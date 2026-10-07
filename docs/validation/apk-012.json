@@ -1,0 +1,108 @@
+{
+  "name": "local-ai-workspace-0.1.12-chat-files-arm64.apk",
+  "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.1.12-chat-files-arm64.apk",
+  "sizeBytes": 91666361,
+  "sha256": "3175b1c8d126befa84f979b5cb9b3382c9bc043934747f3f665bd5b0ca51e824",
+  "package": "com.localai.workspace",
+  "versionName": "0.1.12",
+  "versionCode": 13,
+  "minSdk": 29,
+  "targetSdk": 35,
+  "abi": "arm64-v8a",
+  "certificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
+  "nativeSha256": {
+    "lib/arm64-v8a/libai-chat.so": "0694c540c7333f4473a413708e95e46991ab00031ac7df5a1e45683782032e63",
+    "lib/arm64-v8a/libandroidx.graphics.path.so": "41e9a793c43a0f4fddb19e33f346bace464f30f888ba7b9eaf96294ea115bfb6",
+    "lib/arm64-v8a/libggml-base.so": "6440fc0528213b76a7f9cb24a72555ff17ec90b5feba895dff60ad7b193bfa4b",
+    "lib/arm64-v8a/libggml-cpu.so": "ae1306c6d839e106b5ca0309bd8bb637d015782ca7252f21fd6a2912bab090a4",
+    "lib/arm64-v8a/libggml.so": "aa423a5a8bd4a90efb146fcd2e5b59cb53967eb73f096eb49c73557b99aff487",
+    "lib/arm64-v8a/liblitertlm_jni.so": "6cbef460e821154b947a537e3df918607472a9c36941d25a75828ecdd201a7e2",
+    "lib/arm64-v8a/libllama-common.so": "6588876e7f1fae62253480628bdab7f17d8520cc2f9a21d628265c3aaf3f8f97",
+    "lib/arm64-v8a/libllama.so": "c18fe9c0148d9b8d7c36f39d9737523ecdfb2d831da89e94a15f8dbc550d7884"
+  },
+  "nativeIdenticalTo011": true,
+  "nativeComparisonReference": "Previously verified nativeSha256 values in docs/validation/apk-011.json",
+  "dexMarkers": {
+    "Start chat": true,
+    "Start project": true,
+    "Active model": true,
+    "ChatSessions": true,
+    "Local files": true,
+    "Summarize": true,
+    "DOCUMENT_CONTEXT_UNAVAILABLE": true,
+    "Stop generation": true,
+    "LITERT_INTEGRITY_REUSE": true,
+    "ChatRuntimePool": true
+  },
+  "tests": {
+    "app": {
+      "tests": 167,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "litert-compat": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "llama-runtime": {
+      "tests": 0,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "testTaskResults": {
+    "app": "EXECUTED",
+    "litert-compat": "UP-TO-DATE",
+    "llama-runtime": "NO-SOURCE"
+  },
+  "lint": {
+    "errors": 0,
+    "warnings": 73
+  },
+  "roomSchemaVersion": 3,
+  "validation": {
+    "testDebugUnitTest": "PASS",
+    "assembleDebug": "PASS",
+    "assembleRelease": "PASS",
+    "lintDebug": "PASS_WITH_WARNINGS",
+    "signature": "PASS",
+    "nativeByteComparison": "PASS",
+    "androidDeviceValidation": "NOT_EXECUTED",
+    "newRuntimeValidation": "NOT_EXECUTED",
+    "driveDelivery": "PASS"
+  },
+  "drive": {
+    "fileId": "10_AIAPomtCQnemliE0qksZLEGTM346WO",
+    "url": "https://drive.google.com/file/d/10_AIAPomtCQnemliE0qksZLEGTM346WO/view?usp=drivesdk",
+    "metadataReadback": "PASS",
+    "sizeBytes": 91666361,
+    "parentIds": [
+      "0ANkfEFavP-XTUk9PVA"
+    ],
+    "shared": false,
+    "serverChecksum": "NOT_AVAILABLE",
+    "evidence": "chat-files-012/drive-readback.json"
+  },
+  "executedBuildLogs": [
+    "chat-files-012/gradle-checks-corrected.log",
+    "chat-files-012/release-build.log"
+  ],
+  "initialCheck": {
+    "status": "FAIL",
+    "cause": "Lint SuspiciousIndentation",
+    "log": "chat-files-012/gradle-checks.log",
+    "resolution": "Correct indentation, then rerun the complete test/build/lint batch successfully"
+  },
+  "limitations": [
+    "Android physical inference/file response/navigation UI and speed validation NOT_EXECUTED",
+    "Navigation continuity inside a running app; no new Android foreground inference service",
+    "One resident native engine; cold loading/model switch/process death can still require initialization",
+    "Up to 3 document excerpts of 1000 characters per turn, limited by context; no OCR or whole-file summary pipeline",
+    "CPU decode speed and prior semantic relevance failure not claimed fixed"
+  ],
+  "sourceChanges": "chat-files-012/source-changes.json"
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.LiteRtConversationReuseTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-07T13:13:47" hostname="74096e896c47" time="0.002">
+  <properties/>
+  <testcase name="errorCancellationOversizedOrBlankOutputInvalidatesConversationIdentity" classname="com.localai.workspace.inference.LiteRtConversationReuseTest" time="0.001"/>
+  <testcase name="droppedHistoryAndContextOrAnswerChangesNeverRetainHiddenNativeData" classname="com.localai.workspace.inference.LiteRtConversationReuseTest" time="0.001"/>
+  <testcase name="onlyCompletedExactBudgetedTurnsCanUseExistingNativeCache" classname="com.localai.workspace.inference.LiteRtConversationReuseTest" time="0.0"/>
+  <testcase name="samplerPolicyOutputRoleChangesAndNonTextModesRequireFreshConversation" classname="com.localai.workspace.inference.LiteRtConversationReuseTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

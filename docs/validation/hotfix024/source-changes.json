@@ -1,0 +1,16 @@
+{
+  "modified": [
+    "app/build.gradle.kts",
+    "app/src/main/java/com/localai/workspace/validation/ValidationEngine.kt",
+    "app/src/main/java/com/localai/workspace/validation/ValidationModels.kt",
+    "app/src/main/java/com/localai/workspace/validation/ValidationFixtures.kt",
+    "app/src/main/java/com/localai/workspace/validation/ProductionValidationBackend.kt"
+  ],
+  "added": [
+    "app/src/main/java/com/localai/workspace/validation/ThinkingBudgetControl.kt",
+    "app/src/main/java/com/localai/workspace/validation/ZipTraversalControl.kt",
+    "app/src/test/java/com/localai/workspace/validation/ZipTraversalControlTest.kt",
+    "app/src/test/java/com/localai/workspace/validation/ThinkingBudgetControlTest.kt"
+  ],
+  "removed": []
+}

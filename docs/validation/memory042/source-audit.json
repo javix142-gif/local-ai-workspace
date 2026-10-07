@@ -1,0 +1,18 @@
+{
+  "baselineArchive": "/workspace/baselines/local-ai-workspace-0.4.1-pre-memory042.tar.gz",
+  "baselineSha256": "580dd7a84987457fa880ff9bd1ff8854a5d6bd3aa94e1732173d4ad88d3e733b",
+  "changed": [
+    "app/build.gradle.kts",
+    "app/src/main/java/com/localai/workspace/context/MemoryDomain.kt",
+    "app/src/main/java/com/localai/workspace/context/ContextFoundation.kt",
+    "app/src/main/java/com/localai/workspace/context/ContextBuilder.kt",
+    "app/src/main/java/com/localai/workspace/context/MemoryManager.kt"
+  ],
+  "new": [
+    "app/src/main/java/com/localai/workspace/context/MemoryRelevance.kt",
+    "app/src/test/java/com/localai/workspace/context/MemoryRelevanceTest.kt"
+  ],
+  "removed": [],
+  "viewModelsIdentical": true,
+  "schemasChanged": false
+}

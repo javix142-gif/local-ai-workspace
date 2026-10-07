@@ -1,0 +1,178 @@
+[
+  {
+    "path": "app/src/main/java/com/localai/workspace/MainActivity.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/AppGraph.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/ui/ViewModels.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/data/Daos.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/data/WorkspaceDatabase.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/data/ChatHistoryBuilder.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/data/GenerationMetricsPresentation.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/data/Entities.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/data/ApplicationModelPreparation.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/inference/LiteRtConversationReuse.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/inference/LiteRtIpc.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/inference/LiteRtEngineResources.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/inference/LiteRtLmInferenceRuntime.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/inference/LiteRtTrace.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/inference/LiteRtLmService.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/inference/LiteRtConversationPayload.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/domain/model/ConversationPrompt.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/domain/model/WorkspaceModels.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/domain/rag/ContextBudgetManager.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/domain/inference/GenerationDiagnostics.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/domain/inference/InferenceRuntime.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/domain/inference/ChatRuntimePool.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/test/java/com/localai/workspace/data/ChatDeletionTest.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/test/java/com/localai/workspace/data/WorkspaceMigration3Test.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/test/java/com/localai/workspace/inference/LiteRtEngineResourcesTest.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/test/java/com/localai/workspace/inference/InferenceWatchdogTest.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/test/java/com/localai/workspace/inference/LiteRtRuntimeDeadlineTest.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "llama-runtime/src/main/cpp/logging.h",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "llama-runtime/src/main/cpp/ai_chat.cpp",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "llama-runtime/src/main/java/com/arm/aichat/internal/InferenceEngineImpl.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/build.gradle.kts",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/ui/PerformanceScreen.kt",
+    "status": "ADDED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/performance/ExperimentalBackendPolicy.kt",
+    "status": "ADDED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/performance/RequestTimings.kt",
+    "status": "ADDED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/performance/PerformanceSettings.kt",
+    "status": "ADDED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/performance/PerformanceDiagnostics.kt",
+    "status": "ADDED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/performance/BenchmarkRecords.kt",
+    "status": "ADDED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/performance/DeviceMeasurements.kt",
+    "status": "ADDED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/inference/LiteRtContextCapacity.kt",
+    "status": "ADDED"
+  },
+  {
+    "path": "app/src/test/java/com/localai/workspace/domain/RecentHistoryBudgetTest.kt",
+    "status": "ADDED"
+  },
+  {
+    "path": "app/src/test/java/com/localai/workspace/performance/PerformancePolicyTest.kt",
+    "status": "ADDED"
+  },
+  {
+    "path": "app/src/test/java/com/localai/workspace/performance/PerformanceDiagnosticsIntegrationTest.kt",
+    "status": "ADDED"
+  },
+  {
+    "path": "app/src/test/java/com/localai/workspace/inference/LiteRtContextCapacityTest.kt",
+    "status": "ADDED"
+  },
+  {
+    "path": "app/src/test/java/com/localai/workspace/inference/CanonicalConversationTest.kt",
+    "status": "ADDED"
+  }
+]

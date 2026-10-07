@@ -1,0 +1,28 @@
+{
+  "parentId": "0ANkfEFavP-XTUk9PVA",
+  "sharing": "owner/private readback; no sharing changes",
+  "remoteChecksum": "UNAVAILABLE",
+  "files": [
+    {
+      "kind": "APK",
+      "path": "dist/apk/local-ai-workspace-0.2.0-part2-arm64.apk",
+      "driveId": "17yCnb5BFxLZwuKxidzbhxahY8b2TUrrV",
+      "bytes": 98065334,
+      "sha256Local": "c5c87d2bdd1f1aa0acd1c2a4f654c06b8b9c7c476e7825e42772553cbeaacb3d"
+    },
+    {
+      "kind": "REPORT",
+      "path": "docs/PART2_IMPLEMENTATION.md",
+      "driveId": "1bvFIVQXyeWZEk942_4UKvN23ZQJzmRbT",
+      "bytes": 26508,
+      "sha256Local": "a81362e7e71c74b4b372d4e95ce7fb7fb58d8ea1f62f0937e0b86bd52d9a0f5c"
+    },
+    {
+      "kind": "FIXTURES",
+      "path": "dist/local-ai-workspace-0.2.0-moto-fixtures.zip",
+      "driveId": "1F3V1rQmHmpxj_e--CKbKMXn_wSMxKKdr",
+      "bytes": 2667,
+      "sha256Local": "fa53bea2a1053df6357de8e9a733544c3ff1130ec1985c44314115b37a932979"
+    }
+  ]
+}

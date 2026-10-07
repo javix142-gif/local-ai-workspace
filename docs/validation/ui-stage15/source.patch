@@ -1,0 +1,1660 @@
+--- a/app/src/main/java/com/localai/workspace/MainActivity.kt
++++ b/app/src/main/java/com/localai/workspace/MainActivity.kt
+@@ -31,6 +31,11 @@
+ import androidx.compose.foundation.shape.RoundedCornerShape
+ import androidx.compose.material.icons.Icons
+ import androidx.compose.material.icons.filled.Add
++import androidx.compose.material.icons.automirrored.filled.ArrowBack
++import androidx.compose.material.icons.filled.ContentCopy
++import androidx.compose.material.icons.filled.Edit
++import androidx.compose.material.icons.filled.Search
++import androidx.compose.material.icons.filled.ChevronRight
+ import androidx.compose.material.icons.filled.AttachFile
+ import androidx.compose.material.icons.filled.ChatBubbleOutline
+ import androidx.compose.material.icons.filled.CheckCircle
+@@ -69,6 +74,18 @@
+ import androidx.compose.material3.SnackbarHost
+ import androidx.compose.material3.SnackbarHostState
+ import androidx.compose.material3.Surface
++import androidx.compose.material3.Tab
++import androidx.compose.material3.TabRow
++import androidx.compose.foundation.horizontalScroll
++import androidx.compose.ui.platform.LocalClipboardManager
++import androidx.compose.ui.text.AnnotatedString
++import com.localai.workspace.ui.ChatComposer
++import com.localai.workspace.ui.ChatRichText
++import com.localai.workspace.ui.humanModelName
++import com.localai.workspace.ui.runtimeDisplayName
++import com.localai.workspace.ui.compactGenerationLabel
++import com.localai.workspace.ui.capabilityAvailability
++import com.localai.workspace.ui.CapabilityAvailability
+ import androidx.compose.material3.Text
+ import androidx.compose.material3.TextButton
+ import androidx.compose.material3.TopAppBar
+@@ -81,6 +98,7 @@
+ import androidx.compose.runtime.remember
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
++import androidx.compose.ui.platform.testTag
+ import androidx.compose.ui.graphics.Color
+ import androidx.compose.ui.text.font.FontWeight
+ import androidx.compose.ui.text.input.PasswordVisualTransformation
+@@ -227,59 +245,57 @@
+     val activities by viewModel.chatActivities.collectAsStateWithLifecycle()
+     var deleteId by rememberSaveable { mutableStateOf<String?>(null) }
+     var showCreate by rememberSaveable { mutableStateOf(false) }
+-    Column(Modifier.fillMaxSize().padding(horizontal = 20.dp)) {
+-        TopAppBar(title = {
+-            Column {
+-                Text("Local AI Workspace", fontWeight = FontWeight.SemiBold)
+-                Text("Private by default", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+-            }
+-        }, actions = {
+-            IconButton(onClick = { navController.navigate("models") }) { Icon(Icons.Default.ModelTraining, contentDescription = "Models") }
+-        })
+-        LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(10.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
++    var searching by rememberSaveable { mutableStateOf(false) }
++    var query by rememberSaveable { mutableStateOf("") }
++    val visibleChats = chats.filter { it.name.contains(query.trim(), ignoreCase = true) }
++    val visibleProjects = projects.filter { it.name.contains(query.trim(), ignoreCase = true) }
++    Column(Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
++        TopAppBar(title = { Text("Local AI Workspace", maxLines = 1, overflow = TextOverflow.Ellipsis) },
++            actions = { IconButton(onClick = { searching = !searching; if (!searching) query = "" }) {
++                Icon(androidx.compose.material.icons.Icons.Default.Search, contentDescription = "Search workspace")
++            } })
++        LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 16.dp)) {
+             item {
+                 LocalModeCard()
+-                Spacer(Modifier.height(16.dp))
++                Button(onClick = { viewModel.startChat { id, conversation -> navController.navigate(chatRoute(id, conversation)) } },
++                    enabled = !creating, modifier = Modifier.fillMaxWidth()) {
++                    Icon(Icons.Default.ChatBubbleOutline, null); Spacer(Modifier.width(8.dp)); Text("Start chat")
++                }
++                OutlinedButton(onClick = { showCreate = true }, enabled = !creating, modifier = Modifier.fillMaxWidth()) {
++                    Icon(Icons.Default.FolderOpen, null); Spacer(Modifier.width(8.dp)); Text("Start project")
++                }
+                 WorkspaceModelCard(models, preparation, viewModel::prepareModel,
+                     viewModel::retryModelPreparation, viewModel::cancelModelPreparation)
+-                Spacer(Modifier.height(12.dp))
+-                Button(onClick = { viewModel.startChat { id, conversation -> navController.navigate(chatRoute(id, conversation)) } },
+-                    enabled = !creating, modifier = Modifier.fillMaxWidth()) {
+-                    Icon(Icons.Default.ChatBubbleOutline, contentDescription = null); Spacer(Modifier.width(8.dp)); Text("Start chat")
+-                }
+-                OutlinedButton(onClick = { showCreate = true }, enabled = !creating, modifier = Modifier.fillMaxWidth()) {
+-                    Icon(Icons.Default.FolderOpen, contentDescription = null); Spacer(Modifier.width(8.dp)); Text("Start project")
+-                }
+-                Text("Chat directly, or use a project to organize several chats, files and memory.", style = MaterialTheme.typography.bodySmall)
++            }
++            if (searching) item {
++                OutlinedTextField(query, { query = it }, Modifier.fillMaxWidth(), singleLine = true,
++                    placeholder = { Text("Search titles") })
+             }
+             if (pendingCleanup > 0) item {
+-                Card(Modifier.fillMaxWidth()) { Column(Modifier.padding(12.dp)) {
+-                    Text("$pendingCleanup private files need cleanup", style = MaterialTheme.typography.bodySmall)
+-                    TextButton(onClick = viewModel::retryDocumentCleanup) { Text("Retry cleanup") }
++                Card(Modifier.fillMaxWidth()) { Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
++                    Text("File cleanup pending", Modifier.weight(1f), style = MaterialTheme.typography.bodySmall)
++                    TextButton(onClick = viewModel::retryDocumentCleanup) { Text("Retry") }
+                 } }
+             }
+-            items(activities, key = { "active-${it.projectId}-${it.conversationId}" }) { activity ->
+-                Card(Modifier.fillMaxWidth()) { Column(Modifier.padding(14.dp)) {
+-                    Text(activity.title, style = MaterialTheme.typography.titleMedium)
+-                    Text(if (activity.generating) activity.progress.label else "Reading files…", style = MaterialTheme.typography.bodySmall)
+-                    activity.progress.detail?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
+-                    LinearProgressIndicator(Modifier.fillMaxWidth())
+-                    Row {
+-                        TextButton(onClick = { navController.navigate(chatRoute(activity.projectId, activity.conversationId)) }) { Text("Open chat") }
+-                        if (activity.generating) TextButton(onClick = { viewModel.stopChatActivity(activity.projectId, activity.conversationId) }) { Text("Stop generation") }
+-                    }
++            items(activities, key = { "activity-${it.projectId}-${it.conversationId}" }) { activity ->
++                Card(Modifier.fillMaxWidth()) { Row(Modifier.padding(start = 12.dp), verticalAlignment = Alignment.CenterVertically) {
++                    Column(Modifier.weight(1f).clickable { navController.navigate(chatRoute(activity.projectId, activity.conversationId)) }.padding(vertical = 12.dp)) {
++                        Text(activity.title, maxLines = 1, overflow = TextOverflow.Ellipsis)
++                        Text(if (activity.generating) compactGenerationLabel(activity.progress.stage, activity.progress.cancellationRequested) else "Reading files…", style = MaterialTheme.typography.labelSmall)
++                    }
++                    if (activity.generating) IconButton(onClick = { viewModel.stopChatActivity(activity.projectId, activity.conversationId) }) { Icon(Icons.Default.Stop, "Stop generation") }
+                 } }
+             }
+-            item { Text("Chats", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold) }
+-            if (chats.isEmpty()) item { Text("Start a chat whenever you need one.", style = MaterialTheme.typography.bodyMedium) }
+-            items(chats, key = { "chat-${it.id}" }) { chat ->
+-                WorkspaceEntryCard(chat.name, "Standalone chat", false, chat.id in deleting,
++            item { Text("Chats", style = MaterialTheme.typography.titleLarge) }
++            if (visibleChats.isEmpty()) item { Text(if (query.isBlank()) "No chats yet" else "No matching chats", style = MaterialTheme.typography.bodyMedium) }
++            items(visibleChats, key = { "chat-${it.id}" }) { chat ->
++                WorkspaceEntryCard(chat.name, "", false, chat.id in deleting,
+                     onOpen = { navController.navigate(chatRoute(chat.id)) }, onDelete = { deleteId = chat.id })
+             }
+-            item { Spacer(Modifier.height(6.dp)); Text("Projects", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold) }
+-            if (projects.isEmpty()) item { Text("Projects keep related chats and local documents together.", style = MaterialTheme.typography.bodyMedium) }
+-            items(projects, key = { "project-${it.id}" }) { project ->
+-                WorkspaceEntryCard(project.name, "Chats · Files · Sources · Memory", true, project.id in deleting,
++            item { Text("Projects", style = MaterialTheme.typography.titleLarge) }
++            if (visibleProjects.isEmpty()) item { Text(if (query.isBlank()) "No projects yet" else "No matching projects", style = MaterialTheme.typography.bodyMedium) }
++            items(visibleProjects, key = { "project-${it.id}" }) { project ->
++                WorkspaceEntryCard(project.name, "", true, project.id in deleting,
+                     onOpen = { navController.navigate("project/${project.id}") }, onDelete = { deleteId = project.id })
+             }
+         }
+@@ -299,49 +315,35 @@
+     val usable = models.filter(com.localai.workspace.data.ApplicationModelPreparation::isUsable)
+     if (usable.isEmpty()) return
+     val selected = usable.firstOrNull { it.id == state.modelId }
+-    var menu by remember { mutableStateOf(false) }
+     var details by rememberSaveable { mutableStateOf(false) }
+-    Card(Modifier.fillMaxWidth()) {
+-        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+-            Text("Active model", style = MaterialTheme.typography.titleMedium)
+-            Box {
+-                TextButton(onClick = { menu = true }) { Text(selected?.displayName ?: "Choose model") }
+-                DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
+-                    usable.forEach { model -> DropdownMenuItem(text = { Text(model.displayName) },
+-                        onClick = { menu = false; select(model.id) }) }
+-                }
+-            }
+-            when {
+-                state.preparing -> {
+-                    Text(state.progress.label, style = MaterialTheme.typography.labelMedium)
+-                    state.progress.detail?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
+-                    val completed = state.progress.bytesCompleted
+-                    val total = state.progress.bytesTotal
+-                    if (completed != null && total != null && total > 0) {
+-                        Text("Integrity: ${completed * 100 / total}% · ${state.progress.elapsedMs / 1000}s",
+-                            style = MaterialTheme.typography.labelSmall)
+-                    }
+-                    LinearProgressIndicator(Modifier.fillMaxWidth())
+-                    Text("Loading continues when you open or leave a chat.", style = MaterialTheme.typography.bodySmall)
+-                    TextButton(onClick = cancel) { Text("Cancel loading") }
+-                }
+-                state.error != null -> {
+-                    Text("Model loading failed", color = MaterialTheme.colorScheme.error)
+-                    TextButton(onClick = { details = !details }) { Text("Technical details") }
+-                    if (details) Text(state.error.displayText(), style = MaterialTheme.typography.bodySmall)
+-                    TextButton(onClick = retry) { Text("Retry loading") }
+-                }
+-                state.ready -> Text("Model ready · reused across chats", style = MaterialTheme.typography.labelMedium)
+-                selected?.toDescriptor()?.runtime == RuntimeType.LITERT_LM -> {
+-                    Text("Model is not loaded", style = MaterialTheme.typography.labelMedium)
+-                    TextButton(onClick = retry) { Text("Load model") }
+-                }
+-                else -> Text("This runtime loads on the first message.", style = MaterialTheme.typography.bodySmall)
+-            }
+-            Text("One model stays in memory. Switching models may require loading; Android can release it to free RAM.",
+-                style = MaterialTheme.typography.bodySmall)
+-        }
+-    }
++    Card(Modifier.fillMaxWidth().clickable { details = true }) {
++        Row(Modifier.fillMaxWidth().padding(start = 12.dp, end = 8.dp, top = 8.dp, bottom = 8.dp), verticalAlignment = Alignment.CenterVertically) {
++            Column(Modifier.weight(1f)) {
++                Text(selected?.displayName?.let(::humanModelName) ?: "Choose model", style = MaterialTheme.typography.titleSmall,
++                    maxLines = 1, overflow = TextOverflow.Ellipsis)
++                Text(when { state.preparing -> compactGenerationLabel(state.progress.stage)
++                    state.error != null -> "Could not load · tap to retry"
++                    state.ready -> "Ready · Local"
++                    else -> "Not loaded" }, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
++            }
++            IconButton(onClick = { details = true }) { Icon(Icons.Default.ChevronRight, "Active model") }
++        }
++        if (state.preparing) LinearProgressIndicator(Modifier.fillMaxWidth())
++    }
++    if (details) AlertDialog(onDismissRequest = { details = false }, title = { Text("Active model") },
++        confirmButton = { TextButton(onClick = { details = false }) { Text("Done") } },
++        text = { Column(Modifier.heightIn(max = 440.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
++            usable.forEach { model -> TextButton(onClick = { select(model.id); details = false }, modifier = Modifier.fillMaxWidth()) {
++                Text(humanModelName(model.displayName), maxLines = 2, overflow = TextOverflow.Ellipsis)
++            } }
++            Text("One model stays in memory. Switching may reload it; Android can release it to free RAM.", style = MaterialTheme.typography.bodySmall)
++            if (state.preparing) {
++                Text(state.progress.label); state.progress.detail?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
++                TextButton(onClick = cancel) { Text("Cancel loading") }
++            }
++            state.error?.let { Text(it.displayText(), style = MaterialTheme.typography.bodySmall); TextButton(onClick = retry) { Text("Retry loading") } }
++            if (!state.ready && !state.preparing && state.error == null) TextButton(onClick = retry) { Text("Load model") }
++        } })
+ }
+ 
+ @Composable
+@@ -355,7 +357,7 @@
+             Spacer(Modifier.width(12.dp))
+             Column(Modifier.weight(1f)) {
+                 Text(title, style = MaterialTheme.typography.titleMedium, maxLines = 2, overflow = TextOverflow.Ellipsis)
+-                Text(if (busy) "Deleting…" else subtitle, style = MaterialTheme.typography.bodySmall)
++                if (busy || subtitle.isNotBlank()) Text(if (busy) "Deleting…" else subtitle, style = MaterialTheme.typography.bodySmall)
+             }
+             Box {
+                 IconButton(onClick = { menu = true }, enabled = !busy) { Icon(Icons.Default.MoreVert, contentDescription = "Options for $title") }
+@@ -375,55 +377,77 @@
+     val project by remember(projectId) { viewModel.observeProject(projectId) }.collectAsStateWithLifecycle(initialValue = null)
+     val chats by remember(projectId) { viewModel.observeConversations(projectId) }.collectAsStateWithLifecycle(initialValue = emptyList())
+     val documents by remember(projectId) { viewModel.observeDocuments(projectId) }.collectAsStateWithLifecycle(initialValue = emptyList())
++    val models by viewModel.models.collectAsStateWithLifecycle()
+     val deleting by viewModel.deletingChats.collectAsStateWithLifecycle()
+     val creating by viewModel.creating.collectAsStateWithLifecycle()
+     val busy = projectId in deleting
++    var tab by rememberSaveable { mutableStateOf(0) }
++    var menu by remember { mutableStateOf(false) }
+     var showDelete by rememberSaveable { mutableStateOf(false) }
+     var deleteChatId by rememberSaveable { mutableStateOf<String?>(null) }
+-    val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+-        uri?.let { viewModel.attachProjectDocument(projectId, it) }
+-    }
+-    Column(Modifier.fillMaxSize().padding(horizontal = 20.dp)) {
++    var fileDetailsId by rememberSaveable { mutableStateOf<String?>(null) }
++    val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let { viewModel.attachProjectDocument(projectId, it) } }
++    Column(Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
+         TopAppBar(title = { Text(project?.name ?: "Project", maxLines = 1, overflow = TextOverflow.Ellipsis) },
+-            navigationIcon = { IconButton(onClick = { navController.popBackStack() }, enabled = !busy) { Icon(Icons.Default.Close, contentDescription = "Back") } },
+-            actions = { IconButton(onClick = { showDelete = true }, enabled = !busy && project != null) { Icon(Icons.Default.DeleteOutline, contentDescription = "Delete project") } })
++            navigationIcon = { IconButton(onClick = { navController.popBackStack() }, enabled = !busy) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back") } },
++            actions = { Box {
++                IconButton(onClick = { menu = true }, enabled = !busy && project != null) { Icon(Icons.Default.MoreVert, "Project options") }
++                DropdownMenu(menu, { menu = false }) { DropdownMenuItem(text = { Text("Delete project") }, onClick = { menu = false; showDelete = true }) }
++            } })
++        TabRow(tab) { listOf("Chats", "Files", "Memory", "Settings").forEachIndexed { index, label ->
++            Tab(tab == index, onClick = { tab = index }, enabled = !busy, text = { Text(label, maxLines = 1, style = MaterialTheme.typography.labelMedium) })
++        } }
+         if (busy) LinearProgressIndicator(Modifier.fillMaxWidth())
+-        LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(10.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
+-            item {
+-                Text("Chats in this project share its local files, instructions and saved memory.", style = MaterialTheme.typography.bodyMedium)
+-                Button(onClick = { viewModel.startChat(projectId) { id, conversation -> navController.navigate(chatRoute(id, conversation)) } },
+-                    enabled = !busy && !creating && project != null, modifier = Modifier.fillMaxWidth()) { Text("Start chat") }
+-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+-                    OutlinedButton(onClick = { picker.launch(arrayOf("*/*")) }, enabled = !busy && project != null) { Text("Add file") }
+-                    OutlinedButton(onClick = { navController.navigate("memory/$projectId") }, enabled = !busy && project != null) { Text("Memory") }
+-                }
+-            }
+-            item { Text("Chats", style = MaterialTheme.typography.titleLarge) }
+-            if (chats.isEmpty()) item { Text("No chats yet. Start the first one.") }
+-            items(chats, key = { it.id }) { chat ->
+-                WorkspaceEntryCard(chat.title, "Project chat", false, busy,
+-                    onOpen = { navController.navigate(chatRoute(projectId, chat.id)) }, onDelete = { deleteChatId = chat.id })
+-            }
+-            item { Spacer(Modifier.height(8.dp)); Text("Files", style = MaterialTheme.typography.titleLarge) }
+-            if (documents.isEmpty()) item { Text("Attach local documents for this project's chats.") }
+-            items(documents, key = { it.id }) { document ->
+-                Card(Modifier.fillMaxWidth()) { Column(Modifier.padding(12.dp)) {
+-                    Text(document.displayName, style = MaterialTheme.typography.titleMedium)
+-                    Text("${document.extractionStatus} · ${document.indexingStatus} · ${formatBytes(document.byteSize)}", style = MaterialTheme.typography.bodySmall)
++        when (tab) {
++            0 -> LazyColumn(Modifier.weight(1f), contentPadding = PaddingValues(vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
++                item { Button(onClick = { viewModel.startChat(projectId) { id, conversation -> navController.navigate(chatRoute(id, conversation)) } },
++                    enabled = !busy && !creating && project != null, modifier = Modifier.fillMaxWidth()) { Text("Start chat") } }
++                if (chats.isEmpty()) item { Text("No chats yet", Modifier.padding(12.dp)) }
++                items(chats, key = { it.id }) { chat -> WorkspaceEntryCard(chat.title, "", false, busy,
++                    onOpen = { navController.navigate(chatRoute(projectId, chat.id)) }, onDelete = { deleteChatId = chat.id }) }
++            }
++            1 -> LazyColumn(Modifier.weight(1f), contentPadding = PaddingValues(vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
++                item { OutlinedButton(onClick = { picker.launch(arrayOf("*/*")) }, enabled = !busy && project != null, modifier = Modifier.fillMaxWidth()) { Text("Add file") } }
++                if (documents.isEmpty()) item { Text("No files yet", Modifier.padding(12.dp)) }
++                items(documents, key = { it.id }) { document -> Card(Modifier.fillMaxWidth().clickable { fileDetailsId = document.id }) { Column(Modifier.padding(12.dp)) {
++                    Text(document.displayName, style = MaterialTheme.typography.titleSmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
++                    Text(when { document.indexingStatus == "READY" -> "Ready · ${formatBytes(document.byteSize)}"
++                        document.errorMessage != null || document.extractionStatus == "FAILED" || document.indexingStatus == "FAILED" -> "Could not read · tap for details"
++                        else -> "Reading…" }, style = MaterialTheme.typography.bodySmall)
+                     document.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
+-                } }
+-            }
+-        }
+-    }
++                } } }
++            }
++            2 -> {
++                val graph = (androidx.compose.ui.platform.LocalContext.current.applicationContext as LocalAiApplication).graph
++                val memoryViewModel: MemoryViewModel = viewModel(key = "memory-$projectId", factory = MemoryViewModelFactory(projectId, graph))
++                Box(Modifier.weight(1f)) {
++                    if (busy) Text("Deleting…", Modifier.padding(16.dp))
++                    else MemoryScreen(memoryViewModel, navController, embedded = true)
++                }
++            }
++            3 -> Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(vertical = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
++                Text("Current configuration", style = MaterialTheme.typography.titleMedium)
++                val defaultModel = models.firstOrNull { it.id == project?.defaultModelId }
++                Text("Model: ${defaultModel?.displayName?.let(::humanModelName) ?: "Active workspace model"}")
++                defaultModel?.let { TextButton(onClick = { navController.navigate("model/${it.id}") }) { Text("Model settings") } }
++                Text("Memory: ${if (project?.memoryEnabled == true) "Enabled · approved items only" else "Disabled"}")
++                Text("Instructions", style = MaterialTheme.typography.labelLarge)
++                Text(project?.systemInstructions?.takeIf { it.isNotBlank() } ?: "No project instructions", style = MaterialTheme.typography.bodyMedium)
++            }
++        }
++    }
++    documents.firstOrNull { it.id == fileDetailsId }?.let { file -> AlertDialog(onDismissRequest = { fileDetailsId = null },
++        title = { Text(file.displayName) }, confirmButton = { TextButton(onClick = { fileDetailsId = null }) { Text("Done") } },
++        text = { Column(Modifier.heightIn(max = 380.dp).verticalScroll(rememberScrollState())) {
++            Text("${formatBytes(file.byteSize)} · ${file.mimeType}")
++            Text("Extraction: ${file.extractionStatus}"); Text("Indexing: ${file.indexingStatus}")
++            file.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
++        } }) }
+     if (showDelete && project != null) DeleteWorkspaceDialog(project!!.name, false,
+-        onDismiss = { showDelete = false }, onConfirm = {
+-            showDelete = false; viewModel.deleteWorkspace(projectId) { navController.popBackStack() }
+-        })
+-    chats.firstOrNull { it.id == deleteChatId }?.let { chat ->
+-        DeleteChatDialog(chat.title, onDismiss = { deleteChatId = null }, onConfirm = {
+-            deleteChatId = null; viewModel.deleteConversation(projectId, chat.id)
+-        })
+-    }
++        onDismiss = { showDelete = false }, onConfirm = { showDelete = false; viewModel.deleteWorkspace(projectId) { navController.popBackStack() } })
++    chats.firstOrNull { it.id == deleteChatId }?.let { chat -> DeleteChatDialog(chat.title, { deleteChatId = null }, {
++        deleteChatId = null; viewModel.deleteConversation(projectId, chat.id)
++    }) }
+ }
+ 
+ @Composable
+@@ -495,16 +519,10 @@
+             title = {
+                 Column {
+                     Text("Model Library", fontWeight = FontWeight.SemiBold)
+-                    Text("${models.size} model${if (models.size == 1) "" else "s"} · app-private storage", style = MaterialTheme.typography.labelSmall)
++                    Text("${models.size} model${if (models.size == 1) "" else "s"}", style = MaterialTheme.typography.labelSmall)
+                 }
+             },
+         )
+-        Text(
+-            "Select a runtime-backed format. Inference stays offline after import or download.",
+-            style = MaterialTheme.typography.bodyMedium,
+-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+-        )
+-        Spacer(Modifier.height(12.dp))
+         Button(onClick = { showAddModel = true }, modifier = Modifier.fillMaxWidth()) {
+             Icon(Icons.Default.Add, contentDescription = null)
+             Spacer(Modifier.width(8.dp))
+@@ -550,7 +568,7 @@
+             Spacer(Modifier.height(8.dp))
+         }
+         if (visibleModels.isEmpty()) {
+-            EmptyState("No models in this view", "Add a GGUF or LiteRT-LM model. Files are inspected before they become usable.")
++            EmptyState("No models in this view", "Add a model to get started.")
+         } else {
+             LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
+                 items(visibleModels, key = { it.id }) { model ->
+@@ -572,78 +590,43 @@
+ }
+ 
+ @Composable
+-private fun ModelCard(model: ModelEntity, onClick: () -> Unit) {
++internal fun ModelCard(model: ModelEntity, onClick: () -> Unit) {
+     val descriptor = model.toDescriptor()
+-    val statusColor = when (descriptor.importStatus) {
+-        ModelImportStatus.READY -> MaterialTheme.colorScheme.primary
+-        ModelImportStatus.COMPATIBLE_WARNING -> MaterialTheme.colorScheme.tertiary
+-        else -> MaterialTheme.colorScheme.error
+-    }
++    val name = humanModelName(model.displayName)
++    val available = listOf("Text" to ModelCapability.TEXT, "Images" to ModelCapability.VISION)
++        .filter { capabilityAvailability(descriptor, it.second) == CapabilityAvailability.AVAILABLE }.map { it.first }
+     Card(Modifier.fillMaxWidth().clickable(onClick = onClick)) {
+-        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
++        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+             Row(verticalAlignment = Alignment.CenterVertically) {
+-                Icon(Icons.Default.Memory, contentDescription = null, tint = statusColor)
+-                Spacer(Modifier.width(10.dp))
+-                Text(model.displayName, Modifier.weight(1f), fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+-                Text(descriptor.importStatus.name.replace('_', ' '), style = MaterialTheme.typography.labelSmall, color = statusColor)
+-            }
+-            Text(
+-                listOfNotNull(
+-                    descriptor.format.name,
+-                    descriptor.quantization,
+-                    formatBytes(descriptor.sizeBytes),
+-                ).joinToString("  ·  "),
+-                style = MaterialTheme.typography.bodySmall,
+-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+-            )
+-            Text(
+-                when (descriptor.runtime) {
+-                    com.localai.workspace.domain.model.RuntimeType.LLAMA_CPP -> "llama.cpp"
+-                    com.localai.workspace.domain.model.RuntimeType.LITERT_LM -> "LiteRT-LM"
+-                    else -> "Runtime unavailable"
+-                },
+-                style = MaterialTheme.typography.labelMedium,
+-            )
+-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+-                listOf(
+-                    "Text" to ModelCapability.TEXT,
+-                    "Vision" to ModelCapability.VISION,
+-                    "Audio" to ModelCapability.AUDIO,
+-                ).forEach { (label, capability) ->
+-                    Text("$label ${if (capability in descriptor.capabilities) "✓" else "—"}", style = MaterialTheme.typography.labelSmall)
+-                }
+-            }
+-            Text(
+-                "${descriptor.accelerators.joinToString(" · ") { it.name }}${descriptor.contextLength?.let { "  ·  Context: $it" } ?: ""}",
+-                style = MaterialTheme.typography.labelSmall,
+-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+-            )
++                Text(name, Modifier.weight(1f), style = MaterialTheme.typography.titleMedium, maxLines = 2, overflow = TextOverflow.Ellipsis)
++                Icon(Icons.Default.ChevronRight, null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
++            }
++            Text("${runtimeDisplayName(descriptor.runtime)} · ${formatBytes(descriptor.sizeBytes)}", style = MaterialTheme.typography.bodySmall)
++            if (available.isNotEmpty()) Text("Available: ${available.joinToString(" · ")}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
++            if (ModelCapability.VISION in descriptor.capabilities && "Images" !in available)
++                Text("Vision: model support only", style = MaterialTheme.typography.labelSmall)
++            if (name != model.displayName) Text(model.displayName, style = MaterialTheme.typography.labelSmall,
++                color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
++            if (descriptor.importStatus !in setOf(ModelImportStatus.READY, ModelImportStatus.COMPATIBLE_WARNING))
++                Text(descriptor.importStatus.name.replace('_', ' '), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.error)
+             descriptor.compatibilityWarning?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.tertiary) }
+         }
+     }
+ }
+ 
+ @Composable
+-private fun AddModelDialog(
+-    onDismiss: () -> Unit,
+-    onGguf: () -> Unit,
+-    onLiteRt: () -> Unit,
+-    onHuggingFace: () -> Unit,
+-    onMultimodal: () -> Unit,
+-) {
+-    AlertDialog(
+-        onDismissRequest = onDismiss,
+-        title = { Text("Add model") },
+-        text = {
+-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+-                ModelOption("Import GGUF", "Import a local GGUF model for llama.cpp", "GGUF · llama.cpp", onGguf)
+-                ModelOption("Import LiteRT-LM", "Import an Android-optimized LiteRT-LM model", ".litertlm · LiteRT-LM", onLiteRt)
+-                ModelOption("Download from Hugging Face", "Find and download compatible model files", ".gguf · .litertlm", onHuggingFace)
+-                ModelOption("Import multimodal model", "Import a primary model and required vision components", "GGUF + mmproj or self-contained LiteRT-LM", onMultimodal)
+-            }
+-        },
+-        confirmButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+-    )
++private fun AddModelDialog(onDismiss: () -> Unit, onGguf: () -> Unit, onLiteRt: () -> Unit,
++    onHuggingFace: () -> Unit, onMultimodal: () -> Unit) {
++    AlertDialog(onDismissRequest = onDismiss, title = { Text("Add model") }, text = {
++        Column(Modifier.heightIn(max = 480.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
++            Text("FROM DEVICE", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
++            ModelOption("GGUF", "llama.cpp", ".gguf", onGguf)
++            ModelOption("LiteRT-LM", "Android runtime", ".litertlm", onLiteRt)
++            ModelOption("Multimodal", "Self-contained LiteRT-LM or GGUF + projector", "", onMultimodal)
++            Text("ONLINE", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
++            ModelOption("Hugging Face", "Find and download models", "", onHuggingFace)
++        }
++    }, confirmButton = { TextButton(onClick = onDismiss) { Text("Cancel") } })
+ }
+ 
+ @Composable
+@@ -652,7 +635,7 @@
+         Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+             Text(title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
+             Text(description, style = MaterialTheme.typography.bodySmall)
+-            Text(formats, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
++            if (formats.isNotBlank()) Text(formats, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+         }
+     }
+ }
+@@ -671,7 +654,7 @@
+         onDismissRequest = onDismiss,
+         title = { Text("Download from Hugging Face") },
+         text = {
+-            Column(Modifier.heightIn(max = 580.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
++            Column(Modifier.heightIn(max = 580.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                 Text("Downloading from Hugging Face requires Internet access. Prompts and conversations never leave the device.", style = MaterialTheme.typography.bodySmall)
+                 Row(verticalAlignment = Alignment.CenterVertically) {
+                     OutlinedTextField(reference, { reference = it }, Modifier.weight(1f), label = { Text("owner/repository or URL") }, singleLine = true)
+@@ -758,22 +741,29 @@
+     Column(Modifier.fillMaxSize().padding(horizontal = 20.dp)) {
+         TopAppBar(
+             title = { Text("Model details", maxLines = 1, overflow = TextOverflow.Ellipsis) },
+-            navigationIcon = { IconButton(onClick = { navController.popBackStack() }) { Icon(Icons.Default.Close, contentDescription = "Back") } },
++            navigationIcon = { IconButton(onClick = { navController.popBackStack() }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back") } },
+         )
+         LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
+             item {
+-                Text(model.displayName, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.SemiBold)
++                Text(humanModelName(model.displayName), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.SemiBold)
+                 Text("${descriptor.format.name} · ${descriptor.runtime.name.replace('_', ' ')} · ${formatBytes(descriptor.sizeBytes)}", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+             }
+-            item { DetailSection("GENERAL", listOfNotNull("Family" to descriptor.family, "Architecture" to descriptor.architecture, "Parameters" to model.parameterLabel, "Quantization" to descriptor.quantization, "Size" to formatBytes(descriptor.sizeBytes), "Format" to descriptor.format.name, "Runtime" to model.runtimeId)) }
++            item { DetailSection("GENERAL", listOfNotNull("Filename" to (model.originalFilename ?: java.io.File(model.localPath).name), "Family" to descriptor.family, "Architecture" to descriptor.architecture, "Parameters" to model.parameterLabel, "Quantization" to descriptor.quantization, "Size" to formatBytes(descriptor.sizeBytes), "Format" to descriptor.format.name, "Runtime" to model.runtimeId)) }
+             item {
+                 Card(Modifier.fillMaxWidth()) {
+                     Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+-                        Text("DECLARED MODEL CAPABILITIES (not current activation)", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
++                        Text("CAPABILITIES", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
+                         listOf("Text" to ModelCapability.TEXT, "Vision" to ModelCapability.VISION, "Audio" to ModelCapability.AUDIO, "Tool calling" to ModelCapability.TOOL_CALLING, "Thinking" to ModelCapability.THINKING, "Embeddings" to ModelCapability.EMBEDDING, "Image generation" to ModelCapability.IMAGE_GENERATION, "Speculative decoding" to ModelCapability.SPECULATIVE_DECODING).forEach { (name, capability) ->
+-                            Text("${if (capability in descriptor.capabilities) "✓" else "✕"} $name", color = if (capability in descriptor.capabilities) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant)
++                            val availability = capabilityAvailability(descriptor, capability)
++                            Text("$name · ${when (availability) {
++                                CapabilityAvailability.AVAILABLE -> "Available in app"
++                                CapabilityAvailability.MODEL_ONLY -> "Supported by model · unavailable in app"
++                                CapabilityAvailability.EXPERIMENTAL -> "Experimental · Diagnostics"
++                                CapabilityAvailability.UNAVAILABLE -> "Unavailable"
++                            }}", style = MaterialTheme.typography.bodySmall,
++                                color = if (availability == CapabilityAvailability.AVAILABLE) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant)
+                         }
+-                        Text("Speculative is OFF by default. Runtime/engine activation is shown in Settings → Developer / Diagnostics.", style = MaterialTheme.typography.bodySmall)
++                        Text("Runtime and engine activation are shown in Settings → Developer / Diagnostics. Model declarations do not prove device support.", style = MaterialTheme.typography.bodySmall)
+                     }
+                 }
+             }
+@@ -872,32 +862,40 @@
+     var historicalDiagnostic by remember { mutableStateOf<GenerationError?>(null) }
+     var selectedMetrics by rememberSaveable { mutableStateOf<String?>(null) }
+     var showDiagnostics by rememberSaveable { mutableStateOf(false) }
++    var showModelPicker by rememberSaveable { mutableStateOf(false) }
+     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let(viewModel::attachDocument) }
+     val imagePicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let(viewModel::attachImage) }
+     LaunchedEffect(Unit) { viewModel.notices.collectLatest { snackbarHostState.showSnackbar(it) } }
+     val citation = selectedEvidence?.let { id -> evidence.firstOrNull { it.evidenceId == id } }
+     val selectedModel = models.firstOrNull { it.id == selectedModelId } ?: models.firstOrNull()
+-    val visionEnabled = selectedModel?.let { ModelCapability.VISION in it.toDescriptor().capabilities } == true
++    val visionEnabled = selectedModel?.let { capabilityAvailability(it.toDescriptor(), ModelCapability.VISION) == CapabilityAvailability.AVAILABLE } == true
+ 
+     Scaffold(
+         topBar = {
+             TopAppBar(
+                 title = {
+-                    Column {
++                    Column(Modifier.heightIn(min = 48.dp).clickable(enabled = !generating && !deletingChat) { showModelPicker = true }) {
+                         Text(if (standalone) project?.name ?: "Chat" else "${conversation?.title ?: "Chat"} · ${project?.name ?: "Project"}", maxLines = 1, overflow = TextOverflow.Ellipsis)
+-                        Text(selectedModel?.let { "${it.displayName} · ${it.runtimeId}" } ?: "No model selected", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary, maxLines = 1, overflow = TextOverflow.Ellipsis)
++                        Text(selectedModel?.let { "${humanModelName(it.displayName)} · Local · ${when {
++                            generating -> compactGenerationLabel(generationProgress.stage, generationProgress.cancellationRequested)
++                            preparation.modelId == it.id && preparation.preparing -> compactGenerationLabel(preparation.progress.stage)
++                            preparation.modelId == it.id && preparation.ready -> "Ready"
++                            else -> "Not loaded"
++                        }}" } ?: "Choose a model", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                     }
+                 },
+-                navigationIcon = { IconButton(onClick = { navController.popBackStack() }, enabled = !deletingChat) { Icon(Icons.Default.Close, contentDescription = "Back") } },
++                navigationIcon = { IconButton(onClick = { navController.popBackStack() }, enabled = !deletingChat) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back") } },
+                 actions = {
+-                    IconButton(onClick = { navController.navigate("memory/${project?.id.orEmpty()}") }, enabled = !deletingChat) {
+-                        Icon(Icons.Default.Memory, contentDescription = if (standalone) "Chat memory" else "Project memory")
+-                    }
+                     Box {
+                         IconButton(onClick = { showChatMenu = true }, enabled = !deletingChat) {
+                             Icon(Icons.Default.MoreVert, contentDescription = "Chat options")
+                         }
+                         DropdownMenu(expanded = showChatMenu, onDismissRequest = { showChatMenu = false }) {
++                            DropdownMenuItem(text = { Text("Model") }, enabled = !generating,
++                                onClick = { showChatMenu = false; showModelPicker = true })
++                            DropdownMenuItem(text = { Text("Files") }, onClick = { showChatMenu = false; showFiles = true })
++                            DropdownMenuItem(text = { Text("Memory") }, onClick = { showChatMenu = false; navController.navigate("memory/${project?.id.orEmpty()}") })
++                            DropdownMenuItem(text = { Text("Diagnostics") }, onClick = { showChatMenu = false; showDiagnostics = true })
+                             DropdownMenuItem(
+                                 text = { Text("Delete chat") },
+                                 leadingIcon = { Icon(Icons.Default.DeleteOutline, contentDescription = null) },
+@@ -910,18 +908,24 @@
+         },
+         snackbarHost = { SnackbarHost(snackbarHostState) },
+         bottomBar = {
+-            Composer(
+-                input = input,
+-                generating = generating || deletingChat,
+-                onInputChange = { input = it },
+-                onAttach = { picker.launch(arrayOf("*/*")) },
+-                onAttachImage = { if (visionEnabled) imagePicker.launch(arrayOf("image/*")) },
+-                imageEnabled = visionEnabled,
+-                imageAttached = attachedImage != null,
+-                onClearImage = viewModel::clearImage,
+-                onStop = viewModel::stop,
+-                onSend = { viewModel.send(input); input = "" },
+-            )
++            Column {
++                if (attachedImage != null || selectedFiles.isNotEmpty() || importing) {
++                    Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically) {
++                        if (attachedImage != null) {
++                            Text("Image attached", style = MaterialTheme.typography.labelSmall)
++                            IconButton(onClick = viewModel::clearImage, enabled = !generating && !deletingChat) { Icon(Icons.Default.Close, "Remove image", Modifier.size(18.dp)) }
++                        }
++                        if (selectedFiles.isNotEmpty() || importing) TextButton(onClick = { showFiles = true }) {
++                            Text(if (importing) "Reading files…" else "${selectedFiles.size} file${if (selectedFiles.size == 1) "" else "s"} selected")
++                        }
++                    }
++                }
++                ChatComposer(input = input, generating = generating || deletingChat,
++                    onInputChange = { input = it }, onAttach = { picker.launch(arrayOf("*/*")) },
++                    onAttachImage = { imagePicker.launch(arrayOf("image/*")) }, imageEnabled = visionEnabled,
++                    onFiles = if (documents.isNotEmpty()) ({ showFiles = true }) else null,
++                    onStop = viewModel::stop, onSend = { viewModel.send(input); input = "" })
++            }
+         },
+     ) { padding ->
+         Column(Modifier.fillMaxSize().padding(padding)) {
+@@ -929,71 +933,23 @@
+                 Text("Deleting chat…", modifier = Modifier.padding(16.dp), style = MaterialTheme.typography.labelMedium)
+                 LinearProgressIndicator(Modifier.fillMaxWidth())
+             }
+-            if (models.isNotEmpty()) {
+-                Text("Model picker", style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp))
+-                LazyRow(Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+-                    items(models, key = { it.id }) { model ->
+-                        AssistChip(
+-                            onClick = { viewModel.selectModel(model.id) },
+-                            enabled = !generating && !deletingChat,
+-                            label = { Text("${model.displayName} · ${model.runtimeId}", maxLines = 1, overflow = TextOverflow.Ellipsis) },
+-                            leadingIcon = { Icon(if (model.id == selectedModelId) Icons.Default.CheckCircle else Icons.Default.Memory, contentDescription = null, Modifier.size(16.dp)) },
+-                        )
+-                    }
+-                }
+-            }
+-            if (selectedModel?.toDescriptor()?.runtime == RuntimeType.LITERT_LM) {
+-                Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically) {
+-                    if (preparation.ready && preparation.modelId == selectedModel?.id && !generating && generationError == null) {
+-                        Text("Model ready", style = MaterialTheme.typography.labelSmall, modifier = Modifier.weight(1f))
+-                    } else Spacer(Modifier.weight(1f))
+-                    TextButton(onClick = { showDiagnostics = !showDiagnostics }) { Text("Diagnostics") }
+-                }
+-                if (showDiagnostics) Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+-                    TextButton(onClick = viewModel::runLiteRtSmokeTest, enabled = !generating && !deletingChat && !preparation.preparing) { Text("Run CPU smoke test") }
+-                    Text("Smoke test only: text · 1024 context · 32 output", style = MaterialTheme.typography.labelSmall)
+-                    preparation.metrics?.let { measured ->
+-                        TextButton(onClick = { selectedMetrics = GenerationMetricsPresentation.encode(measured) }) { Text("Model preparation details") }
+-                    }
+-                }
+-            }
+-            if (generating || preparation.preparing || preparation.error != null || generationProgress.stage in setOf(GenerationStage.ERROR, GenerationStage.CANCELLED)) {
+-                val visibleProgress = if (generating || generationError != null) generationProgress else preparation.progress
+-                Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 6.dp)) {
+-                    Text(if (!generating && preparation.error != null) "Model preparation failed · send to retry" else visibleProgress.label,
+-                        style = MaterialTheme.typography.labelMedium)
+-                    if (generating || preparation.preparing) visibleProgress.detail?.let {
+-                        Text(it, style = MaterialTheme.typography.bodySmall)
+-                    }
+-                    if ((generating || preparation.preparing) && visibleProgress.bytesCompleted != null && visibleProgress.bytesTotal != null) {
+-                        val total = visibleProgress.bytesTotal!!.coerceAtLeast(1)
+-                        Text("Integrity: ${visibleProgress.bytesCompleted!! * 100 / total}% · ${visibleProgress.elapsedMs / 1000}s",
+-                            style = MaterialTheme.typography.labelSmall)
+-                    }
+-                    if (generating || preparation.preparing) LinearProgressIndicator(Modifier.fillMaxWidth())
+-                    if (!generating && preparation.preparing) TextButton(onClick = viewModel::cancelPreparation) { Text("Cancel preparation") }
+-                    (generationError ?: preparation.error)?.let { error ->
+-                        TextButton(onClick = { historicalDiagnostic = error; showTechnicalError = true }) { Text("Technical details") }
+-                    }
+-                }
+-            }
+-            if (attachedImage != null) {
+-                Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 5.dp), verticalAlignment = Alignment.CenterVertically) {
+-                    AssistChip(onClick = {}, label = { Text("Image prepared for vision") }, leadingIcon = { Icon(Icons.Default.Image, contentDescription = null, Modifier.size(16.dp)) })
+-                    TextButton(onClick = viewModel::clearImage) { Text("Remove") }
+-                }
+-            }
+-            if (documents.isNotEmpty() || importing) {
+-                Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+-                    TextButton(onClick = { showFiles = true }) { Text("Files (${documents.size})") }
+-                    Text(if (importing) "Reading files…" else if (selectedFiles.isNotEmpty()) "${selectedFiles.size} selected for next message" else "Select a file to use or summarize",
+-                        style = MaterialTheme.typography.labelSmall, modifier = Modifier.weight(1f))
+-                }
+-                if (importing) LinearProgressIndicator(Modifier.fillMaxWidth())
+-                HorizontalDivider()
++            if (generating || (preparation.preparing && preparation.modelId == selectedModel?.id)) {
++                LinearProgressIndicator(Modifier.fillMaxWidth().height(2.dp))
++            }
++            if (!generating && preparation.preparing && preparation.modelId == selectedModel?.id) {
++                Row(Modifier.fillMaxWidth().padding(start = 16.dp), verticalAlignment = Alignment.CenterVertically) {
++                    Text(compactGenerationLabel(preparation.progress.stage), Modifier.weight(1f), style = MaterialTheme.typography.labelSmall)
++                    TextButton(onClick = viewModel::cancelPreparation) { Text("Cancel") }
++                }
++            }
++            if (!generating && (generationError != null || preparation.error != null)) {
++                Row(Modifier.fillMaxWidth().padding(start = 16.dp), verticalAlignment = Alignment.CenterVertically) {
++                    Text("Could not finish", Modifier.weight(1f), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.error)
++                    TextButton(onClick = { historicalDiagnostic = generationError ?: preparation.error; showTechnicalError = true }) { Text("Details") }
++                }
+             }
+             if (messages.isEmpty()) {
+-                EmptyState(if (standalone) "Ask your local model" else "Start a project conversation", "Attach local documents with the paperclip. Answers will identify retrieved passages when the model cites them.")
++                EmptyState("How can I help?", "")
+             } else {
+                 LazyColumn(
+                     modifier = Modifier.fillMaxSize(),
+@@ -1003,9 +959,12 @@
+                     items(messages, key = { it.id }) { message ->
+                         val content = if (message.status == "GENERATING" && message.id == messages.lastOrNull()?.id) streaming else message.content
+                         MessageBubble(message, content, evidence,
+-                            activeLabel = if (generating && message.id == messages.lastOrNull()?.id) generationProgress.label else null,
++                            activeLabel = if (generating && message.id == messages.lastOrNull()?.id) compactGenerationLabel(generationProgress.stage, generationProgress.cancellationRequested) else null,
+                             canContinue = !generating && !deletingChat && message.id == messages.lastOrNull()?.id && message.status == "COMPLETE",
+                             onContinue = { viewModel.continueResponse(message.id) },
++                            onRetry = if (!generating && !deletingChat && message.id == messages.lastOrNull()?.id && message.status in setOf("FAILED", "CANCELED")) {
++                                messages.takeWhile { it.id != message.id }.lastOrNull { it.role == "USER" }?.let { previous -> ({ viewModel.send(previous.content) }) }
++                            } else null,
+                             onMetrics = { selectedMetrics = it },
+                             onDiagnostic = { historicalDiagnostic = it; showTechnicalError = true },
+                             onCitation = { selectedEvidence = it })
+@@ -1014,10 +973,38 @@
+             }
+         }
+     }
++    if (showModelPicker) AlertDialog(onDismissRequest = { showModelPicker = false }, title = { Text("Model") },
++        confirmButton = { TextButton(onClick = { showModelPicker = false }) { Text("Done") } }, text = {
++            Column(Modifier.heightIn(max = 440.dp).verticalScroll(rememberScrollState())) {
++                if (models.isEmpty()) TextButton(onClick = { showModelPicker = false; navController.navigate("models") }) { Text("Add a model") }
++                models.forEach { model -> Row(verticalAlignment = Alignment.CenterVertically) {
++                    TextButton(onClick = { viewModel.selectModel(model.id); showModelPicker = false }, enabled = !generating && !deletingChat, modifier = Modifier.weight(1f)) {
++                        Text(humanModelName(model.displayName), maxLines = 2, overflow = TextOverflow.Ellipsis)
++                    }
++                    IconButton(onClick = { showModelPicker = false; navController.navigate("model/${model.id}") }) { Icon(Icons.Default.Settings, "Settings for ${humanModelName(model.displayName)}") }
++                } }
++            }
++        })
++    if (showDiagnostics) AlertDialog(onDismissRequest = { showDiagnostics = false }, title = { Text("Diagnostics") },
++        confirmButton = { TextButton(onClick = { showDiagnostics = false }) { Text("Close") } }, text = {
++            Column(Modifier.heightIn(max = 460.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
++                val progress = if (generating || generationError != null) generationProgress else preparation.progress
++                Text(progress.label); progress.detail?.let { Text(it) }
++                if (progress.bytesCompleted != null && progress.bytesTotal != null)
++                    Text("Integrity: ${progress.bytesCompleted} / ${progress.bytesTotal} bytes · ${progress.elapsedMs} ms")
++                preparation.metrics?.let { measured -> TextButton(onClick = { selectedMetrics = GenerationMetricsPresentation.encode(measured); showDiagnostics = false }) { Text("Model preparation details") } }
++                TextButton(onClick = { showDiagnostics = false; navController.navigate("performance") }) { Text("Local AI Performance") }
++                if (selectedModel?.toDescriptor()?.runtime == RuntimeType.LITERT_LM) {
++                    TextButton(onClick = { showDiagnostics = false; viewModel.runLiteRtSmokeTest() }, enabled = !generating && !deletingChat && !preparation.preparing) { Text("Run CPU smoke test") }
++                    Text("Text · 1024 context · 32 output", style = MaterialTheme.typography.labelSmall)
++                }
++            }
++        })
+     if (showFiles) AlertDialog(onDismissRequest = { showFiles = false },
+         title = { Text("Local files") }, confirmButton = { TextButton(onClick = { showFiles = false }) { Text("Done") } },
+         text = { Column {
+             Text("Selected files send up to 3 readable excerpts with your next message. Large files are not sent in full.", style = MaterialTheme.typography.bodySmall)
++            if (documents.isEmpty()) Text("No files yet")
+             LazyColumn(Modifier.heightIn(max = 440.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                 items(documents, key = { it.id }) { doc -> Column {
+                     val ready = doc.extractionStatus == "READY" && doc.indexingStatus == "READY"
+@@ -1089,47 +1076,48 @@
+ 
+ @OptIn(ExperimentalMaterial3Api::class)
+ @Composable
+-private fun MemoryScreen(viewModel: MemoryViewModel, navController: NavHostController) {
++private fun MemoryScreen(viewModel: MemoryViewModel, navController: NavHostController, embedded: Boolean = false) {
+     val items by viewModel.items.collectAsStateWithLifecycle()
+     var editorId by rememberSaveable { mutableStateOf<String?>(null) }
+     var showEditor by rememberSaveable { mutableStateOf(false) }
+-    Column(Modifier.fillMaxSize().padding(horizontal = 20.dp)) {
+-        TopAppBar(
+-            title = { Text("Project memory", fontWeight = FontWeight.SemiBold) },
+-            navigationIcon = { IconButton(onClick = { navController.popBackStack() }) { Icon(Icons.Default.Close, contentDescription = "Back") } },
+-            actions = { IconButton(onClick = { editorId = null; showEditor = true }) { Icon(Icons.Default.Add, contentDescription = "Add memory") } },
+-        )
+-        Text("Only user-approved items are stored. Documents and web content cannot write here silently.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+-        Spacer(Modifier.height(12.dp))
+-        if (items.isEmpty()) {
+-            EmptyState("No project memory", "Save stable preferences or facts you explicitly want this project to use.")
+-        } else {
+-            LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
+-                items(items, key = { it.id }) { item ->
+-                    Card(Modifier.fillMaxWidth()) {
+-                        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+-                            Text(item.content, style = MaterialTheme.typography.bodyLarge)
+-                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+-                                Text("${item.sourceType.replace('_', ' ')} · ${item.scopeType}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+-                                Row {
+-                                    TextButton(onClick = { editorId = item.id; showEditor = true }) { Text("Edit") }
+-                                    TextButton(onClick = { viewModel.archive(item.id) }) { Text("Archive") }
+-                                }
+-                            }
+-                        }
+-                    }
+-                }
+-            }
+-        }
+-    }
+-    if (showEditor) {
+-        val existing = editorId?.let { id -> items.firstOrNull { it.id == id } }
+-        MemoryEditorDialog(
+-            initial = existing?.content.orEmpty(),
+-            onDismiss = { showEditor = false },
+-            onSave = { content -> viewModel.save(editorId, content); showEditor = false },
+-        )
+-    }
++    var removeId by rememberSaveable { mutableStateOf<String?>(null) }
++    var info by remember { mutableStateOf(false) }
++    Column(Modifier.fillMaxSize().padding(horizontal = if (embedded) 0.dp else 16.dp)) {
++        if (!embedded) TopAppBar(title = { Text("Memory") },
++            navigationIcon = { IconButton(onClick = { navController.popBackStack() }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back") } },
++            actions = {
++                IconButton(onClick = { info = true }) { Icon(Icons.Default.Info, "About memory") }
++                IconButton(onClick = { editorId = null; showEditor = true }) { Icon(Icons.Default.Add, "Add memory") }
++            })
++        else Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
++            Text("Approved memory", Modifier.weight(1f), style = MaterialTheme.typography.labelMedium)
++            IconButton(onClick = { info = true }) { Icon(Icons.Default.Info, "About memory") }
++            IconButton(onClick = { editorId = null; showEditor = true }) { Icon(Icons.Default.Add, "Add memory") }
++        }
++        if (items.isEmpty()) EmptyState("No saved memory", "Add only what you want remembered.")
++        else LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 16.dp)) {
++            items(items, key = { it.id }) { item -> Card(Modifier.fillMaxWidth().testTag("memory-${item.id}")) {
++                Row(Modifier.fillMaxWidth().padding(start = 12.dp, top = 6.dp, bottom = 6.dp), verticalAlignment = Alignment.Top) {
++                    Column(Modifier.weight(1f).padding(vertical = 8.dp)) {
++                        Text(item.content, style = MaterialTheme.typography.bodyMedium)
++                        if (item.scopeType == "GLOBAL") Text("Global", style = MaterialTheme.typography.labelSmall,
++                            color = MaterialTheme.colorScheme.onSurfaceVariant)
++                    }
++                    IconButton(onClick = { editorId = item.id; showEditor = true }) { Icon(Icons.Default.Edit, "Edit memory") }
++                    IconButton(onClick = { removeId = item.id }) { Icon(Icons.Default.DeleteOutline, "Remove memory") }
++                }
++            } }
++        }
++    }
++    if (info) AlertDialog(onDismissRequest = { info = false }, title = { Text("Approved memory") },
++        text = { Text("Only items you explicitly save are used as memory. Removing an item archives it and stops using it in new requests.") },
++        confirmButton = { TextButton(onClick = { info = false }) { Text("Done") } })
++    if (removeId != null) AlertDialog(onDismissRequest = { removeId = null }, title = { Text("Remove memory?") },
++        text = { Text("This item will no longer be used in new requests.") },
++        confirmButton = { TextButton(onClick = { removeId?.let(viewModel::archive); removeId = null }) { Text("Remove") } },
++        dismissButton = { TextButton(onClick = { removeId = null }) { Text("Cancel") } })
++    if (showEditor) MemoryEditorDialog(initial = items.firstOrNull { it.id == editorId }?.content.orEmpty(),
++        onDismiss = { showEditor = false }, onSave = { viewModel.save(editorId, it); showEditor = false })
+ }
+ 
+ @Composable
+@@ -1138,100 +1126,55 @@
+     AlertDialog(
+         onDismissRequest = onDismiss,
+         title = { Text(if (initial.isBlank()) "Add memory" else "Edit memory") },
+-        text = { OutlinedTextField(value = content, onValueChange = { content = it }, label = { Text("Memory") }, minLines = 3) },
++        text = { OutlinedTextField(value = content, onValueChange = { content = it }, modifier = Modifier.fillMaxWidth(), label = { Text("Memory") }, minLines = 3, maxLines = 6) },
+         confirmButton = { Button(onClick = { onSave(content) }, enabled = content.isNotBlank()) { Text("Save") } },
+         dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+     )
+ }
+ 
+ @Composable
+-private fun Composer(
+-    input: String,
+-    generating: Boolean,
+-    onInputChange: (String) -> Unit,
+-    onAttach: () -> Unit,
+-    onAttachImage: () -> Unit,
+-    imageEnabled: Boolean,
+-    imageAttached: Boolean,
+-    onClearImage: () -> Unit,
+-    onStop: () -> Unit,
+-    onSend: () -> Unit,
+-) {
+-    Surface(shadowElevation = 4.dp) {
+-        Row(Modifier.fillMaxWidth().navigationBarsPadding().padding(10.dp), verticalAlignment = Alignment.Bottom) {
+-            IconButton(onClick = onAttach, enabled = !generating) { Icon(Icons.Default.AttachFile, contentDescription = "Attach document") }
+-            IconButton(onClick = if (imageAttached) onClearImage else onAttachImage, enabled = imageEnabled && !generating) {
+-                Icon(Icons.Default.Image, contentDescription = if (imageAttached) "Remove image" else "Attach image")
+-            }
+-            OutlinedTextField(
+-                value = input,
+-                onValueChange = onInputChange,
+-                modifier = Modifier.weight(1f),
+-                placeholder = { Text("Ask your local model") },
+-                maxLines = 5,
+-                enabled = !generating,
+-            )
+-            Spacer(Modifier.width(6.dp))
+-            IconButton(
+-                onClick = if (generating) onStop else onSend,
+-                enabled = generating || input.isNotBlank(),
+-            ) {
+-                Icon(if (generating) Icons.Default.Stop else Icons.Default.Send, contentDescription = if (generating) "Stop" else "Send")
+-            }
+-        }
+-    }
+-}
+-
+-@Composable
+-private fun MessageBubble(
+-    message: MessageEntity,
+-    content: String,
+-    evidence: List<com.localai.workspace.data.CitationEvidenceEntity>,
+-    activeLabel: String? = null,
+-    canContinue: Boolean = false,
+-    onContinue: () -> Unit,
+-    onMetrics: (String) -> Unit,
+-    onDiagnostic: (GenerationError) -> Unit,
+-    onCitation: (String) -> Unit,
+-) {
++private fun MessageBubble(message: MessageEntity, content: String,
++    evidence: List<com.localai.workspace.data.CitationEvidenceEntity>, activeLabel: String? = null,
++    canContinue: Boolean = false, onContinue: () -> Unit, onRetry: (() -> Unit)? = null,
++    onMetrics: (String) -> Unit, onDiagnostic: (GenerationError) -> Unit, onCitation: (String) -> Unit) {
+     val user = message.role == "USER"
+     val diagnostic = remember(message.generationMetrics) { GenerationDiagnosticCodec.decode(message.generationMetrics) }
+     val metrics = remember(message.generationMetrics) { GenerationMetricsPresentation.decode(message.generationMetrics) }
++    val clipboard = LocalClipboardManager.current
++    var menu by remember { mutableStateOf(false) }
++    var copied by remember(content) { mutableStateOf(false) }
+     Row(Modifier.fillMaxWidth(), horizontalArrangement = if (user) Arrangement.End else Arrangement.Start) {
+-        Card(
+-            modifier = Modifier.fillMaxWidth(if (user) 0.86f else 0.95f),
+-            colors = CardDefaults.cardColors(
+-                containerColor = if (user) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant,
+-            ),
+-        ) {
+-            Column(Modifier.padding(13.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+-                Text(if (user) "You" else "Local assistant", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+-                Text(content.ifBlank {
+-                    activeLabel ?: when (message.status) {
+-                        "GENERATING" -> "Interrupted generation · retry this prompt"
+-                        "CANCELED" -> "Generation cancelled"
+-                        "FAILED" -> "Generation failed"
+-                        else -> "No text returned"
+-                    }
+-                }, style = MaterialTheme.typography.bodyLarge)
+-                if (!user && evidence.isNotEmpty()) {
+-                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+-                        evidence.forEach { item ->
+-                            AssistChip(onClick = { onCitation(item.evidenceId) }, label = { Text(item.evidenceId) }, leadingIcon = { Icon(Icons.Default.CheckCircle, contentDescription = null, Modifier.size(15.dp)) })
++        Card(Modifier.fillMaxWidth(if (user) 0.86f else 1f), colors = CardDefaults.cardColors(
++            containerColor = if (user) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface)) {
++            Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
++                val displayed = if (diagnostic != null && content == diagnostic.displayText()) diagnostic.message else content
++                val body = displayed.ifBlank { activeLabel ?: when (message.status) {
++                    "GENERATING" -> "Response interrupted"
++                    "CANCELED" -> "Stopped"
++                    "FAILED" -> "Could not finish"
++                    else -> "No text returned"
++                } }
++                if (user || content.isBlank()) Text(body, style = MaterialTheme.typography.bodyLarge) else ChatRichText(body)
++                if (!user && evidence.isNotEmpty()) Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
++                    evidence.forEach { item -> AssistChip(onClick = { onCitation(item.evidenceId) }, label = { Text(item.evidenceId) }) }
++                }
++                if (!user && metrics?.outputLimitReached == true) Text("Answer may be incomplete", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
++                if (!user && message.status != "GENERATING") Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
++                    if (message.status == "FAILED") Text("Could not finish", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.error)
++                    Spacer(Modifier.weight(1f))
++                    if (content.isNotBlank()) IconButton(onClick = { clipboard.setText(AnnotatedString(content)); copied = true }) {
++                        Icon(if (copied) Icons.Default.CheckCircle else Icons.Default.ContentCopy, "Copy response", Modifier.size(18.dp))
++                    }
++                    Box {
++                        IconButton(onClick = { menu = true }) { Icon(Icons.Default.MoreVert, "Response options", Modifier.size(18.dp)) }
++                        DropdownMenu(menu, { menu = false }) {
++                            if (metrics?.outputLimitReached == true && canContinue) DropdownMenuItem(text = { Text("Continue") }, onClick = { menu = false; onContinue() })
++                            onRetry?.let { action -> DropdownMenuItem(text = { Text("Retry") }, onClick = { menu = false; action() }) }
++                            if (diagnostic != null) DropdownMenuItem(text = { Text("Details") }, onClick = { menu = false; onDiagnostic(diagnostic) })
++                            else if (metrics != null) DropdownMenuItem(text = { Text("Details") }, onClick = { menu = false; onMetrics(metrics.raw) })
++                            if (diagnostic == null && metrics == null && onRetry == null && !(metrics?.outputLimitReached == true && canContinue))
++                                DropdownMenuItem(text = { Text("Copy") }, onClick = { menu = false; clipboard.setText(AnnotatedString(content)) })
+                         }
+-                    }
+-                }
+-                if (message.status == "FAILED") Text("Not completed by the local runtime", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.error)
+-                if (diagnostic != null) {
+-                    TextButton(onClick = { onDiagnostic(diagnostic) }) { Text("Technical details") }
+-                } else if (!user && metrics != null) {
+-                    if (metrics.outputLimitReached) {
+-                        Text("Output limit reached · the answer may be incomplete", style = MaterialTheme.typography.bodySmall,
+-                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+-                    }
+-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+-                        if (metrics.outputLimitReached && canContinue) TextButton(onClick = onContinue) { Text("Continue") }
+-                        TextButton(onClick = { onMetrics(metrics.raw) }) { Text("Details") }
+                     }
+                 }
+             }
+@@ -1264,48 +1207,35 @@
+ @OptIn(ExperimentalMaterial3Api::class)
+ @Composable
+ private fun SettingsScreen(openPerformance: () -> Unit) {
+-    Column(Modifier.fillMaxSize().padding(horizontal = 20.dp)) {
+-        TopAppBar(title = { Text("Settings", fontWeight = FontWeight.SemiBold) })
+-        Card(Modifier.fillMaxWidth()) {
+-            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+-                Row(verticalAlignment = Alignment.CenterVertically) {
+-                    Icon(Icons.Default.CheckCircle, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+-                    Spacer(Modifier.width(10.dp))
+-                    Text("Local privacy mode", fontWeight = FontWeight.SemiBold)
+-                }
+-                Text("Inference, indexing, embeddings and memory are local. Web and external connectors are not enabled in this build.")
+-            }
+-        }
+-        Spacer(Modifier.height(14.dp))
+-        OutlinedButton(onClick = openPerformance, modifier = Modifier.fillMaxWidth()) {
+-            Text("Developer / Diagnostics · Local AI Performance")
+-        }
+-        Card(Modifier.fillMaxWidth()) {
+-            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+-                Text("Capability boundaries", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+-                Text("• GGUF models are inspected before import. Compatibility is a runtime/device judgment, not a universal promise.")
+-                Text("• Evidence IDs are resolved from the local index; model-generated filenames and pages are never authoritative.")
+-                Text("• Native device benchmarks require an Android device or emulator and are recorded separately from build tests.")
+-            }
+-        }
+-    }
++    var developer by rememberSaveable { mutableStateOf(false) }
++    var boundaries by remember { mutableStateOf(false) }
++    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 16.dp)) {
++        TopAppBar(title = { Text("Settings") })
++        LocalModeCard()
++        Card(Modifier.fillMaxWidth().clickable { developer = !developer }) {
++            Row(Modifier.fillMaxWidth().padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
++                Text("Developer / Diagnostics", Modifier.weight(1f), style = MaterialTheme.typography.titleSmall)
++                Icon(Icons.Default.ChevronRight, null)
++            }
++        }
++        if (developer) TextButton(onClick = openPerformance, modifier = Modifier.fillMaxWidth()) { Text("Local AI Performance") }
++        TextButton(onClick = { boundaries = true }) { Text("About capabilities") }
++    }
++    if (boundaries) AlertDialog(onDismissRequest = { boundaries = false }, title = { Text("Capability boundaries") },
++        text = { Text("Model support does not mean a function is available in this app. Imported models are inspected; runtime and device determine compatibility. Evidence references resolve against the local index. Native performance requires Android device testing.") },
++        confirmButton = { TextButton(onClick = { boundaries = false }) { Text("Done") } })
+ }
+ 
+ @Composable
+ private fun LocalModeCard() {
+-    Card(
+-        Modifier.fillMaxWidth(),
+-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+-    ) {
+-        Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+-                Icon(Icons.Default.CheckCircle, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+-                Spacer(Modifier.width(12.dp))
+-                Column(Modifier.weight(1f)) {
+-                    Text("Local privacy mode", fontWeight = FontWeight.SemiBold)
+-                Text("Internet is used only for an explicit Hugging Face download. Imported models and source files stay on this device.", style = MaterialTheme.typography.bodySmall)
+-                }
+-        }
+-    }
++    var details by remember { mutableStateOf(false) }
++    TextButton(onClick = { details = true }) {
++        Icon(Icons.Default.CheckCircle, null, Modifier.size(16.dp)); Spacer(Modifier.width(6.dp))
++        Text("Private · Local", style = MaterialTheme.typography.labelMedium)
++    }
++    if (details) AlertDialog(onDismissRequest = { details = false }, title = { Text("Private · Local") },
++        text = { Text("Inference and imported models, documents and saved memory stay on this device. Internet is used only for an explicit Hugging Face download. External connectors and web search are not enabled.") },
++        confirmButton = { TextButton(onClick = { details = false }) { Text("Done") } })
+ }
+ 
+ @Composable
+@@ -1314,7 +1244,7 @@
+         Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+             Icon(Icons.Default.ChatBubbleOutline, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(40.dp))
+             Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+-            Text(description, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
++            if (description.isNotBlank()) Text(description, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+         }
+     }
+ }
+@@ -1325,7 +1255,7 @@
+     AlertDialog(
+         onDismissRequest = onDismiss,
+         title = { Text("Start project") },
+-        text = { OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("Project name") }, singleLine = true) },
++        text = { OutlinedTextField(value = name, onValueChange = { name = it }, modifier = Modifier.fillMaxWidth(), label = { Text("Project name") }, singleLine = true) },
+         confirmButton = { Button(onClick = { onCreate(name) }, enabled = name.isNotBlank()) { Text("Create") } },
+         dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+     )
+--- a/app/build.gradle.kts
++++ b/app/build.gradle.kts
+@@ -15,8 +15,8 @@
+         applicationId = "com.localai.workspace"
+         minSdk = 29
+         targetSdk = 35
+-        versionCode = 14
+-        versionName = "0.1.13"
++        versionCode = 15
++        versionName = "0.1.14"
+ 
+         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+         vectorDrawables.useSupportLibrary = true
+@@ -84,9 +84,14 @@
+     testImplementation(libs.junit)
+     testImplementation(libs.kotlinx.coroutines.test)
+     testImplementation(libs.robolectric)
++    testImplementation(platform(libs.androidx.compose.bom))
++    testImplementation("androidx.compose.ui:ui-test-junit4")
++    debugImplementation("androidx.compose.ui:ui-test-manifest")
+     androidTestImplementation(libs.androidx.test.junit)
+     androidTestImplementation(libs.androidx.test.espresso)
+     androidTestImplementation(libs.androidx.room.testing)
++    androidTestImplementation(platform(libs.androidx.compose.bom))
++    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+ }
+ 
+ // Retain the existing host test launcher. The pinned Kotlin compatibility source
+--- a/app/src/androidTest/java/com/localai/workspace/ui/ProjectUiDeviceTest.kt
++++ b/app/src/androidTest/java/com/localai/workspace/ui/ProjectUiDeviceTest.kt
+@@ -0,0 +1,59 @@
++package com.localai.workspace.ui
++
++import androidx.compose.ui.test.*
++import androidx.compose.ui.test.junit4.createAndroidComposeRule
++import androidx.test.ext.junit.runners.AndroidJUnit4
++import com.localai.workspace.MainActivity
++import com.localai.workspace.LocalAiApplication
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.flow.first
++import kotlinx.coroutines.runBlocking
++import org.junit.Rule
++import org.junit.Test
++import org.junit.runner.RunWith
++
++/** PHYSICAL_DEVICE_TEST_REQUIRED: modal input/IME is not validated by the host smoke suite. */
++@RunWith(AndroidJUnit4::class)
++class ProjectUiDeviceTest {
++    @get:Rule val compose = createAndroidComposeRule<MainActivity>()
++
++    @Test fun createProjectAndExplicitlySaveEditRemoveMemory() {
++        val name = "UI validation ${System.currentTimeMillis()}"
++        compose.onNodeWithText("Start project").performClick()
++        compose.onNodeWithText("Project name").performTextInput(name)
++        compose.onNodeWithText("Create").performClick()
++        awaitText("Files")
++        compose.onNodeWithText("Files").performClick()
++        compose.onNodeWithText("No files yet").assertExists()
++        compose.onNodeWithText("Memory").performClick()
++        compose.onNodeWithContentDescription("Add memory").performClick()
++        compose.onNode(hasSetTextAction()).performTextInput("Approved UI validation memory")
++        compose.onNodeWithText("Save").performClick()
++        awaitText("Approved UI validation memory")
++        val graph = (compose.activity.application as LocalAiApplication).graph
++        val memoryId = runBlocking(Dispatchers.IO) {
++            val project = graph.workspace.activeProjects.first().single { it.name == name }
++            graph.database.memoryDao().relevant(project.id, 100).single {
++                it.scopeId == project.id && it.content == "Approved UI validation memory"
++            }.id
++        }
++        compose.onNode(hasContentDescription("Edit memory") and hasAnyAncestor(hasTestTag("memory-$memoryId"))).performClick()
++        compose.onNode(hasSetTextAction()).performTextReplacement("Edited UI validation memory")
++        compose.onNodeWithText("Save").performClick()
++        awaitText("Edited UI validation memory")
++        compose.onNode(hasContentDescription("Remove memory") and hasAnyAncestor(hasTestTag("memory-$memoryId"))).performClick()
++        compose.onNodeWithText("Remove").performClick()
++        compose.waitUntil(15_000) { compose.onAllNodesWithText("Edited UI validation memory").fetchSemanticsNodes().isEmpty() }
++        compose.onNodeWithText("Settings").performClick()
++        compose.onNodeWithText("Current configuration").assertExists()
++        compose.onNodeWithContentDescription("Project options").performClick()
++        compose.onNodeWithText("Delete project").performClick()
++        compose.onNodeWithText("Delete").performClick()
++        compose.waitUntil(15_000) { compose.onAllNodesWithText("Start project").fetchSemanticsNodes().isNotEmpty() }
++        compose.onNodeWithText(name).assertDoesNotExist()
++    }
++
++    private fun awaitText(text: String) = compose.waitUntil(15_000) {
++        compose.onAllNodesWithText(text).fetchSemanticsNodes().isNotEmpty()
++    }
++}
+--- a/app/src/main/java/com/localai/workspace/ui/UiPresentation.kt
++++ b/app/src/main/java/com/localai/workspace/ui/UiPresentation.kt
+@@ -0,0 +1,49 @@
++package com.localai.workspace.ui
++
++import com.localai.workspace.domain.inference.GenerationStage
++import com.localai.workspace.domain.model.ModelCapability
++import com.localai.workspace.domain.model.ModelDescriptor
++import com.localai.workspace.domain.model.ModelImportStatus
++import com.localai.workspace.domain.model.RuntimeType
++
++/** Presentation only: never changes persisted names, capabilities or configuration. */
++fun humanModelName(name: String): String = when {
++    Regex("(?i)^gemma[-_ ]4[-_ ]E2B(?:[-_. ].*)?$").matches(name) -> "Gemma 4 E2B"
++    Regex("(?i)^qwen3\\.5[-_ ]2B(?:[-_. ].*)?$").matches(name) -> "Qwen 3.5 2B"
++    else -> name
++}
++
++fun runtimeDisplayName(runtime: RuntimeType): String = when (runtime) {
++    RuntimeType.LITERT_LM -> "LiteRT-LM"
++    RuntimeType.LLAMA_CPP -> "llama.cpp"
++    else -> "Runtime unavailable"
++}
++
++fun compactGenerationLabel(stage: GenerationStage, cancelling: Boolean = false): String =
++    if (cancelling) "Stopping…" else when (stage) {
++        GenerationStage.LOADING_MODEL -> "Loading…"
++        GenerationStage.WARMING_MODEL -> "Warming…"
++        GenerationStage.GENERATING -> "Generating…"
++        GenerationStage.ERROR -> "Could not finish"
++        GenerationStage.CANCELLED -> "Stopped"
++        GenerationStage.UNLOADING -> "Unloading…"
++        GenerationStage.IDLE, GenerationStage.COMPLETED -> "Ready"
++        else -> "Processing…"
++    }
++
++enum class CapabilityAvailability { AVAILABLE, MODEL_ONLY, EXPERIMENTAL, UNAVAILABLE }
++
++fun capabilityAvailability(model: ModelDescriptor, capability: ModelCapability): CapabilityAvailability {
++    if (capability !in model.capabilities) return CapabilityAvailability.UNAVAILABLE
++    if (model.importStatus !in setOf(ModelImportStatus.READY, ModelImportStatus.COMPATIBLE_WARNING))
++        return CapabilityAvailability.MODEL_ONLY
++    return when (capability) {
++        ModelCapability.TEXT -> if (model.runtime in setOf(RuntimeType.LITERT_LM, RuntimeType.LLAMA_CPP))
++            CapabilityAvailability.AVAILABLE else CapabilityAvailability.MODEL_ONLY
++        ModelCapability.VISION -> if (model.runtime == RuntimeType.LITERT_LM)
++            CapabilityAvailability.AVAILABLE else CapabilityAvailability.MODEL_ONLY
++        ModelCapability.SPECULATIVE_DECODING -> if (model.runtime == RuntimeType.LITERT_LM)
++            CapabilityAvailability.EXPERIMENTAL else CapabilityAvailability.MODEL_ONLY
++        else -> CapabilityAvailability.MODEL_ONLY
++    }
++}
+--- a/app/src/main/java/com/localai/workspace/ui/ChatContent.kt
++++ b/app/src/main/java/com/localai/workspace/ui/ChatContent.kt
+@@ -0,0 +1,103 @@
++package com.localai.workspace.ui
++
++import androidx.compose.foundation.horizontalScroll
++import androidx.compose.foundation.layout.*
++import androidx.compose.foundation.rememberScrollState
++import androidx.compose.foundation.text.selection.SelectionContainer
++import androidx.compose.material.icons.Icons
++import androidx.compose.material.icons.automirrored.filled.Send
++import androidx.compose.material.icons.filled.*
++import androidx.compose.material3.*
++import androidx.compose.runtime.*
++import androidx.compose.ui.Alignment
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.platform.LocalClipboardManager
++import androidx.compose.ui.text.AnnotatedString
++import androidx.compose.ui.text.SpanStyle
++import androidx.compose.ui.text.buildAnnotatedString
++import androidx.compose.ui.text.font.FontFamily
++import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.text.withStyle
++import androidx.compose.ui.unit.dp
++
++@Composable
++fun ChatComposer(input: String, generating: Boolean, onInputChange: (String) -> Unit,
++    onAttach: () -> Unit, onAttachImage: () -> Unit, imageEnabled: Boolean,
++    onFiles: (() -> Unit)? = null, onStop: () -> Unit, onSend: () -> Unit,
++    contextualControls: (@Composable () -> Unit)? = null) {
++    var menu by remember { mutableStateOf(false) }
++    Surface(tonalElevation = 2.dp) {
++        Column(Modifier.fillMaxWidth().imePadding().navigationBarsPadding()) {
++            contextualControls?.invoke() // Empty today; future functional chips can occupy this slot.
++            Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 6.dp), verticalAlignment = Alignment.Bottom) {
++                Box {
++                    IconButton(onClick = { menu = true }, enabled = !generating) { Icon(Icons.Default.Add, "Add attachment") }
++                    DropdownMenu(expanded = menu && !generating, onDismissRequest = { menu = false }) {
++                        if (imageEnabled) DropdownMenuItem(text = { Text("Image") }, leadingIcon = { Icon(Icons.Default.Image, null) },
++                            onClick = { menu = false; onAttachImage() })
++                        DropdownMenuItem(text = { Text("File") }, leadingIcon = { Icon(Icons.Default.AttachFile, null) },
++                            onClick = { menu = false; onAttach() })
++                        onFiles?.let { action -> DropdownMenuItem(text = { Text("Workspace files") },
++                            leadingIcon = { Icon(Icons.Default.FolderOpen, null) }, onClick = { menu = false; action() }) }
++                    }
++                }
++                OutlinedTextField(input, onInputChange, Modifier.weight(1f), placeholder = { Text("Ask anything…") },
++                    maxLines = 5, enabled = !generating, shape = androidx.compose.foundation.shape.RoundedCornerShape(22.dp))
++                IconButton(onClick = if (generating) onStop else onSend, enabled = generating || input.isNotBlank()) {
++                    Icon(if (generating) Icons.Default.Stop else Icons.AutoMirrored.Filled.Send, if (generating) "Stop" else "Send")
++                }
++            }
++        }
++    }
++}
++
++@Composable
++fun ChatRichText(content: String) {
++    val blocks = remember(content) { BasicMarkdown.blocks(content) }
++    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
++        blocks.forEach { block ->
++            when (block) {
++                is MarkdownBlock.Code -> CodeBlock(block)
++                is MarkdownBlock.Paragraph -> InlineText(block.text)
++                is MarkdownBlock.Heading -> InlineText(block.text, true)
++                is MarkdownBlock.ListItem -> Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
++                    Text(block.marker, style = MaterialTheme.typography.bodyLarge)
++                    Box(Modifier.weight(1f)) { InlineText(block.text) }
++                }
++            }
++        }
++    }
++}
++
++@Composable
++private fun InlineText(text: String, heading: Boolean = false) {
++    val runs = remember(text) { BasicMarkdown.inline(text) }
++    val codeColor = MaterialTheme.colorScheme.surfaceVariant
++    val annotated = remember(runs, codeColor) { buildAnnotatedString {
++        runs.forEach { run -> withStyle(SpanStyle(fontWeight = if (run.bold) FontWeight.SemiBold else null,
++            fontFamily = if (run.code) FontFamily.Monospace else null,
++            background = if (run.code) codeColor else androidx.compose.ui.graphics.Color.Unspecified)) { append(run.text) } }
++    } }
++    SelectionContainer { Text(annotated, style = if (heading) MaterialTheme.typography.titleSmall else MaterialTheme.typography.bodyLarge) }
++}
++
++@Composable
++private fun CodeBlock(block: MarkdownBlock.Code) {
++    val clipboard = LocalClipboardManager.current
++    var copied by remember(block.text) { mutableStateOf(false) }
++    Surface(Modifier.fillMaxWidth(), shape = androidx.compose.foundation.shape.RoundedCornerShape(10.dp),
++        color = MaterialTheme.colorScheme.surfaceContainerLowest) {
++        Column {
++            Row(Modifier.fillMaxWidth().padding(start = 12.dp, end = 4.dp), verticalAlignment = Alignment.CenterVertically) {
++                Text(block.language ?: "Code", Modifier.weight(1f), style = MaterialTheme.typography.labelSmall)
++                IconButton(onClick = { clipboard.setText(AnnotatedString(block.text)); copied = true }) {
++                    Icon(if (copied) Icons.Default.Check else Icons.Default.ContentCopy, "Copy code")
++                }
++            }
++            SelectionContainer {
++                Text(block.text, Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(12.dp),
++                    style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily.Monospace))
++            }
++        }
++    }
++}
+--- a/app/src/main/java/com/localai/workspace/ui/BasicMarkdown.kt
++++ b/app/src/main/java/com/localai/workspace/ui/BasicMarkdown.kt
+@@ -0,0 +1,68 @@
++package com.localai.workspace.ui
++
++/** Deliberately small renderer grammar: no HTML, remote resources or executable links. */
++sealed interface MarkdownBlock {
++    data class Paragraph(val text: String) : MarkdownBlock
++    data class ListItem(val marker: String, val text: String) : MarkdownBlock
++    data class Heading(val text: String) : MarkdownBlock
++    data class Code(val language: String?, val text: String) : MarkdownBlock
++}
++
++data class InlineRun(val text: String, val bold: Boolean = false, val code: Boolean = false)
++
++object BasicMarkdown {
++    fun blocks(content: String): List<MarkdownBlock> {
++        val result = mutableListOf<MarkdownBlock>()
++        val paragraph = mutableListOf<String>()
++        fun flush() { if (paragraph.isNotEmpty()) { result += MarkdownBlock.Paragraph(paragraph.joinToString("\n")); paragraph.clear() } }
++        val lines = content.replace("\r\n", "\n").split('\n')
++        var index = 0
++        while (index < lines.size) {
++            val line = lines[index]
++            val fence = Regex("^ {0,3}(`{3,}|~{3,})(.*)$").matchEntire(line)
++            if (fence != null) {
++                flush()
++                val marker = fence.groupValues[1]
++                val language = fence.groupValues[2].trim().takeIf { it.matches(Regex("[A-Za-z0-9_+#.-]{1,32}")) }
++                val code = mutableListOf<String>()
++                index++
++                while (index < lines.size && !lines[index].trim().let { s -> s.length >= marker.length && s.all { it == marker[0] } }) {
++                    code += lines[index++]
++                }
++                result += MarkdownBlock.Code(language, code.joinToString("\n"))
++            } else {
++                val list = Regex("^\\s*([-*+]|\\d+[.)])\\s+(.+)$").matchEntire(line)
++                val heading = Regex("^#{1,6}\\s+(.+)$").matchEntire(line)
++                when {
++                    line.isBlank() -> flush()
++                    list != null -> { flush(); result += MarkdownBlock.ListItem(if (list.groupValues[1].length == 1) "•" else list.groupValues[1], list.groupValues[2]) }
++                    heading != null -> { flush(); result += MarkdownBlock.Heading(heading.groupValues[1]) }
++                    else -> paragraph += line
++                }
++            }
++            index++
++        }
++        flush()
++        return result
++    }
++
++    fun inline(text: String): List<InlineRun> {
++        val result = mutableListOf<InlineRun>()
++        val plain = StringBuilder()
++        fun flush() { if (plain.isNotEmpty()) { result += InlineRun(plain.toString()); plain.clear() } }
++        var index = 0
++        while (index < text.length) {
++            if (text[index] == '\\' && index + 1 < text.length && text[index + 1] in "*`\\") {
++                plain.append(text[index + 1]); index += 2; continue
++            }
++            val delimiter = when { text[index] == '`' -> "`"; text.startsWith("**", index) -> "**"; else -> null }
++            val end = delimiter?.let { text.indexOf(it, index + it.length) } ?: -1
++            if (delimiter != null && end > index + delimiter.length) {
++                flush(); result += InlineRun(text.substring(index + delimiter.length, end), bold = delimiter == "**", code = delimiter == "`")
++                index = end + delimiter.length
++            } else plain.append(text[index++])
++        }
++        flush()
++        return result
++    }
++}
+--- a/app/src/test/java/com/localai/workspace/ui/UiSmokeTest.kt
++++ b/app/src/test/java/com/localai/workspace/ui/UiSmokeTest.kt
+@@ -0,0 +1,118 @@
++package com.localai.workspace.ui
++
++import android.graphics.Bitmap
++import androidx.compose.material3.MaterialTheme
++import androidx.compose.ui.graphics.asAndroidBitmap
++import androidx.compose.ui.test.*
++import androidx.compose.ui.semantics.SemanticsActions
++import androidx.compose.ui.text.AnnotatedString
++import androidx.compose.ui.test.junit4.createAndroidComposeRule
++import com.localai.workspace.MainActivity
++import org.junit.Assert.assertTrue
++import org.junit.Rule
++import org.junit.Test
++import org.junit.runner.RunWith
++import org.robolectric.RobolectricTestRunner
++import org.robolectric.annotation.Config
++import org.robolectric.annotation.GraphicsMode
++import java.io.File
++
++/** Host-rendered UI checks, not a physical Android/inference benchmark. */
++@RunWith(RobolectricTestRunner::class)
++@Config(sdk = [29], qualifiers = "w360dp-h800dp-night")
++@GraphicsMode(GraphicsMode.Mode.NATIVE)
++class UiSmokeTest {
++    @get:Rule val compose = createAndroidComposeRule<MainActivity>()
++
++    @Test fun homePrivacyAndModelImportNavigation() {
++        compose.onNodeWithText("Start chat").assertIsDisplayed()
++        compose.onNodeWithText("No chats yet").assertExists()
++        screenshot("workspace")
++        compose.onNodeWithText("Private · Local").performClick()
++        compose.onNodeWithText("Inference and imported models", substring = true).assertExists()
++        compose.onNodeWithText("Done").performClick()
++        compose.onNodeWithText("Models").performClick()
++        screenshot("models")
++        compose.onNodeWithText("Add model").performClick()
++        listOf("FROM DEVICE", "GGUF", "LiteRT-LM", "Multimodal", "ONLINE", "Hugging Face").forEach { compose.onNode(hasText(it) and hasAnyAncestor(isDialog())).assertExists() }
++        compose.onNodeWithText("Cancel").performClick()
++        compose.onNodeWithText("No models in this view").assertExists()
++    }
++
++    @Test fun settingsKeepsDiagnosticsBehindDeveloperEntry() {
++        compose.onNodeWithText("Settings").performClick()
++        compose.onNodeWithText("Local AI Performance").assertDoesNotExist()
++        compose.onNodeWithText("Developer / Diagnostics").performClick()
++        compose.onNodeWithText("Local AI Performance").performClick()
++        compose.onNodeWithText("RUNTIME: LiteRT-LM 0.17.1").assertExists()
++        compose.onNodeWithText("CPU").assertExists()
++        compose.onNodeWithText("GPU Experimental").assertExists()
++    }
++
++    @Test fun chatComposerAndMenusHaveNoPermanentModelPickerOrFakeTools() {
++        compose.onNodeWithText("Start chat").performClick()
++        awaitText("Ask anything…")
++        compose.onNodeWithText("Model picker").assertDoesNotExist()
++        compose.onNodeWithText("Diagnostics").assertDoesNotExist()
++        compose.onNodeWithContentDescription("Send").assertIsNotEnabled()
++        compose.onNodeWithText("Ask anything…").performTextInput("Hola")
++        compose.onNodeWithContentDescription("Send").assertIsEnabled()
++        screenshot("chat")
++        compose.onNodeWithContentDescription("Chat options").performClick()
++        listOf("Model", "Files", "Memory", "Diagnostics", "Delete chat").forEach { compose.onNodeWithText(it).assertExists() }
++    }
++
++    @Test fun attachmentMenuOnlyOffersFunctionalSources() {
++        compose.onNodeWithText("Start chat").performClick()
++        awaitText("Ask anything…")
++        compose.onNodeWithContentDescription("Add attachment").performClick()
++        compose.onNodeWithText("File").assertIsDisplayed()
++        compose.onNodeWithText("Image").assertDoesNotExist()
++        compose.onNodeWithText("Tools").assertDoesNotExist()
++        compose.onNodeWithText("Think").assertDoesNotExist()
++    }
++
++    @Test fun projectTabsAndApprovedMemoryRemainFunctional() {
++        val graph = (compose.activity.application as com.localai.workspace.LocalAiApplication).graph
++        val projectId = kotlinx.coroutines.runBlocking(kotlinx.coroutines.Dispatchers.IO) { graph.workspace.createProject("Test project") }
++        awaitText("Test project")
++        compose.onNodeWithText("Test project").performClick()
++        awaitText("Files")
++        listOf("Chats", "Files", "Memory", "Settings").forEach { compose.onNodeWithText(it).assertExists() }
++        compose.onNodeWithText("Files").performClick()
++        compose.onNodeWithText("No files yet").assertExists()
++        compose.onNodeWithText("Memory").performClick()
++        compose.onNodeWithText("No saved memory").assertExists()
++        // Fixture is explicitly USER_APPROVED; the real text editor is exercised by the device test.
++        kotlinx.coroutines.runBlocking(kotlinx.coroutines.Dispatchers.IO) {
++            graph.database.memoryDao().upsert(com.localai.workspace.data.MemoryItemEntity(
++                id = "approved", scopeType = "PROJECT", scopeId = projectId, content = "Prefiero respuestas breves",
++                sourceType = "USER_APPROVED", relevance = 1f, createdAt = 0, updatedAt = 0))
++        }
++        awaitText("Prefiero respuestas breves")
++        compose.onNodeWithContentDescription("Edit memory").assertExists()
++        compose.onNodeWithContentDescription("Remove memory").performClick()
++        compose.onNodeWithText("Remove memory?").assertExists()
++        compose.onNodeWithText("Remove").performClick()
++        awaitText("No saved memory")
++        compose.onNodeWithText("Settings").performClick()
++        compose.onNodeWithText("Current configuration").assertExists()
++        screenshot("project-settings")
++    }
++
++    private fun awaitText(text: String) = compose.waitUntil(15_000) {
++        compose.onAllNodesWithText(text).fetchSemanticsNodes().isNotEmpty()
++    }
++
++    private fun screenshot(name: String) {
++        compose.waitForIdle()
++        var bitmap: Bitmap? = null
++        compose.runOnUiThread {
++            val view = compose.activity.window.decorView
++            bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
++            view.draw(android.graphics.Canvas(bitmap!!))
++        }
++        val dir = File("build/ui-stage15-screenshots"); dir.mkdirs()
++        File(dir, "$name.png").outputStream().use { assertTrue(bitmap!!.compress(Bitmap.CompressFormat.PNG, 100, it)) }
++    }
++}
+--- a/app/src/test/java/com/localai/workspace/ui/UiPresentationTest.kt
++++ b/app/src/test/java/com/localai/workspace/ui/UiPresentationTest.kt
+@@ -0,0 +1,35 @@
++package com.localai.workspace.ui
++
++import com.localai.workspace.domain.inference.GenerationStage
++import com.localai.workspace.domain.model.*
++import org.junit.Assert.*
++import org.junit.Test
++
++class UiPresentationTest {
++    @Test fun reliableNamesArePresentationOnlyAndCustomNamesStayIntact() {
++        assertEquals("Gemma 4 E2B", humanModelName("gemma-4-E2B-it.litertlm"))
++        assertEquals("Qwen 3.5 2B", humanModelName("Qwen3.5-2B_int8.litertlm"))
++        assertEquals("My Gemma experiment", humanModelName("My Gemma experiment"))
++        assertEquals("unknown-model.gguf", humanModelName("unknown-model.gguf"))
++    }
++    @Test fun technicalProgressIsCompactWithoutChangingTheSourceStage() {
++        assertEquals("Processing…", compactGenerationLabel(GenerationStage.PREFILLING))
++        assertEquals("Warming…", compactGenerationLabel(GenerationStage.WARMING_MODEL))
++        assertEquals("Stopping…", compactGenerationLabel(GenerationStage.GENERATING, true))
++    }
++    @Test fun modelAudioDoesNotBecomeAnAppFeature() {
++        val model = descriptor(RuntimeType.LITERT_LM)
++        assertEquals(CapabilityAvailability.AVAILABLE, capabilityAvailability(model, ModelCapability.TEXT))
++        assertEquals(CapabilityAvailability.AVAILABLE, capabilityAvailability(model, ModelCapability.VISION))
++        assertEquals(CapabilityAvailability.MODEL_ONLY, capabilityAvailability(model, ModelCapability.AUDIO))
++        assertEquals(CapabilityAvailability.EXPERIMENTAL, capabilityAvailability(model, ModelCapability.SPECULATIVE_DECODING))
++    }
++    @Test fun unsupportedRuntimeAndBrokenImportAreNeverAvailable() {
++        val gguf = descriptor(RuntimeType.LLAMA_CPP)
++        assertEquals(CapabilityAvailability.MODEL_ONLY, capabilityAvailability(gguf, ModelCapability.VISION))
++        assertEquals(CapabilityAvailability.UNAVAILABLE, capabilityAvailability(gguf, ModelCapability.THINKING))
++        assertEquals(CapabilityAvailability.MODEL_ONLY, capabilityAvailability(gguf.copy(importStatus = ModelImportStatus.FAILED), ModelCapability.TEXT))
++    }
++    private fun descriptor(runtime: RuntimeType) = ModelDescriptor("model", "Model", localPath = "/model", runtime = runtime,
++        capabilities = setOf(ModelCapability.TEXT, ModelCapability.VISION, ModelCapability.AUDIO, ModelCapability.SPECULATIVE_DECODING))
++}
+--- a/app/src/test/java/com/localai/workspace/ui/BasicMarkdownTest.kt
++++ b/app/src/test/java/com/localai/workspace/ui/BasicMarkdownTest.kt
+@@ -0,0 +1,34 @@
++package com.localai.workspace.ui
++
++import org.junit.Assert.*
++import org.junit.Test
++
++class BasicMarkdownTest {
++    @Test fun paragraphsListsAndHeadings() {
++        val blocks = BasicMarkdown.blocks("# Title\n\nFirst paragraph.\nSecond line.\n\n- One\n2. Two")
++        assertEquals(listOf(MarkdownBlock.Heading("Title"), MarkdownBlock.Paragraph("First paragraph.\nSecond line."),
++            MarkdownBlock.ListItem("•", "One"), MarkdownBlock.ListItem("2.", "Two")), blocks)
++    }
++    @Test fun fencedCodePreservesIndentationAndDoesNotParseMarkdownInside() {
++        assertEquals(listOf(MarkdownBlock.Code("python", "  print('**literal**')\n")),
++            BasicMarkdown.blocks("```python\n  print('**literal**')\n\n```"))
++    }
++    @Test fun streamingUnclosedFenceRemainsReadable() {
++        assertEquals(listOf(MarkdownBlock.Code("kotlin", "val answer = 42")), BasicMarkdown.blocks("```kotlin\nval answer = 42"))
++    }
++    @Test fun boldAndInlineCodeAreSeparate() {
++        assertEquals(listOf(InlineRun("Use "), InlineRun("bold", bold = true), InlineRun(" and "), InlineRun("x*y", code = true), InlineRun(".")),
++            BasicMarkdown.inline("Use **bold** and `x*y`."))
++    }
++    @Test fun malformedAndEscapedMarkupKeepsVisibleText() {
++        assertEquals(listOf(InlineRun("**unfinished `code")), BasicMarkdown.inline("**unfinished `code"))
++        assertEquals(listOf(InlineRun("**literal**")), BasicMarkdown.inline("\\*\\*literal\\*\\*"))
++    }
++    @Test fun htmlAndRemoteImageStayLiteral() {
++        val source = "<script>alert(1)</script> ![private](https://example.org/a.png)"
++        assertEquals(listOf(MarkdownBlock.Paragraph(source)), BasicMarkdown.blocks(source))
++    }
++    @Test fun unknownFenceLanguageAndTildeFenceAreSafe() {
++        assertEquals(listOf(MarkdownBlock.Code(null, "code")), BasicMarkdown.blocks("~~~not a language\ncode\n~~~"))
++    }
++}
+--- a/app/src/test/java/com/localai/workspace/ui/ChatContentUiTest.kt
++++ b/app/src/test/java/com/localai/workspace/ui/ChatContentUiTest.kt
+@@ -0,0 +1,66 @@
++package com.localai.workspace.ui
++
++import android.app.Application
++import android.content.ClipboardManager
++import android.content.Context
++import androidx.compose.foundation.layout.*
++import androidx.compose.runtime.*
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.platform.LocalDensity
++import androidx.compose.ui.unit.Density
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.test.*
++import androidx.compose.ui.test.junit4.createComposeRule
++import com.localai.workspace.ModelCard
++import com.localai.workspace.data.ModelEntity
++import org.junit.Assert.*
++import org.junit.Rule
++import org.junit.Test
++import org.junit.runner.RunWith
++import org.robolectric.RobolectricTestRunner
++import org.robolectric.RuntimeEnvironment
++import org.robolectric.annotation.Config
++import org.robolectric.annotation.GraphicsMode
++
++@RunWith(RobolectricTestRunner::class)
++@Config(sdk = [29], application = Application::class, qualifiers = "w320dp-h640dp-night")
++@GraphicsMode(GraphicsMode.Mode.NATIVE)
++class ChatContentUiTest {
++    @get:Rule val compose = createComposeRule()
++
++    @Test fun codeHasLanguageAndCopiesExactContent() {
++        compose.setContent { LocalAiTheme { ChatRichText("A **bold** answer with `inline`.\n\n```python\nprint(42)\n```") } }
++        compose.onNodeWithText("python").assertIsDisplayed()
++        compose.onNodeWithText("print(42)").assertExists()
++        compose.onNodeWithContentDescription("Copy code").performClick()
++        compose.runOnIdle {
++            val clipboard = RuntimeEnvironment.getApplication().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
++            assertEquals("print(42)", clipboard.primaryClip?.getItemAt(0)?.text.toString())
++        }
++    }
++
++    @Test fun longInputLargeFontAndGenerationKeepComposerActionsVisible() {
++        var stopped = false
++        compose.setContent { LocalAiTheme {
++            val density = LocalDensity.current
++            CompositionLocalProvider(LocalDensity provides Density(density.density, 1.3f)) {
++                var input by remember { mutableStateOf("Long input\n".repeat(20)) }
++                ChatComposer(input, true, { input = it }, {}, {}, false, onStop = { stopped = true }, onSend = {})
++            }
++        } }
++        compose.onNodeWithContentDescription("Stop").assertIsDisplayed().performClick()
++        assertTrue(stopped)
++        compose.onNodeWithContentDescription("Add attachment").assertIsNotEnabled()
++        compose.onNodeWithText("Tools").assertDoesNotExist()
++    }
++
++    @Test fun libraryDoesNotAdvertiseAudioAsUsable() {
++        val model = ModelEntity(id = "gemma", displayName = "gemma-4-E2B-it.litertlm", localPath = "/test/model",
++            fileHash = "hash", fileSize = 2_590_000_000, format = "LITERT_LM", runtimeId = "litert-lm-android",
++            compatibilityStatus = "COMPATIBLE", capabilities = "text-generation,vision,audio", importedAt = 0)
++        compose.setContent { LocalAiTheme { ModelCard(model) {} } }
++        compose.onNodeWithText("Gemma 4 E2B").assertIsDisplayed()
++        compose.onNodeWithText("Audio", substring = true).assertDoesNotExist()
++        compose.onNodeWithText("Available: Text · Images").assertExists()
++    }
++}

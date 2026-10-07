@@ -1,0 +1,98 @@
+{
+  "platform": "Linux x86_64; PHYSICAL_DEVICE_TEST_REQUIRED",
+  "sdk": "0.17.1",
+  "tests": [
+    {
+      "maxOutput": 256,
+      "thinkingBudget": -1,
+      "rawCallbackCount": 216,
+      "thoughtCallbackCount": 210,
+      "finalCallbackCount": 6,
+      "mixedCallbackCount": 0,
+      "thoughtCharacters": 712,
+      "finalCharacters": 9,
+      "oldFilterVisibleCharacters": 9,
+      "keys": [
+        "channels",
+        "content",
+        "reasoning_content",
+        "role"
+      ],
+      "firstThoughtMs": 7205,
+      "firstFinalMs": 34375,
+      "benchmarkErrorClass": "RuntimeError",
+      "totalMs": 34975,
+      "finalContains7": true,
+      "finishState": "DONE"
+    },
+    {
+      "maxOutput": 512,
+      "thinkingBudget": -1,
+      "rawCallbackCount": 216,
+      "thoughtCallbackCount": 210,
+      "finalCallbackCount": 6,
+      "mixedCallbackCount": 0,
+      "thoughtCharacters": 712,
+      "finalCharacters": 9,
+      "oldFilterVisibleCharacters": 9,
+      "keys": [
+        "channels",
+        "content",
+        "reasoning_content",
+        "role"
+      ],
+      "firstThoughtMs": 1501,
+      "firstFinalMs": 32048,
+      "benchmarkErrorClass": "RuntimeError",
+      "totalMs": 32724,
+      "finalContains7": true,
+      "finishState": "DONE"
+    },
+    {
+      "maxOutput": 1024,
+      "thinkingBudget": -1,
+      "rawCallbackCount": 216,
+      "thoughtCallbackCount": 210,
+      "finalCallbackCount": 6,
+      "mixedCallbackCount": 0,
+      "thoughtCharacters": 712,
+      "finalCharacters": 9,
+      "oldFilterVisibleCharacters": 9,
+      "keys": [
+        "channels",
+        "content",
+        "reasoning_content",
+        "role"
+      ],
+      "firstThoughtMs": 1790,
+      "firstFinalMs": 29529,
+      "benchmarkErrorClass": "RuntimeError",
+      "totalMs": 30180,
+      "finalContains7": true,
+      "finishState": "DONE"
+    },
+    {
+      "maxOutput": 256,
+      "thinkingBudget": 128,
+      "rawCallbackCount": 165,
+      "thoughtCallbackCount": 128,
+      "finalCallbackCount": 37,
+      "mixedCallbackCount": 0,
+      "thoughtCharacters": 454,
+      "finalCharacters": 87,
+      "oldFilterVisibleCharacters": 87,
+      "keys": [
+        "channels",
+        "content",
+        "reasoning_content",
+        "role"
+      ],
+      "firstThoughtMs": 1503,
+      "firstFinalMs": 18394,
+      "benchmarkErrorClass": "RuntimeError",
+      "totalMs": 22895,
+      "finalContains7": true,
+      "finishState": "DONE"
+    }
+  ]
+}

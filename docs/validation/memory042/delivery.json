@@ -1,0 +1,23 @@
+{
+  "versionName": "0.4.2",
+  "versionCode": 26,
+  "physicalDeviceValidated": false,
+  "hostTests": 513,
+  "allSixGates": "PASS",
+  "sharingChanged": false,
+  "remoteMetadataBytesVerified": true,
+  "artifacts": [
+    {
+      "id": "1AcIaC0g2hj2iLwC3i4IeBIqhr-XbLIug",
+      "bytes": 99638941
+    },
+    {
+      "id": "1OQ01CHEKmOpOMxJ6DDZtJ6kBJS38iGv5",
+      "bytes": 8405
+    },
+    {
+      "id": "1i6_IPjwlnqJNX_k2C7lCQ-T8pbNU5cOC",
+      "bytes": 104544
+    }
+  ]
+}

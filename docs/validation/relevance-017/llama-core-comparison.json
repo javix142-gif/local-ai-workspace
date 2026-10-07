@@ -1,0 +1,22 @@
+{
+  "include/llama.h": {
+    "referenceSha256": "d5cf9203bea63b575e76cba4881f29cfd1b611451578b01582b75b72ecbb04bc",
+    "vendoredSha256": "d5cf9203bea63b575e76cba4881f29cfd1b611451578b01582b75b72ecbb04bc",
+    "match": true
+  },
+  "src/llama.cpp": {
+    "referenceSha256": "8058a140d444b67bf64a1ce393d241dfd60080f4b117130c6f82e637e2109233",
+    "vendoredSha256": "8058a140d444b67bf64a1ce393d241dfd60080f4b117130c6f82e637e2109233",
+    "match": true
+  },
+  "src/llama-model.cpp": {
+    "referenceSha256": "c29d7f29c3e760f90855755748edc56fcdf62f0628b0c572f06ffb4c377db5f5",
+    "vendoredSha256": "c29d7f29c3e760f90855755748edc56fcdf62f0628b0c572f06ffb4c377db5f5",
+    "match": true
+  },
+  "ggml/src/ggml.c": {
+    "referenceSha256": "7e8bf2b60598b50d718f46aa3c36c9293b10f4e7dfde6844f0693e6fc976d505",
+    "vendoredSha256": "7e8bf2b60598b50d718f46aa3c36c9293b10f4e7dfde6844f0693e6fc976d505",
+    "match": true
+  }
+}

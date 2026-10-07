@@ -1,0 +1,372 @@
+{
+  "scope": "Linux native reference and Android Gradle verification; no environment phone execution",
+  "deviceValidation": "NOT_EXECUTED",
+  "sourceModelPhoneHash": "UNKNOWN",
+  "files": [
+    {
+      "name": "Qwen3.5-2B-pinned-card.md",
+      "bytes": 15447,
+      "sha256": "773f7ad60a264c3cb29d78dc85d3cf4243011d85b41dab57f4b8c916dc7696a1"
+    },
+    {
+      "name": "cpu-gguf-relevance-017.json",
+      "bytes": 6607,
+      "sha256": "b3981762f465b0cd2b3d1879a20de72f2afb79d19fd565c7422288a7715ddc08"
+    },
+    {
+      "name": "cpu-parameters-017.json",
+      "bytes": 6225,
+      "sha256": "2329cc431f258206866abd815cf8bdfdfbe299b13c7979976d3494d9f01f0074"
+    },
+    {
+      "name": "cpu-qwen3-comparison-017.json",
+      "bytes": 8679,
+      "sha256": "44284e88e6b352dc26b53c0bdbe73d21c414c9d534313ee63ed1692d80dbdf84"
+    },
+    {
+      "name": "cpu-relevance-017.json",
+      "bytes": 12792,
+      "sha256": "adf6077ccf7347773ace00e630902899b5e7b9e211a16f9ed989217aaba7bd62"
+    },
+    {
+      "name": "cpu-sdk-0161-default.json",
+      "bytes": 3046,
+      "sha256": "d8d885ccf4ed605e8a7120b2415ff7303f5318cc0ed2d6926afe20a4b194c37e"
+    },
+    {
+      "name": "cpu-sdk-0171-fp32.json",
+      "bytes": 2930,
+      "sha256": "f22aa1c53a2c7d6b2d87d0c4fbcfe7d14ae7e4cdfa7e3cba158de0de06e8ba84"
+    },
+    {
+      "name": "drive-metadata.json",
+      "bytes": 700,
+      "sha256": "0c277437aeed8d08b7d8f3bd78121005cb3da47f5bd22b08f9a609907d7964d7"
+    },
+    {
+      "name": "force-unit-tests.gradle",
+      "bytes": 131,
+      "sha256": "e9ae7cf93b93ced485fe02d94295a8ec0bf988ba0b6e8f37f0acbb7f3d8ea245"
+    },
+    {
+      "name": "gguf-one-thread-control.stderr.log",
+      "bytes": 2438,
+      "sha256": "3722bc403683bef01756ce5f74a970995b6722318c5e5132561c329ac80004ef"
+    },
+    {
+      "name": "gguf-one-thread-control.stdout.log",
+      "bytes": 47,
+      "sha256": "f6556122b63e832adabebb19e018f723f0e1bf6bbc8a85ccb975255ad421342c"
+    },
+    {
+      "name": "gguf-quota4-timeout/isolated_bare_communes.stderr.log",
+      "bytes": 1678,
+      "sha256": "7a349de68745a753e7fdd9ce52b39b58d66903e46ce2d9e98516e2a40a521ea8"
+    },
+    {
+      "name": "gguf-quota4-timeout/isolated_bare_communes.stdout.log",
+      "bytes": 120,
+      "sha256": "cfa8cefa55c26d90c1605b068b367a623c10382178c18a982475e8a0634b8fcf"
+    },
+    {
+      "name": "gguf-quota4-timeout/report.json",
+      "bytes": 1393,
+      "sha256": "27d9dda3f5a45f131cdfbd4e55a2f56f7ab7a65f68549d88afd3f025a28b0d69"
+    },
+    {
+      "name": "gguf-relevance-017/app_sequence_1.stderr.log",
+      "bytes": 2317,
+      "sha256": "f47973a07c781fe348301064072fcec42385ec287165b5a7cc9a86acf3e79564"
+    },
+    {
+      "name": "gguf-relevance-017/app_sequence_1.stdout.log",
+      "bytes": 50,
+      "sha256": "a49be29484b6b28353c9c76c43fca29b5eb51a26d8273f0366129b0355c43308"
+    },
+    {
+      "name": "gguf-relevance-017/app_sequence_2.stderr.log",
+      "bytes": 2317,
+      "sha256": "78ef3263deeb9548a5dc232a767b0608f4df984669c667e0a5865313b52bdf21"
+    },
+    {
+      "name": "gguf-relevance-017/app_sequence_2.stdout.log",
+      "bytes": 191,
+      "sha256": "556ce355b47063bdb1bc504c6f8f752710f430ba83a2a819d1fa035d503df7d9"
+    },
+    {
+      "name": "gguf-relevance-017/app_sequence_3.stderr.log",
+      "bytes": 2317,
+      "sha256": "55e3639a88880adad78cc1de3f73a55980b5472b0b059240f65bdfd7c1b63f8a"
+    },
+    {
+      "name": "gguf-relevance-017/app_sequence_3.stdout.log",
+      "bytes": 432,
+      "sha256": "958f6bb269e5cae8c8c41993f63aaa719255815e6c8c8bf933a65107d566ba79"
+    },
+    {
+      "name": "gguf-relevance-017/app_sequence_4.stderr.log",
+      "bytes": 2317,
+      "sha256": "30976c1d4b92dc0a9484814c1026f06651bf0515e9b36e36fd04a4930720d9d2"
+    },
+    {
+      "name": "gguf-relevance-017/app_sequence_4.stdout.log",
+      "bytes": 367,
+      "sha256": "6b3f35395b9294a57b476e0a5898d84443d588a6bd7363310f3ef5a5ae79596d"
+    },
+    {
+      "name": "gguf-relevance-017/isolated_app_communes.stderr.log",
+      "bytes": 2317,
+      "sha256": "87fe4991b852006cc67e9bdfb6270f27c42c44af535e1e36eee8c91a81c3c183"
+    },
+    {
+      "name": "gguf-relevance-017/isolated_app_communes.stdout.log",
+      "bytes": 436,
+      "sha256": "11704ab38bf21908979807cc1301822473de90695dbf25fc920a4262d8246ee2"
+    },
+    {
+      "name": "gguf-relevance-017/isolated_bare_communes.stderr.log",
+      "bytes": 2439,
+      "sha256": "63bcf7f7ace9f4547e6d5e9c4456539bbf173a12c4b70c4d7190abed4b1af48e"
+    },
+    {
+      "name": "gguf-relevance-017/isolated_bare_communes.stdout.log",
+      "bytes": 372,
+      "sha256": "ba9df63e187323dad83d50bef96964d7de98ea1801f48bb4107f6779d0b9ece8"
+    },
+    {
+      "name": "gguf-relevance-017/isolated_exact_five.stderr.log",
+      "bytes": 2317,
+      "sha256": "c0c8f5ff8fecccea08a765b948bb96d4a1dca00bac67f72dde9ebe1cafd089e2"
+    },
+    {
+      "name": "gguf-relevance-017/isolated_exact_five.stdout.log",
+      "bytes": 150,
+      "sha256": "9ab46066329ea01e6872fac7c98e840b63a4827ada2cc0f15c859487e53afe97"
+    },
+    {
+      "name": "gguf-relevance-017/isolated_math.stderr.log",
+      "bytes": 2317,
+      "sha256": "0214dda086ff20e2cd8987c02222887d023934daef0e1e1c1e2a18a20d76e6e6"
+    },
+    {
+      "name": "gguf-relevance-017/isolated_math.stdout.log",
+      "bytes": 36,
+      "sha256": "e0ea2069a54033f44ae0e0826ca38d0df19aa6afb8f1828036da4f8728d148e9"
+    },
+    {
+      "name": "gradle-checks.log",
+      "bytes": 10880,
+      "sha256": "78797b02d844f58c2416e5731703cce771e9b65932daf9f56ddc54c5445e6b17"
+    },
+    {
+      "name": "llama-completion-build.log",
+      "bytes": 298,
+      "sha256": "568b28868e39dc17cc551968c1d7d111ff9c9ae7732065a4ff513bfbb34c62b0"
+    },
+    {
+      "name": "llama-core-comparison.json",
+      "bytes": 913,
+      "sha256": "e4ec8d7d63e5938552a4c65eb9fddb035bc3c7e49452b2ab71e8b44379859ac4"
+    },
+    {
+      "name": "llama-reference-build.log",
+      "bytes": 18118,
+      "sha256": "9ef7d8016d45b28c47af1e576323526a845f00355ab030b005290c1076e04735"
+    },
+    {
+      "name": "llama-reference-configure.log",
+      "bytes": 606,
+      "sha256": "94745fbec0698b619b5968f6e4bda46217298395999f428c5f4f6d028b11bba1"
+    },
+    {
+      "name": "native-gguf-relevance.log",
+      "bytes": 2512,
+      "sha256": "4e2f7e7a559dbe0bba96f233b3aafefad8513adfa268d70170243025ea09cf7d"
+    },
+    {
+      "name": "native-gguf-relevance.py",
+      "bytes": 5855,
+      "sha256": "69d60d642b20623bcb5b863079a1615201dcfe5cb067e1991d72b93efe0be791"
+    },
+    {
+      "name": "native-parameters.log",
+      "bytes": 5204,
+      "sha256": "84e19012c0bc80dccb16158231272d77d52153c0fd69130510e59b94c5395fd2"
+    },
+    {
+      "name": "native-parameters.py",
+      "bytes": 3211,
+      "sha256": "0932abe21ce6a443906a70aadf8622a51d3dfaf400c2269282bb57ca15f151aa"
+    },
+    {
+      "name": "native-qwen3-comparison.log",
+      "bytes": 6073,
+      "sha256": "2c48677cf6b35102a94a046a3d843a13f2ec28d37e01b84c4f9fe2c70f1729b1"
+    },
+    {
+      "name": "native-qwen3-comparison.py",
+      "bytes": 5041,
+      "sha256": "dcab201a2c7558921c1fd1953ea6fde6e9d59509367fa2a0c923b2df889a0136"
+    },
+    {
+      "name": "native-relevance.log",
+      "bytes": 11018,
+      "sha256": "93318488e1b869fd5ce619bb7283d5bc37ef358f00181580e5dfbcdc6af4ff8f"
+    },
+    {
+      "name": "native-relevance.py",
+      "bytes": 4737,
+      "sha256": "517e0150657494dd399aee8e0f772f891f54eae87d1fc3672b392b1eee371a1d"
+    },
+    {
+      "name": "native-sdk-comparison.py",
+      "bytes": 2899,
+      "sha256": "10caabfc364e11570a15cc7afb490270d7268385e74a7853996d3920bdd46609"
+    },
+    {
+      "name": "native-sdk0161.log",
+      "bytes": 2298,
+      "sha256": "fbd82a3888cf2be98ddde8235e3bc5fee8d41bb5a1da369ba45e6d92cd2a7e6b"
+    },
+    {
+      "name": "native-sdk0171-fp32.log",
+      "bytes": 2182,
+      "sha256": "e3f2201dcefc12819fb8eb536ee0d7f8e48962c21ba4575add42740f1d2ddd38"
+    },
+    {
+      "name": "qwen25-gguf-source.json",
+      "bytes": 504,
+      "sha256": "df3a59a01d40878a2c8915d7bf3f8e9fef68ac536bccaac03e958fb4a5259da3"
+    },
+    {
+      "name": "qwen3-1.7b-source.json",
+      "bytes": 509,
+      "sha256": "b0a519f10a80a38afd7094efdc136b846b12dd9f18e1de743b3605bfa8e555e7"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.data.GenerationMetricsPresentationTest.xml",
+      "bytes": 1053,
+      "sha256": "639d2357d9bce4c239eb914de66df8d322ac78408ee58faa99d4eb6baafcfcd7"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.data.LiteRtChatDefaultsUpgradeTest.xml",
+      "bytes": 992,
+      "sha256": "4bbda3cb5532e0626cfc814f6cd77daac300566acd3dd5afc0ecf012b2512bfd"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.data.LiteRtDefaultsUpgradeTest.xml",
+      "bytes": 974,
+      "sha256": "95cae4f2827ff67cacb9333dea7a643611b04331c2ae36f99cb3df121e76abad"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.domain.ContextBudgetManagerTest.xml",
+      "bytes": 490,
+      "sha256": "3fc3f9498d44ee771ee3eb72c25bb2056d767ec0c258468748954563739e77bb"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.domain.ConversationPromptTest.xml",
+      "bytes": 1623,
+      "sha256": "5fe3ef85374fabae80bfbbb1f006dd3f32f937ab403947a39d2792b332c19d91"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.domain.RepetitionParagraphTest.xml",
+      "bytes": 836,
+      "sha256": "ec5036ccab3d7833a004182dbc7bc433bc88243225d174634bfd222e774f149b"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.inference.GenerationDiagnosticPersistenceTest.xml",
+      "bytes": 716,
+      "sha256": "4f4d5d1beae4698e8bcb845ffc63dfcc59e28b93e930b5683e08cb364b39911b"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.inference.IndependentInferenceDeadlineTest.xml",
+      "bytes": 703,
+      "sha256": "ea2299e69d0dfcab4f2759116de9abd5f9a2b07bed5813af6338f26a91058601"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.inference.InferenceWatchdogTest.xml",
+      "bytes": 1235,
+      "sha256": "55b5520a037fd7493dd59168bc650a38a2ab445719ef837787d488bcd8195789"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.inference.LiteRtBundleMetadataTest.xml",
+      "bytes": 1171,
+      "sha256": "8f7b0ce1d3e3fa0e0c6f30a77d9e183d75d8afdc5baa8cbfc5cc8ef62e6064eb"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.inference.LiteRtConversationPayloadTest.xml",
+      "bytes": 1056,
+      "sha256": "8bc3fa0112bdbceec1af10d66a7c8e8c18f03ef700781f05dcfc855d3087bebb"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.inference.LiteRtConversationReuseTest.xml",
+      "bytes": 1025,
+      "sha256": "e25d31a305e87a4f79b4c165fe3e64528df16bd70197c8e93bf5df5bb3e7dbc2"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.inference.LiteRtDecodeControlsTest.xml",
+      "bytes": 848,
+      "sha256": "7f20504617234867247de781c55bdd5c2878e99e3b3c94eb4526102f1987579b"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.inference.LiteRtEngineResourcesTest.xml",
+      "bytes": 1864,
+      "sha256": "5db9685529be78c8a5924a23adfa33deeacaed23112f40b054da5779b62e91b7"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.inference.LiteRtIpcDispatchTest.xml",
+      "bytes": 1477,
+      "sha256": "9f62b57202664eae597a18e406c0c2c89b86090e70608c9ca94163f9eb8d2c89"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.inference.LiteRtModelIntegrityTest.xml",
+      "bytes": 1101,
+      "sha256": "1a8b933e751135c2ca505a7724f101bc2814a5f5dd05559f31e612fa0531da03"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.inference.LiteRtRuntimeDeadlineTest.xml",
+      "bytes": 1367,
+      "sha256": "c0047666d414468fc61a9709937f1fac8d241ef2b52e1a91dc67d3e0a5981e93"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.inference.RuntimePreparationTest.xml",
+      "bytes": 1313,
+      "sha256": "76b173585e548fb736ee26d7638a7714d0626f73d506a2ba8d35eede5dc3c334"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.model.ModelManagerDomainTest.xml",
+      "bytes": 1054,
+      "sha256": "e5d7a21b59384d4a321e6c282641463583faa08d5f132094df6a8158210d3cda"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.rag.CitationValidatorTest.xml",
+      "bytes": 583,
+      "sha256": "c5e78735e0cf9afc35ca734bfa70bbbaa813bdfa9b960f4189241acd7be366b1"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.rag.ReciprocalRankFusionTest.xml",
+      "bytes": 484,
+      "sha256": "49b16d96d746fa61dee83501d3fb2f13d5319886296a3af5289fd366d31859e1"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.security.SecurityPolicyTest.xml",
+      "bytes": 766,
+      "sha256": "4e8b5c54b4da280094c750cd99642a814369e7861f91fc5bcdce02e7c6d71471"
+    },
+    {
+      "name": "unit-tests/app/TEST-com.localai.workspace.tools.ToolFrameworkTest.xml",
+      "bytes": 746,
+      "sha256": "9379cdc0a469edef8d94247a923cce4da7a41c212447690f6f31f843d9e17c68"
+    },
+    {
+      "name": "unit-tests/litert-compat/TEST-com.google.ai.edge.litertlm.NativeHistoryRoleTest.xml",
+      "bytes": 643,
+      "sha256": "05a9086774b97925f7a39150c15dba0c39c62213cbd304f388af81a87d1cf688"
+    },
+    {
+      "name": "validation.json",
+      "bytes": 1889,
+      "sha256": "ef8410bfa163ac41d2efc1486c64cfe41d41c243d6cd37da42b606308986bfa2"
+    }
+  ]
+}

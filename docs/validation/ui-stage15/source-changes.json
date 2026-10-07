@@ -1,0 +1,42 @@
+[
+  {
+    "path": "app/src/main/java/com/localai/workspace/MainActivity.kt",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/build.gradle.kts",
+    "status": "MODIFIED"
+  },
+  {
+    "path": "app/src/androidTest/java/com/localai/workspace/ui/ProjectUiDeviceTest.kt",
+    "status": "ADDED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/ui/UiPresentation.kt",
+    "status": "ADDED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/ui/ChatContent.kt",
+    "status": "ADDED"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/ui/BasicMarkdown.kt",
+    "status": "ADDED"
+  },
+  {
+    "path": "app/src/test/java/com/localai/workspace/ui/UiSmokeTest.kt",
+    "status": "ADDED"
+  },
+  {
+    "path": "app/src/test/java/com/localai/workspace/ui/UiPresentationTest.kt",
+    "status": "ADDED"
+  },
+  {
+    "path": "app/src/test/java/com/localai/workspace/ui/BasicMarkdownTest.kt",
+    "status": "ADDED"
+  },
+  {
+    "path": "app/src/test/java/com/localai/workspace/ui/ChatContentUiTest.kt",
+    "status": "ADDED"
+  }
+]

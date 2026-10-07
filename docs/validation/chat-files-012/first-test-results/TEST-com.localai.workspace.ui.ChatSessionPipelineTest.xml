@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.ChatSessionPipelineTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-05T20:31:22" hostname="74096e896c47" time="1.011">
+  <properties/>
+  <testcase name="emptyDocumentIsFailedRatherThanPretendingToHaveUsableText" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.207"/>
+  <testcase name="navigatingAwayKeepsGenerationAndReopeningUsesSameControllerAndPersistedResult" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.119"/>
+  <testcase name="simpleGreetingDoesNotIncludeLibraryOrDefaultEvidenceInstructions" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.112"/>
+  <testcase name="readingFileContinuesAfterNavigationAndSendWaitsForItsActualContent" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.1"/>
+  <testcase name="removingWorkspaceSettlesActiveControllerBeforeDeletingPersistedRows" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.098"/>
+  <testcase name="changingPreparedModelWaitsForActiveRequestInsteadOfStealingItsSession" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.143"/>
+  <testcase name="queuedChatStopNeverCancelsTheOtherBackgroundGeneration" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.114"/>
+  <testcase name="realSafMarkdownReachesGenerationRequestAndRemainsReusableInLibrary" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.115"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

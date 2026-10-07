@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.ApplicationPreparationLifecycleTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-06T06:29:27" hostname="74096e896c47" time="0.369">
+  <properties/>
+  <testcase name="explicitCancelReachesNativePreparationAndAllowsRetry" classname="com.localai.workspace.inference.ApplicationPreparationLifecycleTest" time="0.283"/>
+  <testcase name="noTimerEvictionButMemoryPressureReleasesIdleEngineAndInvalidatesReady" classname="com.localai.workspace.inference.ApplicationPreparationLifecycleTest" time="0.008"/>
+  <testcase name="openingAndClosingChatsDuringColdLoadDoesNotCancelApplicationPreparation" classname="com.localai.workspace.inference.ApplicationPreparationLifecycleTest" time="0.013"/>
+  <testcase name="queuedPreloaderCancellationCannotStopCurrentChatGeneration" classname="com.localai.workspace.inference.ApplicationPreparationLifecycleTest" time="0.025"/>
+  <testcase name="cancelledScreenWaiterDoesNotCancelSharedPreparation" classname="com.localai.workspace.inference.ApplicationPreparationLifecycleTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,144 @@
+ELF Header:
+  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
+  Class:                             ELF64
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              DYN (Shared object file)
+  Machine:                           AArch64
+  Version:                           0x1
+  Entry point address:               0x0
+  Start of program headers:          64 (bytes into file)
+  Start of section headers:          43824 (bytes into file)
+  Flags:                             0x0
+  Size of this header:               64 (bytes)
+  Size of program headers:           56 (bytes)
+  Number of program headers:         9
+  Size of section headers:           64 (bytes)
+  Number of section headers:         27
+  Section header string table index: 26
+Dynamic section at offset 0xa488 contains 33 entries:
+  Tag                Type           Name/Value
+  0x0000000000000001 (NEEDED)       Shared library: [libllama.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libggml-cpu.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libandroid.so]
+  0x0000000000000001 (NEEDED)       Shared library: [liblog.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libggml.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libggml-base.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libm.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libdl.so]
+  0x0000000000000001 (NEEDED)       Shared library: [libc.so]
+  0x000000000000000e (SONAME)       Library soname: [liblocal-embedding.so]
+  0x000000000000001e (FLAGS)        BIND_NOW 
+  0x000000006ffffffb (FLAGS_1)      NOW 
+  0x0000000000000007 (RELA)         0x1610
+  0x0000000000000008 (RELASZ)       960 (bytes)
+  0x0000000000000009 (RELAENT)      24 (bytes)
+  0x000000006ffffff9 (RELACOUNT)    22
+  0x0000000000000017 (JMPREL)       0x19d0
+  0x0000000000000002 (PLTRELSZ)     1680 (bytes)
+  0x0000000000000003 (PLTGOT)       0xb6e0
+  0x0000000000000014 (PLTREL)       RELA
+  0x0000000000000006 (SYMTAB)       0x2f8
+  0x000000000000000b (SYMENT)       24 (bytes)
+  0x0000000000000005 (STRTAB)       0xcd4
+  0x000000000000000a (STRSZ)        2360 (bytes)
+  0x000000006ffffef5 (GNU_HASH)     0xc60
+  0x0000000000000019 (INIT_ARRAY)   0xb480
+  0x000000000000001b (INIT_ARRAYSZ) 8 (bytes)
+  0x000000000000001a (FINI_ARRAY)   0xb470
+  0x000000000000001c (FINI_ARRAYSZ) 16 (bytes)
+  0x000000006ffffff0 (VERSYM)       0xb68
+  0x000000006ffffffe (VERNEED)      0xc1c
+  0x000000006fffffff (VERNEEDNUM)   2
+  0x0000000000000000 (NULL)         0x0
+0000000000005c74 T Java_com_arm_aichat_EmbeddingGemma_nativeArchitecture
+0000000000005cf8 T Java_com_arm_aichat_EmbeddingGemma_nativeClose
+0000000000005c60 T Java_com_arm_aichat_EmbeddingGemma_nativeDimension
+0000000000005158 T Java_com_arm_aichat_EmbeddingGemma_nativeEmbed
+000000000000440c T Java_com_arm_aichat_EmbeddingGemma_nativeLoad
+0000000000004a0c W _Z19local_embedding_cpuv
+0000000000005470 W _ZN14LocalEmbedding5embedERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+0000000000004b30 W _ZN14LocalEmbeddingC2EPKc
+0000000000005d44 W _ZN16EmbeddingFailureC2EPKcS1_RKNSt6__ndk112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE
+0000000000006040 W _ZN16EmbeddingFailureD0Ev
+                 U _ZNKSt13runtime_error4whatEv
+                 U _ZNSt11logic_errorC2EPKc
+                 U _ZNSt12length_errorD1Ev
+                 U _ZNSt13runtime_errorC2ERKNSt6__ndk112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEE
+                 U _ZNSt13runtime_errorD2Ev
+                 U _ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6appendEPKc
+                 U _ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6appendEPKcm
+                 U _ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6insertEmPKc
+0000000000004fc4 W _ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2B8ne180000ILi0EEEPKc
+                 U _ZNSt6__ndk15mutex4lockEv
+                 U _ZNSt6__ndk15mutex6unlockEv
+                 U _ZNSt6__ndk15mutexD1Ev
+                 U _ZNSt6__ndk19to_stringEi
+                 U _ZSt9terminatev
+000000000000b3a8 V _ZTI16EmbeddingFailure
+                 U _ZTISt12length_error
+                 U _ZTISt13runtime_error
+                 U _ZTISt9exception
+00000000000022f4 V _ZTS16EmbeddingFailure
+000000000000b3c0 V _ZTV16EmbeddingFailure
+                 U _ZTVN10__cxxabiv120__si_class_type_infoE
+                 U _ZTVSt12length_error
+                 U _ZdlPv
+                 U _Znwm
+                 U __cxa_allocate_exception
+                 U __cxa_atexit@LIBC
+                 U __cxa_begin_catch
+                 U __cxa_end_catch
+                 U __cxa_finalize@LIBC
+                 U __cxa_free_exception
+                 U __cxa_throw
+                 U __dynamic_cast
+                 U __gxx_personality_v0
+                 U __register_atfork@LIBC
+                 U __sF@LIBC
+                 U __stack_chk_fail@LIBC
+                 U abort@LIBC
+                 U dl_iterate_phdr@LIBC
+                 U fflush@LIBC
+                 U fprintf@LIBC
+                 U free@LIBC
+                 U fwrite@LIBC
+                 U getpid@LIBC
+                 U ggml_backend_cpu_reg
+                 U ggml_backend_dev_by_type
+                 U ggml_backend_register
+                 U gguf_find_key
+                 U gguf_free
+                 U gguf_get_kv_type
+                 U gguf_get_val_str
+                 U gguf_init_from_file
+                 U llama_backend_init
+                 U llama_batch_get_one
+                 U llama_context_default_params
+                 U llama_decode
+                 U llama_encode
+                 U llama_free
+                 U llama_get_embeddings_seq
+                 U llama_init_from_model
+                 U llama_log_set
+                 U llama_model_default_params
+                 U llama_model_free
+                 U llama_model_get_vocab
+                 U llama_model_has_encoder
+                 U llama_model_load_from_file
+                 U llama_model_meta_val_str
+                 U llama_model_n_embd_out
+                 U llama_tokenize
+                 U malloc@LIBC
+                 U memchr@LIBC
+                 U memcmp@LIBC
+                 U memcpy@LIBC
+                 U memmove@LIBC
+                 U memset@LIBC
+                 U pthread_rwlock_rdlock@LIBC
+                 U pthread_rwlock_unlock@LIBC
+                 U pthread_rwlock_wrlock@LIBC
+                 U strlen@LIBC
+                 U syscall@LIBC

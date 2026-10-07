@@ -1,0 +1,104 @@
+# Gradle / Android build output and local tool state
+.gradle/
+.kotlin/
+**/build/
+**/.cxx/
+local.properties
+**/local.properties
+*.iml
+.idea/
+**/.idea/
+/captures/
+.externalNativeBuild/
+.cxx/
+
+# Android packages and generated native outputs
+*.apk
+*.aab
+*.aar
+*.dex
+*.class
+*.so
+*.dylib
+*.dll
+*.o
+*.a
+*.profraw
+*.hprof
+
+# Model weights and downloaded model caches
+*.litertlm
+*.gguf
+*.tflite
+*.onnx
+*.safetensors
+*.pt
+*.pth
+*.ckpt
+*.ggml
+/models/
+**/models/**
+**/model-cache/**
+**/model_cache/**
+
+# Keep small binary test fixtures; ignore model .bin only in model directories.
+/models/**/*.bin
+**/models/**/*.bin
+**/model-cache/**/*.bin
+**/model_cache/**/*.bin
+
+# Secrets, local credentials and signing material
+.env
+.env.*
+*.env
+secrets*
+Secrets*
+credentials*
+CREDENTIALS*
+*.keystore
+*.jks
+*.p12
+*.pfx
+*.pem
+*.key
+
+# Python/editor/test caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+.tox/
+
+# Logs and temporary/exported workspace data
+*.log
+logs/
+tmp/
+temp/
+/tmp/
+/temp/
+/dist/
+/dist/**
+/baselines/
+/baselines/**
+*.tar.gz
+
+# Validation outputs that contain generated binaries, snapshots or signing commands.
+docs/validation/**/build-evidence/
+docs/validation/**/*.log
+docs/validation/**/*.tar.gz
+docs/validation/**/*.so
+docs/validation/**/*.zip
+docs/validation/**/*.o
+docs/validation/**/*.a
+docs/validation/**/*.bin
+docs/validation/**/*.pb
+docs/validation/**/audit_package.py
+
+# Common OS/editor detritus
+.DS_Store
+Thumbs.db
+*.swp
+*~

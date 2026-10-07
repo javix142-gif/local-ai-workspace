@@ -1,0 +1,927 @@
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -1,4 +1,12 @@
+ # Changelog
++
++## 0.1.11 — 2026-10-05
++
++- Start real application-owned CPU preparation of the last selected usable LiteRT model; Workspace shows Active model selection and actual loading/integrity/session/ready/error/cancel/retry. Persist app selection; new chats inherit it while existing project preferences remain honored.
++- Shared pool preloader survives chat closure/cancelled waiters; explicit loading cancellation/switch still reaches native preparation. Existing serialized generation leases preserve conversation isolation. Remove the application's ten-minute idle expiry; retain memory-pressure eviction and ready invalidation. One engine is resident; switching models may still initialize the other.
++- Cache up to8actual successful worker-lifetime SHA receipts for unchanged app-private file identity/stat/expected hash/size; always check header/format/size, invalidate changes/failures, no reuse without known stat/valid hash. Report `LITERT_INTEGRITY_REUSE`; never read multi-GB models wholly into RAM.
++- 146app tests executed/PASS (17new),2compatibility tests UP-TO-DATE; debug tests/build/lint PASS48s, lint0errors/73existing warnings. Release/signature/native-byte comparison PASS1m15s. Room3/SDK0.17.1native/template unchanged; existing deletion/GGUF/RAG/memory/tools/model management retained. Phone UI/native/timing checks NOT_EXECUTED; no faster CPU decode or quality repair claimed.
++- [Signed0.1.11 APK in Drive](https://drive.google.com/file/d/1xOJPIKlK9cA4csUT-yphfqR9a9ijf1u_/view?usp=drivesdk),91,584,441bytes,versionCode12; metadata readback PASS. [Implementation and phone checks](docs/APP_MODEL_PREPARATION_011.md), [manifest](docs/validation/apk-011.json).
+ 
+ ## 0.1.10 — 2026-10-05
+ 
+--- a/README.md
++++ b/README.md
+@@ -1,6 +1,14 @@
+ # Local AI Workspace for Android
+ 
+ An Android-first, offline-by-default AI workspace with a runtime-neutral Model Manager. The app keeps projects, chats, imported documents, local retrieval evidence, memory and model metadata in an on-device Room database. Model binaries stay in app-private storage; they are never stored in Room.
++
++Version **0.1.11** prepares the last selected usable LiteRT model from application startup, with real **Active model** loading/integrity/ready/error/cancel/retry in Workspace. Closing a chat does not cancel shared preparation; new chats use the remembered selection and isolated native conversation state. A ready/running identical preparation is shared, and the idle engine no longer has a ten-minute expiry. Worker-lifetime receipts avoid repeated SHA scans of unchanged private files. One engine remains resident: switching models/context/vision/backend, memory pressure or Android process reclamation can still require loading. GGUF retains its existing first-send path; CPU decode speed and the prior semantic relevance failure are unchanged.
++
++146app tests executed/PASS;2compatibility tests UP-TO-DATE; debug/release build and signature PASS; lint0errors/73pre-existing warnings. Room remains schema3; models/history/projects are preserved. New physical UI/native/timing validation **NOT_EXECUTED**. [Implementation and phone checks](docs/APP_MODEL_PREPARATION_011.md). [Artifact](docs/validation/apk-011.json).
++
++[Download0.1.11 APK from Drive](https://drive.google.com/file/d/1xOJPIKlK9cA4csUT-yphfqR9a9ijf1u_/view?usp=drivesdk) (91.58MB / 87.34MiB, ARM64,versionCode12). Install as an update without clearing data.
++
++## Previous release — 0.1.10
+ 
+ Version **0.1.10** reorganizes Workspace around **Start chat** and optional **Start project**. Standalone chats and projects have separate lists and confirmed deletion; projects can contain multiple independently addressed chats and shared files/memory. Delete project removes its card and all owned chats/private documents/indexes/embeddings/project memory; deleting one project chat keeps its siblings and shared resources. Installed models and global memory remain. Existing projects are preserved by Room2→3 migration; deleted Personal workspace is no longer recreated at startup. Private-file cleanup has a durable retry outbox. [Behavior and phone checks](docs/WORKSPACE_010.md).
+ 
+--- a/STATUS.md
++++ b/STATUS.md
+@@ -1,4 +1,16 @@
+-# Project status — 0.1.10 / 2026-10-05
++# Project status — 0.1.11 / 2026-10-05
++
++**APP-OWNED MODEL PREPARATION**: real LiteRT CPU preparation starts at app launch for the last selected usable model; Workspace shows Active model selection, actual progress/integrity/session/error/cancel/retry. New chats inherit this selection; existing project model preferences remain honored. Closing a chat or cancelling its waiter cannot cancel the application job. Generation uses the existing isolated chat lease, serialized native access and fresh conversation/KV handover.
++
++**RETENTION / INTEGRITY**: app idle weights no longer expire after ten minutes; memory pressure still releases idle engines and invalidates readiness. Only one engine is retained; Qwen↔Gemma/context/vision/backend changes can require initialization. A bounded worker-lifetime SHA receipt cache rechecks header/size/identity/hash/stat attributes, invalidates changes/failures and skips repeated full scans only for previously verified unchanged private files. No persistent verification bypass, no models loaded into RAM for hashing and no promise to retain both models in8GB. Android worker/app reclamation can require cold loading.
++
++**VALIDATION PASS**:146app tests actually executed,0failures/errors/skips;2unchanged compatibility tests UP-TO-DATE. Full debug tests/build/lint PASS in48s. Lint0errors/73pre-existing warnings. Release PASS in1m15s; same-certificate signature/package/version/ABI/feature DEX checks PASS; all8native hashes match0.1.10. Room remains schema3; no migration/data deletion. LiteRT0.17.1CPU/templates/native libraries and existing GGUF/RAG/citations/memory/tools/library/import/download/deletion flows retained. CPU decoding and prior semantic-relevance failure unchanged. Android physical UI/startup/native/timing validation **NOT_EXECUTED**, no attached device.
++
++**APK / DRIVE PASS**: [Download signed0.1.11 ARM64 APK](https://drive.google.com/file/d/1xOJPIKlK9cA4csUT-yphfqR9a9ijf1u_/view?usp=drivesdk),91,584,441bytes,versionCode12. Local path `dist/apk/local-ai-workspace-0.1.11-app-preload-arm64.apk`, SHA-256 `95ff736a2ba37bf4b2de0c35d9be3eecfdf4d1f23cff5518ccbacf64ff0494fb`. Drive readback confirms exact filename/size/MIME/original parent/private sharing; provider hash not exposed. Install as an update without uninstalling or clearing data. Earlier signed artifacts remain intact.
++
++[Behavior and phone checks](docs/APP_MODEL_PREPARATION_011.md). [Artifact](docs/validation/apk-011.json).
++
++## Historical project status — 0.1.10 / 2026-10-05
+ 
+ **WORKSPACE REORGANIZED**: direct Start chat plus optional Start project; separate chat/project lists; project screen with multiple independently addressed conversations, shared local files and memory. Confirmed standalone-chat deletion removes its isolated owner/card/resources; Delete project removes its card and every owned chat/document/index/embedding/project memory; Delete project chat preserves siblings/shared resources. Models/settings/benchmarks, global memory and unrelated work remain. Startup no longer recreates a deleted Personal workspace.
+ 
+--- a/app/build.gradle.kts
++++ b/app/build.gradle.kts
+@@ -15,8 +15,8 @@
+         applicationId = "com.localai.workspace"
+         minSdk = 29
+         targetSdk = 35
+-        versionCode = 11
+-        versionName = "0.1.10"
++        versionCode = 12
++        versionName = "0.1.11"
+ 
+         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+         vectorDrawables.useSupportLibrary = true
+--- a/app/src/main/java/com/localai/workspace/AppGraph.kt
++++ b/app/src/main/java/com/localai/workspace/AppGraph.kt
+@@ -26,8 +26,10 @@
+     val liteRtLmRuntime = LiteRtLmInferenceRuntime(appContext)
+     val runtimes = InferenceRuntimeRegistry(listOf(llamaRuntime, liteRtLmRuntime))
+     private val runtimeScope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.IO)
+-    val chatRuntimes = com.localai.workspace.domain.inference.ChatRuntimePool(runtimeScope,
+-        reportCleanupFailure = { android.util.Log.e("LocalAI/Runtime", "warm_cleanup_error type=${it.javaClass.name}") })
++    private val preparationScope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.Main.immediate)
++    val chatRuntimes: com.localai.workspace.domain.inference.ChatRuntimePool = com.localai.workspace.domain.inference.ChatRuntimePool(runtimeScope, idleRetentionMs = null,
++        reportCleanupFailure = { android.util.Log.e("LocalAI/Runtime", "warm_cleanup_error type=${it.javaClass.name}") },
++        onEngineReleased = { preparationScope.launch { modelPreparation.invalidate() } })
+     fun releaseIdleModel() { runtimeScope.launch { chatRuntimes.releaseIdle() } }
+     /** Compatibility alias for older screens while chat is migrated to the registry. */
+     val runtime = llamaRuntime
+@@ -35,6 +37,8 @@
+     val documents = DocumentIngestionService(appContext, database, database.documentDao())
+     val modelImport = ModelImportService(appContext, database.modelDao(), runtimes)
+     val liteRtDefaults = com.localai.workspace.data.LiteRtChatDefaultsUpgrade(appContext, database.modelDao())
++    val modelPreparation: com.localai.workspace.data.ApplicationModelPreparation = com.localai.workspace.data.ApplicationModelPreparation(appContext, preparationScope,
++        workspace, liteRtDefaults, runtimes, chatRuntimes)
+     val huggingFaceTokenStore = HuggingFaceTokenStore(appContext)
+     val huggingFace = HuggingFaceClient(huggingFaceTokenStore)
+     val huggingFaceDownloader = HuggingFaceDownloader(appContext, huggingFaceTokenStore)
+--- a/app/src/main/java/com/localai/workspace/LocalAiApplication.kt
++++ b/app/src/main/java/com/localai/workspace/LocalAiApplication.kt
+@@ -15,6 +15,7 @@
+         // The inference worker does not open Room or construct the workspace graph.
+         if (Application.getProcessName().endsWith(":litert")) return
+         graph = AppGraph(this)
++        graph.modelPreparation.start()
+         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
+             graph.workspace.cleanupDeletedDocuments()
+         }
+--- a/app/src/main/java/com/localai/workspace/MainActivity.kt
++++ b/app/src/main/java/com/localai/workspace/MainActivity.kt
+@@ -109,6 +109,7 @@
+ import com.localai.workspace.domain.model.RuntimeType
+ import com.localai.workspace.domain.inference.GenerationStage
+ import com.localai.workspace.domain.inference.GenerationError
++import com.localai.workspace.domain.inference.RuntimePreparation
+ import com.localai.workspace.ui.ChatViewModel
+ import com.localai.workspace.ui.ChatViewModelFactory
+ import com.localai.workspace.ui.HomeViewModel
+@@ -220,6 +221,8 @@
+     val deleting by viewModel.deletingChats.collectAsStateWithLifecycle()
+     val creating by viewModel.creating.collectAsStateWithLifecycle()
+     val pendingCleanup by viewModel.pendingDocumentCleanup.collectAsStateWithLifecycle()
++    val preparation by viewModel.modelPreparation.collectAsStateWithLifecycle()
++    val models by viewModel.models.collectAsStateWithLifecycle()
+     var deleteId by rememberSaveable { mutableStateOf<String?>(null) }
+     var showCreate by rememberSaveable { mutableStateOf(false) }
+     Column(Modifier.fillMaxSize().padding(horizontal = 20.dp)) {
+@@ -235,6 +238,9 @@
+             item {
+                 LocalModeCard()
+                 Spacer(Modifier.height(16.dp))
++                WorkspaceModelCard(models, preparation, viewModel::prepareModel,
++                    viewModel::retryModelPreparation, viewModel::cancelModelPreparation)
++                Spacer(Modifier.height(12.dp))
+                 Button(onClick = { viewModel.startChat { id, conversation -> navController.navigate(chatRoute(id, conversation)) } },
+                     enabled = !creating, modifier = Modifier.fillMaxWidth()) {
+                     Icon(Icons.Default.ChatBubbleOutline, contentDescription = null); Spacer(Modifier.width(8.dp)); Text("Start chat")
+@@ -271,6 +277,57 @@
+     if (showCreate) CreateProjectDialog(onDismiss = { showCreate = false }, onCreate = { name ->
+         showCreate = false; viewModel.createProject(name) { navController.navigate("project/$it") }
+     })
++}
++
++@Composable
++private fun WorkspaceModelCard(models: List<ModelEntity>, state: RuntimePreparation.State,
++    select: (String) -> Unit, retry: () -> Unit, cancel: () -> Unit) {
++    val usable = models.filter(com.localai.workspace.data.ApplicationModelPreparation::isUsable)
++    if (usable.isEmpty()) return
++    val selected = usable.firstOrNull { it.id == state.modelId }
++    var menu by remember { mutableStateOf(false) }
++    var details by rememberSaveable { mutableStateOf(false) }
++    Card(Modifier.fillMaxWidth()) {
++        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
++            Text("Active model", style = MaterialTheme.typography.titleMedium)
++            Box {
++                TextButton(onClick = { menu = true }) { Text(selected?.displayName ?: "Choose model") }
++                DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
++                    usable.forEach { model -> DropdownMenuItem(text = { Text(model.displayName) },
++                        onClick = { menu = false; select(model.id) }) }
++                }
++            }
++            when {
++                state.preparing -> {
++                    Text(state.progress.label, style = MaterialTheme.typography.labelMedium)
++                    state.progress.detail?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
++                    val completed = state.progress.bytesCompleted
++                    val total = state.progress.bytesTotal
++                    if (completed != null && total != null && total > 0) {
++                        Text("Integrity: ${completed * 100 / total}% · ${state.progress.elapsedMs / 1000}s",
++                            style = MaterialTheme.typography.labelSmall)
++                    }
++                    LinearProgressIndicator(Modifier.fillMaxWidth())
++                    Text("Loading continues when you open or leave a chat.", style = MaterialTheme.typography.bodySmall)
++                    TextButton(onClick = cancel) { Text("Cancel loading") }
++                }
++                state.error != null -> {
++                    Text("Model loading failed", color = MaterialTheme.colorScheme.error)
++                    TextButton(onClick = { details = !details }) { Text("Technical details") }
++                    if (details) Text(state.error.displayText(), style = MaterialTheme.typography.bodySmall)
++                    TextButton(onClick = retry) { Text("Retry loading") }
++                }
++                state.ready -> Text("Model ready · reused across chats", style = MaterialTheme.typography.labelMedium)
++                selected?.toDescriptor()?.runtime == RuntimeType.LITERT_LM -> {
++                    Text("Model is not loaded", style = MaterialTheme.typography.labelMedium)
++                    TextButton(onClick = retry) { Text("Load model") }
++                }
++                else -> Text("This runtime loads on the first message.", style = MaterialTheme.typography.bodySmall)
++            }
++            Text("One model stays in memory. Switching models may require loading; Android can release it to free RAM.",
++                style = MaterialTheme.typography.bodySmall)
++        }
++    }
+ }
+ 
+ @Composable
+--- /dev/null
++++ b/app/src/main/java/com/localai/workspace/data/ApplicationModelPreparation.kt
+@@ -0,0 +1,92 @@
++package com.localai.workspace.data
++
++import android.content.Context
++import com.localai.workspace.domain.inference.*
++import com.localai.workspace.domain.model.*
++import kotlinx.coroutines.CancellationException
++import kotlinx.coroutines.CoroutineScope
++import kotlinx.coroutines.Job
++import kotlinx.coroutines.flow.first
++import kotlinx.coroutines.launch
++
++/** One app-owned preparation; never owned/cancelled by a disposable chat screen. */
++class ApplicationModelPreparation(
++    context: Context,
++    private val scope: CoroutineScope,
++    private val workspace: WorkspaceRepository,
++    private val defaults: LiteRtChatDefaultsUpgrade,
++    private val runtimes: InferenceRuntimeRegistry,
++    private val pool: ChatRuntimePool,
++) {
++    private val preferences = context.getSharedPreferences("app_model_preparation", Context.MODE_PRIVATE)
++    val controller = RuntimePreparation(scope)
++    val state = controller.state
++    private val preloaders = mutableMapOf<InferenceRuntime, InferenceRuntime>()
++    private var setup: Job? = null
++    private var started = false
++    private var selectedId = preferences.getString("selected_model", null)
++    fun selectedModelId(): String? = selectedId
++
++    fun start() {
++        if (started) return
++        started = true
++        scope.launch {
++            // Room emissions include settings changes/import/removal; identical configs deduplicate.
++            workspace.allModels.collect { available ->
++                val chosen = usableModel(available, selectedId)
++                if (chosen == null) {
++                    setup?.cancel(); controller.cancel(); controller.invalidateReady()
++                } else prepare(chosen.id)
++            }
++        }
++    }
++
++    fun select(modelId: String) {
++        selectedId = modelId
++        preferences.edit().putString("selected_model", modelId).apply()
++        prepare(modelId)
++    }
++
++    fun retry() { selectedId?.let(::prepare) }
++    fun cancel() { setup?.cancel(); controller.cancel() }
++    fun invalidate() = controller.invalidateReady()
++
++    private fun prepare(modelId: String) {
++        setup?.cancel()
++        setup = scope.launch {
++            try {
++                val model = workspace.allModels.first().firstOrNull { it.id == modelId && isUsable(it) } ?: return@launch
++                selectedId = model.id
++                preferences.edit().putString("selected_model", model.id).apply()
++                // Keep GGUF's existing first-send path; do not claim a prepared llama engine.
++                if (model.toDescriptor().runtime != RuntimeType.LITERT_LM) {
++                    controller.defer(model.id)
++                    return@launch
++                }
++                val effective = defaults.applyOnce(model.id) ?: return@launch
++                val descriptor = effective.toDescriptor()
++                val backend = runtimes.runtimeFor(descriptor)
++                val preloader = preloaders.getOrPut(backend) { pool.preloader(backend) }
++                controller.start(RuntimePreparation.Request(effective.id, preloader, ModelLoadConfig(
++                    ModelSource(descriptor.localPath, descriptor.displayName, effective.sourceUri, descriptor.format,
++                        auxiliaryFiles = descriptor.auxiliaryFiles.map { it.absolutePath }, sourceType = descriptor.source,
++                        expectedSizeBytes = effective.fileSize, sha256 = effective.fileHash),
++                    contextSize = (effective.configuredContext ?: effective.declaredContext ?: 4096).coerceIn(256, 8192),
++                    maxOutputTokens = effective.maxOutputTokens.coerceIn(1, 8192), temperature = effective.temperature,
++                    topP = effective.topP, topK = effective.topK, repeatPenalty = effective.repeatPenalty, seed = effective.seed,
++                    preferredAccelerator = AcceleratorType.CPU, conversation = ConversationPrompt(""))))
++            } catch (cancelled: CancellationException) { throw cancelled }
++            catch (failure: Throwable) {
++                controller.setupFailed(modelId, (failure as? GenerationException)?.diagnostic ?: GenerationError(
++                    GenerationStage.LOADING_MODEL, "MODEL_PREPARATION_FAILED", failure.message ?: "Model preparation failed",
++                    technicalDetail = failure.javaClass.name))
++            }
++        }
++    }
++
++    companion object {
++        fun isUsable(model: ModelEntity) = model.importStatus in setOf(ModelImportStatus.READY.name, ModelImportStatus.COMPATIBLE_WARNING.name)
++        fun usableModel(models: List<ModelEntity>, preferred: String?): ModelEntity? =
++            models.firstOrNull { it.id == preferred && isUsable(it) } ?: models.firstOrNull(::isUsable)
++    }
++}
+--- a/app/src/main/java/com/localai/workspace/domain/inference/ChatRuntimePool.kt
++++ b/app/src/main/java/com/localai/workspace/domain/inference/ChatRuntimePool.kt
+@@ -17,17 +17,41 @@
+ /** Application-owned single engine, with disposable screen owners and serialized native use. */
+ class ChatRuntimePool(
+     private val scope: CoroutineScope,
+-    private val idleRetentionMs: Long = 10 * 60_000L,
++    private val idleRetentionMs: Long? = 10 * 60_000L,
+     private val reportCleanupFailure: (Throwable) -> Unit,
++    private val onEngineReleased: () -> Unit = {},
+ ) {
+     private val operations = Mutex()
+     private val guard = Any()
+     private var retained: InferenceRuntime? = null // Access only inside operations.
+     @Volatile private var owner: Lease? = null
+     private var executing: Lease? = null // Protected by guard, including cancellation dispatch.
++    private var preparingBackend: InferenceRuntime? = null // Same guard, application-owned load only.
+     private var idleJob: Job? = null
+ 
+     fun lease(runtime: InferenceRuntime) = Lease(runtime)
++
++    /** Application preparation has no chat owner: departing screens cannot cancel it. */
++    fun preloader(backend: InferenceRuntime): InferenceRuntime = object : InferenceRuntime by backend {
++        override suspend fun load(config: ModelLoadConfig) = operations.withLock {
++            idleJob?.cancel(); idleJob = null
++            if (retained !== backend) {
++                retained?.unload()
++                retained = backend
++            }
++            owner = null
++            synchronized(guard) { preparingBackend = backend }
++            try {
++                backend.resetConversation()
++                backend.load(config)
++            } finally { synchronized(guard) { preparingBackend = null } }
++        }
++        override fun cancelGeneration() = synchronized(guard) {
++            // Explicit preparation cancellation must never cancel a chat generation.
++            if (preparingBackend === backend) backend.cancelGeneration()
++        }
++        override fun observeProgress() = backend.observeProgress().filter { synchronized(guard) { preparingBackend === backend } }
++    }
+ 
+     inner class Lease internal constructor(private val backend: InferenceRuntime) : InferenceRuntime by backend {
+         @Volatile private var closed = false
+@@ -93,14 +117,14 @@
+                         retained = null
+                     } finally { owner = null }
+                     idleJob?.cancel()
+-                    idleJob = scope.launch {
+-                        delay(idleRetentionMs)
++                    idleJob = idleRetentionMs?.let { retention -> scope.launch {
++                        delay(retention)
+                         operations.withLock {
+                             if (idleJob !== coroutineContext[Job]) return@withLock
+                             idleJob = null // Do not cancel the timer coroutine performing native unload.
+                             evictIdle()
+                         }
+-                    }
++                    } }
+                 }
+             }
+         }
+@@ -126,6 +150,6 @@
+     private suspend fun evictIdle() {
+         try { retained?.unload() }
+         catch (failure: Throwable) { reportCleanupFailure(failure) }
+-        finally { retained = null }
++        finally { retained = null; onEngineReleased() }
+     }
+ }
+--- a/app/src/main/java/com/localai/workspace/domain/inference/RuntimePreparation.kt
++++ b/app/src/main/java/com/localai/workspace/domain/inference/RuntimePreparation.kt
+@@ -82,6 +82,13 @@
+ 
+     fun invalidateReady() { mutableState.value = mutableState.value.copy(ready = false, metrics = null) }
+ 
++    /** A supported runtime may deliberately keep its existing first-send load path. */
++    fun defer(modelId: String) {
++        if (mutableState.value.modelId == modelId && !mutableState.value.preparing && !mutableState.value.ready) return
++        cancel()
++        mutableState.value = State(modelId)
++    }
++
+     /** Called only after the foreground request has actually returned from runtime.load. */
+     fun loadedForRequest(modelId: String, metrics: RuntimeMetrics) {
+         mutableState.value = State(modelId, ready = true, metrics = metrics)
+--- a/app/src/main/java/com/localai/workspace/inference/LiteRtLmService.kt
++++ b/app/src/main/java/com/localai/workspace/inference/LiteRtLmService.kt
+@@ -78,6 +78,7 @@
+     )
+     private data class VerifiedModel(val formatVersion: String, val capabilities: Bundle, val metadata: LiteRtBundleMetadata)
+     private var verifiedModel: VerifiedModel? = null
++    private val verificationCache = LiteRtVerificationCache()
+     private val conversationReuse = LiteRtConversationReuse()
+     private var modelDiagnostics = Bundle()
+     private var modelName: String? = null
+@@ -286,10 +287,18 @@
+             verifiedModel = null
+             synchronized(operation.guard) { operation.snapshot.putLong("verifiedBytes", 0) }
+             phase(operation, GenerationStage.LOADING_MODEL, "LITERT_VERIFY_START")
+-            val formatVersion = LiteRtModelIntegrity.verify(file, expectedSize, expectedHash,
++            val formatVersion = verificationCache.verify(file, expectedSize, expectedHash,
++                fingerprint = {
++                    try {
++                        val stat = android.system.Os.stat(file.path)
++                        LiteRtVerificationCache.Fingerprint(file.path, stat.st_size, file.lastModified(),
++                            stat.st_ino, stat.st_dev, stat.st_ctime)
++                    } catch (_: android.system.ErrnoException) { null }
++                },
+                 onProgress = { completed, _ -> synchronized(operation.guard) { operation.snapshot.putLong("verifiedBytes", completed) } }) {
+                 if (operation.cancelled.get()) throw CancellationException()
+             }
++            if (verificationCache.lastCheckReused) trace(operation, "LITERT_INTEGRITY_REUSE", mapOf("sizeBytes" to file.length()))
+             // Do not reuse a file changed while it was being inspected.
+             require(file.length() == key.sizeBytes && file.lastModified() == key.lastModifiedMs) { "Model file changed during verification" }
+             synchronized(operation.guard) { operation.snapshot.putString("formatVersion", formatVersion) }
+--- /dev/null
++++ b/app/src/main/java/com/localai/workspace/inference/LiteRtVerificationCache.kt
+@@ -0,0 +1,44 @@
++package com.localai.workspace.inference
++
++import java.io.File
++
++/** Bounded worker-lifetime receipts, never persisted or inferred from the filename. */
++internal class LiteRtVerificationCache(private val capacity: Int = 8) {
++    data class Fingerprint(val path: String, val size: Long, val modifiedMs: Long, val inode: Long,
++        val device: Long, val changedSeconds: Long)
++    private data class Receipt(val fingerprint: Fingerprint, val expectedSize: Long?, val hash: String, val version: String)
++    private val receipts = linkedMapOf<String, Receipt>()
++    var lastCheckReused: Boolean = false
++        private set
++
++    fun verify(file: File, expectedSize: Long?, hash: String?, fingerprint: () -> Fingerprint?,
++        onProgress: (Long, Long) -> Unit = { _, _ -> }, checkCancelled: () -> Unit = {}): String {
++        lastCheckReused = false
++        checkCancelled()
++        val before = fingerprint()
++        val normalized = hash?.lowercase()
++        val validHash = normalized?.matches(Regex("[a-f0-9]{64}")) == true
++        val previous = receipts[file.canonicalPath]
++        // Always recheck header/size/readability, including on a cache hit.
++        val header = LiteRtModelIntegrity.verify(file, expectedSize, null)
++        if (before != null && validHash && previous != null && previous.fingerprint == before &&
++            previous.expectedSize == expectedSize && previous.hash == normalized && previous.version == header) {
++            checkCancelled()
++            if (fingerprint() == before) {
++                lastCheckReused = true
++                onProgress(file.length(), file.length())
++                return header
++            }
++        }
++        receipts.remove(file.canonicalPath)
++        val version = LiteRtModelIntegrity.verify(file, expectedSize, hash, onProgress, checkCancelled)
++        val after = fingerprint()
++        if (before != null && after != before) throw ModelIntegrityException("MODEL_CHANGED_DURING_VERIFICATION")
++        checkCancelled()
++        if (before != null && validHash) {
++            if (receipts.size >= capacity) receipts.remove(receipts.keys.first())
++            receipts[file.canonicalPath] = Receipt(before, expectedSize, normalized!!, version)
++        }
++        return version
++    }
++}
+--- a/app/src/main/java/com/localai/workspace/ui/ViewModels.kt
++++ b/app/src/main/java/com/localai/workspace/ui/ViewModels.kt
+@@ -64,6 +64,10 @@
+ import java.util.UUID
+ 
+ class HomeViewModel(private val graph: AppGraph) : ViewModel() {
++    val modelPreparation = graph.modelPreparation.state
++    fun prepareModel(id: String) = graph.modelPreparation.select(id)
++    fun retryModelPreparation() = graph.modelPreparation.retry()
++    fun cancelModelPreparation() = graph.modelPreparation.cancel()
+     private val documentImports = mutableMapOf<String, Job>()
+     private val _creating = MutableStateFlow(false)
+     val creating = _creating.asStateFlow()
+@@ -348,7 +352,7 @@
+     private val runtimeLeases = mutableMapOf<InferenceRuntime, com.localai.workspace.domain.inference.ChatRuntimePool.Lease>()
+     private fun chatRuntime(backend: InferenceRuntime): InferenceRuntime =
+         runtimeLeases.getOrPut(backend) { graph.chatRuntimes.lease(backend) }
+-    private val preparation = RuntimePreparation(viewModelScope)
++    private val preparation = graph.modelPreparation.controller
+     private var stopRequested = false
+     private lateinit var conversationInitialization: Job
+ 
+@@ -382,7 +386,9 @@
+     val notices = _notices.asSharedFlow()
+     val generationProgress: StateFlow<GenerationProgress> = _generationProgress.asStateFlow()
+     val generationError: StateFlow<GenerationError?> = _generationError.asStateFlow()
+-    val modelPreparation = preparation.state
++    val modelPreparation = _selectedModelId.flatMapLatest { id ->
++        preparation.state.map { if (id == null || it.modelId == id) it else RuntimePreparation.State(modelId = id) }
++    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), RuntimePreparation.State())
+     val conversation = _conversationId.flatMapLatest { id ->
+         if (id == null) kotlinx.coroutines.flow.flowOf(null) else graph.workspace.observeConversation(id)
+     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+@@ -393,7 +399,7 @@
+             val conversation = graph.workspace.conversationForChat(projectId, requestedConversationId)
+             graph.workspace.recoverInterruptedGeneration(conversation.id)
+             _conversationId.value = conversation.id
+-            _selectedModelId.value = graph.workspace.observeProject(projectId).first()?.defaultModelId
++            _selectedModelId.value = graph.workspace.observeProject(projectId).first()?.defaultModelId ?: graph.modelPreparation.selectedModelId()
+             prepareSelectedModel()
+             } catch (cancelled: CancellationException) { throw cancelled }
+             catch (error: Exception) { _notices.emit(error.message ?: "Could not open chat") }
+@@ -410,41 +416,18 @@
+     private fun prepareSelectedModel() {
+         if (_isGenerating.value || _isDeletingChat.value) return
+         val selectedId = _selectedModelId.value
+-        preparation.cancel()
+         preparationSetupJob?.cancel()
+         preparationSetupJob = viewModelScope.launch {
+-            try {
+             val available = graph.workspace.allModels.first()
+-            val chosen = available.firstOrNull { it.id == selectedId } ?: available.firstOrNull {
+-                it.importStatus in setOf(ModelImportStatus.READY.name, ModelImportStatus.COMPATIBLE_WARNING.name)
+-            } ?: return@launch
+-            if (_isGenerating.value || _selectedModelId.value != selectedId || chosen.toDescriptor().runtime != RuntimeType.LITERT_LM ||
+-                chosen.importStatus !in setOf(ModelImportStatus.READY.name, ModelImportStatus.COMPATIBLE_WARNING.name)) return@launch
+-            val model = graph.liteRtDefaults.applyOnce(chosen.id) ?: return@launch
++            val chosen = com.localai.workspace.data.ApplicationModelPreparation.usableModel(available, selectedId) ?: return@launch
+             if (_isGenerating.value || _selectedModelId.value != selectedId) return@launch
+-            val descriptor = model.toDescriptor()
+-            val runtime = chatRuntime(graph.runtimes.runtimeFor(descriptor))
+-            activeRuntime = runtime
+-            val source = ModelSource(descriptor.localPath, descriptor.displayName, model.sourceUri, descriptor.format,
+-                auxiliaryFiles = descriptor.auxiliaryFiles.map { it.absolutePath }, sourceType = descriptor.source,
+-                expectedSizeBytes = model.fileSize, sha256 = model.fileHash)
+-            preparation.start(RuntimePreparation.Request(model.id, runtime, ModelLoadConfig(
+-                source, contextSize = (model.configuredContext ?: model.declaredContext ?: 4096).coerceIn(256, 8192),
+-                maxOutputTokens = model.maxOutputTokens.coerceIn(1, 8192), temperature = model.temperature,
+-                topP = model.topP, topK = model.topK, repeatPenalty = model.repeatPenalty, seed = model.seed,
+-                preferredAccelerator = AcceleratorType.CPU, conversation = ConversationPrompt(""))))
+-            } catch (cancelled: CancellationException) { throw cancelled }
+-            catch (failure: Throwable) {
+-                if (_selectedModelId.value == selectedId && !_isGenerating.value) {
+-                    preparation.setupFailed(selectedId, (failure as? GenerationException)?.diagnostic ?: GenerationError(
+-                        GenerationStage.LOADING_MODEL, "MODEL_PREPARATION_FAILED", failure.message ?: "Model preparation failed",
+-                        technicalDetail = failure.javaClass.name))
+-                }
+-            }
+-        }
+-    }
+-
+-    fun cancelPreparation() = preparation.cancel()
++            _selectedModelId.value = chosen.id
++            graph.modelPreparation.select(chosen.id)
++            activeRuntime = chatRuntime(graph.runtimes.runtimeFor(chosen.toDescriptor()))
++        }
++    }
++
++    fun cancelPreparation() = graph.modelPreparation.cancel()
+ 
+     fun deleteChat(onDeleted: () -> Unit) {
+         if (_isDeletingChat.value) return
+@@ -454,10 +437,8 @@
+                 conversationInitialization.join()
+                 stopRequested = true
+                 preparationSetupJob?.cancelAndJoin()
+-                preparation.cancel()
+                 activeRuntime?.cancelGeneration()
+                 generationJob?.cancelAndJoin()
+-                preparation.awaitPending()
+                 // Discard the native conversation/KV, retaining only a safe LiteRT engine.
+                 activeRuntime?.resetConversation()
+                 // A revoked lease prevents old cleanup from touching a replacement chat.
+@@ -844,7 +825,7 @@
+ 
+     override fun onCleared() {
+         preparationSetupJob?.cancel()
+-        preparation.cancel()
++        // Application-owned cold loading continues when this chat is closed.
+         activeRuntime?.cancelGeneration()
+         generationJob?.cancel()
+         runtimeLeases.values.forEach { it.close() }
+--- /dev/null
++++ b/app/src/test/java/com/localai/workspace/data/ApplicationModelPreparationTest.kt
+@@ -0,0 +1,112 @@
++package com.localai.workspace.data
++
++import android.app.Application
++import androidx.room.Room
++import com.localai.workspace.domain.inference.*
++import com.localai.workspace.domain.model.*
++import kotlinx.coroutines.*
++import kotlinx.coroutines.flow.*
++import org.junit.Assert.*
++import org.junit.Before
++import org.junit.After
++import org.junit.Test
++import org.junit.runner.RunWith
++import org.robolectric.RobolectricTestRunner
++import org.robolectric.RuntimeEnvironment
++import org.robolectric.annotation.Config
++import java.util.concurrent.CopyOnWriteArrayList
++
++/** Actual Room/prefs selection; controlled native boundary, not phone inference. */
++@RunWith(RobolectricTestRunner::class)
++@Config(sdk = [29], application = Application::class)
++@OptIn(ExperimentalCoroutinesApi::class)
++class ApplicationModelPreparationTest {
++    private lateinit var db: WorkspaceDatabase
++    private val context get() = RuntimeEnvironment.getApplication()
++    private val dispatcher = Dispatchers.Default.limitedParallelism(1)
++    private lateinit var scope: CoroutineScope
++    private lateinit var backend: Backend
++    private lateinit var pool: ChatRuntimePool
++    private class Backend : InferenceRuntime {
++        override val runtimeType = RuntimeType.LITERT_LM
++        override val runtimeId = "litert-lm-android"
++        val loads = CopyOnWriteArrayList<ModelLoadConfig>()
++        val gate = CompletableDeferred<Unit>()
++        override fun supports(format: ModelFormat) = format == ModelFormat.LITERT_LM
++        override fun availableAccelerators() = setOf(AcceleratorType.CPU)
++        override suspend fun inspectModel(source: ModelSource): ModelMetadata = error("Unused")
++        override suspend fun load(config: ModelLoadConfig) { loads.add(config); gate.await() }
++        override fun generate(request: GenerationRequest): Flow<GenerationEvent> = error("Prewarming must never generate")
++        override fun cancelGeneration() = Unit
++        override suspend fun resetConversation() = Unit
++        override suspend fun unload() = Unit
++        override fun capabilities() = RuntimeCapabilities(runtimeId, true, false, false, false, false)
++        override fun metrics() = RuntimeMetrics(backend = runtimeId)
++    }
++    @Before fun open() {
++        for (n in listOf("app_model_preparation", "litert_cpu_defaults_v016", "litert_chat_defaults_v017"))
++            context.getSharedPreferences(n, 0).edit().clear().commit()
++        db = Room.inMemoryDatabaseBuilder(context, WorkspaceDatabase::class.java).build()
++        scope = CoroutineScope(SupervisorJob() + dispatcher)
++        backend = Backend()
++        pool = ChatRuntimePool(scope, idleRetentionMs = null, reportCleanupFailure = { throw it })
++    }
++    @After fun close() = runBlocking { scope.coroutineContext[Job]!!.cancelAndJoin(); db.close() }
++    private fun manager() = ApplicationModelPreparation(context, scope, WorkspaceRepository(db),
++        LiteRtChatDefaultsUpgrade(context, db.modelDao()), InferenceRuntimeRegistry(listOf(backend)), pool)
++    private fun model(id: String, date: Long = 1, status: String = "READY") = ModelEntity(id, id,
++        "/private/models/$id.litertlm", fileHash = java.security.MessageDigest.getInstance("SHA-256")
++            .digest(id.toByteArray()).joinToString("") { "%02x".format(it) }, fileSize = 4096, format = "LITERT_LM",
++        runtimeId = "litert-lm-android", compatibilityStatus = "COMPATIBLE", importedAt = date,
++        importStatus = status, configuredContext = 4096, maxOutputTokens = 256, repeatPenalty = 1.1f)
++    private fun check(block: suspend () -> Unit) = runBlocking { withTimeout(15_000) { withContext(dispatcher) { block() } } }
++
++    @Test fun appStartupLoadsLastSelectedModelRatherThanNewerLibraryEntry() = check {
++        db.modelDao().insert(model("qwen")); db.modelDao().insert(model("gemma", 2))
++        context.getSharedPreferences("app_model_preparation", 0).edit().putString("selected_model", "qwen").commit()
++        val app = manager(); app.start()
++        app.state.first { it.preparing }
++        assertFalse(app.state.value.ready)
++        backend.gate.complete(Unit); app.state.first { it.ready }
++        assertEquals("qwen", app.state.value.modelId); assertEquals(1, backend.loads.size)
++        assertEquals(AcceleratorType.CPU, backend.loads.single().preferredAccelerator)
++        assertEquals("", backend.loads.single().conversation?.userMessage)
++    }
++
++    @Test fun importedPartialFileAndRemovedPreferredModelNeverBecomePreloadTargets() = check {
++        db.modelDao().insert(model("partial", 3, "IMPORTING")); db.modelDao().insert(model("usable", 2))
++        context.getSharedPreferences("app_model_preparation", 0).edit().putString("selected_model", "removed").commit()
++        val app = manager(); backend.gate.complete(Unit); app.start(); app.state.first { it.ready }
++        assertEquals("usable", app.selectedModelId()); assertEquals("usable", app.state.value.modelId)
++        assertEquals(1, backend.loads.size)
++    }
++
++    @Test fun repeatedSelectionAndMetadataUpdatesDoNotReloadSamePreparedConfig() = check {
++        val model = model("qwen"); db.modelDao().insert(model)
++        val app = manager(); backend.gate.complete(Unit); app.start(); app.state.first { it.ready }
++        repeat(3) { app.select("qwen") }
++        // Await setup through a settings-relevant emission below; metrics alone must not load.
++        db.modelDao().insert(model.copy(lastMetrics = "updated", updatedAt = 2))
++        delay(100)
++        assertEquals(1, backend.loads.size)
++        db.modelDao().insert(model.copy(configuredContext = 2048, updatedAt = 3))
++        withTimeout(5000) { while (backend.loads.size < 2) delay(10) }
++        app.state.first { it.ready }; assertEquals(2048, backend.loads.last().contextSize)
++    }
++
++    @Test fun changingModelPersistsSelectionForNextApplicationInstance() = check {
++        db.modelDao().insert(model("qwen")); db.modelDao().insert(model("gemma", 2))
++        val app = manager(); backend.gate.complete(Unit); app.start(); app.state.first { it.ready }
++        app.select("qwen"); app.state.first { it.ready && it.modelId == "qwen" }
++        val restored = manager()
++        assertEquals("qwen", restored.selectedModelId())
++        assertEquals("qwen", context.getSharedPreferences("app_model_preparation", 0).getString("selected_model", null))
++    }
++
++    @Test fun ggufSelectionKeepsExistingFirstSendPathAndDoesNotClaimReady() = check {
++        db.modelDao().insert(model("gguf").copy(format = "GGUF", runtimeId = "llama-cpp-jni"))
++        val app = manager(); app.start(); app.state.first { it.modelId == "gguf" }
++        assertFalse(app.state.value.ready); assertFalse(app.state.value.preparing)
++        assertTrue(backend.loads.isEmpty())
++    }
++}
+--- /dev/null
++++ b/app/src/test/java/com/localai/workspace/inference/ApplicationPreparationLifecycleTest.kt
+@@ -0,0 +1,95 @@
++package com.localai.workspace.inference
++
++import com.localai.workspace.domain.inference.*
++import com.localai.workspace.domain.model.*
++import kotlinx.coroutines.*
++import kotlinx.coroutines.flow.*
++import kotlinx.coroutines.test.*
++import org.junit.Assert.*
++import org.junit.Test
++
++/** Ownership tests with controllable backends; not native/device performance evidence. */
++@OptIn(ExperimentalCoroutinesApi::class)
++class ApplicationPreparationLifecycleTest {
++    private class Backend : InferenceRuntime {
++        override val runtimeType = RuntimeType.LITERT_LM
++        override val runtimeId = "controlled"
++        val progress = MutableStateFlow(GenerationProgress())
++        var gate = CompletableDeferred<Unit>()
++        var generationGate = CompletableDeferred<Unit>()
++        var loads = 0; var initializations = 0; var cancels = 0; var unloads = 0
++        private var path: String? = null
++        override fun supports(format: ModelFormat) = true
++        override fun availableAccelerators() = setOf(AcceleratorType.CPU)
++        override suspend fun inspectModel(source: ModelSource): ModelMetadata = error("Not needed")
++        override suspend fun load(config: ModelLoadConfig) {
++            loads++; progress.value = GenerationProgress(GenerationStage.LOADING_MODEL, detail = "Native load")
++            gate.await()
++            if (path != config.model.absolutePath) { initializations++; path = config.model.absolutePath }
++        }
++        override fun generate(request: GenerationRequest) = flow {
++            generationGate.await(); emit(GenerationEvent.Token("fake callback"))
++        }
++        override fun cancelGeneration() { cancels++ }
++        override suspend fun resetConversation() = Unit
++        override suspend fun unload() { unloads++; path = null }
++        override fun capabilities() = RuntimeCapabilities(runtimeId, true, false, false, false, false)
++        override fun metrics() = RuntimeMetrics(backend = runtimeId)
++        override fun observeProgress() = progress
++    }
++    private fun config(path: String = "qwen") = ModelLoadConfig(ModelSource("/private/$path", path,
++        format = ModelFormat.LITERT_LM), 4096, conversation = ConversationPrompt(""))
++
++    @Test fun openingAndClosingChatsDuringColdLoadDoesNotCancelApplicationPreparation() = runTest {
++        val b = Backend(); val pool = ChatRuntimePool(backgroundScope, idleRetentionMs = null, reportCleanupFailure = { throw it })
++        val application = RuntimePreparation(backgroundScope)
++        val preloader = pool.preloader(b)
++        application.start(RuntimePreparation.Request("qwen", preloader, config())); runCurrent()
++        assertTrue(application.state.value.preparing)
++        // UI revocation is synchronous; cleanup waits behind the ongoing native load.
++        val cleanup = List(3) { pool.lease(b).close() }
++        assertEquals(0, b.cancels); assertEquals(1, b.loads)
++        b.gate.complete(Unit); runCurrent(); application.awaitPending()
++        cleanup.forEach { it.join() }
++        assertTrue(application.state.value.ready)
++        pool.lease(b).load(config())
++        assertEquals(1, b.initializations)
++    }
++
++    @Test fun cancelledScreenWaiterDoesNotCancelSharedPreparation() = runTest {
++        val b = Backend(); val pool = ChatRuntimePool(backgroundScope, reportCleanupFailure = { throw it })
++        val application = RuntimePreparation(backgroundScope)
++        application.start(RuntimePreparation.Request("qwen", pool.preloader(b), config())); runCurrent()
++        val waiter = launch { application.awaitPending() }; runCurrent(); waiter.cancelAndJoin()
++        assertTrue(application.state.value.preparing); assertEquals(0, b.cancels)
++        b.gate.complete(Unit); runCurrent(); assertTrue(application.state.value.ready)
++    }
++
++    @Test fun explicitCancelReachesNativePreparationAndAllowsRetry() = runTest {
++        val b = Backend(); val pool = ChatRuntimePool(backgroundScope, reportCleanupFailure = { throw it })
++        val app = RuntimePreparation(backgroundScope); val request = RuntimePreparation.Request("qwen", pool.preloader(b), config())
++        app.start(request); runCurrent(); app.cancel(); runCurrent()
++        assertEquals(1, b.cancels); assertFalse(app.state.value.ready)
++        b.gate.complete(Unit); app.start(request); runCurrent()
++        assertTrue(app.state.value.ready); assertEquals(2, b.loads)
++    }
++
++    @Test fun noTimerEvictionButMemoryPressureReleasesIdleEngineAndInvalidatesReady() = runTest {
++        val b = Backend().apply { gate.complete(Unit) }; var released = false
++        val pool = ChatRuntimePool(backgroundScope, idleRetentionMs = null, reportCleanupFailure = { throw it }, onEngineReleased = { released = true })
++        val chat = pool.lease(b); chat.load(config()); chat.close().join()
++        advanceTimeBy(2 * 60 * 60_000); runCurrent(); assertEquals(0, b.unloads)
++        pool.releaseIdle(); assertEquals(1, b.unloads); assertTrue(released)
++    }
++
++    @Test fun queuedPreloaderCancellationCannotStopCurrentChatGeneration() = runTest {
++        val b = Backend().apply { gate.complete(Unit) }; val pool = ChatRuntimePool(backgroundScope, reportCleanupFailure = { throw it })
++        val chat = pool.lease(b); chat.load(config())
++        val generating = launch { chat.generate(GenerationRequest("text")).toList() }; runCurrent()
++        val preloader = pool.preloader(b)
++        val waiting = launch { preloader.load(config("gemma")) }; runCurrent()
++        preloader.cancelGeneration(); waiting.cancelAndJoin()
++        assertEquals(0, b.cancels); assertEquals(1, b.loads)
++        b.generationGate.complete(Unit); generating.join()
++    }
++}
+--- /dev/null
++++ b/app/src/test/java/com/localai/workspace/inference/LiteRtVerificationCacheTest.kt
+@@ -0,0 +1,85 @@
++package com.localai.workspace.inference
++
++import java.io.File
++import java.io.RandomAccessFile
++import java.nio.ByteBuffer
++import java.nio.ByteOrder
++import java.security.MessageDigest
++import java.util.concurrent.CancellationException
++import org.junit.Assert.*
++import org.junit.Rule
++import org.junit.Test
++import org.junit.rules.TemporaryFolder
++
++class LiteRtVerificationCacheTest {
++    @get:Rule val tmp = TemporaryFolder()
++    private fun file() = tmp.newFile().apply {
++        writeBytes("LITERTLM".toByteArray() + ByteBuffer.allocate(12).order(ByteOrder.LITTLE_ENDIAN)
++            .putInt(1).putInt(6).putInt(0).array() + ByteArray(4096) { 42 })
++    }
++    private fun hash(file: File) = MessageDigest.getInstance("SHA-256").digest(file.readBytes()).joinToString("") { "%02x".format(it) }
++    private fun stamp(file: File, inode: Long = 1, changed: Long = 1) = LiteRtVerificationCache.Fingerprint(
++        file.canonicalPath, file.length(), file.lastModified(), inode, 1, changed)
++
++    @Test fun repeatedConfigOrModelSwitchCanReuseActualPriorHashVerification() {
++        val a = file(); val b = file(); val cache = LiteRtVerificationCache()
++        val progress = mutableListOf<Long>()
++        fun check(f: File) = cache.verify(f, f.length(), hash(f), { stamp(f) }, { n, _ -> progress.add(n) })
++        check(a); assertFalse(cache.lastCheckReused); assertEquals(0L, progress.first())
++        check(b); assertFalse(cache.lastCheckReused)
++        progress.clear(); check(a); assertTrue(cache.lastCheckReused); assertEquals(listOf(a.length()), progress)
++    }
++
++    @Test fun replacingFileWithSameLengthAndRestoredMtimeStillRequiresHash() {
++        val f = file(); val original = hash(f); val before = stamp(f); val cache = LiteRtVerificationCache()
++        cache.verify(f, f.length(), original, { before })
++        RandomAccessFile(f, "rw").use { it.seek(32); it.writeByte(0) }
++        assertThrows(ModelIntegrityException::class.java) {
++            cache.verify(f, f.length(), original, { before.copy(inode = 2) })
++        }
++        assertFalse(cache.lastCheckReused)
++    }
++
++    @Test fun cachedHeaderAndExpectedSizeAreAlwaysRechecked() {
++        val f = file(); val h = hash(f); val original = stamp(f); val cache = LiteRtVerificationCache()
++        cache.verify(f, f.length(), h, { original })
++        assertThrows(ModelIntegrityException::class.java) { cache.verify(f, f.length() + 1, h, { original }) }
++        RandomAccessFile(f, "rw").use { it.writeByte(0) }
++        assertThrows(ModelIntegrityException::class.java) { cache.verify(f, f.length(), h, { original }) }
++    }
++
++    @Test fun changedHashAndChangedCtimeNeverReuseOldReceipt() {
++        val f = file(); val h = hash(f); val initial = stamp(f); val cache = LiteRtVerificationCache()
++        cache.verify(f, f.length(), h, { initial })
++        assertThrows(ModelIntegrityException::class.java) { cache.verify(f, f.length(), "0".repeat(64), { initial }) }
++        cache.verify(f, f.length(), h, { initial })
++        cache.verify(f, f.length(), h, { initial.copy(changedSeconds = 2) })
++        assertFalse(cache.lastCheckReused)
++    }
++
++    @Test fun missingStatOrMissingHashCannotProduceVerificationReuseClaim() {
++        val f = file(); val cache = LiteRtVerificationCache(); val h = hash(f)
++        repeat(2) { cache.verify(f, f.length(), h, { null }); assertFalse(cache.lastCheckReused) }
++        repeat(2) { cache.verify(f, f.length(), null, { stamp(f) }); assertFalse(cache.lastCheckReused) }
++    }
++
++    @Test fun changedFileDuringHashAndCancellationCannotCreateReceipt() {
++        val f = file(); val cache = LiteRtVerificationCache(); val h = hash(f); var revision = 1L
++        assertThrows(ModelIntegrityException::class.java) {
++            cache.verify(f, f.length(), h, { stamp(f, changed = revision++) })
++        }
++        assertThrows(CancellationException::class.java) {
++            cache.verify(f, f.length(), h, { stamp(f) }, checkCancelled = { throw CancellationException() })
++        }
++        cache.verify(f, f.length(), h, { stamp(f) }); assertFalse(cache.lastCheckReused)
++    }
++
++    @Test fun boundedReceiptsEvictAndNewWorkerStartsWithoutTrust() {
++        val a = file(); val b = file(); val cache = LiteRtVerificationCache(capacity = 1)
++        cache.verify(a, a.length(), hash(a), { stamp(a) })
++        cache.verify(b, b.length(), hash(b), { stamp(b) })
++        cache.verify(a, a.length(), hash(a), { stamp(a) }); assertFalse(cache.lastCheckReused)
++        val fresh = LiteRtVerificationCache(); fresh.verify(a, a.length(), hash(a), { stamp(a) })
++        assertFalse(fresh.lastCheckReused)
++    }
++}
+--- /dev/null
++++ b/docs/APP_MODEL_PREPARATION_011.md
+@@ -0,0 +1,46 @@
++# Application model preparation — 0.1.11
++
++The supplied 25243–25247 captures show repeated cold preparation when choosing between Qwen and Gemma and entering chats. The previous code prepared only on chat entry, cancelled that screen's preparation on clearing its ViewModel, selected the newest library entry when a new owner had no preference, and expired idle weights after ten minutes. The native engine already reused an exact unchanged engine; it owned only one engine, so changing models still invalidated it. These are verified code paths, not a measured attribution of every captured device wait.
++
++## Current behavior and ownership
++
++- Application startup constructs one `ApplicationModelPreparation` and begins real CPU preparation of the last selected usable LiteRT model. A missing selection falls back to a usable library entry; partial/corrupt/importing records are not preload targets. No prompt is generated, no network call is involved, and no second model is preloaded.
++- Workspace now has an **Active model** selector, real loading/integrity/session progress, ready state, cancel, retry and expandable actual error details. Status is shared with the matching chat. The selected ID is persisted in private ordinary preferences, independently of project-specific model preferences. New chats inherit the last app selection; existing project preferences remain honored.
++- Preparation uses an application-owned pool preloader with no screen lease. Opening/closing a chat, cancelling its waiter or deleting its conversation cannot cancel this shared job. Explicit Cancel loading and selecting another model still cancel native preparation and await teardown. Backend deadlines/errors remain active.
++- A real chat generation obtains a revocable lease through the existing serialized pool. It waits for preparation, then loads its actual bounded prompt/config and reuses the backend's exact verified engine when possible. Handover discards prior conversation/KV state. No previous project's prompt/history is shared with a new chat.
++- The application's idle engine has no arbitrary ten-minute timer. Reported memory pressure still releases an idle engine and invalidates the ready badge. Android can reclaim the native worker/app; retry then needs a load. GGUF retains its existing first-send preparation and safe unload path; this version does not claim cross-chat GGUF weight retention.
++
++## Integrity and changing models
++
++The LiteRT worker now keeps at most eight successful SHA verification receipts. A receipt includes canonical path, actual size, millisecond mtime, inode/device, change-time seconds, expected size/hash and actual format version. Every load still verifies readable header/format/size; changes to identity/attributes/hash invalidate reuse. If stat is unavailable or the expected hash is absent/malformed, reuse is disabled. A changed file during verification, corruption, hash failure or cancelled verification cannot produce a receipt. Receipts exist only for that worker lifetime, and are not written to Room or trusted after restarting the worker.
++
++This is a cache for app-private files with app-controlled atomic imports/replacements, not proof against arbitrary privileged in-place tampering that preserves every recorded attribute. It never reads a whole model into RAM. The log `LITERT_INTEGRITY_REUSE` means an earlier successful SHA verification was reused for the unchanged private file, not that a new hash scan occurred. Existing `LITERT_VERIFY_OK`/engine/session/error/watchdog logs remain available under `LocalAI/LiteRT`.
++
++One native engine remains resident. Switching Qwen ↔ Gemma still initializes the other model, but an unchanged model's hash can reuse its receipt while the worker survives. Returning to Workspace/new chat with the same model does not start another native preparation when the shared configuration is already ready/running. Context/thread/vision changes may require a different engine; first startup, actual worker failure/reset, memory eviction and model file changes can require verification/loading again.
++
++The phone has 8GB total RAM; the captures show 4.4GiB of model files. These file sizes are not measured runtime RAM requirements, and available Android memory is unverified. Two simultaneously initialized engines would require additional weights, KV caches and runtime buffers. This version deliberately retains one model and does not claim both models can remain resident or that CPU decoding is faster. The previous answer-relevance failure is also unresolved.
++
++## Data and retained features
++
++Room remains schema3: no new DB migration, no destructive migration and no model/chat/project deletion. Workspace separation and confirmed deletion, private-file cleanup outbox, model library, existing GGUF, RAG/citations, memory, tools, imports/downloads and image flow are retained. LiteRT0.17.1 CPU/native libraries and embedded model templates remain unchanged. A lightweight model-ID preference is added; it contains no prompts, HF token or private conversation content.
++
++## Executed validation
++
++- Corrected debug batch: `./gradlew testDebugUnitTest assembleDebug lintDebug --max-workers=2`, PASS in48s. All146app tests actually executed, zero failures/errors/skips; 2unchanged compatibility tests UP-TO-DATE. Lint PASS_WITH_WARNINGS: 0errors,73pre-existing warnings (72app+1compatibility).
++- 17new regressions: five real Room/preferences startup/selection/settings tests, five coroutine/pool ownership/cancellation/retention tests and seven integrity receipt invalidation/failure/bounding tests. Controlled backends in these tests are not native generation or phone benchmarks.
++- First compile found an inferred-type recursion in AppGraph callbacks; explicit property types corrected it. Initial test fixtures gave both models the same unique hash, replacing Qwen with Gemma, and one test awaited queued cleanup before releasing its simulated load. Corrected fixtures/async test ordering; failed logs/XML are retained, followed by the full successful suite.
++- Physical Android UI/startup/latency/native runtime validation: **NOT_EXECUTED**, no attached adb device. No new device speedup or Gemma inference PASS is claimed.
++- Release `assembleRelease -Parm64Only=true --max-workers=2`: PASS in1m15s,23executed tasks/115up to date. Same certificate/package/version/minSdk/ABI/feature DEX markers and all8native hashes vs0.1.10 PASS.
++- [Signed0.1.11 APK in Drive](https://drive.google.com/file/d/1xOJPIKlK9cA4csUT-yphfqR9a9ijf1u_/view?usp=drivesdk),91,584,441bytes, SHA-256 `95ff736a2ba37bf4b2de0c35d9be3eecfdf4d1f23cff5518ccbacf64ff0494fb`. Drive metadata readback PASS; provider checksum unavailable. [Artifact manifest](validation/apk-011.json).
++
++## Phone verification
++
++Install as an update without uninstalling or clearing data. Keep existing models/projects/chats.
++
++1. In Workspace select Qwen. Confirm progress appears there, and wait for Model ready. Close/open several chats with Qwen: no full integrity scan or engine initialization should recur. Native session creation for an independent chat is expected.
++2. Begin loading from Workspace and immediately enter/leave a chat. The Workspace load must continue. Cancel loading explicitly, then Retry loading; errors must show a recoverable diagnostic.
++3. Restart the app: Qwen should be selected and load once from Workspace. Restarting the app/worker may require a cold load; this does not constitute a warm-navigation result.
++4. Choose Gemma. Expect one engine initialization for Gemma. Return to Qwen: initialization is expected because only one engine is retained; if the worker and file are unchanged the `LITERT_INTEGRITY_REUSE` event should replace a full hash scan.
++5. Compare actual request-to-first-token/load timings in Diagnostics for cold and warm cases. Check native `LITERT_ENGINE_REUSE`, `LITERT_MODEL_OPEN_START`, `LITERT_INTEGRITY_REUSE`, `LITERT_WORKER_RESET` and errors. Do not infer CPU decode improvement from faster preparation.
++
++For logs: `adb logcat -v threadtime 'LocalAI/LiteRT:V' 'LocalAI/Runtime:V' '*:S'`. Do not share unrelated logcat output containing private app content. Model weights/engine handles cannot survive Android process destruction permanently.
+--- a/docs/STATUS.md
++++ b/docs/STATUS.md
+@@ -1,4 +1,16 @@
+-# Project status — 0.1.10 / 2026-10-05
++# Project status — 0.1.11 / 2026-10-05
++
++**APP-OWNED MODEL PREPARATION**: real LiteRT CPU preparation starts at app launch for the last selected usable model; Workspace shows Active model selection, actual progress/integrity/session/error/cancel/retry. New chats inherit this selection; existing project model preferences remain honored. Closing a chat or cancelling its waiter cannot cancel the application job. Generation uses the existing isolated chat lease, serialized native access and fresh conversation/KV handover.
++
++**RETENTION / INTEGRITY**: app idle weights no longer expire after ten minutes; memory pressure still releases idle engines and invalidates readiness. Only one engine is retained; Qwen↔Gemma/context/vision/backend changes can require initialization. A bounded worker-lifetime SHA receipt cache rechecks header/size/identity/hash/stat attributes, invalidates changes/failures and skips repeated full scans only for previously verified unchanged private files. No persistent verification bypass, no models loaded into RAM for hashing and no promise to retain both models in8GB. Android worker/app reclamation can require cold loading.
++
++**VALIDATION PASS**:146app tests actually executed,0failures/errors/skips;2unchanged compatibility tests UP-TO-DATE. Full debug tests/build/lint PASS in48s. Lint0errors/73pre-existing warnings. Release PASS in1m15s; same-certificate signature/package/version/ABI/feature DEX checks PASS; all8native hashes match0.1.10. Room remains schema3; no migration/data deletion. LiteRT0.17.1CPU/templates/native libraries and existing GGUF/RAG/citations/memory/tools/library/import/download/deletion flows retained. CPU decoding and prior semantic-relevance failure unchanged. Android physical UI/startup/native/timing validation **NOT_EXECUTED**, no attached device.
++
++**APK / DRIVE PASS**: [Download signed0.1.11 ARM64 APK](https://drive.google.com/file/d/1xOJPIKlK9cA4csUT-yphfqR9a9ijf1u_/view?usp=drivesdk),91,584,441bytes,versionCode12. Local path `dist/apk/local-ai-workspace-0.1.11-app-preload-arm64.apk`, SHA-256 `95ff736a2ba37bf4b2de0c35d9be3eecfdf4d1f23cff5518ccbacf64ff0494fb`. Drive readback confirms exact filename/size/MIME/original parent/private sharing; provider hash not exposed. Install as an update without uninstalling or clearing data. Earlier signed artifacts remain intact.
++
++[Behavior and phone checks](APP_MODEL_PREPARATION_011.md). [Artifact](validation/apk-011.json).
++
++## Historical project status — 0.1.10 / 2026-10-05
+ 
+ **WORKSPACE REORGANIZED**: direct Start chat plus optional Start project; separate chat/project lists; project screen with multiple independently addressed conversations, shared local files and memory. Confirmed standalone-chat deletion removes its isolated owner/card/resources; Delete project removes its card and every owned chat/document/index/embedding/project memory; Delete project chat preserves siblings/shared resources. Models/settings/benchmarks, global memory and unrelated work remain. Startup no longer recreates a deleted Personal workspace.
+ 

@@ -1,0 +1,8 @@
+{
+  "version": "0.3.1",
+  "versionCode": 23,
+  "gitAvailable": false,
+  "sourceArchive": "/workspace/baselines/local-ai-workspace-0.3.1-source.tar.gz",
+  "sourceArchiveSha256": "5e1405da528b2b636a048be422e9fde0f86d0f9f3e7de8b827e04cecb1f23683",
+  "physicalValidation": "User reported historical33/33 and semantic20/20; not rerun on host"
+}

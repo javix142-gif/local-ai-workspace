@@ -1,0 +1,16 @@
+{
+  "runtime": "0.17.1",
+  "platform": "Linux host; NOT YET DEVICE VALIDATED",
+  "image": {
+    "dimension": 768,
+    "finite": true,
+    "norm": 1.000000013375861,
+    "ms": 3432.883824018063
+  },
+  "audio": {
+    "dimension": 768,
+    "finite": true,
+    "norm": 0.99999945532499,
+    "ms": 298.96763002034277
+  }
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.LiteRtEngineResourcesTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-05T17:20:31" hostname="74096e896c47" time="0.056">
+  <properties/>
+  <testcase name="completedTurnsReuseOneEngineWithFreshConversationAndUpdatedSampler" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.005"/>
+  <testcase name="acknowledgedStopCanDiscardConversationWithoutUnloadingVerifiedEngine" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.005"/>
+  <testcase name="unloadOrLostNativeHandleInvalidatesReuseAndAllowsColdRetry" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.001"/>
+  <testcase name="missingOrInvalidRecordedHashCannotQualifyAnEngineForReuse" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.0"/>
+  <testcase name="failedInitializationCannotBeReusedAndOwnedHandleCanBeReleasedBeforeRetry" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.0"/>
+  <testcase name="smokeTestsAlwaysInitializeFreshWithoutUsingNormalChatEngine" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.0"/>
+  <testcase name="verifiedConversationMayBePreservedButAChangedEngineMustAlwaysDiscardIt" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.001"/>
+  <testcase name="changedFileIdentityOrEngineConfigurationForcesColdInitialization" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.039"/>
+  <testcase name="failedConversationReplacementNeverLeavesPreviousHistoryOrSessionAttached" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

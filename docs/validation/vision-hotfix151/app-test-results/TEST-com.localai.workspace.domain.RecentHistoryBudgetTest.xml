@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.domain.RecentHistoryBudgetTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-06T04:33:05" hostname="74096e896c47" time="0.002">
+  <properties/>
+  <testcase name="onlyNewestCompletePairsFit" classname="com.localai.workspace.domain.RecentHistoryBudgetTest" time="0.0"/>
+  <testcase name="oneOversizedRecentTurnNeverResurrectsOlderHistory" classname="com.localai.workspace.domain.RecentHistoryBudgetTest" time="0.0"/>
+  <testcase name="allPairsFitAndAreReturnedChronologicallyToModel" classname="com.localai.workspace.domain.RecentHistoryBudgetTest" time="0.0"/>
+  <testcase name="explicitDocumentHasPriorityAndIsNeverCut" classname="com.localai.workspace.domain.RecentHistoryBudgetTest" time="0.001"/>
+  <testcase name="noHistoryFitsButCurrentAndPolicySurvive" classname="com.localai.workspace.domain.RecentHistoryBudgetTest" time="0.0"/>
+  <testcase name="memoryKeepsItsExistingPriorityAboveHistory" classname="com.localai.workspace.domain.RecentHistoryBudgetTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

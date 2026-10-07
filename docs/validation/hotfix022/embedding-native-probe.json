@@ -1,0 +1,1 @@
+{"cpuInitiallyRegistered":false,"missingCpuFailureReproduced":true,"nativeBackendMissingErrorObserved":true,"architecture":"gemma-embedding","dimensions":768,"norm":1,"relevantCosine":0.506576,"unrelatedCosine":0.0894677}

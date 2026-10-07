@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.LiteRtVisionInputTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-07T20:38:56" hostname="05497ac86eb0" time="0.001">
+  <properties/>
+  <testcase name="canonicalVisualHistoryContinuesOnlyInItsOwnChat" classname="com.localai.workspace.inference.LiteRtVisionInputTest" time="0.001"/>
+  <testcase name="sameNativeTurnContainsImageAndQuestionAndTextTurnDoesNot" classname="com.localai.workspace.inference.LiteRtVisionInputTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

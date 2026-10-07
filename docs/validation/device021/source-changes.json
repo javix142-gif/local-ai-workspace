@@ -1,0 +1,194 @@
+[
+  {
+    "path": "app/build.gradle.kts",
+    "before": "0102004a5e809f56c793bb29bd2da3bccac1239cd7d3b7d96ad120515b24d535",
+    "after": "7d9d8369391df1c78ff915f5b5603e5512a149e92681f2578613bfa609600adf",
+    "kind": "modified"
+  },
+  {
+    "path": "app/src/androidTest/java/com/localai/workspace/ui/DeviceValidationNavigationTest.kt",
+    "before": null,
+    "after": "26591eafc3847430bf5a613b5fcc0e92917a1536d8c8c27aab785370a2f1a96b",
+    "kind": "added"
+  },
+  {
+    "path": "app/src/main/assets/device_validation/audio_fixture.wav",
+    "before": null,
+    "after": "6748182dca6da09f24151813c9e9da854cde048faf01142fd750f2f49682db92",
+    "kind": "added"
+  },
+  {
+    "path": "app/src/main/assets/device_validation/PROVENANCE.json",
+    "before": null,
+    "after": "9da02ee67b327e5611ec39a8f868c012da3f1faff18fc3b00d9b572eb046fea8",
+    "kind": "added"
+  },
+  {
+    "path": "app/src/main/assets/python/worker.js",
+    "before": "cee14ec6c435ac1912b07e32fd59502397426a884ea31d4caf2468bf521e49a5",
+    "after": "622faa56a48cd1de5db320b5ed50381dce7b9754ad9e79379f172af4e0149de0",
+    "kind": "modified"
+  },
+  {
+    "path": "app/src/main/assets/python/main.js",
+    "before": "52828b83f87c26f64c86de86cd55efb3ef114734ffcb09db1ed8ab0c8087698b",
+    "after": "14c70b25999a8ddb5df0656873fed2ef3b6b2f1b8097ca74aeac7276a9246643",
+    "kind": "modified"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/MainActivity.kt",
+    "before": "eecb532fe667bd0bf964192121a1b723febc3e0fed184b8f2a2038f3b471461a",
+    "after": "ee9e666ad118f423edec9b5a72d3f31a112997c321b458fefe4a77dcfc147c05",
+    "kind": "modified"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/AppGraph.kt",
+    "before": "b979ebe6e1689cdb4b0480009feb3e86409ef86ad003c03d8134351454bac399",
+    "after": "bc5ebfc404c8242f9c26790c80f28c957d4267aa5359bdc4a2ab0e8b9257059a",
+    "kind": "modified"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/ui/ViewModels.kt",
+    "before": "13f086a310f900fb28e429a8191e350419b0e7259e4e16d6b89e0afc01bc8e49",
+    "after": "242e572448058acdca2a4197c55451f6cf923fb2eb58e8cd046f32fa3ad02ed5",
+    "kind": "modified"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/ui/DeviceValidationScreen.kt",
+    "before": null,
+    "after": "37e8eed1e734deef64db49d287572b3431630c6a24da9f248d61c31595f8a62f",
+    "kind": "added"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/validation/ValidationEngine.kt",
+    "before": null,
+    "after": "f43a52d32ebc5e3744aab9491041bd873e8db1b8dda1683e2025a101a99b075b",
+    "kind": "added"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/validation/ValidationModels.kt",
+    "before": null,
+    "after": "f50f98ae722712d8710799c8089e0f5f827fdd5bad78b8c16388672051e35ded",
+    "kind": "added"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/validation/DeviceValidation.kt",
+    "before": null,
+    "after": "77b84c922c4aa25f214a6acb4a66bc1d20f273dd2a67288f5f417d141c4cab4e",
+    "kind": "added"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/validation/ValidationContext.kt",
+    "before": null,
+    "after": "f5424dca7f7c6dc8413985b895ca624f8461e1faa25ff46e64dcfef1d3db2a46",
+    "kind": "added"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/validation/ValidationFixtures.kt",
+    "before": null,
+    "after": "1ffe4bb41435ab5eface9d73901bb503a09468e1d24777fa0d885462fe4d7c8f",
+    "kind": "added"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/validation/ProductionValidationBackend.kt",
+    "before": null,
+    "after": "d01188a3bb402ad2565a3e89a1577db47ca9d87e123f288fb2d783fb8eea85ed",
+    "kind": "added"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/performance/PerformanceDiagnostics.kt",
+    "before": "0778853a23ac2b897733bdab0fda3e4b8877a02244de581e0c173fb7f9d724de",
+    "after": "4e897645424b5e8c0bad82910a9890925df086af07c802f0b3f02adbbee76b69",
+    "kind": "modified"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/data/LiteRtChatDefaultsUpgrade.kt",
+    "before": "143468c734362b36599bf0725b8a274d869def04bd6918eb87b3113e43818f9b",
+    "after": "6c5f99003ab8b89da719cfee90f9ed2f61d5adb47ee7102aefb2d2e2a6271d5e",
+    "kind": "modified"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/data/DocumentIngestion.kt",
+    "before": "d1721aaf6258122c5cfc2b3c50d9a4a41f8dc3887f5016810713ad6f66b63224",
+    "after": "38d23bf6819d7e63432af17e04edf80120f8c860588bac7fec80028206637dc7",
+    "kind": "modified"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/data/ImagePreprocessor.kt",
+    "before": "e1378bd1b6e44ca5f73789ec2d99a3917d35a4c13b22e235e252bbcdaddd4196",
+    "after": "0a1649b7feddfad1c94ff2222e423575a6f9abbe9999e646612b653636ecfdd2",
+    "kind": "modified"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/data/WorkspaceDatabase.kt",
+    "before": "9df91638cdab6a0929d9a498b99660b3560ad1739e6a117eb86ab096b2c7e370",
+    "after": "1e241ec617d35dfd8ad4d36e75d51437f45a05265523d6eccadf61eba1370dcf",
+    "kind": "modified"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/inference/NativeChatTools.kt",
+    "before": "73351444072d332e658c3bf054ce319857c2daf771185e08660976c5f88197ec",
+    "after": "db9a1f227b649a88ffebfc93ae183938fbb15799c05165a45e6b02cbc2952c7d",
+    "kind": "modified"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/inference/LiteRtLmInferenceRuntime.kt",
+    "before": "b1f0cd248eadf0f9314e51feaac942c9b4ac000fd369da54d156e2bb0527e518",
+    "after": "7c8e4e4739965a786ee81f6fdf14c540b451536f0d64a29abaa679a2ff5fbce1",
+    "kind": "modified"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/inference/LiteRtLmService.kt",
+    "before": "d3b5697b82f43f4b84e05e9abf9728244fe2d7c542b56e40d80a227d4ea63ca2",
+    "after": "35e222a9c43fe31dd03ab56382df749198615af7181d1e3ea25615b4f073dd59",
+    "kind": "modified"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/audio/AudioInput.kt",
+    "before": "7396af05acb24b2cbb78b171aa494ca3436e819fd96fc1d8dc636cc784febe5d",
+    "after": "7fcbc2410b953d0a22a5e54e0670f568434a5e0e98efcf5a96183fb51c0c29f3",
+    "kind": "modified"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/domain/model/WorkspaceModels.kt",
+    "before": "02218da64820b243a1fded5fa1d44c4a0768d043cb597b309236e836fbbfd240",
+    "after": "6e0a1e8dfc059c565d026913eb46a50ae005d52daacec1788312f95bc0bb912b",
+    "kind": "modified"
+  },
+  {
+    "path": "app/src/main/java/com/localai/workspace/domain/tools/ProjectTools.kt",
+    "before": "e65994f1bc6935b4796fbb3ec1fe9cc95a4e6c16eb43b8ef5f4234eed405174b",
+    "after": "35c1084e8f63ca8815a6cf77e423ab6ca5d6413e9dca03a4ece4a77c9b8bb5ce",
+    "kind": "modified"
+  },
+  {
+    "path": "app/src/test/java/com/localai/workspace/ui/UiSmokeTest.kt",
+    "before": "e0df19a22804294a505e4500138735ee840b791809ef92c22e49c29b4822adc4",
+    "after": "57ba914eee43e3f36345df10d5fba1ec158400b834dc6411e185a2f3e9923632",
+    "kind": "modified"
+  },
+  {
+    "path": "app/src/test/java/com/localai/workspace/validation/ValidationFrameworkTest.kt",
+    "before": null,
+    "after": "4b8c13332950755ce2f0a3c00a7837834b1912eccb46d6db515ec4d74b769b6e",
+    "kind": "added"
+  },
+  {
+    "path": "app/src/test/java/com/localai/workspace/validation/ValidationPrerequisitesTest.kt",
+    "before": null,
+    "after": "cb7dd3b03dc831f41ffdac6f92a09592c02e2123e23c3adea65247deaf4e0677",
+    "kind": "added"
+  },
+  {
+    "path": "app/src/test/java/com/localai/workspace/validation/ValidationIsolationTest.kt",
+    "before": null,
+    "after": "d7ce0f1fc455dd3e69a2f1b84fe78138ad6756902c9c06541d52e25fb169c140",
+    "kind": "added"
+  },
+  {
+    "path": "app/src/test/java/com/localai/workspace/inference/LiteRtIpcDispatchTest.kt",
+    "before": "2ff39404ef2dfc2877268ff560f7e8c9da396b8f201f3bad98f3f6aff80ab125",
+    "after": "d72ac4165b2060d99b85b6957ed8cee7abe1909796e02d1e124263b1e12515ce",
+    "kind": "modified"
+  }
+]

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.LiteRtIpcDispatchTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-07T04:55:36" hostname="74096e896c47" time="0.39">
+  <properties/>
+  <testcase name="effectiveConfigurationAndMediaEvidenceSurviveIpcWithoutInventingMetrics" classname="com.localai.workspace.inference.LiteRtIpcDispatchTest" time="0.138"/>
+  <testcase name="warmTurnMetricsDoNotReportPreviousColdLoadOrInventUnsupportedValues" classname="com.localai.workspace.inference.LiteRtIpcDispatchTest" time="0.04"/>
+  <testcase name="loadReachesFileValidationEvenIfMessageIsRecycledBeforeWorkerRuns" classname="com.localai.workspace.inference.LiteRtIpcDispatchTest" time="0.047"/>
+  <testcase name="conversationResetIsDispatchedAndAcknowledgedAfterMessageRecycle" classname="com.localai.workspace.inference.LiteRtIpcDispatchTest" time="0.03"/>
+  <testcase name="snapshotsKeepEveryCommandReplyAndScalarPayloadAfterRecycleAndReuse" classname="com.localai.workspace.inference.LiteRtIpcDispatchTest" time="0.035"/>
+  <testcase name="invalidCommandIsReportedAsProtocolErrorBeforeAnyNativeTask" classname="com.localai.workspace.inference.LiteRtIpcDispatchTest" time="0.034"/>
+  <testcase name="reusedSessionAndNativeCompletionAreDistinctFromUnsupportedEos" classname="com.localai.workspace.inference.LiteRtIpcDispatchTest" time="0.02"/>
+  <testcase name="queuedStructuredHistoryListsAreSnapshotsEvenIfSenderMutatesItsBundle" classname="com.localai.workspace.inference.LiteRtIpcDispatchTest" time="0.018"/>
+  <testcase name="queuedUnloadCompletesAfterHandlerRecyclesItsMessage" classname="com.localai.workspace.inference.LiteRtIpcDispatchTest" time="0.028"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

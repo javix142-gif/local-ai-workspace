@@ -1,0 +1,29 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "Action completed."
+    }
+  ],
+  "structuredContent": {
+    "accepted_input": "file_uri",
+    "success": true,
+    "id": "10_AIAPomtCQnemliE0qksZLEGTM346WO",
+    "title": "local-ai-workspace-0.1.12-chat-files-arm64.apk",
+    "file_name": "local-ai-workspace-0.1.12-chat-files-arm64.apk",
+    "mime_type": "application/vnd.android.package-archive",
+    "url": "https://drive.google.com/file/d/10_AIAPomtCQnemliE0qksZLEGTM346WO/view?usp=drivesdk",
+    "parent_id": "0ANkfEFavP-XTUk9PVA",
+    "structuredContent": {
+      "accepted_input": "file_uri",
+      "success": true,
+      "id": "10_AIAPomtCQnemliE0qksZLEGTM346WO",
+      "title": "local-ai-workspace-0.1.12-chat-files-arm64.apk",
+      "file_name": "local-ai-workspace-0.1.12-chat-files-arm64.apk",
+      "mime_type": "application/vnd.android.package-archive",
+      "url": "https://drive.google.com/file/d/10_AIAPomtCQnemliE0qksZLEGTM346WO/view?usp=drivesdk",
+      "parent_id": "0ANkfEFavP-XTUk9PVA"
+    }
+  },
+  "isError": false
+}

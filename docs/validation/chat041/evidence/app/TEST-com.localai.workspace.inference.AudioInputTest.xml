@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.AudioInputTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-07T18:30:38" hostname="05497ac86eb0" time="0.007">
+  <properties/>
+  <testcase name="invalidOversizedAndEscapedInputsAreRejected" classname="com.localai.workspace.inference.AudioInputTest" time="0.002"/>
+  <testcase name="validAudioIsSameTurnAsTextAndNextRequestIsTextOnly" classname="com.localai.workspace.inference.AudioInputTest" time="0.002"/>
+  <testcase name="audioEffectiveTurnRemainsInOwnHistoryWithoutBecomingNextAttachment" classname="com.localai.workspace.inference.AudioInputTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

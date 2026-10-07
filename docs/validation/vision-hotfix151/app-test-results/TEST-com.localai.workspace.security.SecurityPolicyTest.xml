@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.security.SecurityPolicyTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-06T04:33:09" hostname="74096e896c47" time="0.004">
+  <properties/>
+  <testcase name="pathAndUrlAllowListsRejectEscapesAndDangerousSchemes" classname="com.localai.workspace.security.SecurityPolicyTest" time="0.002"/>
+  <testcase name="writeToolRequiresNativeConfirmationBoundary" classname="com.localai.workspace.security.SecurityPolicyTest" time="0.002"/>
+  <testcase name="untrustedContentCannotAuthorizeEvenAnEnabledTool" classname="com.localai.workspace.security.SecurityPolicyTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

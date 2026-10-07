@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.data.ChatDeletionTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-05T20:37:13" hostname="74096e896c47" time="1.633">
+  <properties/>
+  <testcase name="deletesEveryConversationAndItsMessagesCitationsAndToolHistory" classname="com.localai.workspace.data.ChatDeletionTest" time="0.347"/>
+  <testcase name="lateGenerationWritesCannotResurrectDeletedChatOrAttachToReplacement" classname="com.localai.workspace.data.ChatDeletionTest" time="0.258"/>
+  <testcase name="concurrentOpenDoesNotCreateDuplicateConversations" classname="com.localai.workspace.data.ChatDeletionTest" time="0.274"/>
+  <testcase name="retainsLegacyConversationUntilDeletedThenCreatesFreshEmptyChat" classname="com.localai.workspace.data.ChatDeletionTest" time="0.196"/>
+  <testcase name="failedDeleteRollsBackChildRowsAndConversationTogether" classname="com.localai.workspace.data.ChatDeletionTest" time="0.153"/>
+  <testcase name="deletionOfMissingOrAlreadyDeletedChatsIsSafeAndScoped" classname="com.localai.workspace.data.ChatDeletionTest" time="0.173"/>
+  <testcase name="preservesOtherChatsDocumentsMemoryModelsAndProjectSettings" classname="com.localai.workspace.data.ChatDeletionTest" time="0.228"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

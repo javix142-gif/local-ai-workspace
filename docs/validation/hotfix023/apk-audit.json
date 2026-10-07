@@ -1,0 +1,24 @@
+{
+  "apk": "local-ai-workspace-0.2.3-thinking-arm64.apk",
+  "bytes": 98520164,
+  "sha256": "7daaee409d0f717ddd27b5bc3af62d03bef5525f34c09a46cbd22d07ec0ac3c5",
+  "versionName": "0.2.3",
+  "versionCode": 20,
+  "certificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
+  "updateSignatureMatches022": true,
+  "abi": "arm64-v8a",
+  "nativeLibraries": 9,
+  "libraryChanged": {
+    "lib/arm64-v8a/libai-chat.so": false,
+    "lib/arm64-v8a/libandroidx.graphics.path.so": false,
+    "lib/arm64-v8a/libggml-base.so": false,
+    "lib/arm64-v8a/libggml-cpu.so": false,
+    "lib/arm64-v8a/libggml.so": false,
+    "lib/arm64-v8a/liblitertlm_jni.so": false,
+    "lib/arm64-v8a/libllama-common.so": false,
+    "lib/arm64-v8a/libllama.so": false,
+    "lib/arm64-v8a/liblocal-embedding.so": false
+  },
+  "pythonAssetsUnchanged": true,
+  "physicalDeviceTest": "REQUIRED"
+}

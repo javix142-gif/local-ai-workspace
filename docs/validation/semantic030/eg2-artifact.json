@@ -1,0 +1,13 @@
+{
+  "revision": "24d962e906c7d332c6428e71c9676855024569e2",
+  "file": {
+    "rfilename": "embeddinggemma-2-740m.litertlm",
+    "blobId": "e431e6c96407361a30faf0b6d8a5448c7836c7bd",
+    "size": 484622336,
+    "lfs": {
+      "sha256": "e7a8a2204b91e0f96e92960e84a09a89212e1633dcb7575a9bf3378b4df77f4c",
+      "size": 484622336,
+      "pointerSize": 134
+    }
+  }
+}

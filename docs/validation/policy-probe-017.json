@@ -1,0 +1,162 @@
+{
+  "sdk": "0.17.1",
+  "platform": "Linux CPU, not Android",
+  "limit": 256,
+  "turns": [
+    {
+      "profile": "short-en",
+      "policy": "You are an offline local assistant. Reply in the user's language in at most two sentences. Use a list only when requested.",
+      "prompt": "hola",
+      "ttftMs": 2561,
+      "totalMs": 3739,
+      "chunks": 9,
+      "text": "Hola! ¿En qué puedo ayudarte hoy?",
+      "benchmark": {
+        "init_time_in_second": 57.107424886000004,
+        "time_to_first_token_in_second": 2.12265543275,
+        "last_prefill_token_count": 60,
+        "last_prefill_tokens_per_second": 30.862831612426216,
+        "last_decode_token_count": 10,
+        "last_decode_tokens_per_second": 5.60006374530161
+      }
+    },
+    {
+      "profile": "short-en",
+      "policy": "You are an offline local assistant. Reply in the user's language in at most two sentences. Use a list only when requested.",
+      "prompt": "como estas",
+      "ttftMs": 1643,
+      "totalMs": 5922,
+      "chunks": 30,
+      "text": "¡Estoy bien, gracias! ¿Y tú?\n\n¿Te gustaría que hablemos de algo más o te ayude con algo específico?",
+      "benchmark": {
+        "init_time_in_second": 57.107424886000004,
+        "time_to_first_token_in_second": 2.12265543275,
+        "last_prefill_token_count": 14,
+        "last_prefill_tokens_per_second": 13.591226520005787,
+        "last_decode_token_count": 31,
+        "last_decode_tokens_per_second": 6.339424801758851
+      }
+    },
+    {
+      "profile": "short-en",
+      "policy": "You are an offline local assistant. Reply in the user's language in at most two sentences. Use a list only when requested.",
+      "prompt": "por que se demoran los mensajes?",
+      "ttftMs": 1432,
+      "totalMs": 44390,
+      "chunks": 256,
+      "text": "Los mensajes tardan en llegar por varias razones técnicas:\n\n*   **Latencia de red:** El tráfico y la congestión pueden retrasar el envío.\n*   **Procesamiento local:** El servidor debe procesar los datos antes de enviarlos al cliente.\n*   **Código de respuesta:** Algunos sistemas tienen límites de longitud o caracteres que causen lentitud.\n*   **Configuraciones:** Si hay problemas con el software, puede causar demoras.\n*   **Factores externos:** Eventos como huelgas o cambios de clima pueden afectar la velocidad.\n*   **Tecnología:** La infraestructura y las herramientas disponibles pueden influir en la rapidez.\n*   **Humanos:** La experiencia del usuario puede variar según su perfil.\n*   **Sistemas:** Los frameworks y plataformas utilizados pueden tener limitaciones.\n*   **Datos:** La calidad e integridad de la información es clave.\n*   **Algoritmos:** Las decisiones de diseño y lógica deben ser eficientes.\n*   **Estructuras:** Los componentes físicos y lógicos son fundamentales.\n*   **Infraestructuras:** Las bases materiales y digitales son vitales.\n*   **Protocolos:** Las",
+      "benchmark": {
+        "init_time_in_second": 57.107424886000004,
+        "time_to_first_token_in_second": 2.12265543275,
+        "last_prefill_token_count": 20,
+        "last_prefill_tokens_per_second": 25.739288708578535,
+        "last_decode_token_count": 256,
+        "last_decode_tokens_per_second": 5.870166402348116
+      }
+    },
+    {
+      "profile": "short-es",
+      "policy": "La inferencia de esta app es local y sin red. Responde brevemente en el idioma del usuario: máximo dos frases. Usa listas solo si las piden.",
+      "prompt": "hola",
+      "ttftMs": 2489,
+      "totalMs": 3966,
+      "chunks": 11,
+      "text": "Hola! Aquí estoy. ¿En qué puedo ayudarte?",
+      "benchmark": {
+        "init_time_in_second": 57.107509971,
+        "time_to_first_token_in_second": 1.86927107625,
+        "last_prefill_token_count": 69,
+        "last_prefill_tokens_per_second": 41.077833021265135,
+        "last_decode_token_count": 12,
+        "last_decode_tokens_per_second": 5.276125906417271
+      }
+    },
+    {
+      "profile": "short-es",
+      "policy": "La inferencia de esta app es local y sin red. Responde brevemente en el idioma del usuario: máximo dos frases. Usa listas solo si las piden.",
+      "prompt": "como estas",
+      "ttftMs": 1632,
+      "totalMs": 5601,
+      "chunks": 29,
+      "text": "Como una inteligencia artificial, no tengo sentimientos ni estado emocional. Sin embargo, estoy funcionando y lista para asistirte. ¿En qué puedo ayudarte?",
+      "benchmark": {
+        "init_time_in_second": 57.107509971,
+        "time_to_first_token_in_second": 1.86927107625,
+        "last_prefill_token_count": 14,
+        "last_prefill_tokens_per_second": 13.527883638486523,
+        "last_decode_token_count": 30,
+        "last_decode_tokens_per_second": 6.573702379959447
+      }
+    },
+    {
+      "profile": "short-es",
+      "policy": "La inferencia de esta app es local y sin red. Responde brevemente en el idioma del usuario: máximo dos frases. Usa listas solo si las piden.",
+      "prompt": "por que se demoran los mensajes?",
+      "ttftMs": 1256,
+      "totalMs": 12732,
+      "chunks": 78,
+      "text": "Los mensajes tardan en llegar por varias razones técnicas:\n\n- **Procesamiento de datos**: Los sistemas deben procesar la información antes de enviarla.\n- **Conexión**: La conexión es vital para que los mensajes lleguen.\n\nEn resumen, los mensajes tardan porque el sistema debe procesar la información antes de enviar.\n\n¿Hay algo más sobre esto?",
+      "benchmark": {
+        "init_time_in_second": 57.107509971,
+        "time_to_first_token_in_second": 1.86927107625,
+        "last_prefill_token_count": 20,
+        "last_prefill_tokens_per_second": 26.46446793400919,
+        "last_decode_token_count": 79,
+        "last_decode_tokens_per_second": 6.597052924684646
+      }
+    },
+    {
+      "profile": "concise-en",
+      "policy": "Answer briefly in the user's language. Do not add a list or a follow-up question unless asked. Inference runs offline on the phone's CPU.",
+      "prompt": "hola",
+      "ttftMs": 1515,
+      "totalMs": 2798,
+      "chunks": 10,
+      "text": "¡Hola! ¿En qué puedo ayudarte hoy?",
+      "benchmark": {
+        "init_time_in_second": 57.10746340199999,
+        "time_to_first_token_in_second": 1.1388153970000001,
+        "last_prefill_token_count": 65,
+        "last_prefill_tokens_per_second": 66.78361930522631,
+        "last_decode_token_count": 11,
+        "last_decode_tokens_per_second": 6.041462529881382
+      }
+    },
+    {
+      "profile": "concise-en",
+      "policy": "Answer briefly in the user's language. Do not add a list or a follow-up question unless asked. Inference runs offline on the phone's CPU.",
+      "prompt": "como estas",
+      "ttftMs": 1388,
+      "totalMs": 4315,
+      "chunks": 22,
+      "text": "¡Hola! Estoy muy bien, gracias por preguntar. 😊\n\n¿Y tú? ¿Cómo estás?",
+      "benchmark": {
+        "init_time_in_second": 57.10746340199999,
+        "time_to_first_token_in_second": 1.1388153970000001,
+        "last_prefill_token_count": 14,
+        "last_prefill_tokens_per_second": 15.824360449995078,
+        "last_decode_token_count": 23,
+        "last_decode_tokens_per_second": 6.707112170538295
+      }
+    },
+    {
+      "profile": "concise-en",
+      "policy": "Answer briefly in the user's language. Do not add a list or a follow-up question unless asked. Inference runs offline on the phone's CPU.",
+      "prompt": "por que se demoran los mensajes?",
+      "ttftMs": 1242,
+      "totalMs": 38673,
+      "chunks": 256,
+      "text": "Los mensajes tardan en llegar por varias razones técnicas relacionadas con la red y el procesamiento de datos:\n\n1. **Latencia de la red**: La conexión a internet puede tener retrasos o interrupciones que afecten la velocidad de transmisión de los datos.\n2. **Procesamiento de datos**: El servidor debe procesar cada mensaje antes de enviártelo.\n3. **Limitación de la red**: La red puede tener problemas que afecten la velocidad de transmisión.\n4. **Problemas de la red**: La red puede ser lenta o inestable, lo cual afecta la comunicación entre dispositivos.\n\n5. **Respuesta de la red**: La red puede responder lentamente o no, lo cual impacta la comunicación entre dispositivos.\n\n6. **Respuesta de la red (latencia)**: La red puede tener latencias o retrasos que afectan la velocidad de transmisión de los datos de los mensajes.\n\n7. **Respuesta de la red** (latencia)**: La red tiene latencias o retrasos que afectan a la velocidad de transmisión de los datos del mensaje.\n\n8. **Respuesta de la red **(latencia) La red tiene latencias o retraso que afectan a la velocidad de transmisión.\n\n",
+      "benchmark": {
+        "init_time_in_second": 57.10746340199999,
+        "time_to_first_token_in_second": 1.1388153970000001,
+        "last_prefill_token_count": 20,
+        "last_prefill_tokens_per_second": 26.840074302988096,
+        "last_decode_token_count": 256,
+        "last_decode_tokens_per_second": 6.749903877651062
+      }
+    }
+  ],
+  "loadMs": 27999,
+  "unloadReturned": true
+}

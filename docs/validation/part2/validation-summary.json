@@ -1,0 +1,66 @@
+{
+  "version": "0.2.0",
+  "versionCode": 17,
+  "baseVersion": "0.1.15",
+  "runtime": "LiteRT-LM 0.17.1",
+  "hostCommand": "JAVA_HOME=/workspace/.toolchain/jdk-17 ANDROID_HOME=/workspace/.toolchain/android-sdk ./gradlew :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:assembleDebug :app:assembleRelease :app:lintDebug :app:assembleDebugAndroidTest -Parm64Only=true -Pkotlin.compiler.execution.strategy=in-process -Dorg.gradle.jvmargs=-Xmx3072m --max-workers=2 --console=plain",
+  "elapsed": "12m54s",
+  "log": "final-delivery-stable.log",
+  "checks": [
+    {
+      "command": ":app:testDebugUnitTest",
+      "result": "PASS",
+      "tests": 262,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "command": ":litert-compat:testDebugUnitTest",
+      "result": "PASS",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution": "UP_TO_DATE (unchanged SDK tests, previously PASS)"
+    },
+    {
+      "command": ":app:assembleDebug",
+      "result": "PASS"
+    },
+    {
+      "command": ":app:assembleRelease",
+      "result": "PASS"
+    },
+    {
+      "command": ":app:assembleDebugAndroidTest",
+      "result": "PASS"
+    },
+    {
+      "command": ":app:lintDebug",
+      "result": "PASS",
+      "Error": 0,
+      "Fatal": 0,
+      "Warning": 76,
+      "Information": 1
+    },
+    {
+      "command": "node scripts/test_python_sandbox.cjs",
+      "result": "PASS",
+      "tests": 8,
+      "environment": "Node/Linux CPython/WASM, not Android WebView"
+    },
+    {
+      "command": "embedding probe with pinned GGUF",
+      "result": "PASS",
+      "tests": 1,
+      "environment": "Linux/x86, not Android",
+      "dimensions": 768
+    },
+    {
+      "command": "connectedAndroidTest / physical Gemma, WebView, audio, Mali, RAM/thermal",
+      "result": "NOT_EXECUTED",
+      "reason": "PHYSICAL_DEVICE_TEST_REQUIRED; adb devices empty"
+    }
+  ]
+}

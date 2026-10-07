@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.ApplicationPreparationLifecycleTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-06T05:20:15" hostname="74096e896c47" time="0.128">
+  <properties/>
+  <testcase name="noTimerEvictionButMemoryPressureReleasesIdleEngineAndInvalidatesReady" classname="com.localai.workspace.inference.ApplicationPreparationLifecycleTest" time="0.128"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

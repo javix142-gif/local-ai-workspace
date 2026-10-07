@@ -1,0 +1,127 @@
+{
+  "files": [
+    {
+      "path": "CHANGELOG.md",
+      "change": "modified",
+      "beforeSha256": "f771645bc03038cef5f691d7eb8a0e3b75dff5bbcbbc4478123f7f0a5a89ce65",
+      "sha256": "ac1c7c014a41e25df2cf3196dfdc21543693449b8cc15a02eef80be3d6a2e91d"
+    },
+    {
+      "path": "README.md",
+      "change": "modified",
+      "beforeSha256": "a0b10302839463b379cecfb4df95d357a8c3786beea0168582d6fdbd5503cce1",
+      "sha256": "48e5d8adff344b93fdbe337067b271a4d737735d47018603845029d252923424"
+    },
+    {
+      "path": "STATUS.md",
+      "change": "modified",
+      "beforeSha256": "51bf08eaa25a7a0e95e8ec35f93e38ecb44f8bc23b250225d867ec45f2f678d2",
+      "sha256": "729f93bd5587cd06203712e5758290dfa37f422ea3a56dff9c29b2e81752b284"
+    },
+    {
+      "path": "app/build.gradle.kts",
+      "change": "modified",
+      "beforeSha256": "0c0bc529b963180f56e8dd69257d30cff8054b620516310e0d01cbbd56a59251",
+      "sha256": "1af1d4bf9b125a0b5d1d7158024aadaa30acd59ae9182dac6f1b0501460b745c"
+    },
+    {
+      "path": "app/src/main/java/com/localai/workspace/AppGraph.kt",
+      "change": "modified",
+      "beforeSha256": "032cb796b04dcb60dd1e8cb627e5878ce3631bf35e2113d7356336c6d3514eda",
+      "sha256": "e2520baa18bf37c0b21acf67c47e95b2a0d0889983b9b56b70e4e2b41c4e80cb"
+    },
+    {
+      "path": "app/src/main/java/com/localai/workspace/MainActivity.kt",
+      "change": "modified",
+      "beforeSha256": "d8f573600487c4b4cc88b6149ee6e9ebac32fa26235a5622bbc6cfce56d1c077",
+      "sha256": "339936421f8dc8d092f7e0b6111cc19b26f51443754d4040718648815dfae1cd"
+    },
+    {
+      "path": "app/src/main/java/com/localai/workspace/data/ApplicationModelPreparation.kt",
+      "change": "modified",
+      "beforeSha256": "e322f2c01e38ef5dcc6451b1440ad0ccba38ba2b2a87457b54e0893b64ff1413",
+      "sha256": "eedce76e0ebc506683b8efafc7636723e5bd07852714c5ac0d6a16adf3924b2c"
+    },
+    {
+      "path": "app/src/main/java/com/localai/workspace/data/Daos.kt",
+      "change": "modified",
+      "beforeSha256": "0c044d7dccc4faac618c7cc4ab5dd946c35a9f18e52f96df290bd8dec043b5c7",
+      "sha256": "306e7b7ce91cbbcb36c689046d38437a0f9988aa2c2bfbfcfe062d3475a50dd9"
+    },
+    {
+      "path": "app/src/main/java/com/localai/workspace/data/DocumentIngestion.kt",
+      "change": "modified",
+      "beforeSha256": "6b315271e8ee611167281a8ab4fba45ba772975e20530b3955722bf58c495c77",
+      "sha256": "2c6c6f19da3cbe2a08e77b0da46af81a2c7770ec5c347441e11d596f4cd8adc9"
+    },
+    {
+      "path": "app/src/main/java/com/localai/workspace/inference/LiteRtEngineResources.kt",
+      "change": "modified",
+      "beforeSha256": "e59d495c9d7d21beb65bdd96667958bb29f8ff4a1d1f8c848541372f337151a5",
+      "sha256": "d58fd19fddf55a81f817e102c878346dd7b59380cd96d6d02b68bf5fb2bb0be3"
+    },
+    {
+      "path": "app/src/main/java/com/localai/workspace/rag/LocalRetrievalService.kt",
+      "change": "modified",
+      "beforeSha256": "9a7e6c54b5950f5ae099419267697e3e62061975d898c71b85b551806dad8689",
+      "sha256": "41c70bc3396855c1a43413806ff27f672c98daa8f1ecee04ed5265ef2bd1655b"
+    },
+    {
+      "path": "app/src/main/java/com/localai/workspace/rag/RetrievalQuery.kt",
+      "change": "created",
+      "beforeSha256": null,
+      "sha256": "67c4062c99462fdefce87fb997189f8a9e9c6723c991ac4b625f2214bc2c4ed8"
+    },
+    {
+      "path": "app/src/main/java/com/localai/workspace/ui/ChatSessions.kt",
+      "change": "created",
+      "beforeSha256": null,
+      "sha256": "93eee32f910bc07c6402d1b821d74e08a5f5ee26364f3096ab30bf94fed594d2"
+    },
+    {
+      "path": "app/src/main/java/com/localai/workspace/ui/ViewModels.kt",
+      "change": "modified",
+      "beforeSha256": "36c1b6f212147b2e8764e25760d712cfa52fc1b834acccd1d3db62c14c725962",
+      "sha256": "d542315cca517d01e68a14fcb4e61cf3c4a4c3a08c6dcf89657a3cdb9ed9b839"
+    },
+    {
+      "path": "app/src/test/java/com/localai/workspace/inference/VisionEngineTextReuseTest.kt",
+      "change": "created",
+      "beforeSha256": null,
+      "sha256": "93e25dcc474570c0bbf3ab2f509bd3f38ff23a247a53fbf77365126dbd6602fd"
+    },
+    {
+      "path": "app/src/test/java/com/localai/workspace/rag/DocumentRetrievalTest.kt",
+      "change": "created",
+      "beforeSha256": null,
+      "sha256": "5f79befe84262283af15c815822548b79afbed0b1a3e5c7e20d451655d8172c2"
+    },
+    {
+      "path": "app/src/test/java/com/localai/workspace/ui/ChatSessionPipelineTest.kt",
+      "change": "created",
+      "beforeSha256": null,
+      "sha256": "781fb738994283bfa05f27dc091d2536e48bfffa3b2f62fd93a2d8586747cf89"
+    },
+    {
+      "path": "docs/CHAT_FILES_AND_BACKGROUND_012.md",
+      "change": "created",
+      "beforeSha256": null,
+      "sha256": "59a1cced48b173952f700a73b1355313019189be267ab038e6e08b4ac26b53fa"
+    },
+    {
+      "path": "docs/STATUS.md",
+      "change": "modified",
+      "beforeSha256": "3c98f8ff85b6d671c93c53f0a15da7e1a9506181647951982117a5e18f754dc0",
+      "sha256": "775b164214b8e55ef52bab3011b1ae3de0369e6386f2617a35660b6ebc129b6f"
+    },
+    {
+      "path": "docs/validation/chat-files-012/verify-artifact.py",
+      "change": "created",
+      "beforeSha256": null,
+      "sha256": "7e1c81877e1846bdd2f61eac27ae138836b7773043aa21922da75b15ce49d620"
+    }
+  ],
+  "schemaVersion": 3,
+  "nativeBaseline": "apk-011.json",
+  "baselineNote": "Source before iteration archive; missing engine-resources original verified against full source backup by exact equality after reverting this iteration\u2019s reuse comparison"
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.LiteRtRuntimeDeadlineTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-05T19:31:57" hostname="74096e896c47" time="2.087">
+  <properties/>
+  <testcase name="repetitionWithoutNativeAcknowledgmentHasFiveSecondPolicyAndResetNotCompletion" classname="com.localai.workspace.inference.LiteRtRuntimeDeadlineTest" time="0.384"/>
+  <testcase name="ignoredNativeCancellationHasItsOwnDeadlineAndReleasesWakeLease" classname="com.localai.workspace.inference.LiteRtRuntimeDeadlineTest" time="0.26"/>
+  <testcase name="acknowledgedManualStopKeepsEngineUntilExplicitUnloadAndReleasesWakeLease" classname="com.localai.workspace.inference.LiteRtRuntimeDeadlineTest" time="0.063"/>
+  <testcase name="acknowledgedLoopIsAnErrorWithRetainedEngineAndSameClientRetry" classname="com.localai.workspace.inference.LiteRtRuntimeDeadlineTest" time="0.056"/>
+  <testcase name="retryAndUnloadCompleteAfterTimeoutWithoutMainThreadOrNewRuntime" classname="com.localai.workspace.inference.LiteRtRuntimeDeadlineTest" time="0.655"/>
+  <testcase name="blockedNativeLoadTimesOutAndKillsWorkerWhileMainLooperNeverRuns" classname="com.localai.workspace.inference.LiteRtRuntimeDeadlineTest" time="0.668"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

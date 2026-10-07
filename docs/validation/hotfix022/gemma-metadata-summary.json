@@ -1,0 +1,68 @@
+{
+  "metadata": {
+    "start_token": {
+      "token_ids": {
+        "ids": [
+          2
+        ]
+      }
+    },
+    "stop_tokens": [
+      {
+        "token_ids": {
+          "ids": [
+            1
+          ]
+        }
+      },
+      {
+        "token_ids": {
+          "ids": [
+            50
+          ]
+        }
+      },
+      {
+        "token_ids": {
+          "ids": [
+            106
+          ]
+        }
+      }
+    ],
+    "llm_model_type": {
+      "gemma4": {
+        "start_of_image_token": {
+          "token_str": "<|image>"
+        },
+        "end_of_image_token": {
+          "token_str": "<image|>"
+        },
+        "start_of_audio_token": {
+          "token_str": "<|audio>"
+        },
+        "end_of_audio_token": {
+          "token_str": "<audio|>"
+        },
+        "code_fence_start": "<|tool_call>",
+        "code_fence_end": "<tool_call|>",
+        "open_quote": "<|\"|>",
+        "close_quote": "<|\"|>",
+        "function_response_start": "<|tool_response>",
+        "use_template_for_fc_format": true,
+        "patch_width": 16,
+        "patch_height": 16,
+        "max_num_patches": 2520
+      }
+    },
+    "channels": [
+      {
+        "channel_name": "thought",
+        "start": "<|channel>thought\n",
+        "end": "<channel|>"
+      }
+    ]
+  },
+  "thinkingFieldPresent": false,
+  "toolsFieldPresent": false
+}

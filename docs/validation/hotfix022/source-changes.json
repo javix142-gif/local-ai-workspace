@@ -1,0 +1,30 @@
+{
+  "changed": [
+    "app/build.gradle.kts",
+    "app/src/main/java/com/localai/workspace/LocalAiApplication.kt",
+    "app/src/main/java/com/localai/workspace/ui/SemanticSettings.kt",
+    "app/src/main/java/com/localai/workspace/validation/ValidationModels.kt",
+    "app/src/main/java/com/localai/workspace/validation/DeviceValidation.kt",
+    "app/src/main/java/com/localai/workspace/validation/ProductionValidationBackend.kt",
+    "app/src/main/java/com/localai/workspace/semantic/EmbeddingModels.kt",
+    "app/src/main/java/com/localai/workspace/data/ModelImportService.kt",
+    "app/src/main/java/com/localai/workspace/data/Daos.kt",
+    "app/src/main/java/com/localai/workspace/inference/LiteRtBundleMetadata.kt",
+    "app/src/main/java/com/localai/workspace/inference/LiteRtLmInferenceRuntime.kt",
+    "app/src/main/java/com/localai/workspace/inference/LiteRtLmService.kt",
+    "app/src/main/java/com/localai/workspace/domain/model/WorkspaceModels.kt",
+    "llama-runtime/src/main/cpp/local_embedding_jni.cpp",
+    "llama-runtime/src/main/cpp/CMakeLists.txt",
+    "llama-runtime/src/main/cpp/local_embedding.h",
+    "llama-runtime/src/main/java/com/arm/aichat/EmbeddingGemma.kt"
+  ],
+  "new": [
+    "app/src/main/java/com/localai/workspace/semantic/EmbeddingImportPipeline.kt",
+    "app/src/main/java/com/localai/workspace/inference/LiteRtCapabilityState.kt",
+    "app/src/main/java/com/localai/workspace/inference/LiteRtCapabilityRefresh.kt",
+    "app/src/test/resources/litert/gemma4-legacy-metadata.pb",
+    "app/src/test/java/com/localai/workspace/semantic/EmbeddingImportPipelineTest.kt",
+    "app/src/test/java/com/localai/workspace/semantic/EmbeddingModelsFailureTest.kt",
+    "app/src/test/java/com/localai/workspace/inference/LiteRtCapabilityStateTest.kt"
+  ]
+}

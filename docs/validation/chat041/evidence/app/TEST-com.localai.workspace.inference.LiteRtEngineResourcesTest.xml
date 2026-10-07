@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.LiteRtEngineResourcesTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-07T18:30:39" hostname="05497ac86eb0" time="0.021">
+  <properties/>
+  <testcase name="completedTurnsReuseOneEngineWithFreshConversationAndUpdatedSampler" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.001"/>
+  <testcase name="acknowledgedStopCanDiscardConversationWithoutUnloadingVerifiedEngine" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.0"/>
+  <testcase name="unloadOrLostNativeHandleInvalidatesReuseAndAllowsColdRetry" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.001"/>
+  <testcase name="missingOrInvalidRecordedHashCannotQualifyAnEngineForReuse" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.0"/>
+  <testcase name="failedInitializationCannotBeReusedAndOwnedHandleCanBeReleasedBeforeRetry" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.001"/>
+  <testcase name="smokeTestsAlwaysInitializeFreshWithoutUsingNormalChatEngine" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.0"/>
+  <testcase name="verifiedConversationMayBePreservedButAChangedEngineMustAlwaysDiscardIt" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.0"/>
+  <testcase name="changedFileIdentityOrEngineConfigurationForcesColdInitialization" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.016"/>
+  <testcase name="failedConversationReplacementNeverLeavesPreviousHistoryOrSessionAttached" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.0"/>
+  <testcase name="backendAndSpeculativeAreEngineIdentityRatherThanCapabilityLabels" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

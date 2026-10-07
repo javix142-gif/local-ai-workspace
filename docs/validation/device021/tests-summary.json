@@ -1,0 +1,512 @@
+{
+  "environment": "HOST_TESTED",
+  "generatedAt": "2026-10-06T16:03:35.426116+00:00",
+  "modules": [
+    {
+      "module": "app",
+      "totals": {
+        "tests": 298,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "classes": [
+        {
+          "class": "com.localai.workspace.data.LiteRtDefaultsUpgradeTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.515
+        },
+        {
+          "class": "com.localai.workspace.performance.PerformanceDiagnosticsIntegrationTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.973
+        },
+        {
+          "class": "com.localai.workspace.inference.LiteRtVisionPayloadTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.069
+        },
+        {
+          "class": "com.localai.workspace.inference.LiteRtConversationReuseTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.002
+        },
+        {
+          "class": "com.localai.workspace.tools.ChatToolSchemasTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.195
+        },
+        {
+          "class": "com.localai.workspace.validation.ValidationFrameworkTest",
+          "tests": 23,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.477
+        },
+        {
+          "class": "com.localai.workspace.data.LiteRtChatDefaultsUpgradeTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.683
+        },
+        {
+          "class": "com.localai.workspace.inference.RuntimePreparationTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.032
+        },
+        {
+          "class": "com.localai.workspace.performance.PerformancePolicyTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.151
+        },
+        {
+          "class": "com.localai.workspace.data.VisionPersistenceTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 13.199
+        },
+        {
+          "class": "com.localai.workspace.inference.LiteRtVisionInputTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.002
+        },
+        {
+          "class": "com.localai.workspace.data.ApplicationModelPreparationTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 23.543
+        },
+        {
+          "class": "com.localai.workspace.tools.PythonToolTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.106
+        },
+        {
+          "class": "com.localai.workspace.data.SemanticRetrievalIntegrationTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.579
+        },
+        {
+          "class": "com.localai.workspace.data.SemanticVectorsTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.008
+        },
+        {
+          "class": "com.localai.workspace.inference.CanonicalConversationTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.007
+        },
+        {
+          "class": "com.localai.workspace.data.StructuredDocumentsTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 1.579
+        },
+        {
+          "class": "com.localai.workspace.inference.LiteRtEngineResourcesTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.064
+        },
+        {
+          "class": "com.localai.workspace.ui.UiPresentationTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.04
+        },
+        {
+          "class": "com.localai.workspace.inference.LiteRtDecodeControlsTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.007
+        },
+        {
+          "class": "com.localai.workspace.security.SecurityPolicyTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.019
+        },
+        {
+          "class": "com.localai.workspace.inference.LiteRtRuntimeDeadlineTest",
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 2.662
+        },
+        {
+          "class": "com.localai.workspace.data.WorkspaceMigration3Test",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.168
+        },
+        {
+          "class": "com.localai.workspace.ui.ChatSessionPipelineTest",
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 4.83
+        },
+        {
+          "class": "com.localai.workspace.inference.GenerationDiagnosticPersistenceTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.18
+        },
+        {
+          "class": "com.localai.workspace.tools.ToolFrameworkTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.023
+        },
+        {
+          "class": "com.localai.workspace.inference.Part2ThinkingTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.003
+        },
+        {
+          "class": "com.localai.workspace.data.WorkspaceLifecycleTest",
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 1.235
+        },
+        {
+          "class": "com.localai.workspace.inference.InferenceWatchdogTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.01
+        },
+        {
+          "class": "com.localai.workspace.ui.BasicMarkdownTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.04
+        },
+        {
+          "class": "com.localai.workspace.domain.RepetitionParagraphTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.272
+        },
+        {
+          "class": "com.localai.workspace.rag.CitationValidatorTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.005
+        },
+        {
+          "class": "com.localai.workspace.rag.DocumentRetrievalTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.652
+        },
+        {
+          "class": "com.localai.workspace.domain.ConversationPromptTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.433
+        },
+        {
+          "class": "com.localai.workspace.validation.ValidationIsolationTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 1.015
+        },
+        {
+          "class": "com.localai.workspace.inference.LiteRtContextCapacityTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.011
+        },
+        {
+          "class": "com.localai.workspace.ui.UiSmokeTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 6.874
+        },
+        {
+          "class": "com.localai.workspace.inference.LiteRtVerificationCacheTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.028
+        },
+        {
+          "class": "com.localai.workspace.inference.LiteRtBundleMetadataTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.034
+        },
+        {
+          "class": "com.localai.workspace.inference.LiteRtConversationPayloadTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.325
+        },
+        {
+          "class": "com.localai.workspace.inference.ApplicationPreparationLifecycleTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.218
+        },
+        {
+          "class": "com.localai.workspace.domain.ContextBudgetManagerTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.03
+        },
+        {
+          "class": "com.localai.workspace.domain.RecentHistoryBudgetTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.003
+        },
+        {
+          "class": "com.localai.workspace.ui.ChatContentUiTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 13.737
+        },
+        {
+          "class": "com.localai.workspace.data.SemanticMemoryTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 1.592
+        },
+        {
+          "class": "com.localai.workspace.validation.ValidationPrerequisitesTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.201
+        },
+        {
+          "class": "com.localai.workspace.data.GenerationMetricsPresentationTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.032
+        },
+        {
+          "class": "com.localai.workspace.model.ModelManagerDomainTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.02
+        },
+        {
+          "class": "com.localai.workspace.data.ChatDeletionTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 1.533
+        },
+        {
+          "class": "com.localai.workspace.inference.AudioInputTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.025
+        },
+        {
+          "class": "com.localai.workspace.inference.LiteRtIpcDispatchTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 1.134
+        },
+        {
+          "class": "com.localai.workspace.rag.ReciprocalRankFusionTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.002
+        },
+        {
+          "class": "com.localai.workspace.inference.IndependentInferenceDeadlineTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.124
+        },
+        {
+          "class": "com.localai.workspace.tools.ToolLifecycleTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.561
+        },
+        {
+          "class": "com.localai.workspace.data.DeletedWorkspaceImportTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.848
+        },
+        {
+          "class": "com.localai.workspace.inference.LiteRtModelIntegrityTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.047
+        },
+        {
+          "class": "com.localai.workspace.inference.VisionEngineTextReuseTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.004
+        },
+        {
+          "class": "com.localai.workspace.inference.ChatRuntimePoolTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.093
+        }
+      ]
+    },
+    {
+      "module": "litert-compat",
+      "totals": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "classes": [
+        {
+          "class": "com.google.ai.edge.litertlm.NativeHistoryRoleTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "seconds": 0.085
+        }
+      ]
+    }
+  ],
+  "pythonWasm": {
+    "environment": "Node/Linux, not Android",
+    "runtime": "Pyodide 0.27.7 / CPython 3.12.7",
+    "tests": 8,
+    "failures": 0,
+    "log": "python-wasm.log"
+  },
+  "instrumentedTests": {
+    "apk": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+    "execution": "NOT_TESTED",
+    "reason": "NO_ANDROID_DEVICE_CONNECTED"
+  }
+}

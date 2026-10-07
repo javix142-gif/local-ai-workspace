@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.InferenceWatchdogTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-05T17:20:29" hostname="74096e896c47" time="0.062">
+  <properties/>
+  <testcase name="endlessOutputStillHasATotalDeadline" classname="com.localai.workspace.inference.InferenceWatchdogTest" time="0.001"/>
+  <testcase name="cancellationMustFinishEvenWhenTheNativeOperationIsBlocked" classname="com.localai.workspace.inference.InferenceWatchdogTest" time="0.001"/>
+  <testcase name="identifiesThePhaseOfEveryStalledNativeOperation" classname="com.localai.workspace.inference.InferenceWatchdogTest" time="0.001"/>
+  <testcase name="completedAndIdleStatesNeverPretendToBeGenerating" classname="com.localai.workspace.inference.InferenceWatchdogTest" time="0.044"/>
+  <testcase name="emptyCallbacksAndRepeatedStageUpdatesDoNotHideMissingFirstToken" classname="com.localai.workspace.inference.InferenceWatchdogTest" time="0.004"/>
+  <testcase name="actualOutputResetsOnlyTheDecodeInactivityDeadline" classname="com.localai.workspace.inference.InferenceWatchdogTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

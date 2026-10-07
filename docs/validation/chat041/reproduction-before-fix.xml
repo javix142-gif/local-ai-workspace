@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.NormalChatHotfixTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-07T17:48:10" hostname="05497ac86eb0" time="9.61">
+  <properties/>
+  <testcase name="plain_chat_legacy_off" classname="com.localai.workspace.ui.NormalChatHotfixTest" time="7.904"/>
+  <testcase name="characterize_context_on_gate_reentrancy_before_fix" classname="com.localai.workspace.ui.NormalChatHotfixTest" time="1.706"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

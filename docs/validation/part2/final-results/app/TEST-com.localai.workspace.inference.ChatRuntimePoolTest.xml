@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.ChatRuntimePoolTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-06T06:29:27" hostname="74096e896c47" time="0.1">
+  <properties/>
+  <testcase name="nextChatKeepsEngineButReceivesNoPreviousConversation" classname="com.localai.workspace.inference.ChatRuntimePoolTest" time="0.02"/>
+  <testcase name="closedOwnerCannotSubmitAnotherLoad" classname="com.localai.workspace.inference.ChatRuntimePoolTest" time="0.001"/>
+  <testcase name="resetFailureIsReportedAndUnsafeEngineIsDiscardedBeforeRetry" classname="com.localai.workspace.inference.ChatRuntimePoolTest" time="0.038"/>
+  <testcase name="nextChatWaitsForNativeGenerationCleanup" classname="com.localai.workspace.inference.ChatRuntimePoolTest" time="0.01"/>
+  <testcase name="backendSwitchUnloadsOldEngineAndPreservesSafeGgufFallback" classname="com.localai.workspace.inference.ChatRuntimePoolTest" time="0.005"/>
+  <testcase name="delayedOldCloseAndCancellationCannotAffectNewChat" classname="com.localai.workspace.inference.ChatRuntimePoolTest" time="0.008"/>
+  <testcase name="memoryPressureEvictsOnlyIdleModel" classname="com.localai.workspace.inference.ChatRuntimePoolTest" time="0.004"/>
+  <testcase name="actualLoadFailureReachesCallerAndRetryDoesNotClaimReadyEarly" classname="com.localai.workspace.inference.ChatRuntimePoolTest" time="0.003"/>
+  <testcase name="idleExpiryEvictsButReturningInTimeCancelsOldExpiry" classname="com.localai.workspace.inference.ChatRuntimePoolTest" time="0.009"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

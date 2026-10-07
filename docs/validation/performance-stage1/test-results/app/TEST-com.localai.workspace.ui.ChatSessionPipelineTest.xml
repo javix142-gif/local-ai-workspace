@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.ChatSessionPipelineTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-06T00:28:43" hostname="74096e896c47" time="1.77">
+  <properties/>
+  <testcase name="htmlExtractsVisibleTextAndDoesNotInjectScriptOrMarkupIntoModel" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.265"/>
+  <testcase name="paperclipImageUsesVisionPreparationInsteadOfDocumentParser" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.24"/>
+  <testcase name="filesOmittedByTheBoundedTurnStaySelectedRatherThanBeingSilentlyConsumed" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.17"/>
+  <testcase name="emptyDocumentIsFailedRatherThanPretendingToHaveUsableText" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.146"/>
+  <testcase name="navigatingAwayKeepsGenerationAndReopeningUsesSameControllerAndPersistedResult" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.132"/>
+  <testcase name="simpleGreetingDoesNotIncludeLibraryOrDefaultEvidenceInstructions" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.099"/>
+  <testcase name="readingFileContinuesAfterNavigationAndSendWaitsForItsActualContent" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.11"/>
+  <testcase name="removingWorkspaceSettlesActiveControllerBeforeDeletingPersistedRows" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.145"/>
+  <testcase name="changingPreparedModelWaitsForActiveRequestInsteadOfStealingItsSession" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.158"/>
+  <testcase name="queuedChatStopNeverCancelsTheOtherBackgroundGeneration" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.102"/>
+  <testcase name="realSafMarkdownReachesGenerationRequestAndRemainsReusableInLibrary" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.13"/>
+  <testcase name="unsupportedFileShowsParserFailureAndNeverBecomesSelectedModelContext" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.072"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

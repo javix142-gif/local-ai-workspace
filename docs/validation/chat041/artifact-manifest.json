@@ -1,0 +1,17 @@
+[
+  {
+    "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.4.1-normal-chat-hotfix-arm64.apk",
+    "bytes": 99622557,
+    "sha256": "56e47434a1ff233efb3f308536e3f88b9fbe35eef930d78ca308b8997d4b7676"
+  },
+  {
+    "path": "/workspace/local-ai-workspace/docs/CHAT041_REPORT.md",
+    "bytes": 12392,
+    "sha256": "46f773aede5df52fd8e383f46540ef764bc5f310f50eac0dce036aee3dbbebad"
+  },
+  {
+    "path": "/workspace/local-ai-workspace/dist/local-ai-workspace-0.4.1-source-and-qa.zip",
+    "bytes": 246234,
+    "sha256": "6bcdeab171bffee938854610f029117ccfbf86fdb9568bfd1f754eccd5ecb820"
+  }
+]

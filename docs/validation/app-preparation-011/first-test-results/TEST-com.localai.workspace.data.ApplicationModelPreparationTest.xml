@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.data.ApplicationModelPreparationTest" tests="5" skipped="0" failures="2" errors="0" timestamp="2026-10-05T19:28:49" hostname="74096e896c47" time="33.943">
+  <properties/>
+  <testcase name="repeatedSelectionAndMetadataUpdatesDoNotReloadSamePreparedConfig" classname="com.localai.workspace.data.ApplicationModelPreparationTest" time="17.734"/>
+  <testcase name="appStartupLoadsLastSelectedModelRatherThanNewerLibraryEntry" classname="com.localai.workspace.data.ApplicationModelPreparationTest" time="0.288">
+    <failure message="org.junit.ComparisonFailure: expected:&lt;[qwen]&gt; but was:&lt;[gemma]&gt;" type="org.junit.ComparisonFailure">org.junit.ComparisonFailure: expected:&lt;[qwen]&gt; but was:&lt;[gemma]&gt;
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at com.localai.workspace.data.ApplicationModelPreparationTest$appStartupLoadsLastSelectedModelRatherThanNewerLibraryEntry$1.invokeSuspend(ApplicationModelPreparationTest.kt:70)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:101)
+	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)
+	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:589)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:832)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:720)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:707)
+</failure>
+  </testcase>
+  <testcase name="changingModelPersistsSelectionForNextApplicationInstance" classname="com.localai.workspace.data.ApplicationModelPreparationTest" time="15.281">
+    <failure message="kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 15000 ms" type="kotlinx.coroutines.TimeoutCancellationException">kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 15000 ms
+	at _COROUTINE._BOUNDARY._(CoroutineDebugging.kt:42)
+	at kotlinx.coroutines.flow.StateFlowImpl.collect(StateFlow.kt:406)
+	at kotlinx.coroutines.flow.FlowKt__ReduceKt.first(Reduce.kt:179)
+	at com.localai.workspace.data.ApplicationModelPreparationTest$changingModelPersistsSelectionForNextApplicationInstance$1.invokeSuspend(ApplicationModelPreparationTest.kt:99)
+	at com.localai.workspace.data.ApplicationModelPreparationTest$check$1$1$1.invokeSuspend(ApplicationModelPreparationTest.kt:61)
+	at com.localai.workspace.data.ApplicationModelPreparationTest$check$1$1.invokeSuspend(ApplicationModelPreparationTest.kt:61)
+	at com.localai.workspace.data.ApplicationModelPreparationTest$check$1.invokeSuspend(ApplicationModelPreparationTest.kt:61)
+Caused by: kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 15000 ms
+	at kotlinx.coroutines.TimeoutKt.TimeoutCancellationException(Timeout.kt:188)
+	at kotlinx.coroutines.TimeoutCoroutine.run(Timeout.kt:156)
+	at kotlinx.coroutines.EventLoopImplBase$DelayedRunnableTask.run(EventLoop.common.kt:505)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.DefaultExecutor.run(DefaultExecutor.kt:105)
+	at java.base@21.0.12.1/java.lang.Thread.run(Thread.java:1583)
+</failure>
+  </testcase>
+  <testcase name="ggufSelectionKeepsExistingFirstSendPathAndDoesNotClaimReady" classname="com.localai.workspace.data.ApplicationModelPreparationTest" time="0.309"/>
+  <testcase name="importedPartialFileAndRemovedPreferredModelNeverBecomePreloadTargets" classname="com.localai.workspace.data.ApplicationModelPreparationTest" time="0.327"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

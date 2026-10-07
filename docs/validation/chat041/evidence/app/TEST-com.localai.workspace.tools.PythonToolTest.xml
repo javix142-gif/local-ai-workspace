@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.tools.PythonToolTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-07T18:30:44" hostname="05497ac86eb0" time="0.034">
+  <properties/>
+  <testcase name="typedBoundedCodeAndNoUnknownArguments" classname="com.localai.workspace.tools.PythonToolTest" time="0.018"/>
+  <testcase name="onlyLocalPinnedAssetsCanBeLoaded" classname="com.localai.workspace.tools.PythonToolTest" time="0.016"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

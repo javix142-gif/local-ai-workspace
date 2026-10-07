@@ -1,0 +1,175 @@
+{
+  "sdk": "0.17.1",
+  "platform": "Linux x86_64 CPU native C API, not Android JNI/device",
+  "modelSha256": "8ae5027136e0b89039ed76eedfb61f0cf4b7277024d99bf765359264295b86b1",
+  "context": 4096,
+  "threads": 4,
+  "temperature": 0.3,
+  "topP": 0.95,
+  "topK": 40,
+  "seed": 0,
+  "repeatPenalty": 1.1,
+  "ngram": 8,
+  "window": 256,
+  "normalOutputLimit": 128,
+  "turns": [
+    {
+      "name": "first-hola",
+      "limit": 128,
+      "sessionMs": 39,
+      "protected": true,
+      "cancelRequested": false,
+      "nativeStreamTerminated": true,
+      "ttftMs": 3654,
+      "totalMs": 4971,
+      "chunks": 10,
+      "text": "¡Hola! ¿En qué puedo ayudarte hoy?",
+      "benchmark": {
+        "init_time_in_second": 58.868060316999994,
+        "time_to_first_token_in_second": 2.9987127675,
+        "last_prefill_token_count": 71,
+        "last_prefill_tokens_per_second": 25.321976808110023,
+        "last_decode_token_count": 11,
+        "last_decode_tokens_per_second": 5.132831237728527
+      },
+      "outputLimitReached": false
+    },
+    {
+      "name": "same-session-como",
+      "limit": 128,
+      "sessionMs": null,
+      "protected": true,
+      "cancelRequested": false,
+      "nativeStreamTerminated": true,
+      "ttftMs": 1465,
+      "totalMs": 8692,
+      "chunks": 49,
+      "text": "¡Hola! Estoy bien, gracias por preguntar. \n\nComo modelo de lenguaje basado en texto, no tengo una experiencia física ni un estado mental tangible, pero puedo decir que estoy funcionando correctamente y listo para continuar con cualquier tarea o consulta que tengas.",
+      "benchmark": {
+        "init_time_in_second": 58.868060316999994,
+        "time_to_first_token_in_second": 2.9987127675,
+        "last_prefill_token_count": 14,
+        "last_prefill_tokens_per_second": 14.534743534294607,
+        "last_decode_token_count": 50,
+        "last_decode_tokens_per_second": 6.4704020968219
+      },
+      "outputLimitReached": false
+    },
+    {
+      "name": "same-session-delay",
+      "limit": 128,
+      "sessionMs": null,
+      "protected": true,
+      "cancelRequested": false,
+      "nativeStreamTerminated": true,
+      "ttftMs": 1394,
+      "totalMs": 16497,
+      "chunks": 106,
+      "text": "Los mensajes pueden tardar un poco en llegar por varias razones técnicas:\n\n1. **Procesamiento del contexto**: El sistema debe procesar la información de tu mensaje antes de responder.\n2. **Respuesta directa**: Tu pregunta es clara y directa, así que te responderé con precisión sobre el funcionamiento interno.\n3. **Limitaciones**: Reconozco que no tengo una experiencia física ni un estado mental tangible, pero puedo decir que estoy funcionando correctamente y listo para continuar con cualquier tarea o consulta que tengas.",
+      "benchmark": {
+        "init_time_in_second": 58.868060316999994,
+        "time_to_first_token_in_second": 2.9987127675,
+        "last_prefill_token_count": 20,
+        "last_prefill_tokens_per_second": 22.563462655044862,
+        "last_decode_token_count": 107,
+        "last_decode_tokens_per_second": 6.8549500796768275
+      },
+      "outputLimitReached": false
+    },
+    {
+      "name": "restored-assistant-como",
+      "limit": 128,
+      "sessionMs": 1,
+      "protected": true,
+      "cancelRequested": false,
+      "nativeStreamTerminated": true,
+      "ttftMs": 2015,
+      "totalMs": 5084,
+      "chunks": 18,
+      "text": "¡Hola! Estoy bien, gracias. 😊\n\nY tú, ¿Cómo estás?",
+      "benchmark": {
+        "init_time_in_second": 58.867886254000005,
+        "time_to_first_token_in_second": 1.6952973087499998,
+        "last_prefill_token_count": 97,
+        "last_prefill_tokens_per_second": 64.36114311887337,
+        "last_decode_token_count": 19,
+        "last_decode_tokens_per_second": 5.31415191504827
+      },
+      "outputLimitReached": false
+    },
+    {
+      "name": "minimal-cpu-smoke",
+      "limit": 32,
+      "sessionMs": 1,
+      "protected": false,
+      "cancelRequested": false,
+      "nativeStreamTerminated": true,
+      "ttftMs": 1586,
+      "totalMs": 1725,
+      "chunks": 2,
+      "text": "FUNCION",
+      "benchmark": {
+        "init_time_in_second": 58.867908476,
+        "time_to_first_token_in_second": 1.320571089,
+        "last_prefill_token_count": 21,
+        "last_prefill_tokens_per_second": 18.765328911299658,
+        "last_decode_token_count": 3,
+        "last_decode_tokens_per_second": 4.963124284354702
+      },
+      "outputLimitReached": false
+    },
+    {
+      "name": "native-cancel",
+      "limit": 512,
+      "sessionMs": 1,
+      "protected": true,
+      "cancelRequested": true,
+      "nativeStreamTerminated": true,
+      "ttftMs": 2256,
+      "totalMs": 2689,
+      "chunks": 4,
+      "text": "1. 2",
+      "cancelToTerminalMs": 138,
+      "benchmark": {
+        "init_time_in_second": 58.867888633,
+        "time_to_first_token_in_second": 1.92813090175,
+        "last_prefill_token_count": 81,
+        "last_prefill_tokens_per_second": 46.59317173651369,
+        "last_decode_token_count": 5,
+        "last_decode_tokens_per_second": 5.272072058461577
+      },
+      "outputLimitReached": false
+    },
+    {
+      "name": "retry-after-cancel",
+      "limit": 32,
+      "sessionMs": 1,
+      "protected": false,
+      "cancelRequested": false,
+      "nativeStreamTerminated": true,
+      "ttftMs": 1259,
+      "totalMs": 2457,
+      "chunks": 9,
+      "text": "Responde únicamente con la palabra FUNCIONA",
+      "benchmark": {
+        "init_time_in_second": 58.867880615000004,
+        "time_to_first_token_in_second": 1.016434741,
+        "last_prefill_token_count": 21,
+        "last_prefill_tokens_per_second": 24.517701494439134,
+        "last_decode_token_count": 10,
+        "last_decode_tokens_per_second": 6.253489009122861
+      },
+      "outputLimitReached": false
+    }
+  ],
+  "androidDeviceValidation": "NOT_EXECUTED",
+  "eosTokenObserved": null,
+  "loadMs": 28889,
+  "restoredHistory": {
+    "modelRoleRendered": false,
+    "assistantMarkers": 2
+  },
+  "referenceExecution": "PASS",
+  "unloadMs": 369,
+  "unloadReturned": true
+}

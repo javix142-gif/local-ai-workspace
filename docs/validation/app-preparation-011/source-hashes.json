@@ -1,0 +1,20 @@
+{
+  "CHANGELOG.md": "f771645bc03038cef5f691d7eb8a0e3b75dff5bbcbbc4478123f7f0a5a89ce65",
+  "README.md": "a0b10302839463b379cecfb4df95d357a8c3786beea0168582d6fdbd5503cce1",
+  "STATUS.md": "51bf08eaa25a7a0e95e8ec35f93e38ecb44f8bc23b250225d867ec45f2f678d2",
+  "app/build.gradle.kts": "0c0bc529b963180f56e8dd69257d30cff8054b620516310e0d01cbbd56a59251",
+  "app/src/main/java/com/localai/workspace/AppGraph.kt": "032cb796b04dcb60dd1e8cb627e5878ce3631bf35e2113d7356336c6d3514eda",
+  "app/src/main/java/com/localai/workspace/LocalAiApplication.kt": "48d9a12b9efee24644ff9fb14d148989d865f112deeba9f0caa106fcff1380e6",
+  "app/src/main/java/com/localai/workspace/MainActivity.kt": "d8f573600487c4b4cc88b6149ee6e9ebac32fa26235a5622bbc6cfce56d1c077",
+  "app/src/main/java/com/localai/workspace/data/ApplicationModelPreparation.kt": "e322f2c01e38ef5dcc6451b1440ad0ccba38ba2b2a87457b54e0893b64ff1413",
+  "app/src/main/java/com/localai/workspace/domain/inference/ChatRuntimePool.kt": "5351b0c0de552ae91aae16ab06fc8fc85d6f2e441d24979def916facef2fbb50",
+  "app/src/main/java/com/localai/workspace/domain/inference/RuntimePreparation.kt": "a53248f885fd862d57d8fd63dd1c15e2dcbc7c001aa6a6292c49434e4d18a617",
+  "app/src/main/java/com/localai/workspace/inference/LiteRtLmService.kt": "8b7705b8770a49c37472ca1f6a95c99f8eda1d209a669563013a15c1db99c781",
+  "app/src/main/java/com/localai/workspace/inference/LiteRtVerificationCache.kt": "95bfac7351b47430bb0b186256c9c2e6a7f8b43938c74b76e235dc6a801c16ad",
+  "app/src/main/java/com/localai/workspace/ui/ViewModels.kt": "36c1b6f212147b2e8764e25760d712cfa52fc1b834acccd1d3db62c14c725962",
+  "app/src/test/java/com/localai/workspace/data/ApplicationModelPreparationTest.kt": "988b1b162f05dceaf59292ebcbd9b9bd01e7f21aeb625715c707a2ec4de1fe71",
+  "app/src/test/java/com/localai/workspace/inference/ApplicationPreparationLifecycleTest.kt": "a1765a7bf84c66e0b4a909fe1b9e08cf051829ea1da48dc311120d6ac34a4afe",
+  "app/src/test/java/com/localai/workspace/inference/LiteRtVerificationCacheTest.kt": "60884c76be8053231df4798a0fa188d69792cca802892a62d092abc641312f80",
+  "docs/APP_MODEL_PREPARATION_011.md": "65eccf03c788b25dc4fe16ef95b4708b7c212376d048cd2c46d76260d1c72163",
+  "docs/STATUS.md": "3c98f8ff85b6d671c93c53f0a15da7e1a9506181647951982117a5e18f754dc0"
+}

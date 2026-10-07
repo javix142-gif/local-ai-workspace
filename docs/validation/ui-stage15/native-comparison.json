@@ -1,0 +1,34 @@
+[
+  {
+    "file": "lib/arm64-v8a/libai-chat.so",
+    "sameAs013": true
+  },
+  {
+    "file": "lib/arm64-v8a/libandroidx.graphics.path.so",
+    "sameAs013": true
+  },
+  {
+    "file": "lib/arm64-v8a/libggml-base.so",
+    "sameAs013": true
+  },
+  {
+    "file": "lib/arm64-v8a/libggml-cpu.so",
+    "sameAs013": true
+  },
+  {
+    "file": "lib/arm64-v8a/libggml.so",
+    "sameAs013": true
+  },
+  {
+    "file": "lib/arm64-v8a/liblitertlm_jni.so",
+    "sameAs013": true
+  },
+  {
+    "file": "lib/arm64-v8a/libllama-common.so",
+    "sameAs013": true
+  },
+  {
+    "file": "lib/arm64-v8a/libllama.so",
+    "sameAs013": true
+  }
+]

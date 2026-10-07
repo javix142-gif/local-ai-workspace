@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.data.ApplicationModelPreparationTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-06T04:32:48" hostname="74096e896c47" time="9.213">
+  <properties/>
+  <testcase name="repeatedSelectionAndMetadataUpdatesDoNotReloadSamePreparedConfig" classname="com.localai.workspace.data.ApplicationModelPreparationTest" time="8.625"/>
+  <testcase name="appStartupLoadsLastSelectedModelRatherThanNewerLibraryEntry" classname="com.localai.workspace.data.ApplicationModelPreparationTest" time="0.21"/>
+  <testcase name="changingModelPersistsSelectionForNextApplicationInstance" classname="com.localai.workspace.data.ApplicationModelPreparationTest" time="0.15"/>
+  <testcase name="ggufSelectionKeepsExistingFirstSendPathAndDoesNotClaimReady" classname="com.localai.workspace.data.ApplicationModelPreparationTest" time="0.097"/>
+  <testcase name="importedPartialFileAndRemovedPreferredModelNeverBecomePreloadTargets" classname="com.localai.workspace.data.ApplicationModelPreparationTest" time="0.128"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

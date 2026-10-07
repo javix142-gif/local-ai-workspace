@@ -1,0 +1,24 @@
+{
+  "apk": "local-ai-workspace-0.2.4-qa-arm64.apk",
+  "bytes": 98536548,
+  "sha256": "9ee785da378a6b24999dbcd1cfb552898b83406b7b9f4c6f9c4bde68c18412e8",
+  "versionName": "0.2.4",
+  "versionCode": 21,
+  "certificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
+  "updateSignatureMatches023": true,
+  "abi": "arm64-v8a",
+  "nativeLibraries": 9,
+  "libraryChanged": {
+    "lib/arm64-v8a/libai-chat.so": false,
+    "lib/arm64-v8a/libandroidx.graphics.path.so": false,
+    "lib/arm64-v8a/libggml-base.so": false,
+    "lib/arm64-v8a/libggml-cpu.so": false,
+    "lib/arm64-v8a/libggml.so": false,
+    "lib/arm64-v8a/liblitertlm_jni.so": false,
+    "lib/arm64-v8a/libllama-common.so": false,
+    "lib/arm64-v8a/libllama.so": false,
+    "lib/arm64-v8a/liblocal-embedding.so": false
+  },
+  "pythonAssetsUnchanged": true,
+  "physicalDeviceTest": "REQUIRED"
+}

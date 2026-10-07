@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.validation.ThinkingBudgetControlTest" tests="20" skipped="0" failures="0" errors="0" timestamp="2026-10-07T13:14:14" hostname="74096e896c47" time="0.039">
+  <properties/>
+  <testcase name="exportRetainsSafeEvidenceAndNoPrivatePayload" classname="com.localai.workspace.validation.ThinkingBudgetControlTest" time="0.002"/>
+  <testcase name="unknownChannelFails" classname="com.localai.workspace.validation.ThinkingBudgetControlTest" time="0.0"/>
+  <testcase name="exactPhysicalEvidenceIsExpectedPassWithoutHidingCondition" classname="com.localai.workspace.validation.ThinkingBudgetControlTest" time="0.0"/>
+  <testcase name="boundedThinkingFails" classname="com.localai.workspace.validation.ThinkingBudgetControlTest" time="0.0"/>
+  <testcase name="filteredFinalDoesNotCountAsExhaustion" classname="com.localai.workspace.validation.ThinkingBudgetControlTest" time="0.001"/>
+  <testcase name="correctFinalAt256IsValidAlternativeCharacterization" classname="com.localai.workspace.validation.ThinkingBudgetControlTest" time="0.0"/>
+  <testcase name="unavailableInfrastructureBeforeExecutionIsBlocked" classname="com.localai.workspace.validation.ThinkingBudgetControlTest" time="0.0"/>
+  <testcase name="shortOutputWithoutFinalFails" classname="com.localai.workspace.validation.ThinkingBudgetControlTest" time="0.0"/>
+  <testcase name="unexpectedReasonFails" classname="com.localai.workspace.validation.ThinkingBudgetControlTest" time="0.0"/>
+  <testcase name="inconsistentCallbacksFail" classname="com.localai.workspace.validation.ThinkingBudgetControlTest" time="0.0"/>
+  <testcase name="ineffectiveThinkingFails" classname="com.localai.workspace.validation.ThinkingBudgetControlTest" time="0.0"/>
+  <testcase name="timeoutAfterRequestStartedFails" classname="com.localai.workspace.validation.ThinkingBudgetControlTest" time="0.0"/>
+  <testcase name="catalogAndQuickMembershipRemainUnchanged" classname="com.localai.workspace.validation.ThinkingBudgetControlTest" time="0.003"/>
+  <testcase name="noFinalWithoutOutputLimitFails" classname="com.localai.workspace.validation.ThinkingBudgetControlTest" time="0.0"/>
+  <testcase name="unexpectedSdkErrorFailsEvenWhenOtherMetricsMatch" classname="com.localai.workspace.validation.ThinkingBudgetControlTest" time="0.001"/>
+  <testcase name="missingMetricIsNotInvented" classname="com.localai.workspace.validation.ThinkingBudgetControlTest" time="0.0"/>
+  <testcase name="missingNativeCompletionFails" classname="com.localai.workspace.validation.ThinkingBudgetControlTest" time="0.0"/>
+  <testcase name="uncaughtControlCrashesFailAndCorruptionIsNotTraversal" classname="com.localai.workspace.validation.ThinkingBudgetControlTest" time="0.022"/>
+  <testcase name="missingThoughtFails" classname="com.localai.workspace.validation.ThinkingBudgetControlTest" time="0.0"/>
+  <testcase name="unavailableFilesystemAndUnrelatedCasesKeepBlockedContract" classname="com.localai.workspace.validation.ThinkingBudgetControlTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,56 @@
+{
+  "recordedAtUtc": "2026-10-04T19:03:29.327010+00:00",
+  "appVersion": "0.1.7",
+  "productionCodeChanges": false,
+  "roomSchema": 2,
+  "unitTests": {
+    "status": "PASS",
+    "forcedTestTaskRerun": true,
+    "tests": 99,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "assembleDebug": {
+    "status": "PASS",
+    "unchangedCompileOutputsReused": true
+  },
+  "lintDebug": {
+    "status": "PASS_WITH_WARNINGS",
+    "errors": 0,
+    "warnings": 73,
+    "unchangedLintOutputsReused": true
+  },
+  "nativeLiteRtSemanticControls": "FAIL",
+  "discardedLiteRtAlternative": "FAIL",
+  "discardedGgufAlternative": "FAIL",
+  "deviceValidation": "NOT_EXECUTED",
+  "phoneReportedModel": "Moto G86 Power, 8GB total RAM",
+  "phoneInstalledVersion": "NOT_CAPTURED",
+  "phoneModelSha256": "UNKNOWN",
+  "apk": {
+    "status": "PASS",
+    "newArtifact": false,
+    "version": "0.1.7",
+    "versionCode": 8,
+    "path": "/workspace/local-ai-workspace/app/build/outputs/apk/release/local-ai-workspace-0.1.7-litert-chat-latency-arm64.apk",
+    "bytes": 91355065,
+    "sha256": "c4d539fb6e15293a320e52673d622281c6c6ada2ebcd63bfc34ac2886e28703a",
+    "driveMetadataReadback": "PASS",
+    "driveId": "1nxDYFA2d07YSExVlfVIFGFDwqYcC54Ej",
+    "driveUrl": "https://drive.google.com/file/d/1nxDYFA2d07YSExVlfVIFGFDwqYcC54Ej/view?usp=drivesdk"
+  },
+  "ggufReferenceExclusions": [
+    "Initial CLI --host argument not accepted: no inference in that attempt.",
+    "Four-thread CLI/direct runs timed out after 150s on two-core-quota Linux host; not successful performance/semantic benchmarks.",
+    "Final one-thread direct cases are actual native execution, not Android/phone measurements."
+  ],
+  "modifiedExistingFiles": [
+    "README.md",
+    "STATUS.md",
+    "CHANGELOG.md",
+    "docs/STATUS.md",
+    "docs/CHAT_LATENCY_AND_OUTPUT_017.md"
+  ],
+  "createdReport": "docs/LITERT_RELEVANCE_AUDIT_017.md"
+}

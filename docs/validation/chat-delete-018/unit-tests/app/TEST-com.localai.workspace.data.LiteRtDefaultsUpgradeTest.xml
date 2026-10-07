@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.data.LiteRtDefaultsUpgradeTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-05T14:43:05" hostname="74096e896c47" time="0.357">
+  <properties/>
+  <testcase name="customizationCheckedFirstIsNotOverwrittenByLaterLegacyTuple" classname="com.localai.workspace.data.LiteRtDefaultsUpgradeTest" time="0.086"/>
+  <testcase name="customizedParametersAndGgufRecordsArePreserved" classname="com.localai.workspace.data.LiteRtDefaultsUpgradeTest" time="0.114"/>
+  <testcase name="explicitReturnToOldTupleIsRespectedAfterUpgradeAndNewHelperInstance" classname="com.localai.workspace.data.LiteRtDefaultsUpgradeTest" time="0.084"/>
+  <testcase name="exactOldDefaultsChangeOnceWithoutResettingModelFilesHistoryOrContext" classname="com.localai.workspace.data.LiteRtDefaultsUpgradeTest" time="0.071"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

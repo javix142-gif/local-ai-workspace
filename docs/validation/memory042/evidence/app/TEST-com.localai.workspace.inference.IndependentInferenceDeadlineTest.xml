@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.IndependentInferenceDeadlineTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-07T20:38:53" hostname="05497ac86eb0" time="0.163">
+  <properties/>
+  <testcase name="deadlineCallbackExceptionsAreReportedRatherThanSilentlyStoppingTheMonitor" classname="com.localai.workspace.inference.IndependentInferenceDeadlineTest" time="0.056"/>
+  <testcase name="stalledConsumerCannotPreventTheIndependentDeadlineFromFiring" classname="com.localai.workspace.inference.IndependentInferenceDeadlineTest" time="0.107"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

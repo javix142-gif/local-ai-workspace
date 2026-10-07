@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.performance.PerformancePolicyTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-06T03:18:31" hostname="74096e896c47" time="0.049">
+  <properties/>
+  <testcase name="missingMetricsAreNullAndMedianNeverInventsSamples" classname="com.localai.workspace.performance.PerformancePolicyTest" time="0.001"/>
+  <testcase name="warmupFailureAndTimeoutDoNotAutomaticallyRetryEveryMessage" classname="com.localai.workspace.performance.PerformancePolicyTest" time="0.0"/>
+  <testcase name="matrixSeparatesNotTestedUnsupportedAndFailedFallback" classname="com.localai.workspace.performance.PerformancePolicyTest" time="0.001"/>
+  <testcase name="suiteIncludesDeterministicValidationAndContinuation" classname="com.localai.workspace.performance.PerformancePolicyTest" time="0.002"/>
+  <testcase name="gpuFailureFallsBackAndRequiresExplicitRetry" classname="com.localai.workspace.performance.PerformancePolicyTest" time="0.0"/>
+  <testcase name="speculativeSupportDoesNotMeanEnabledOrActive" classname="com.localai.workspace.performance.PerformancePolicyTest" time="0.001"/>
+  <testcase name="appTimingsNeverOverwriteNativeTtftOrInventTokenCounts" classname="com.localai.workspace.performance.PerformancePolicyTest" time="0.0"/>
+  <testcase name="benchmarkSerializationIsPersistentAndContainsNoPrivateTextFields" classname="com.localai.workspace.performance.PerformancePolicyTest" time="0.044"/>
+  <testcase name="warmupIsRealOneAttemptPerLoadedEngine" classname="com.localai.workspace.performance.PerformancePolicyTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

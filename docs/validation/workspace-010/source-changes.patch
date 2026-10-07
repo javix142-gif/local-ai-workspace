@@ -1,0 +1,1452 @@
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -1,4 +1,13 @@
+ # Changelog
++
++## 0.1.10 — 2026-10-05
++
++- Reorganize Workspace with primary Start chat, optional Start project, separate lists and actual confirmed deletion for both. Projects have a screen containing independently addressed chats, shared files and memory. Direct chats auto-title from their first user message.
++- Delete a standalone chat removes its isolated owner/card and resources. Delete project removes all its chats/private documents/FTS indexes/embeddings/project memory and its card. Delete one project chat keeps other chats/files/memory. Models/preferences/benchmarks/global memory remain.
++- Room2→3 real migration preserves existing records, adds workspaceKind defaultPROJECT and durable private-file deletion outbox. Canonical cleanup is limited to app-private documents, with visible retry after failures/restart. Stop recreating the deleted starter project; guard imports against concurrent deletion.
++-129app tests executed/PASS (15new),2unchanged compatibility tests up to date; debug build PASS, lint0errors/73existing warnings. Existing model-default invariance tests now compare current schema before/after their helper. New real Room migration validation passes. Physical device checks NOT_EXECUTED; runtime/SDK/native libraries and0.1.9warm pool unchanged. [Implementation/checks](docs/WORKSPACE_010.md), [artifact](docs/validation/apk-010.json).
++
++- Final delivery batch PASS in1m42s; release/signature/native comparison PASS in44s. [Signed0.1.10 APK in Drive](https://drive.google.com/file/d/1DnJoNPZNrboP5QMgNXCkZxN1BcYP1wnI/view?usp=drivesdk),91,535,289bytes,versionCode11. Replaced initial upload in place after correcting the project-import notice to report indexing status accurately; final source/APK rerun and metadata readback PASS. Physical checks remain NOT_EXECUTED.
+ 
+ ## 0.1.9 — 2026-10-05
+ 
+--- a/README.md
++++ b/README.md
+@@ -1,6 +1,14 @@
+ # Local AI Workspace for Android
+ 
+ An Android-first, offline-by-default AI workspace with a runtime-neutral Model Manager. The app keeps projects, chats, imported documents, local retrieval evidence, memory and model metadata in an on-device Room database. Model binaries stay in app-private storage; they are never stored in Room.
++
++Version **0.1.10** reorganizes Workspace around **Start chat** and optional **Start project**. Standalone chats and projects have separate lists and confirmed deletion; projects can contain multiple independently addressed chats and shared files/memory. Delete project removes its card and all owned chats/private documents/indexes/embeddings/project memory; deleting one project chat keeps its siblings and shared resources. Installed models and global memory remain. Existing projects are preserved by Room2→3 migration; deleted Personal workspace is no longer recreated at startup. Private-file cleanup has a durable retry outbox. [Behavior and phone checks](docs/WORKSPACE_010.md).
++
++Validation:129app tests executed/PASS,2unchanged compatibility tests up to date; debug assembly PASS; lint0errors/73existing warnings. Actual Android UI/native deletion checks **NOT_EXECUTED**. LiteRT0.1.9 warm-engine lifecycle is retained, with no SDK/model/sampler/quality/performance change. [0.1.10 artifact manifest](docs/validation/apk-010.json).
++
++[Download 0.1.10 APK from Drive](https://drive.google.com/file/d/1DnJoNPZNrboP5QMgNXCkZxN1BcYP1wnI/view?usp=drivesdk) (91.54MB / 87.29MiB, ARM64, versionCode11). Install as an update to keep existing records. Release/signature/Drive metadata checks PASS; private sharing unchanged.
++
++## Previous release — 0.1.9
+ 
+ Version **0.1.9** retains an unchanged healthy LiteRT CPU engine across chats/projects and creates a clean conversation for each new chat owner. Navigation no longer unconditionally unloads model weights. Idle engines expire after 10 minutes or reported idle memory pressure; Android may reclaim them earlier. Initial cold loading, changed configurations and CPU decoding still take time. GGUF retains its existing safe unload path. Chat deletion, private storage and Room schema2 remain. [Implementation and exact phone checks](docs/WARM_MODEL_019.md).
+ 
+--- a/STATUS.md
++++ b/STATUS.md
+@@ -1,4 +1,16 @@
+-# Project status — 0.1.9 / 2026-10-05
++# Project status — 0.1.10 / 2026-10-05
++
++**WORKSPACE REORGANIZED**: direct Start chat plus optional Start project; separate chat/project lists; project screen with multiple independently addressed conversations, shared local files and memory. Confirmed standalone-chat deletion removes its isolated owner/card/resources; Delete project removes its card and every owned chat/document/index/embedding/project memory; Delete project chat preserves siblings/shared resources. Models/settings/benchmarks, global memory and unrelated work remain. Startup no longer recreates a deleted Personal workspace.
++
++**ROOM MIGRATION3**: real2→3 migration adds workspaceKind (existing rows defaultPROJECT) and durable pending private-document deletion table, with no destructive migration. Preserves existing IDs/history/models/preferences/files. SQL deletion/outbox is one transaction; canonical private-filesystem cleanup follows commit and can retry on launch or from Workspace. Source originals/models/escaping symlinks are excluded. Import-vs-delete guards prevent late document/index resurrection.
++
++**HOST VALIDATION PASS**:129app tests executed,0failures/errors/skips (114preceding+15new),2compatibility tests up to date. Final delivery testDebugUnitTest/assembleDebug/lintDebug succeed in1m42s; lint0errors/73existing warnings. Includes actual Room2→3 opening/schema validation, deletion/isolation/rollback/FTS/embeddings/file-outbox/symlink and streaming import race tests. Device UI/native/performance validation NOT_EXECUTED; no adb device. Warm LiteRT pool unchanged, no semantic-quality/CPU-decoding improvement claimed.
++
++[Behavior and phone checks](docs/WORKSPACE_010.md). [Artifact](docs/validation/apk-010.json).
++
++**APK / DRIVE PASS**: [Download signed 0.1.10 ARM64 APK](https://drive.google.com/file/d/1DnJoNPZNrboP5QMgNXCkZxN1BcYP1wnI/view?usp=drivesdk), 91,535,289 bytes, versionCode11, same update certificate. Local file `dist/apk/local-ai-workspace-0.1.10-workspace-arm64.apk`, SHA-256 `63cee591e87d99502244026b0f2bcfaaeaeba9bdb35feb847cc20fe0eadf640a`. Release assembly PASS in44s; signature/package/version/DEX markers and all8 native SHA comparisons with0.1.9 PASS. Drive replacement and metadata readback confirm exact filename/size/MIME/original parent/private sharing; provider checksum unavailable. Install as an update without uninstalling or clearing app data. Device validation remains NOT_EXECUTED.
++
++## Historical project status — 0.1.9 / 2026-10-05
+ 
+ **WARM LITERT ACROSS CHATS IMPLEMENTED**: application-owned single-engine pool, per-chat revocable runtime leases, serialized native operations and real RESET_CONVERSATION IPC. Closing/deleting a chat discards conversation/KV; an unchanged healthy LiteRT engine can remain warm. The next owner always gets an independent session. Late old cancellation/cleanup cannot touch the new owner. Idle retention10minutes, idle memory-pressure eviction, normal backend/config/file invalidation; existing GGUF unload fallback retained. Room remains schema2; SDK/JNI unchanged0.17.1CPU.
+ 
+--- a/app/build.gradle.kts
++++ b/app/build.gradle.kts
+@@ -15,8 +15,8 @@
+         applicationId = "com.localai.workspace"
+         minSdk = 29
+         targetSdk = 35
+-        versionCode = 10
+-        versionName = "0.1.9"
++        versionCode = 11
++        versionName = "0.1.10"
+ 
+         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+         vectorDrawables.useSupportLibrary = true
+--- a/app/src/main/java/com/localai/workspace/AppGraph.kt
++++ b/app/src/main/java/com/localai/workspace/AppGraph.kt
+@@ -31,7 +31,7 @@
+     fun releaseIdleModel() { runtimeScope.launch { chatRuntimes.releaseIdle() } }
+     /** Compatibility alias for older screens while chat is migrated to the registry. */
+     val runtime = llamaRuntime
+-    val workspace = WorkspaceRepository(database)
++    val workspace = WorkspaceRepository(database, java.io.File(appContext.filesDir, "documents"))
+     val documents = DocumentIngestionService(appContext, database, database.documentDao())
+     val modelImport = ModelImportService(appContext, database.modelDao(), runtimes)
+     val liteRtDefaults = com.localai.workspace.data.LiteRtChatDefaultsUpgrade(appContext, database.modelDao())
+--- a/app/src/main/java/com/localai/workspace/LocalAiApplication.kt
++++ b/app/src/main/java/com/localai/workspace/LocalAiApplication.kt
+@@ -16,7 +16,7 @@
+         if (Application.getProcessName().endsWith(":litert")) return
+         graph = AppGraph(this)
+         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
+-            graph.workspace.ensureStarterProject()
++            graph.workspace.cleanupDeletedDocuments()
+         }
+     }
+ 
+--- a/app/src/main/java/com/localai/workspace/MainActivity.kt
++++ b/app/src/main/java/com/localai/workspace/MainActivity.kt
+@@ -89,6 +89,8 @@
+ import androidx.lifecycle.compose.collectAsStateWithLifecycle
+ import androidx.lifecycle.viewmodel.compose.viewModel
+ import androidx.navigation.NavHostController
++import androidx.navigation.NavType
++import androidx.navigation.navArgument
+ import androidx.navigation.compose.NavHost
+ import androidx.navigation.compose.composable
+ import androidx.navigation.compose.currentBackStackEntryAsState
+@@ -182,11 +184,16 @@
+             composable("settings") {
+                 SettingsScreen()
+             }
+-            composable("chat/{projectId}") { entry ->
++            composable("project/{projectId}") { entry ->
++                ProjectScreen(homeViewModel, navController, entry.arguments?.getString("projectId").orEmpty())
++            }
++            composable("chat/{projectId}?conversationId={conversationId}",
++                arguments = listOf(navArgument("conversationId") { type = NavType.StringType; nullable = true; defaultValue = null })) { entry ->
+                 val projectId = entry.arguments?.getString("projectId").orEmpty()
++                val conversationId = entry.arguments?.getString("conversationId")
+                 val chatViewModel: ChatViewModel = viewModel(
+-                    key = "chat-$projectId",
+-                    factory = ChatViewModelFactory(projectId, graph),
++                    key = "chat-$projectId-${conversationId ?: "default"}",
++                    factory = ChatViewModelFactory(projectId, graph, conversationId),
+                 )
+                 ChatScreen(chatViewModel, navController)
+             }
+@@ -202,91 +209,161 @@
+     }
+ }
+ 
++private fun chatRoute(projectId: String, conversationId: String? = null): String =
++    "chat/$projectId" + (conversationId?.let { "?conversationId=$it" } ?: "")
++
+ @OptIn(ExperimentalMaterial3Api::class)
+ @Composable
+ private fun WorkspaceScreen(viewModel: HomeViewModel, navController: NavHostController) {
+     val projects by viewModel.projects.collectAsStateWithLifecycle()
+-    val deletingChats by viewModel.deletingChats.collectAsStateWithLifecycle()
+-    var chatMenuId by rememberSaveable { mutableStateOf<String?>(null) }
+-    var deleteChatProjectId by rememberSaveable { mutableStateOf<String?>(null) }
++    val chats by viewModel.chats.collectAsStateWithLifecycle()
++    val deleting by viewModel.deletingChats.collectAsStateWithLifecycle()
++    val creating by viewModel.creating.collectAsStateWithLifecycle()
++    val pendingCleanup by viewModel.pendingDocumentCleanup.collectAsStateWithLifecycle()
++    var deleteId by rememberSaveable { mutableStateOf<String?>(null) }
+     var showCreate by rememberSaveable { mutableStateOf(false) }
+     Column(Modifier.fillMaxSize().padding(horizontal = 20.dp)) {
+-        TopAppBar(
+-            title = {
+-                Column {
+-                    Text("Local AI Workspace", fontWeight = FontWeight.SemiBold)
+-                    Text("Private by default", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+-                }
+-            },
+-            actions = {
+-                IconButton(onClick = { navController.navigate("models") }) {
+-                    Icon(Icons.Default.ModelTraining, contentDescription = "Models")
+-                }
+-            },
+-        )
+-        LocalModeCard()
+-        Spacer(Modifier.height(18.dp))
+-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+-            Text("Projects", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
+-            OutlinedButton(onClick = { showCreate = true }) {
+-                Icon(Icons.Default.Add, contentDescription = null)
+-                Spacer(Modifier.width(6.dp))
+-                Text("New project")
+-            }
+-        }
+-        Spacer(Modifier.height(8.dp))
+-        if (projects.isEmpty()) {
+-            EmptyState("Your workspace is ready", "Create a project to keep chats, files, sources and memory together.")
+-        } else {
+-            LazyColumn(
+-                verticalArrangement = Arrangement.spacedBy(10.dp),
+-                contentPadding = PaddingValues(bottom = 24.dp),
+-            ) {
+-                items(projects, key = { it.id }) { project ->
+-                    Card(
+-                        modifier = Modifier.fillMaxWidth().clickable(enabled = project.id !in deletingChats) { navController.navigate("chat/${project.id}") },
+-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+-                    ) {
+-                        Row(Modifier.fillMaxWidth().padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+-                            Icon(Icons.Default.FolderOpen, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+-                            Spacer(Modifier.width(12.dp))
+-                            Column(Modifier.weight(1f)) {
+-                                Text(project.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Medium)
+-                                Text("Chats  ·  Files  ·  Sources  ·  Memory", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+-                            }
+-                            Text(if (project.id in deletingChats) "Deleting…" else "Open", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelLarge)
+-                            Box {
+-                                IconButton(onClick = { chatMenuId = project.id }, enabled = project.id !in deletingChats) {
+-                                    Icon(Icons.Default.MoreVert, contentDescription = "Chat options for ${project.name}")
+-                                }
+-                                DropdownMenu(expanded = chatMenuId == project.id, onDismissRequest = { chatMenuId = null }) {
+-                                    DropdownMenuItem(
+-                                        text = { Text("Delete chat") },
+-                                        leadingIcon = { Icon(Icons.Default.DeleteOutline, contentDescription = null) },
+-                                        onClick = { chatMenuId = null; deleteChatProjectId = project.id },
+-                                    )
+-                                }
+-                            }
+-                        }
+-                    }
+-                }
+-            }
+-        }
+-    }
+-    projects.firstOrNull { it.id == deleteChatProjectId }?.let { project ->
+-        DeleteChatDialog(project.name,
+-            onDismiss = { deleteChatProjectId = null },
+-            onConfirm = { deleteChatProjectId = null; viewModel.deleteChats(project.id) })
+-    }
+-    if (showCreate) {
+-        CreateProjectDialog(
+-            onDismiss = { showCreate = false },
+-            onCreate = { name ->
+-                showCreate = false
+-                viewModel.createProject(name) { id -> navController.navigate("chat/$id") }
+-            },
+-        )
+-    }
++        TopAppBar(title = {
++            Column {
++                Text("Local AI Workspace", fontWeight = FontWeight.SemiBold)
++                Text("Private by default", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
++            }
++        }, actions = {
++            IconButton(onClick = { navController.navigate("models") }) { Icon(Icons.Default.ModelTraining, contentDescription = "Models") }
++        })
++        LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(10.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
++            item {
++                LocalModeCard()
++                Spacer(Modifier.height(16.dp))
++                Button(onClick = { viewModel.startChat { id, conversation -> navController.navigate(chatRoute(id, conversation)) } },
++                    enabled = !creating, modifier = Modifier.fillMaxWidth()) {
++                    Icon(Icons.Default.ChatBubbleOutline, contentDescription = null); Spacer(Modifier.width(8.dp)); Text("Start chat")
++                }
++                OutlinedButton(onClick = { showCreate = true }, enabled = !creating, modifier = Modifier.fillMaxWidth()) {
++                    Icon(Icons.Default.FolderOpen, contentDescription = null); Spacer(Modifier.width(8.dp)); Text("Start project")
++                }
++                Text("Chat directly, or use a project to organize several chats, files and memory.", style = MaterialTheme.typography.bodySmall)
++            }
++            if (pendingCleanup > 0) item {
++                Card(Modifier.fillMaxWidth()) { Column(Modifier.padding(12.dp)) {
++                    Text("$pendingCleanup private files need cleanup", style = MaterialTheme.typography.bodySmall)
++                    TextButton(onClick = viewModel::retryDocumentCleanup) { Text("Retry cleanup") }
++                } }
++            }
++            item { Text("Chats", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold) }
++            if (chats.isEmpty()) item { Text("Start a chat whenever you need one.", style = MaterialTheme.typography.bodyMedium) }
++            items(chats, key = { "chat-${it.id}" }) { chat ->
++                WorkspaceEntryCard(chat.name, "Standalone chat", false, chat.id in deleting,
++                    onOpen = { navController.navigate(chatRoute(chat.id)) }, onDelete = { deleteId = chat.id })
++            }
++            item { Spacer(Modifier.height(6.dp)); Text("Projects", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold) }
++            if (projects.isEmpty()) item { Text("Projects keep related chats and local documents together.", style = MaterialTheme.typography.bodyMedium) }
++            items(projects, key = { "project-${it.id}" }) { project ->
++                WorkspaceEntryCard(project.name, "Chats · Files · Sources · Memory", true, project.id in deleting,
++                    onOpen = { navController.navigate("project/${project.id}") }, onDelete = { deleteId = project.id })
++            }
++        }
++    }
++    (chats + projects).firstOrNull { it.id == deleteId }?.let { item ->
++        DeleteWorkspaceDialog(item.name, item.workspaceKind == com.localai.workspace.data.WorkspaceKind.CHAT,
++            onDismiss = { deleteId = null }, onConfirm = { deleteId = null; viewModel.deleteWorkspace(item.id) })
++    }
++    if (showCreate) CreateProjectDialog(onDismiss = { showCreate = false }, onCreate = { name ->
++        showCreate = false; viewModel.createProject(name) { navController.navigate("project/$it") }
++    })
++}
++
++@Composable
++private fun WorkspaceEntryCard(title: String, subtitle: String, isProject: Boolean, busy: Boolean,
++    onOpen: () -> Unit, onDelete: () -> Unit) {
++    var menu by rememberSaveable { mutableStateOf(false) }
++    Card(Modifier.fillMaxWidth().clickable(enabled = !busy, onClick = onOpen),
++        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
++        Row(Modifier.fillMaxWidth().padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
++            Icon(if (isProject) Icons.Default.FolderOpen else Icons.Default.ChatBubbleOutline, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
++            Spacer(Modifier.width(12.dp))
++            Column(Modifier.weight(1f)) {
++                Text(title, style = MaterialTheme.typography.titleMedium, maxLines = 2, overflow = TextOverflow.Ellipsis)
++                Text(if (busy) "Deleting…" else subtitle, style = MaterialTheme.typography.bodySmall)
++            }
++            Box {
++                IconButton(onClick = { menu = true }, enabled = !busy) { Icon(Icons.Default.MoreVert, contentDescription = "Options for $title") }
++                DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
++                    DropdownMenuItem(text = { Text(if (isProject) "Delete project" else "Delete chat") },
++                        leadingIcon = { Icon(Icons.Default.DeleteOutline, contentDescription = null) },
++                        onClick = { menu = false; onDelete() })
++                }
++            }
++        }
++    }
++}
++
++@OptIn(ExperimentalMaterial3Api::class)
++@Composable
++private fun ProjectScreen(viewModel: HomeViewModel, navController: NavHostController, projectId: String) {
++    val project by remember(projectId) { viewModel.observeProject(projectId) }.collectAsStateWithLifecycle(initialValue = null)
++    val chats by remember(projectId) { viewModel.observeConversations(projectId) }.collectAsStateWithLifecycle(initialValue = emptyList())
++    val documents by remember(projectId) { viewModel.observeDocuments(projectId) }.collectAsStateWithLifecycle(initialValue = emptyList())
++    val deleting by viewModel.deletingChats.collectAsStateWithLifecycle()
++    val creating by viewModel.creating.collectAsStateWithLifecycle()
++    val busy = projectId in deleting
++    var showDelete by rememberSaveable { mutableStateOf(false) }
++    var deleteChatId by rememberSaveable { mutableStateOf<String?>(null) }
++    val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
++        uri?.let { viewModel.attachProjectDocument(projectId, it) }
++    }
++    Column(Modifier.fillMaxSize().padding(horizontal = 20.dp)) {
++        TopAppBar(title = { Text(project?.name ?: "Project", maxLines = 1, overflow = TextOverflow.Ellipsis) },
++            navigationIcon = { IconButton(onClick = { navController.popBackStack() }, enabled = !busy) { Icon(Icons.Default.Close, contentDescription = "Back") } },
++            actions = { IconButton(onClick = { showDelete = true }, enabled = !busy && project != null) { Icon(Icons.Default.DeleteOutline, contentDescription = "Delete project") } })
++        if (busy) LinearProgressIndicator(Modifier.fillMaxWidth())
++        LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(10.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
++            item {
++                Text("Chats in this project share its local files, instructions and saved memory.", style = MaterialTheme.typography.bodyMedium)
++                Button(onClick = { viewModel.startChat(projectId) { id, conversation -> navController.navigate(chatRoute(id, conversation)) } },
++                    enabled = !busy && !creating && project != null, modifier = Modifier.fillMaxWidth()) { Text("Start chat") }
++                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
++                    OutlinedButton(onClick = { picker.launch(arrayOf("*/*")) }, enabled = !busy && project != null) { Text("Add file") }
++                    OutlinedButton(onClick = { navController.navigate("memory/$projectId") }, enabled = !busy && project != null) { Text("Memory") }
++                }
++            }
++            item { Text("Chats", style = MaterialTheme.typography.titleLarge) }
++            if (chats.isEmpty()) item { Text("No chats yet. Start the first one.") }
++            items(chats, key = { it.id }) { chat ->
++                WorkspaceEntryCard(chat.title, "Project chat", false, busy,
++                    onOpen = { navController.navigate(chatRoute(projectId, chat.id)) }, onDelete = { deleteChatId = chat.id })
++            }
++            item { Spacer(Modifier.height(8.dp)); Text("Files", style = MaterialTheme.typography.titleLarge) }
++            if (documents.isEmpty()) item { Text("Attach local documents for this project's chats.") }
++            items(documents, key = { it.id }) { document ->
++                Card(Modifier.fillMaxWidth()) { Column(Modifier.padding(12.dp)) {
++                    Text(document.displayName, style = MaterialTheme.typography.titleMedium)
++                    Text("${document.extractionStatus} · ${document.indexingStatus} · ${formatBytes(document.byteSize)}", style = MaterialTheme.typography.bodySmall)
++                    document.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
++                } }
++            }
++        }
++    }
++    if (showDelete && project != null) DeleteWorkspaceDialog(project!!.name, false,
++        onDismiss = { showDelete = false }, onConfirm = {
++            showDelete = false; viewModel.deleteWorkspace(projectId) { navController.popBackStack() }
++        })
++    chats.firstOrNull { it.id == deleteChatId }?.let { chat ->
++        DeleteChatDialog(chat.title, onDismiss = { deleteChatId = null }, onConfirm = {
++            deleteChatId = null; viewModel.deleteConversation(projectId, chat.id)
++        })
++    }
++}
++
++@Composable
++private fun DeleteWorkspaceDialog(name: String, standalone: Boolean, onDismiss: () -> Unit, onConfirm: () -> Unit) {
++    AlertDialog(onDismissRequest = onDismiss,
++        icon = { Icon(Icons.Default.DeleteOutline, contentDescription = null) },
++        title = { Text(if (standalone) "Delete chat?" else "Delete project?") },
++        text = { Text(if (standalone) "Delete “$name”, its messages, attached private files and chat memory? This cannot be undone. Installed models and global memory are kept."
++            else "Delete “$name”, all its chats, private files, source indexes and project memory? This cannot be undone. Installed models, global memory and other projects are kept.") },
++        confirmButton = { TextButton(onClick = onConfirm) { Text("Delete", color = MaterialTheme.colorScheme.error) } },
++        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } })
+ }
+ 
+ @OptIn(ExperimentalMaterial3Api::class)
+@@ -689,6 +766,8 @@
+ @Composable
+ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostController) {
+     val project by viewModel.project.collectAsStateWithLifecycle()
++    val conversation by viewModel.conversation.collectAsStateWithLifecycle()
++    val standalone = project?.workspaceKind == com.localai.workspace.data.WorkspaceKind.CHAT
+     val models by viewModel.models.collectAsStateWithLifecycle()
+     val selectedModelId by viewModel.selectedModelId.collectAsStateWithLifecycle()
+     val attachedImage by viewModel.attachedImagePath.collectAsStateWithLifecycle()
+@@ -722,14 +801,14 @@
+             TopAppBar(
+                 title = {
+                     Column {
+-                        Text(project?.name ?: "Project", maxLines = 1, overflow = TextOverflow.Ellipsis)
++                        Text(if (standalone) project?.name ?: "Chat" else "${conversation?.title ?: "Chat"} · ${project?.name ?: "Project"}", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                         Text(selectedModel?.let { "${it.displayName} · ${it.runtimeId}" } ?: "No model selected", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                     }
+                 },
+                 navigationIcon = { IconButton(onClick = { navController.popBackStack() }, enabled = !deletingChat) { Icon(Icons.Default.Close, contentDescription = "Back") } },
+                 actions = {
+                     IconButton(onClick = { navController.navigate("memory/${project?.id.orEmpty()}") }, enabled = !deletingChat) {
+-                        Icon(Icons.Default.Memory, contentDescription = "Project memory")
++                        Icon(Icons.Default.Memory, contentDescription = if (standalone) "Chat memory" else "Project memory")
+                     }
+                     Box {
+                         IconButton(onClick = { showChatMenu = true }, enabled = !deletingChat) {
+@@ -831,7 +910,7 @@
+                 HorizontalDivider()
+             }
+             if (messages.isEmpty()) {
+-                EmptyState("Start with a project question", "Attach local documents with the paperclip. Answers will identify retrieved passages when the model cites them.")
++                EmptyState(if (standalone) "Ask your local model" else "Start a project conversation", "Attach local documents with the paperclip. Answers will identify retrieved passages when the model cites them.")
+             } else {
+                 LazyColumn(
+                     modifier = Modifier.fillMaxSize(),
+@@ -852,12 +931,11 @@
+             }
+         }
+     }
+-    if (showDeleteChat) DeleteChatDialog(project?.name ?: "Project",
+-        onDismiss = { showDeleteChat = false },
+-        onConfirm = {
+-            showDeleteChat = false
+-            viewModel.deleteChat { navController.popBackStack() }
+-        })
++    if (showDeleteChat) {
++        val confirm = { showDeleteChat = false; viewModel.deleteChat { navController.popBackStack() } }
++        if (standalone) DeleteWorkspaceDialog(project?.name ?: "Chat", true, { showDeleteChat = false }, confirm)
++        else DeleteChatDialog(conversation?.title ?: "Chat", { showDeleteChat = false }, confirm)
++    }
+     if (showTechnicalError) {
+         AlertDialog(
+             onDismissRequest = { showTechnicalError = false },
+@@ -893,7 +971,7 @@
+         onDismissRequest = onDismiss,
+         icon = { Icon(Icons.Default.DeleteOutline, contentDescription = null) },
+         title = { Text("Delete chat?") },
+-        text = { Text("Delete all chat messages, citations and tool history in “$projectName”? This cannot be undone. The project, files, memory and models are kept. An active response will be stopped.") },
++        text = { Text("Delete “$projectName” and its messages, citations and tool history? This cannot be undone. Other chats, project files, memory and models are kept. An active response will be stopped.") },
+         confirmButton = { TextButton(onClick = onConfirm) { Text("Delete", color = MaterialTheme.colorScheme.error) } },
+         dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+     )
+@@ -1133,7 +1211,7 @@
+     var name by rememberSaveable { mutableStateOf("") }
+     AlertDialog(
+         onDismissRequest = onDismiss,
+-        title = { Text("New project") },
++        title = { Text("Start project") },
+         text = { OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("Project name") }, singleLine = true) },
+         confirmButton = { Button(onClick = { onCreate(name) }, enabled = name.isNotBlank()) { Text("Create") } },
+         dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+--- a/app/src/main/java/com/localai/workspace/data/Daos.kt
++++ b/app/src/main/java/com/localai/workspace/data/Daos.kt
+@@ -10,6 +10,8 @@
+ 
+ @Dao
+ interface ProjectDao {
++    @Query("DELETE FROM projects WHERE id = :id")
++    suspend fun delete(id: String)
+     @Query("SELECT * FROM projects WHERE archived = 0 ORDER BY updatedAt DESC")
+     fun observeActive(): Flow<List<ProjectEntity>>
+ 
+@@ -34,6 +36,14 @@
+ 
+ @Dao
+ interface ConversationDao {
++    @Query("SELECT * FROM conversations WHERE id = :id LIMIT 1")
++    fun observe(id: String): Flow<ConversationEntity?>
++
++    @Query("DELETE FROM conversations WHERE id = :id")
++    suspend fun delete(id: String)
++
++    @Query("UPDATE conversations SET title = :title WHERE id = :id")
++    suspend fun rename(id: String, title: String)
+     @Query("SELECT * FROM conversations WHERE projectId = :projectId ORDER BY updatedAt DESC LIMIT 1")
+     suspend fun getForProject(projectId: String): ConversationEntity?
+ 
+@@ -55,6 +65,8 @@
+ 
+ @Dao
+ interface MessageDao {
++    @Query("DELETE FROM messages WHERE conversationId = :id")
++    suspend fun deleteForConversation(id: String)
+     @Query("DELETE FROM messages WHERE conversationId IN (SELECT id FROM conversations WHERE projectId = :projectId)")
+     suspend fun deleteForProject(projectId: String)
+ 
+@@ -117,6 +129,20 @@
+ 
+ @Dao
+ interface DocumentDao {
++    @Query("SELECT * FROM documents WHERE projectId = :projectId")
++    suspend fun forProject(projectId: String): List<DocumentEntity>
++
++    @Query("DELETE FROM embedding_records WHERE segmentId IN (SELECT id FROM document_segments WHERE documentId IN (SELECT id FROM documents WHERE projectId = :projectId))")
++    suspend fun deleteEmbeddingsForProject(projectId: String)
++
++    @Query("DELETE FROM document_segments WHERE documentId IN (SELECT id FROM documents WHERE projectId = :projectId)")
++    suspend fun deleteSegmentsForProject(projectId: String)
++
++    @Query("DELETE FROM documents WHERE projectId = :projectId")
++    suspend fun deleteForProject(projectId: String)
++
++    @Query("SELECT COUNT(*) FROM documents WHERE localPath = :path")
++    suspend fun pathReferences(path: String): Int
+     @Query("SELECT * FROM documents WHERE projectId = :projectId ORDER BY updatedAt DESC")
+     fun observeForProject(projectId: String): Flow<List<DocumentEntity>>
+ 
+@@ -159,6 +185,8 @@
+ 
+ @Dao
+ interface MemoryDao {
++    @Query("DELETE FROM memory_items WHERE scopeType = 'PROJECT' AND scopeId = :projectId")
++    suspend fun deleteForProject(projectId: String)
+     @Query("SELECT * FROM memory_items WHERE status = 'ACTIVE' AND (scopeType = 'GLOBAL' OR (scopeType = 'PROJECT' AND scopeId = :projectId)) ORDER BY updatedAt DESC")
+     fun observeRelevant(projectId: String): Flow<List<MemoryItemEntity>>
+ 
+@@ -177,6 +205,8 @@
+ 
+ @Dao
+ interface CitationEvidenceDao {
++    @Query("DELETE FROM citation_evidence WHERE conversationId = :id OR messageId IN (SELECT id FROM messages WHERE conversationId = :id)")
++    suspend fun deleteForConversation(id: String)
+     @Query("DELETE FROM citation_evidence WHERE conversationId IN (SELECT id FROM conversations WHERE projectId = :projectId) OR messageId IN (SELECT id FROM messages WHERE conversationId IN (SELECT id FROM conversations WHERE projectId = :projectId))")
+     suspend fun deleteForProject(projectId: String)
+ 
+@@ -189,6 +219,8 @@
+ 
+ @Dao
+ interface ToolCallDao {
++    @Query("DELETE FROM tool_calls WHERE conversationId = :id OR messageId IN (SELECT id FROM messages WHERE conversationId = :id)")
++    suspend fun deleteForConversation(id: String)
+     @Query("DELETE FROM tool_calls WHERE conversationId IN (SELECT id FROM conversations WHERE projectId = :projectId) OR messageId IN (SELECT id FROM messages WHERE conversationId IN (SELECT id FROM conversations WHERE projectId = :projectId))")
+     suspend fun deleteForProject(projectId: String)
+ 
+@@ -198,3 +230,15 @@
+     @Query("SELECT * FROM tool_calls WHERE conversationId = :conversationId ORDER BY startedAt DESC")
+     fun observeForConversation(conversationId: String): Flow<List<ToolCallEntity>>
+ }
++
++@Dao
++interface PendingDocumentDeletionDao {
++    @Insert(onConflict = OnConflictStrategy.IGNORE)
++    suspend fun insertAll(items: List<PendingDocumentDeletionEntity>)
++    @Query("SELECT * FROM pending_document_deletions")
++    suspend fun pending(): List<PendingDocumentDeletionEntity>
++    @Query("DELETE FROM pending_document_deletions WHERE localPath = :path")
++    suspend fun acknowledge(path: String)
++    @Query("SELECT COUNT(*) FROM pending_document_deletions")
++    fun observeCount(): Flow<Int>
++}
+--- a/app/src/main/java/com/localai/workspace/data/DocumentIngestion.kt
++++ b/app/src/main/java/com/localai/workspace/data/DocumentIngestion.kt
+@@ -12,6 +12,7 @@
+ import com.tom_roush.pdfbox.text.PDFTextStripper
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.withContext
++import kotlinx.coroutines.ensureActive
+ import org.xmlpull.v1.XmlPullParser
+ import java.io.File
+ import java.io.FileInputStream
+@@ -140,11 +141,14 @@
+     private val chunker = TextChunker()
+ 
+     suspend fun ingest(projectId: String, uri: Uri): Result<String> = withContext(Dispatchers.IO) {
+-        runCatching {
++        var copiedFile: File? = null
++        val result = runCatching {
++            check(database.projectDao().get(projectId) != null) { "This workspace was deleted" }
+             val displayName = displayName(uri)
+             val mimeType = context.contentResolver.getType(uri) ?: "application/octet-stream"
+             val destinationDirectory = File(context.filesDir, "documents").apply { mkdirs() }
+             val destination = File(destinationDirectory, "${UUID.randomUUID()}_${safeFileName(displayName)}")
++            copiedFile = destination
+             val hashAndSize = copyWithHash(uri, destination)
+             val existing = documents.findByHash(projectId, hashAndSize.second)
+             if (existing != null) {
+@@ -153,6 +157,8 @@
+             }
+             val documentId = UUID.randomUUID().toString()
+             val now = System.currentTimeMillis()
++            database.withTransaction {
++            check(database.projectDao().get(projectId) != null) { "This workspace was deleted during import" }
+             documents.insert(
+                 DocumentEntity(
+                     id = documentId,
+@@ -167,10 +173,13 @@
+                     updatedAt = now,
+                 ),
+             )
++            }
+             try {
+                 val parsed = parser.parse(destination, mimeType, displayName)
+                 val chunks = chunker.chunk(parsed)
+                 database.withTransaction {
++                    // A deletion may commit while parsing is running. Do not resurrect its index.
++                    if (documents.get(documentId) == null || database.projectDao().get(projectId) == null) return@withTransaction
+                     documents.deleteSegments(documentId)
+                     documents.insertSegments(chunks.mapIndexed { index, chunk ->
+                         DocumentSegmentEntity(
+@@ -188,7 +197,8 @@
+                     })
+                     documents.updateStatus(documentId, "READY", "READY", parsed.pages.size, null, System.currentTimeMillis())
+                 }
+-            } catch (error: Throwable) {
++            } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled }
++            catch (error: Throwable) {
+                 documents.updateStatus(
+                     documentId,
+                     extraction = "FAILED",
+@@ -200,6 +210,17 @@
+             }
+             documentId
+         }
++        if (result.isFailure) {
++            copiedFile?.let { file ->
++                withContext(kotlinx.coroutines.NonCancellable) {
++                    if (documents.pathReferences(file.absolutePath) == 0 && file.exists() && !file.delete()) {
++                        database.pendingDocumentDeletionDao().insertAll(listOf(PendingDocumentDeletionEntity(file.absolutePath)))
++                    }
++                }
++            }
++            (result.exceptionOrNull() as? kotlinx.coroutines.CancellationException)?.let { throw it }
++        }
++        result
+     }
+ 
+     private fun displayName(uri: Uri): String {
+@@ -209,7 +230,7 @@
+         return uri.lastPathSegment?.substringAfterLast('/') ?: "Imported document"
+     }
+ 
+-    private fun copyWithHash(uri: Uri, destination: File): Pair<Long, String> {
++    private suspend fun copyWithHash(uri: Uri, destination: File): Pair<Long, String> {
+         val digest = MessageDigest.getInstance("SHA-256")
+         var size = 0L
+         context.contentResolver.openInputStream(uri).use { input ->
+@@ -218,6 +239,7 @@
+                 val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+                 var read: Int
+                 while (input.read(buffer).also { read = it } >= 0) {
++                    kotlinx.coroutines.currentCoroutineContext().ensureActive()
+                     if (read == 0) continue
+                     output.write(buffer, 0, read)
+                     digest.update(buffer, 0, read)
+--- a/app/src/main/java/com/localai/workspace/data/Entities.kt
++++ b/app/src/main/java/com/localai/workspace/data/Entities.kt
+@@ -1,6 +1,7 @@
+ package com.localai.workspace.data
+ 
+ import androidx.room.Entity
++import androidx.room.ColumnInfo
+ import androidx.room.Fts4
+ import androidx.room.Index
+ import androidx.room.PrimaryKey
+@@ -16,7 +17,14 @@
+     val webEnabled: Boolean = false,
+     val memoryEnabled: Boolean = true,
+     val archived: Boolean = false,
+-)
++    @ColumnInfo(defaultValue = "'PROJECT'") val workspaceKind: String = "PROJECT",
++)
++
++/** A standalone chat owns an isolated workspace; project chats share their project resources. */
++object WorkspaceKind { const val CHAT = "CHAT"; const val PROJECT = "PROJECT" }
++
++@Entity(tableName = "pending_document_deletions")
++data class PendingDocumentDeletionEntity(@PrimaryKey val localPath: String)
+ 
+ @Entity(
+     tableName = "conversations",
+--- a/app/src/main/java/com/localai/workspace/data/WorkspaceDatabase.kt
++++ b/app/src/main/java/com/localai/workspace/data/WorkspaceDatabase.kt
+@@ -20,8 +20,9 @@
+         MemoryItemEntity::class,
+         CitationEvidenceEntity::class,
+         ToolCallEntity::class,
++        PendingDocumentDeletionEntity::class,
+     ],
+-    version = 2,
++    version = 3,
+     exportSchema = false,
+ )
+ abstract class WorkspaceDatabase : RoomDatabase() {
+@@ -33,13 +34,22 @@
+     abstract fun memoryDao(): MemoryDao
+     abstract fun citationEvidenceDao(): CitationEvidenceDao
+     abstract fun toolCallDao(): ToolCallDao
++    abstract fun pendingDocumentDeletionDao(): PendingDocumentDeletionDao
+ 
+     companion object {
+         fun create(context: Context): WorkspaceDatabase = Room.databaseBuilder(
+             context,
+             WorkspaceDatabase::class.java,
+             "local_ai_workspace.db",
+-        ).addMigrations(MIGRATION_1_2).build()
++        ).addMigrations(MIGRATION_1_2, MIGRATION_2_3).build()
++
++        val MIGRATION_2_3 = object : Migration(2, 3) {
++            override fun migrate(database: SupportSQLiteDatabase) {
++                // Existing project IDs, chats, models, files and preferences are unchanged.
++                database.execSQL("ALTER TABLE projects ADD COLUMN workspaceKind TEXT NOT NULL DEFAULT 'PROJECT'")
++                database.execSQL("CREATE TABLE IF NOT EXISTS pending_document_deletions (localPath TEXT NOT NULL PRIMARY KEY)")
++            }
++        }
+ 
+         val MIGRATION_1_2 = object : Migration(1, 2) {
+             override fun migrate(database: SupportSQLiteDatabase) {
+--- a/app/src/main/java/com/localai/workspace/data/WorkspaceRepository.kt
++++ b/app/src/main/java/com/localai/workspace/data/WorkspaceRepository.kt
+@@ -2,15 +2,31 @@
+ 
+ import androidx.room.withTransaction
+ import kotlinx.coroutines.flow.Flow
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.withContext
++import kotlinx.coroutines.ensureActive
++import kotlinx.coroutines.sync.Mutex
++import kotlinx.coroutines.sync.withLock
++import java.io.File
+ import java.util.UUID
+ 
+-class WorkspaceRepository(private val database: WorkspaceDatabase) {
++class WorkspaceRepository(private val database: WorkspaceDatabase, private val privateDocumentsDirectory: File? = null) {
+     private val projects = database.projectDao()
+     private val conversations = database.conversationDao()
+     private val messages = database.messageDao()
+     private val models = database.modelDao()
+     val activeProjects: Flow<List<ProjectEntity>> = projects.observeActive()
+     val allModels: Flow<List<ModelEntity>> = models.observeAll()
++    val pendingDocumentCleanup = database.pendingDocumentDeletionDao().observeCount()
++    private val cleanupMutex = Mutex()
++
++    suspend fun createChat(): String = database.withTransaction {
++        val id = UUID.randomUUID().toString()
++        val now = System.currentTimeMillis()
++        projects.upsert(ProjectEntity(id, "New chat", now, now, workspaceKind = WorkspaceKind.CHAT))
++        createConversation(id)
++        id
++    }
+ 
+     suspend fun ensureStarterProject() {
+         if (projects.get(DEFAULT_PROJECT_ID) == null) {
+@@ -40,8 +56,26 @@
+     suspend fun archiveProject(id: String) = projects.archive(id, System.currentTimeMillis())
+ 
+     fun observeProject(id: String): Flow<ProjectEntity?> = projects.observe(id)
++    fun observeConversations(projectId: String) = conversations.observeForProject(projectId)
++    fun observeConversation(id: String) = conversations.observe(id)
++
++    suspend fun conversationForChat(projectId: String, conversationId: String?): ConversationEntity = database.withTransaction {
++        check(projects.get(projectId) != null) { "This workspace was deleted" }
++        if (conversationId == null) ensureConversation(projectId)
++        else checkNotNull(conversations.get(conversationId)?.takeIf { it.projectId == projectId }) { "This chat was deleted" }
++    }
++
++    suspend fun createConversation(projectId: String): ConversationEntity = database.withTransaction {
++        val owner = checkNotNull(projects.get(projectId)) { "This workspace was deleted" }
++        if (owner.workspaceKind == WorkspaceKind.CHAT) {
++            conversations.getForProject(projectId)?.let { return@withTransaction it }
++        }
++        val now = System.currentTimeMillis()
++        ConversationEntity(UUID.randomUUID().toString(), projectId, "New chat", now, now).also { conversations.upsert(it) }
++    }
+ 
+     suspend fun ensureConversation(projectId: String): ConversationEntity = database.withTransaction {
++        check(projects.get(projectId) != null) { "This workspace was deleted" }
+         // Preserve legacy IDs; a new chat gets a fresh ID so late callbacks cannot
+         // attach evidence or messages to a replacement of a deleted conversation.
+         val current = conversations.getForProject(projectId)
+@@ -64,6 +98,61 @@
+         conversations.deleteForProject(projectId)
+     }
+ 
++    /** Remove one project conversation, or the entire isolated owner of a standalone chat. */
++    suspend fun deleteConversation(id: String): Int {
++        database.withTransaction {
++            val conversation = conversations.get(id) ?: return@withTransaction
++            val owner = conversation.projectId?.let { projects.get(it) }
++            if (owner?.workspaceKind == WorkspaceKind.CHAT) deleteWorkspaceRows(owner.id)
++            else {
++                database.citationEvidenceDao().deleteForConversation(id)
++                database.toolCallDao().deleteForConversation(id)
++                messages.deleteForConversation(id)
++                conversations.delete(id)
++            }
++        }
++        return cleanupDeletedDocuments()
++    }
++
++    suspend fun deleteWorkspace(id: String): Int {
++        database.withTransaction { deleteWorkspaceRows(id) }
++        return cleanupDeletedDocuments()
++    }
++
++    private suspend fun deleteWorkspaceRows(id: String) {
++        val documents = database.documentDao()
++        database.pendingDocumentDeletionDao().insertAll(documents.forProject(id).map { PendingDocumentDeletionEntity(it.localPath) })
++        deleteProjectChats(id)
++        documents.deleteEmbeddingsForProject(id)
++        // Room's external-content FTS triggers remove the deleted segments from the index.
++        documents.deleteSegmentsForProject(id)
++        documents.deleteForProject(id)
++        database.memoryDao().deleteForProject(id)
++        projects.delete(id)
++    }
++
++    /** Durable outbox: DB deletion is atomic; failed private-file cleanup can be retried after restart. */
++    suspend fun cleanupDeletedDocuments(): Int = withContext(Dispatchers.IO) { cleanupMutex.withLock {
++        val queue = database.pendingDocumentDeletionDao()
++        val root = privateDocumentsDirectory?.canonicalFile
++        for (item in queue.pending()) {
++            kotlinx.coroutines.currentCoroutineContext().ensureActive()
++            try {
++                if (database.documentDao().pathReferences(item.localPath) > 0) {
++                    queue.acknowledge(item.localPath); continue
++                }
++                if (root == null) continue
++                val file = File(item.localPath).canonicalFile
++                // Never touch originals, models, directories or targets outside private documents.
++                if (!file.path.startsWith(root.path + File.separator) || file.isDirectory) continue
++                if (!file.exists() || file.delete()) queue.acknowledge(item.localPath)
++            } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled }
++            catch (_: java.io.IOException) { /* Keep the durable item; UI exposes retry/count. */ }
++            catch (_: SecurityException) { /* Keep the durable item; UI exposes retry/count. */ }
++        }
++        queue.pending().size
++    } }
++
+     suspend fun saveCitationEvidence(items: List<CitationEvidenceEntity>) = database.withTransaction {
+         val retained = items.filter { conversations.get(it.conversationId) != null }
+         if (retained.isNotEmpty()) database.citationEvidenceDao().insertAll(retained)
+@@ -74,7 +163,14 @@
+     suspend fun recoverInterruptedGeneration(conversationId: String) = messages.recoverInterruptedGeneration(conversationId)
+ 
+     suspend fun addMessage(message: MessageEntity) = database.withTransaction {
+-        check(conversations.get(message.conversationId) != null) { "This chat was deleted. Open the project again to start a new chat." }
++        val conversation = checkNotNull(conversations.get(message.conversationId)) { "This chat was deleted. Start a new chat." }
++        if (message.role == "USER" && conversation.title in setOf("New chat", "New conversation")) {
++            val title = message.content.trim().replace(Regex("\\s+"), " ").take(60).ifBlank { "New chat" }
++            conversations.rename(conversation.id, title)
++            conversation.projectId?.let { id ->
++                if (projects.get(id)?.workspaceKind == WorkspaceKind.CHAT) projects.rename(id, title, message.createdAt)
++            }
++        }
+         messages.insert(message)
+         conversations.touch(message.conversationId, message.createdAt)
+     }
+--- a/app/src/main/java/com/localai/workspace/ui/ViewModels.kt
++++ b/app/src/main/java/com/localai/workspace/ui/ViewModels.kt
+@@ -56,6 +56,7 @@
+ import kotlinx.coroutines.flow.asStateFlow
+ import kotlinx.coroutines.flow.flatMapLatest
+ import kotlinx.coroutines.flow.first
++import kotlinx.coroutines.flow.map
+ import kotlinx.coroutines.flow.stateIn
+ import kotlinx.coroutines.launch
+ import kotlinx.coroutines.cancelAndJoin
+@@ -63,6 +64,70 @@
+ import java.util.UUID
+ 
+ class HomeViewModel(private val graph: AppGraph) : ViewModel() {
++    private val documentImports = mutableMapOf<String, Job>()
++    private val _creating = MutableStateFlow(false)
++    val creating = _creating.asStateFlow()
++    val pendingDocumentCleanup = graph.workspace.pendingDocumentCleanup.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
++    val chats = graph.workspace.activeProjects.map { it.filter { item -> item.workspaceKind == com.localai.workspace.data.WorkspaceKind.CHAT } }
++        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
++    fun observeProject(id: String) = graph.workspace.observeProject(id)
++    fun observeConversations(id: String) = graph.workspace.observeConversations(id)
++    fun observeDocuments(id: String) = graph.database.documentDao().observeForProject(id)
++
++    fun startChat(projectId: String? = null, onCreated: (String, String?) -> Unit) {
++        if (_creating.value || (projectId != null && projectId in _deletingChats.value)) return
++        _creating.value = true
++        viewModelScope.launch {
++            try {
++                if (projectId == null) onCreated(graph.workspace.createChat(), null)
++                else onCreated(projectId, graph.workspace.createConversation(projectId).id)
++            } catch (cancelled: CancellationException) { throw cancelled }
++            catch (error: Exception) { _notices.emit(error.message ?: "Could not start chat") }
++            finally { _creating.value = false }
++        }
++    }
++
++    fun deleteWorkspace(id: String, onDeleted: () -> Unit = {}) {
++        if (id in _deletingChats.value) return
++        _deletingChats.value += id
++        viewModelScope.launch {
++            try {
++                documentImports.remove(id)?.cancelAndJoin()
++                val pending = graph.workspace.deleteWorkspace(id)
++                _notices.emit(if (pending == 0) "Deleted" else "Deleted. Some private files need cleanup; retry from Workspace.")
++                onDeleted()
++            } catch (cancelled: CancellationException) { throw cancelled }
++            catch (error: Exception) { _notices.emit(error.message ?: "Could not delete. Please retry.") }
++            finally { _deletingChats.value -= id }
++        }
++    }
++
++    fun deleteConversation(projectId: String, id: String) {
++        if (projectId in _deletingChats.value) return
++        _deletingChats.value += projectId
++        viewModelScope.launch {
++            try {
++                graph.workspace.deleteConversation(id)
++                _notices.emit("Chat deleted")
++            } catch (cancelled: CancellationException) { throw cancelled }
++            catch (error: Exception) { _notices.emit(error.message ?: "Could not delete chat") }
++            finally { _deletingChats.value -= projectId }
++        }
++    }
++
++    fun retryDocumentCleanup() { viewModelScope.launch {
++        val pending = graph.workspace.cleanupDeletedDocuments()
++        _notices.emit(if (pending == 0) "Private file cleanup completed" else "$pending private files still need cleanup")
++    } }
++
++    fun attachProjectDocument(projectId: String, uri: android.net.Uri) {
++        if (projectId in _deletingChats.value || documentImports[projectId]?.isActive == true) return
++        documentImports[projectId] = viewModelScope.launch {
++            graph.documents.ingest(projectId, uri).fold(
++                onSuccess = { _notices.emit("Document imported; check its indexing status in Files") },
++                onFailure = { _notices.emit(it.message ?: "Document import failed") })
++        }
++    }
+     private val _deletingChats = MutableStateFlow<Set<String>>(emptySet())
+     val deletingChats = _deletingChats.asStateFlow()
+ 
+@@ -79,7 +144,7 @@
+         }
+     }
+ 
+-    val projects: StateFlow<List<ProjectEntity>> = graph.workspace.activeProjects.stateIn(
++    val projects: StateFlow<List<ProjectEntity>> = graph.workspace.activeProjects.map { it.filter { item -> item.workspaceKind == com.localai.workspace.data.WorkspaceKind.PROJECT } }.stateIn(
+         viewModelScope,
+         SharingStarted.WhileSubscribed(5_000),
+         emptyList(),
+@@ -102,8 +167,13 @@
+     private var downloadJob: Job? = null
+ 
+     fun createProject(name: String, onCreated: (String) -> Unit) {
+-        viewModelScope.launch {
+-            onCreated(graph.workspace.createProject(name))
++        if (_creating.value) return
++        _creating.value = true
++        viewModelScope.launch {
++            try { onCreated(graph.workspace.createProject(name)) }
++            catch (cancelled: CancellationException) { throw cancelled }
++            catch (error: Exception) { _notices.emit(error.message ?: "Could not create project") }
++            finally { _creating.value = false }
+         }
+     }
+ 
+@@ -258,6 +328,7 @@
+ class ChatViewModel(
+     private val projectId: String,
+     private val graph: AppGraph,
++    private val requestedConversationId: String? = null,
+ ) : ViewModel() {
+     private val _conversationId = MutableStateFlow<String?>(null)
+     private val _isGenerating = MutableStateFlow(false)
+@@ -312,14 +383,20 @@
+     val generationProgress: StateFlow<GenerationProgress> = _generationProgress.asStateFlow()
+     val generationError: StateFlow<GenerationError?> = _generationError.asStateFlow()
+     val modelPreparation = preparation.state
++    val conversation = _conversationId.flatMapLatest { id ->
++        if (id == null) kotlinx.coroutines.flow.flowOf(null) else graph.workspace.observeConversation(id)
++    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+ 
+     init {
+         conversationInitialization = viewModelScope.launch {
+-            val conversation = graph.workspace.ensureConversation(projectId)
++            try {
++            val conversation = graph.workspace.conversationForChat(projectId, requestedConversationId)
+             graph.workspace.recoverInterruptedGeneration(conversation.id)
+             _conversationId.value = conversation.id
+             _selectedModelId.value = graph.workspace.observeProject(projectId).first()?.defaultModelId
+             prepareSelectedModel()
++            } catch (cancelled: CancellationException) { throw cancelled }
++            catch (error: Exception) { _notices.emit(error.message ?: "Could not open chat") }
+         }
+     }
+ 
+@@ -386,7 +463,8 @@
+                 // A revoked lease prevents old cleanup from touching a replacement chat.
+                 activeRuntime = null
+                 preparation.invalidateReady()
+-                graph.workspace.deleteProjectChats(projectId)
++                val pending = _conversationId.value?.let { graph.workspace.deleteConversation(it) } ?: 0
++                if (pending > 0) _notices.emit("Chat deleted; some private files need cleanup from Workspace")
+                 _conversationId.value = null
+                 _streamingText.value = ""
+                 _evidence.value = emptyList()
+@@ -425,7 +503,7 @@
+             try {
+             // Recovery must finish before inserting a new GENERATING row.
+             conversationInitialization.join()
+-            val conversationId = _conversationId.value ?: graph.workspace.ensureConversation(projectId).also {
++            val conversationId = _conversationId.value ?: graph.workspace.conversationForChat(projectId, requestedConversationId).also {
+                 _conversationId.value = it.id
+             }.id
+             val userId = UUID.randomUUID().toString()
+@@ -699,6 +777,7 @@
+     }
+ 
+     fun attachDocument(uri: android.net.Uri) {
++        if (_isDeletingChat.value) return
+         viewModelScope.launch {
+             graph.documents.ingest(projectId, uri).fold(
+                 onSuccess = { _notices.emit("Document imported; local indexing status is visible below") },
+@@ -780,7 +859,7 @@
+     override fun <T : ViewModel> create(modelClass: Class<T>): T = HomeViewModel(graph) as T
+ }
+ 
+-class ChatViewModelFactory(private val projectId: String, private val graph: AppGraph) : ViewModelProvider.Factory {
++class ChatViewModelFactory(private val projectId: String, private val graph: AppGraph, private val conversationId: String? = null) : ViewModelProvider.Factory {
+     @Suppress("UNCHECKED_CAST")
+-    override fun <T : ViewModel> create(modelClass: Class<T>): T = ChatViewModel(projectId, graph) as T
++    override fun <T : ViewModel> create(modelClass: Class<T>): T = ChatViewModel(projectId, graph, conversationId) as T
+ }
+--- a/app/src/test/java/com/localai/workspace/data/ChatDeletionTest.kt
++++ b/app/src/test/java/com/localai/workspace/data/ChatDeletionTest.kt
+@@ -52,7 +52,7 @@
+         repository.deleteProjectChats("target")
+         for (table in listOf("conversations", "messages", "citation_evidence", "tool_calls")) assertEquals(table, 0, count(table))
+         assertNotNull(db.projectDao().get("target"))
+-        assertEquals(2, db.openHelper.readableDatabase.version)
++        assertEquals(3, db.openHelper.readableDatabase.version)
+     }
+ 
+     @Test fun preservesOtherChatsDocumentsMemoryModelsAndProjectSettings() = runBlocking {
+--- /dev/null
++++ b/app/src/test/java/com/localai/workspace/data/DeletedWorkspaceImportTest.kt
+@@ -0,0 +1,72 @@
++package com.localai.workspace.data
++
++import android.app.Application
++import android.net.Uri
++import androidx.room.Room
++import kotlinx.coroutines.runBlocking
++import org.junit.After
++import org.junit.Assert.*
++import org.junit.Before
++import org.junit.Test
++import org.junit.runner.RunWith
++import org.robolectric.RobolectricTestRunner
++import org.robolectric.RuntimeEnvironment
++import org.robolectric.Shadows.shadowOf
++import org.robolectric.annotation.Config
++import java.io.ByteArrayInputStream
++import java.io.File
++
++@RunWith(RobolectricTestRunner::class)
++@Config(sdk = [29], application = Application::class)
++class DeletedWorkspaceImportTest {
++    private val context = RuntimeEnvironment.getApplication()
++    private lateinit var db: WorkspaceDatabase
++    private lateinit var repo: WorkspaceRepository
++    private lateinit var service: DocumentIngestionService
++    private lateinit var root: File
++    private var existingFiles = emptySet<String>()
++    @Before fun open() {
++        db = Room.inMemoryDatabaseBuilder(context, WorkspaceDatabase::class.java).build()
++        root = File(context.filesDir, "documents").apply { mkdirs() }
++        existingFiles = root.listFiles().orEmpty().map { it.name }.toSet()
++        repo = WorkspaceRepository(db, root)
++        service = DocumentIngestionService(context, db, db.documentDao())
++    }
++    @After fun close() { db.close(); root.listFiles().orEmpty().filter { it.name !in existingFiles }.forEach { it.delete() } }
++    private fun newFiles() = root.listFiles().orEmpty().filter { it.name !in existingFiles }
++
++    @Test fun deletedOwnerRejectsImportBeforeCopyingAnyFile() = runBlocking {
++        val id = repo.createProject("Gone"); repo.deleteWorkspace(id)
++        val result = service.ingest(id, Uri.parse("content://local.fixture/file.txt"))
++        assertTrue(result.isFailure); assertTrue(newFiles().isEmpty())
++    }
++
++    @Test fun deletionDuringStreamingCopyCannotRecreateDocumentOrLeavePartialCopy() = runBlocking {
++        val id = repo.createProject("Gone during copy")
++        val uri = Uri.parse("content://local.fixture/file.txt")
++        val input = object : ByteArrayInputStream("private fixture content".toByteArray()) {
++            var deleted = false
++            override fun read(buffer: ByteArray, offset: Int, length: Int): Int {
++                if (!deleted) { deleted = true; runBlocking { repo.deleteWorkspace(id) } }
++                return super.read(buffer, offset, length)
++            }
++        }
++        shadowOf(context.contentResolver).registerInputStream(uri, input)
++        val result = service.ingest(id, uri)
++        assertTrue(result.isFailure); assertNull(db.projectDao().get(id))
++        assertTrue(db.documentDao().forProject(id).isEmpty()); assertTrue(newFiles().isEmpty())
++    }
++
++    @Test fun ordinaryImportStillCopiesAndIndexesTextInPrivateStorage() = runBlocking {
++        val id = repo.createProject("Normal")
++        val uri = Uri.parse("content://local.fixture/notes.txt")
++        shadowOf(context.contentResolver).registerInputStream(uri, ByteArrayInputStream("local source with useful words".toByteArray()))
++        val result = service.ingest(id, uri)
++        assertTrue(result.exceptionOrNull()?.message, result.isSuccess)
++        val doc = db.documentDao().get(result.getOrThrow())!!
++        assertEquals("READY", doc.indexingStatus); assertEquals("READY", doc.extractionStatus)
++        assertTrue(File(doc.localPath).canonicalPath.startsWith(root.canonicalPath + File.separator))
++        assertEquals("local source with useful words", File(doc.localPath).readText())
++        assertFalse(db.documentDao().segmentsForDocument(doc.id).isEmpty())
++    }
++}
+--- a/app/src/test/java/com/localai/workspace/data/LiteRtChatDefaultsUpgradeTest.kt
++++ b/app/src/test/java/com/localai/workspace/data/LiteRtChatDefaultsUpgradeTest.kt
+@@ -27,10 +27,11 @@
+         configuredContext = 4096, importedAt = 123, sourceRepository = "owner/repo", lastMetrics = "old metrics")
+ 
+     @Test fun originalDefaultsUpgradeToLargerCeilingWithoutChangingFilesContextOrRoomSchema() = runBlocking {
++        val schemaBefore = database.openHelper.readableDatabase.version
+         val old = model(); database.modelDao().insert(old)
+         val updated = LiteRtChatDefaultsUpgrade(context, database.modelDao()).applyOnce(old.id)!!
+         assertEquals(old.copy(maxOutputTokens = 256, repeatPenalty = 1.1f, updatedAt = updated.updatedAt), updated)
+-        assertEquals(2, database.openHelper.readableDatabase.version)
++        assertEquals(schemaBefore, database.openHelper.readableDatabase.version)
+     }
+ 
+     @Test fun previousUpdateDefaultIsCorrectedButLaterDeliberateSmallLimitIsPreserved() = runBlocking {
+--- a/app/src/test/java/com/localai/workspace/data/LiteRtDefaultsUpgradeTest.kt
++++ b/app/src/test/java/com/localai/workspace/data/LiteRtDefaultsUpgradeTest.kt
+@@ -32,13 +32,14 @@
+         lastMetrics = "old benchmark", lastTestedAt = 124, auxiliaryFiles = "unchanged", sourceRepository = "owner/repo")
+ 
+     @Test fun exactOldDefaultsChangeOnceWithoutResettingModelFilesHistoryOrContext() = runBlocking {
++        val schemaBefore = database.openHelper.readableDatabase.version
+         val old = model()
+         database.modelDao().insert(old)
+         val fresh = checkNotNull(upgrade.applyOnce(old.id))
+         assertEquals(128, fresh.maxOutputTokens)
+         assertEquals(1.1f, fresh.repeatPenalty, 0f)
+         assertEquals(old.copy(maxOutputTokens = 128, repeatPenalty = 1.1f, updatedAt = fresh.updatedAt), fresh)
+-        assertEquals(2, database.openHelper.readableDatabase.version)
++        assertEquals(schemaBefore, database.openHelper.readableDatabase.version)
+         assertEquals(fresh, database.modelDao().get(old.id))
+     }
+ 
+--- /dev/null
++++ b/app/src/test/java/com/localai/workspace/data/WorkspaceLifecycleTest.kt
+@@ -0,0 +1,166 @@
++package com.localai.workspace.data
++
++import android.app.Application
++import androidx.room.Room
++import kotlinx.coroutines.flow.first
++import kotlinx.coroutines.runBlocking
++import org.junit.After
++import org.junit.Assert.*
++import org.junit.Before
++import org.junit.Test
++import org.junit.runner.RunWith
++import org.robolectric.RobolectricTestRunner
++import org.robolectric.RuntimeEnvironment
++import org.robolectric.annotation.Config
++import java.io.File
++import java.nio.file.Files
++
++@RunWith(RobolectricTestRunner::class)
++@Config(sdk = [29], application = Application::class)
++class WorkspaceLifecycleTest {
++    private lateinit var db: WorkspaceDatabase
++    private lateinit var repo: WorkspaceRepository
++    private lateinit var files: File
++    private lateinit var documents: File
++    @Before fun open() {
++        db = Room.inMemoryDatabaseBuilder(RuntimeEnvironment.getApplication(), WorkspaceDatabase::class.java).build()
++        files = Files.createTempDirectory("workspace-lifecycle").toFile()
++        documents = File(files, "documents").apply { mkdirs() }
++        repo = WorkspaceRepository(db, documents)
++    }
++    @After fun close() { db.close(); files.deleteRecursively() }
++    private fun count(table: String) = db.openHelper.readableDatabase.query("SELECT COUNT(*) FROM $table").use { it.moveToFirst(); it.getInt(0) }
++    private suspend fun conversation(project: String, text: String): ConversationEntity {
++        val chat = repo.createConversation(project)
++        repo.addMessage(MessageEntity("msg-${chat.id}", chat.id, "USER", text, 5))
++        repo.saveCitationEvidence(listOf(CitationEvidenceEntity("cite-${chat.id}", chat.id, "msg-${chat.id}", "LCL", 1,
++            "evidence", "doc", "doc", retrievalScore = 1.0, createdAt = 1)))
++        db.toolCallDao().insert(ToolCallEntity("tool-${chat.id}", chat.id, "msg-${chat.id}", "calculator", "{}", "ALLOW", status = "COMPLETE", startedAt = 1))
++        return chat
++    }
++    private suspend fun document(project: String, id: String, path: File): Long {
++        path.writeText("$id private source")
++        db.documentDao().insert(DocumentEntity(id, project, id, localPath = path.path, mimeType = "text/plain",
++            fileHash = id, byteSize = path.length(), importedAt = 1, updatedAt = 1))
++        db.documentDao().insertSegments(listOf(DocumentSegmentEntity(documentId = id, segmentIndex = 0,
++            text = id, normalizedText = id, contentHash = id)))
++        val segment = db.documentDao().segmentsForDocument(id).single().id
++        db.openHelper.writableDatabase.execSQL("INSERT INTO embedding_records VALUES (?, ?, ?, ?, ?)",
++            arrayOf(segment, "embedding", 1, byteArrayOf(1), 1L))
++        return segment
++    }
++
++    @Test fun directChatIsIndependentAndNamedFromItsFirstMessage() = runBlocking {
++        val a = repo.createChat(); val b = repo.createChat()
++        assertNotEquals(a, b)
++        assertEquals(WorkspaceKind.CHAT, db.projectDao().get(a)!!.workspaceKind)
++        val chat = repo.ensureConversation(a)
++        repo.addMessage(MessageEntity("user", chat.id, "USER", "Hola desde mi chat", 10))
++        assertEquals("Hola desde mi chat", db.projectDao().get(a)!!.name)
++        assertEquals("Hola desde mi chat", db.conversationDao().get(chat.id)!!.title)
++        assertEquals("New chat", db.projectDao().get(b)!!.name)
++        assertTrue(repo.observeMessages(repo.ensureConversation(b).id).first().isEmpty())
++    }
++
++    @Test fun projectContainsMultipleIndependentlyAddressableChats() = runBlocking {
++        val project = repo.createProject("Study")
++        val a = conversation(project, "First subject"); val b = conversation(project, "Second subject")
++        assertNotEquals(a.id, b.id)
++        assertEquals(WorkspaceKind.PROJECT, db.projectDao().get(project)!!.workspaceKind)
++        assertEquals("Study", db.projectDao().get(project)!!.name)
++        assertEquals(a.id, repo.conversationForChat(project, a.id).id)
++        assertEquals(b.id, repo.conversationForChat(project, b.id).id)
++        assertEquals("First subject", repo.observeMessages(a.id).first().single().content)
++        assertEquals(2, repo.observeConversations(project).first().size)
++    }
++
++    @Test fun deletingOneProjectChatKeepsSiblingsFilesAndMemory() = runBlocking {
++        val project = repo.createProject("Study"); val a = conversation(project, "one"); val b = conversation(project, "two")
++        val file = File(documents, "keep.txt"); document(project, "keepdoc", file)
++        db.memoryDao().upsert(MemoryItemEntity("memory", "PROJECT", project, "keep", "USER", createdAt = 1, updatedAt = 1))
++        assertEquals(0, repo.deleteConversation(a.id))
++        assertNull(db.conversationDao().get(a.id)); assertNotNull(db.conversationDao().get(b.id))
++        assertNotNull(db.projectDao().get(project)); assertTrue(file.isFile)
++        assertEquals(1, count("messages")); assertEquals(1, count("citation_evidence")); assertEquals(1, count("tool_calls"))
++        assertEquals(1, count("documents")); assertEquals(1, count("memory_items"))
++    }
++
++    @Test fun deletingProjectRemovesItsCardAndEveryOwnedResourceButKeepsOtherWorkAndModels() = runBlocking {
++        val target = repo.createProject("target"); val other = repo.createProject("other")
++        conversation(target, "one"); conversation(target, "two"); conversation(other, "keep")
++        val targetFile = File(documents, "remove.txt"); val keepFile = File(documents, "keep.txt")
++        document(target, "uniquewordtarget", targetFile); document(other, "keepword", keepFile)
++        db.memoryDao().upsert(MemoryItemEntity("local", "PROJECT", target, "remove", "USER", createdAt = 1, updatedAt = 1))
++        db.memoryDao().upsert(MemoryItemEntity("global", "GLOBAL", null, "keep", "USER", createdAt = 1, updatedAt = 1))
++        val modelFile = File(files, "models/model.gguf").apply { parentFile!!.mkdirs(); writeText("model") }
++        db.modelDao().insert(ModelEntity("model", "Model", modelFile.path, fileHash = "model", fileSize = 5,
++            format = "GGUF", runtimeId = "llama.cpp-android", compatibilityStatus = "COMPATIBLE", importedAt = 1))
++        assertEquals(0, repo.deleteWorkspace(target))
++        assertNull(db.projectDao().get(target)); assertFalse(targetFile.exists()); assertTrue(keepFile.exists())
++        assertNotNull(db.projectDao().get(other)); assertTrue(modelFile.exists()); assertNotNull(db.modelDao().get("model"))
++        for (table in listOf("projects", "conversations", "messages", "citation_evidence", "tool_calls", "documents", "document_segments", "embedding_records", "memory_items")) assertEquals(table, 1, count(table))
++        db.openHelper.readableDatabase.query("SELECT docid FROM document_segments_fts WHERE document_segments_fts MATCH 'uniquewordtarget'").use { assertFalse(it.moveToFirst()) }
++    }
++
++    @Test fun standaloneChatDeletionRemovesItsListEntryFilesAndLocalMemory() = runBlocking {
++        val id = repo.createChat(); val chat = repo.ensureConversation(id)
++        val file = File(documents, "attachment.txt"); document(id, "chatfile", file)
++        db.memoryDao().upsert(MemoryItemEntity("memory", "PROJECT", id, "remove", "USER", createdAt = 1, updatedAt = 1))
++        repo.deleteConversation(chat.id)
++        assertTrue(repo.activeProjects.first().isEmpty()); assertEquals(0, count("projects"))
++        assertEquals(0, count("conversations")); assertEquals(0, count("memory_items")); assertFalse(file.exists())
++    }
++
++    @Test fun storageFailureRollsBackProjectAndItsCleanupOutbox() = runBlocking {
++        val target = repo.createProject("target"); conversation(target, "one")
++        val file = File(documents, "rollback.txt"); document(target, "rollbackword", file)
++        db.openHelper.writableDatabase.execSQL("CREATE TRIGGER block_project_delete BEFORE DELETE ON projects BEGIN SELECT RAISE(ABORT, 'storage failure'); END")
++        try { repo.deleteWorkspace(target); fail("Expected database failure") } catch (_: android.database.sqlite.SQLiteException) { }
++        for (table in listOf("projects", "conversations", "messages", "documents", "document_segments", "embedding_records")) assertEquals(table, 1, count(table))
++        assertEquals(0, count("pending_document_deletions")); assertTrue(file.exists())
++    }
++
++    @Test fun pendingPrivateFilesAreRetriedAfterRepositoryRestart() = runBlocking {
++        val target = repo.createProject("target"); val file = File(documents, "later.txt"); document(target, "laterword", file)
++        // Missing root deliberately models an unavailable cleaner; metadata commits with a durable outbox.
++        assertEquals(1, WorkspaceRepository(db).deleteWorkspace(target))
++        assertNull(db.projectDao().get(target)); assertTrue(file.exists()); assertEquals(1, count("pending_document_deletions"))
++        assertEquals(0, WorkspaceRepository(db, documents).cleanupDeletedDocuments())
++        assertFalse(file.exists()); assertEquals(0, count("pending_document_deletions"))
++    }
++
++    @Test fun cleanupNeverDeletesModelsOriginalsOrSymlinkTargetsOutsideDocuments() = runBlocking {
++        val original = File(files, "original.txt").apply { writeText("original") }
++        val model = File(files, "models/model.litertlm").apply { parentFile!!.mkdirs(); writeText("model") }
++        val link = File(documents, "escape.txt"); Files.createSymbolicLink(link.toPath(), original.toPath())
++        db.pendingDocumentDeletionDao().insertAll(listOf(original, model, link).map { PendingDocumentDeletionEntity(it.path) })
++        assertEquals(3, repo.cleanupDeletedDocuments()); assertTrue(original.isFile); assertTrue(model.isFile)
++    }
++
++    @Test fun cleanupKeepsFilesStillReferencedByAnotherWorkspace() = runBlocking {
++        val a = repo.createProject("a"); val b = repo.createProject("b"); val file = File(documents, "shared.txt")
++        document(a, "doca", file)
++        db.documentDao().insert(DocumentEntity("docb", b, "B", localPath = file.path, mimeType = "text/plain", fileHash = "b",
++            byteSize = file.length(), importedAt = 1, updatedAt = 1))
++        repo.deleteWorkspace(a); assertTrue(file.isFile); assertNotNull(db.documentDao().get("docb"))
++        repo.deleteWorkspace(b); assertFalse(file.exists())
++    }
++
++    @Test fun deletedWorkCannotBeRecreatedByLateChatOrCitationWrites() = runBlocking {
++        val target = repo.createProject("target"); val chat = conversation(target, "first")
++        repo.deleteWorkspace(target)
++        try { repo.ensureConversation(target); fail("Missing project must not be recreated") } catch (_: IllegalStateException) { }
++        try { repo.createConversation(target); fail("Missing project must not accept new chat") } catch (_: IllegalStateException) { }
++        try { repo.addMessage(MessageEntity("late", chat.id, "USER", "late", 99)); fail("Deleted chat must not accept output") } catch (_: IllegalStateException) { }
++        repo.saveCitationEvidence(listOf(CitationEvidenceEntity("late", chat.id, "late", "LCL", 1, "text", "doc", "doc", retrievalScore = 1.0, createdAt = 1)))
++        assertEquals(0, count("projects")); assertEquals(0, count("conversations")); assertEquals(0, count("messages")); assertEquals(0, count("citation_evidence"))
++        repo.deleteWorkspace(target); repo.deleteConversation(chat.id) // Idempotent.
++        Unit
++    }
++
++    @Test fun explicitConversationIdCannotOpenAnotherProjectsHistory() = runBlocking {
++        val a = repo.createProject("a"); val b = repo.createProject("b"); val chat = conversation(a, "secret")
++        try { repo.conversationForChat(b, chat.id); fail("Cross-project conversation must be rejected") } catch (_: IllegalStateException) { }
++        assertEquals(1, count("conversations")); assertEquals(1, count("messages"))
++    }
++}
+--- /dev/null
++++ b/app/src/test/java/com/localai/workspace/data/WorkspaceMigration3Test.kt
+@@ -0,0 +1,91 @@
++package com.localai.workspace.data
++
++import android.app.Application
++import android.database.Cursor
++import androidx.room.Room
++import androidx.sqlite.db.SupportSQLiteDatabase
++import androidx.sqlite.db.SupportSQLiteOpenHelper
++import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
++import kotlinx.coroutines.runBlocking
++import org.junit.Assert.*
++import org.junit.Test
++import org.junit.runner.RunWith
++import org.robolectric.RobolectricTestRunner
++import org.robolectric.RuntimeEnvironment
++import org.robolectric.annotation.Config
++import java.util.UUID
++
++/** Opens a real version-2 SQLite file through Room's version-3 migration AND schema validation. */
++@RunWith(RobolectricTestRunner::class)
++@Config(sdk = [29], application = Application::class)
++class WorkspaceMigration3Test {
++    @Test fun version2WorkspacesChatsAndModelsSurviveRoomMigrationAndDeletedDefaultStaysDeleted() = runBlocking {
++        val context = RuntimeEnvironment.getApplication()
++        val name = "workspace-v2-${UUID.randomUUID()}.db"
++        val template = Room.inMemoryDatabaseBuilder(context, WorkspaceDatabase::class.java).build()
++        val oldProject = ProjectEntity(WorkspaceRepository.DEFAULT_PROJECT_ID, "Legacy workspace", 10, 11,
++            defaultModelId = "model", systemInstructions = "Saved instructions")
++        val oldConversation = ConversationEntity("legacy-chat", oldProject.id, "Saved title", 10, 11)
++        val oldMessage = MessageEntity("legacy-message", oldConversation.id, "ASSISTANT", "Saved answer", 12, status = "COMPLETE")
++        val oldModel = ModelEntity("model", "Qwen", "/private/model.litertlm", fileHash = "a".repeat(64), fileSize = 42,
++            format = "LITERT_LM", runtimeId = "litert-lm-android", compatibilityStatus = "COMPATIBLE", importedAt = 10,
++            maxOutputTokens = 256, lastMetrics = "saved benchmark")
++        template.projectDao().upsert(oldProject); template.conversationDao().upsert(oldConversation)
++        template.messageDao().insert(oldMessage); template.modelDao().insert(oldModel)
++        val source = template.openHelper.readableDatabase
++        val ddl = source.query("SELECT name, sql FROM sqlite_master WHERE sql IS NOT NULL AND name NOT LIKE 'sqlite_%' AND name NOT IN ('room_master_table', 'android_metadata', 'pending_document_deletions') ORDER BY CASE type WHEN 'table' THEN 0 WHEN 'index' THEN 1 ELSE 2 END").use { cursor ->
++            buildList {
++                while (cursor.moveToNext()) {
++                    val table = cursor.getString(0)
++                    if (table.startsWith("document_segments_fts_")) continue // FTS creates its own shadow tables.
++                    val sql = cursor.getString(1)
++                    add(if (table == "projects") sql.replace(Regex(", [`\"]?workspaceKind[`\"]? TEXT NOT NULL DEFAULT 'PROJECT'"), "").also {
++                        assertFalse("Version2 fixture must omit the new column", it.contains("workspaceKind"))
++                    } else sql)
++                }
++            }
++        }
++        val helper = FrameworkSQLiteOpenHelperFactory().create(SupportSQLiteOpenHelper.Configuration.builder(context).name(name)
++            .callback(object : SupportSQLiteOpenHelper.Callback(2) {
++                override fun onCreate(db: SupportSQLiteDatabase) { ddl.forEach { db.execSQL(it) } }
++                override fun onUpgrade(db: SupportSQLiteDatabase, oldVersion: Int, newVersion: Int) = error("Fixture is version2")
++            }).build())
++        val old = helper.writableDatabase
++        for (table in listOf("projects", "conversations", "messages", "models")) copyRows(source, old, table)
++        helper.close(); template.close()
++
++        var migrated: WorkspaceDatabase? = null
++        try {
++            migrated = Room.databaseBuilder(context, WorkspaceDatabase::class.java, name).addMigrations(WorkspaceDatabase.MIGRATION_2_3).build()
++            assertEquals(3, migrated.openHelper.readableDatabase.version) // Forces real migration + Room validation.
++            assertEquals(oldProject, migrated.projectDao().get(oldProject.id))
++            assertEquals(oldConversation, migrated.conversationDao().get(oldConversation.id))
++            assertEquals(oldMessage, migrated.messageDao().recent(oldConversation.id, 10).single())
++            assertEquals(oldModel, migrated.modelDao().get(oldModel.id))
++            assertTrue(migrated.pendingDocumentDeletionDao().pending().isEmpty())
++            WorkspaceRepository(migrated).deleteWorkspace(oldProject.id)
++            migrated.close()
++            migrated = Room.databaseBuilder(context, WorkspaceDatabase::class.java, name).addMigrations(WorkspaceDatabase.MIGRATION_2_3).build()
++            assertNull(migrated.projectDao().get(oldProject.id))
++            assertEquals(oldModel, migrated.modelDao().get(oldModel.id))
++        } finally { migrated?.close(); context.deleteDatabase(name) }
++    }
++
++    private fun copyRows(source: SupportSQLiteDatabase, target: SupportSQLiteDatabase, table: String) {
++        source.query("SELECT * FROM $table").use { cursor ->
++            val indexes = (0 until cursor.columnCount).filter { cursor.getColumnName(it) != "workspaceKind" }
++            val names = indexes.joinToString(",") { "`${cursor.getColumnName(it)}`" }
++            val placeholders = indexes.joinToString(",") { "?" }
++            while (cursor.moveToNext()) {
++                val args = indexes.map { index -> when (cursor.getType(index)) {
++                    Cursor.FIELD_TYPE_NULL -> null
++                    Cursor.FIELD_TYPE_INTEGER -> cursor.getLong(index)
++                    Cursor.FIELD_TYPE_FLOAT -> cursor.getDouble(index)
++                    Cursor.FIELD_TYPE_BLOB -> cursor.getBlob(index)
++                    else -> cursor.getString(index)
++                } }.toTypedArray()
++                target.execSQL("INSERT INTO $table ($names) VALUES ($placeholders)", args)
++            }
++        }
++    }
++}
+--- a/docs/STATUS.md
++++ b/docs/STATUS.md
+@@ -1,4 +1,16 @@
+-# Project status — 0.1.9 / 2026-10-05
++# Project status — 0.1.10 / 2026-10-05
++
++**WORKSPACE REORGANIZED**: direct Start chat plus optional Start project; separate chat/project lists; project screen with multiple independently addressed conversations, shared local files and memory. Confirmed standalone-chat deletion removes its isolated owner/card/resources; Delete project removes its card and every owned chat/document/index/embedding/project memory; Delete project chat preserves siblings/shared resources. Models/settings/benchmarks, global memory and unrelated work remain. Startup no longer recreates a deleted Personal workspace.
++
++**ROOM MIGRATION3**: real2→3 migration adds workspaceKind (existing rows defaultPROJECT) and durable pending private-document deletion table, with no destructive migration. Preserves existing IDs/history/models/preferences/files. SQL deletion/outbox is one transaction; canonical private-filesystem cleanup follows commit and can retry on launch or from Workspace. Source originals/models/escaping symlinks are excluded. Import-vs-delete guards prevent late document/index resurrection.
++
++**HOST VALIDATION PASS**:129app tests executed,0failures/errors/skips (114preceding+15new),2compatibility tests up to date. Final delivery testDebugUnitTest/assembleDebug/lintDebug succeed in1m42s; lint0errors/73existing warnings. Includes actual Room2→3 opening/schema validation, deletion/isolation/rollback/FTS/embeddings/file-outbox/symlink and streaming import race tests. Device UI/native/performance validation NOT_EXECUTED; no adb device. Warm LiteRT pool unchanged, no semantic-quality/CPU-decoding improvement claimed.
++
++[Behavior and phone checks](WORKSPACE_010.md). [Artifact](validation/apk-010.json).
++
++**APK / DRIVE PASS**: [Download signed 0.1.10 ARM64 APK](https://drive.google.com/file/d/1DnJoNPZNrboP5QMgNXCkZxN1BcYP1wnI/view?usp=drivesdk), 91,535,289 bytes, versionCode11, same update certificate. Local file `dist/apk/local-ai-workspace-0.1.10-workspace-arm64.apk`, SHA-256 `63cee591e87d99502244026b0f2bcfaaeaeba9bdb35feb847cc20fe0eadf640a`. Release assembly PASS in44s; signature/package/version/DEX markers and all8 native SHA comparisons with0.1.9 PASS. Drive replacement and metadata readback confirm exact filename/size/MIME/original parent/private sharing; provider checksum unavailable. Install as an update without uninstalling or clearing app data. Device validation remains NOT_EXECUTED.
++
++## Historical project status — 0.1.9 / 2026-10-05
+ 
+ **WARM LITERT ACROSS CHATS IMPLEMENTED**: application-owned single-engine pool, per-chat revocable runtime leases, serialized native operations and real RESET_CONVERSATION IPC. Closing/deleting a chat discards conversation/KV; an unchanged healthy LiteRT engine can remain warm. The next owner always gets an independent session. Late old cancellation/cleanup cannot touch the new owner. Idle retention10minutes, idle memory-pressure eviction, normal backend/config/file invalidation; existing GGUF unload fallback retained. Room remains schema2; SDK/JNI unchanged0.17.1CPU.
+ 
+--- /dev/null
++++ b/docs/WORKSPACE_010.md
+@@ -0,0 +1,47 @@
++# Workspace: direct chats and projects — 0.1.10
++
++## User behavior
++
++Workspace now leads with Start chat (direct, no project-creation dialog) and Start project (name, then project screen). Separate Chats and Projects lists have explicit confirmed deletion actions. Direct chats acquire a title from their first user message. A project can contain several independently addressed conversations plus shared local files and project memory. Its screen supports Start chat, Add file, Memory, chat reopening/deletion and Delete project. Imported files use the existing real SAF/private-copy/local-index pipeline.
++
++- Delete standalone chat removes its card, messages, citations, tool history, attached private copies/index/embeddings and its local memory.
++- Delete project removes its card and all of its conversations and owned resources.
++- Delete one chat inside a project removes only that conversation/messages/citations/tool history; sibling chats, shared project files and memory remain.
++- Installed models/settings/benchmarks, global memory and other workspaces remain. Original user source files outside the app are never deleted. Confirmation dialogs describe these different scopes.
++- Chat deletion from the open chat still stops/joins native preparation/generation and closes its conversation/KV before deleting persisted history. Healthy LiteRT weights can remain warm through the0.1.9 pool. Runtime/SDK/native library code is unchanged in this iteration.
++
++## Data and migration
++
++Room schema3 adds projects.workspaceKind with SQL default PROJECT and pending_document_deletions(localPath primary key). The projects table remains an internal resource-ownership namespace: CHAT denotes an isolated standalone conversation, PROJECT denotes a collection with shared resources. A standalone chat is never presented as a project in the UI. Conversation selection uses explicit project/conversation IDs; cross-project IDs and deleted owners are rejected. Existing project IDs/names/chats/files/preferences/models are preserved as PROJECT by MIGRATION_2_3; version1 retains the existing1→2 migration then2→3. No destructive migration.
++
++The old application startup automatically created Personal workspace if it did not exist. Startup now only retries pending private-file cleanup, so deleting that project cannot recreate it on relaunch. Existing Personal workspace remains until the user deletes it.
++
++Deletion is one Room transaction: enqueue owned private document paths, remove citations/tools/messages/conversations, embeddings, segments (including Room external-content FTS triggers), documents, project-local memory and owner row. A failure rolls back both data deletion and the cleanup outbox. File deletion follows commit and is constrained to canonical paths under filesDir/documents; models, source originals, directories and escaping symlink targets are excluded. Files still referenced by another workspace are retained. Missing files count as already cleaned.
++
++Failed cleanup remains in a durable outbox and is retried on launch or Workspace → Retry cleanup, with a visible pending count. Imports check that their owner still exists before row insertion and before writing their index; deletion during streaming copy cannot recreate data, and unregistered partial copies are cleaned/queued. Models never enter this cleanup queue.
++
++## Validation and phone checks
++
++Automated tests exercise real Room transactions, actual2→3 database opening/schema validation, private filesystem cleanup, FTS/embedding removal, isolation/rollback/outbox/symlink handling, import-vs-delete races and the retained runtime pool. Fake native resource tests do not constitute Android inference validation.
++
++Install as an update, without uninstalling or clearing app data:
++
++1. Confirm existing projects/history/models remain. Start chat must immediately open a direct chat and produce a new Chats entry after returning.
++2. Start project, create two chats, reopen each and verify separate message histories. Add a text/PDF document; both project chats can access the same project source through existing local retrieval.
++3. Delete one project chat: its card/messages disappear while its sibling, files and project memory remain.
++4. Delete a standalone chat: its Chats card disappears. Delete a project from its card or project screen: its Projects card disappears with all owned chats/files/memory. Confirm installed models and unrelated work remain.
++5. Close/reopen the app: deleted projects, including Personal workspace, must stay deleted. If a private file could not be cleaned, use the visible Retry cleanup action.
++6. Repeat normal LiteRT navigation using the same model/settings to check0.1.9 engine reuse still works. Actual Android UI, native lifecycle and timing checks remain NOT_EXECUTED here because no device is attached.
++
++Build/test/lint/signature/Drive results are recorded in [the artifact manifest](validation/apk-010.json).
++
++## Executed checks
++
++- Final delivery `./gradlew testDebugUnitTest assembleDebug lintDebug --max-workers=2`: PASS in1m42s,22tasks executed/137up to date. All129app tests executed,0failures/errors/skips;2unchanged compatibility tests up to date. Includes15new regressions:11workspace lifecycle/file-safety tests,1actual Room2→3 migration/schema-validation test,3document-import/delete tests.
++- Lint PASS_WITH_WARNINGS:0errors/73existing warnings (72app+1compatibility).
++- Initial new migration-test fixture used a generic signature unavailable in the pinned Robolectric API; corrected. First test round then found JUnit required a void return for the idempotent-deletion test and two legacy tests hard-coded schema2. Corrected declaration and made the model-default tests compare schema before/after their helper, keeping their original invariance assertions. Chat-deletion schema assertion updated to3. Final suite passes. Failed logs are retained.
++- No Android device attached. Device UI/deletion/native lifecycle/performance validation NOT_EXECUTED.
++- Release `assembleRelease -Parm64Only=true --max-workers=2`: PASS in44s,13tasks executed/125up to date. Signature/update certificate, package/version/minSdk/ABI, feature DEX markers and all8 native hashes against0.1.9 PASS.
++- The last review corrected the import notice: importing is not proof that extraction/indexing succeeded; users now see “Document imported; check its indexing status in Files”. Debug tests/build/lint and release were rerun before replacing the initial Drive upload in place.
++- Final signed artifact is91,535,289bytes; SHA-256 `63cee591e87d99502244026b0f2bcfaaeaeba9bdb35feb847cc20fe0eadf640a`. Drive raw replacement and metadata readback PASS for name/size/MIME/parent/private sharing. Provider checksum is unavailable; no remote hash comparison is claimed.
++- [Download final0.1.10 APK](https://drive.google.com/file/d/1DnJoNPZNrboP5QMgNXCkZxN1BcYP1wnI/view?usp=drivesdk). Release/signature/Drive metadata are recorded in the artifact manifest.

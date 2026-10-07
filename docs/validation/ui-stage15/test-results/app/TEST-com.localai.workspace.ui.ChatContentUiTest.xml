@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.ChatContentUiTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-06T03:18:32" hostname="74096e896c47" time="7.249">
+  <properties/>
+  <testcase name="longInputLargeFontAndGenerationKeepComposerActionsVisible" classname="com.localai.workspace.ui.ChatContentUiTest" time="6.663"/>
+  <testcase name="codeHasLanguageAndCopiesExactContent" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.358"/>
+  <testcase name="libraryDoesNotAdvertiseAudioAsUsable" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.227"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

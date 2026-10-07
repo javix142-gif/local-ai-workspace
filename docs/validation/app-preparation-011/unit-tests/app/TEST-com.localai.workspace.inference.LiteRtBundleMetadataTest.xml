@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.LiteRtBundleMetadataTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-05T19:31:55" hostname="74096e896c47" time="0.034">
+  <properties/>
+  <testcase name="truncatedOutOfBoundsAndUnsupportedProtoFieldsAreRecoverableErrors" classname="com.localai.workspace.inference.LiteRtBundleMetadataTest" time="0.02"/>
+  <testcase name="legacyModelTemplatesRemainModelWhileChatMlUsesAssistant" classname="com.localai.workspace.inference.LiteRtBundleMetadataTest" time="0.008"/>
+  <testcase name="corruptAndGiganticContainerOffsetsAreRejectedBeforeAllocatingPayload" classname="com.localai.workspace.inference.LiteRtBundleMetadataTest" time="0.004"/>
+  <testcase name="publishedQwenMetadataUsesNativeAssistantHistoryWithoutReadingWeights" classname="com.localai.workspace.inference.LiteRtBundleMetadataTest" time="0.001"/>
+  <testcase name="knownProcessorsKeepTheirNativeRolesAndUnknownIsNotGuessed" classname="com.localai.workspace.inference.LiteRtBundleMetadataTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

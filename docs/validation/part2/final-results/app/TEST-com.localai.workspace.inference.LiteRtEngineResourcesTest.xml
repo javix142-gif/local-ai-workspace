@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.LiteRtEngineResourcesTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-06T06:29:28" hostname="74096e896c47" time="0.154">
+  <properties/>
+  <testcase name="completedTurnsReuseOneEngineWithFreshConversationAndUpdatedSampler" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.046"/>
+  <testcase name="acknowledgedStopCanDiscardConversationWithoutUnloadingVerifiedEngine" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.001"/>
+  <testcase name="unloadOrLostNativeHandleInvalidatesReuseAndAllowsColdRetry" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.002"/>
+  <testcase name="missingOrInvalidRecordedHashCannotQualifyAnEngineForReuse" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.005"/>
+  <testcase name="failedInitializationCannotBeReusedAndOwnedHandleCanBeReleasedBeforeRetry" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.001"/>
+  <testcase name="smokeTestsAlwaysInitializeFreshWithoutUsingNormalChatEngine" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.004"/>
+  <testcase name="verifiedConversationMayBePreservedButAChangedEngineMustAlwaysDiscardIt" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.003"/>
+  <testcase name="changedFileIdentityOrEngineConfigurationForcesColdInitialization" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.085"/>
+  <testcase name="failedConversationReplacementNeverLeavesPreviousHistoryOrSessionAttached" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.001"/>
+  <testcase name="backendAndSpeculativeAreEngineIdentityRatherThanCapabilityLabels" classname="com.localai.workspace.inference.LiteRtEngineResourcesTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

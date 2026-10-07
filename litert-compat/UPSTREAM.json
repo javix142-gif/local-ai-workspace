@@ -1,0 +1,25 @@
+{
+  "repository": "https://github.com/google-ai-edge/LiteRT-LM",
+  "tag": "v0.17.1",
+  "commit": "5e58e9a0aef7abf7091207a8b1d1063a1c800f08",
+  "nativeArtifact": "com.google.ai.edge.litertlm:litertlm-android:0.17.1",
+  "license": "Apache-2.0",
+  "files": {
+    "Benchmark.kt": "65ff7ac71d48fbc99f9f4e785207c6c62499b05bc5f01b5640e77f2e1ca0e054",
+    "Capabilities.kt": "9d604ac7ecd11fccb4dc6e23297590176b15fa94ba1dd2b7700bc2551d4105a8",
+    "Config.kt": "a84a641961cfcb0c56050f1c876c095a75db78549f4bafb221200e76b2ee3931",
+    "Conversation.kt": "188ceb90cbc5a0d35de27440fe06ef58805e778b79495c6fa9a77998ad9fdc45",
+    "EmbeddingConfig.kt": "3d3cddb9f2d784023a9dd790a72f2fb602aee25bf67372421f441156a234aa57",
+    "EmbeddingEngine.kt": "49cbc18e0429078452428eb7dbff457ae603e57ef1273f501138bb0b1f7c57b2",
+    "Engine.kt": "e2848c6f296e646ab42dbcc32b5d6c258074a004bd5c093761284b0f19cbcccc",
+    "ExperimentalFlags.kt": "2a8a5cf7e3ed99a0b1ab6c6ef151b7435dbfe9bc6656413f1bb766e75ce719f4",
+    "JsonConverters.kt": "58e71aa704f69dd133a185737c83c9fb02d621070d1fb59216e311f2c66e215c",
+    "LiteRtLmJni.kt": "f661e45dc6fde7dbc3da8d6b6cfabd7046f8e9ec5471e6c217f538a7bd549253",
+    "LiteRtLmJniException.kt": "28bf86240a095b1c505c7f364c53ffee8f193a2a0ca7f4ea1fdfc6790e90c678",
+    "Message.kt": "723dfeb1ebbe2b6e358350651410b9ad81df7f6e50db7157ff51e07af7c4c9cf",
+    "NativeLibraryLoader.kt": "536a3d1376466c0189dc9b9bbd62f19c6231039ab787f6bf4fd9cee68eec78e5",
+    "ResponseFormat.kt": "a23087172e0f891d9731ce2a977ca8186f4c63956b93abd0e92ab3e177a8f53d",
+    "Session.kt": "b4d4fa506df63ddadcc50e880257f4b3317f7a9abadb24b0b11d5ba7d45ebe4c",
+    "Tool.kt": "75a3ac57ad9f6e15109b05fcae65d281b2185bd197d33bfc0648fabc0a9d11b8"
+  }
+}

@@ -1,0 +1,911 @@
+--- before/app/src/main/java/com/localai/workspace/MainActivity.kt
++++ after/app/src/main/java/com/localai/workspace/MainActivity.kt
+@@ -912,8 +912,7 @@
+                 if (attachedImage != null || selectedFiles.isNotEmpty() || importing) {
+                     Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+                         if (attachedImage != null) {
+-                            Text("Image attached", style = MaterialTheme.typography.labelSmall)
+-                            IconButton(onClick = viewModel::clearImage, enabled = !generating && !deletingChat) { Icon(Icons.Default.Close, "Remove image", Modifier.size(18.dp)) }
++                            com.localai.workspace.ui.PendingImageAttachment(attachedImage!!, !generating && !deletingChat, viewModel::clearImage)
+                         }
+                         if (selectedFiles.isNotEmpty() || importing) TextButton(onClick = { showFiles = true }) {
+                             Text(if (importing) "Reading files…" else "${selectedFiles.size} file${if (selectedFiles.size == 1) "" else "s"} selected")
+@@ -924,7 +923,7 @@
+                     onInputChange = { input = it }, onAttach = { picker.launch(arrayOf("*/*")) },
+                     onAttachImage = { imagePicker.launch(arrayOf("image/*")) }, imageEnabled = visionEnabled,
+                     onFiles = if (documents.isNotEmpty()) ({ showFiles = true }) else null,
+-                    onStop = viewModel::stop, onSend = { viewModel.send(input); input = "" })
++                    onStop = viewModel::stop, onSend = { if (viewModel.send(input)) input = "" })
+             }
+         },
+     ) { padding ->
+@@ -963,7 +962,7 @@
+                             canContinue = !generating && !deletingChat && message.id == messages.lastOrNull()?.id && message.status == "COMPLETE",
+                             onContinue = { viewModel.continueResponse(message.id) },
+                             onRetry = if (!generating && !deletingChat && message.id == messages.lastOrNull()?.id && message.status in setOf("FAILED", "CANCELED")) {
+-                                messages.takeWhile { it.id != message.id }.lastOrNull { it.role == "USER" }?.let { previous -> ({ viewModel.send(previous.content) }) }
++                                messages.takeWhile { it.id != message.id }.lastOrNull { it.role == "USER" }?.let { previous -> ({ viewModel.send(previous.content, retryImagePath = previous.imagePath) }) }
+                             } else null,
+                             onMetrics = { selectedMetrics = it },
+                             onDiagnostic = { historicalDiagnostic = it; showTechnicalError = true },
+@@ -990,6 +989,7 @@
+             Column(Modifier.heightIn(max = 460.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                 val progress = if (generating || generationError != null) generationProgress else preparation.progress
+                 Text(progress.label); progress.detail?.let { Text(it) }
++                Text(viewModel.visionDiagnostics.collectAsStateWithLifecycle().value, style = MaterialTheme.typography.bodySmall)
+                 if (progress.bytesCompleted != null && progress.bytesTotal != null)
+                     Text("Integrity: ${progress.bytesCompleted} / ${progress.bytesTotal} bytes · ${progress.elapsedMs} ms")
+                 preparation.metrics?.let { measured -> TextButton(onClick = { selectedMetrics = GenerationMetricsPresentation.encode(measured); showDiagnostics = false }) { Text("Model preparation details") } }
+@@ -1154,6 +1154,7 @@
+                     "FAILED" -> "Could not finish"
+                     else -> "No text returned"
+                 } }
++                if (user) message.imagePath?.let { com.localai.workspace.ui.ImageAttachment(it) }
+                 if (user || content.isBlank()) Text(body, style = MaterialTheme.typography.bodyLarge) else ChatRichText(body)
+                 if (!user && evidence.isNotEmpty()) Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                     evidence.forEach { item -> AssistChip(onClick = { onCitation(item.evidenceId) }, label = { Text(item.evidenceId) }) }
+--- before/app/src/main/java/com/localai/workspace/ui/ViewModels.kt
++++ after/app/src/main/java/com/localai/workspace/ui/ViewModels.kt
+@@ -350,6 +350,8 @@
+     private val _evidence = MutableStateFlow<List<CitationEvidenceEntity>>(emptyList())
+     private val _selectedModelId = MutableStateFlow<String?>(null)
+     private val _attachedImagePath = MutableStateFlow<String?>(null)
++    private val _visionDiagnostics = MutableStateFlow("Vision input: absent")
++    val visionDiagnostics: StateFlow<String> = _visionDiagnostics.asStateFlow()
+     private val _generationProgress = MutableStateFlow(GenerationProgress())
+     private val _generationError = MutableStateFlow<GenerationError?>(null)
+     internal var screenCount = 0
+@@ -508,9 +510,18 @@
+         send("Continue the previous answer in the same language, from where it stopped. Do not repeat completed text. Finish the interrupted sentence or list item.")
+     }
+ 
+-    fun send(message: String, diagnosticSmoke: Boolean = false) {
++    fun send(message: String, diagnosticSmoke: Boolean = false, retryImagePath: String? = null): Boolean {
+         val trimmed = message.trim()
+-        if (trimmed.isBlank() || _isGenerating.value || _isDeletingChat.value) return
++        if (trimmed.isBlank() || _isGenerating.value || _isDeletingChat.value) return false
++        var submittedImage = if (diagnosticSmoke) null else retryImagePath ?: _attachedImagePath.value
++        _visionDiagnostics.value = if (submittedImage == null) "Vision input: absent" else "Vision input: pending; preprocessing succeeded"
++        if (submittedImage != null) {
++            val model = com.localai.workspace.data.ApplicationModelPreparation.usableModel(models.value, _selectedModelId.value)
++            if (model == null || model.toDescriptor().runtime != RuntimeType.LITERT_LM ||
++                com.localai.workspace.domain.model.ModelCapability.VISION !in model.toDescriptor().capabilities) {
++                viewModelScope.launch { _notices.emit("This model does not support image input.") }; return false
++            }
++        }
+         _isGenerating.value = true
+         stopRequested = false
+         _generationError.value = null
+@@ -544,6 +555,8 @@
+             try {
+                 // Recovery must finish before inserting a new GENERATING row.
+                 conversationInitialization.join()
++                imports.toList().forEach { it.join() }
++                if (!diagnosticSmoke && submittedImage == null) submittedImage = _attachedImagePath.value
+                 val conversationId = _conversationId.value ?: graph.workspace.conversationForChat(projectId, requestedConversationId).also {
+                     _conversationId.value = it.id
+                 }.id
+@@ -556,10 +569,13 @@
+                         conversationId = conversationId,
+                         role = MessageRole.USER.name,
+                         content = trimmed,
++                        imagePath = submittedImage,
+                         createdAt = now,
+                         status = MessageStatus.COMPLETE.name,
+                     ),
+                 )
++                // The stored turn now owns this file. Never clear/delete it as a draft.
++                if (submittedImage != null && _attachedImagePath.value == submittedImage) _attachedImagePath.value = null
+                 activeAssistantId = assistantId
+                 graph.workspace.addMessage(
+                     MessageEntity(
+@@ -657,7 +673,7 @@
+                     _notices.emit("Some source passages were excluded by the active context budget")
+                 }
+                 val descriptor = model.toDescriptor()
+-                val attachedImage = if (diagnosticSmoke) null else _attachedImagePath.value
++                val attachedImage = submittedImage
+                 if (attachedImage != null && com.localai.workspace.domain.model.ModelCapability.VISION !in descriptor.capabilities) {
+                     val text = "${model.displayName} does not support vision in its current runtime."
+                     _streamingText.value = text
+@@ -672,6 +688,7 @@
+                 progressJob = launch(start = CoroutineStart.UNDISPATCHED) {
+                     runtime.observeProgress().collect { progress ->
+                         if (progress.stage != GenerationStage.IDLE) _generationProgress.value = progress
++                        if (progress.event == "LITERT_VISION_INPUT_READY") progress.detail?.let { _visionDiagnostics.value = it }
+                         progress.error?.let { _generationError.value = it }
+                     }
+                 }
+@@ -707,7 +724,8 @@
+                         preferredAccelerator = if (diagnosticSmoke) AcceleratorType.CPU else selectedAccelerator,
+                         threads = if (diagnosticSmoke) minOf(4, Runtime.getRuntime().availableProcessors()) else null,
+                         diagnosticMode = diagnosticSmoke,
+-                        enableVision = attachedImage != null,
++                        enableVision = attachedImage != null || conversation.history.any { it.imagePath != null },
++                        nextHasImage = attachedImage != null,
+                         conversation = conversation,
+                         warmupEnabled = !diagnosticSmoke && profile.warmup,
+                         speculativeEnabled = !diagnosticSmoke && profile.speculative,
+@@ -717,6 +735,10 @@
+                 preparation.loadedForRequest(model.id, runtime.metrics())
+                 if (usedAccelerator != selectedAccelerator) {
+                     _notices.emit("${selectedAccelerator.name} failed to initialize; safely fell back to ${usedAccelerator.name}")
++                }
++                if (attachedImage != null && !runtime.capabilities().vision) {
++                    throw GenerationException(GenerationError(GenerationStage.LOADING_MODEL, "VISION_UNAVAILABLE",
++                        "Image input could not be initialized. No text-only request was sent."))
+                 }
+                 val answer = StringBuilder()
+                 var metrics: String? = null
+@@ -858,6 +880,7 @@
+                 activeAssistantId = null
+             }
+         }
++        return true
+     }
+ 
+     fun stop() {
+@@ -925,11 +948,12 @@
+         }
+     }
+     fun attachImage(uri: android.net.Uri) {
++        if (_isGenerating.value || _isDeletingChat.value) return
+         importJob { prepareImage(uri) }
+     }
+     private suspend fun prepareImage(uri: android.net.Uri) {
+             val model = com.localai.workspace.data.ApplicationModelPreparation.usableModel(graph.workspace.allModels.first(), _selectedModelId.value)
+-            if (model == null || com.localai.workspace.domain.model.ModelCapability.VISION !in model.toDescriptor().capabilities) {
++            if (model == null || model.toDescriptor().runtime != RuntimeType.LITERT_LM || com.localai.workspace.domain.model.ModelCapability.VISION !in model.toDescriptor().capabilities) {
+                 _notices.emit("Select a vision model before attaching an image"); return
+             }
+             try {
+@@ -938,7 +962,7 @@
+                 _attachedImagePath.value = file.absolutePath
+                 _notices.emit("Image prepared locally for the selected vision model")
+             } catch (cancelled: CancellationException) { throw cancelled }
+-            catch (failure: Throwable) { _notices.emit(failure.message ?: "Image could not be prepared") }
++            catch (failure: Throwable) { _notices.emit("Image could not be prepared. No image has been attached.") }
+     }
+     fun clearImage() {
+         if (_isGenerating.value) return
+--- before/app/src/main/java/com/localai/workspace/ui/ImageAttachment.kt
++++ after/app/src/main/java/com/localai/workspace/ui/ImageAttachment.kt
+@@ -0,0 +1,54 @@
++package com.localai.workspace.ui
++
++import android.graphics.BitmapFactory
++import androidx.compose.material.icons.filled.Close
++import androidx.compose.foundation.Image
++import androidx.compose.foundation.layout.sizeIn
++import androidx.compose.material3.Text
++import androidx.compose.runtime.*
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.graphics.asImageBitmap
++import androidx.compose.ui.layout.ContentScale
++import androidx.compose.ui.platform.LocalContext
++import androidx.compose.ui.unit.dp
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.withContext
++import java.io.File
++
++@Composable
++fun ImageAttachment(path: String, compact: Boolean = false) {
++    val context = LocalContext.current
++    var bitmap by remember(path) { mutableStateOf<android.graphics.Bitmap?>(null) }
++    LaunchedEffect(path) {
++        bitmap = withContext(Dispatchers.IO) {
++            runCatching {
++                val root = File(context.filesDir, "attachments").canonicalFile
++                val file = File(path).canonicalFile
++                require(file.path.startsWith(root.path + File.separator) && file.isFile)
++                val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
++                BitmapFactory.decodeFile(file.path, bounds)
++                val options = BitmapFactory.Options().apply {
++                    var sample = 1
++                    while (maxOf(bounds.outWidth, bounds.outHeight) / sample > 512) sample *= 2
++                    inSampleSize = sample
++                }
++                BitmapFactory.decodeFile(file.path, options)
++            }.getOrNull()
++        }
++    }
++    bitmap?.let {
++        Image(it.asImageBitmap(), "Attached image", Modifier.sizeIn(maxWidth = if (compact) 56.dp else 240.dp,
++            maxHeight = if (compact) 56.dp else 180.dp), contentScale = ContentScale.Fit)
++    } ?: Text("Image attachment", style = androidx.compose.material3.MaterialTheme.typography.labelSmall)
++}
++
++@Composable
++fun PendingImageAttachment(path: String, enabled: Boolean, onRemove: () -> Unit) {
++    androidx.compose.foundation.layout.Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
++        ImageAttachment(path, compact = true)
++        Text("Image attached", style = androidx.compose.material3.MaterialTheme.typography.labelSmall)
++        androidx.compose.material3.IconButton(onClick = onRemove, enabled = enabled) {
++            androidx.compose.material3.Icon(androidx.compose.material.icons.Icons.Default.Close, "Remove image")
++        }
++    }
++}
+--- before/app/src/main/java/com/localai/workspace/data/WorkspaceRepository.kt
++++ after/app/src/main/java/com/localai/workspace/data/WorkspaceRepository.kt
+@@ -94,6 +94,7 @@
+     suspend fun deleteProjectChats(projectId: String) = database.withTransaction {
+         database.citationEvidenceDao().deleteForProject(projectId)
+         database.toolCallDao().deleteForProject(projectId)
++        database.pendingDocumentDeletionDao().insertAll(messages.imagesForProject(projectId).map { PendingDocumentDeletionEntity(it) })
+         messages.deleteForProject(projectId)
+         conversations.deleteForProject(projectId)
+     }
+@@ -107,6 +108,7 @@
+             else {
+                 database.citationEvidenceDao().deleteForConversation(id)
+                 database.toolCallDao().deleteForConversation(id)
++                database.pendingDocumentDeletionDao().insertAll(messages.imagesForConversation(id).map { PendingDocumentDeletionEntity(it) })
+                 messages.deleteForConversation(id)
+                 conversations.delete(id)
+             }
+@@ -138,13 +140,14 @@
+         for (item in queue.pending()) {
+             kotlinx.coroutines.currentCoroutineContext().ensureActive()
+             try {
+-                if (database.documentDao().pathReferences(item.localPath) > 0) {
++                if (database.documentDao().pathReferences(item.localPath) > 0 || messages.imageReferences(item.localPath) > 0) {
+                     queue.acknowledge(item.localPath); continue
+                 }
+                 if (root == null) continue
+                 val file = File(item.localPath).canonicalFile
+                 // Never touch originals, models, directories or targets outside private documents.
+-                if (!file.path.startsWith(root.path + File.separator) || file.isDirectory) continue
++                val attachments = File(root.parentFile, "attachments").canonicalFile
++                if ((!file.path.startsWith(root.path + File.separator) && !file.path.startsWith(attachments.path + File.separator)) || file.isDirectory) continue
+                 if (!file.exists() || file.delete()) queue.acknowledge(item.localPath)
+             } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled }
+             catch (_: java.io.IOException) { /* Keep the durable item; UI exposes retry/count. */ }
+--- before/app/src/main/java/com/localai/workspace/data/ImagePreprocessor.kt
++++ after/app/src/main/java/com/localai/workspace/data/ImagePreprocessor.kt
+@@ -3,6 +3,8 @@
+ import android.content.Context
+ import android.graphics.Bitmap
+ import android.graphics.BitmapFactory
++import android.graphics.Matrix
++import android.media.ExifInterface
+ import android.net.Uri
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.withContext
+@@ -24,10 +26,30 @@
+             inSampleSize = sample
+             inPreferredConfig = Bitmap.Config.ARGB_8888
+         }
+-        val bitmap = context.contentResolver.openInputStream(uri).use { input ->
++        val decoded = context.contentResolver.openInputStream(uri).use { input ->
+             requireNotNull(input) { "The selected image could not be opened" }
+             BitmapFactory.decodeStream(input, null, options)
+         } ?: throw IllegalArgumentException("The selected image could not be decoded")
++        val orientation = runCatching {
++            context.contentResolver.openInputStream(uri).use { input ->
++                ExifInterface(requireNotNull(input)).getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
++            }
++        }.getOrDefault(ExifInterface.ORIENTATION_NORMAL)
++        val matrix = Matrix().apply {
++            when (orientation) {
++                ExifInterface.ORIENTATION_FLIP_HORIZONTAL -> setScale(-1f, 1f)
++                ExifInterface.ORIENTATION_ROTATE_180 -> setRotate(180f)
++                ExifInterface.ORIENTATION_FLIP_VERTICAL -> setScale(1f, -1f)
++                ExifInterface.ORIENTATION_TRANSPOSE -> { setRotate(90f); postScale(-1f, 1f) }
++                ExifInterface.ORIENTATION_ROTATE_90 -> setRotate(90f)
++                ExifInterface.ORIENTATION_TRANSVERSE -> { setRotate(270f); postScale(-1f, 1f) }
++                ExifInterface.ORIENTATION_ROTATE_270 -> setRotate(270f)
++            }
++        }
++        val bitmap = try {
++            if (matrix.isIdentity) decoded else Bitmap.createBitmap(decoded, 0, 0, decoded.width, decoded.height, matrix, true)
++        } catch (failure: Throwable) { decoded.recycle(); throw failure }
++        if (bitmap !== decoded) decoded.recycle()
+         val directory = File(context.filesDir, "attachments").apply { mkdirs() }
+         val output = File(directory, "${UUID.randomUUID()}.jpg")
+         try {
+@@ -36,6 +58,9 @@
+                 stream.fd.sync()
+             }
+             output
++        } catch (failure: Throwable) {
++            output.delete()
++            throw failure
+         } finally {
+             bitmap.recycle()
+         }
+--- before/app/src/main/java/com/localai/workspace/data/Daos.kt
++++ after/app/src/main/java/com/localai/workspace/data/Daos.kt
+@@ -65,6 +65,13 @@
+ 
+ @Dao
+ interface MessageDao {
++    @Query("SELECT imagePath FROM messages WHERE conversationId IN (SELECT id FROM conversations WHERE projectId = :id) AND imagePath IS NOT NULL")
++    suspend fun imagesForProject(id: String): List<String>
++    @Query("SELECT imagePath FROM messages WHERE conversationId = :id AND imagePath IS NOT NULL")
++    suspend fun imagesForConversation(id: String): List<String>
++    @Query("SELECT COUNT(*) FROM messages WHERE imagePath = :path")
++    suspend fun imageReferences(path: String): Int
++
+     @Query("UPDATE messages SET effectiveContent = :content, effectiveModelId = :modelId WHERE id = :id")
+     suspend fun setEffectiveTurn(id: String, content: String, modelId: String)
+     @Query("UPDATE messages SET generationMetrics = :metrics WHERE id = :id")
+--- before/app/src/main/java/com/localai/workspace/data/WorkspaceDatabase.kt
++++ after/app/src/main/java/com/localai/workspace/data/WorkspaceDatabase.kt
+@@ -22,7 +22,7 @@
+         ToolCallEntity::class,
+         PendingDocumentDeletionEntity::class,
+     ],
+-    version = 4,
++    version = 5,
+     exportSchema = false,
+ )
+ abstract class WorkspaceDatabase : RoomDatabase() {
+@@ -41,7 +41,13 @@
+             context,
+             WorkspaceDatabase::class.java,
+             "local_ai_workspace.db",
+-        ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4).build()
++        ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5).build()
++
++        val MIGRATION_4_5 = object : Migration(4, 5) {
++            override fun migrate(database: SupportSQLiteDatabase) {
++                database.execSQL("ALTER TABLE messages ADD COLUMN imagePath TEXT")
++            }
++        }
+ 
+         val MIGRATION_3_4 = object : Migration(3, 4) {
+             override fun migrate(database: SupportSQLiteDatabase) {
+--- before/app/src/main/java/com/localai/workspace/data/ChatHistoryBuilder.kt
++++ after/app/src/main/java/com/localai/workspace/data/ChatHistoryBuilder.kt
+@@ -29,7 +29,8 @@
+                     if (previous != null && message.status == MessageStatus.COMPLETE.name &&
+                         message.content.isNotBlank() && !RepetitionLoopDetector.containsLoop(message.content)) {
+                         val effective = previous.effectiveContent.takeIf { modelId == null || previous.effectiveModelId == modelId }
+-                        result += ChatMessage(MessageRole.USER, effective ?: previous.content)
++                        result += ChatMessage(MessageRole.USER, effective ?: previous.content,
++                            previous.imagePath.takeIf { modelId == null || previous.effectiveModelId == modelId })
+                         result += ChatMessage(MessageRole.ASSISTANT, message.content)
+                     }
+                 }
+--- before/app/src/main/java/com/localai/workspace/data/Entities.kt
++++ after/app/src/main/java/com/localai/workspace/data/Entities.kt
+@@ -56,6 +56,7 @@
+     // Private application data, never telemetry. Visible content remains unchanged.
+     val effectiveContent: String? = null,
+     val effectiveModelId: String? = null,
++    val imagePath: String? = null,
+ )
+ 
+ @Entity(tableName = "models", indices = [Index(value = ["fileHash"], unique = true)])
+--- before/app/src/main/java/com/localai/workspace/inference/LiteRtConversationReuse.kt
++++ after/app/src/main/java/com/localai/workspace/inference/LiteRtConversationReuse.kt
+@@ -41,12 +41,12 @@
+         completed = false
+     }
+ 
+-    fun completed(userMessage: String, answer: String) {
++    fun completed(userMessage: String, answer: String, imagePath: String? = null) {
+         if (settings?.enabled != true || userMessage.isBlank() || answer.isBlank() ||
+             history.sumOf { it.content.length } + userMessage.length + answer.length > 100_000) {
+             invalidate(); return
+         }
+-        history = history + listOf(ChatMessage(MessageRole.USER, userMessage), ChatMessage(MessageRole.ASSISTANT, answer))
++        history = history + listOf(ChatMessage(MessageRole.USER, userMessage, imagePath), ChatMessage(MessageRole.ASSISTANT, answer))
+         completed = true
+     }
+ 
+--- before/app/src/main/java/com/localai/workspace/inference/LiteRtVisionInput.kt
++++ after/app/src/main/java/com/localai/workspace/inference/LiteRtVisionInput.kt
+@@ -0,0 +1,23 @@
++package com.localai.workspace.inference
++
++import com.google.ai.edge.litertlm.Content
++import com.google.ai.edge.litertlm.Contents
++import java.io.File
++
++/** Never convert a failed image request into a text-only turn. No paths are logged. */
++internal object LiteRtVisionInput {
++    fun validate(filesDir: File, path: String): File {
++        val root = File(filesDir, "attachments").canonicalFile
++        val file = File(path).canonicalFile
++        require(file.path.startsWith(root.path + File.separator) && file.isFile && file.canRead() && file.length() > 0) {
++            "Prepared image is unavailable in private attachment storage"
++        }
++        return file
++    }
++    fun contents(filesDir: File, text: String, imagePath: String?, visionInitialized: Boolean): Contents {
++        if (imagePath == null) return Contents.of(Content.Text(text))
++        check(visionInitialized) { "Image input requires an initialized vision backend; no text-only fallback" }
++        val image = validate(filesDir, imagePath)
++        return Contents.of(Content.ImageFile(image.path), Content.Text(text))
++    }
++}
+--- before/app/src/main/java/com/localai/workspace/inference/LiteRtLmInferenceRuntime.kt
++++ after/app/src/main/java/com/localai/workspace/inference/LiteRtLmInferenceRuntime.kt
+@@ -268,6 +268,7 @@
+             putInt("seed", config.seed)
+             putBoolean("diagnostic", config.diagnosticMode)
+             putBoolean("vision", !config.diagnosticMode && config.enableVision)
++            putBoolean("nextHasImage", config.nextHasImage)
+             putString("accelerator", config.preferredAccelerator.name)
+             putBoolean("warmup", config.warmupEnabled)
+             putBoolean("speculative", config.speculativeEnabled)
+--- before/app/src/main/java/com/localai/workspace/inference/LiteRtLmService.kt
++++ after/app/src/main/java/com/localai/workspace/inference/LiteRtLmService.kt
+@@ -239,6 +239,8 @@
+         diagnosticMode = data.getBoolean("diagnostic")
+         val validatedConfig = LiteRtConversationPayload.config(data, diagnosticMode)
+         val requestedHistory = if (diagnosticMode) emptyList() else LiteRtConversationPayload.history(data)
++        requestedHistory.mapNotNull { it.imagePath }.forEach { LiteRtVisionInput.validate(filesDir, it) }
++        require(requestedHistory.none { it.imagePath != null } || data.getBoolean("vision")) { "Visual history requires vision" }
+         thinkingOverride = validatedConfig.thinkingConfig?.enableThinking
+         ordinaryFinalText = !diagnosticMode && data.getBoolean("structuredConversation") && thinkingOverride == false
+         val expectedSize = data.getLong("size").takeIf { it > 0 }
+@@ -281,13 +283,14 @@
+         fun settings(role: Role) = LiteRtConversationReuse.Settings(
+             data.getString("systemInstruction"), sampler.temperature.toFloat(), sampler.topP.toFloat(), sampler.topK,
+             sampler.seed, data.getInt("maxOutput", 128).coerceIn(1, 8192), role.value,
+-            enabled = data.getBoolean("structuredConversation") && !diagnosticMode && !key.vision && thinkingOverride == false,
++            enabled = data.getBoolean("structuredConversation") && !diagnosticMode && thinkingOverride == false,
+             conversationId = data.getString("conversationId"), modelIdentity = file.path + ":" + expectedHash,
+             contextSize = context,
+             repeatPenalty = data.getFloat("repeatPenalty", 1f), thinking = thinkingOverride == true,
+         )
+         var rebuildReason = if (resources.key?.let { it.canonicalPath != key.canonicalPath || it.sha256 != key.sha256 } == true) "MODEL_CHANGED"
+             else if (resources.key?.contextSize?.let { it != key.contextSize } == true) "CONTEXT_CHANGED"
++            else if (resources.key?.vision == false && key.vision) "MODALITY_CHANGED"
+             else if (!reuseExpected) "ENGINE_CHANGED"
+             else if (cachedRole != null) conversationReuse.reason(settings(cachedRole), requestedHistory).let {
+                 if (it == "SESSION_LOST") resetReason ?: it else it
+@@ -295,6 +298,10 @@
+         var cachedTokens: Int? = null
+         var continueSession = reuseExpected && cachedRole != null && resources.conversation?.isAlive == true &&
+             conversationReuse.canContinue(settings(cachedRole), requestedHistory)
++        if (continueSession && data.getBoolean("nextHasImage")) {
++            continueSession = false
++            rebuildReason = "MODALITY_CHANGED"
++        }
+         if (continueSession) {
+             // Exact history equality is necessary but keep enough real cache capacity for
+             // the next message/output. This bound is conservative, not a tokenizer metric.
+@@ -451,7 +458,7 @@
+         warmup.start()
+         phase(operation, GenerationStage.WARMING_MODEL, "LITERT_WARMUP_START")
+         val temporaryData = Bundle(data).apply {
+-            putStringArrayList("historyRoles", arrayListOf()); putStringArrayList("historyContents", arrayListOf())
++            putStringArrayList("historyRoles", arrayListOf()); putStringArrayList("historyContents", arrayListOf()); putStringArrayList("historyImages", arrayListOf())
+             putString("systemInstruction", null); putInt("maxOutput", 1)
+         }
+         val terminal = CountDownLatch(1)
+@@ -513,10 +520,17 @@
+         val prompt = requireNotNull(data.getString("prompt"))
+         require(prompt.isNotBlank() && prompt.length <= 100_000) { "Prompt is empty or exceeds the IPC budget" }
+         val imagePath = data.getString("image")
+-        val contents = if (imagePath == null) Contents.of(Content.Text(prompt)) else {
+-            val image = File(imagePath).canonicalFile
+-            require(image.path.startsWith(filesDir.canonicalPath + File.separator) && image.isFile) { "Image outside private storage" }
+-            Contents.of(Content.ImageFile(image.path), Content.Text(prompt))
++        val contents = LiteRtVisionInput.contents(filesDir, prompt, imagePath, resources.key?.vision == true)
++        if (imagePath != null) {
++            val image = LiteRtVisionInput.validate(filesDir, imagePath)
++            val bounds = android.graphics.BitmapFactory.Options().apply { inJustDecodeBounds = true }
++            android.graphics.BitmapFactory.decodeFile(image.path, bounds)
++            require(bounds.outWidth > 0 && bounds.outHeight > 0) { "Prepared image could not be decoded; no text-only fallback" }
++            phase(operation, GenerationStage.PREPARING_PROMPT, "LITERT_VISION_INPUT_READY")
++            operation.label = "Vision input: present · preprocess: success · backend: CPU · ${bounds.outWidth} × ${bounds.outHeight} · ${image.length()} bytes"
++            send(operation, "state", Bundle().apply { putString("event", "LITERT_VISION_INPUT_READY") })
++            trace(operation, "LITERT_VISION_INPUT_READY", mapOf("visionInput" to "present", "visionBackend" to "CPU",
++                "imageWidth" to bounds.outWidth, "imageHeight" to bounds.outHeight, "preparedBytes" to image.length()))
+         }
+         val userMessage = Message.user(contents)
+         val extra: Map<String, Any> = thinkingOverride?.let { mapOf("enable_thinking" to it) } ?: emptyMap()
+@@ -645,7 +659,7 @@
+             totalRamBytes = after.totalRamBytes, thermalBefore = before.thermal, thermalAfter = after.thermal,
+             finishState = "SUCCESS",
+         )
+-        conversationReuse.completed(prompt, completedAnswer.toString())
++        conversationReuse.completed(prompt, completedAnswer.toString(), imagePath)
+         trace(operation, "LITERT_METRICS", mapOf(
+             "promptTokens" to metrics.promptTokens, "generatedTokens" to metrics.outputTokens,
+             "ttftMs" to metrics.timeToFirstTokenMs, "prefillMs" to metrics.prefillDurationMs,
+--- before/app/src/main/java/com/localai/workspace/inference/LiteRtConversationPayload.kt
++++ after/app/src/main/java/com/localai/workspace/inference/LiteRtConversationPayload.kt
+@@ -18,6 +18,7 @@
+         data.putBoolean("structuredConversation", true)
+         data.putStringArrayList("historyRoles", ArrayList(prompt.history.map { it.role.name }))
+         data.putStringArrayList("historyContents", ArrayList(prompt.history.map { it.content }))
++        data.putStringArrayList("historyImages", ArrayList(prompt.history.map { it.imagePath.orEmpty() }))
+         data.putString("systemInstruction", prompt.systemInstruction)
+         data.putBoolean("enableThinking", prompt.enableThinking)
+         data.putInt("nextInputChars", prompt.userMessage.length)
+@@ -30,12 +31,14 @@
+     fun history(data: Bundle): List<ChatMessage> {
+         val roles = data.getStringArrayList("historyRoles") ?: arrayListOf()
+         val texts = data.getStringArrayList("historyContents") ?: arrayListOf()
++        val images = data.getStringArrayList("historyImages")
++        require(images == null || images.size == texts.size) { "Invalid visual history" }
+         require(roles.size == texts.size && roles.size <= 20 && roles.size % 2 == 0) { "Invalid conversation history" }
+         require(texts.sumOf { it.length } + data.getString("systemInstruction").orEmpty().length <= 100_000) { "Conversation history exceeds the IPC budget" }
+         return roles.indices.map { index ->
+             require(texts[index].isNotBlank()) { "Empty conversation history message" }
+             when {
+-                index % 2 == 0 && roles[index] == MessageRole.USER.name -> ChatMessage(MessageRole.USER, texts[index])
++                index % 2 == 0 && roles[index] == MessageRole.USER.name -> ChatMessage(MessageRole.USER, texts[index], images?.get(index)?.takeIf { it.isNotBlank() })
+                 index % 2 == 1 && roles[index] == MessageRole.ASSISTANT.name -> ChatMessage(MessageRole.ASSISTANT, texts[index])
+                 else -> throw IllegalArgumentException("Conversation history must contain completed user/assistant pairs")
+             }
+@@ -53,7 +56,8 @@
+         return ConversationConfig(
+             systemInstruction = if (diagnostic) null else Contents.of(instruction),
+             initialMessages = if (diagnostic) emptyList() else history(data).map {
+-                if (it.role == MessageRole.USER) Message.user(it.content)
++                if (it.role == MessageRole.USER) Message.user(if (it.imagePath == null) Contents.of(it.content) else
++                    Contents.of(com.google.ai.edge.litertlm.Content.ImageFile(it.imagePath), com.google.ai.edge.litertlm.Content.Text(it.content)))
+                 else if (historyRole == Role.ASSISTANT) Message.assistant(it.content) else Message.model(it.content)
+             },
+             samplerConfig = SamplerConfig(
+--- before/app/src/main/java/com/localai/workspace/domain/model/ConversationPrompt.kt
++++ after/app/src/main/java/com/localai/workspace/domain/model/ConversationPrompt.kt
+@@ -4,7 +4,7 @@
+ import com.localai.workspace.domain.rag.ContextItemKind
+ 
+ /** Runtime-neutral turns, kept separate from the text fallback used by older adapters. */
+-data class ChatMessage(val role: MessageRole, val content: String)
++data class ChatMessage(val role: MessageRole, val content: String, val imagePath: String? = null)
+ 
+ data class ConversationPrompt(
+     val userMessage: String,
+--- before/app/src/main/java/com/localai/workspace/domain/model/WorkspaceModels.kt
++++ after/app/src/main/java/com/localai/workspace/domain/model/WorkspaceModels.kt
+@@ -154,6 +154,7 @@
+     val preferredAccelerator: AcceleratorType = AcceleratorType.CPU,
+     val diagnosticMode: Boolean = false,
+     val enableVision: Boolean = false,
++    val nextHasImage: Boolean = false,
+     val conversation: ConversationPrompt? = null,
+     val warmupEnabled: Boolean = false,
+     val speculativeEnabled: Boolean = false,
+--- before/app/src/test/java/com/localai/workspace/ui/ChatContentUiTest.kt
++++ after/app/src/test/java/com/localai/workspace/ui/ChatContentUiTest.kt
+@@ -27,6 +27,16 @@
+ @GraphicsMode(GraphicsMode.Mode.NATIVE)
+ class ChatContentUiTest {
+     @get:Rule val compose = createComposeRule()
++
++    @Test fun pendingImageIsVisibleAndRemoveClearsIt() {
++        compose.setContent { LocalAiTheme {
++            var path by remember { mutableStateOf<String?>("/missing/image.jpg") }
++            path?.let { PendingImageAttachment(it, true) { path = null } }
++        } }
++        compose.onNodeWithText("Image attached").assertIsDisplayed()
++        compose.onNodeWithContentDescription("Remove image").performClick()
++        compose.onNodeWithText("Image attached").assertDoesNotExist()
++    }
+ 
+     @Test fun codeHasLanguageAndCopiesExactContent() {
+         compose.setContent { LocalAiTheme { ChatRichText("A **bold** answer with `inline`.\n\n```python\nprint(42)\n```") } }
+--- before/app/src/test/java/com/localai/workspace/ui/ChatSessionPipelineTest.kt
++++ after/app/src/test/java/com/localai/workspace/ui/ChatSessionPipelineTest.kt
+@@ -3,6 +3,7 @@
+ import android.app.Application
+ import android.net.Uri
+ import androidx.room.Room
++import androidx.lifecycle.viewModelScope
+ import com.localai.workspace.AppGraph
+ import com.localai.workspace.data.*
+ import com.localai.workspace.domain.inference.*
+@@ -36,6 +37,7 @@
+     private lateinit var appScope: CoroutineScope
+     private lateinit var graph: AppGraph
+     private lateinit var backend: Backend
++    private val controllers = mutableListOf<ChatViewModel>()
+     private data class Turn(val request: GenerationRequest, val finish: CompletableDeferred<Unit> = CompletableDeferred())
+     private class Backend : InferenceRuntime {
+         override val runtimeType = RuntimeType.LITERT_LM
+@@ -44,10 +46,12 @@
+         val turns = Channel<Turn>(Channel.UNLIMITED)
+         var active: Turn? = null
+         var cancellations = 0
++        var vision = false
++        var failLoad = false
+         override fun supports(format: ModelFormat) = format == ModelFormat.LITERT_LM
+         override fun availableAccelerators() = setOf(AcceleratorType.CPU)
+         override suspend fun inspectModel(source: ModelSource): ModelMetadata = error("Not used")
+-        override suspend fun load(config: ModelLoadConfig) { loads.add(config) }
++        override suspend fun load(config: ModelLoadConfig) { loads.add(config); if (failLoad && config.enableVision) error("Vision preparation failed") }
+         override fun generate(request: GenerationRequest) = flow {
+             val turn = Turn(request); active = turn
+             try {
+@@ -59,7 +63,7 @@
+         override fun cancelGeneration() { cancellations++; active?.finish?.cancel() }
+         override suspend fun unload() = Unit
+         override suspend fun resetConversation() = Unit
+-        override fun capabilities() = RuntimeCapabilities(runtimeId, true, false, false, false, false)
++        override fun capabilities() = RuntimeCapabilities(runtimeId, true, false, vision, false, false)
+         override fun metrics() = RuntimeMetrics(backend = runtimeId, modelRetainedAfterStop = true)
+     }
+     @Before fun open() {
+@@ -73,6 +77,7 @@
+     }
+     @After fun close() = runBlocking {
+         withContext(main) { graph.chatSessions.clear(); graph.modelPreparation.cancel() }
++        controllers.forEach { it.viewModelScope.coroutineContext[Job]?.join() }
+         appScope.coroutineContext[Job]!!.cancelAndJoin()
+         Dispatchers.resetMain(); db.close()
+     }
+@@ -84,7 +89,7 @@
+     private suspend fun chat(): Pair<String, ChatViewModel> {
+         if (graph.workspace.getModel("model") == null) db.modelDao().insert(model("model"))
+         val id = graph.workspace.createChat()
+-        val vm = graph.chatSessions.get(id, null); vm.enterScreen()
++        val vm = graph.chatSessions.get(id, null); controllers += vm; vm.enterScreen()
+         vm.currentConversationId.first { it != null }
+         graph.modelPreparation.state.first { it.ready }
+         return id to vm
+@@ -98,6 +103,68 @@
+         return uri
+     }
+ 
++    private suspend fun visionChat(): ChatViewModel {
++        backend.vision = true
++        db.modelDao().insert(model("model").copy(capabilities = "text-generation,vision"))
++        val (_, vm) = chat()
++        vm.models.first { it.isNotEmpty() }
++        return vm
++    }
++    private suspend fun attach(vm: ChatViewModel): String {
++        val file = java.io.File(context.cacheDir, "hotfix-source.png")
++        val bitmap = android.graphics.Bitmap.createBitmap(32, 24, android.graphics.Bitmap.Config.ARGB_8888)
++        file.outputStream().use { bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it) }
++        bitmap.recycle()
++        vm.attachImage(Uri.fromFile(file))
++        return vm.attachedImagePath.first { it != null }!!
++    }
++    @Test fun imageMovesToPersistedTurnAndNextRequestHasNoImage() = check {
++        val vm = visionChat(); val path = attach(vm)
++        vm.send("Describe image")
++        val first = backend.turns.receive()
++        assertEquals(path, first.request.imagePath)
++        assertNull(vm.attachedImagePath.value)
++        assertTrue(backend.loads.last().enableVision)
++        assertTrue(backend.loads.last().nextHasImage)
++        assertTrue(java.io.File(path).isFile)
++        finish(vm, first)
++        val rows = graph.workspace.recentMessages(vm.currentConversationId.value!!, 10)
++        assertEquals(path, rows.first { it.role == "USER" }.imagePath)
++        vm.send("What color?")
++        val second = backend.turns.receive()
++        assertNull(second.request.imagePath)
++        assertEquals(path, second.request.conversation!!.history.first().imagePath)
++        assertFalse(backend.loads.last().nextHasImage)
++        finish(vm, second)
++    }
++    @Test fun removingDraftDeletesOnlyDraftAndTextRemainsText() = check {
++        val vm = visionChat(); val path = attach(vm); vm.clearImage()
++        assertNull(vm.attachedImagePath.value); assertFalse(java.io.File(path).exists())
++        vm.send("Hello")
++        val turn = backend.turns.receive(); assertNull(turn.request.imagePath)
++        assertFalse(backend.loads.last().enableVision); finish(vm, turn)
++    }
++    @Test fun loadedRuntimeRejectingVisionNeverGetsTextFallback() = check {
++        val vm = visionChat(); attach(vm); backend.vision = false
++        vm.send("Describe image")
++        vm.isGenerating.first { !it }
++        assertTrue(backend.turns.tryReceive().isFailure)
++        assertNull(vm.attachedImagePath.value)
++        assertTrue(graph.workspace.recentMessages(vm.currentConversationId.value!!, 10).any { it.status == "FAILED" })
++    }
++    @Test fun visionLoadFailureNeverCallsGenerate() = check {
++        val vm = visionChat(); attach(vm); backend.failLoad = true
++        vm.send("Describe image"); vm.isGenerating.first { !it }
++        assertTrue(backend.turns.tryReceive().isFailure)
++    }
++    @Test fun unsupportedModelRejectsImageBeforePreparing() = check {
++        val (_, vm) = chat(); vm.models.first { it.isNotEmpty() }
++        val uri = Uri.parse("content://test/not-readable")
++        vm.attachImage(uri)
++        vm.isImporting.first { !it }
++        assertNull(vm.attachedImagePath.value)
++        vm.send("Hello"); val turn = backend.turns.receive(); assertNull(turn.request.imagePath); finish(vm, turn)
++    }
+     @Test fun navigatingAwayKeepsGenerationAndReopeningUsesSameControllerAndPersistedResult() = check {
+         val (id, vm) = chat(); vm.send("Hola")
+         val turn = backend.turns.receive(); assertEquals("partial", vm.streamingText.value)
+@@ -179,8 +246,10 @@
+     }
+ 
+     @Test fun paperclipImageUsesVisionPreparationInsteadOfDocumentParser() = check {
++        backend.vision = true
+         val (id, vm) = chat()
+         db.modelDao().insert(model("model").copy(capabilities = "TEXT,VISION"))
++        vm.models.first { list -> list.any { "VISION" in it.capabilities } }
+         val png = java.util.Base64.getDecoder().decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+j2ioAAAAASUVORK5CYII=")
+         val uri = Uri.parse("content://test/picture.png")
+         shadowOf(context.contentResolver).registerInputStream(uri, object : ByteArrayInputStream(png) {
+--- before/app/src/test/java/com/localai/workspace/data/ChatDeletionTest.kt
++++ after/app/src/test/java/com/localai/workspace/data/ChatDeletionTest.kt
+@@ -52,7 +52,7 @@
+         repository.deleteProjectChats("target")
+         for (table in listOf("conversations", "messages", "citation_evidence", "tool_calls")) assertEquals(table, 0, count(table))
+         assertNotNull(db.projectDao().get("target"))
+-        assertEquals(4, db.openHelper.readableDatabase.version)
++        assertEquals(5, db.openHelper.readableDatabase.version)
+     }
+ 
+     @Test fun preservesOtherChatsDocumentsMemoryModelsAndProjectSettings() = runBlocking {
+--- before/app/src/test/java/com/localai/workspace/data/WorkspaceMigration3Test.kt
++++ after/app/src/test/java/com/localai/workspace/data/WorkspaceMigration3Test.kt
+@@ -42,7 +42,7 @@
+                     add(if (table == "projects") sql.replace(Regex(", [`\"]?workspaceKind[`\"]? TEXT NOT NULL DEFAULT 'PROJECT'"), "").also {
+                         assertFalse("Version2 fixture must omit the new column", it.contains("workspaceKind"))
+                     } else if (table == "messages") sql.replace(Regex(", [`\"]?effectiveContent[`\"]? TEXT"), "")
+-                        .replace(Regex(", [`\"]?effectiveModelId[`\"]? TEXT"), "") else sql)
++                        .replace(Regex(", [`\"]?effectiveModelId[`\"]? TEXT"), "").replace(Regex(", [`\"]?imagePath[`\"]? TEXT"), "") else sql)
+                 }
+             }
+         }
+@@ -57,8 +57,8 @@
+ 
+         var migrated: WorkspaceDatabase? = null
+         try {
+-            migrated = Room.databaseBuilder(context, WorkspaceDatabase::class.java, name).addMigrations(WorkspaceDatabase.MIGRATION_2_3, WorkspaceDatabase.MIGRATION_3_4).build()
+-            assertEquals(4, migrated.openHelper.readableDatabase.version) // Forces real migration + Room validation.
++            migrated = Room.databaseBuilder(context, WorkspaceDatabase::class.java, name).addMigrations(WorkspaceDatabase.MIGRATION_2_3, WorkspaceDatabase.MIGRATION_3_4, WorkspaceDatabase.MIGRATION_4_5).build()
++            assertEquals(5, migrated.openHelper.readableDatabase.version) // Forces real migration + Room validation.
+             assertEquals(oldProject, migrated.projectDao().get(oldProject.id))
+             assertEquals(oldConversation, migrated.conversationDao().get(oldConversation.id))
+             assertEquals(oldMessage, migrated.messageDao().recent(oldConversation.id, 10).single())
+@@ -66,7 +66,7 @@
+             assertTrue(migrated.pendingDocumentDeletionDao().pending().isEmpty())
+             WorkspaceRepository(migrated).deleteWorkspace(oldProject.id)
+             migrated.close()
+-            migrated = Room.databaseBuilder(context, WorkspaceDatabase::class.java, name).addMigrations(WorkspaceDatabase.MIGRATION_2_3, WorkspaceDatabase.MIGRATION_3_4).build()
++            migrated = Room.databaseBuilder(context, WorkspaceDatabase::class.java, name).addMigrations(WorkspaceDatabase.MIGRATION_2_3, WorkspaceDatabase.MIGRATION_3_4, WorkspaceDatabase.MIGRATION_4_5).build()
+             assertNull(migrated.projectDao().get(oldProject.id))
+             assertEquals(oldModel, migrated.modelDao().get(oldModel.id))
+         } finally { migrated?.close(); context.deleteDatabase(name) }
+@@ -74,7 +74,7 @@
+ 
+     private fun copyRows(source: SupportSQLiteDatabase, target: SupportSQLiteDatabase, table: String) {
+         source.query("SELECT * FROM $table").use { cursor ->
+-            val indexes = (0 until cursor.columnCount).filter { cursor.getColumnName(it) !in setOf("workspaceKind", "effectiveContent", "effectiveModelId") }
++            val indexes = (0 until cursor.columnCount).filter { cursor.getColumnName(it) !in setOf("workspaceKind", "effectiveContent", "effectiveModelId", "imagePath") }
+             val names = indexes.joinToString(",") { "`${cursor.getColumnName(it)}`" }
+             val placeholders = indexes.joinToString(",") { "?" }
+             while (cursor.moveToNext()) {
+--- before/app/src/test/java/com/localai/workspace/data/VisionPersistenceTest.kt
++++ after/app/src/test/java/com/localai/workspace/data/VisionPersistenceTest.kt
+@@ -0,0 +1,56 @@
++package com.localai.workspace.data
++
++import android.app.Application
++import android.graphics.Bitmap
++import android.graphics.BitmapFactory
++import android.media.ExifInterface
++import android.net.Uri
++import androidx.room.Room
++import kotlinx.coroutines.runBlocking
++import org.junit.Assert.*
++import org.junit.Test
++import org.junit.runner.RunWith
++import org.robolectric.RobolectricTestRunner
++import org.robolectric.RuntimeEnvironment
++import org.robolectric.annotation.Config
++import org.robolectric.annotation.GraphicsMode
++import java.io.File
++import java.util.UUID
++
++@RunWith(RobolectricTestRunner::class)
++@Config(sdk = [29], application = Application::class)
++@GraphicsMode(GraphicsMode.Mode.NATIVE)
++class VisionPersistenceTest {
++    @Test fun persistedReferenceSurvivesDatabaseReopeningAndDeletionCleansOnlyPrivateAttachment() = runBlocking {
++        val context = RuntimeEnvironment.getApplication()
++        val name = "vision-${UUID.randomUUID()}.db"
++        var db = Room.databaseBuilder(context, WorkspaceDatabase::class.java, name).build()
++        val file = File(context.filesDir, "attachments/${UUID.randomUUID()}.jpg").apply { parentFile!!.mkdirs(); writeBytes(byteArrayOf(1)) }
++        try {
++            val repo = WorkspaceRepository(db, File(context.filesDir, "documents"))
++            val project = repo.createChat()
++            val conversation = db.conversationDao().getForProject(project)!!
++            val row = MessageEntity("image", conversation.id, "USER", "Describe", 1, imagePath = file.path)
++            db.messageDao().insert(row)
++            db.close(); db = Room.databaseBuilder(context, WorkspaceDatabase::class.java, name).build()
++            assertEquals(row, db.messageDao().recent(conversation.id, 10).single())
++            assertTrue(file.isFile)
++            WorkspaceRepository(db, File(context.filesDir, "documents")).deleteWorkspace(project)
++            assertFalse(file.exists())
++        } finally { db.close(); context.deleteDatabase(name); file.delete() }
++    }
++    @Test fun cameraExifOrientationIsBakedIntoPreparedJpeg() = runBlocking {
++        val context = RuntimeEnvironment.getApplication()
++        val source = File(context.cacheDir, "exif-${UUID.randomUUID()}.jpg")
++        val bitmap = Bitmap.createBitmap(32, 24, Bitmap.Config.ARGB_8888)
++        source.outputStream().use { bitmap.compress(Bitmap.CompressFormat.JPEG, 90, it) }; bitmap.recycle()
++        ExifInterface(source.path).apply { setAttribute(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_ROTATE_90.toString()); saveAttributes() }
++        var prepared: File? = null
++        try {
++            prepared = ImagePreprocessor(context).prepare(Uri.fromFile(source))
++            val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
++            BitmapFactory.decodeFile(prepared.path, bounds)
++            assertEquals(24, bounds.outWidth); assertEquals(32, bounds.outHeight)
++        } finally { source.delete(); prepared?.delete() }
++    }
++}
+--- before/app/src/test/java/com/localai/workspace/inference/LiteRtVisionPayloadTest.kt
++++ after/app/src/test/java/com/localai/workspace/inference/LiteRtVisionPayloadTest.kt
+@@ -0,0 +1,24 @@
++package com.localai.workspace.inference
++
++import android.os.Bundle
++import com.google.ai.edge.litertlm.Content
++import com.localai.workspace.domain.model.*
++import org.junit.Assert.*
++import org.junit.Test
++import org.junit.runner.RunWith
++import org.robolectric.RobolectricTestRunner
++import org.robolectric.annotation.Config
++
++@RunWith(RobolectricTestRunner::class)
++@Config(sdk = [29], application = android.app.Application::class)
++class LiteRtVisionPayloadTest {
++    @Test fun imageReferenceSurvivesIpcAndNativeHistoryConstruction() {
++        val prompt = ConversationPrompt("Follow up", history = listOf(
++            ChatMessage(MessageRole.USER, "Describe", "/private/image.jpg"), ChatMessage(MessageRole.ASSISTANT, "Red")))
++        val data = Bundle(); LiteRtConversationPayload.write(data, prompt)
++        assertEquals(prompt.history, LiteRtConversationPayload.history(data))
++        val user = LiteRtConversationPayload.config(data, false).initialMessages!!.first()
++        assertEquals(Content.ImageFile("/private/image.jpg"), user.contents.contents.first())
++        assertEquals(Content.Text("Describe"), user.contents.contents.last())
++    }
++}
+--- before/app/src/test/java/com/localai/workspace/inference/LiteRtVisionInputTest.kt
++++ after/app/src/test/java/com/localai/workspace/inference/LiteRtVisionInputTest.kt
+@@ -0,0 +1,34 @@
++package com.localai.workspace.inference
++
++import com.google.ai.edge.litertlm.Content
++import com.localai.workspace.domain.model.*
++import org.junit.Assert.*
++import org.junit.Test
++import java.nio.file.Files
++
++class LiteRtVisionInputTest {
++    @Test fun sameNativeTurnContainsImageAndQuestionAndTextTurnDoesNot() {
++        val root = Files.createTempDirectory("vision-test").toFile()
++        try {
++            val file = java.io.File(root, "attachments/image.jpg").apply { parentFile!!.mkdirs(); writeBytes(byteArrayOf(1)) }
++            val contents = LiteRtVisionInput.contents(root, "What is this?", file.path, true).contents
++            assertEquals(listOf(Content.ImageFile(file.canonicalPath), Content.Text("What is this?")), contents)
++            assertEquals(listOf(Content.Text("Hello")), LiteRtVisionInput.contents(root, "Hello", null, false).contents)
++            for ((path, initialized) in listOf(file.path to false, "${root.path}/missing" to true)) {
++                try { LiteRtVisionInput.contents(root, "Question", path, initialized); fail("Must fail, never send text") }
++                catch (_: IllegalStateException) { } catch (_: IllegalArgumentException) { }
++            }
++        } finally { root.deleteRecursively() }
++    }
++    @Test fun canonicalVisualHistoryContinuesOnlyInItsOwnChat() {
++        val tracker = LiteRtConversationReuse()
++        val settings = LiteRtConversationReuse.Settings(null, .3f, .95f, 40, 0, 128, "model", true,
++            conversationId = "chat-a", modelIdentity = "gemma", contextSize = 4096)
++        tracker.begin(settings, emptyList()); tracker.completed("Question", "Red object", "/private/image.jpg")
++        val history = listOf(ChatMessage(MessageRole.USER, "Question", "/private/image.jpg"), ChatMessage(MessageRole.ASSISTANT, "Red object"))
++        assertTrue(tracker.canContinue(settings, history))
++        assertEquals("CHAT_CHANGED", tracker.reason(settings.copy(conversationId = "chat-b"), history))
++        assertEquals("HISTORY_MISMATCH", tracker.reason(settings, history.map { it.copy(imagePath = null) }))
++        tracker.invalidate(); assertFalse(tracker.canContinue(settings, history))
++    }
++}
+--- before/app/build.gradle.kts
++++ after/app/build.gradle.kts
+@@ -15,8 +15,8 @@
+         applicationId = "com.localai.workspace"
+         minSdk = 29
+         targetSdk = 35
+-        versionCode = 15
+-        versionName = "0.1.14"
++        versionCode = 16
++        versionName = "0.1.15"
+ 
+         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+         vectorDrawables.useSupportLibrary = true

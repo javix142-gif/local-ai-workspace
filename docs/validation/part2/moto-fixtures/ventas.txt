@@ -1,0 +1,2 @@
+VENTAS_PRUEBA: 12345
+Documento de prueba sin datos privados.

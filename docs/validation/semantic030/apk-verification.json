@@ -1,0 +1,15 @@
+{
+  "apk": "dist/apk/local-ai-workspace-0.3.0-semantic-v2-arm64.apk",
+  "versionName": "0.3.0",
+  "versionCode": 22,
+  "applicationId": "com.localai.workspace",
+  "bytes": 99016291,
+  "sha256": "0b334f2c649a4037262e8e0c17828b5d28902a65984ea76c25fb68a7a42c96ab",
+  "certificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
+  "zipalign16KiB": "PASS",
+  "signatureVerified": true,
+  "oldNativePythonFilesCompared": 22,
+  "oldNativePythonFilesChanged": [],
+  "signing": "existing development key; same as baseline",
+  "buildVariants": "arm64Only"
+}

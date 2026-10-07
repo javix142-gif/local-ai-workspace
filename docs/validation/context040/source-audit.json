@@ -1,0 +1,52 @@
+{
+  "baseline": "0.3.1",
+  "target": "0.4.0",
+  "changedFiles": [
+    "app/src/main/java/com/localai/workspace/MainActivity.kt",
+    "app/src/main/java/com/localai/workspace/AppGraph.kt",
+    "app/src/main/java/com/localai/workspace/LocalAiApplication.kt",
+    "app/src/main/java/com/localai/workspace/ui/ViewModels.kt",
+    "app/build.gradle.kts"
+  ],
+  "newFiles": [
+    "app/src/androidTest/java/com/localai/workspace/ui/ContextMemoryDeviceTest.kt",
+    "app/src/main/java/com/localai/workspace/ui/ContextMemoryUi.kt",
+    "app/src/main/java/com/localai/workspace/context/ContextCapacityDiagnostics.kt",
+    "app/src/main/java/com/localai/workspace/context/ContextInterop.kt",
+    "app/src/main/java/com/localai/workspace/context/MemoryDomain.kt",
+    "app/src/main/java/com/localai/workspace/context/ContextMemoryValidation.kt",
+    "app/src/main/java/com/localai/workspace/context/ContextFoundation.kt",
+    "app/src/main/java/com/localai/workspace/context/ContextBuilder.kt",
+    "app/src/main/java/com/localai/workspace/context/MemoryDatabase.kt",
+    "app/src/main/java/com/localai/workspace/context/MemoryManager.kt",
+    "app/src/test/java/com/localai/workspace/context/ContextFoundationTest.kt"
+  ],
+  "deletedFiles": [],
+  "protectedFilesChecked": 124,
+  "protectedFilesChanged": [],
+  "existingSchemasChanged": false,
+  "legacyValidationCatalogChanged": false,
+  "semanticV2CatalogChanged": false,
+  "nativeRuntimeChanged": false,
+  "contextBuilderDefault": "OFF",
+  "contextBuilderChatScope": "TEXT_ONLY_EXPERIMENTAL",
+  "physical040Evidence": "NOT_YET_DEVICE_VALIDATED",
+  "finalSourceHashes": {
+    "app/src/main/java/com/localai/workspace/MainActivity.kt": "2c75b49c8a075ad12efc6bc1270dc586bcdf2694844f15013391decfc8b49fc9",
+    "app/src/main/java/com/localai/workspace/AppGraph.kt": "069d5e2e0f82b17583a5637888c1cf0e0ceb06ae406913905ae08ce639972f39",
+    "app/src/main/java/com/localai/workspace/LocalAiApplication.kt": "32ce4d8164abc3fc81c93cc841697eca64154324cb2bcf18a04e7fa204f9861b",
+    "app/src/main/java/com/localai/workspace/ui/ViewModels.kt": "b4c2b3b07dadb7f67f738a9723b768ad5c0c55d579346a56a6e66799519c7c30",
+    "app/build.gradle.kts": "c884c4688451c9ba3b3dcd01d228f24363d98bbb744b261f79307070fe8579e8",
+    "app/src/androidTest/java/com/localai/workspace/ui/ContextMemoryDeviceTest.kt": "5243faced9470dc7c8aef228082c6b5869094fc6d9c380b6ed6c47a5164ddcdb",
+    "app/src/main/java/com/localai/workspace/ui/ContextMemoryUi.kt": "1cd6aefa699f4cbe9aab2e76c7f47595bd87bfc218081beb34ad09e34f8118b8",
+    "app/src/main/java/com/localai/workspace/context/ContextCapacityDiagnostics.kt": "096af4cad981ec9ba247256e874e88f093726780527eb6e8518d3d17988068e3",
+    "app/src/main/java/com/localai/workspace/context/ContextInterop.kt": "f7de80265e8a76cc9f4f5e5e777e86fd4b03cc3508523ec0b1abc9f4ef24dabd",
+    "app/src/main/java/com/localai/workspace/context/MemoryDomain.kt": "954abac46cbdef198ce6aaf9f74cd226c4e53e1e33ac89aeca47ce7491621ea2",
+    "app/src/main/java/com/localai/workspace/context/ContextMemoryValidation.kt": "47343d9b98a7394ed74cc6ce97bb352b4634c743eb0f0c0c17d507306085b50f",
+    "app/src/main/java/com/localai/workspace/context/ContextFoundation.kt": "c94609bfe7389a9ef4a616c09feeb1079eb4213cd28b1f81d1955f9f03a00df5",
+    "app/src/main/java/com/localai/workspace/context/ContextBuilder.kt": "4afdf309163c84f7d9befd542ddc0197b3b22502518c7a45f4202d06b71dac32",
+    "app/src/main/java/com/localai/workspace/context/MemoryDatabase.kt": "762c40c52a3073e4f54f08cf42f31cfcc38ea7bca030557f68d056852c94523d",
+    "app/src/main/java/com/localai/workspace/context/MemoryManager.kt": "37df067acb0d6444b35b1a797fa9000c56b5269c21fbc90cf55ba9d25c2c5523",
+    "app/src/test/java/com/localai/workspace/context/ContextFoundationTest.kt": "b97004050470284f41ea52ebc2b7713fb0680c06f2f67b0ac94219b786ad30aa"
+  }
+}

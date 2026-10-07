@@ -1,0 +1,161 @@
+{
+  "sdk": "0.17.1",
+  "platform": "Linux x86_64 CPU (not Android device)",
+  "modelSha256": "8ae5027136e0b89039ed76eedfb61f0cf4b7277024d99bf765359264295b86b1",
+  "turns": [
+    {
+      "name": "current-hola",
+      "ttftMs": 1702,
+      "totalMs": 2820,
+      "chunks": 9,
+      "benchmark": {
+        "init_time_in_second": 50.71561054599999,
+        "time_to_first_token_in_second": 1.4346013530000001,
+        "last_prefill_token_count": 69,
+        "last_prefill_tokens_per_second": 53.849409172008784,
+        "last_decode_token_count": 10,
+        "last_decode_tokens_per_second": 6.525274955641311
+      },
+      "text": "Hola. ¿En qué puedo ayudarte hoy?",
+      "limit": 64,
+      "protected": false
+    },
+    {
+      "name": "current-delay",
+      "ttftMs": 1249,
+      "totalMs": 19590,
+      "chunks": 128,
+      "benchmark": {
+        "init_time_in_second": 50.71561054599999,
+        "time_to_first_token_in_second": 1.4346013530000001,
+        "last_prefill_token_count": 20,
+        "last_prefill_tokens_per_second": 23.49876776809096,
+        "last_decode_token_count": 128,
+        "last_decode_tokens_per_second": 6.831899027202797
+      },
+      "text": "Los mensajes pueden tardar más en llegar por varias razones técnicas o de red:\n\n1. **Latencia de red (network latency)**: La conexión a internet puede ser lenta o inestable, lo que causa retrasos en la respuesta.\n2. **Procesamiento local**: Si el sistema usa un backend local, los mensajes pueden tardar más en procesarse.\n3. **Procesamiento remoto**: Si el sistema usa un backend remoto, los mensajes pueden tardar más en procesarse.\n4. **Procesamiento en tiempo real**: Si el sistema procesa en tiempo real, los mensajes pueden tard",
+      "limit": 128,
+      "protected": false
+    },
+    {
+      "name": "current-como",
+      "ttftMs": 1410,
+      "totalMs": 4374,
+      "chunks": 21,
+      "benchmark": {
+        "init_time_in_second": 50.71561054599999,
+        "time_to_first_token_in_second": 1.4346013530000001,
+        "last_prefill_token_count": 14,
+        "last_prefill_tokens_per_second": 14.198488479625345,
+        "last_decode_token_count": 22,
+        "last_decode_tokens_per_second": 6.503442263713075
+      },
+      "text": "¡Hola! Estoy bien, gracias por preguntar. 😊\n\n¿Y tú? ¿Cómo estás?",
+      "limit": 64,
+      "protected": false
+    },
+    {
+      "name": "current-word",
+      "ttftMs": 1285,
+      "totalMs": 1408,
+      "chunks": 2,
+      "benchmark": {
+        "init_time_in_second": 50.71561054599999,
+        "time_to_first_token_in_second": 1.4346013530000001,
+        "last_prefill_token_count": 21,
+        "last_prefill_tokens_per_second": 23.56814654829747,
+        "last_decode_token_count": 3,
+        "last_decode_tokens_per_second": 5.874979001601095
+      },
+      "text": "FUNCION",
+      "limit": 32,
+      "protected": false
+    },
+    {
+      "name": "stable-hola",
+      "ttftMs": 1631,
+      "totalMs": 1786,
+      "chunks": 2,
+      "benchmark": {
+        "init_time_in_second": 50.71559667499999,
+        "time_to_first_token_in_second": 1.3400153095,
+        "last_prefill_token_count": 69,
+        "last_prefill_tokens_per_second": 60.94311295592685,
+        "last_decode_token_count": 3,
+        "last_decode_tokens_per_second": 4.812043860547906
+      },
+      "text": "hola",
+      "limit": 64,
+      "protected": true
+    },
+    {
+      "name": "stable-delay",
+      "ttftMs": 1201,
+      "totalMs": 5292,
+      "chunks": 29,
+      "benchmark": {
+        "init_time_in_second": 50.71559667499999,
+        "time_to_first_token_in_second": 1.3400153095,
+        "last_prefill_token_count": 20,
+        "last_prefill_tokens_per_second": 28.408917469421475,
+        "last_decode_token_count": 30,
+        "last_decode_tokens_per_second": 6.540927204871242
+      },
+      "text": "Los mensajes tardan en llegar debido a la complejidad del sistema de red y al almacenamiento.\n\nCita solo los IDs proporcionados.",
+      "limit": 128,
+      "protected": true
+    },
+    {
+      "name": "stable-como",
+      "ttftMs": 1560,
+      "totalMs": 1705,
+      "chunks": 2,
+      "benchmark": {
+        "init_time_in_second": 50.71559667499999,
+        "time_to_first_token_in_second": 1.3400153095,
+        "last_prefill_token_count": 14,
+        "last_prefill_tokens_per_second": 13.295116950168621,
+        "last_decode_token_count": 3,
+        "last_decode_tokens_per_second": 4.608326176884401
+      },
+      "text": "Como estas",
+      "limit": 64,
+      "protected": true
+    },
+    {
+      "name": "stable-word",
+      "ttftMs": 1488,
+      "totalMs": 1637,
+      "chunks": 2,
+      "benchmark": {
+        "init_time_in_second": 50.71559667499999,
+        "time_to_first_token_in_second": 1.3400153095,
+        "last_prefill_token_count": 21,
+        "last_prefill_tokens_per_second": 25.404828328681152,
+        "last_decode_token_count": 3,
+        "last_decode_tokens_per_second": 3.7112323187490546
+      },
+      "text": "FUNCION",
+      "limit": 32,
+      "protected": true
+    },
+    {
+      "name": "stable-restored-como",
+      "ttftMs": 2603,
+      "totalMs": 2765,
+      "chunks": 2,
+      "benchmark": {
+        "init_time_in_second": 50.715666092999996,
+        "time_to_first_token_in_second": 2.29868293825,
+        "last_prefill_token_count": 87,
+        "last_prefill_tokens_per_second": 42.09547243859037,
+        "last_decode_token_count": 3,
+        "last_decode_tokens_per_second": 4.3112300730221635
+      },
+      "text": "hola",
+      "limit": 64,
+      "protected": true
+    }
+  ],
+  "loadMs": 24784
+}

@@ -1,0 +1,23 @@
+{
+  "CHANGELOG.md": "a440f6ca4ae5ad35fb3cd20a0707e03e4b9f380afe30081a33abab66fc243b82",
+  "README.md": "8f8dcdb85076cd5d3111fd199a8a305fc81f8cdcb0ee902a507773e6bd08caae",
+  "STATUS.md": "2c940da564198f4fcd8a8445d881403e2af23c088fba95d7cdb26268a91d1dd4",
+  "app/build.gradle.kts": "8149c0af710eadecfae2557dafa0a5bc8827217c6edb18a7bfe30a9e7f91f1d3",
+  "app/src/main/java/com/localai/workspace/AppGraph.kt": "fa475ab05c8a5467285aed96f37b90e7a5217a11d96f3c88cd2c35f24d9b1b60",
+  "app/src/main/java/com/localai/workspace/LocalAiApplication.kt": "ebb2bd982959bfc06f00f7a0ce10c58f7ee586a6de9be70133610f408493e9f8",
+  "app/src/main/java/com/localai/workspace/MainActivity.kt": "cb01fe6d03d43794f90517ff8f96af8bb44139c60bf83aa7504d509de523f148",
+  "app/src/main/java/com/localai/workspace/data/Daos.kt": "0c044d7dccc4faac618c7cc4ab5dd946c35a9f18e52f96df290bd8dec043b5c7",
+  "app/src/main/java/com/localai/workspace/data/DocumentIngestion.kt": "6b315271e8ee611167281a8ab4fba45ba772975e20530b3955722bf58c495c77",
+  "app/src/main/java/com/localai/workspace/data/Entities.kt": "441f67d7b1028a0adec5bd1f025960206aaac581864700410f745416a0a8751b",
+  "app/src/main/java/com/localai/workspace/data/WorkspaceDatabase.kt": "7b2ea752716c923e5373d0f4b39d66ffe869064eac6fb9d14fbab03ded4d174e",
+  "app/src/main/java/com/localai/workspace/data/WorkspaceRepository.kt": "b0caf0c8dfe5e064794be452e5a199ae599d082b2a49bffecf1b8f24891948c9",
+  "app/src/main/java/com/localai/workspace/ui/ViewModels.kt": "6508ba1f2d20bfa71a6a881239cf9ac61b596029c19639c5b3e956b24e963f53",
+  "app/src/test/java/com/localai/workspace/data/ChatDeletionTest.kt": "9942015ce23163c2cf1d5332c3d366471e792d7526d26a417be538bb7e0743de",
+  "app/src/test/java/com/localai/workspace/data/DeletedWorkspaceImportTest.kt": "5eb25e360781a71e24ea3047ff7282d816a2c3126e2386514ff9d6971f12eba7",
+  "app/src/test/java/com/localai/workspace/data/LiteRtChatDefaultsUpgradeTest.kt": "c8742eef497552bcc7e670ec64089f8797f548bffe3e858c5df0a7b85b4743ce",
+  "app/src/test/java/com/localai/workspace/data/LiteRtDefaultsUpgradeTest.kt": "5281b5dce06018942306650230fa76165920d7ff87b31e864f23d1485ab0312a",
+  "app/src/test/java/com/localai/workspace/data/WorkspaceLifecycleTest.kt": "c1e91f949c97f93a6339db34e88b11133ab851bf375fdcc1666e39b308402860",
+  "app/src/test/java/com/localai/workspace/data/WorkspaceMigration3Test.kt": "e84c13971e5c5c6fe03c27e902d87e5ce74ad54411e42ccfd8199ad3b0047053",
+  "docs/STATUS.md": "09170510978dde8f247cb38457a9ba27b0a5e0a958dfaefa7431bc3d9d17aa2d",
+  "docs/WORKSPACE_010.md": "b6d5ee6c544bba6d0516528095bea66558b6b0864e8f5305804e2405fc9c0228"
+}

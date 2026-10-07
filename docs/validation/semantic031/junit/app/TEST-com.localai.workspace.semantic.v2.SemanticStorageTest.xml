@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.semantic.v2.SemanticStorageTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-07T04:55:47" hostname="74096e896c47" time="0.296">
+  <properties/>
+  <testcase name="additiveSidecarLeavesVersion8WorkspaceAndEg1VectorsIntact" classname="com.localai.workspace.semantic.v2.SemanticStorageTest" time="0.061"/>
+  <testcase name="sameSegmentCanRetainDifferentRepresentationsWithoutOverwriting" classname="com.localai.workspace.semantic.v2.SemanticStorageTest" time="0.05"/>
+  <testcase name="interruptedJobRecoveryPreservesActiveIndex" classname="com.localai.workspace.semantic.v2.SemanticStorageTest" time="0.03"/>
+  <testcase name="deduplicationIncludesSpaceTaskAndHash" classname="com.localai.workspace.semantic.v2.SemanticStorageTest" time="0.03"/>
+  <testcase name="completedStaleIndexCanBeRestoredButFailedJobCannot" classname="com.localai.workspace.semantic.v2.SemanticStorageTest" time="0.058"/>
+  <testcase name="scopeCannotReadAnotherProjectsVectors" classname="com.localai.workspace.semantic.v2.SemanticStorageTest" time="0.025"/>
+  <testcase name="cancelledGreenBuildDoesNotReplaceBluePointer" classname="com.localai.workspace.semantic.v2.SemanticStorageTest" time="0.042"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,32 @@
+{
+  "unitTests": {
+    "app": {
+      "tests": 441,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 69
+    },
+    "litert-compat": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 1
+    }
+  },
+  "lintIssues": {
+    "Warning": 40,
+    "Information": 1
+  },
+  "commands": {
+    ":app:testDebugUnitTest": "PASS",
+    ":litert-compat:testDebugUnitTest": "PASS",
+    ":app:assembleDebug": "PASS",
+    ":app:assembleRelease": "PASS",
+    ":app:lintDebug": "PASS",
+    ":app:assembleDebugAndroidTest": "PASS"
+  },
+  "instrumentedTestsExecuted": false,
+  "physicalDeviceValidated": false
+}

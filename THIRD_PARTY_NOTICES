@@ -1,0 +1,7 @@
+Local AI Workspace includes source from llama.cpp/ggml at commit
+99b95488cac0f00ce3f05af113a8c1e287753f87 under the MIT License. The complete
+upstream notice is preserved in third_party/llama.cpp/LICENSE.
+
+AndroidX, Jetpack Compose, Room and Kotlin coroutines are Apache-2.0 licensed
+dependencies. PDFBox Android 2.0.27.0 is distributed under Apache-2.0. Verify
+the resolved transitive dependency licenses before release.

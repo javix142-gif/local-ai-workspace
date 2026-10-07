@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.CanonicalConversationTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-07T20:38:53" hostname="05497ac86eb0" time="0.001">
+  <properties/>
+  <testcase name="configAndContextAndThinkingReasonsAreSeparate" classname="com.localai.workspace.inference.CanonicalConversationTest" time="0.0"/>
+  <testcase name="enrichedRoomTurnAndNativeTurnMatchWithoutChangingVisibleMessage" classname="com.localai.workspace.inference.CanonicalConversationTest" time="0.0"/>
+  <testcase name="modelChangeIsExplicitAndDoesNotReuseEnrichmentFromOtherModel" classname="com.localai.workspace.inference.CanonicalConversationTest" time="0.0"/>
+  <testcase name="failedAssistantNeverMakesEffectiveUserTurnReusable" classname="com.localai.workspace.inference.CanonicalConversationTest" time="0.001"/>
+  <testcase name="consecutiveNormalTurnsReuseCompletedSession" classname="com.localai.workspace.inference.CanonicalConversationTest" time="0.0"/>
+  <testcase name="fatalErrorLosesSessionAndHistoryMismatchIsObservable" classname="com.localai.workspace.inference.CanonicalConversationTest" time="0.0"/>
+  <testcase name="otherChatNeverInheritsNativeCache" classname="com.localai.workspace.inference.CanonicalConversationTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

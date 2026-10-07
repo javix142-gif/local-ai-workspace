@@ -1,0 +1,68 @@
+{
+  "sdk": "0.17.1",
+  "precisionRequested": "fp32",
+  "model": "Qwen3.5-2B_int8.litertlm",
+  "platform": "Linux x86_64 C API, NOT Android",
+  "context": 2048,
+  "threads": 4,
+  "temperature": 0.3,
+  "topP": 0.95,
+  "topK": 40,
+  "seed": 0,
+  "maxOutput": 128,
+  "appPolicy": false,
+  "history": false,
+  "extraControls": false,
+  "prerender": false,
+  "turns": [
+    {
+      "prompt": "Calcula 17 + 25. Responde solo el número.",
+      "nativeDone": true,
+      "benchmark": {
+        "init_time_in_second": 85.149447521,
+        "time_to_first_token_in_second": 1.62899974425,
+        "last_prefill_token_count": 28,
+        "last_prefill_tokens_per_second": 19.868873665200198,
+        "last_decode_token_count": 3,
+        "last_decode_tokens_per_second": 4.550411922778181
+      },
+      "text": "42",
+      "ttftMs": 1930,
+      "totalMs": 2075
+    },
+    {
+      "prompt": "que comunas de santiago de chile conoces?",
+      "nativeDone": true,
+      "benchmark": {
+        "init_time_in_second": 85.14755307200001,
+        "time_to_first_token_in_second": 1.230880829,
+        "last_prefill_token_count": 24,
+        "last_prefill_tokens_per_second": 22.66729512875776,
+        "last_decode_token_count": 128,
+        "last_decode_tokens_per_second": 5.811025811428432
+      },
+      "text": "Santiago de Chile es una ciudad con mucha historia y cultura, así que conozco varios aspectos de ella:\n\n- **Geografía y Clima**: Clima continental, con veranos calurosos y veranos secos.\n- **Cultura**: Tradición, arte, música.\n- **Ciudad**: Arquitectura, historia.\n- **Tecnología**: Innovación, ciencia.\n- **Ciudad**: Arquitectura, historia.\n- **Tecnología**: Innovación, ciencia.\n- **Ciudad**: Arquitectura, historia.\n- **Tecnología**: Innovación, ciencia.\n-",
+      "ttftMs": 1505,
+      "totalMs": 23089
+    },
+    {
+      "prompt": "Enumera cinco comunas de la región metropolitana de Santiago, Chile. Solo nombres.",
+      "nativeDone": true,
+      "benchmark": {
+        "init_time_in_second": 85.147559332,
+        "time_to_first_token_in_second": 1.67713532525,
+        "last_prefill_token_count": 29,
+        "last_prefill_tokens_per_second": 19.36406699936199,
+        "last_decode_token_count": 128,
+        "last_decode_tokens_per_second": 5.570532567510402
+      },
+      "text": "Basado en la información disponible sobre las comunas de la región metropolitana de Santiago, Chile, aquí están algunos nombres:\n\n- Santiago\n- La Serena\n- La Paz\n- La Serena\n- La Paz\n- La Serena\n- La Paz\n- La Serena\n- La Paz\n- La Serena\n- La Paz\n- La Serena\n- La Paz\n- La Serena\n- La Paz\n- La Serena\n- La Paz\n- La Serena\n- La Paz\n- La Serena\n- La Paz\n- La Serena\n- La Paz\n- La Serena\n- La Paz\n- La Serena\n",
+      "ttftMs": 1958,
+      "totalMs": 24477
+    }
+  ],
+  "deviceValidation": "NOT_EXECUTED",
+  "loadMs": 41805,
+  "unloadReturned": true,
+  "hostPeakRssBytes": 3858972672
+}

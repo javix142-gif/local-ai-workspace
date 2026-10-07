@@ -1,0 +1,20 @@
+{
+  "environment": "HOST_ROBOLECTRIC_NOT_MOTO",
+  "nativeEmbeddingExecuted": false,
+  "records": [
+    {
+      "memories": 100,
+      "lookupNs": 18690523,
+      "lexicalRetrievalNs": 87628428,
+      "contextBuildNs": 2387005,
+      "included": 6
+    },
+    {
+      "memories": 1000,
+      "lookupNs": 68034680,
+      "lexicalRetrievalNs": 108317483,
+      "contextBuildNs": 680412,
+      "included": 6
+    }
+  ]
+}

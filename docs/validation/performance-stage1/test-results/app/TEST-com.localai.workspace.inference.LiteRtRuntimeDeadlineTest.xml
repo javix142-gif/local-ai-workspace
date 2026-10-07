@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.LiteRtRuntimeDeadlineTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-06T00:28:40" hostname="74096e896c47" time="2.401">
+  <properties/>
+  <testcase name="repetitionWithoutNativeAcknowledgmentHasFiveSecondPolicyAndResetNotCompletion" classname="com.localai.workspace.inference.LiteRtRuntimeDeadlineTest" time="0.387"/>
+  <testcase name="ignoredNativeCancellationHasItsOwnDeadlineAndReleasesWakeLease" classname="com.localai.workspace.inference.LiteRtRuntimeDeadlineTest" time="0.258"/>
+  <testcase name="acknowledgedManualStopKeepsEngineUntilExplicitUnloadAndReleasesWakeLease" classname="com.localai.workspace.inference.LiteRtRuntimeDeadlineTest" time="0.134"/>
+  <testcase name="experimentalGpuFailureIsVisibleAndNotRetriedUntilExplicitRequest" classname="com.localai.workspace.inference.LiteRtRuntimeDeadlineTest" time="0.081"/>
+  <testcase name="measuredNativeTtftSurvivesGenerationFailureWithoutInventingOutputTokenCount" classname="com.localai.workspace.inference.LiteRtRuntimeDeadlineTest" time="0.055"/>
+  <testcase name="acknowledgedLoopIsAnErrorWithRetainedEngineAndSameClientRetry" classname="com.localai.workspace.inference.LiteRtRuntimeDeadlineTest" time="0.04"/>
+  <testcase name="retryAndUnloadCompleteAfterTimeoutWithoutMainThreadOrNewRuntime" classname="com.localai.workspace.inference.LiteRtRuntimeDeadlineTest" time="0.652"/>
+  <testcase name="blockedNativeLoadTimesOutAndKillsWorkerWhileMainLooperNeverRuns" classname="com.localai.workspace.inference.LiteRtRuntimeDeadlineTest" time="0.646"/>
+  <testcase name="conversationResetTransmitsAnExplicitStructuralReason" classname="com.localai.workspace.inference.LiteRtRuntimeDeadlineTest" time="0.039"/>
+  <testcase name="failedWarmupReloadsSafelyAndDoesNotRepeatOnEveryMessage" classname="com.localai.workspace.inference.LiteRtRuntimeDeadlineTest" time="0.066"/>
+  <testcase name="unsupportedSpeculativeRetainsFunctionalCpuAndExplicitFailureState" classname="com.localai.workspace.inference.LiteRtRuntimeDeadlineTest" time="0.039"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

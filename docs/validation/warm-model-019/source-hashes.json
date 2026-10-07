@@ -1,0 +1,18 @@
+{
+  "app/build.gradle.kts": "ee4f47bdff1d726fb1743ff5101f98b950650ec136701f8891a9b32b9e571b0b",
+  "app/src/main/java/com/localai/workspace/AppGraph.kt": "69dffb6a2aad807d6186adfbc3a31a1862534cd080d300c297411f4df54c9c77",
+  "app/src/main/java/com/localai/workspace/LocalAiApplication.kt": "49473bd48ff4e2e31add643af5eba4824a099d6a929dcd9f835dedb83d648c5f",
+  "app/src/main/java/com/localai/workspace/ui/ViewModels.kt": "596a71a4a65787a6f634939d796915367f7edb57d1703bf04f5f281532c2bcb7",
+  "app/src/main/java/com/localai/workspace/domain/inference/InferenceRuntime.kt": "096e8c6987a0cd6f93d94fbb235335cd0c6c9e52ca7545237f06d9b1faca3976",
+  "app/src/main/java/com/localai/workspace/inference/LiteRtIpc.kt": "bf0fdd2f7865a45041a25145e52762cdc774c9b01d75e1289d1a51e6b95eb561",
+  "app/src/main/java/com/localai/workspace/inference/LiteRtLmInferenceRuntime.kt": "5e8ea45ba9daac9f22a96092e469d232ea12eb1d5ee59728dfbe138ae01698df",
+  "app/src/main/java/com/localai/workspace/inference/LiteRtLmService.kt": "e6070ba5bc20e54b621c3e1e11403f9d830016955cecceb2c28f306dd24dbc07",
+  "README.md": "377ba1a596c407103cb3e6b7f6a4a3d49cd4984b9c58b912d931231402c59dd4",
+  "STATUS.md": "6004becd0ee0a29dda6981ea3a68d959c483a60e21e6f6ed37c08f7e26284aa0",
+  "CHANGELOG.md": "728d0e5ab9499c87afe3fddc64791cd2c70cf4854dbe51743576208ff61e5e69",
+  "docs/STATUS.md": "d7d03afddca6a900d12a029f373a7bb3951a07e457836691debb58615634d2b8",
+  "app/src/test/java/com/localai/workspace/inference/LiteRtIpcDispatchTest.kt": "2ff39404ef2dfc2877268ff560f7e8c9da396b8f201f3bad98f3f6aff80ab125",
+  "app/src/main/java/com/localai/workspace/domain/inference/ChatRuntimePool.kt": "7930b787dc859c729f3010dab44364188956ffa825881645cab2d89ff24f4d3b",
+  "app/src/test/java/com/localai/workspace/inference/ChatRuntimePoolTest.kt": "9c8af7876f0c69797a6e789dd02488c0ed47e018e80885b94047bd84bcc1d536",
+  "docs/WARM_MODEL_019.md": "19d4292289450331beb59e402fbf415e7fbc87a7325d588edad1992b725756f3"
+}

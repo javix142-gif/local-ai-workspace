@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.GenerationDiagnosticPersistenceTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-07T18:30:38" hostname="05497ac86eb0" time="0.113">
+  <properties/>
+  <testcase name="reopeningAFailedMessageKeepsCheckpointAndNativeStackOutsideBenchmarkFields" classname="com.localai.workspace.inference.GenerationDiagnosticPersistenceTest" time="0.08"/>
+  <testcase name="existingBenchmarksAndMalformedRecordsDoNotBecomeFakeDiagnostics" classname="com.localai.workspace.inference.GenerationDiagnosticPersistenceTest" time="0.032"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,23 @@
+{
+  "old": {
+    "lib/arm64-v8a/libai-chat.so": "cc778324220f0214a02921960d5042db2a68567e07f70a7a373c137fbad2ac42",
+    "lib/arm64-v8a/libandroidx.graphics.path.so": "41e9a793c43a0f4fddb19e33f346bace464f30f888ba7b9eaf96294ea115bfb6",
+    "lib/arm64-v8a/libggml-base.so": "6440fc0528213b76a7f9cb24a72555ff17ec90b5feba895dff60ad7b193bfa4b",
+    "lib/arm64-v8a/libggml-cpu.so": "ae1306c6d839e106b5ca0309bd8bb637d015782ca7252f21fd6a2912bab090a4",
+    "lib/arm64-v8a/libggml.so": "aa423a5a8bd4a90efb146fcd2e5b59cb53967eb73f096eb49c73557b99aff487",
+    "lib/arm64-v8a/liblitertlm_jni.so": "6cbef460e821154b947a537e3df918607472a9c36941d25a75828ecdd201a7e2",
+    "lib/arm64-v8a/libllama-common.so": "6588876e7f1fae62253480628bdab7f17d8520cc2f9a21d628265c3aaf3f8f97",
+    "lib/arm64-v8a/libllama.so": "c18fe9c0148d9b8d7c36f39d9737523ecdfb2d831da89e94a15f8dbc550d7884"
+  },
+  "new": {
+    "lib/arm64-v8a/libai-chat.so": "cc778324220f0214a02921960d5042db2a68567e07f70a7a373c137fbad2ac42",
+    "lib/arm64-v8a/libandroidx.graphics.path.so": "41e9a793c43a0f4fddb19e33f346bace464f30f888ba7b9eaf96294ea115bfb6",
+    "lib/arm64-v8a/libggml-base.so": "6440fc0528213b76a7f9cb24a72555ff17ec90b5feba895dff60ad7b193bfa4b",
+    "lib/arm64-v8a/libggml-cpu.so": "ae1306c6d839e106b5ca0309bd8bb637d015782ca7252f21fd6a2912bab090a4",
+    "lib/arm64-v8a/libggml.so": "aa423a5a8bd4a90efb146fcd2e5b59cb53967eb73f096eb49c73557b99aff487",
+    "lib/arm64-v8a/liblitertlm_jni.so": "6cbef460e821154b947a537e3df918607472a9c36941d25a75828ecdd201a7e2",
+    "lib/arm64-v8a/libllama-common.so": "6588876e7f1fae62253480628bdab7f17d8520cc2f9a21d628265c3aaf3f8f97",
+    "lib/arm64-v8a/libllama.so": "c18fe9c0148d9b8d7c36f39d9737523ecdfb2d831da89e94a15f8dbc550d7884"
+  },
+  "identical": true
+}

@@ -1,0 +1,15 @@
+{
+  "fixtureId": "audio_fixture",
+  "synthetic": true,
+  "spokenText": "La palabra de prueba es bicicleta.",
+  "generator": "eSpeak NG 1.52.0+dfsg-5",
+  "voice": "es",
+  "rateWordsPerMinute": 145,
+  "sampleRate": 22050,
+  "channels": 1,
+  "sampleWidthBytes": 2,
+  "durationMs": 2642,
+  "sha256": "6748182dca6da09f24151813c9e9da854cde048faf01142fd750f2f49682db92",
+  "generationCommand": "espeak-ng -v es -s 145 -w audio_fixture.wav \"La palabra de prueba es bicicleta.\"",
+  "provenance": "Generated speech only. No eSpeak executable, library or voice data is bundled in the APK. No recording or user data."
+}

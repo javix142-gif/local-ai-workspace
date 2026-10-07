@@ -1,0 +1,32 @@
+{
+  "version": "0.4.0",
+  "versionCode": 24,
+  "files": [
+    {
+      "id": "1W4aLRFmguxcTz40QU_wrnmDLYEZLkVZu",
+      "url": "https://drive.google.com/file/d/1W4aLRFmguxcTz40QU_wrnmDLYEZLkVZu/view?usp=drivesdk",
+      "bytes": 99557021,
+      "parentVerified": true
+    },
+    {
+      "id": "1FOfs5W5_UyE5UnyMffP1olpWIutFD6L7",
+      "url": "https://drive.google.com/file/d/1FOfs5W5_UyE5UnyMffP1olpWIutFD6L7/view?usp=drivesdk",
+      "bytes": 15713,
+      "parentVerified": true
+    },
+    {
+      "id": "17ZAkNT_zlFZ7cYeKpz-iNtKyA2MQNb8d",
+      "url": "https://drive.google.com/file/d/17ZAkNT_zlFZ7cYeKpz-iNtKyA2MQNb8d/view?usp=drivesdk",
+      "bytes": 163842,
+      "parentVerified": true
+    }
+  ],
+  "baselineUrl": "https://drive.google.com/file/d/12SybtzhebRD1_9HEMNtnnzqmKPhtuwkL/view",
+  "apkSha256": "e2fde8b6d6f28d2260aa0741352fb6243a79aa1aa8af006345ae07602485d8d0",
+  "unitTests": 477,
+  "unitFailures": 0,
+  "allSixHostGates": "PASS",
+  "publicSharingChanged": false,
+  "physical040Validated": false,
+  "contextBuilderDefault": "OFF"
+}

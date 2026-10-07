@@ -1,0 +1,34 @@
+{
+  "baseline": "0.4.0",
+  "target": "0.4.1",
+  "existingFilesChanged": [
+    "app/src/main/java/com/localai/workspace/AppGraph.kt",
+    "app/src/main/java/com/localai/workspace/ui/ViewModels.kt",
+    "app/src/main/java/com/localai/workspace/ui/PerformanceScreen.kt",
+    "app/build.gradle.kts"
+  ],
+  "newFiles": [
+    "app/src/androidTest/java/com/localai/workspace/ui/NormalChatNativeDeviceTest.kt",
+    "app/src/main/java/com/localai/workspace/diagnostics/NormalGenerationTrace.kt",
+    "app/src/test/java/com/localai/workspace/ui/NormalChatHotfixTest.kt",
+    "app/src/test/java/com/localai/workspace/diagnostics/NormalGenerationTraceTest.kt"
+  ],
+  "deletedFiles": [],
+  "protectedFilesChecked": 58,
+  "protectedFilesChanged": [],
+  "runtimeChanged": false,
+  "schemasChanged": false,
+  "oldCatalogsChanged": false,
+  "physical041Validated": false,
+  "offPhysicalRootCause": "NO_DETERMINADO",
+  "finalHashes": {
+    "app/src/main/java/com/localai/workspace/AppGraph.kt": "0347a2a8e2e78c4d29696b5c69d537fe72c42271a6c79a4ab59c51bbafecb850",
+    "app/src/main/java/com/localai/workspace/ui/ViewModels.kt": "6c9a69650ebdce8f35a0db3c0174f0cbb7851b1f0172372119fb5be5812632f3",
+    "app/src/main/java/com/localai/workspace/ui/PerformanceScreen.kt": "2e3ef26d1a98ecd50d1400bcecf01a46ffc1cd0d5b2c6b7ddb29c72dacaa2d13",
+    "app/build.gradle.kts": "6de1dc43b5a052f65639cedf232c178e21773e3e92d6b0ddd610620b3e96a0ec",
+    "app/src/androidTest/java/com/localai/workspace/ui/NormalChatNativeDeviceTest.kt": "7d6d417fcee8b4f45287f32c2218436d20151e7b0662c0652334bf0fcfa32218",
+    "app/src/main/java/com/localai/workspace/diagnostics/NormalGenerationTrace.kt": "a08f393e74370650e0177ab8b5ca0b8ef6926c78000d9dd52d4890294d2b63b2",
+    "app/src/test/java/com/localai/workspace/ui/NormalChatHotfixTest.kt": "0fca8bda54a465a4e51114345264a13b2b57e3c1c49d548d53035555fbae1d3a",
+    "app/src/test/java/com/localai/workspace/diagnostics/NormalGenerationTraceTest.kt": "0020a494fb62d339faf6c67b89c08c6f9e09fb44ed4599246d897c2b3f57c6fb"
+  }
+}

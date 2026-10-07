@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.data.VisionPersistenceTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-06T06:29:11" hostname="74096e896c47" time="12.899">
+  <properties/>
+  <testcase name="persistedReferenceSurvivesDatabaseReopeningAndDeletionCleansOnlyPrivateAttachment" classname="com.localai.workspace.data.VisionPersistenceTest" time="11.797"/>
+  <testcase name="audioPersistsAndDeletionCleansItsPrivateFile" classname="com.localai.workspace.data.VisionPersistenceTest" time="0.274"/>
+  <testcase name="cameraExifOrientationIsBakedIntoPreparedJpeg" classname="com.localai.workspace.data.VisionPersistenceTest" time="0.828"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

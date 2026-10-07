@@ -1,0 +1,1 @@
+Documento ficticio para validar recuperación. La estación Lumen utiliza acumuladores de litio con autonomía de 18 horas para registrar la calidad del aire. El sensor necesita mantenimiento cada 45 días.

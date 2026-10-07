@@ -1,0 +1,101 @@
+litert-compat/src/main/java/com/google/ai/edge/litertlm/Config.kt
+121: /**
+122:  * Configuration for thinking/reasoning generation.
+123:  *
+124:  * @property enableThinking Whether thinking/reasoning generation is enabled.
+125:  * @property thinkingTokenBudget The token budget for thinking/reasoning generation. Defaults to -1
+126:  *   (infinite budget).
+127:  */
+128: data class ThinkingConfig
+129: @JvmOverloads
+130: constructor(val enableThinking: Boolean = true, val thinkingTokenBudget: Int = -1)
+131: 
+
+litert-compat/src/main/java/com/google/ai/edge/litertlm/Conversation.kt
+104:    * @param noRepeatNgramConfig Optional configuration for no repeat ngram.
+105:    * @param suppressTokensConfig Optional configuration for suppressing specific tokens.
+106:    * @param maxOutputToken Optional override for the maximum number of output tokens per decode
+107:    *   step. For thinking models, both thinking (reasoning) tokens and the final response tokens
+108:    *   count towards this limit.
+109:    * @param thinkingConfig Optional configuration for thinking/reasoning generation.
+110:    * @return The model's response message.
+
+litert-compat/src/main/java/com/google/ai/edge/litertlm/Conversation.kt
+790:         }
+791:       }
+792: 
+793:       val channels = mutableMapOf<String, String>()
+794:       if (messageJsonObject.has("channels")) {
+795:         val channelsJsonObject = messageJsonObject.getAsJsonObject("channels")
+796:         for (entry in channelsJsonObject.entrySet()) {
+797:           channels[entry.key] = entry.value.asString
+798:         }
+799:       }
+800: 
+801:       // Note: consider to parse the "role" from the messageJsonObject.
+802:       // It seems that models can return "assistant" or "model".
+803:       return Message.model(Contents.of(contents), toolCalls, channels)
+804:     }
+805:   }
+806: }
+807: 
+808: /** A callback for receiving streaming message responses. */
+809: interface MessageCallback {
+810:   /**
+811:    * Called when a new message chunk is available from the model.
+812:    *
+813:    * This method may be called multiple times for a single `sendMessageAsync` call as the model
+814:    * streams its response.
+815:    *
+816:    * @param contents The message chunk.
+817:    */
+818:   fun onMessage(message: Message)
+819: 
+820:   /**
+821:    * Called when all message chunks are sent for a given `sendMessageAsync` call.
+822:    *
+823:    * If the model response includes tool calls, this method is called *after* the tool calls have
+824:    * been executed and their responses have been sent back to the model.
+825:    */
+826:   fun onDone()
+827: 
+828:   /**
+829:    * Called when an error occurs during the response streaming process.
+830:    *
+831:    * @param throwable The error that occurred.
+832:    */
+833:   fun onError(throwable: Throwable)
+
+docs/validation/hotfix022/conversation.cc
+371:   }
+372:   if (thinking_config.has_value() && thinking_config->enable_thinking()) {
+373:     decode_config.SetThinkingTokenBudget(
+374:         thinking_config->thinking_token_budget());
+375:     const Channel* thinking_channel = nullptr;
+376:     // We assume the thinking channel is the first channel configured for the
+377:     // conversation.
+378:     // TODO(b/521921341): Support dynamically identifying or specifying the
+379:     // thinking channel when multiple channels are present.
+380:     if (!config_.GetChannels().empty()) {
+381:       thinking_channel = &config_.GetChannels().front();
+382:     }
+383:     if (thinking_channel != nullptr) {
+384:       if (open_channel_name.has_value() &&
+385:           *open_channel_name == thinking_channel->channel_name) {
+386:         decode_config.SetThinkingStartTokenIds({});
+387:       } else {
+388:         ABSL_ASSIGN_OR_RETURN(auto start_token_ids,
+389:                               const_cast<Tokenizer&>(engine_.GetTokenizer())
+390:                                   .TextToTokenIds(thinking_channel->start));
+391:         decode_config.SetThinkingStartTokenIds(std::move(start_token_ids));
+392:       }
+393:       ABSL_ASSIGN_OR_RETURN(auto end_token_ids,
+394:                             const_cast<Tokenizer&>(engine_.GetTokenizer())
+395:                                 .TextToTokenIds(thinking_channel->end));
+396:       decode_config.SetThinkingEndTokenIds(std::move(end_token_ids));
+397:     }
+398:   } else {
+399:     decode_config.SetThinkingTokenBudget(0);
+400:   }
+401:   if (decoding_constraint.has_value() && constraint_provider_ != nullptr) {
+402:     ABSL_ASSIGN_OR_RETURN(constraint_,

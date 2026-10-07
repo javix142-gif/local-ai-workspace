@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.ChatSessionPipelineTest" tests="17" skipped="0" failures="0" errors="0" timestamp="2026-10-06T04:33:14" hostname="74096e896c47" time="2.098">
+  <properties/>
+  <testcase name="htmlExtractsVisibleTextAndDoesNotInjectScriptOrMarkupIntoModel" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.268"/>
+  <testcase name="paperclipImageUsesVisionPreparationInsteadOfDocumentParser" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.261"/>
+  <testcase name="filesOmittedByTheBoundedTurnStaySelectedRatherThanBeingSilentlyConsumed" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.138"/>
+  <testcase name="emptyDocumentIsFailedRatherThanPretendingToHaveUsableText" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.1"/>
+  <testcase name="imageMovesToPersistedTurnAndNextRequestHasNoImage" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.162"/>
+  <testcase name="navigatingAwayKeepsGenerationAndReopeningUsesSameControllerAndPersistedResult" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.083"/>
+  <testcase name="simpleGreetingDoesNotIncludeLibraryOrDefaultEvidenceInstructions" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.138"/>
+  <testcase name="loadedRuntimeRejectingVisionNeverGetsTextFallback" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.093"/>
+  <testcase name="readingFileContinuesAfterNavigationAndSendWaitsForItsActualContent" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.089"/>
+  <testcase name="visionLoadFailureNeverCallsGenerate" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.105"/>
+  <testcase name="removingWorkspaceSettlesActiveControllerBeforeDeletingPersistedRows" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.085"/>
+  <testcase name="changingPreparedModelWaitsForActiveRequestInsteadOfStealingItsSession" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.1"/>
+  <testcase name="queuedChatStopNeverCancelsTheOtherBackgroundGeneration" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.108"/>
+  <testcase name="removingDraftDeletesOnlyDraftAndTextRemainsText" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.084"/>
+  <testcase name="realSafMarkdownReachesGenerationRequestAndRemainsReusableInLibrary" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.111"/>
+  <testcase name="unsupportedFileShowsParserFailureAndNeverBecomesSelectedModelContext" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.078"/>
+  <testcase name="unsupportedModelRejectsImageBeforePreparing" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.089"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

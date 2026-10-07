@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Used only after the user explicitly chooses Hugging Face metadata/downloads. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Bounded partial wake lock only during an explicitly requested LiteRT operation. -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <application
+        android:name=".LocalAiApplication"
+        android:allowBackup="false"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.LocalAiWorkspace">
+        <!-- Optional accelerators used by LiteRT-LM on devices that expose them. -->
+        <uses-native-library android:name="libvndksupport.so" android:required="false" />
+        <uses-native-library android:name="libOpenCL.so" android:required="false" />
+        <!-- A blocked JNI call can be terminated without killing the chat or losing its DB. -->
+        <service
+            android:name=".inference.LiteRtLmService"
+            android:exported="false"
+            android:process=":litert" />
+        <service android:name=".python.PythonService" android:exported="false" android:process=":python" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

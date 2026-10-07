@@ -1,0 +1,15 @@
+{
+  "apk": "dist/apk/local-ai-workspace-0.4.2-memory-relevance-hotfix-arm64.apk",
+  "versionName": "0.4.2",
+  "versionCode": 26,
+  "applicationId": "com.localai.workspace",
+  "bytes": 99638941,
+  "sha256": "2de32fbad0f295baebccd6aba67060140e78f1436f293a2905a90f069066af4a",
+  "certificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
+  "zipalign16KiB": "PASS",
+  "signatureVerified": true,
+  "oldNativePythonFilesCompared": 22,
+  "oldNativePythonFilesChanged": [],
+  "signing": "existing development key; same as baseline",
+  "buildVariants": "arm64Only"
+}

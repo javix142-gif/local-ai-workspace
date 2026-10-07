@@ -1,0 +1,32 @@
+{
+  "tests": {
+    "app": {
+      "tests": 221,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "litert-compat": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "lint": {
+    "app": {
+      "Error": 0,
+      "Warning": 75,
+      "Fatal": 0
+    },
+    "litert-compat": {
+      "Error": 0,
+      "Warning": 1,
+      "Fatal": 0
+    }
+  },
+  "protectedBaselineFilesUnchanged": 104,
+  "sourceFilesChanged": 10,
+  "physicalDeviceTest": "PHYSICAL_DEVICE_TEST_REQUIRED",
+  "instrumentedTests": "COMPILED_NOT_EXECUTED"
+}

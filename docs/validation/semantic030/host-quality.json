@@ -1,0 +1,12 @@
+{
+  "image": {
+    "positiveScore": 0.7740500342487835,
+    "distractorScore": 0.609067642476571,
+    "correctTop1": true
+  },
+  "audio": {
+    "positiveScore": 0.7234128824486611,
+    "distractorScore": 0.6683699607537296,
+    "correctTop1": true
+  }
+}

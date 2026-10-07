@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.semantic.EmbeddingImportPipelineTest" tests="18" skipped="0" failures="0" errors="0" timestamp="2026-10-07T13:13:52" hostname="74096e896c47" time="0.04">
+  <properties/>
+  <testcase name="sourceSizeMismatchPreventsNativeLoad" classname="com.localai.workspace.semantic.EmbeddingImportPipelineTest" time="0.007"/>
+  <testcase name="wrongProbeDimensionIsRejected" classname="com.localai.workspace.semantic.EmbeddingImportPipelineTest" time="0.001"/>
+  <testcase name="truncatedFileIsReportedExplicitly" classname="com.localai.workspace.semantic.EmbeddingImportPipelineTest" time="0.001"/>
+  <testcase name="nativeModelLoadFailurePreservesKnownArchitecture" classname="com.localai.workspace.semantic.EmbeddingImportPipelineTest" time="0.003"/>
+  <testcase name="nonfiniteProbeIsRejected" classname="com.localai.workspace.semantic.EmbeddingImportPipelineTest" time="0.001"/>
+  <testcase name="unnormalizedProbeIsRejected" classname="com.localai.workspace.semantic.EmbeddingImportPipelineTest" time="0.004"/>
+  <testcase name="cancellationIsNotMisreportedAsImportFailure" classname="com.localai.workspace.semantic.EmbeddingImportPipelineTest" time="0.001"/>
+  <testcase name="failedImportDoesNotReplacePreviouslyValidConfiguration" classname="com.localai.workspace.semantic.EmbeddingImportPipelineTest" time="0.001"/>
+  <testcase name="badShaNeverLoadsOrCommits" classname="com.localai.workspace.semantic.EmbeddingImportPipelineTest" time="0.006"/>
+  <testcase name="wrongArchitectureClosesEncoderWithoutCommit" classname="com.localai.workspace.semantic.EmbeddingImportPipelineTest" time="0.002"/>
+  <testcase name="sourceFailureWithholdsPrivateExceptionText" classname="com.localai.workspace.semantic.EmbeddingImportPipelineTest" time="0.002"/>
+  <testcase name="successfulProbeCommitsOnlyAfterEncoderClosed" classname="com.localai.workspace.semantic.EmbeddingImportPipelineTest" time="0.001"/>
+  <testcase name="commitFailureHasOwnStage" classname="com.localai.workspace.semantic.EmbeddingImportPipelineTest" time="0.001"/>
+  <testcase name="wrongNativeDimensionIsRejected" classname="com.localai.workspace.semantic.EmbeddingImportPipelineTest" time="0.001"/>
+  <testcase name="nativeOpenFailureKeepsRealStageAndCode" classname="com.localai.workspace.semantic.EmbeddingImportPipelineTest" time="0.003"/>
+  <testcase name="nullSourceRemainsSourceOpenFailure" classname="com.localai.workspace.semantic.EmbeddingImportPipelineTest" time="0.001"/>
+  <testcase name="nativeLinkFailureIsDistinct" classname="com.localai.workspace.semantic.EmbeddingImportPipelineTest" time="0.001"/>
+  <testcase name="copyFailureWithholdsRawMessage" classname="com.localai.workspace.semantic.EmbeddingImportPipelineTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

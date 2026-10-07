@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.domain.ConversationPromptTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-07T04:55:35" hostname="74096e896c47" time="0.248">
+  <properties/>
+  <testcase name="ordinaryTextTwoQuotesSeparatorsAndLongDistinctTextAreNotStopped" classname="com.localai.workspace.domain.ConversationPromptTest" time="0.216"/>
+  <testcase name="budgetExclusionCannotSilentlyRestoreHistoryOrDropTheCurrentMessage" classname="com.localai.workspace.domain.ConversationPromptTest" time="0.004"/>
+  <testcase name="failedCancelledBlankAndOrphanedTurnsDoNotPoisonNewHistory" classname="com.localai.workspace.domain.ConversationPromptTest" time="0.001"/>
+  <testcase name="legacyCompletedLoopIsKeptInDatabaseButExcludedFromModelHistory" classname="com.localai.workspace.domain.ConversationPromptTest" time="0.002"/>
+  <testcase name="evidenceMemoryAndRoleLikeTextRemainDataAndCitationIdsAreIntact" classname="com.localai.workspace.domain.ConversationPromptTest" time="0.001"/>
+  <testcase name="missingListItemsAreMarkedAsNeverGeneratedOnlyAfterRealOutputLimit" classname="com.localai.workspace.domain.ConversationPromptTest" time="0.0"/>
+  <testcase name="currentUserOccursOnceAndPastTurnsKeepRealRolesInsteadOfUserTranscript" classname="com.localai.workspace.domain.ConversationPromptTest" time="0.0"/>
+  <testcase name="realScreenshotLoopIsDetectedAcrossAnySmallChunkBoundaries" classname="com.localai.workspace.domain.ConversationPromptTest" time="0.018"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

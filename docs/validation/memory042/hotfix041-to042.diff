@@ -1,0 +1,207 @@
+--- 0.4.1/app/build.gradle.kts
++++ 0.4.2/app/build.gradle.kts
+@@ -15,8 +15,8 @@
+         applicationId = "com.localai.workspace"
+         minSdk = 29
+         targetSdk = 35
+-        versionCode = 25
+-        versionName = "0.4.1"
++        versionCode = 26
++        versionName = "0.4.2"
+ 
+         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+         vectorDrawables.useSupportLibrary = true
+--- 0.4.1/app/src/main/java/com/localai/workspace/context/MemoryDomain.kt
++++ 0.4.2/app/src/main/java/com/localai/workspace/context/MemoryDomain.kt
+@@ -17,5 +17,5 @@
+     fun words(text:String)=Regex("[\\p{L}\\p{N}_]{2,}").findAll(text.lowercase(java.util.Locale.ROOT)).map{it.value}.filter{it !in setOf("the","what","this","does","have","with","para","que","como","este","una","los","las","del")}.toSet()
+     fun lexical(query:String,text:String):Double {val q=words(query);return if(q.isEmpty())0.0 else q.intersect(words(text)).size.toDouble()/q.size}
+ }
+-data class MemoryHit(val record:MemoryRecord,val score:Double,val semanticScore:Double?=null)
++data class MemoryHit(val record:MemoryRecord,val score:Double,val semanticScore:Double?=null,val relevance:MemoryRelevanceScore?=null)
+ data class RollingSummary(val conversationId:String,val fromMessageId:String,val toMessageId:String,val text:String,val createdAt:Long,val version:Int=1)
+--- 0.4.1/app/src/main/java/com/localai/workspace/context/ContextFoundation.kt
++++ 0.4.2/app/src/main/java/com/localai/workspace/context/ContextFoundation.kt
+@@ -77,8 +77,12 @@
+         val started=System.nanoTime();val access=request.access
+         check(access.projectId==null||graph.database.projectDao().get(access.projectId)!=null){"PROJECT_NOT_FOUND"}
+         val all=mutableListOf<ContextItem>();val memoryStart=System.nanoTime()
+-        val vector=if(memoryEnabled)memory.queryEmbedding(request.query)else null
+-        if(memoryEnabled)memory.search(request.query,access,queryVector=vector,allowEmbedding=false).forEachIndexed{i,hit->val m=hit.record;all+=ContextItem("M${i+1}",ContextKind.MEMORY,m.text,SemanticScope(ScopeType.valueOf(m.scopeType),m.scopeId),ContextTrust.APPROVED_MEMORY,if(m.pinned)85 else 65,hit.score,ContextProvenance(sourceId=m.id,segmentId=m.sourceSegmentId,messageIds=listOfNotNull(m.sourceMessageId)))}
++        val memorySkipped=memoryEnabled&&MemoryRelevance.smallTalk(request.query)
++        val vector=if(memoryEnabled&&!memorySkipped)memory.queryEmbedding(request.query)else null
++        val selection=if(memoryEnabled)memory.select(request.query,access,queryVector=vector,allowEmbedding=false)else MemorySelection(emptyList(),emptyList())
++        fun memoryItem(hit:MemoryHit,id:String):ContextItem {val m=hit.record;return ContextItem(id,ContextKind.MEMORY,m.text,SemanticScope(ScopeType.valueOf(m.scopeType),m.scopeId),ContextTrust.APPROVED_MEMORY,if(m.pinned)85 else 65,hit.score,ContextProvenance(sourceId=m.id,segmentId=m.sourceSegmentId,messageIds=listOfNotNull(m.sourceMessageId)),memoryRelevance=hit.relevance)}
++        selection.included.forEachIndexed{i,hit->all+=memoryItem(hit,"M${i+1}")}
++        val relevanceDropped=selection.dropped.mapIndexed{i,hit->DroppedContext(memoryItem(hit,"MD${i+1}"),"BELOW_RELEVANCE_THRESHOLD")}
+         val memoryMs=(System.nanoTime()-memoryStart)/1_000_000
+         access.projectId?.let{id->database.dao().brief(id)?.let{all+=ContextItem("P1",ContextKind.PROJECT,it.markdown(),SemanticScope(ScopeType.PROJECT,id),ContextTrust.USER_PROJECT_DATA,70,provenance=ContextProvenance(sourceId=id))}}
+         val retrieveStart=System.nanoTime()
+@@ -104,6 +108,6 @@
+         val historyMs=(System.nanoTime()-historyStart)/1_000_000
+         val result=ContextBuilder().build(request,all)
+         val renderStart=System.nanoTime();result.conversation();val renderMs=(System.nanoTime()-renderStart)/1_000_000
+-        result.copy(timings=result.timings.copy(totalMs=(System.nanoTime()-started)/1_000_000,memoryMs=memoryMs,retrievalMs=retrievalMs,historyMs=historyMs,renderMs=renderMs),notice=notice.value).also{last.value=it}
++        result.copy(dropped=result.dropped+relevanceDropped,memoryLookupSkipped=memorySkipped,timings=result.timings.copy(totalMs=(System.nanoTime()-started)/1_000_000,memoryMs=memoryMs,retrievalMs=retrievalMs,historyMs=historyMs,renderMs=renderMs),notice=notice.value).also{last.value=it}
+     }
+ }
+--- 0.4.1/app/src/main/java/com/localai/workspace/context/ContextBuilder.kt
++++ 0.4.2/app/src/main/java/com/localai/workspace/context/ContextBuilder.kt
+@@ -8,14 +8,14 @@
+ enum class ContextKind { OBJECTIVE, PROJECT, MEMORY, SOURCE, OLD_CONVERSATION, RECENT_CONVERSATION, TOOL_OBSERVATION }
+ enum class ContextTrust { APPROVED_MEMORY, UNTRUSTED_SOURCE, CONVERSATION, TOOL_DATA, USER_PROJECT_DATA }
+ data class ContextProvenance(val sourceId:String?=null,val segmentId:String?=null,val messageIds:List<String> = emptyList(),val page:Int?=null,val lineStart:Int?=null,val lineEnd:Int?=null,val startMs:Long?=null,val endMs:Long?=null)
+-data class ContextItem(val id:String,val kind:ContextKind,val text:String,val scope:SemanticScope,val trust:ContextTrust,val priority:Int=50,val score:Double=0.0,val provenance:ContextProvenance=ContextProvenance(),val history:List<ChatMessage> = emptyList(),val order:Long=0) {
++data class ContextItem(val id:String,val kind:ContextKind,val text:String,val scope:SemanticScope,val trust:ContextTrust,val priority:Int=50,val score:Double=0.0,val provenance:ContextProvenance=ContextProvenance(),val history:List<ChatMessage> = emptyList(),val order:Long=0,val memoryRelevance:MemoryRelevanceScore?=null) {
+     val hash get()=com.localai.workspace.semantic.v2.fingerprint(text)
+     val estimatedTokens get()=ContextTokenEstimator.count(ContextTemplate.renderItem(this))+32
+ }
+ data class ContextRequest(val query:String,val access:ScopeAccess=ScopeAccess(),val contextWindow:Int=4096,val reservedOutput:Int=256,val extraReserve:Int=0,val conversationId:String?=null,val projectInstructions:String?=null,val agentId:String?=null,val taskId:String?=null,val skillIds:List<String> = emptyList(),val skillInstructions:String?=null,val allowedTools:List<String> = emptyList())
+ data class DroppedContext(val item:ContextItem,val reason:String)
+ data class ContextTimings(val totalMs:Long=0,val memoryMs:Long=0,val retrievalMs:Long=0,val historyMs:Long=0,val rankingMs:Long=0,val tokenCountingMs:Long=0,val renderMs:Long=0)
+-data class ContextBundle(val request:ContextRequest,val included:List<ContextItem>,val dropped:List<DroppedContext>,val inputBudget:Int,val estimatedInputTokens:Int,val safetyMargin:Int,val timings:ContextTimings=ContextTimings(),val notice:String?=null) {
++data class ContextBundle(val request:ContextRequest,val included:List<ContextItem>,val dropped:List<DroppedContext>,val inputBudget:Int,val estimatedInputTokens:Int,val safetyMargin:Int,val timings:ContextTimings=ContextTimings(),val notice:String?=null,val memoryLookupSkipped:Boolean=false) {
+     val perSection get()=included.groupBy{it.kind}.mapValues{(_,v)->v.sumOf{it.estimatedTokens}}
+     fun conversation():ConversationPrompt {
+         val data=included.filter{it.kind!=ContextKind.RECENT_CONVERSATION}.joinToString("\n"){ContextTemplate.renderItem(it)}
+@@ -24,7 +24,7 @@
+             systemInstruction=ContextTemplate.POLICY+request.skillInstructions?.let{"\nUser-enabled skill instructions:\n$it"}.orEmpty()+request.projectInstructions?.takeIf{it.isNotBlank()}?.let{"\nUser-authored project instructions:\n$it"}.orEmpty(),conversationId=request.conversationId)
+     }
+     /** Metadata only. Content is exposed only by an explicit inspector expansion/export action. */
+-    fun safeReport()=mapOf("template" to ContextTemplate.VERSION,"tokenCounting" to ContextTokenEstimator.METHOD,"contextWindow" to request.contextWindow,"reservedOutput" to request.reservedOutput,"extraReserve" to request.extraReserve,"inputBudget" to inputBudget,"safetyMargin" to safetyMargin,"estimatedInputTokens" to estimatedInputTokens,"estimatedTokensPerSection" to perSection,"timings" to timings,"notice" to notice,"included" to included.map{mapOf("id" to it.id,"kind" to it.kind,"scope" to it.scope,"score" to it.score,"estimatedTokens" to it.estimatedTokens,"provenance" to it.provenance)},"dropped" to dropped.map{mapOf("id" to it.item.id,"reason" to it.reason)})
++    fun safeReport()=mapOf("template" to ContextTemplate.VERSION,"tokenCounting" to ContextTokenEstimator.METHOD,"contextWindow" to request.contextWindow,"reservedOutput" to request.reservedOutput,"extraReserve" to request.extraReserve,"inputBudget" to inputBudget,"safetyMargin" to safetyMargin,"estimatedInputTokens" to estimatedInputTokens,"estimatedTokensPerSection" to perSection,"timings" to timings,"notice" to notice,"memoryLookupSkipped" to memoryLookupSkipped,"included" to included.map{mapOf("id" to it.id,"kind" to it.kind,"scope" to it.scope,"score" to it.score,"memoryRelevance" to it.memoryRelevance,"estimatedTokens" to it.estimatedTokens,"provenance" to it.provenance)},"dropped" to dropped.map{mapOf("id" to it.item.id,"kind" to it.item.kind,"reason" to it.reason,"memoryRelevance" to it.item.memoryRelevance)})
+ }
+ object ContextTemplate {
+     const val VERSION="V1"
+--- 0.4.1/app/src/main/java/com/localai/workspace/context/MemoryManager.kt
++++ 0.4.2/app/src/main/java/com/localai/workspace/context/MemoryManager.kt
+@@ -39,14 +39,19 @@
+         return committed
+     }
+     suspend fun queryEmbedding(query:String)=embed(SemanticInput.Text(query),EmbeddingTask.SEARCH)
+-    suspend fun search(query:String,access:ScopeAccess,limit:Int=6,queryVector:EmbeddingResult?=null,allowEmbedding:Boolean=true):List<MemoryHit> = withContext(Dispatchers.IO){
+-        require(limit in 1..50);val candidates=lookup(access);val vector=queryVector ?: if(allowEmbedding&&query.length>2)queryEmbedding(query)else null
++    suspend fun search(query:String,access:ScopeAccess,limit:Int=6,queryVector:EmbeddingResult?=null,allowEmbedding:Boolean=true):List<MemoryHit> = select(query,access,limit,queryVector,allowEmbedding).included
++    suspend fun select(query:String,access:ScopeAccess,limit:Int=6,queryVector:EmbeddingResult?=null,allowEmbedding:Boolean=true):MemorySelection = withContext(Dispatchers.IO){
++        require(limit in 1..50)
++        if(MemoryRelevance.smallTalk(query))return@withContext MemorySelection(emptyList(),emptyList(),true)
++        val candidates=lookup(access);val vector=queryVector ?: if(allowEmbedding&&query.length>2)queryEmbedding(query)else null
+         var newEmbeddings=0
+-        candidates.mapNotNull{m->val lexical=MemoryContent.lexical(query,m.text+" "+m.title.orEmpty());var stored=vector?.let{database.dao().vector(m.id,it.space.id,m.contentHash)}
++        val hits=candidates.map{m->var stored=vector?.let{database.dao().vector(m.id,it.space.id,m.contentHash)}
+             if(vector!=null&&stored==null&&newEmbeddings<8){newEmbeddings++;index(m);stored=database.dao().vector(m.id,vector.space.id,m.contentHash)}
+             val semantic=if(stored!=null&&vector!=null)SemanticVectors.cosine(vector,EmbeddingResult(vector.space,SemanticVectors.decode(stored.bytes,stored.dimension),0))else null
+-            if(!m.pinned&&lexical==0.0&&(semantic==null||semantic<=0))null else MemoryHit(m,lexical+(semantic ?: 0.0)+(if(m.pinned)2.0 else .1*m.importance)+.05*m.confidence,semantic)
+-        }.sortedWith(compareByDescending<MemoryHit>{it.score}.thenBy{it.record.id}).take(limit)
++            val relevance=MemoryRelevance.assess(query,m,semantic)
++            MemoryHit(m,relevance.rankingScore,semantic,relevance)
++        }.sortedWith(compareByDescending<MemoryHit>{it.score}.thenBy{it.record.id})
++        MemorySelection(hits.filter{it.relevance!!.accepted}.take(limit),hits.filter{!it.relevance!!.accepted})
+     }
+     suspend fun exportJson(access:ScopeAccess)=GsonBuilder().serializeNulls().setPrettyPrinting().create().toJson(mapOf("schema" to "MEMORY_CONTEXT_V1","memories" to lookup(access),"vectorsIncluded" to false))
+ }
+--- 0.4.1/app/src/main/java/com/localai/workspace/context/MemoryRelevance.kt
++++ 0.4.2/app/src/main/java/com/localai/workspace/context/MemoryRelevance.kt
+@@ -0,0 +1,42 @@
++package com.localai.workspace.context
++
++import java.text.Normalizer
++import java.util.Locale
++
++/** V1 policy: eligibility is handled by lookup; bonuses never determine relevance. */
++object MemoryRelevance {
++    const val VERSION = "MEMORY_RELEVANCE_V1"
++    // Conservative provisional cosine floor, independent of the additive ranking scale.
++    // Requires Moto calibration for each embedding space; not a measured universal cutoff.
++    const val SEMANTIC_FLOOR = 0.80
++    const val LEXICAL_FLOOR = 0.50
++    private fun normalized(text: String) = Normalizer.normalize(text.lowercase(Locale.ROOT), Normalizer.Form.NFD)
++        .replace(Regex("\\p{M}+"), "")
++    fun smallTalk(query: String): Boolean {
++        val text = normalized(query).replace(Regex("[^\\p{L}\\p{N}\\s]"), " ").trim().replace(Regex("\\s+"), " ")
++        if (text.isEmpty()) return false
++        // Anchored grammar of complete utterances; a substantive suffix cannot match.
++        return Regex("(?:(?:hola|buenas|buenos dias|buenas tardes|buenas noches|gracias|muchas gracias|ok|okay|perfecto|como estas|que tal|chao|adios|hello|hi|thanks|thank you)(?:\\s+|$))+").matches(text)
++    }
++    private val stop = setOf("mi","mis","su","sus","me","es","el","la","lo","un","una","de","del","en","por","con","y","a","al","cual","que","como","este","esta","estos","estas","what","which","is","my","the","of","this","does","use","uses","usa","utiliza","utilizar","hola","buenos","dias","buenas","tardes","prueba")
++    private fun terms(text: String) = Regex("[\\p{L}\\p{N}_]{2,}").findAll(normalized(text)).map { it.value }
++        .filter { it !in stop }.map { when(it) { "prefiero","preferida","preferido","favorito","favorita","preferred","favorite" -> "preferencia"; "editor" -> "editor"; else -> it } }.toSet()
++    fun assess(query: String, memory: MemoryRecord, semantic: Double?): MemoryRelevanceScore {
++        val q = terms(query)
++        val contentQuery = q - "preferencia"
++        fun coverage(text:String, queryTerms:Set<String>):Double = if(queryTerms.isEmpty()) 0.0 else queryTerms.intersect(terms(text)).size.toDouble()/queryTerms.size
++        fun overlap(text: String): Double = coverage(text,contentQuery)
++        val lexical = overlap(memory.text+" "+memory.title.orEmpty())
++        val subjectTerms = terms(memory.subject.orEmpty())
++        val structured = subjectTerms.isNotEmpty() && q.containsAll(subjectTerms) &&
++            (memory.predicate.isNullOrBlank() || coverage(memory.predicate,q) > 0)
++        val accepted = structured || lexical >= LEXICAL_FLOOR || (semantic?.isFinite()==true && semantic >= SEMANTIC_FLOOR)
++        val raw = lexical + (semantic?.takeIf { it.isFinite() } ?: 0.0) + if(structured) 1.0 else 0.0
++        val importance = if(memory.pinned) 0.0 else .1*memory.importance
++        val pin = if(memory.pinned) 2.0 else 0.0
++        val confidence = .05*memory.confidence
++        return MemoryRelevanceScore(raw,raw+importance+pin+confidence,semantic,lexical,structured,importance,pin,confidence,accepted)
++    }
++}
++data class MemoryRelevanceScore(val rawRelevance:Double,val rankingScore:Double,val semanticSimilarity:Double?,val lexicalContribution:Double,val structuredMatch:Boolean,val importanceBonus:Double,val pinBonus:Double,val confidenceBonus:Double,val accepted:Boolean,val policy:String=MemoryRelevance.VERSION)
++data class MemorySelection(val included:List<MemoryHit>,val dropped:List<MemoryHit>,val lookupSkipped:Boolean=false)
+--- 0.4.1/app/src/test/java/com/localai/workspace/context/MemoryRelevanceTest.kt
++++ 0.4.2/app/src/test/java/com/localai/workspace/context/MemoryRelevanceTest.kt
+@@ -0,0 +1,57 @@
++package com.localai.workspace.context
++
++import android.app.Application
++import androidx.room.Room
++import com.localai.workspace.semantic.v2.*
++import kotlinx.coroutines.*
++import com.localai.workspace.AppGraph
++import com.localai.workspace.data.WorkspaceDatabase
++import org.junit.*
++import org.junit.Assert.*
++import org.junit.runner.RunWith
++import org.robolectric.RobolectricTestRunner
++import org.robolectric.RuntimeEnvironment
++import org.robolectric.annotation.Config
++
++@RunWith(RobolectricTestRunner::class)
++@Config(sdk=[35],application=Application::class)
++class MemoryRelevanceTest {
++    private lateinit var db:MemoryContextDatabase
++    private lateinit var memory:MemoryManager
++    private val user=SemanticScope(ScopeType.USER,"local")
++    private val access=ScopeAccess()
++    private val nebula="Mi editor de prueba preferido es Nebula."
++    @Before fun setup(){db=Room.inMemoryDatabaseBuilder(RuntimeEnvironment.getApplication(),MemoryContextDatabase::class.java).build();memory=MemoryManager(db){_,_->null}}
++    @After fun close(){db.close()}
++    @Test fun irrelevant_memory_is_dropped()=runBlocking {memory.create(nebula,user);val s=memory.select("¿Qué base de datos utiliza este proyecto?",access);assertTrue(s.included.isEmpty());assertEquals(1,s.dropped.size)}
++    @Test fun relevant_memory_is_included()=runBlocking {val m=memory.create(nebula,user);for(q in listOf("¿Cuál es mi editor de prueba preferido?","¿Qué editor prefiero?"))assertEquals(m.id,memory.search(q,access).single().record.id)}
++    @Test fun small_talk_skips_memory()=runBlocking {var calls=0;val manager=MemoryManager(db){_,_->calls++;error("must not embed")};manager.create(nebula,user);for(q in listOf("hola","gracias","cómo estás?","¡Hola! Gracias.","buenos días","ok","adiós")){val s=manager.select(q,access);assertTrue(q,s.lookupSkipped);assertTrue(s.included.isEmpty())};assertEquals(0,calls)}
++    @Test fun greeting_plus_real_query_does_not_skip_memory()=runBlocking {memory.create(nebula,user);val q="Hola, ¿cuál es mi editor de prueba preferido?";assertFalse(MemoryRelevance.smallTalk(q));assertEquals(1,memory.search(q,access).size);assertFalse(MemoryRelevance.smallTalk("Buenos días, ¿qué base de datos usa este proyecto?"))}
++    @Test fun pinned_irrelevant_memory_is_dropped()=runBlocking {val m=memory.create(nebula,user);memory.pin(m.id);assertTrue(memory.search("hola",access).isEmpty());val s=memory.select("base de datos",access);assertTrue(s.included.isEmpty());assertEquals(2.0,s.dropped.single().relevance!!.pinBonus,0.0)}
++    @Test fun important_irrelevant_memory_is_dropped()=runBlocking {val m=memory.create(nebula,user);db.dao().put(m.copy(importance=100.0));assertTrue(memory.search("hola",access).isEmpty());assertTrue(memory.select("base de datos",access).included.isEmpty())}
++    @Test fun project_memory_scope_and_relevance()=runBlocking {memory.create(nebula,user);val a=memory.create("La base de datos de este proyecto es SQLite.",SemanticScope(ScopeType.PROJECT,"a"));val b=memory.create("La base de datos de este proyecto es PostgreSQL.",SemanticScope(ScopeType.PROJECT,"b"));for((id,wanted) in listOf("a" to a,"b" to b)){val s=memory.select("¿Qué base de datos utiliza este proyecto?",ScopeAccess(projectId=id));assertEquals(wanted.id,s.included.single().record.id);assertEquals(nebula,s.dropped.single().record.text)}}
++    @Test fun user_memory_does_not_pollute_project_query()=runBlocking {memory.create(nebula,user);assertTrue(memory.search("Buenos días, ¿qué base de datos usa este proyecto?",ScopeAccess(projectId="a")).isEmpty())}
++    @Test fun no_candidate_above_threshold_returns_empty()=runBlocking {memory.create(nebula,user);val s=memory.select("orbital mechanics",access);assertTrue(s.included.isEmpty());val c=ContextBuilder().build(ContextRequest("orbital mechanics"),emptyList());assertFalse(c.perSection.containsKey(ContextKind.MEMORY));assertFalse(c.conversation().userMessage.contains("CONTEXT DATA"))}
++    @Test fun structured_exact_match_survives_gate()=runBlocking {val m=memory.create("Nebula",user,subject="editor",predicate="preferred",objectValue="Nebula");val s=memory.select("¿Qué editor prefiero?",access);assertEquals(m.id,s.included.single().record.id);assertTrue(s.included.single().relevance!!.structuredMatch)}
++    @Test fun lexical_fallback_has_own_relevance_gate()=runBlocking {val m=memory.create(nebula,user);assertTrue(memory.select("editor astronomia planetas galaxias",access).included.isEmpty());assertEquals(m.id,memory.select("editor",access).included.single().record.id)}
++    @Test fun many_memories_only_relevant_items_selected()=runBlocking {val m=memory.create(nebula,user);for(t in listOf("Mi lenguaje preferido es Kotlin","Prefiero reuniones cortas","Mi comida favorita es pasta","pantalla oscura","estilo sangria","ciudad Santiago","zona horaria Chile","formato PDF","musica jazz","deporte tenis","mascota gato","transporte tren","navegador Firefox","bebida cafe","vacaciones playa","presupuesto mensual","cumpleanos junio","trabajo remoto","telefono Motorola","base datos SQLite"))memory.create(t,user);assertEquals(21,memory.lookup(access).size);val s=memory.select("¿Cuál es mi editor preferido?",access);assertEquals(m.id,s.included.single().record.id);assertEquals(20,s.dropped.size)}
++    @Test fun semantic_gate_is_independent_of_ranking_bonus()=runBlocking {val m=memory.create(nebula,user).copy(pinned=true,importance=99.0);assertFalse(MemoryRelevance.assess("base de datos",m,.619).accepted);assertTrue(MemoryRelevance.assess("different phrasing",m,.9).accepted)}
++    @Test fun diagnostics_do_not_export_dropped_content()=runBlocking {val m=memory.create(nebula,user);val h=memory.select("base de datos",access).dropped.single();val item=ContextItem("MD1",ContextKind.MEMORY,m.text,user,ContextTrust.APPROVED_MEMORY,memoryRelevance=h.relevance);val bundle=ContextBuilder().build(ContextRequest("base de datos"),emptyList()).copy(dropped=listOf(DroppedContext(item,"BELOW_RELEVANCE_THRESHOLD")));val report=bundle.safeReport().toString();assertTrue(report.contains("BELOW_RELEVANCE_THRESHOLD"));assertFalse(report.contains("Nebula"));assertFalse(bundle.conversation().userMessage.contains("Nebula"))}
++    @Test fun small_talk_foundation_avoids_embedding_gate_and_memory_budget()=runBlocking {
++        val context=RuntimeEnvironment.getApplication()
++        val workspace=Room.inMemoryDatabaseBuilder(context,WorkspaceDatabase::class.java).build()
++        val scope=CoroutineScope(SupervisorJob()+Dispatchers.Default)
++        val graph=AppGraph(context,databaseOverride=workspace,applicationScope=scope)
++        val foundation=graph.contextFoundation
++        try {
++            foundation.memory.create(nebula,user)
++            graph.inferenceGate.lock()
++            val bundle=withTimeout(5000){foundation.build(ContextRequest("hola"),evidence=emptyList())}
++            assertTrue(bundle.memoryLookupSkipped)
++            assertTrue(bundle.included.none{it.kind==ContextKind.MEMORY})
++            assertFalse(bundle.perSection.containsKey(ContextKind.MEMORY))
++            assertFalse(bundle.conversation().userMessage.contains("Nebula"))
++        } finally { if(graph.inferenceGate.isLocked)graph.inferenceGate.unlock();scope.cancel();foundation.database.close();workspace.close() }
++    }
++    @Test fun semantic_nonfinite_never_passes_gate()=runBlocking {val m=memory.create(nebula,user);assertFalse(MemoryRelevance.assess("unrelated",m,Double.NaN).accepted)}
++}

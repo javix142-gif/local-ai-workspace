@@ -1,0 +1,82 @@
+{
+  "appVersion": "0.2.1",
+  "versionCode": 18,
+  "package": "com.localai.workspace",
+  "abi": "arm64-v8a",
+  "minSdk": 29,
+  "targetSdk": 35,
+  "apk": "dist/apk/local-ai-workspace-0.2.1-device-validation-arm64.apk",
+  "bytes": 98425956,
+  "sha256": "5c2f6b76fdca514241b4ab55148d1e11b4651ac483ab546d12faef3efff87f3e",
+  "certificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
+  "nativeAndPythonByteComparison": [
+    {
+      "entry": "lib/arm64-v8a/libai-chat.so",
+      "sha256": "cc778324220f0214a02921960d5042db2a68567e07f70a7a373c137fbad2ac42",
+      "sameAs020": true
+    },
+    {
+      "entry": "lib/arm64-v8a/libandroidx.graphics.path.so",
+      "sha256": "41e9a793c43a0f4fddb19e33f346bace464f30f888ba7b9eaf96294ea115bfb6",
+      "sameAs020": true
+    },
+    {
+      "entry": "lib/arm64-v8a/libggml-base.so",
+      "sha256": "6440fc0528213b76a7f9cb24a72555ff17ec90b5feba895dff60ad7b193bfa4b",
+      "sameAs020": true
+    },
+    {
+      "entry": "lib/arm64-v8a/libggml-cpu.so",
+      "sha256": "ae1306c6d839e106b5ca0309bd8bb637d015782ca7252f21fd6a2912bab090a4",
+      "sameAs020": true
+    },
+    {
+      "entry": "lib/arm64-v8a/libggml.so",
+      "sha256": "aa423a5a8bd4a90efb146fcd2e5b59cb53967eb73f096eb49c73557b99aff487",
+      "sameAs020": true
+    },
+    {
+      "entry": "lib/arm64-v8a/liblitertlm_jni.so",
+      "sha256": "6cbef460e821154b947a537e3df918607472a9c36941d25a75828ecdd201a7e2",
+      "sameAs020": true
+    },
+    {
+      "entry": "lib/arm64-v8a/libllama-common.so",
+      "sha256": "6588876e7f1fae62253480628bdab7f17d8520cc2f9a21d628265c3aaf3f8f97",
+      "sameAs020": true
+    },
+    {
+      "entry": "lib/arm64-v8a/libllama.so",
+      "sha256": "c18fe9c0148d9b8d7c36f39d9737523ecdfb2d831da89e94a15f8dbc550d7884",
+      "sameAs020": true
+    },
+    {
+      "entry": "lib/arm64-v8a/liblocal-embedding.so",
+      "sha256": "7dcb795b070960d623a916a752c81baf2cd2cc14ed5ce253e5b7fef950bf2f13",
+      "sameAs020": true
+    },
+    {
+      "entry": "assets/python/UPSTREAM.json",
+      "sha256": "15ac956dbd16e0e86f488bf87f3591a56eff110c6d744f555b1b7ec6e0c334c4",
+      "sameAs020": true
+    },
+    {
+      "entry": "assets/python/pyodide-lock.json",
+      "sha256": "9c45b916001a750f4102fc287494f3eab215909c7535c626a20db80fd6333e2c",
+      "sameAs020": true
+    },
+    {
+      "entry": "assets/python/pyodide.asm.wasm",
+      "sha256": "a50dd1843f805a0b7c45b61037ee0d7b26dfe85efe0e18ef95a34ad24e401f5f",
+      "sameAs020": true
+    },
+    {
+      "entry": "assets/python/python_stdlib.zip",
+      "sha256": "16611534726e5d8ac2bd8f926410b2dcb8d6f49aa24913463533b457a2115c16",
+      "sameAs020": true
+    }
+  ],
+  "deviceValidation": "PHYSICAL_DEVICE_TEST_REQUIRED",
+  "driveFileId": "1RQ_WbpVHPxkAfpQMY-NkJoE7pEM2dAum",
+  "downloadUrl": "https://drive.google.com/file/d/1RQ_WbpVHPxkAfpQMY-NkJoE7pEM2dAum/view?usp=drivesdk"
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.ThinkingDiagnosticsTest" tests="18" skipped="0" failures="0" errors="0" timestamp="2026-10-07T20:38:56" hostname="05497ac86eb0" time="0.136">
+  <properties/>
+  <testcase name="namedFinalWorksAlongsideAnalysis" classname="com.localai.workspace.inference.ThinkingDiagnosticsTest" time="0.0"/>
+  <testcase name="unknownThenFinal" classname="com.localai.workspace.inference.ThinkingDiagnosticsTest" time="0.001"/>
+  <testcase name="changingThinkingInvalidatesNativeConversation" classname="com.localai.workspace.inference.ThinkingDiagnosticsTest" time="0.0"/>
+  <testcase name="thoughtThenPrimaryFinal" classname="com.localai.workspace.inference.ThinkingDiagnosticsTest" time="0.0"/>
+  <testcase name="filteredFinalIsDistinctFromNoFinal" classname="com.localai.workspace.inference.ThinkingDiagnosticsTest" time="0.001"/>
+  <testcase name="validationCanReproduceUnboundedBudget" classname="com.localai.workspace.inference.ThinkingDiagnosticsTest" time="0.0"/>
+  <testcase name="emptyCallbacksAreNotVisibleTokens" classname="com.localai.workspace.inference.ThinkingDiagnosticsTest" time="0.0"/>
+  <testcase name="mixedSdkCallbackRetainsOnlyPrimaryContent" classname="com.localai.workspace.inference.ThinkingDiagnosticsTest" time="0.0"/>
+  <testcase name="autoSimpleOffAndReasoningOn" classname="com.localai.workspace.inference.ThinkingDiagnosticsTest" time="0.0"/>
+  <testcase name="noReasoningIsStoredInTelemetry" classname="com.localai.workspace.inference.ThinkingDiagnosticsTest" time="0.126"/>
+  <testcase name="offDoesNotAddThinkingBudget" classname="com.localai.workspace.inference.ThinkingDiagnosticsTest" time="0.0"/>
+  <testcase name="prefixedExportAllowsOnlyKnownScalarKeys" classname="com.localai.workspace.inference.ThinkingDiagnosticsTest" time="0.0"/>
+  <testcase name="finalOnlyWorks" classname="com.localai.workspace.inference.ThinkingDiagnosticsTest" time="0.004"/>
+  <testcase name="unknownContentBlockedConservatively" classname="com.localai.workspace.inference.ThinkingDiagnosticsTest" time="0.0"/>
+  <testcase name="officialBudgetBoundedAndOutputUnchanged" classname="com.localai.workspace.inference.ThinkingDiagnosticsTest" time="0.001"/>
+  <testcase name="timeoutIsDistinct" classname="com.localai.workspace.inference.ThinkingDiagnosticsTest" time="0.0"/>
+  <testcase name="budgetExhaustionUsesRealLimitFlag" classname="com.localai.workspace.inference.ThinkingDiagnosticsTest" time="0.0"/>
+  <testcase name="thoughtOnlyNeverBecomesAnswer" classname="com.localai.workspace.inference.ThinkingDiagnosticsTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.data.StructuredDocumentsTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-06T06:29:10" hostname="74096e896c47" time="0.714">
+  <properties/>
+  <testcase name="normalStructuredRowsStillPreserveHeaderAndFormula" classname="com.localai.workspace.data.StructuredDocumentsTest" time="0.081"/>
+  <testcase name="tooLargeFileRejectedBeforeRead" classname="com.localai.workspace.data.StructuredDocumentsTest" time="0.033"/>
+  <testcase name="csvPreservesQuotedCellsAndRows" classname="com.localai.workspace.data.StructuredDocumentsTest" time="0.085"/>
+  <testcase name="repeatedSharedValuesCannotExpandContextWithoutBound" classname="com.localai.workspace.data.StructuredDocumentsTest" time="0.14"/>
+  <testcase name="invalidEncodingDoesNotBecomeGibberish" classname="com.localai.workspace.data.StructuredDocumentsTest" time="0.169"/>
+  <testcase name="zipSlipAndBombRejected" classname="com.localai.workspace.data.StructuredDocumentsTest" time="0.099"/>
+  <testcase name="xlsxPreservesSheetAddressCachedValueFormula" classname="com.localai.workspace.data.StructuredDocumentsTest" time="0.105"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

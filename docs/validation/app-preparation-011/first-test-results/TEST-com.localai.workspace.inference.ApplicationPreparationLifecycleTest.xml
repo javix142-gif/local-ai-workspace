@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.ApplicationPreparationLifecycleTest" tests="5" skipped="0" failures="1" errors="0" timestamp="2026-10-05T19:29:30" hostname="74096e896c47" time="60.316">
+  <properties/>
+  <testcase name="explicitCancelReachesNativePreparationAndAllowsRetry" classname="com.localai.workspace.inference.ApplicationPreparationLifecycleTest" time="0.217"/>
+  <testcase name="noTimerEvictionButMemoryPressureReleasesIdleEngineAndInvalidatesReady" classname="com.localai.workspace.inference.ApplicationPreparationLifecycleTest" time="0.009"/>
+  <testcase name="openingAndClosingChatsDuringColdLoadDoesNotCancelApplicationPreparation" classname="com.localai.workspace.inference.ApplicationPreparationLifecycleTest" time="60.049">
+    <failure message="kotlinx.coroutines.test.UncompletedCoroutinesError: After waiting for 1m, the test body did not run to completion" type="kotlinx.coroutines.test.UncompletedCoroutinesError">kotlinx.coroutines.test.UncompletedCoroutinesError: After waiting for 1m, the test body did not run to completion
+	at app//kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt$runTest$2$1$2.invokeSuspend$lambda$0(TestBuilders.kt:354)
+	at app//kotlinx.coroutines.InvokeOnCancelling.invoke(JobSupport.kt:1571)
+	at app//kotlinx.coroutines.JobSupport.notifyCancelling(JobSupport.kt:1604)
+	at app//kotlinx.coroutines.JobSupport.tryMakeCancelling(JobSupport.kt:826)
+	at app//kotlinx.coroutines.JobSupport.makeCancelling(JobSupport.kt:786)
+	at app//kotlinx.coroutines.JobSupport.cancelImpl$kotlinx_coroutines_core(JobSupport.kt:702)
+	at app//kotlinx.coroutines.JobSupport.cancelCoroutine(JobSupport.kt:689)
+	at app//kotlinx.coroutines.TimeoutCoroutine.run(Timeout.kt:156)
+	at app//kotlinx.coroutines.EventLoopImplBase$DelayedRunnableTask.run(EventLoop.common.kt:505)
+	at app//kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at app//kotlinx.coroutines.DefaultExecutor.run(DefaultExecutor.kt:105)
+	at java.base@21.0.12.1/java.lang.Thread.run(Thread.java:1583)
+</failure>
+  </testcase>
+  <testcase name="queuedPreloaderCancellationCannotStopCurrentChatGeneration" classname="com.localai.workspace.inference.ApplicationPreparationLifecycleTest" time="0.034"/>
+  <testcase name="cancelledScreenWaiterDoesNotCancelSharedPreparation" classname="com.localai.workspace.inference.ApplicationPreparationLifecycleTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

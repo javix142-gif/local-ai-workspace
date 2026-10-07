@@ -1,0 +1,68 @@
+{
+  "sdk": "0.16.1",
+  "precisionRequested": "default",
+  "model": "Qwen3.5-2B_int8.litertlm",
+  "platform": "Linux x86_64 C API, NOT Android",
+  "context": 2048,
+  "threads": 4,
+  "temperature": 0.3,
+  "topP": 0.95,
+  "topK": 40,
+  "seed": 0,
+  "maxOutput": 128,
+  "appPolicy": false,
+  "history": false,
+  "extraControls": false,
+  "prerender": false,
+  "turns": [
+    {
+      "prompt": "Calcula 17 + 25. Responde solo el número.",
+      "nativeDone": true,
+      "benchmark": {
+        "init_time_in_second": 81.406733566,
+        "time_to_first_token_in_second": 1.998455566,
+        "last_prefill_token_count": 28,
+        "last_prefill_tokens_per_second": 16.13576490597153,
+        "last_decode_token_count": 3,
+        "last_decode_tokens_per_second": 3.7996820973175183
+      },
+      "text": "42",
+      "ttftMs": 2129,
+      "totalMs": 2530
+    },
+    {
+      "prompt": "que comunas de santiago de chile conoces?",
+      "nativeDone": true,
+      "benchmark": {
+        "init_time_in_second": 81.406718837,
+        "time_to_first_token_in_second": 1.237947031,
+        "last_prefill_token_count": 24,
+        "last_prefill_tokens_per_second": 23.160991105362992,
+        "last_decode_token_count": 128,
+        "last_decode_tokens_per_second": 4.957318844909686
+      },
+      "text": "Santiago de Chile es una ciudad con una riqueza cultural y natural impresionante. Aquí hay algunas de las cosas más famosas que conozco:\n\n**Cultura y Arte:**\n- **La Catedral de Santiago:** Es la catedral de la ciudad, construida en el siglo XII.\n- **El Palacio de la Catedral:** Es el palacio de la ciudad, construida en el siglo XII.\n- **El Palacio de la Catedral:** Es el palacio de la ciudad, construida en el siglo XII.\n- **El Palacio de la Catedral:** Es el palacio de la ciudad, constr",
+      "ttftMs": 1391,
+      "totalMs": 26859
+    },
+    {
+      "prompt": "Enumera cinco comunas de la región metropolitana de Santiago, Chile. Solo nombres.",
+      "nativeDone": true,
+      "benchmark": {
+        "init_time_in_second": 81.406722786,
+        "time_to_first_token_in_second": 1.814478124,
+        "last_prefill_token_count": 29,
+        "last_prefill_tokens_per_second": 17.978609007606106,
+        "last_decode_token_count": 128,
+        "last_decode_tokens_per_second": 4.964008232794779
+      },
+      "text": "Aquí tienes cinco comunas de la región metropolitana de Santiago, Chile:\n\n1. Santiago\n2. Providencia\n3. Las Conchas\n4. Las Conchas\n5. Las Conchas\n\nEs importante destacar que la región metropolitana de Santiago, Chile, se divide en comunas de la región metropolitana de Santiago, Chile:\n\n1. Santiago\n2. Providencia\n3. Las Conchas\n4. Las Conchas\n5. Las Conchas\n\nEs importante destacar que la región metropolitana de Santiago, Chile, se divide en comunas de la región metropolitana de Santiago, Chile:\n\n1. Santiago\n",
+      "ttftMs": 1953,
+      "totalMs": 27401
+    }
+  ],
+  "deviceValidation": "NOT_EXECUTED",
+  "loadMs": 40245,
+  "unloadReturned": true,
+  "hostPeakRssBytes": 3859836928
+}

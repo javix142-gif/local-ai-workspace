@@ -1,0 +1,46 @@
+{
+  "version": "0.1.14",
+  "versionCode": 15,
+  "stage": "1.5 UX/UI",
+  "applicationId": "com.localai.workspace",
+  "apk": "dist/apk/local-ai-workspace-0.1.14-ui-stage15-arm64.apk",
+  "bytes": 91977657,
+  "sha256": "f4ed95f29f34e6a9ba254ed333aac25d3cfacd7e9a241b04a2ec343abaf9d34c",
+  "signerCertificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
+  "sameSignatureAs013": true,
+  "nativeLibrariesUnchanged": true,
+  "tests": {
+    "app": {
+      "tests": 221,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "litert-compat": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "lint": {
+    "app": {
+      "Error": 0,
+      "Warning": 75,
+      "Fatal": 0
+    },
+    "litert-compat": {
+      "Error": 0,
+      "Warning": 1,
+      "Fatal": 0
+    }
+  },
+  "physicalDeviceTest": "PHYSICAL_DEVICE_TEST_REQUIRED",
+  "report": "docs/UI_STAGE15_014.md",
+  "driveFileId": "19mUWuLhWwtddSM-rXHc2H2L5hdNi2iSp",
+  "downloadUrl": "https://drive.google.com/file/d/19mUWuLhWwtddSM-rXHc2H2L5hdNi2iSp/view?usp=drivesdk",
+  "driveSizeVerifiedBytes": 91977657,
+  "reportDriveId": "1oxrgqZK7X--6cGSn9UDZ-4stDWifV4XI",
+  "reportUrl": "https://drive.google.com/file/d/1oxrgqZK7X--6cGSn9UDZ-4stDWifV4XI/view?usp=drivesdk",
+  "instrumentedTests": "COMPILED_NOT_EXECUTED"
+}

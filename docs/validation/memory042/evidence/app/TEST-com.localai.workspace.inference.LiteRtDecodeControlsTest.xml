@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.LiteRtDecodeControlsTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-07T20:38:53" hostname="05497ac86eb0" time="0.005">
+  <properties/>
+  <testcase name="invalidNonFiniteParametersFailInsteadOfReachingNativeLogits" classname="com.localai.workspace.inference.LiteRtDecodeControlsTest" time="0.004"/>
+  <testcase name="ordinaryChatUsesActualBoundedNativeControlsWithoutStrongPresencePenalty" classname="com.localai.workspace.inference.LiteRtDecodeControlsTest" time="0.0"/>
+  <testcase name="deliberateDisableAndThinkingDiagnosticModesDoNotForceNgramConstraints" classname="com.localai.workspace.inference.LiteRtDecodeControlsTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.LiteRtConversationPayloadTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-06T06:29:28" hostname="74096e896c47" time="0.315">
+  <properties/>
+  <testcase name="rejectsForgedRolesUnpairedTurnsAndOversizedHistoryBeforeNativeLoad" classname="com.localai.workspace.inference.LiteRtConversationPayloadTest" time="0.05"/>
+  <testcase name="usesOfficialUserModelInitialMessagesWithCurrentUserReservedForOneSend" classname="com.localai.workspace.inference.LiteRtConversationPayloadTest" time="0.076"/>
+  <testcase name="chatMlBundleHistoryUsesActualAssistantRoleWhileLegacyModelRemainsAvailable" classname="com.localai.workspace.inference.LiteRtConversationPayloadTest" time="0.106"/>
+  <testcase name="explicitThinkingAndLegacyDefaultsRemainAvailableWhileSmokeIsMinimal" classname="com.localai.workspace.inference.LiteRtConversationPayloadTest" time="0.082"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

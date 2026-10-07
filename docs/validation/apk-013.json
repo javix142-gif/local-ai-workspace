@@ -1,0 +1,26 @@
+{
+  "version": "0.1.13",
+  "versionCode": 14,
+  "applicationId": "com.localai.workspace",
+  "apk": "dist/apk/local-ai-workspace-0.1.13-performance-stage1-arm64.apk",
+  "bytes": 91879353,
+  "sha256": "fb0d7466d0d0185d402ab8885a9b288d3d3bfbadb7976b5d0e0cec070560dccf",
+  "signerCertificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
+  "physicalDeviceTest": "PHYSICAL_DEVICE_TEST_REQUIRED",
+  "driveFileId": "1adjrjfw3K4juH-f7qgj8aXGuSsUkhEQy",
+  "downloadUrl": "https://drive.google.com/file/d/1adjrjfw3K4juH-f7qgj8aXGuSsUkhEQy/view?usp=drivesdk",
+  "driveSizeVerifiedBytes": 91879353,
+  "sameSignatureAs012": true,
+  "nativeLiteRtUnchanged": true,
+  "tests": {
+    "app": 202,
+    "compatibility": 2,
+    "compatibilityTask": "UP-TO-DATE",
+    "failures": 0
+  },
+  "lint": {
+    "errors": 0,
+    "warnings": 73
+  },
+  "report": "docs/PERFORMANCE_STAGE1_013.md"
+}

@@ -1,0 +1,136 @@
+{
+  "sdk": "0.17.1",
+  "platform": "Linux x86_64 CPU (not Android device)",
+  "modelSha256": "8ae5027136e0b89039ed76eedfb61f0cf4b7277024d99bf765359264295b86b1",
+  "turns": [
+    {
+      "name": "existing-0",
+      "ttftMs": 2923,
+      "totalMs": 4076,
+      "chunks": 9,
+      "benchmark": {
+        "init_time_in_second": 54.677663391,
+        "time_to_first_token_in_second": 2.3534901169999998,
+        "last_prefill_token_count": 42,
+        "last_prefill_tokens_per_second": 19.408864715681887,
+        "last_decode_token_count": 10,
+        "last_decode_tokens_per_second": 5.276196425790364
+      },
+      "text": "¡Hola! ¿En qué puedo ayudarte?",
+      "limit": 64
+    },
+    {
+      "name": "existing-1",
+      "ttftMs": 1516,
+      "totalMs": 4523,
+      "chunks": 22,
+      "benchmark": {
+        "init_time_in_second": 54.677663391,
+        "time_to_first_token_in_second": 2.3534901169999998,
+        "last_prefill_token_count": 14,
+        "last_prefill_tokens_per_second": 14.12953706663982,
+        "last_decode_token_count": 23,
+        "last_decode_tokens_per_second": 6.515760680442338
+      },
+      "text": "¡Hola! Estoy bien, gracias por preguntar. 😊\n\n¿Y tú? ¿Cómo estás hoy?",
+      "limit": 64
+    },
+    {
+      "name": "existing-2",
+      "ttftMs": 1308,
+      "totalMs": 16291,
+      "chunks": 107,
+      "benchmark": {
+        "init_time_in_second": 54.677663391,
+        "time_to_first_token_in_second": 2.3534901169999998,
+        "last_prefill_token_count": 20,
+        "last_prefill_tokens_per_second": 25.513590815556345,
+        "last_decode_token_count": 108,
+        "last_decode_tokens_per_second": 6.9651805339310675
+      },
+      "text": "Los mensajes tardan un poco en aparecer por varias razones técnicas y de diseño:\n\n1. **Procesamiento en segundo plano**: La mayoría de los sistemas operativos procesan las solicitudes del usuario en segundo plano para responder preguntas rápidas o comunes, como \"como estas\".\n2. **Tiempo de respuesta**: El sistema tiene que procesar la solicitud antes de generar el texto.\n3. **Latencia**: Hay una pequeña pausa entre la petición y la respuesta.\n\n¿Y tú? ¿Cómo estás hoy?",
+      "limit": 128
+    },
+    {
+      "name": "existing-3",
+      "ttftMs": 1329,
+      "totalMs": 1483,
+      "chunks": 2,
+      "benchmark": {
+        "init_time_in_second": 54.677663391,
+        "time_to_first_token_in_second": 2.3534901169999998,
+        "last_prefill_token_count": 21,
+        "last_prefill_tokens_per_second": 25.267639074430065,
+        "last_decode_token_count": 3,
+        "last_decode_tokens_per_second": 4.61710153786572
+      },
+      "text": "FUNCION",
+      "limit": 32
+    },
+    {
+      "name": "qwen-sampling-0",
+      "ttftMs": 1639,
+      "totalMs": 3097,
+      "chunks": 11,
+      "benchmark": {
+        "init_time_in_second": 54.677261596,
+        "time_to_first_token_in_second": 1.29656026325,
+        "last_prefill_token_count": 42,
+        "last_prefill_tokens_per_second": 37.07012751964995,
+        "last_decode_token_count": 12,
+        "last_decode_tokens_per_second": 6.11349620108365
+      },
+      "text": "Hola!\n\n¿Hay algo más que necesites?",
+      "limit": 64
+    },
+    {
+      "name": "qwen-sampling-1",
+      "ttftMs": 1349,
+      "totalMs": 3444,
+      "chunks": 16,
+      "benchmark": {
+        "init_time_in_second": 54.677261596,
+        "time_to_first_token_in_second": 1.29656026325,
+        "last_prefill_token_count": 14,
+        "last_prefill_tokens_per_second": 16.466427730802312,
+        "last_decode_token_count": 17,
+        "last_decode_tokens_per_second": 6.556686016204334
+      },
+      "text": "Hola!\n\nEstoy bien.\n\n¿Hay algo más que necesites?",
+      "limit": 64
+    },
+    {
+      "name": "qwen-sampling-2",
+      "ttftMs": 1213,
+      "totalMs": 19110,
+      "chunks": 128,
+      "benchmark": {
+        "init_time_in_second": 54.677261596,
+        "time_to_first_token_in_second": 1.29656026325,
+        "last_prefill_token_count": 20,
+        "last_prefill_tokens_per_second": 28.287116421096947,
+        "last_decode_token_count": 128,
+        "last_decode_tokens_per_second": 6.955816769747055
+      },
+      "text": "Hola!\n\nLos mensajes tardan en llegar por varias razones técnicas relacionadas con la infraestructura de la red.\n\n### Posibles Causas\n- **Velocidad da a a a a a a a a t t t t t t t t l l l l l l l l m l l l l l l l r r r r r r r r**\n- **Velocidad da da a a a a a a r r r r r r rrr**\n- **Velocidad de da da a a a a r r r rr**\n- **Velocidade de da da",
+      "limit": 128
+    },
+    {
+      "name": "qwen-sampling-3",
+      "ttftMs": 1443,
+      "totalMs": 1576,
+      "chunks": 2,
+      "benchmark": {
+        "init_time_in_second": 54.677261596,
+        "time_to_first_token_in_second": 1.29656026325,
+        "last_prefill_token_count": 21,
+        "last_prefill_tokens_per_second": 22.334586486920664,
+        "last_decode_token_count": 3,
+        "last_decode_tokens_per_second": 4.726849813441636
+      },
+      "text": "FUNCION",
+      "limit": 32
+    }
+  ],
+  "loadMs": 26787
+}

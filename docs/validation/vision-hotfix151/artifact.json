@@ -1,0 +1,41 @@
+{
+  "version": "0.1.15",
+  "versionCode": 16,
+  "package": "com.localai.workspace",
+  "apk": "dist/apk/local-ai-workspace-0.1.15-vision-hotfix151-arm64.apk",
+  "sizeBytes": 92010425,
+  "sha256": "8320e6a037b65be7b899203ad0bd66d041f60f250b37d92c2e7ef494eceb90f1",
+  "nativeLibrariesUnchanged": true,
+  "physicalDeviceTest": "PHYSICAL_DEVICE_TEST_REQUIRED",
+  "appTests": {
+    "tests": 232,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "litert-compatTests": {
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "lint": {
+    "app": {
+      "Error": 0,
+      "Warning": 76,
+      "Fatal": 0
+    },
+    "litert-compat": {
+      "Error": 0,
+      "Warning": 1,
+      "Fatal": 0
+    }
+  },
+  "buildLog": "final-checks.log",
+  "buildSuccess": true,
+  "driveApkId": "1a4kG4e5ssWmG6eAEtEXl80fx6DrVjkgX",
+  "driveReportId": "1cKNwPP1NLO3RB56CVacO0ZcaKjRoZeWI",
+  "driveApkUrl": "https://drive.google.com/file/d/1a4kG4e5ssWmG6eAEtEXl80fx6DrVjkgX/view?usp=drivesdk",
+  "signatureSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
+  "remoteChecksumVerified": false
+}

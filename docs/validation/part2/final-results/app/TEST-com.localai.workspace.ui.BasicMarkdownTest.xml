@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.BasicMarkdownTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-06T06:29:37" hostname="74096e896c47" time="0.013">
+  <properties/>
+  <testcase name="htmlAndRemoteImageStayLiteral" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.005"/>
+  <testcase name="unknownFenceLanguageAndTildeFenceAreSafe" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.001"/>
+  <testcase name="fencedCodePreservesIndentationAndDoesNotParseMarkdownInside" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.001"/>
+  <testcase name="paragraphsListsAndHeadings" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.001"/>
+  <testcase name="boldAndInlineCodeAreSeparate" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.004"/>
+  <testcase name="streamingUnclosedFenceRemainsReadable" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.0"/>
+  <testcase name="malformedAndEscapedMarkupKeepsVisibleText" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

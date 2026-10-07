@@ -1,0 +1,19 @@
+{
+  "runtime": "0.17.1",
+  "platform": "Linux host; NOT YET DEVICE VALIDATED",
+  "size": 484622336,
+  "sha256": "e7a8a2204b91e0f96e92960e84a09a89212e1633dcb7575a9bf3378b4df77f4c",
+  "loadMs": 3031.7442560044583,
+  "768": {
+    "dimension": 768,
+    "finite": true,
+    "norm": 1.0000000721999018,
+    "ms": 248.81858899607323
+  },
+  "256": {
+    "dimension": 256,
+    "finite": true,
+    "norm": 1.0000001863782142,
+    "ms": 149.67759800492786
+  }
+}

@@ -1,0 +1,17 @@
+[
+  {
+    "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.4.2-memory-relevance-hotfix-arm64.apk",
+    "bytes": 99638941,
+    "sha256": "2de32fbad0f295baebccd6aba67060140e78f1436f293a2905a90f069066af4a"
+  },
+  {
+    "path": "/workspace/local-ai-workspace/docs/MEMORY042_REPORT.md",
+    "bytes": 8405,
+    "sha256": "ec89725b17cc89f2230a59b11633bf4ee53ca11a922ab8644695d9aeac2480c1"
+  },
+  {
+    "path": "/workspace/local-ai-workspace/dist/local-ai-workspace-0.4.2-source-and-qa.zip",
+    "bytes": 104544,
+    "sha256": "b0787b1788edbe2a4238f6afad9124991f16b1b9a8afa54673bdea22cd69a212"
+  }
+]

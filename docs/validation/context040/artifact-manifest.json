@@ -1,0 +1,17 @@
+[
+  {
+    "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.4.0-context-memory-arm64.apk",
+    "bytes": 99557021,
+    "sha256": "e2fde8b6d6f28d2260aa0741352fb6243a79aa1aa8af006345ae07602485d8d0"
+  },
+  {
+    "path": "/workspace/local-ai-workspace/docs/CONTEXT040_REPORT.md",
+    "bytes": 15713,
+    "sha256": "66a1f16a127b37cbab6b5414532fcab476ca36b1841940f1be4d408cf2bf93d7"
+  },
+  {
+    "path": "/workspace/local-ai-workspace/dist/local-ai-workspace-0.4.0-source-and-qa.zip",
+    "bytes": 163842,
+    "sha256": "adc1e3741777a3d88d05c35f905c33ae34bf99a5e882e006631e0148a5496248"
+  }
+]

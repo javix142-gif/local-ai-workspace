@@ -1,0 +1,15 @@
+{
+  "app/build.gradle.kts": "18c2fc3fbbeee2571360c5f99d1ddeff68981b47ba9a1a180b637cbf2c856855",
+  "app/src/main/java/com/localai/workspace/AppGraph.kt": "2e654475e27dcbf27bf68a2eb92edcb7e77b742861665c573d1ad19f4742ae30",
+  "app/src/main/java/com/localai/workspace/MainActivity.kt": "9b315e1eedfa74ba2b1397c7726d9c65b6889f872360a56c4e424869ed12cc1c",
+  "app/src/main/java/com/localai/workspace/data/Daos.kt": "fe01bb068dd0346703f782719dab627d12110c43fc6794b177e398545fa66cb0",
+  "app/src/main/java/com/localai/workspace/data/WorkspaceRepository.kt": "3ba8c0b787b0991a9c0b59dcad08d324a1091e905893d2a33e6850d47314ec98",
+  "app/src/main/java/com/localai/workspace/ui/ViewModels.kt": "a2d8a31760429ac016d1c930965e4af5528054028df40b405c4eb34cfd04befa",
+  "app/src/test/java/com/localai/workspace/data/ChatDeletionTest.kt": "e25076eee3df824467d765c0b89afbb846ddda5ed1b11b0afbdb37e2f36e0419",
+  "docs/CHAT_DELETION_018.md": "48643ac2e98c09a62628908f2818ab6ef5e714873eec52f568a5306d8cc1c246",
+  "README.md": "a194bedca42ea2f5a519fce8fc15929adc4a0354d13c3f874d05ebd639e76bd5",
+  "STATUS.md": "335899f65edd08d98959170bb2e8960a257abaa7813ba4e35b44bb692a866344",
+  "CHANGELOG.md": "2596f735975f9111df671ab7963f96a01557dedb004eac5fa8d298ea76baad0a",
+  "docs/STATUS.md": "acec513ff0cc39f5c256f26e4812f00932a80666279ee4d03eb0505a0d3a2b3e",
+  "docs/STORAGE_CLEANUP_2026-10-05.md": "1083263a9f7e42f12fbb9cc8d465d5135e61696ee718249c1650a836ace0b4d8"
+}

@@ -1,0 +1,33 @@
+{
+  "version": "0.4.1",
+  "versionCode": 25,
+  "files": [
+    {
+      "id": "1SE_mXlY2ROLW2uxs_YxtDKjBV4RjP6is",
+      "url": "https://drive.google.com/file/d/1SE_mXlY2ROLW2uxs_YxtDKjBV4RjP6is/view?usp=drivesdk",
+      "bytes": 99622557,
+      "parentVerified": true
+    },
+    {
+      "id": "1fcM24CDJkS4c_u5jQ1qzFrFzWAGJOCa4",
+      "url": "https://drive.google.com/file/d/1fcM24CDJkS4c_u5jQ1qzFrFzWAGJOCa4/view?usp=drivesdk",
+      "bytes": 12392,
+      "parentVerified": true
+    },
+    {
+      "id": "1aiHlzkF6lvDy4a5H2JEe4qGif2ptvL0a",
+      "url": "https://drive.google.com/file/d/1aiHlzkF6lvDy4a5H2JEe4qGif2ptvL0a/view?usp=drivesdk",
+      "bytes": 246234,
+      "parentVerified": true
+    }
+  ],
+  "apkSha256": "56e47434a1ff233efb3f308536e3f88b9fbe35eef930d78ca308b8997d4b7676",
+  "unitTests": 497,
+  "unitFailures": 0,
+  "allSixHostGates": "PASS",
+  "publicSharingChanged": false,
+  "physical041Validated": false,
+  "onDeadlockReproducedAndFixedOnHost": true,
+  "earlyCancellationReproducedAndFixedOnHost": true,
+  "physicalOffRootCause": "NO_DETERMINADO"
+}

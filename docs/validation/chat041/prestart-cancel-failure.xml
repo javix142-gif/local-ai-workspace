@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.NormalChatHotfixTest" tests="15" skipped="0" failures="1" errors="0" timestamp="2026-10-07T17:57:44" hostname="05497ac86eb0" time="41.34">
+  <properties/>
+  <testcase name="normal_chat_does_not_wait_for_memory_when_off" classname="com.localai.workspace.ui.NormalChatHotfixTest" time="15.823"/>
+  <testcase name="cancel_then_retry" classname="com.localai.workspace.ui.NormalChatHotfixTest" time="0.429"/>
+  <testcase name="legacy_off_does_not_open_context_database" classname="com.localai.workspace.ui.NormalChatHotfixTest" time="0.58"/>
+  <testcase name="project_chat_context_v1_on" classname="com.localai.workspace.ui.NormalChatHotfixTest" time="0.928"/>
+  <testcase name="generation_first_callback" classname="com.localai.workspace.ui.NormalChatHotfixTest" time="0.246"/>
+  <testcase name="generation_final_completion" classname="com.localai.workspace.ui.NormalChatHotfixTest" time="0.206"/>
+  <testcase name="plain_chat_legacy_off" classname="com.localai.workspace.ui.NormalChatHotfixTest" time="0.14"/>
+  <testcase name="plain_chat_think_auto_tools_auto" classname="com.localai.workspace.ui.NormalChatHotfixTest" time="0.171"/>
+  <testcase name="new_chat_after_app_recreation" classname="com.localai.workspace.ui.NormalChatHotfixTest" time="0.295"/>
+  <testcase name="cancel_then_new_chat" classname="com.localai.workspace.ui.NormalChatHotfixTest" time="0.208"/>
+  <testcase name="stop_before_acquire_then_retry" classname="com.localai.workspace.ui.NormalChatHotfixTest" time="20.12">
+    <failure message="kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 20000 ms" type="kotlinx.coroutines.TimeoutCancellationException">kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 20000 ms
+	at _COROUTINE._BOUNDARY._(CoroutineDebugging.kt:42)
+	at kotlinx.coroutines.flow.StateFlowImpl.collect(StateFlow.kt:406)
+	at kotlinx.coroutines.flow.FlowKt__ReduceKt.first(Reduce.kt:179)
+	at com.localai.workspace.ui.NormalChatHotfixTest$stop_before_acquire_then_retry$1.invokeSuspend(NormalChatHotfixTest.kt:126)
+	at com.localai.workspace.ui.NormalChatHotfixTest$check$1$1$1.invokeSuspend(NormalChatHotfixTest.kt:62)
+	at com.localai.workspace.ui.NormalChatHotfixTest$check$1$1.invokeSuspend(NormalChatHotfixTest.kt:62)
+	at com.localai.workspace.ui.NormalChatHotfixTest$check$1.invokeSuspend(NormalChatHotfixTest.kt:62)
+Caused by: kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 20000 ms
+	at kotlinx.coroutines.TimeoutKt.TimeoutCancellationException(Timeout.kt:188)
+	at kotlinx.coroutines.TimeoutCoroutine.run(Timeout.kt:156)
+	at kotlinx.coroutines.EventLoopImplBase$DelayedRunnableTask.run(EventLoop.common.kt:505)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.DefaultExecutor.run(DefaultExecutor.kt:105)
+	at java.base@21.0.12.1/java.lang.Thread.run(Thread.java:1583)
+</failure>
+  </testcase>
+  <testcase name="normal_chat_does_not_wait_for_semantic_engine_when_off" classname="com.localai.workspace.ui.NormalChatHotfixTest" time="0.496"/>
+  <testcase name="plain_chat_think_off_tools_off" classname="com.localai.workspace.ui.NormalChatHotfixTest" time="0.416"/>
+  <testcase name="plain_chat_context_v1_on" classname="com.localai.workspace.ui.NormalChatHotfixTest" time="0.354"/>
+  <testcase name="context_v1_toggle_on_off" classname="com.localai.workspace.ui.NormalChatHotfixTest" time="0.924"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[System.logW: A resource was acquired at attached stack trace but never released. See java.io.Closeable for information on avoiding resource leaks.
+java.lang.Throwable: Explicit termination method 'close' not called
+	at dalvik.system.CloseGuard.$$robo$$dalvik_system_CloseGuard$openWithCallSite(CloseGuard.java:288)
+	at dalvik.system.CloseGuard.openWithCallSite(CloseGuard.java)
+	at dalvik.system.CloseGuard.$$robo$$dalvik_system_CloseGuard$open(CloseGuard.java:257)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.robolectric.shadows.ShadowCloseGuard$CloseGuardReflector$$Reflector15.open(Unknown Source)
+	at org.robolectric.shadows.ShadowCloseGuard.open(ShadowCloseGuard.java:38)
+	at dalvik.system.CloseGuard.open(CloseGuard.java)
+	at android.database.sqlite.SQLiteDatabase.$$robo$$android_database_sqlite_SQLiteDatabase$openInner(SQLiteDatabase.java:1164)
+	at android.database.sqlite.SQLiteDatabase.openInner(SQLiteDatabase.java)
+	at android.database.sqlite.SQLiteDatabase.$$robo$$android_database_sqlite_SQLiteDatabase$open(SQLiteDatabase.java:1143)
+	at android.database.sqlite.SQLiteDatabase.open(SQLiteDatabase.java)
+	at android.database.sqlite.SQLiteDatabase.$$robo$$android_database_sqlite_SQLiteDatabase$openDatabase(SQLiteDatabase.java:1007)
+	at android.database.sqlite.SQLiteDatabase.openDatabase(SQLiteDatabase.java)
+	at android.database.sqlite.SQLiteDatabase.$$robo$$android_database_sqlite_SQLiteDatabase$openDatabase(SQLiteDatabase.java:996)
+	at android.database.sqlite.SQLiteDatabase.openDatabase(SQLiteDatabase.java)
+	at android.database.sqlite.SQLiteOpenHelper.$$robo$$android_database_sqlite_SQLiteOpenHelper$getDatabaseLocked(SQLiteOpenHelper.java:373)
+	at android.database.sqlite.SQLiteOpenHelper.getDatabaseLocked(SQLiteOpenHelper.java)
+	at android.database.sqlite.SQLiteOpenHelper.$$robo$$android_database_sqlite_SQLiteOpenHelper$getWritableDatabase(SQLiteOpenHelper.java:316)
+	at android.database.sqlite.SQLiteOpenHelper.getWritableDatabase(SQLiteOpenHelper.java)
+	at androidx.sqlite.db.framework.FrameworkSQLiteOpenHelper$OpenHelper.getWritableOrReadableDatabase(FrameworkSQLiteOpenHelper.kt:232)
+	at androidx.sqlite.db.framework.FrameworkSQLiteOpenHelper$OpenHelper.innerGetDatabase(FrameworkSQLiteOpenHelper.kt:177)
+	at androidx.sqlite.db.framework.FrameworkSQLiteOpenHelper$OpenHelper.getSupportDatabase(FrameworkSQLiteOpenHelper.kt:151)
+	at androidx.sqlite.db.framework.FrameworkSQLiteOpenHelper.getWritableDatabase(FrameworkSQLiteOpenHelper.kt:104)
+	at androidx.room.RoomDatabase.internalBeginTransaction(RoomDatabase.kt:522)
+	at androidx.room.RoomDatabase.beginTransaction(RoomDatabase.kt:511)
+	at androidx.room.RoomDatabaseKt$withTransaction$transactionBlock$1.invokeSuspend(RoomDatabaseExt.kt:60)
+	at androidx.room.RoomDatabaseKt$withTransaction$transactionBlock$1.invoke(RoomDatabaseExt.kt)
+	at androidx.room.RoomDatabaseKt$withTransaction$transactionBlock$1.invoke(RoomDatabaseExt.kt)
+	at kotlinx.coroutines.intrinsics.UndispatchedKt.startUndispatchedOrReturn(Undispatched.kt:42)
+	at kotlinx.coroutines.BuildersKt__Builders_commonKt.withContext(Builders.common.kt:164)
+	at kotlinx.coroutines.BuildersKt.withContext(Unknown Source)
+	at androidx.room.RoomDatabaseKt$startTransactionCoroutine$2$1$1.invokeSuspend(RoomDatabaseExt.kt:103)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:101)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source)
+	at androidx.room.RoomDatabaseKt$startTransactionCoroutine$2$1.run(RoomDatabaseExt.kt:99)
+	at androidx.room.TransactionExecutor.execute$lambda$1$lambda$0(TransactionExecutor.kt:36)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+
+]]></system-err>
+</testsuite>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.data.DeletedWorkspaceImportTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-05T20:37:15" hostname="74096e896c47" time="1.272">
+  <properties/>
+  <testcase name="deletionDuringStreamingCopyCannotRecreateDocumentOrLeavePartialCopy" classname="com.localai.workspace.data.DeletedWorkspaceImportTest" time="0.675"/>
+  <testcase name="deletedOwnerRejectsImportBeforeCopyingAnyFile" classname="com.localai.workspace.data.DeletedWorkspaceImportTest" time="0.163"/>
+  <testcase name="ordinaryImportStillCopiesAndIndexesTextInPrivateStorage" classname="com.localai.workspace.data.DeletedWorkspaceImportTest" time="0.434"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

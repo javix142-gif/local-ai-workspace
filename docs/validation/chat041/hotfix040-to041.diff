@@ -1,0 +1,604 @@
+--- 0.4.0/app/src/main/java/com/localai/workspace/AppGraph.kt
++++ 0.4.1/app/src/main/java/com/localai/workspace/AppGraph.kt
+@@ -70,6 +70,7 @@
+     val semanticV2 by lazy { com.localai.workspace.semantic.v2.SemanticLayer(appContext, database, inferenceGate) }
+     val semanticImports by lazy { com.localai.workspace.semantic.v2.SemanticImportCoordinator(appContext,embeddingModels,{semanticV2}) }
+     val semanticDiagnostics by lazy { com.localai.workspace.semantic.v2.SemanticDiagnostics(appContext,runtimeScope,{semanticV2},validationBusy,{performance.running.value || chatSessions.hasGeneration}) }
++    val normalGenerationTrace by lazy { com.localai.workspace.diagnostics.NormalGenerationTrace(java.io.File(appContext.filesDir, validationId?.let { "device-validation/runs/$it/normal-generation.json" } ?: "diagnostics/normal-generation.json")) }
+     val contextFoundation by lazy { com.localai.workspace.context.ContextFoundation(this) }
+     val localTools = ToolRegistry(listOf(CalculatorTool(), LocalFileReadTool()))
+     val deviceValidation by lazy { com.localai.workspace.validation.DeviceValidation(this, preparationScope) }
+--- 0.4.0/app/src/main/java/com/localai/workspace/ui/ViewModels.kt
++++ 0.4.1/app/src/main/java/com/localai/workspace/ui/ViewModels.kt
+@@ -560,8 +560,10 @@
+         _streamingText.value = ""
+         val requestStartedAt = android.os.SystemClock.elapsedRealtime()
+         acceptedAtElapsedMs = requestStartedAt; firstUiObservedMs = null
+-        generationJob = viewModelScope.launch {
+-            val appMemoryBefore = withContext(Dispatchers.IO) { com.localai.workspace.performance.DeviceMeasurements.capture(graph.contextForMeasurements) }
++        val traceStore = graph.normalGenerationTrace
++        val runId = traceStore.begin(_conversationId.value, project.value?.workspaceKind == "PROJECT")
++        generationJob = viewModelScope.launch(start = CoroutineStart.UNDISPATCHED) {
++            var appMemoryBefore: com.localai.workspace.performance.DeviceMeasurement? = null
+             val assistantId = UUID.randomUUID().toString()
+             var progressJob: Job? = null
+             var gateAcquired = false
+@@ -575,19 +577,37 @@
+             var effectiveThinking: String? = null
+             var collectedMetrics: com.localai.workspace.domain.model.RuntimeMetrics? = null
+             var requestRuntime: InferenceRuntime? = null
++            var generationCollectionStarted = false
++            suspend fun trace(phase: String, update: (com.localai.workspace.diagnostics.NormalGenerationSnapshot) -> com.localai.workspace.diagnostics.NormalGenerationSnapshot = { it }) {
++                traceStore.mark(runId, phase) { update(it).copy(gateLocked = graph.inferenceGate.isLocked, gateOwned = gateAcquired) }
++            }
++            suspend fun acquireGenerationGate() {
++                if (stopRequested) throw CancellationException("Cancelled before conversation acquisition")
++                trace("CONVERSATION_ACQUIRE_START")
++                val gateStartedAt = android.os.SystemClock.elapsedRealtime()
++                graph.inferenceGate.lock()
++                gateWaitMs = android.os.SystemClock.elapsedRealtime() - gateStartedAt
++                gateAcquired = true
++                requestRunning = true
++                trace("CONVERSATION_GATE_ACQUIRED")
++            }
+             suspend fun finishMetrics(finish: String): com.localai.workspace.domain.model.RuntimeMetrics {
+                 val measured = com.localai.workspace.performance.RequestTimings(requestStartedAt, gateWaitMs,
+                     contextBuildMs, requestFirstTokenMs, callbackToUiMs).merge(
+                     collectedMetrics ?: requestRuntime?.metrics() ?: com.localai.workspace.domain.model.RuntimeMetrics(),
+                     android.os.SystemClock.elapsedRealtime(), finish).copy(thinkingRequested = requestedThinking, thinkingPolicyDecision = effectiveThinking, uiObservedTimeToFirstContentMs = firstUiObservedMs,
+-                    appPssBeforeBytes = appMemoryBefore.pssBytes,
++                    appPssBeforeBytes = appMemoryBefore?.pssBytes,
+                     appPssAfterBytes = withContext(Dispatchers.IO) { com.localai.workspace.performance.DeviceMeasurements.capture(graph.contextForMeasurements).pssBytes })
+                 diagnosticModelId?.let { graph.performance.recordGeneration(it, measured) }
+                 return measured
+             }
+             try {
++                trace("REQUEST_CREATED") { it.copy(contextBuilderEnabled = !diagnosticSmoke && graph.validationOwner == null && graph.contextForMeasurements.getSharedPreferences("context_foundation_v1", android.content.Context.MODE_PRIVATE).getBoolean("enabled", false)) }
++                appMemoryBefore = withContext(Dispatchers.IO) { com.localai.workspace.performance.DeviceMeasurements.capture(graph.contextForMeasurements) }
+                 // Recovery must finish before inserting a new GENERATING row.
++                trace("CHAT_INITIALIZATION_WAIT")
+                 conversationInitialization.join()
++                trace("CHAT_INITIALIZED")
+                 imports.toList().forEach { it.join() }
+                 if (waitingForImports && mediaPreparationError != null) error(mediaPreparationError!!)
+                 if (!diagnosticSmoke && retryImagePath == null && retryAudioPath == null) {
+@@ -597,6 +617,7 @@
+                 val conversationId = _conversationId.value ?: graph.workspace.conversationForChat(projectId, requestedConversationId).also {
+                     _conversationId.value = it.id
+                 }.id
++                trace("CONVERSATION_IDENTIFIED") { it.copy(conversationId = conversationId) }
+                 val userId = UUID.randomUUID().toString()
+                 val history = if (diagnosticSmoke) emptyList() else graph.workspace.recentMessages(conversationId, 10)
+                 val now = System.currentTimeMillis()
+@@ -628,14 +649,15 @@
+                 )
+                 _generationProgress.value = GenerationProgress(GenerationStage.PREPARING_PROMPT, detail = "Waiting for file reading / model preparation")
+                 imports.toList().forEach { it.join() }
++                trace("MODEL_PREPARATION_WAIT")
+                 preparation.awaitPending()
++                trace("MODEL_READY") { it.copy(modelState = if (preparation.state.value.ready) "READY" else preparation.state.value.progress.stage.name, engineReused = preparation.state.value.metrics?.engineReused) }
+                 if (stopRequested) throw CancellationException("Cancelled before inference")
+                 _generationProgress.value = GenerationProgress(GenerationStage.PREPARING_PROMPT, detail = "Waiting for the active generation, if any")
+-                val gateStartedAt = android.os.SystemClock.elapsedRealtime()
+-                graph.inferenceGate.lock()
+-                gateWaitMs = android.os.SystemClock.elapsedRealtime() - gateStartedAt
+-                gateAcquired = true
+-                requestRunning = true
++                val contextBuilderRequested = !diagnosticSmoke && graph.validationOwner == null &&
++                    graph.contextForMeasurements.getSharedPreferences("context_foundation_v1", android.content.Context.MODE_PRIVATE).getBoolean("enabled", false)
++                // Preserve the exact legacy gate order when OFF (including historical validation).
++                if (!contextBuilderRequested) acquireGenerationGate()
+                 val activeProject = graph.workspace.observeProject(projectId).first() ?: error("Project no longer exists")
+                 val availableModels = graph.workspace.allModels.first()
+                 val selectedId = _selectedModelId.value ?: activeProject.defaultModelId
+@@ -670,13 +692,19 @@
+                     return@launch
+                 }
+                 val contextStartedAt = android.os.SystemClock.elapsedRealtime()
+-                val useContextV1 = !diagnosticSmoke && graph.validationOwner == null && graph.contextFoundation.enabled.value && submittedImage == null && submittedAudio == null && history.none { it.imagePath != null || it.audioPath != null } && model.toDescriptor().runtime == RuntimeType.LITERT_LM
++                val useContextV1 = contextBuilderRequested && submittedImage == null && submittedAudio == null && history.none { it.imagePath != null || it.audioPath != null } && model.toDescriptor().runtime == RuntimeType.LITERT_LM
++                if (!useContextV1 && !gateAcquired) acquireGenerationGate()
++                trace("CONTEXT_BUILD_START") { it.copy(contextBuilderEnabled = useContextV1, thinkingRequested = graph.assistantSettings.forProject(projectId).thinking.name, toolsRequested = graph.assistantSettings.forProject(projectId).tools.isNotEmpty(), projectPresent = activeProject.workspaceKind == "PROJECT") }
+                 val selectedFiles = _selectedDocumentIds.value
+                 val smallTalk = com.localai.workspace.rag.RetrievalQuery.greeting(trimmed) && selectedFiles.isEmpty()
++                trace("RAG_START")
+                 val evidence = if (diagnosticSmoke || smallTalk) emptyList() else graph.retrieval.retrieve(projectId, trimmed, documentIds = selectedFiles)
++                trace("RAG_COMPLETE")
++                trace("MEMORY_START")
+                 val memories = if (!useContextV1 && !diagnosticSmoke && !smallTalk && activeProject.memoryEnabled) {
+                     graph.retrieval.memories(projectId, trimmed, 4)
+                 } else emptyList()
++                trace(if (useContextV1) "LEGACY_MEMORY_BYPASSED" else "MEMORY_COMPLETE")
+                 val routedTools = if (!diagnosticSmoke && model.toDescriptor().runtime == RuntimeType.LITERT_LM && com.localai.workspace.domain.model.ModelCapability.TOOL_CALLING in model.toDescriptor().capabilities)
+                     com.localai.workspace.data.AssistantRouting.tools(graph.assistantSettings.forProject(projectId).tools, trimmed, selectedFiles.isNotEmpty()) else emptySet()
+                 val toolOutputReserve = if (routedTools.any { it.startsWith("files.") }) 1000 else if ("python.execute" in routedTools) 800 else if(routedTools.isEmpty()) 0 else 64
+@@ -709,11 +737,14 @@
+                         graph.assistantSettings.forProject(projectId).thinking,
+                         model.toDescriptor().runtime == RuntimeType.LITERT_LM && com.localai.workspace.domain.model.ModelCapability.THINKING in model.toDescriptor().capabilities, trimmed), validationThinkingBudget = if (validationMaxOutputOverride != null) -1 else null)
+                 if (useContextV1) {
++                    trace("CONTEXT_V1_BUILD_START")
+                     val selectedContext = graph.contextFoundation.build(com.localai.workspace.context.ContextRequest(
+                         trimmed, com.localai.workspace.context.ScopeAccess(projectId = projectId, sessionId = conversationId),
+                         contextWindow = contextSize, reservedOutput = outputLimit, extraReserve = toolOutputReserve + routedTools.sumOf { com.localai.workspace.context.ContextTokenEstimator.count(com.localai.workspace.domain.tools.ChatToolSchemas.schema(it)) } + if (routedTools.isEmpty()) 0 else 128,
+                         conversationId = conversationId, projectInstructions = activeProject?.systemInstructions,
+                         allowedTools = routedTools.toList()), evidence = evidence, memoryEnabled = activeProject?.memoryEnabled != false)
++                    trace("MEMORY_COMPLETE")
++                    trace("CONTEXT_V1_BUILD_COMPLETE")
+                     val selectedSourceIds = selectedContext.included.filter { it.kind == com.localai.workspace.context.ContextKind.SOURCE }.map { it.id }.toSet()
+                     suppliedEvidence = evidence.filter { it.id in selectedSourceIds }
+                     if ((selectedFiles - suppliedEvidence.map { it.documentId }.toSet()).isNotEmpty()) _notices.emit("Some selected files did not fit this turn; they remain selected for your next message")
+@@ -727,6 +758,7 @@
+                 requestedThinking = graph.assistantSettings.forProject(projectId).thinking.name
+                 effectiveThinking = if (conversation.enableThinking) "ON" else "OFF"
+                 contextBuildMs = android.os.SystemClock.elapsedRealtime() - contextStartedAt
++                trace("CONTEXT_BUILD_COMPLETE") { it.copy(thinkingEffective = conversation.enableThinking, toolsEffectiveCount = routedTools.size) }
+                 if (model.toDescriptor().runtime == RuntimeType.LITERT_LM) {
+                     graph.database.messageDao().setEffectiveTurn(userId, conversation.userMessage, model.id)
+                 }
+@@ -749,13 +781,24 @@
+                     _notices.emit(text)
+                     return@launch
+                 }
++                // V1 embeddings have completed; both routes now share the native pipeline.
++                if (!gateAcquired) acquireGenerationGate()
+                 val runtime = chatRuntime(graph.runtimes.runtimeFor(descriptor))
+                 activeRuntime = runtime
+                 requestRuntime = runtime
+                 _generationProgress.value = GenerationProgress(GenerationStage.LOADING_MODEL)
+                 progressJob = launch(start = CoroutineStart.UNDISPATCHED) {
++                    var lastWorkerEvent: String? = null
+                     runtime.observeProgress().collect { progress ->
+                         if (progress.stage != GenerationStage.IDLE) _generationProgress.value = progress
++                        val workerEvent = progress.event
++                        if (workerEvent != null && workerEvent != lastWorkerEvent) {
++                            lastWorkerEvent = workerEvent
++                            // A StateFlow replay/load checkpoint is not a callback for this request.
++                            if (generationCollectionStarted && workerEvent == "LITERT_PREFILL_START") trace("SDK_SEND_START") { it.copy(nativeInFlight = true, workerCheckpoint = workerEvent, checkpointBoundary = "WORKER_PREFILL_PHASE_BEFORE_SEND_MESSAGE_ASYNC") }
++                            else if (generationCollectionStarted && workerEvent == "LITERT_FIRST_TOKEN") trace("SDK_CALLBACK_FIRST") { it.copy(nativeInFlight = true, workerCheckpoint = workerEvent) }
++                            else trace("WORKER_CHECKPOINT") { it.copy(workerCheckpoint = workerEvent) }
++                        }
+                         if (progress.event == "LITERT_AUDIO_INPUT_READY") progress.detail?.let { _audioDiagnostics.value = it }
+                         if (progress.event == "LITERT_VISION_INPUT_READY") progress.detail?.let { _visionDiagnostics.value = it }
+                         progress.error?.let { _generationError.value = it }
+@@ -779,6 +822,7 @@
+                     LiteRtTrace.event("LITERT_CHAT_REQUEST", GenerationStage.LOADING_MODEL, model.displayName,
+                         fields = mapOf("diagnostic" to diagnosticSmoke, "inputChars" to prompt.length, "context" to contextSize, "maxOutput" to outputLimit))
+                 }
++                trace("CONFIG_BUILT") { it.copy(backendRequested = selectedAccelerator.name) }
+                 val usedAccelerator = graph.runtimes.loadWithFallback(
+                     descriptor,
+                     ModelLoadConfig(
+@@ -805,6 +849,7 @@
+                         validationScope = graph.validationOwner != null,
+                     ), runtime = runtime,
+                 )
++                trace("CONVERSATION_ACQUIRED") { it.copy(engineReused = runtime.metrics().engineReused, sessionReused = runtime.metrics().sessionReused, backendEffective = usedAccelerator.name) }
+                 if (stopRequested) throw CancellationException("Cancelled before prompt submission")
+                 preparation.loadedForRequest(model.id, runtime.metrics())
+                 if (usedAccelerator != selectedAccelerator) {
+@@ -818,6 +863,8 @@
+                 val answer = StringBuilder()
+                 var metrics: String? = null
+                 _generationProgress.value = GenerationProgress(GenerationStage.PREPARING_PROMPT)
++                trace("GENERATION_START") { it.copy(nativeInFlight = null) }
++                generationCollectionStarted = true
+                 runtime.generate(
+                     GenerationRequest(
+                         prompt = prompt,
+@@ -840,6 +887,7 @@
+                             if (requestFirstTokenMs == null) {
+                                 val emittedAt = android.os.SystemClock.elapsedRealtime()
+                                 requestFirstTokenMs = emittedAt - requestStartedAt
++                                trace("UI_FIRST_CONTENT") { it.copy(firstVisibleUiMs = requestFirstTokenMs, nativeInFlight = true) }
+                                 if (profile.measureUiDelivery) callbackToUiMs = event.receivedAtElapsedMs?.let { emittedAt - it }
+                             }
+                             val checkpointAt = android.os.SystemClock.elapsedRealtime()
+@@ -855,6 +903,7 @@
+                         }
+                         is GenerationEvent.Metrics -> {
+                             collectedMetrics = event.metrics
++                            trace("RUNTIME_METRICS") { it.copy(firstCallbackMs = event.metrics.firstCallbackMs) }
+                             metrics = GenerationMetricsPresentation.encode(com.localai.workspace.performance.RequestTimings(
+                                 requestStartedAt, gateWaitMs, contextBuildMs, requestFirstTokenMs, callbackToUiMs)
+                                 .merge(event.metrics, android.os.SystemClock.elapsedRealtime()))
+@@ -862,13 +911,18 @@
+                         is GenerationEvent.StateChanged -> _generationProgress.value = event.progress
+                         is GenerationEvent.Error -> throw GenerationException(event.error)
+                         GenerationEvent.Cancelled -> throw CancellationException("Native generation cancelled")
+-                        GenerationEvent.Completed -> _generationProgress.value = _generationProgress.value.copy(stage = GenerationStage.COMPLETED)
++                        GenerationEvent.Completed -> {
++                            _generationProgress.value = _generationProgress.value.copy(stage = GenerationStage.COMPLETED)
++                            trace("SDK_CALLBACK_FINAL") { it.copy(nativeInFlight = false) }
++                        }
+                     }
+                 }
+                 check(answer.isNotEmpty()) { "The local runtime completed without any text output" }
+                 val finalText = answer.toString()
+                 _streamingText.value = finalText
++                trace("PERSIST_START")
+                 graph.workspace.updateGeneratedMessage(assistantId, finalText, MessageStatus.COMPLETE.name, metrics)
++                trace("PERSIST_COMPLETE")
+                 // Attachments are consumed by this turn; files remain in the library for re-selection.
+                 _selectedDocumentIds.value = _selectedDocumentIds.value - suppliedEvidence.map { it.documentId }.toSet()
+                 val validated = CitationValidator().validate(
+@@ -904,7 +958,9 @@
+                 val encodedMetrics = GenerationMetricsPresentation.encode(completeMetrics)
+                 graph.database.messageDao().setMetrics(assistantId, encodedMetrics)
+                 graph.workspace.updateModelMetrics(model.id, encodedMetrics)
++                trace("REQUEST_COMPLETE") { it.copy(completedAt = traceStore.terminalTime(), nativeInFlight = false) }
+             } catch (error: kotlinx.coroutines.CancellationException) {
++                withContext(NonCancellable) { trace("REQUEST_CANCELLED") { it.copy(cancelled = true, completedAt = traceStore.terminalTime(), errorClass = error.javaClass.simpleName) } }
+                 preparation.invalidateReady()
+                 _generationProgress.value = GenerationProgress(GenerationStage.CANCELLED)
+                 withContext(NonCancellable) { finishMetrics("CANCELLED") }
+@@ -916,6 +972,7 @@
+                 ) }
+                 throw error
+             } catch (error: Throwable) {
++                trace("REQUEST_FAILED") { it.copy(errorClass = error.javaClass.simpleName, completedAt = traceStore.terminalTime()) }
+                 preparation.invalidateReady()
+                 val diagnostic = (error as? GenerationException)?.diagnostic ?: GenerationError(
+                     _generationProgress.value.stage, "GENERATION_ERROR", error.message ?: "Local generation failed.",
+@@ -953,6 +1010,8 @@
+                 }
+                 requestRunning = false
+                 if (gateAcquired) graph.inferenceGate.unlock()
++                gateAcquired = false
++                withContext(NonCancellable) { trace("REQUEST_SETTLED") { it.copy(nativeInFlight = false) } }
+                 _isGenerating.value = false
+                 activeAssistantId = null
+             }
+--- 0.4.0/app/src/main/java/com/localai/workspace/ui/PerformanceScreen.kt
++++ 0.4.1/app/src/main/java/com/localai/workspace/ui/PerformanceScreen.kt
+@@ -37,6 +37,7 @@
+     val status by graph.performance.status.collectAsStateWithLifecycle()
+     val records by graph.performance.records.collectAsStateWithLifecycle()
+     val latest by graph.performance.lastGeneration.collectAsStateWithLifecycle()
++    val chatTrace by graph.normalGenerationTrace.state.collectAsStateWithLifecycle()
+     val models by graph.workspace.allModels.collectAsStateWithLifecycle(emptyList())
+     var iterations by rememberSaveable { mutableStateOf("1") }
+     var mode by rememberSaveable { mutableStateOf("ALL") }
+@@ -101,6 +102,11 @@
+         Row { Checkbox(checked = profile.measureUiDelivery, enabled = !running,
+             onCheckedChange = { graph.performance.applyProfile(profile.copy(measureUiDelivery = it)) }); Text("Measure adapter callback → UI state") }
+         Text("No external draft is selected by this app. Acceptance rate: unavailable in this SDK. Active means the explicit flag was accepted at engine initialization.")
++        Text("NORMAL CHAT TRACE", style = MaterialTheme.typography.titleMedium)
++        chatTrace?.let { trace ->
++            Text("Run: ${trace.runId}\nPhase: ${trace.phase}\nWorker checkpoint: ${trace.workerCheckpoint ?: "unavailable"}\nNative first callback: ${trace.firstCallbackMs ?: "unavailable"} ms\nFirst UI content: ${trace.firstVisibleUiMs ?: "unavailable"} ms\nNative in flight: ${trace.nativeInFlight ?: "unknown"}\nGate locked / owned: ${trace.gateLocked} / ${trace.gateOwned}\nCancelled: ${trace.cancelled}\nError class: ${trace.errorClass ?: "none"}\nProcess restart observed: ${trace.processRestartObserved}")
++            TextButton(onClick = { (context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(ClipData.newPlainText("Normal chat trace", graph.normalGenerationTrace.report())) }) { Text("Copy normal chat trace") }
++        } ?: Text("No normal generation recorded")
+         Text("LAST GENERATION", style = MaterialTheme.typography.titleMedium)
+         Text(buildString {
+             fun value(label: String, item: Any?) { append("$label: ${item ?: "unavailable"}\n") }
+--- 0.4.0/app/build.gradle.kts
++++ 0.4.1/app/build.gradle.kts
+@@ -15,8 +15,8 @@
+         applicationId = "com.localai.workspace"
+         minSdk = 29
+         targetSdk = 35
+-        versionCode = 24
+-        versionName = "0.4.0"
++        versionCode = 25
++        versionName = "0.4.1"
+ 
+         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+         vectorDrawables.useSupportLibrary = true
+--- 0.4.0/app/src/androidTest/java/com/localai/workspace/ui/NormalChatNativeDeviceTest.kt
++++ 0.4.1/app/src/androidTest/java/com/localai/workspace/ui/NormalChatNativeDeviceTest.kt
+@@ -0,0 +1,70 @@
++package com.localai.workspace.ui
++
++import androidx.test.core.app.ActivityScenario
++import androidx.test.ext.junit.runners.AndroidJUnit4
++import androidx.test.filters.LargeTest
++import androidx.test.platform.app.InstrumentationRegistry
++import com.localai.workspace.LocalAiApplication
++import com.localai.workspace.MainActivity
++import com.localai.workspace.data.*
++import com.localai.workspace.domain.model.*
++import com.localai.workspace.semantic.v2.*
++import com.localai.workspace.context.MemoryKind
++import kotlinx.coroutines.*
++import kotlinx.coroutines.flow.*
++import org.junit.*
++import org.junit.Assert.*
++import org.junit.runner.RunWith
++import java.io.File
++
++/** PHYSICAL_DEVICE_TEST_REQUIRED. Real app ChatViewModel -> LiteRT worker, no diagnostic bypass.
++ * Uses installed Gemma and existing data; removes only its own synthetic workspace/memory. */
++@RunWith(AndroidJUnit4::class)
++@LargeTest
++class NormalChatNativeDeviceTest {
++ private val app get()=InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as LocalAiApplication
++ private fun run(block:suspend (com.localai.workspace.AppGraph,ChatViewModel,String)->Unit,contextOn:Boolean,project:Boolean=false)=runBlocking<Unit>{
++  ActivityScenario.launch(MainActivity::class.java).use {
++   val graph=app.graph
++   Assume.assumeFalse("Finish user requests/validation first",graph.chatSessions.hasGeneration||graph.validationBusy.value||graph.performance.running.value)
++   val model=graph.workspace.allModels.first().firstOrNull{m->m.toDescriptor().runtime==RuntimeType.LITERT_LM&&File(m.localPath).isFile&&(m.displayName+" "+m.family).lowercase().let{"gemma" in it && "e2b" in it}}
++   Assume.assumeNotNull("Installed Gemma E2B required; never fake native output",model)
++   val flag=graph.contextFoundation.enabled.value
++   val id=if(project)graph.workspace.createProject("QA normal-chat 0.4.1")else graph.workspace.createChat()
++   var vm:ChatViewModel?=null
++   var memoryId:String?=null
++   try {
++    graph.contextFoundation.enable(contextOn)
++    if(project)memoryId=graph.contextFoundation.memory.create("La base de datos de este proyecto es SQLite.",SemanticScope(ScopeType.PROJECT,id),MemoryKind.FACT).id
++    withContext(Dispatchers.Main){graph.assistantSettings.update(id,AssistantProfile(ThinkingMode.OFF,emptySet()));vm=graph.chatSessions.get(id,null);vm!!.enterScreen();vm!!.selectModel(model!!.id)}
++    withTimeout(240000){graph.modelPreparation.state.first{it.ready&&it.modelId==model!!.id}}
++    block(graph,vm!!,id)
++   }finally{
++    withContext(NonCancellable){withContext(Dispatchers.Main){vm?.cancelAndAwait();graph.chatSessions.removeWorkspace(id)}
++     memoryId?.let{graph.contextFoundation.memory.delete(it)};graph.workspace.deleteWorkspace(id);graph.contextFoundation.enable(flag)}
++   }
++  }
++ }
++ private suspend fun answer(graph:com.localai.workspace.AppGraph,vm:ChatViewModel,text:String):String {
++  assertTrue(withContext(Dispatchers.Main){vm.send(text)})
++  withTimeout(240000){vm.streamingText.first{it.isNotBlank()};vm.isGenerating.first{!it}}
++  val row=graph.workspace.recentMessages(vm.currentConversationId.value!!,10).last{it.role=="ASSISTANT"}
++  assertEquals("COMPLETE",row.status);assertTrue(row.content.isNotBlank())
++  assertFalse(graph.inferenceGate.isLocked)
++  val trace=graph.normalGenerationTrace.state.value!!
++  assertTrue(trace.events.any{it.phase=="SDK_CALLBACK_FINAL"});assertTrue(trace.events.any{it.phase=="REQUEST_COMPLETE"})
++  // Native metric must actually exist; a UI placeholder/error is not a callback.
++  assertNotNull(trace.firstCallbackMs)
++  return row.content
++ }
++ @Test fun plain_chat_legacy_off_real_native()=run({g,v,_->answer(g,v,"hola");answer(g,v,"¿cómo estás?")},false)
++ @Test fun plain_chat_context_v1_on_real_native()=run({g,v,_->answer(g,v,"hola")},true)
++ @Test fun project_chat_context_v1_on_real_native()=run({g,v,_->assertTrue(answer(g,v,"¿Qué base de datos utiliza este proyecto?").contains("SQLite",true))},true,true)
++ @Test fun cancel_then_retry_real_native()=run({g,v,_->
++  assertTrue(withContext(Dispatchers.Main){v.send("Explica en 200 palabras cómo funciona una computadora.")})
++  withTimeout(240000){v.streamingText.first{it.isNotBlank()}}
++  withContext(Dispatchers.Main){v.stop()}
++  withTimeout(30000){v.isGenerating.first{!it}}
++  answer(g,v,"hola")
++ },false)
++}
+--- 0.4.0/app/src/main/java/com/localai/workspace/diagnostics/NormalGenerationTrace.kt
++++ 0.4.1/app/src/main/java/com/localai/workspace/diagnostics/NormalGenerationTrace.kt
+@@ -0,0 +1,54 @@
++package com.localai.workspace.diagnostics
++
++import android.os.SystemClock
++import android.util.AtomicFile
++import com.google.gson.GsonBuilder
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.flow.MutableStateFlow
++import kotlinx.coroutines.flow.asStateFlow
++import kotlinx.coroutines.withContext
++import java.io.File
++import java.util.UUID
++
++/** Metadata only: never accepts a prompt, answer, file path or exception message. */
++data class GenerationCheckpoint(val phase:String,val elapsedRealtimeMs:Long)
++data class NormalGenerationSnapshot(
++ val runId:String,val conversationId:String?,val projectPresent:Boolean,
++ val startedAt:Long,val startedElapsedMs:Long,val phase:String="REQUEST_CREATED",
++ val completedAt:Long?=null,val firstCallbackMs:Long?=null,val firstVisibleUiMs:Long?=null,
++ val cancelled:Boolean=false,val errorClass:String?=null,val nativeInFlight:Boolean?=null,
++ val gateLocked:Boolean=false,val gateOwned:Boolean=false,
++ val contextBuilderEnabled:Boolean=false,val thinkingRequested:String?=null,val thinkingEffective:Boolean?=null,
++ val toolsRequested:Boolean?=null,val toolsEffectiveCount:Int?=null,
++ val modelState:String?=null,val engineReused:Boolean?=null,val sessionReused:Boolean?=null,
++ val backendRequested:String?=null,val backendEffective:String?=null,val workerCheckpoint:String?=null,
++ val processRestartObserved:Boolean=false,val checkpointBoundary:String="APP_PIPELINE_AND_EXISTING_WORKER_PROGRESS",
++ val events:List<GenerationCheckpoint> = emptyList(),val persistenceErrorClass:String?=null,
++)
++class NormalGenerationTrace(private val file:File,private val clock:()->Long={SystemClock.elapsedRealtime()},private val wall:()->Long={System.currentTimeMillis()}) {
++ private val gson=GsonBuilder().serializeNulls().setPrettyPrinting().create()
++ private val guard=Any()
++ private val mutable=MutableStateFlow<NormalGenerationSnapshot?>(null)
++ val state=mutable.asStateFlow()
++ init { synchronized(guard) {
++  if(file.exists())try {
++   val prior=AtomicFile(file).openRead().bufferedReader().use{gson.fromJson(it,NormalGenerationSnapshot::class.java)}
++   if(prior!=null)mutable.value=if(prior.completedAt==null)prior.copy(processRestartObserved=true,nativeInFlight=null,gateLocked=false,gateOwned=false)else prior
++  }catch(error:Exception){android.util.Log.w("LocalAI/ChatTrace","read_failed type=${error.javaClass.simpleName}")}
++ } }
++ fun begin(conversationId:String?,projectPresent:Boolean):String=synchronized(guard){
++  val id=UUID.randomUUID().toString();val now=clock()
++  mutable.value=NormalGenerationSnapshot(id,conversationId,projectPresent,wall(),now,events=listOf(GenerationCheckpoint("REQUEST_CREATED",now)));id
++ }
++ /** Suspend IO for ordered, durable markers. A journal failure never blocks inference. */
++ suspend fun mark(id:String,phase:String,update:(NormalGenerationSnapshot)->NormalGenerationSnapshot={it})=withContext(Dispatchers.IO){synchronized(guard){
++  val old=mutable.value?.takeIf{it.runId==id} ?: return@synchronized
++  val now=clock();val next=update(old).copy(phase=phase,events=(old.events+GenerationCheckpoint(phase,now)).takeLast(64))
++  mutable.value=next
++  var stream:java.io.FileOutputStream?=null
++  try{file.parentFile?.mkdirs();val atomic=AtomicFile(file);stream=atomic.startWrite();stream.write(gson.toJson(next).toByteArray());atomic.finishWrite(stream)}
++  catch(error:Exception){stream?.let{runCatching{AtomicFile(file).failWrite(it)}};mutable.value=next.copy(persistenceErrorClass=error.javaClass.simpleName);android.util.Log.w("LocalAI/ChatTrace","write_failed type=${error.javaClass.simpleName}")}
++ }}
++ fun report():String=synchronized(guard){gson.toJson(mutable.value)}
++ fun terminalTime():Long=wall()
++}
+--- 0.4.0/app/src/test/java/com/localai/workspace/ui/NormalChatHotfixTest.kt
++++ 0.4.1/app/src/test/java/com/localai/workspace/ui/NormalChatHotfixTest.kt
+@@ -0,0 +1,145 @@
++package com.localai.workspace.ui
++
++import android.app.Application
++import androidx.room.Room
++import androidx.room.withTransaction
++import androidx.lifecycle.viewModelScope
++import com.localai.workspace.AppGraph
++import com.localai.workspace.data.*
++import com.localai.workspace.domain.inference.*
++import com.localai.workspace.domain.model.*
++import kotlinx.coroutines.*
++import kotlinx.coroutines.channels.Channel
++import kotlinx.coroutines.flow.*
++import kotlinx.coroutines.test.*
++import org.junit.*
++import org.junit.Assert.*
++import org.junit.runner.RunWith
++import org.robolectric.RobolectricTestRunner
++import org.robolectric.RuntimeEnvironment
++import org.robolectric.annotation.Config
++
++/** Actual ChatViewModel + Room/pool/gate; only native boundary is a test double. */
++@RunWith(RobolectricTestRunner::class)
++@Config(sdk=[35], application=Application::class)
++@OptIn(ExperimentalCoroutinesApi::class)
++class NormalChatHotfixTest {
++ private val context get()=RuntimeEnvironment.getApplication()
++ private val main=Dispatchers.Default.limitedParallelism(1)
++ private lateinit var db:WorkspaceDatabase
++ private lateinit var scope:CoroutineScope
++ private lateinit var graph:AppGraph
++ private lateinit var backend:Backend
++ private val controllers=mutableListOf<ChatViewModel>()
++ private data class Turn(val request:GenerationRequest,val finish:CompletableDeferred<Unit> = CompletableDeferred())
++ private class Backend:InferenceRuntime {
++  override val runtimeType=RuntimeType.LITERT_LM
++  override val runtimeId="litert-lm-android"
++  val turns=Channel<Turn>(Channel.UNLIMITED)
++  var active:Turn?=null
++  private val progress=MutableStateFlow(GenerationProgress())
++  var replayOldCallbackOnLoad=false
++  private var loads=0L
++  override fun observeProgress()=progress
++  override fun supports(format:ModelFormat)=format==ModelFormat.LITERT_LM
++  override fun availableAccelerators()=setOf(AcceleratorType.CPU)
++  override suspend fun inspectModel(source:ModelSource):ModelMetadata=error("not used")
++  override suspend fun load(config:ModelLoadConfig){progress.value=if(replayOldCallbackOnLoad)GenerationProgress(GenerationStage.GENERATING,event="LITERT_FIRST_TOKEN",elapsedMs=++loads)else GenerationProgress(GenerationStage.IDLE)}
++  override fun generate(request:GenerationRequest)=flow {
++   val turn=Turn(request);active=turn
++   try{emit(GenerationEvent.Token("Hola"));turns.send(turn);turn.finish.await();emit(GenerationEvent.Token(" local"));emit(GenerationEvent.Completed)}finally{active=null}
++  }
++  override fun cancelGeneration(){active?.finish?.cancel()}
++  override suspend fun unload()=Unit
++  override suspend fun resetConversation()=Unit
++  override fun capabilities()=RuntimeCapabilities(runtimeId,true,false,false,false,false)
++  override fun metrics()=RuntimeMetrics(backend=runtimeId,modelRetainedAfterStop=true)
++ }
++ @Before fun open(){
++  Dispatchers.setMain(main)
++  listOf("app_model_preparation","litert_chat_defaults_v017","context_foundation_v1","local_assistant_profiles").forEach{context.getSharedPreferences(it,0).edit().clear().commit()}
++  db=Room.inMemoryDatabaseBuilder(context,WorkspaceDatabase::class.java).build()
++  scope=CoroutineScope(SupervisorJob()+main);backend=Backend();graph=AppGraph(context,listOf(backend),db,scope,scope)
++ }
++ @After fun close()=runBlocking {
++  withContext(main){graph.chatSessions.clear();graph.modelPreparation.cancel()}
++  // ViewModel scopes are independent of appScope; await their children before replacing Main.
++  controllers.forEach{it.viewModelScope.coroutineContext[Job]?.join()}
++  scope.coroutineContext[Job]!!.cancelAndJoin();Dispatchers.resetMain();db.close()
++ }
++ private fun check(block:suspend ()->Unit)=runBlocking<Unit>{withTimeout(20000){withContext(main){block()}}}
++ private suspend fun chat(project:String?=null):ChatViewModel{
++  if(db.modelDao().get("model")==null)db.modelDao().insert(ModelEntity("model","Gemma","/private/model.litertlm",fileHash="hash",fileSize=4096,format="LITERT_LM",runtimeId=backend.runtimeId,compatibilityStatus="COMPATIBLE",configuredContext=4096,maxOutputTokens=256,importedAt=1))
++  val id=project ?: graph.workspace.createChat()
++  val vm=graph.chatSessions.get(id,null);controllers+=vm;vm.enterScreen();vm.currentConversationId.first{it!=null};graph.modelPreparation.state.first{it.ready};return vm
++ }
++ private suspend fun complete(vm:ChatViewModel):Turn {
++  val turn=backend.turns.receive();assertEquals("Hola",vm.streamingText.value);turn.finish.complete(Unit);vm.isGenerating.first{!it}
++  assertEquals("COMPLETE",graph.workspace.recentMessages(vm.currentConversationId.value!!,10).last().status)
++  assertEquals("Hola local",vm.streamingText.value);assertFalse(graph.inferenceGate.isLocked);return turn
++ }
++ @Test fun plain_chat_legacy_off()=check{val vm=chat();assertTrue(vm.send("hola"));complete(vm);assertTrue(graph.normalGenerationTrace.state.value!!.events.indexOfFirst{it.phase=="CONVERSATION_GATE_ACQUIRED"}<graph.normalGenerationTrace.state.value!!.events.indexOfFirst{it.phase=="CONTEXT_BUILD_START"})}
++ @Test fun plain_chat_context_v1_on()=check{
++  graph.contextFoundation.enable(true);val vm=chat();assertTrue(vm.send("hola"));val turn=complete(vm)
++  assertNotNull(turn.request.conversation!!.systemInstruction)
++  assertTrue(graph.normalGenerationTrace.state.value!!.contextBuilderEnabled)
++  val phases=graph.normalGenerationTrace.state.value!!.events.map{it.phase}
++  assertTrue(phases.indexOf("CONTEXT_V1_BUILD_COMPLETE")<phases.indexOf("CONVERSATION_GATE_ACQUIRED"))
++ }
++ @Test fun project_chat_context_v1_on()=check{
++  graph.contextFoundation.enable(true);val id=graph.workspace.createProject("A")
++  graph.contextFoundation.memory.create("La base de datos de este proyecto es SQLite.",com.localai.workspace.semantic.v2.SemanticScope(com.localai.workspace.semantic.v2.ScopeType.PROJECT,id),com.localai.workspace.context.MemoryKind.FACT)
++  val vm=chat(id);vm.send("¿Qué base de datos utiliza este proyecto?");val turn=complete(vm)
++  assertTrue(turn.request.conversation!!.userMessage.contains("SQLite"))
++ }
++ @Test fun plain_chat_think_off_tools_off()=check{
++  val vm=chat();graph.assistantSettings.update(vm.project.value?.id ?: db.conversationDao().get(vm.currentConversationId.value!!)!!.projectId!!,AssistantProfile(ThinkingMode.OFF,emptySet()))
++  vm.send("hola");val turn=complete(vm);assertFalse(turn.request.conversation!!.enableThinking)
++  assertEquals(0,graph.normalGenerationTrace.state.value!!.toolsEffectiveCount)
++ }
++ @Test fun plain_chat_think_auto_tools_auto()=check{val vm=chat();vm.send("hola");val turn=complete(vm);assertFalse(turn.request.conversation!!.enableThinking)}
++ @Test fun generation_first_callback()=check{
++  val vm=chat();vm.send("hola");val turn=backend.turns.receive()
++  assertEquals("Hola",vm.streamingText.value);assertNotNull(graph.normalGenerationTrace.state.value!!.firstVisibleUiMs)
++  turn.finish.complete(Unit);vm.isGenerating.first{!it}
++ }
++ @Test fun generation_final_completion()=check{
++  val vm=chat();vm.send("hola");complete(vm)
++  val trace=graph.normalGenerationTrace.state.value!!;assertNotNull(trace.completedAt)
++  assertTrue(trace.events.any{it.phase=="SDK_CALLBACK_FINAL"});assertTrue(trace.events.any{it.phase=="PERSIST_COMPLETE"})
++  assertTrue(trace.events.any{it.phase=="REQUEST_COMPLETE"});assertEquals(false,trace.nativeInFlight)
++ }
++ @Test fun cancel_then_retry()=check{val vm=chat();vm.send("hola");backend.turns.receive();vm.stop();vm.isGenerating.first{!it};assertFalse(graph.inferenceGate.isLocked);vm.send("hola");complete(vm)}
++ @Test fun cancel_then_new_chat()=check{val vm=chat();vm.send("hola");backend.turns.receive();vm.stop();vm.isGenerating.first{!it};val next=chat();next.send("hola");complete(next)}
++ @Test fun new_chat_after_app_recreation()=check{
++  val vm=chat();vm.send("hola");complete(vm)
++  graph.chatSessions.clear();graph.modelPreparation.cancel()
++  graph=AppGraph(context,listOf(backend),db,scope,scope)
++  val next=chat();next.send("hola");complete(next)
++ }
++ @Test fun context_v1_toggle_on_off()=check{val vm=chat();for(on in listOf(true,false,true,false)){graph.contextFoundation.enable(on);vm.send("hola");complete(vm);assertEquals(on,graph.normalGenerationTrace.state.value!!.contextBuilderEnabled)}}
++ @Test fun normal_chat_does_not_wait_for_memory_when_off()=check{
++  val vm=chat();val entered=CompletableDeferred<Unit>();val release=CompletableDeferred<Unit>()
++  val lock=scope.launch(Dispatchers.IO){graph.contextFoundation.database.withTransaction{entered.complete(Unit);release.await()}}
++  entered.await();try{vm.send("hola");complete(vm)}finally{release.complete(Unit);lock.join()}
++ }
++ @Test fun normal_chat_does_not_wait_for_semantic_engine_when_off()=check{
++  val vm=chat();val entered=CompletableDeferred<Unit>();val release=CompletableDeferred<Unit>()
++  val lock=scope.launch{graph.semanticV2.manager.exclusive{entered.complete(Unit);release.await()}}
++  entered.await();try{vm.send("hola");complete(vm)}finally{release.complete(Unit);lock.join()}
++ }
++ @Test fun legacy_off_does_not_open_context_database()=check{
++  val vm=chat();val file=context.getDatabasePath("memory_context.db");assertFalse(file.exists())
++  vm.send("hola");complete(vm);assertFalse(file.exists())
++ }
++ @Test fun stale_load_progress_is_not_a_generation_callback()=check {
++  backend.replayOldCallbackOnLoad=true;val vm=chat();vm.send("hola");complete(vm)
++  val trace=graph.normalGenerationTrace.state.value!!
++  assertFalse(trace.events.any{it.phase=="SDK_CALLBACK_FIRST"})
++  assertTrue(trace.events.any{it.phase=="WORKER_CHECKPOINT"})
++ }
++ @Test fun stop_before_acquire_then_retry()=check{
++  val vm=chat();vm.send("hola");vm.stop();vm.isGenerating.first{!it}
++  vm.send("hola");complete(vm)
++ }
++}
+--- 0.4.0/app/src/test/java/com/localai/workspace/diagnostics/NormalGenerationTraceTest.kt
++++ 0.4.1/app/src/test/java/com/localai/workspace/diagnostics/NormalGenerationTraceTest.kt
+@@ -0,0 +1,38 @@
++package com.localai.workspace.diagnostics
++
++import android.app.Application
++import kotlinx.coroutines.runBlocking
++import org.junit.*
++import org.junit.Assert.*
++import org.junit.runner.RunWith
++import org.robolectric.RobolectricTestRunner
++import org.robolectric.RuntimeEnvironment
++import org.robolectric.annotation.Config
++import java.io.File
++
++@RunWith(RobolectricTestRunner::class)
++@Config(sdk=[35],application=Application::class)
++class NormalGenerationTraceTest {
++ private fun file()=File(RuntimeEnvironment.getApplication().filesDir,"trace-test.json")
++ @Test fun partial_trace_is_durable_and_restart_is_not_success()=runBlocking<Unit>{
++  var t=100L;val journal=NormalGenerationTrace(file(),{t++},{1000L})
++  val id=journal.begin("opaque-id",false);journal.mark(id,"GENERATION_START"){it.copy(gateLocked=true,nativeInFlight=true)}
++  val restored=NormalGenerationTrace(file(),{t++},{1001L}).state.value!!
++  assertEquals(id,restored.runId);assertEquals("GENERATION_START",restored.phase);assertTrue(restored.processRestartObserved);assertNull(restored.completedAt);assertNull(restored.nativeInFlight);assertFalse(restored.gateLocked)
++ }
++ @Test fun timestamps_monotonic_and_report_contains_no_prompt_answer_or_path()=runBlocking<Unit>{
++  var t=100L;val journal=NormalGenerationTrace(file(),{t++},{1000L})
++  val id=journal.begin("uuid",true);journal.mark(id,"SDK_CALLBACK_FIRST");journal.mark(id,"REQUEST_COMPLETE"){it.copy(completedAt=1001L)}
++  val state=journal.state.value!!;assertEquals(state.events.sortedBy{it.elapsedRealtimeMs},state.events)
++  val report=journal.report();listOf("prompt","answer","/private","SQLite","Nebula").forEach{assertFalse(report.contains(it))}
++  assertFalse(NormalGenerationTrace(file()).state.value!!.processRestartObserved)
++ }
++ @Test fun old_request_cannot_overwrite_newer_trace()=runBlocking<Unit>{
++  val journal=NormalGenerationTrace(file());val a=journal.begin("a",false);val b=journal.begin("b",false)
++  journal.mark(a,"REQUEST_CANCELLED"){it.copy(cancelled=true)}
++  assertEquals(b,journal.state.value!!.runId);assertFalse(journal.state.value!!.cancelled)
++ }
++ @Test fun corrupt_trace_does_not_block_new_request()=runBlocking<Unit>{
++  file().writeText("invalid");val journal=NormalGenerationTrace(file());val id=journal.begin(null,false);journal.mark(id,"REQUEST_COMPLETE"){it.copy(completedAt=1)};assertEquals(id,journal.state.value!!.runId)
++ }
++}

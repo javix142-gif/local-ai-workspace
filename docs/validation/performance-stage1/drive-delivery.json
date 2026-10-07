@@ -1,0 +1,60 @@
+{
+  "upload": {
+    "content": [
+      {
+        "type": "text",
+        "text": "Action completed."
+      }
+    ],
+    "structuredContent": {
+      "accepted_input": "file_uri",
+      "success": true,
+      "id": "1adjrjfw3K4juH-f7qgj8aXGuSsUkhEQy",
+      "title": "local-ai-workspace-0.1.13-performance-stage1-arm64.apk",
+      "file_name": "local-ai-workspace-0.1.13-performance-stage1-arm64.apk",
+      "mime_type": "application/vnd.android.package-archive",
+      "url": "https://drive.google.com/file/d/1adjrjfw3K4juH-f7qgj8aXGuSsUkhEQy/view?usp=drivesdk",
+      "parent_id": "0ANkfEFavP-XTUk9PVA",
+      "structuredContent": {
+        "accepted_input": "file_uri",
+        "success": true,
+        "id": "1adjrjfw3K4juH-f7qgj8aXGuSsUkhEQy",
+        "title": "local-ai-workspace-0.1.13-performance-stage1-arm64.apk",
+        "file_name": "local-ai-workspace-0.1.13-performance-stage1-arm64.apk",
+        "mime_type": "application/vnd.android.package-archive",
+        "url": "https://drive.google.com/file/d/1adjrjfw3K4juH-f7qgj8aXGuSsUkhEQy/view?usp=drivesdk",
+        "parent_id": "0ANkfEFavP-XTUk9PVA"
+      }
+    },
+    "isError": false
+  },
+  "metadata": {
+    "content": [
+      {
+        "type": "text",
+        "text": "Action completed."
+      }
+    ],
+    "structuredContent": {
+      "id": "1adjrjfw3K4juH-f7qgj8aXGuSsUkhEQy",
+      "title": "local-ai-workspace-0.1.13-performance-stage1-arm64.apk",
+      "mime_type": "application/vnd.android.package-archive",
+      "size": "91879353",
+      "url": "https://drive.google.com/file/d/1adjrjfw3K4juH-f7qgj8aXGuSsUkhEQy/view?usp=drivesdk",
+      "display_url": "https://drive.google.com/file/d/1adjrjfw3K4juH-f7qgj8aXGuSsUkhEQy/view?usp=drivesdk",
+      "file_or_folder": "file",
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "0ANkfEFavP-XTUk9PVA"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    },
+    "isError": false
+  }
+}

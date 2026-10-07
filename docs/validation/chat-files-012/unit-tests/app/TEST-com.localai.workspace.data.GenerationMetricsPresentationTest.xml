@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.data.GenerationMetricsPresentationTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-05T20:37:16" hostname="74096e896c47" time="0.159">
+  <properties/>
+  <testcase name="actualPhoneLocaleCommaMetricsKeepCorrectTimingsAndSpeedInsideDetails" classname="com.localai.workspace.data.GenerationMetricsPresentationTest" time="0.098"/>
+  <testcase name="newEncodingsUseStableNumbersRegardlessOfPhoneLocaleAndKeepRealFinishFlags" classname="com.localai.workspace.data.GenerationMetricsPresentationTest" time="0.056"/>
+  <testcase name="outputCapNeedsExplicitNativeMetricRatherThanOnDoneOrTextThatLooksIncomplete" classname="com.localai.workspace.data.GenerationMetricsPresentationTest" time="0.004"/>
+  <testcase name="absentInvalidOrDiagnosticValuesDoNotBecomeInventedBenchmarkRows" classname="com.localai.workspace.data.GenerationMetricsPresentationTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

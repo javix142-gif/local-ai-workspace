@@ -1,0 +1,46 @@
+{
+  "platform": "Linux x86_64 reference SDK; NOT physical Android",
+  "modelSha256": "181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c",
+  "sdk": "0.17.1",
+  "tests": [
+    {
+      "test": "native automatic calculator",
+      "calls": 1,
+      "validatedResult": 5781,
+      "finalContainsResult": true,
+      "responseKeys": [
+        "role",
+        "content"
+      ],
+      "status": "PASS"
+    },
+    {
+      "test": "native ThinkingConfig",
+      "enabled": false,
+      "requestCompleted": true,
+      "responseKeys": [
+        "role",
+        "content"
+      ],
+      "containsExpectedFinalAnswer": true,
+      "reasoningChannelObserved": false,
+      "status": "PASS"
+    },
+    {
+      "test": "native ThinkingConfig",
+      "enabled": true,
+      "requestCompleted": true,
+      "responseKeys": [
+        "role",
+        "content",
+        "channels",
+        "reasoning_content"
+      ],
+      "containsExpectedFinalAnswer": true,
+      "reasoningChannelObserved": true,
+      "status": "PASS"
+    }
+  ],
+  "initializationMs": 8007,
+  "durationMs": 150719
+}

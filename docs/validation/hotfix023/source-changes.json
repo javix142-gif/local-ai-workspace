@@ -1,0 +1,25 @@
+{
+  "modified": [
+    "app/src/main/java/com/localai/workspace/ui/ViewModels.kt",
+    "app/src/main/java/com/localai/workspace/ui/DeviceValidationScreen.kt",
+    "app/src/main/java/com/localai/workspace/ui/PerformanceScreen.kt",
+    "app/src/main/java/com/localai/workspace/validation/ValidationEngine.kt",
+    "app/src/main/java/com/localai/workspace/validation/ValidationModels.kt",
+    "app/src/main/java/com/localai/workspace/validation/DeviceValidation.kt",
+    "app/src/main/java/com/localai/workspace/validation/ProductionValidationBackend.kt",
+    "app/src/main/java/com/localai/workspace/inference/LiteRtLmService.kt",
+    "app/src/main/java/com/localai/workspace/inference/LiteRtConversationPayload.kt",
+    "app/src/main/java/com/localai/workspace/inference/VisibleModelOutput.kt",
+    "app/src/main/java/com/localai/workspace/domain/model/ConversationPrompt.kt",
+    "app/src/main/java/com/localai/workspace/domain/model/WorkspaceModels.kt",
+    "app/src/test/java/com/localai/workspace/validation/ValidationFrameworkTest.kt",
+    "app/src/test/java/com/localai/workspace/inference/LiteRtConversationPayloadTest.kt",
+    "app/src/test/java/com/localai/workspace/inference/Part2ThinkingTest.kt",
+    "app/build.gradle.kts"
+  ],
+  "added": [
+    "app/src/main/java/com/localai/workspace/inference/ThinkingDiagnostics.kt",
+    "app/src/test/java/com/localai/workspace/inference/ThinkingDiagnosticsTest.kt"
+  ],
+  "removed": []
+}

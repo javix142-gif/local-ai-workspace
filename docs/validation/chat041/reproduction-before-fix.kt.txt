@@ -1,0 +1,79 @@
+package com.localai.workspace.ui
+
+import android.app.Application
+import androidx.room.Room
+import androidx.lifecycle.viewModelScope
+import com.localai.workspace.AppGraph
+import com.localai.workspace.data.*
+import com.localai.workspace.domain.inference.*
+import com.localai.workspace.domain.model.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.test.*
+import org.junit.*
+import org.junit.Assert.*
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
+
+/** Actual ChatViewModel + Room/pool/gate; only native boundary is a test double. */
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk=[35], application=Application::class)
+@OptIn(ExperimentalCoroutinesApi::class)
+class NormalChatHotfixTest {
+ private val context get()=RuntimeEnvironment.getApplication()
+ private val main=Dispatchers.Default.limitedParallelism(1)
+ private lateinit var db:WorkspaceDatabase
+ private lateinit var scope:CoroutineScope
+ private lateinit var graph:AppGraph
+ private lateinit var backend:Backend
+ private data class Turn(val request:GenerationRequest,val finish:CompletableDeferred<Unit> = CompletableDeferred())
+ private class Backend:InferenceRuntime {
+  override val runtimeType=RuntimeType.LITERT_LM
+  override val runtimeId="litert-lm-android"
+  val turns=Channel<Turn>(Channel.UNLIMITED)
+  var active:Turn?=null
+  private val progress=MutableStateFlow(GenerationProgress())
+  override fun observeProgress()=progress
+  override fun supports(format:ModelFormat)=format==ModelFormat.LITERT_LM
+  override fun availableAccelerators()=setOf(AcceleratorType.CPU)
+  override suspend fun inspectModel(source:ModelSource):ModelMetadata=error("not used")
+  override suspend fun load(config:ModelLoadConfig){progress.value=GenerationProgress(GenerationStage.IDLE)}
+  override fun generate(request:GenerationRequest)=flow {
+   val turn=Turn(request);active=turn
+   try{emit(GenerationEvent.Token("Hola"));turns.send(turn);turn.finish.await();emit(GenerationEvent.Token(" local"));emit(GenerationEvent.Completed)}finally{active=null}
+  }
+  override fun cancelGeneration(){active?.finish?.cancel()}
+  override suspend fun unload()=Unit
+  override suspend fun resetConversation()=Unit
+  override fun capabilities()=RuntimeCapabilities(runtimeId,true,false,false,false,false)
+  override fun metrics()=RuntimeMetrics(backend=runtimeId,modelRetainedAfterStop=true)
+ }
+ @Before fun open(){
+  Dispatchers.setMain(main)
+  listOf("app_model_preparation","litert_chat_defaults_v017","context_foundation_v1","assistant_settings").forEach{context.getSharedPreferences(it,0).edit().clear().commit()}
+  db=Room.inMemoryDatabaseBuilder(context,WorkspaceDatabase::class.java).build()
+  scope=CoroutineScope(SupervisorJob()+main);backend=Backend();graph=AppGraph(context,listOf(backend),db,scope,scope)
+ }
+ @After fun close()=runBlocking {withContext(main){graph.chatSessions.clear();graph.modelPreparation.cancel()};scope.coroutineContext[Job]!!.cancelAndJoin();Dispatchers.resetMain();db.close()}
+ private fun check(block:suspend ()->Unit)=runBlocking<Unit>{withTimeout(20000){withContext(main){block()}}}
+ private suspend fun chat(project:String?=null):ChatViewModel{
+  if(db.modelDao().get("model")==null)db.modelDao().insert(ModelEntity("model","Gemma","/private/model.litertlm",fileHash="hash",fileSize=4096,format="LITERT_LM",runtimeId=backend.runtimeId,compatibilityStatus="COMPATIBLE",configuredContext=4096,maxOutputTokens=256,importedAt=1))
+  val id=project ?: graph.workspace.createChat()
+  val vm=graph.chatSessions.get(id,null);vm.enterScreen();vm.currentConversationId.first{it!=null};graph.modelPreparation.state.first{it.ready};return vm
+ }
+ private suspend fun complete(vm:ChatViewModel):Turn {
+  val turn=backend.turns.receive();assertEquals("Hola",vm.streamingText.value);turn.finish.complete(Unit);vm.isGenerating.first{!it}
+  assertEquals("COMPLETE",graph.workspace.recentMessages(vm.currentConversationId.value!!,10).last().status)
+  assertEquals("Hola local",vm.streamingText.value);assertFalse(graph.inferenceGate.isLocked);return turn
+ }
+ @Test fun plain_chat_legacy_off()=check{val vm=chat();assertTrue(vm.send("hola"));complete(vm)}
+ @Test fun characterize_context_on_gate_reentrancy_before_fix()=check{
+  graph.contextFoundation.enable(true);val vm=chat();assertTrue(vm.send("hola"))
+  val turn=withTimeoutOrNull(1500){backend.turns.receive()}
+  assertNull("0.4.0 must reproduce before SDK",turn);assertTrue(graph.inferenceGate.isLocked)
+  vm.stop();vm.isGenerating.first{!it};assertFalse(graph.inferenceGate.isLocked)
+ }
+}

@@ -1,0 +1,12 @@
+{
+  "repo": "litert-community/Qwen3-1.7B",
+  "revision": "73fbc3fe8271c162a603ee66f6e7ed25b6211195",
+  "filename": "Qwen3-1.7B_dynamic_wi4b32_afp32.litertlm",
+  "url": "https://huggingface.co/litert-community/Qwen3-1.7B/resolve/73fbc3fe8271c162a603ee66f6e7ed25b6211195/Qwen3-1.7B_dynamic_wi4b32_afp32.litertlm",
+  "sizeBytes": 977184032,
+  "sha256": "2eeffef7b51bc3e1225ea69fe7aa5f417397934b56a5b6c20cc068d6fd2c918b",
+  "license": "Apache-2.0",
+  "gated": false,
+  "verified": "PASS",
+  "downloadMs": 84894
+}

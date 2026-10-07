@@ -1,0 +1,11 @@
+{
+  "ApplySharedPref": 2,
+  "ExifInterface": 1,
+  "GradleDependency": 27,
+  "ChromeOsAbiSupport": 1,
+  "TrustAllX509TrustManager": 3,
+  "DataExtractionRules": 1,
+  "AutoboxingStateCreation": 1,
+  "MissingApplicationIcon": 1,
+  "UseTomlInstead": 3
+}

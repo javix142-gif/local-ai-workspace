@@ -1,0 +1,486 @@
+--- before/app/build.gradle.kts
++++ after/app/build.gradle.kts
+@@ -15,8 +15,8 @@
+         applicationId = "com.localai.workspace"
+         minSdk = 29
+         targetSdk = 35
+-        versionCode = 18
+-        versionName = "0.2.1"
++        versionCode = 19
++        versionName = "0.2.2"
+ 
+         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+         vectorDrawables.useSupportLibrary = true
+--- before/app/src/main/java/com/localai/workspace/LocalAiApplication.kt
++++ after/app/src/main/java/com/localai/workspace/LocalAiApplication.kt
+@@ -17,6 +17,7 @@
+         graph = AppGraph(this)
+         graph.modelPreparation.start()
+         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
++            com.localai.workspace.inference.LiteRtCapabilityRefresh.refresh(graph.database.modelDao(),graph.liteRtLmRuntime)
+             graph.workspace.cleanupDeletedDocuments()
+         }
+     }
+--- before/app/src/main/java/com/localai/workspace/ui/SemanticSettings.kt
++++ after/app/src/main/java/com/localai/workspace/ui/SemanticSettings.kt
+@@ -14,12 +14,18 @@
+ @Composable fun SemanticSettings(projectId: String? = null) {
+  val graph=(LocalContext.current.applicationContext as LocalAiApplication).graph
+  val status by graph.embeddingModels.status.collectAsState()
++ val diagnostics by graph.embeddingModels.diagnostics.collectAsState()
++ val context=LocalContext.current
+  val scope=rememberCoroutineScope();var busy by remember { mutableStateOf(false) };var notice by remember { mutableStateOf<String?>(null) }
+  val picker=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri->if(uri!=null)scope.launch { busy=true;try { graph.embeddingModels.import(uri);notice="EmbeddingGemma validated" } catch(e:Exception){notice=e.message?:"Import failed"} finally{busy=false} } }
+  Column {
+   Text("Semantic search",style=MaterialTheme.typography.titleSmall);Text(status,style=MaterialTheme.typography.bodySmall)
+   TextButton(enabled=!busy,onClick={picker.launch(arrayOf("*/*"))}) { Text("Import EmbeddingGemma GGUF") }
+   if(projectId!=null) TextButton(enabled=!busy&&graph.embeddingModels.id!=null,onClick={scope.launch { busy=true;try { graph.retrieval.indexProject(projectId);notice="Project index updated" } catch(e:Exception){notice=e.message?:"Index failed"} finally{busy=false} }}) { Text("Index project") }
++  diagnostics?.takeIf { it.status=="FAILED" }?.let { diagnostic->
++   Text(diagnostic.text(),style=MaterialTheme.typography.bodySmall)
++   TextButton(onClick={ context.getSystemService(android.content.ClipboardManager::class.java).setPrimaryClip(android.content.ClipData.newPlainText("Embedding diagnostics",diagnostic.text())) }) { Text("Copy diagnostics") }
++  }
+   if(busy) LinearProgressIndicator(Modifier.fillMaxWidth());notice?.let { Text(it,style=MaterialTheme.typography.bodySmall) }
+  }
+ }
+--- before/app/src/main/java/com/localai/workspace/validation/ValidationModels.kt
++++ after/app/src/main/java/com/localai/workspace/validation/ValidationModels.kt
+@@ -91,7 +91,7 @@
+ object ValidationMetricCodec {
+     private val gson = GsonBuilder().serializeNulls().create()
+     private val runtimeKeys = setOf("maxOutputTokens","temperature","topP","topK","repeatPenalty","seed","prefillDurationSource","backendFallbackReason","speculativeActive","uiObservedTimeToFirstContentMs","modelLoadDurationMs", "modelPreparationDurationMs", "sessionCreationDurationMs", "warmupDurationMs", "warmupStatus", "warmupPerformedThisPreparation", "inferenceGateWaitMs", "contextBuildMs", "timeToFirstTokenMs", "requestTimeToFirstTokenMs", "prefillTokensPerSecond", "prefillDurationMs", "promptTokens", "decodeTokensPerSecond", "outputTokens", "totalGenerationDurationMs", "endToEndTotalMs", "callbackToUiStateMs", "engineReused", "sessionReused", "cachedTokenCount", "conversationRebuildReason", "backendRequested", "backendEffective", "speculativeEnabled", "configuredCpuThreads", "workerPssBeforeBytes", "workerPssAfterBytes", "appPssBeforeBytes", "appPssAfterBytes", "availableRamBeforeBytes", "availableRamAfterBytes", "totalRamBytes", "thermalBefore", "thermalAfter", "nativeCompletionObserved", "thinkingEffective", "automaticToolCallingActive", "visionBackendInitialized", "audioBackendInitialized", "visionInputPresent", "audioInputPresent", "finishState", "contextSize")
+-    val allowed = runtimeKeys + setOf("semanticScoreA","semanticScoreB","coldPreparationEngineReused","thinkingOffEffective","thinkingAutoSimpleEffective","thinkingAutoReasonEffective","thinkingOnEffective","finalOnlyValidated","toolCallCount", "registryExecutions", "toolName", "toolDurationMs", "toolResultStatus", "embeddingDurationMs", "embeddingModelHash", "dimension", "vectorNorm", "finite", "semanticUsed", "topDocument", "retrievalDurationMs", "memoryRetrieved", "retrievalMode", "bootstrapMs", "executionMs", "pythonRequestMs", "pythonStatus", "audioPreparationMs", "audioDurationMs", "composerCleared", "newChatIsolated", "nextRequestMediaAbsent", "runtimeAccepted", "appPssBytes", "availableRamBytes", "thermalStatus", "parserValidated", "cleanupPending", "persistedRows", "outputLimitReached")
++    val allowed = runtimeKeys + setOf("embeddingImportStage","embeddingImportCode","embeddingNativeCode","semanticScoreA","semanticScoreB","coldPreparationEngineReused","thinkingOffEffective","thinkingAutoSimpleEffective","thinkingAutoReasonEffective","thinkingOnEffective","finalOnlyValidated","toolCallCount", "registryExecutions", "toolName", "toolDurationMs", "toolResultStatus", "embeddingDurationMs", "embeddingModelHash", "dimension", "vectorNorm", "finite", "semanticUsed", "topDocument", "retrievalDurationMs", "memoryRetrieved", "retrievalMode", "bootstrapMs", "executionMs", "pythonRequestMs", "pythonStatus", "audioPreparationMs", "audioDurationMs", "composerCleared", "newChatIsolated", "nextRequestMediaAbsent", "runtimeAccepted", "appPssBytes", "availableRamBytes", "thermalStatus", "parserValidated", "cleanupPending", "persistedRows", "outputLimitReached")
+     fun runtime(metrics: RuntimeMetrics): JsonObject = sanitize(gson.toJsonTree(metrics).asJsonObject)
+     fun sanitize(input: JsonObject): JsonObject = JsonObject().apply {
+         input.entrySet().filter { it.key in allowed }.forEach { (key, value) ->
+--- before/app/src/main/java/com/localai/workspace/validation/DeviceValidation.kt
++++ after/app/src/main/java/com/localai/workspace/validation/DeviceValidation.kt
+@@ -60,6 +60,7 @@
+             try {
+                 publish(report)
+                 graph.modelPreparation.pauseForBenchmark()
++                com.localai.workspace.inference.LiteRtCapabilityRefresh.refresh(graph.database.modelDao(),graph.liteRtLmRuntime)
+                 val available=graph.workspace.allModels.first()
+                 val preferred=graph.modelPreparation.selectedModelId()
+                 val candidates=available.filter { m->ApplicationModelPreparation.isUsable(m) && m.toDescriptor().runtime==RuntimeType.LITERT_LM &&
+--- before/app/src/main/java/com/localai/workspace/validation/ProductionValidationBackend.kt
++++ after/app/src/main/java/com/localai/workspace/validation/ProductionValidationBackend.kt
+@@ -44,7 +44,7 @@
+     private data class Session(val vm: ChatViewModel, val store: ViewModelStore, val requests: MutableList<GenerationRequest>, val projectId:String, var subscription: Job?=null)
+     private data class Turn(val answer: String, val message: MessageEntity, val metrics: RuntimeMetrics,
+         val calls: List<ToolCallEntity>, val request: GenerationRequest?)
+-    private class Blocked(val code: String): Exception()
++    private class Blocked(val code: String,val data:JsonObject=JsonObject()): Exception()
+     private fun metrics(vararg values: Pair<String,Any?>)=JsonObject().apply { values.forEach { (key,value)->when(value) {
+         null->add(key,com.google.gson.JsonNull.INSTANCE);is Boolean->addProperty(key,value);is Number->addProperty(key,value);else->addProperty(key,value.toString())
+     } } }
+@@ -115,14 +115,26 @@
+         documentIds[name]=id;id
+     }
+     private fun result(call:ToolCallEntity):JSONObject?=runCatching { JSONObject(call.resultJson!!).getJSONObject("result") }.getOrNull()
++    private fun capabilityReason(feature:String):String {
++        val meta=ModelDescriptorCodec.decodeMetadata(model.metadataJson)
++        return when {
++            meta["capability.detectionError"]!=null -> "CAPABILITY_DETECTION_ERROR"
++            meta["$feature.runtimeSupport"]=="false" -> "RUNTIME_CAPABILITY_MISSING"
++            meta["$feature.appImplemented"]=="false" -> "APP_CAPABILITY_MISSING"
++            meta["$feature.bundleDeclared"]=="false" -> "BUNDLE_CAPABILITY_MISSING"
++            meta["$feature.modelSupport"]=="false" -> "MODEL_CAPABILITY_MISSING"
++            meta["$feature.source"]=="UNDETERMINED_BUNDLE" -> "BUNDLE_CAPABILITY_MISSING"
++            else -> "CAPABILITY_DETECTION_ERROR"
++        }
++    }
+     private suspend fun arithmetic():ValidationOutcome {
+-        if(ModelCapability.TOOL_CALLING !in model.toDescriptor().capabilities)throw Blocked("MODEL_TOOLS_NOT_DECLARED")
++        if(ModelCapability.TOOL_CALLING !in model.toDescriptor().capabilities)throw Blocked(capabilityReason("tools"))
+         val t=ask(newSession(AssistantProfile(ThinkingMode.OFF,setOf("calculator.evaluate"))),"Usa la calculadora para calcular 123*47. Responde brevemente.")
+         val executed=t.calls.any { it.toolId=="calculator.evaluate" && it.status=="SUCCESS" && result(it)?.optString("value")?.toDoubleOrNull()==5781.0 }
+         return checkResult(executed && t.metrics.automaticToolCallingActive==true && "5781" in t.answer,"NATIVE_TOOL_RESULT_OR_FINAL_MISMATCH",evidence(t))
+     }
+     private suspend fun thinking():ValidationOutcome {
+-        if(ModelCapability.THINKING !in model.toDescriptor().capabilities)throw Blocked("MODEL_THINKING_NOT_DECLARED")
++        if(ModelCapability.THINKING !in model.toDescriptor().capabilities)throw Blocked(capabilityReason("thinking"))
+         val reasoning="Analiza cuidadosamente: tres cajas contienen 4 objetos cada una. Se retiran 5. ¿Cuántos quedan? Responde brevemente."
+         val session=newSession()
+         val inputs=listOf(ThinkingMode.OFF to "¿Cuál es la capital de Japón?",ThinkingMode.AUTO to "Hola.",ThinkingMode.AUTO to reasoning,ThinkingMode.ON to reasoning)
+@@ -149,7 +161,11 @@
+         return checkResult(success && Regex("\\b16\\b").containsMatchIn(t.answer),"STRUCTURED_NATIVE_TOOL_MISMATCH",evidence(t).apply { addProperty("parserValidated",true) })
+     }
+     private suspend fun semantic():ValidationOutcome {
+-        if(graph.embeddingModels.id==null)return skipped("EMBEDDING_MODEL_NOT_INSTALLED")
++        if(graph.embeddingModels.id==null) {
++            val failed=graph.embeddingModels.diagnostics.value?.takeIf { it.status=="FAILED" }
++            if(failed!=null)throw Blocked("EMBEDDING_MODEL_LOAD_FAILED",metrics("embeddingImportStage" to failed.stage.name,"embeddingImportCode" to failed.code,"embeddingNativeCode" to failed.nativeCode))
++            return skipped("EMBEDDING_MODEL_NOT_INSTALLED")
++        }
+         val query="¿Por qué ciertas aves adquieren tonalidades rosadas?"
+         val start=System.nanoTime();var dimension=0;var norm=0.0;var finite=false;var hash:String?=null;var queryVector=FloatArray(0)
+         graph.embeddingModels.use { encoder->val vector=encoder.embed("task: search result | query: "+query);queryVector=vector;dimension=vector.size;finite=vector.all { it.isFinite() };norm=sqrt(vector.sumOf { it.toDouble()*it });hash=encoder.modelId.substringAfter(':').substringBefore(':') } ?: throw Blocked("EMBEDDING_ENCODER_UNAVAILABLE")
+@@ -268,7 +284,8 @@
+         }
+     } catch(cancel:CancellationException) {
+         withContext(NonCancellable+Dispatchers.Main.immediate) { sessions.forEach { it.vm.cancelAndAwait() } };throw cancel
+-    } catch(block:Blocked) { ValidationOutcome(ValidationStatus.BLOCKED,block.code) }
++    } catch(block:Blocked) { ValidationOutcome(ValidationStatus.BLOCKED,block.code,block.data) }
++    catch(native:com.arm.aichat.EmbeddingNativeException) { ValidationOutcome(ValidationStatus.BLOCKED,"EMBEDDING_MODEL_LOAD_FAILED",metrics("embeddingImportStage" to native.stage,"embeddingNativeCode" to native.code)) }
+     finally {
+         withContext(NonCancellable+Dispatchers.Main.immediate) {
+             sessions.toList().filter { it!==visionSession && it!==audioSession && it!==warmSession }.forEach { closeSession(it) }
+--- before/app/src/main/java/com/localai/workspace/semantic/EmbeddingModels.kt
++++ after/app/src/main/java/com/localai/workspace/semantic/EmbeddingModels.kt
+@@ -2,33 +2,45 @@
+ 
+ import android.content.Context
+ import android.net.Uri
++import android.provider.OpenableColumns
+ import com.arm.aichat.EmbeddingGemma
++import com.google.gson.Gson
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.withContext
+-import kotlinx.coroutines.ensureActive
+ import kotlinx.coroutines.sync.Mutex
+ import kotlinx.coroutines.sync.withLock
+ import kotlinx.coroutines.flow.MutableStateFlow
+ import java.io.File
+-import java.security.MessageDigest
+ 
+ interface NeuralEmbeddings : AutoCloseable { val modelId: String;fun embed(text: String): FloatArray }
+ interface EmbeddingProvider { suspend fun <T> use(block: suspend (NeuralEmbeddings)->T): T? }
+ class EmbeddingModels(private val context: Context) : EmbeddingProvider {
+  private val prefs=context.getSharedPreferences("local_embedding_model",Context.MODE_PRIVATE)
+  private val gate=Mutex()
++ private val gson=Gson()
++ val diagnostics=MutableStateFlow(runCatching { prefs.getString("diagnostics",null)?.let { gson.fromJson(it,EmbeddingDiagnostics::class.java) } }.getOrNull())
+  val status=MutableStateFlow(if(prefs.contains("path")) "EmbeddingGemma configured" else "Embedding model unavailable · lexical fallback")
+  val id: String? get()=prefs.getString("hash",null)?.let { "embeddinggemma-gguf:$it:v1" }
+  suspend fun import(uri: Uri)=withContext(Dispatchers.IO) { gate.withLock {
+   val dir=File(context.filesDir,"embedding-models").apply { mkdirs() };val file=File(dir,"import-${java.util.UUID.randomUUID()}.gguf")
++  val old=prefs.getString("path",null);val oldHash=prefs.getString("hash",null)
+   try {
+-   val digest=MessageDigest.getInstance("SHA-256");var total=0L
+-   context.contentResolver.openInputStream(uri).use { input->requireNotNull(input);file.outputStream().use { output->val b=ByteArray(65536);var n:Int;while(input.read(b).also { n=it }>=0){kotlinx.coroutines.currentCoroutineContext().ensureActive();total+=n;require(total<=600L*1024*1024){"Embedding model exceeds 600 MiB"};output.write(b,0,n);digest.update(b,0,n)} } }
+-   EmbeddingGemma(file.path,context.applicationInfo.nativeLibraryDir).use { require(it.embed("task: search result | query: test").size==768) }
+-   val old=prefs.getString("path",null);val hash=digest.digest().joinToString(""){"%02x".format(it)}
+-   prefs.edit().putString("path",file.path).putString("hash",hash).apply();old?.let { p->if(File(p).canonicalFile.parentFile==dir.canonicalFile)File(p).delete() };status.value="EmbeddingGemma · 768 dimensions · CPU"
+-  } catch(cancel: kotlinx.coroutines.CancellationException){file.delete();throw cancel}
+-  catch(error:Throwable){file.delete();status.value="Embedding import failed: ${error.javaClass.simpleName}";throw error}
++   val sourceSize=runCatching { context.contentResolver.query(uri,arrayOf(OpenableColumns.SIZE),null,null,null)?.use { c->if(c.moveToFirst() && !c.isNull(0))c.getLong(0) else null } }.getOrNull()
++   EmbeddingImportPipeline().run(file,sourceSize,{context.contentResolver.openInputStream(uri)}, { privateFile->
++    val encoder=EmbeddingGemma(privateFile.path,context.applicationInfo.nativeLibraryDir)
++    object:ImportEncoder { override val dimension get()=encoder.dimension;override val architecture get()=encoder.architecture;override fun embed(text:String)=encoder.embed(text);override fun close()=encoder.close() }
++   }, { privateFile,hash->
++    if(!prefs.edit().putString("path",privateFile.path).putString("hash",hash).commit()) {
++     val rollback=prefs.edit();if(old==null)rollback.remove("path") else rollback.putString("path",old)
++     if(oldHash==null)rollback.remove("hash") else rollback.putString("hash",oldHash)
++     rollback.commit();error("Config commit failed")
++    }
++   }, { d->diagnostics.value=d;status.value=if(d.status=="FAILED") "Embedding import failed · ${d.stage} · ${d.code}" else "Embedding import · ${d.stage}" })
++   runCatching { old?.let { p->if(File(p).canonicalFile.parentFile==dir.canonicalFile && p!=file.path)File(p).delete() } } // Cleanup failure must not roll back a committed import.
++   status.value="EmbeddingGemma · 768 dimensions · CPU"
++  } catch(cancel: kotlinx.coroutines.CancellationException){file.delete();diagnostics.value=diagnostics.value?.copy(status="CANCELLED",code="CANCELLED");throw cancel}
++  catch(error:Throwable){file.delete();throw error}
++  finally { diagnostics.value?.let { prefs.edit().putString("diagnostics",gson.toJson(it)).apply() } }
+  } }
+  override suspend fun <T> use(block: suspend (NeuralEmbeddings)->T): T? = withContext(Dispatchers.IO) { gate.withLock {
+   val path=prefs.getString("path",null)?:return@withLock null;val modelId=id?:return@withLock null
+--- before/app/src/main/java/com/localai/workspace/data/ModelImportService.kt
++++ after/app/src/main/java/com/localai/workspace/data/ModelImportService.kt
+@@ -369,7 +369,7 @@
+                 importStatus = status.name,
+                 bundleStatus = bundleStatus.name,
+                 metadataJson = ModelDescriptorCodec.encodeMetadata(
+-                    mapOfNotNull("tokenizer.chat_template" to metadata.tokenizerChatTemplate),
++                    mapOfNotNull("tokenizer.chat_template" to metadata.tokenizerChatTemplate) + metadata.capabilityEvidence,
+                 ),
+                 sourceRepository = sourceRepository,
+                 originalFilename = originalFilename,
+--- before/app/src/main/java/com/localai/workspace/data/Daos.kt
++++ after/app/src/main/java/com/localai/workspace/data/Daos.kt
+@@ -99,6 +99,8 @@
+ 
+ @Dao
+ interface ModelDao {
++    @Query("UPDATE models SET capabilities = :capabilities, metadataJson = :metadata WHERE id = :id")
++    suspend fun updateCapabilityEvidence(id: String, capabilities: String, metadata: String)
+     @Query("SELECT * FROM models ORDER BY importedAt DESC")
+     fun observeAll(): Flow<List<ModelEntity>>
+ 
+--- before/app/src/main/java/com/localai/workspace/inference/LiteRtBundleMetadata.kt
++++ after/app/src/main/java/com/localai/workspace/inference/LiteRtBundleMetadata.kt
+@@ -11,6 +11,10 @@
+     val modelProcessor: Int?,
+     val declaredContext: Int?,
+     val historyRole: Role?,
++    val thinkingDeclared: Boolean? = null,
++    val toolsDeclared: Boolean? = null,
++    val templateSha256: String? = null,
++    val legacyGemmaContract: Boolean = false,
+ ) {
+     companion object {
+         private const val MAX_METADATA = 1_048_576
+@@ -61,7 +65,18 @@
+                 processor in setOf(2, 3, 4, 8) -> Role.MODEL
+                 else -> null
+             }
+-            return LiteRtBundleMetadata(processor, context, role)
++            val templateHash = template?.let { java.security.MessageDigest.getInstance("SHA-256").digest(it.toByteArray(Charsets.UTF_8)).joinToString("") { b -> "%02x".format(b) } }
++            // Audited official Gemma4 processor/template, NOT a model filename heuristic.
++            // SDK 0.17.1 proto fields 11/12 were absent in this older export.
++            val processorBytes = fields.lastOrNull { it.id == 6 }?.bytes?.let { WireReader(it).fields().lastOrNull { f -> f.id == 8 }?.bytes }
++            val config = processorBytes?.let { WireReader(it).fields() }.orEmpty()
++            fun stringField(id: Int) = config.lastOrNull { it.id == id }?.bytes?.toString(Charsets.UTF_8)
++            val legacy = processor == 8 && templateHash == "02b3091acf53c0b722e3db0c7a1b4980363edcc2d85549dafa339ff5dbfff629" &&
++                stringField(5) == "<|tool_call>" && stringField(6) == "<tool_call|>" &&
++                stringField(12) == "<|tool_response>" && config.lastOrNull { it.id == 13 }?.number == 1L &&
++                fields.filter { it.id == 8 }.any { channel -> channel.bytes?.let { WireReader(it).fields().any { f -> f.id == 1 && f.bytes?.toString(Charsets.UTF_8) == "thought" } } == true }
++            fun declared(id: Int) = fields.lastOrNull { it.id == id && it.number != null }?.number?.let { it != 0L }
++            return LiteRtBundleMetadata(processor, context, role, declared(11), declared(12), templateHash, legacy)
+         }
+     }
+ }
+--- before/app/src/main/java/com/localai/workspace/inference/LiteRtLmInferenceRuntime.kt
++++ after/app/src/main/java/com/localai/workspace/inference/LiteRtLmInferenceRuntime.kt
+@@ -162,18 +162,7 @@
+         val file = File(source.absolutePath)
+         require(file.isFile && file.canRead()) { "LiteRT-LM file is not readable" }
+         LiteRtModelIntegrity.verify(file, null, null)
+-        val capabilities = Capabilities(file.path).use { caps ->
+-            val modalities = caps.inputModalities()
+-            buildSet {
+-                if (modalities.text) add(ModelCapability.TEXT)
+-                if (modalities.vision) add(ModelCapability.VISION)
+-                if (modalities.audio) add(ModelCapability.AUDIO)
+-                if (modalities.text && (modalities.vision || modalities.audio)) add(ModelCapability.MULTIMODAL)
+-                if (caps.supportsFunctionCalling()) add(ModelCapability.TOOL_CALLING)
+-                if (caps.supportsThinking()) add(ModelCapability.THINKING)
+-                if (caps.hasSpeculativeDecodingSupport()) add(ModelCapability.SPECULATIVE_DECODING)
+-            }
+-        }
++        val (capabilities,evidence) = inspectCapabilityEvidence(source)
+         loadedCapabilities = RuntimeCapabilities(
+             runtimeId = RUNTIME_ID, textGeneration = ModelCapability.TEXT in capabilities,
+             embeddings = false, vision = ModelCapability.VISION in capabilities,
+@@ -199,7 +188,31 @@
+             supportsThinking = ModelCapability.THINKING in capabilities,
+             supportsSpeculativeDecoding = ModelCapability.SPECULATIVE_DECODING in capabilities,
+             capabilities = capabilities, accelerators = availableAccelerators(), backendVersion = LiteRtIpc.VERSION,
++            capabilityEvidence = evidence,
+         )
++    }
++
++    internal suspend fun inspectCapabilityEvidence(source: ModelSource): Pair<Set<ModelCapability>,Map<String,String>> = withContext(Dispatchers.IO) {
++        val file=File(source.absolutePath)
++        require(file.isFile && file.canRead()) { "Model file unavailable" }
++        val bundle = LiteRtBundleMetadata.read(file)
++        var evidence: Map<String,String> = emptyMap()
++        val capabilities = Capabilities(file.path).use { caps ->
++            val modalities = caps.inputModalities()
++            val tools = LiteRtCapabilityResolver.resolve(bundle.toolsDeclared,caps.supportsFunctionCalling(),bundle.legacyGemmaContract)
++            val thinking = LiteRtCapabilityResolver.resolve(bundle.thinkingDeclared,caps.supportsThinking(),bundle.legacyGemmaContract)
++            evidence = tools.metadata("tools") + thinking.metadata("thinking") + mapOf("tools.sdkAdvertised" to caps.supportsFunctionCalling().toString(), "thinking.sdkAdvertised" to caps.supportsThinking().toString(), "capability.schema" to "0.2.2", "capability.templateSha256" to bundle.templateSha256.orEmpty())
++            buildSet {
++                if (modalities.text) add(ModelCapability.TEXT)
++                if (modalities.vision) add(ModelCapability.VISION)
++                if (modalities.audio) add(ModelCapability.AUDIO)
++                if (modalities.text && (modalities.vision || modalities.audio)) add(ModelCapability.MULTIMODAL)
++                if (tools.available) add(ModelCapability.TOOL_CALLING)
++                if (thinking.available) add(ModelCapability.THINKING)
++                if (caps.hasSpeculativeDecodingSupport()) add(ModelCapability.SPECULATIVE_DECODING)
++            }
++        }
++        capabilities to evidence
+     }
+ 
+     private val backendPolicy = com.localai.workspace.performance.ExperimentalBackendPolicy()
+--- before/app/src/main/java/com/localai/workspace/inference/LiteRtLmService.kt
++++ after/app/src/main/java/com/localai/workspace/inference/LiteRtLmService.kt
+@@ -367,14 +367,15 @@
+             Engine.setNativeMinLogSeverity(LogSeverity.INFINITY)
+             phase(operation, GenerationStage.LOADING_MODEL, "LITERT_JNI_INIT_OK")
+             phase(operation, GenerationStage.LOADING_MODEL, "LITERT_CAPABILITIES_START")
++            val metadata = LiteRtBundleMetadata.read(file)
+             val capabilityData = Capabilities(file.path).use { caps ->
+                 val modalities = caps.inputModalities()
+                 Bundle().apply {
+                     putBoolean("text", modalities.text)
+                     putBoolean("vision", modalities.vision)
+                     putBoolean("audio", modalities.audio)
+-                    putBoolean("tools", caps.supportsFunctionCalling())
+-                    putBoolean("thinking", caps.supportsThinking())
++                    putBoolean("tools", LiteRtCapabilityResolver.resolve(metadata.toolsDeclared,caps.supportsFunctionCalling(),metadata.legacyGemmaContract).available)
++                    putBoolean("thinking", LiteRtCapabilityResolver.resolve(metadata.thinkingDeclared,caps.supportsThinking(),metadata.legacyGemmaContract).available)
+                     putBoolean("speculative", caps.hasSpeculativeDecodingSupport())
+                 }
+             }
+@@ -384,7 +385,6 @@
+             require(!key.vision || capabilityData.getBoolean("vision")) { "Model does not declare vision input" }
+             require(thinkingOverride != true || capabilityData.getBoolean("thinking")) { "Model does not declare thinking support" }
+             require(!key.speculative || capabilityData.getBoolean("speculative")) { "SPECULATIVE_UNSUPPORTED_BY_BUNDLE" }
+-            val metadata = LiteRtBundleMetadata.read(file)
+             verifiedModel = VerifiedModel(formatVersion, Bundle(capabilityData), metadata)
+             trace(operation, "LITERT_HISTORY_ROLE", mapOf("processor" to metadata.modelProcessor,
+                 "historyRole" to metadata.historyRole?.value, "source" to "embedded_metadata"))
+--- before/app/src/main/java/com/localai/workspace/domain/model/WorkspaceModels.kt
++++ after/app/src/main/java/com/localai/workspace/domain/model/WorkspaceModels.kt
+@@ -139,6 +139,7 @@
+     val parameterCount: Long? = null,
+     val recommendedContextLength: Int? = null,
+     val backendVersion: String? = null,
++    val capabilityEvidence: Map<String,String> = emptyMap(),
+ )
+ 
+ data class ModelLoadConfig(
+--- before/llama-runtime/src/main/cpp/local_embedding_jni.cpp
++++ after/llama-runtime/src/main/cpp/local_embedding_jni.cpp
+@@ -1,20 +1,35 @@
+ #include <jni.h>
+ #include "local_embedding.h"
+ #include <mutex>
++#include <atomic>
+ static std::mutex gate;
+-static void fail(JNIEnv *env,const char *what){env->ThrowNew(env->FindClass("java/lang/IllegalStateException"),what);}
+-extern "C" JNIEXPORT jlong JNICALL Java_com_arm_aichat_EmbeddingGemma_nativeLoad(JNIEnv *e,jobject,jstring path,jstring dir){
+- std::lock_guard<std::mutex>lock(gate);const char *p=e->GetStringUTFChars(path,nullptr);const char *d=e->GetStringUTFChars(dir,nullptr);jlong result=0;
+- // No native prompt/token logs; the embedding model has no generative output.
+- llama_log_set([](ggml_log_level,const char*,void*){},nullptr);
+- ggml_backend_load_all_from_path(d);llama_backend_init();
+- try{result=reinterpret_cast<jlong>(new LocalEmbedding(p));}catch(const std::exception &x){fail(e,x.what());}
+- e->ReleaseStringUTFChars(path,p);e->ReleaseStringUTFChars(dir,d);return result;
++static std::atomic<int> load_error{0};
++// Capture only recognized native causes. Never retain arbitrary native text, paths or tokens.
++static void native_log(ggml_log_level level,const char *text,void*) {
++ if(level!=GGML_LOG_LEVEL_ERROR)return;
++ const std::string s(text);
++ if(s.find("no CPU backend found")!=std::string::npos)load_error=1;
++ else if(s.find("no backends are loaded")!=std::string::npos)load_error=5;
++ else if(s.find("failed to allocate")!=std::string::npos || s.find("cannot allocate")!=std::string::npos)load_error=2;
++ else if(s.find("unsupported")!=std::string::npos)load_error=3;
++ else if(s.find("failed to open")!=std::string::npos)load_error=4;
++}
++static void fail(JNIEnv *env,const char *what){env->ThrowNew(env->FindClass("com/arm/aichat/EmbeddingNativeException"),what);}
++extern "C" JNIEXPORT jlong JNICALL Java_com_arm_aichat_EmbeddingGemma_nativeLoad(JNIEnv *e,jobject,jstring path,jstring){
++ std::lock_guard<std::mutex>lock(gate);const char *p=e->GetStringUTFChars(path,nullptr);if(!p)return 0;jlong result=0;
++ llama_log_set(native_log,nullptr);load_error=0;
++ try{local_embedding_cpu();llama_backend_init();result=reinterpret_cast<jlong>(new LocalEmbedding(p));}
++ catch(const std::exception &x){std::string message=dynamic_cast<const EmbeddingFailure*>(&x)?x.what():"MODEL_LOAD|NATIVE_EXCEPTION|Native loader threw an exception; raw text withheld";if(message.find("MODEL_LOAD_NULL")!=std::string::npos) {
++  switch(load_error.load()) {case 1:message+="; no CPU backend found";break;case 2:message+="; native allocation failed";break;case 3:message+="; unsupported native model data";break;case 4:message+="; native file open failed";break;case 5:message+="; no native backends are loaded";break;default:break;}
++ }fail(e,message.c_str());}
++ e->ReleaseStringUTFChars(path,p);return result;
+ }
+ extern "C" JNIEXPORT jfloatArray JNICALL Java_com_arm_aichat_EmbeddingGemma_nativeEmbed(JNIEnv *e,jobject,jlong handle,jbyteArray text){
+- std::lock_guard<std::mutex>lock(gate);if(!handle){fail(e,"Embedding engine not loaded");return nullptr;}
++ std::lock_guard<std::mutex>lock(gate);if(!handle){fail(e,"EMBEDDING_PROBE|SESSION_LOST|Embedding engine is not loaded");return nullptr;}
+  const jsize n=e->GetArrayLength(text);std::string s(n,0);e->GetByteArrayRegion(text,0,n,reinterpret_cast<jbyte*>(s.data()));jfloatArray result=nullptr;
+- try{auto v=reinterpret_cast<LocalEmbedding*>(handle)->embed(s);result=e->NewFloatArray(v.size());e->SetFloatArrayRegion(result,0,v.size(),v.data());}catch(const std::exception &x){fail(e,x.what());}
++ try{auto v=reinterpret_cast<LocalEmbedding*>(handle)->embed(s);result=e->NewFloatArray(v.size());if(result)e->SetFloatArrayRegion(result,0,v.size(),v.data());}catch(const std::exception &x){fail(e,dynamic_cast<const EmbeddingFailure*>(&x)?x.what():"EMBEDDING_PROBE|NATIVE_EXCEPTION|Native embedding threw an exception; raw text withheld");}
+  return result;
+ }
++extern "C" JNIEXPORT jint JNICALL Java_com_arm_aichat_EmbeddingGemma_nativeDimension(JNIEnv *,jobject,jlong handle){return handle?reinterpret_cast<LocalEmbedding*>(handle)->dimension():0;}
++extern "C" JNIEXPORT jstring JNICALL Java_com_arm_aichat_EmbeddingGemma_nativeArchitecture(JNIEnv *e,jobject,jlong handle){char arch[64]={};if(handle)llama_model_meta_val_str(reinterpret_cast<LocalEmbedding*>(handle)->model,"general.architecture",arch,sizeof(arch));return e->NewStringUTF(arch);}
+ extern "C" JNIEXPORT void JNICALL Java_com_arm_aichat_EmbeddingGemma_nativeClose(JNIEnv *,jobject,jlong handle){std::lock_guard<std::mutex>lock(gate);delete reinterpret_cast<LocalEmbedding*>(handle);}
+--- before/llama-runtime/src/main/cpp/CMakeLists.txt
++++ after/llama-runtime/src/main/cpp/CMakeLists.txt
+@@ -60,4 +60,9 @@
+ # Auxiliary neural embeddings, separate from the generative GGUF engine.
+ add_library(local-embedding SHARED local_embedding_jni.cpp)
+ target_include_directories(local-embedding PRIVATE ${LLAMA_SRC}/include ${LLAMA_SRC}/ggml/include)
+-target_link_libraries(local-embedding llama android log)
++# ggml-cpu is a MODULE when GGML_BACKEND_DL is enabled. Link its actual official
++# shared object explicitly so APK-backed native loading does not need directory scanning.
++add_dependencies(local-embedding ggml-cpu)
++# MODULE has no SONAME: use a basename lookup so DT_NEEDED never embeds a build path.
++target_link_directories(local-embedding PRIVATE "$<TARGET_FILE_DIR:ggml-cpu>")
++target_link_libraries(local-embedding llama "-l:$<TARGET_FILE_NAME:ggml-cpu>" android log)
+--- before/llama-runtime/src/main/cpp/local_embedding.h
++++ after/llama-runtime/src/main/cpp/local_embedding.h
+@@ -1,36 +1,54 @@
+ #pragma once
+ #include "llama.h"
+ #include "ggml-backend.h"
++#include "ggml-cpu.h"
++#include "gguf.h"
+ #include <vector>
+ #include <string>
+ #include <stdexcept>
+ #include <cmath>
++#include <memory>
+ 
+-/** Independent handles: never touches the chat engine's global model/context. */
++struct EmbeddingFailure : std::runtime_error {
++ EmbeddingFailure(const char *stage,const char *code,const std::string &safe):std::runtime_error(std::string(stage)+"|"+code+"|"+safe){}
++};
++// Directly linked CPU registration works with Android's APK-backed .so loader.
++inline void local_embedding_cpu() {
++ if(!ggml_backend_dev_by_type(GGML_BACKEND_DEVICE_TYPE_CPU))ggml_backend_register(ggml_backend_cpu_reg());
++ if(!ggml_backend_dev_by_type(GGML_BACKEND_DEVICE_TYPE_CPU))throw EmbeddingFailure("NATIVE_LIBRARY_LOAD","CPU_BACKEND_UNAVAILABLE","CPU backend registration failed");
++}
+ struct LocalEmbedding {
+  llama_model *model=nullptr;
+  explicit LocalEmbedding(const char *path) {
++  gguf_init_params header_params={true,nullptr};
++  std::unique_ptr<gguf_context,decltype(&gguf_free)>header(gguf_init_from_file(path,header_params),gguf_free);
++  if(!header)throw EmbeddingFailure("GGUF_OPEN","GGUF_OPEN_FAILED","Native GGUF header could not be opened");
++  auto key=gguf_find_key(header.get(),"general.architecture");
++  if(key<0 || gguf_get_kv_type(header.get(),key)!=GGUF_TYPE_STRING || std::string(gguf_get_val_str(header.get(),key))!="gemma-embedding")
++   throw EmbeddingFailure("ARCHITECTURE_VALIDATE","WRONG_ARCHITECTURE","Expected GGUF gemma-embedding architecture");
+   auto params=llama_model_default_params();params.n_gpu_layers=0;params.load_mode=LLAMA_LOAD_MODE_MMAP;
+   model=llama_model_load_from_file(path,params);
+-  if(!model) throw std::runtime_error("Embedding model could not be loaded");
+-  char arch[64] = {};llama_model_meta_val_str(model,"general.architecture",arch,sizeof(arch));
+-  if(std::string(arch)!="gemma-embedding" || llama_model_n_embd_out(model)!=768) { llama_model_free(model);model=nullptr;throw std::runtime_error("Expected EmbeddingGemma with 768-dimensional output"); }
++  if(!model)throw EmbeddingFailure("MODEL_LOAD","MODEL_LOAD_NULL","GGUF architecture=gemma-embedding; native model loader returned null");
++  if(llama_model_n_embd_out(model)!=768) { llama_model_free(model);model=nullptr;throw EmbeddingFailure("DIMENSION_VALIDATE","WRONG_DIMENSION","Native model output is not 768 dimensions"); }
+  }
+  ~LocalEmbedding(){if(model)llama_model_free(model);}
++ int dimension()const{return llama_model_n_embd_out(model);}
+  std::vector<float> embed(const std::string &text) {
+   const auto *vocab=llama_model_get_vocab(model);
+-  int n=llama_tokenize(vocab,text.data(),text.size(),nullptr,0,true,true); if(n<0)n=-n;
+-  if(n<=0||n>512)throw std::runtime_error("Embedding input exceeds 512 tokens");
++  int n=llama_tokenize(vocab,text.data(),text.size(),nullptr,0,true,true);if(n<0)n=-n;
++  if(n<=0||n>512)throw EmbeddingFailure("EMBEDDING_PROBE","TOKEN_LIMIT","Embedding input exceeds the 512 token limit");
+   std::vector<llama_token>tokens(n);n=llama_tokenize(vocab,text.data(),text.size(),tokens.data(),tokens.size(),true,true);
+-  if(n<=0)throw std::runtime_error("Embedding tokenization failed");
++  if(n<=0)throw EmbeddingFailure("EMBEDDING_PROBE","TOKENIZATION_FAILED","Embedding tokenization failed");
+   auto p=llama_context_default_params();p.n_ctx=512;p.n_batch=512;p.n_ubatch=512;p.embeddings=true;p.n_threads=4;p.n_threads_batch=4;p.pooling_type=LLAMA_POOLING_TYPE_UNSPECIFIED;
+-  auto *ctx=llama_init_from_model(model,p);if(!ctx)throw std::runtime_error("Embedding context failed");
++  std::unique_ptr<llama_context,decltype(&llama_free)>ctx(llama_init_from_model(model,p),llama_free);
++  if(!ctx)throw EmbeddingFailure("CONTEXT_CREATE","CONTEXT_CREATE_FAILED","Embedding context creation failed");
+   auto batch=llama_batch_get_one(tokens.data(),n);
+-  int status=llama_model_has_encoder(model)?llama_encode(ctx,batch):llama_decode(ctx,batch);
+-  const float *v=status==0?llama_get_embeddings_seq(ctx,0):nullptr;
+-  if(!v){llama_free(ctx);throw std::runtime_error("Embedding inference failed");}
+-  std::vector<float>out(v,v+768);llama_free(ctx);double norm=0;
+-  for(float x:out){if(!std::isfinite(x))throw std::runtime_error("Invalid embedding");norm+=double(x)*x;}
+-  if(norm<=0)throw std::runtime_error("Empty embedding");norm=std::sqrt(norm);for(float &x:out)x/=norm;return out;
++  int status=llama_model_has_encoder(model)?llama_encode(ctx.get(),batch):llama_decode(ctx.get(),batch);
++  const float *v=status==0?llama_get_embeddings_seq(ctx.get(),0):nullptr;
++  if(!v)throw EmbeddingFailure("EMBEDDING_PROBE",status==0?"EMBEDDING_MISSING":"INFERENCE_FAILED","Native embedding inference failed; returnCode="+std::to_string(status));
++  std::vector<float>out(v,v+dimension());double norm=0;
++  for(float x:out){if(!std::isfinite(x))throw EmbeddingFailure("EMBEDDING_PROBE","NONFINITE_VECTOR","Native embedding contains NaN or infinity");norm+=double(x)*x;}
++  if(norm<=0)throw EmbeddingFailure("EMBEDDING_PROBE","ZERO_VECTOR","Native embedding is zero");
++  norm=std::sqrt(norm);for(float &x:out)x/=norm;return out;
+  }
+ };
+--- before/llama-runtime/src/main/java/com/arm/aichat/EmbeddingGemma.kt
++++ after/llama-runtime/src/main/java/com/arm/aichat/EmbeddingGemma.kt
+@@ -4,9 +4,19 @@
+ class EmbeddingGemma(path: String, nativeLibraryDir: String) : AutoCloseable {
+  private var handle: Long
+  init { System.loadLibrary("local-embedding");handle=nativeLoad(path,nativeLibraryDir) }
++ val dimension get() = nativeDimension(handle)
++ val architecture get() = nativeArchitecture(handle)
+  @Synchronized fun embed(text: String): FloatArray { check(handle!=0L);return nativeEmbed(handle,text.toByteArray(Charsets.UTF_8)) }
+  @Synchronized override fun close() { if(handle!=0L) { nativeClose(handle);handle=0 } }
+  private external fun nativeLoad(path: String, nativeLibraryDir: String): Long
+  private external fun nativeEmbed(handle: Long, text: ByteArray): FloatArray
+  private external fun nativeClose(handle: Long)
++ private external fun nativeDimension(handle: Long): Int
++ private external fun nativeArchitecture(handle: Long): String
+ }
++
++class EmbeddingNativeException(message: String) : IllegalStateException(message) {
++ val stage: String get() = message.orEmpty().substringBefore('|')
++ val code: String get() = message.orEmpty().split('|').getOrNull(1) ?: "NATIVE_ERROR"
++ val safeDetail: String get() = message.orEmpty().split('|',limit=3).getOrNull(2) ?: "Native operation failed"
++}

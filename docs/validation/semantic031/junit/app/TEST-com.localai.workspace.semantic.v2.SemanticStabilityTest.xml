@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.semantic.v2.SemanticStabilityTest" tests="22" skipped="0" failures="0" errors="0" timestamp="2026-10-07T04:55:40" hostname="74096e896c47" time="6.745">
+  <properties/>
+  <testcase name="fileTypeDetectedBeforeProviderImporter" classname="com.localai.workspace.semantic.v2.SemanticStabilityTest" time="5.504"/>
+  <testcase name="comparisonRestoresUserProfileAndDimension" classname="com.localai.workspace.semantic.v2.SemanticStabilityTest" time="0.401"/>
+  <testcase name="benchmarkSamplesAreSequentialAndColdLoadSeparate" classname="com.localai.workspace.semantic.v2.SemanticStabilityTest" time="0.06"/>
+  <testcase name="exitClassificationDoesNotInventOom" classname="com.localai.workspace.semantic.v2.SemanticStabilityTest" time="0.026"/>
+  <testcase name="successfulRegistrationIsImmediatelyDiscoverableBySuiteLookup" classname="com.localai.workspace.semantic.v2.SemanticStabilityTest" time="0.088"/>
+  <testcase name="completedBenchmarkDoesNotBecomeAbortedOnRestart" classname="com.localai.workspace.semantic.v2.SemanticStabilityTest" time="0.029"/>
+  <testcase name="restartPreservesPartialReportAndNeverReportsSuccess" classname="com.localai.workspace.semantic.v2.SemanticStabilityTest" time="0.079"/>
+  <testcase name="repairDoesNotOverrideExplicitEg1Selection" classname="com.localai.workspace.semantic.v2.SemanticStabilityTest" time="0.052"/>
+  <testcase name="repeatedInitializeUnloadIsIdempotent" classname="com.localai.workspace.semantic.v2.SemanticStabilityTest" time="0.043"/>
+  <testcase name="failedLegacyImportDoesNotInvalidateInstalledProvider" classname="com.localai.workspace.semantic.v2.SemanticStabilityTest" time="0.023"/>
+  <testcase name="concurrentInitializeUsesSingleNativeCandidate" classname="com.localai.workspace.semantic.v2.SemanticStabilityTest" time="0.037"/>
+  <testcase name="storageFailureDoesNotEscapeApplicationOwnedBenchmarkJob" classname="com.localai.workspace.semantic.v2.SemanticStabilityTest" time="0.025"/>
+  <testcase name="failedInitializationWithLiveHandleIsClosed" classname="com.localai.workspace.semantic.v2.SemanticStabilityTest" time="0.021"/>
+  <testcase name="cancellingBenchmarkRestoresConfigurationAfterNativeReturns" classname="com.localai.workspace.semantic.v2.SemanticStabilityTest" time="0.084"/>
+  <testcase name="cancellationKeepsCompletedSamples" classname="com.localai.workspace.semantic.v2.SemanticStabilityTest" time="0.023"/>
+  <testcase name="closeAndDimensionSwitchWaitForActiveCompute" classname="com.localai.workspace.semantic.v2.SemanticStabilityTest" time="0.044"/>
+  <testcase name="journalFailureBeforeCloseStillReleasesNativeHandle" classname="com.localai.workspace.semantic.v2.SemanticStabilityTest" time="0.023"/>
+  <testcase name="repeatedDimensionSwitchNeverReusesWrongEngine" classname="com.localai.workspace.semantic.v2.SemanticStabilityTest" time="0.068"/>
+  <testcase name="registeredOldImportWithoutSelectionIsRepaired" classname="com.localai.workspace.semantic.v2.SemanticStabilityTest" time="0.027"/>
+  <testcase name="stateLabelsNeverExposeInternalReasons" classname="com.localai.workspace.semantic.v2.SemanticStabilityTest" time="0.024"/>
+  <testcase name="comparisonUsesIdenticalFixturesAndDimensions" classname="com.localai.workspace.semantic.v2.SemanticStabilityTest" time="0.021"/>
+  <testcase name="missingPrivateFileIsNotInstalled" classname="com.localai.workspace.semantic.v2.SemanticStabilityTest" time="0.035"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

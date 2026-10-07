@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.7.3">
+
+    <issue
+        id="UnsafeDynamicallyLoadedCode"
+        severity="Warning"
+        message="Dynamically loading code using `load` is risky, please use `loadLibrary` instead when possible"
+        category="Security"
+        priority="4"
+        summary="`load` used to dynamically load code"
+        explanation="Dynamically loading code from locations other than the application&apos;s library directory or the Android platform&apos;s built-in library directories is dangerous, as there is an increased risk that the code could have been tampered with. Applications should use `loadLibrary` when possible, which provides increased assurance that libraries are loaded from one of these safer locations. Application developers should use the features of their development environment to place application native libraries into the lib directory of their compiled APKs."
+        errorLine1="      System.load(extractedLibraryPath)"
+        errorLine2="      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/workspace/local-ai-workspace/litert-compat/src/main/java/com/google/ai/edge/litertlm/NativeLibraryLoader.kt"
+            line="97"
+            column="7"/>
+    </issue>
+
+</issues>

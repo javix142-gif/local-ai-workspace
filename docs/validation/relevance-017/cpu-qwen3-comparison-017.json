@@ -1,0 +1,249 @@
+{
+  "platform": "Linux native C API, NOT Android APK/JNI/device",
+  "sdk": "0.17.1",
+  "appPolicyVersion": "0.1.7",
+  "modelSource": {
+    "repo": "litert-community/Qwen3-1.7B",
+    "revision": "73fbc3fe8271c162a603ee66f6e7ed25b6211195",
+    "filename": "Qwen3-1.7B_dynamic_wi4b32_afp32.litertlm",
+    "url": "https://huggingface.co/litert-community/Qwen3-1.7B/resolve/73fbc3fe8271c162a603ee66f6e7ed25b6211195/Qwen3-1.7B_dynamic_wi4b32_afp32.litertlm",
+    "sizeBytes": 977184032,
+    "sha256": "2eeffef7b51bc3e1225ea69fe7aa5f417397934b56a5b6c20cc068d6fd2c918b",
+    "license": "Apache-2.0",
+    "gated": false,
+    "verified": "PASS",
+    "downloadMs": 84894
+  },
+  "threads": 4,
+  "context": 2048,
+  "temperature": 0.3,
+  "topP": 0.95,
+  "topK": 40,
+  "seed": 0,
+  "maxOutput": 256,
+  "repeatPenalty": 1.1,
+  "noRepeatNgram": 8,
+  "thinking": false,
+  "turns": [
+    {
+      "name": "isolated-app-policy",
+      "prompt": "que comunas de santiago de chile conoces?",
+      "newSessionMs": 23,
+      "renderedQuestionOccurrences": 1,
+      "cancelAfterFirstOutput": false,
+      "nativeDone": true,
+      "benchmark": {
+        "init_time_in_second": 16.572724351,
+        "time_to_first_token_in_second": 4.092334737,
+        "last_prefill_token_count": 87,
+        "last_prefill_tokens_per_second": 22.81887569402935,
+        "last_decode_token_count": 45,
+        "last_decode_tokens_per_second": 3.575237844342204
+      },
+      "outputLimitReached": false,
+      "text": "Las comunas de Santiago de Chile incluyen a la Comuna de Santiago, la Comuna de San Antonio, la Comuna de San Francisco, la Comuna de San José y la Comuna de San Miguel.",
+      "chunks": 44,
+      "ttftMs": 5956,
+      "totalMs": 16409,
+      "cancelTerminalMs": null
+    },
+    {
+      "name": "sequence-1",
+      "prompt": "Hola",
+      "newSessionMs": 4,
+      "renderedQuestionOccurrences": 1,
+      "cancelAfterFirstOutput": false,
+      "nativeDone": true,
+      "benchmark": {
+        "init_time_in_second": 16.572708372,
+        "time_to_first_token_in_second": 4.993464713,
+        "last_prefill_token_count": 76,
+        "last_prefill_tokens_per_second": 16.201676956918405,
+        "last_decode_token_count": 10,
+        "last_decode_tokens_per_second": 3.304777104678182
+      },
+      "outputLimitReached": false,
+      "text": "Hola, ¿qué quieres que haga?",
+      "chunks": 9,
+      "ttftMs": 5415,
+      "totalMs": 7722,
+      "cancelTerminalMs": null
+    },
+    {
+      "name": "sequence-2",
+      "prompt": "que herramientas tienes como modelo?",
+      "newSessionMs": null,
+      "renderedQuestionOccurrences": 1,
+      "cancelAfterFirstOutput": false,
+      "nativeDone": true,
+      "benchmark": {
+        "init_time_in_second": 16.572708372,
+        "time_to_first_token_in_second": 4.993464713,
+        "last_prefill_token_count": 19,
+        "last_prefill_tokens_per_second": 5.395842036033727,
+        "last_decode_token_count": 39,
+        "last_decode_tokens_per_second": 4.851388675787494
+      },
+      "outputLimitReached": false,
+      "text": "Tengo herramientas para procesar datos, generar texto y realizar tareas básicas, pero no puedo dar instrucciones ni ejecutar programas. ¿Qué necesitas que haga?",
+      "chunks": 38,
+      "ttftMs": 4476,
+      "totalMs": 11562,
+      "cancelTerminalMs": null
+    },
+    {
+      "name": "sequence-3",
+      "prompt": "Que sabes sobre leyes medicas en chile?",
+      "newSessionMs": null,
+      "renderedQuestionOccurrences": 1,
+      "cancelAfterFirstOutput": false,
+      "nativeDone": true,
+      "benchmark": {
+        "init_time_in_second": 16.572708372,
+        "time_to_first_token_in_second": 4.993464713,
+        "last_prefill_token_count": 24,
+        "last_prefill_tokens_per_second": 8.580010773168777,
+        "last_decode_token_count": 46,
+        "last_decode_tokens_per_second": 5.1614085343275455
+      },
+      "outputLimitReached": false,
+      "text": "Sé que Chile tiene leyes médicas que protegen la salud dosica y garantizan el acceso a tratamientos, pero no puedo proporcionar información completa sin fuentes confiadas. ¿Qué quieres saber?",
+      "chunks": 45,
+      "ttftMs": 3354,
+      "totalMs": 11713,
+      "cancelTerminalMs": null
+    },
+    {
+      "name": "sequence-4",
+      "prompt": "que comunas de santiago de chile conoces?",
+      "newSessionMs": null,
+      "renderedQuestionOccurrences": 1,
+      "cancelAfterFirstOutput": false,
+      "nativeDone": true,
+      "benchmark": {
+        "init_time_in_second": 16.572708372,
+        "time_to_first_token_in_second": 4.993464713,
+        "last_prefill_token_count": 24,
+        "last_prefill_tokens_per_second": 6.6503076119182625,
+        "last_decode_token_count": 39,
+        "last_decode_tokens_per_second": 5.205816190503643
+      },
+      "outputLimitReached": false,
+      "text": "Santiago tiene varias comunas, como la de San Francisco, la de La Florida, la de Las Condes y muchas más. ¿Querés saber algo sobre alguna de ellas?",
+      "chunks": 38,
+      "ttftMs": 4262,
+      "totalMs": 11103,
+      "cancelTerminalMs": null
+    },
+    {
+      "name": "restored-assistant-history",
+      "prompt": "que comunas de santiago de chile conoces?",
+      "newSessionMs": 4,
+      "renderedQuestionOccurrences": 1,
+      "cancelAfterFirstOutput": false,
+      "nativeDone": true,
+      "benchmark": {
+        "init_time_in_second": 16.572711677,
+        "time_to_first_token_in_second": 5.21023942075,
+        "last_prefill_token_count": 229,
+        "last_prefill_tokens_per_second": 45.49514533850025,
+        "last_decode_token_count": 29,
+        "last_decode_tokens_per_second": 5.6581781251531655
+      },
+      "outputLimitReached": false,
+      "text": "Santiago de Chile tiene varias comunas, como la ciudad principal y otras cerca de ella. ¿Quieres saber más sobre alguna específica?",
+      "chunks": 28,
+      "ttftMs": 5494,
+      "totalMs": 10165,
+      "cancelTerminalMs": null
+    },
+    {
+      "name": "arithmetic",
+      "prompt": "Calcula 17 + 25. Responde solo el número.",
+      "newSessionMs": 3,
+      "renderedQuestionOccurrences": 1,
+      "cancelAfterFirstOutput": false,
+      "nativeDone": true,
+      "benchmark": {
+        "init_time_in_second": 16.572739008,
+        "time_to_first_token_in_second": 2.947565448,
+        "last_prefill_token_count": 91,
+        "last_prefill_tokens_per_second": 33.521881058091154,
+        "last_decode_token_count": 3,
+        "last_decode_tokens_per_second": 4.293307595126033
+      },
+      "outputLimitReached": false,
+      "text": "32",
+      "chunks": 2,
+      "ttftMs": 3241,
+      "totalMs": 3415,
+      "cancelTerminalMs": null
+    },
+    {
+      "name": "cancel-after-output",
+      "prompt": "Escribe una lista larga de números, uno por línea.",
+      "newSessionMs": null,
+      "renderedQuestionOccurrences": 1,
+      "cancelAfterFirstOutput": true,
+      "nativeDone": true,
+      "benchmark": {
+        "init_time_in_second": 16.572739008,
+        "time_to_first_token_in_second": 2.947565448,
+        "last_prefill_token_count": 25,
+        "last_prefill_tokens_per_second": 9.703751703376197,
+        "last_decode_token_count": 3,
+        "last_decode_tokens_per_second": 4.905059756184783
+      },
+      "outputLimitReached": false,
+      "text": "1,",
+      "chunks": 2,
+      "ttftMs": 3020,
+      "totalMs": 3190,
+      "cancelTerminalMs": 170
+    },
+    {
+      "name": "retry-after-cancel",
+      "prompt": "Nombra tres comunas de Santiago de Chile. Solo los nombres.",
+      "newSessionMs": 1,
+      "renderedQuestionOccurrences": 1,
+      "cancelAfterFirstOutput": false,
+      "nativeDone": true,
+      "benchmark": {
+        "init_time_in_second": 16.572701975999998,
+        "time_to_first_token_in_second": 2.7199430985000004,
+        "last_prefill_token_count": 90,
+        "last_prefill_tokens_per_second": 35.44093699606113,
+        "last_decode_token_count": 11,
+        "last_decode_tokens_per_second": 5.539955879187019
+      },
+      "outputLimitReached": false,
+      "text": "Valparaíso, Santiago, yacimiento.",
+      "chunks": 10,
+      "ttftMs": 3015,
+      "totalMs": 4526,
+      "cancelTerminalMs": null
+    }
+  ],
+  "deviceValidation": "NOT_EXECUTED",
+  "literalEos": null,
+  "metadata": {
+    "modalities": {
+      "text": true,
+      "vision": false,
+      "audio": false,
+      "video": false
+    },
+    "thinking": false,
+    "defaultSampler": {
+      "top_k": 20,
+      "top_p": 0.949999988079071,
+      "temperature": 0.6000000238418579,
+      "seed": null
+    }
+  },
+  "loadMs": 7970,
+  "nativeApiCompleted": true,
+  "unloadMs": 123,
+  "unloadReturned": true,
+  "hostPeakRssBytes": 2111295488
+}

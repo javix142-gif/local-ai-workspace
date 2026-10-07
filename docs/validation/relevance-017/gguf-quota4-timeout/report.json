@@ -1,0 +1,40 @@
+{
+  "platform": "Linux x86_64 CPU, NOT Android",
+  "llamaCommit": "99b95488cac0f00ce3f05af113a8c1e287753f87",
+  "modelSource": {
+    "repo": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+    "revision": "91cad51170dc346986eccefdc2dd33a9da36ead9",
+    "filename": "qwen2.5-1.5b-instruct-q4_k_m.gguf",
+    "url": "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/resolve/91cad51170dc346986eccefdc2dd33a9da36ead9/qwen2.5-1.5b-instruct-q4_k_m.gguf",
+    "sizeBytes": 1117320736,
+    "sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+    "license": "Apache-2.0",
+    "gated": false,
+    "verified": "PASS",
+    "downloadMs": 99914
+  },
+  "context": 8192,
+  "threads": 4,
+  "maxOutput": 256,
+  "temperature": 0.3,
+  "topP": 0.95,
+  "topK": 40,
+  "minP": 0.05,
+  "repeatPenalty": 1.0,
+  "seed": 0,
+  "warmup": false,
+  "scope": "Direct stock native completion loop; Android fallback text prompt emulated, no app/UI/IPC",
+  "hostPolling": "Disabled to avoid spin overhead with a two-core cgroup CPU quota; no Android change",
+  "ttft": "NOT_INSTRUMENTED",
+  "generatedTokenCount": "NOT_EXPOSED_BY_CLI_REPORT",
+  "literalEos": "NOT_EXPOSED_BY_CLI_REPORT",
+  "deviceValidation": "NOT_EXECUTED",
+  "turns": [
+    {
+      "name": "isolated_bare_communes",
+      "prompt": "que comunas de santiago de chile conoces?",
+      "status": "TIMEOUT",
+      "elapsedMs": 150133
+    }
+  ]
+}
