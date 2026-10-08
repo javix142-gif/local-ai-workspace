@@ -1,0 +1,830 @@
+[
+  {
+    "id": "001",
+    "query": "hola",
+    "expected": []
+  },
+  {
+    "id": "002",
+    "query": "hello",
+    "expected": []
+  },
+  {
+    "id": "003",
+    "query": "buenos días",
+    "expected": []
+  },
+  {
+    "id": "004",
+    "query": "hi",
+    "expected": []
+  },
+  {
+    "id": "005",
+    "query": "gracias",
+    "expected": []
+  },
+  {
+    "id": "006",
+    "query": "thanks",
+    "expected": []
+  },
+  {
+    "id": "007",
+    "query": "buenas tardes",
+    "expected": []
+  },
+  {
+    "id": "008",
+    "query": "good morning",
+    "expected": []
+  },
+  {
+    "id": "009",
+    "query": "necesito ayuda con esto",
+    "expected": []
+  },
+  {
+    "id": "010",
+    "query": "I need help with this",
+    "expected": []
+  },
+  {
+    "id": "011",
+    "query": "¿Cuál es mi editor de prueba preferido?",
+    "expected": []
+  },
+  {
+    "id": "012",
+    "query": "What is my preferred editor?",
+    "expected": []
+  },
+  {
+    "id": "013",
+    "query": "¿Cuál es la capital de Japón?",
+    "expected": []
+  },
+  {
+    "id": "014",
+    "query": "What is the capital of Japan?",
+    "expected": []
+  },
+  {
+    "id": "015",
+    "query": "calcula 5+5",
+    "expected": []
+  },
+  {
+    "id": "016",
+    "query": "calculate 5+5",
+    "expected": []
+  },
+  {
+    "id": "017",
+    "query": "Nebula",
+    "expected": []
+  },
+  {
+    "id": "018",
+    "query": "ok",
+    "expected": []
+  },
+  {
+    "id": "019",
+    "query": "hola Excel",
+    "expected": []
+  },
+  {
+    "id": "020",
+    "query": "I like Kotlin",
+    "expected": []
+  },
+  {
+    "id": "021",
+    "query": "Redacta un correo",
+    "expected": [
+      "skill.general-writing"
+    ]
+  },
+  {
+    "id": "022",
+    "query": "Draft a letter",
+    "expected": [
+      "skill.general-writing"
+    ]
+  },
+  {
+    "id": "023",
+    "query": "Escribe una carta",
+    "expected": [
+      "skill.general-writing"
+    ]
+  },
+  {
+    "id": "024",
+    "query": "write an email to Alex",
+    "expected": [
+      "skill.general-writing"
+    ]
+  },
+  {
+    "id": "025",
+    "query": "Reescribe este párrafo",
+    "expected": [
+      "skill.general-writing"
+    ]
+  },
+  {
+    "id": "026",
+    "query": "Rewrite this paragraph",
+    "expected": [
+      "skill.general-writing"
+    ]
+  },
+  {
+    "id": "027",
+    "query": "corrige la redacción",
+    "expected": [
+      "skill.general-writing"
+    ]
+  },
+  {
+    "id": "028",
+    "query": "Redactar una introducción",
+    "expected": [
+      "skill.general-writing"
+    ]
+  },
+  {
+    "id": "029",
+    "query": "Draft a short announcement",
+    "expected": [
+      "skill.general-writing"
+    ]
+  },
+  {
+    "id": "030",
+    "query": "Rewrite the summary",
+    "expected": [
+      "skill.general-writing"
+    ]
+  },
+  {
+    "id": "031",
+    "query": "Revisa este Excel",
+    "expected": [
+      "skill.spreadsheet-analysis"
+    ]
+  },
+  {
+    "id": "032",
+    "query": "Analyze this spreadsheet",
+    "expected": [
+      "skill.spreadsheet-analysis"
+    ]
+  },
+  {
+    "id": "033",
+    "query": "Revisa los totales del Excel",
+    "expected": [
+      "skill.spreadsheet-analysis"
+    ]
+  },
+  {
+    "id": "034",
+    "query": "Explain CSV formulas",
+    "expected": [
+      "skill.spreadsheet-analysis"
+    ]
+  },
+  {
+    "id": "035",
+    "query": "Analiza estas columnas del CSV",
+    "expected": [
+      "skill.spreadsheet-analysis"
+    ]
+  },
+  {
+    "id": "036",
+    "query": "Why do Excel totals differ?",
+    "expected": [
+      "skill.spreadsheet-analysis"
+    ]
+  },
+  {
+    "id": "037",
+    "query": "Calculate Excel columns",
+    "expected": [
+      "skill.spreadsheet-analysis"
+    ]
+  },
+  {
+    "id": "038",
+    "query": "Explica esta planilla",
+    "expected": [
+      "skill.spreadsheet-analysis"
+    ]
+  },
+  {
+    "id": "039",
+    "query": "Compare these XLSX rows",
+    "expected": [
+      "skill.spreadsheet-analysis"
+    ]
+  },
+  {
+    "id": "040",
+    "query": "Revisa una fórmula del Excel",
+    "expected": [
+      "skill.spreadsheet-analysis"
+    ]
+  },
+  {
+    "id": "041",
+    "query": "Revisa este archivo",
+    "expected": [
+      "skill.spreadsheet-analysis"
+    ],
+    "filename": "report.xlsx"
+  },
+  {
+    "id": "042",
+    "query": "Analyze this file",
+    "expected": [
+      "skill.spreadsheet-analysis"
+    ],
+    "filename": "report.xlsx"
+  },
+  {
+    "id": "043",
+    "query": "Explica estos datos",
+    "expected": [
+      "skill.spreadsheet-analysis"
+    ],
+    "filename": "report.xlsx"
+  },
+  {
+    "id": "044",
+    "query": "Review the totals",
+    "expected": [
+      "skill.spreadsheet-analysis"
+    ],
+    "filename": "report.xlsx"
+  },
+  {
+    "id": "045",
+    "query": "Analiza las columnas",
+    "expected": [
+      "skill.spreadsheet-analysis"
+    ],
+    "filename": "report.xlsx"
+  },
+  {
+    "id": "046",
+    "query": "Revisa este archivo",
+    "expected": [
+      "skill.spreadsheet-analysis"
+    ],
+    "filename": "report.csv"
+  },
+  {
+    "id": "047",
+    "query": "Analyze this file",
+    "expected": [
+      "skill.spreadsheet-analysis"
+    ],
+    "filename": "report.csv"
+  },
+  {
+    "id": "048",
+    "query": "Explica estos datos",
+    "expected": [
+      "skill.spreadsheet-analysis"
+    ],
+    "filename": "report.csv"
+  },
+  {
+    "id": "049",
+    "query": "Review the totals",
+    "expected": [
+      "skill.spreadsheet-analysis"
+    ],
+    "filename": "report.csv"
+  },
+  {
+    "id": "050",
+    "query": "Analiza las columnas",
+    "expected": [
+      "skill.spreadsheet-analysis"
+    ],
+    "filename": "report.csv"
+  },
+  {
+    "id": "051",
+    "query": "Revisa código Kotlin",
+    "expected": [
+      "skill.code-assistant"
+    ]
+  },
+  {
+    "id": "052",
+    "query": "Review this code",
+    "expected": [
+      "skill.code-assistant"
+    ]
+  },
+  {
+    "id": "053",
+    "query": "Depura esta función",
+    "expected": [
+      "skill.code-assistant"
+    ]
+  },
+  {
+    "id": "054",
+    "query": "Debug this bug",
+    "expected": [
+      "skill.code-assistant"
+    ]
+  },
+  {
+    "id": "055",
+    "query": "Implementa una función",
+    "expected": [
+      "skill.code-assistant"
+    ]
+  },
+  {
+    "id": "056",
+    "query": "Write some code",
+    "expected": [
+      "skill.code-assistant"
+    ]
+  },
+  {
+    "id": "057",
+    "query": "Explain this ViewModel",
+    "expected": [
+      "skill.code-assistant"
+    ]
+  },
+  {
+    "id": "058",
+    "query": "Analiza el deadlock",
+    "expected": [
+      "skill.code-assistant"
+    ]
+  },
+  {
+    "id": "059",
+    "query": "Why does this Kotlin code deadlock?",
+    "expected": [
+      "skill.code-assistant"
+    ]
+  },
+  {
+    "id": "060",
+    "query": "Corrige este bug",
+    "expected": [
+      "skill.code-assistant"
+    ]
+  },
+  {
+    "id": "061",
+    "query": "Revisa esta clase y dime por qué podría producir un deadlock",
+    "expected": [
+      "skill.code-assistant"
+    ],
+    "filename": "Example.kt"
+  },
+  {
+    "id": "062",
+    "query": "Revisa esta clase y dime por qué podría producir un deadlock",
+    "expected": [
+      "skill.code-assistant"
+    ],
+    "filename": "Example.py"
+  },
+  {
+    "id": "063",
+    "query": "Revisa esta clase y dime por qué podría producir un deadlock",
+    "expected": [
+      "skill.code-assistant"
+    ],
+    "filename": "Example.java"
+  },
+  {
+    "id": "064",
+    "query": "Revisa esta clase y dime por qué podría producir un deadlock",
+    "expected": [
+      "skill.code-assistant"
+    ],
+    "filename": "Example.ts"
+  },
+  {
+    "id": "065",
+    "query": "Revisa esta clase y dime por qué podría producir un deadlock",
+    "expected": [
+      "skill.code-assistant"
+    ],
+    "filename": "Example.cpp"
+  },
+  {
+    "id": "066",
+    "query": "Revisa esta clase y dime por qué podría producir un deadlock",
+    "expected": [
+      "skill.code-assistant"
+    ],
+    "filename": "Example.rs"
+  },
+  {
+    "id": "067",
+    "query": "Revisa esta clase y dime por qué podría producir un deadlock",
+    "expected": [
+      "skill.code-assistant"
+    ],
+    "filename": "Example.go"
+  },
+  {
+    "id": "068",
+    "query": "Revisa esta clase y dime por qué podría producir un deadlock",
+    "expected": [
+      "skill.code-assistant"
+    ],
+    "filename": "Example.cs"
+  },
+  {
+    "id": "069",
+    "query": "Revisa esta clase y dime por qué podría producir un deadlock",
+    "expected": [
+      "skill.code-assistant"
+    ],
+    "filename": "Example.swift"
+  },
+  {
+    "id": "070",
+    "query": "Revisa esta clase y dime por qué podría producir un deadlock",
+    "expected": [
+      "skill.code-assistant"
+    ],
+    "filename": "Example.js"
+  },
+  {
+    "id": "071",
+    "query": "Resume este archivo",
+    "expected": [
+      "skill.document-analysis"
+    ],
+    "filename": "report.pdf"
+  },
+  {
+    "id": "072",
+    "query": "Analyze the document",
+    "expected": [
+      "skill.document-analysis"
+    ],
+    "filename": "report.pdf"
+  },
+  {
+    "id": "073",
+    "query": "Resume este archivo",
+    "expected": [
+      "skill.document-analysis"
+    ],
+    "filename": "report.docx"
+  },
+  {
+    "id": "074",
+    "query": "Analyze the document",
+    "expected": [
+      "skill.document-analysis"
+    ],
+    "filename": "report.docx"
+  },
+  {
+    "id": "075",
+    "query": "Resume este archivo",
+    "expected": [
+      "skill.document-analysis"
+    ],
+    "filename": "report.txt"
+  },
+  {
+    "id": "076",
+    "query": "Analyze the document",
+    "expected": [
+      "skill.document-analysis"
+    ],
+    "filename": "report.txt"
+  },
+  {
+    "id": "077",
+    "query": "Resume este archivo",
+    "expected": [
+      "skill.document-analysis"
+    ],
+    "filename": "report.md"
+  },
+  {
+    "id": "078",
+    "query": "Analyze the document",
+    "expected": [
+      "skill.document-analysis"
+    ],
+    "filename": "report.md"
+  },
+  {
+    "id": "079",
+    "query": "Resume este archivo",
+    "expected": [
+      "skill.document-analysis"
+    ],
+    "filename": "report.json"
+  },
+  {
+    "id": "080",
+    "query": "Analyze the document",
+    "expected": [
+      "skill.document-analysis"
+    ],
+    "filename": "report.json"
+  },
+  {
+    "id": "081",
+    "query": "Resume este archivo",
+    "expected": [
+      "skill.document-analysis"
+    ],
+    "filename": "report.xml"
+  },
+  {
+    "id": "082",
+    "query": "Analyze the document",
+    "expected": [
+      "skill.document-analysis"
+    ],
+    "filename": "report.xml"
+  },
+  {
+    "id": "083",
+    "query": "Resume este archivo",
+    "expected": [
+      "skill.document-analysis"
+    ],
+    "filename": "report.yaml"
+  },
+  {
+    "id": "084",
+    "query": "Analyze the document",
+    "expected": [
+      "skill.document-analysis"
+    ],
+    "filename": "report.yaml"
+  },
+  {
+    "id": "085",
+    "query": "Resume este PDF",
+    "expected": [
+      "skill.document-analysis"
+    ]
+  },
+  {
+    "id": "086",
+    "query": "Summarize the document",
+    "expected": [
+      "skill.document-analysis"
+    ]
+  },
+  {
+    "id": "087",
+    "query": "Compara estos documentos",
+    "expected": [
+      "skill.document-analysis"
+    ]
+  },
+  {
+    "id": "088",
+    "query": "Analiza este documento",
+    "expected": [
+      "skill.document-analysis"
+    ]
+  },
+  {
+    "id": "089",
+    "query": "Revisa estos datos",
+    "expected": [
+      "skill.spreadsheet-analysis"
+    ],
+    "mime": "text/csv"
+  },
+  {
+    "id": "090",
+    "query": "Resume esto",
+    "expected": [
+      "skill.document-analysis"
+    ],
+    "mime": "application/pdf"
+  },
+  {
+    "id": "091",
+    "query": "hola",
+    "expected": [],
+    "filename": "report.xlsx"
+  },
+  {
+    "id": "092",
+    "query": "hello",
+    "expected": [],
+    "filename": "Example.kt"
+  },
+  {
+    "id": "093",
+    "query": "Necesito ayuda con esto",
+    "expected": [],
+    "filename": "report.pdf"
+  },
+  {
+    "id": "094",
+    "query": "Revisa el código y los totales del Excel",
+    "expected": [
+      "skill.code-assistant",
+      "skill.spreadsheet-analysis"
+    ]
+  },
+  {
+    "id": "095",
+    "query": "Redacta un correo y revisa el código",
+    "expected": [
+      "skill.general-writing",
+      "skill.code-assistant"
+    ]
+  },
+  {
+    "id": "096",
+    "query": "hola",
+    "expected": [
+      "skill.general-writing"
+    ],
+    "explicit": [
+      "skill.general-writing"
+    ]
+  },
+  {
+    "id": "097",
+    "query": "hola",
+    "expected": [],
+    "explicit": [
+      "skill.general-writing"
+    ],
+    "disabled": [
+      "skill.general-writing"
+    ]
+  },
+  {
+    "id": "098",
+    "query": "hola",
+    "expected": [],
+    "explicit": [
+      "skill.general-writing"
+    ],
+    "agentSkills": []
+  },
+  {
+    "id": "099",
+    "query": "hola",
+    "expected": [
+      "skill.document-analysis"
+    ],
+    "explicit": [
+      "skill.document-analysis"
+    ]
+  },
+  {
+    "id": "100",
+    "query": "hola",
+    "expected": [],
+    "explicit": [
+      "skill.document-analysis"
+    ],
+    "disabled": [
+      "skill.document-analysis"
+    ]
+  },
+  {
+    "id": "101",
+    "query": "hola",
+    "expected": [],
+    "explicit": [
+      "skill.document-analysis"
+    ],
+    "agentSkills": []
+  },
+  {
+    "id": "102",
+    "query": "hola",
+    "expected": [
+      "skill.code-assistant"
+    ],
+    "explicit": [
+      "skill.code-assistant"
+    ]
+  },
+  {
+    "id": "103",
+    "query": "hola",
+    "expected": [],
+    "explicit": [
+      "skill.code-assistant"
+    ],
+    "disabled": [
+      "skill.code-assistant"
+    ]
+  },
+  {
+    "id": "104",
+    "query": "hola",
+    "expected": [],
+    "explicit": [
+      "skill.code-assistant"
+    ],
+    "agentSkills": []
+  },
+  {
+    "id": "105",
+    "query": "hola",
+    "expected": [
+      "skill.spreadsheet-analysis"
+    ],
+    "explicit": [
+      "skill.spreadsheet-analysis"
+    ]
+  },
+  {
+    "id": "106",
+    "query": "hola",
+    "expected": [],
+    "explicit": [
+      "skill.spreadsheet-analysis"
+    ],
+    "disabled": [
+      "skill.spreadsheet-analysis"
+    ]
+  },
+  {
+    "id": "107",
+    "query": "hola",
+    "expected": [],
+    "explicit": [
+      "skill.spreadsheet-analysis"
+    ],
+    "agentSkills": []
+  },
+  {
+    "id": "108",
+    "query": "hola",
+    "expected": [],
+    "explicit": [
+      "skill.missing"
+    ]
+  },
+  {
+    "id": "109",
+    "query": "Revisa este Excel",
+    "expected": [],
+    "disabled": [
+      "skill.spreadsheet-analysis"
+    ]
+  },
+  {
+    "id": "110",
+    "query": "Review this code",
+    "expected": [],
+    "agentSkills": [
+      "skill.general-writing"
+    ]
+  },
+  {
+    "id": "111",
+    "query": "Revisa este Excel",
+    "expected": [],
+    "missingCapability": true,
+    "requiresCapability": true
+  },
+  {
+    "id": "112",
+    "query": "Revisa código Kotlin",
+    "expected": [],
+    "missingCapability": true,
+    "requiresCapability": true
+  },
+  {
+    "id": "113",
+    "query": "Sumar cinco más cinco",
+    "expected": []
+  },
+  {
+    "id": "114",
+    "query": "La memoria del editor Nebula está guardada",
+    "expected": []
+  }
+]
