@@ -54,6 +54,19 @@ class ContextFoundationTest {
         assertFalse(c.requiresUserNotice)
         assertEquals("ROUTINE",c.safeReport()["omissionSeverity"])
     }
+    @Test fun incompleteSpreadsheetEvidenceHasMaterialInspectorNotice(){
+        val source=item("spreadsheet-cell","A3=4 · formula=\$A\$2-\$A\$1").copy(provenance=ContextProvenance(
+            sourceId="source-id",documentId="document-id",cellAddresses=listOf("A3","A1"),
+            evidenceIncompleteReasons=listOf("MISSING_REFERENCED_CELLS"),missingCellAddresses=listOf("A2")))
+        val base=ContextBuilder().build(ContextRequest("Explain A3",access),listOf(source))
+        val bundle=base.copy(sourceEvidenceIssues=listOf(SourceEvidenceIssue("source-id","segment-id","document-id",listOf("MISSING_REFERENCED_CELLS"),listOf("A2"))))
+        val report=bundle.safeReport().toString()
+        assertTrue(bundle.requiresUserNotice)
+        assertEquals("IMPORTANT",bundle.safeReport()["omissionSeverity"])
+        assertTrue(report.contains("MISSING_REFERENCED_CELLS"))
+        assertTrue(report.contains("A2"))
+        assertFalse(report.contains("A3=4"))
+    }
     @Test fun relevantSourceOrMemoryLostToTokenBudgetRaisesPreciseNotice(){
         val source=item("large-source","relevant passage ".repeat(100)).copy(priority=90)
         val memory=item("large-memory","approved memory ".repeat(100),kind=ContextKind.MEMORY,priority=80).copy(trust=ContextTrust.APPROVED_MEMORY)

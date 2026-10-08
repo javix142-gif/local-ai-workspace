@@ -802,8 +802,10 @@ class ChatViewModel(
                     suppliedDocumentIds = selectedContext.included.filter { it.kind == com.localai.workspace.context.ContextKind.SOURCE }.mapNotNull { it.provenance.documentId }.toSet()
                     val selectedSourceDrops=selectedContext.dropped.filter { it.item.kind==com.localai.workspace.context.ContextKind.SOURCE && it.item.provenance.documentId in selectedFiles }
                     val selectedSourceBudgetDrop=selectedSourceDrops.any { it.reason=="TOKEN_BUDGET" }
+                    val incompleteCellEvidence=selectedContext.sourceEvidenceIssues.isNotEmpty() || selectedContext.included.any { it.kind==com.localai.workspace.context.ContextKind.SOURCE && it.provenance.evidenceIncompleteReasons.isNotEmpty() }
+                    if(incompleteCellEvidence) _notices.emit("Some requested spreadsheet cells or formula dependencies could not be included; verify the cell evidence before relying on totals.")
                     if(selectedSourceBudgetDrop) _notices.emit("A relevant passage from a selected file did not fit this turn and was not sent to the model")
-                    else if ((selectedFiles - suppliedDocumentIds).isNotEmpty()) {
+                    else if (!incompleteCellEvidence && (selectedFiles - suppliedDocumentIds).isNotEmpty()) {
                         if(suppliedDocumentIds.isEmpty()) _notices.emit("No relevant passage was found in the selected files; their contents were not sent")
                         else _notices.emit("One or more selected files had no relevant passage for this question")
                     }

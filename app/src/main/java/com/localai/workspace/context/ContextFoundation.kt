@@ -102,10 +102,15 @@ class ContextFoundation(private val graph:AppGraph, private val semanticLayerPro
         }else emptyList()
         if(canUseV2 && v2Hits.isEmpty() && sourceNotice==null) sourceNotice="SOURCE_SEMANTIC_V2_NO_HITS;LEGACY_FALLBACK"
         val sourceEvidenceByItem=linkedMapOf<String,Evidence>()
+        val sourceEvidenceIssues=mutableListOf<SourceEvidenceIssue>()
         if(v2Hits.isNotEmpty()) {
             for(hit in v2Hits) {
                 val content=hit.content ?: continue
                 val excerpt=ContextEvidenceExcerptSelector.select(request.query,content)
+                if(excerpt.incompleteReasons.isNotEmpty()) sourceEvidenceIssues+=SourceEvidenceIssue(
+                    sourceId=hit.sourceId,segmentId=hit.segmentId,documentId=hit.documentId,
+                    reasons=excerpt.incompleteReasons,missingCellAddresses=excerpt.missingCellAddresses)
+                if(excerpt.text.isBlank()) continue
                 val evidenceHit=hit.legacySegmentId?.let { legacyId->
                     val document=graph.database.documentDao().documentForSegment(legacyId)
                     val segment=graph.database.documentDao().segment(legacyId)
@@ -127,7 +132,7 @@ class ContextFoundation(private val graph:AppGraph, private val semanticLayerPro
                 val absoluteStart=excerpt.charStart?.let{offset->segmentStart?.plus(offset)}
                 val absoluteEnd=excerpt.charEnd?.let{offset->segmentStart?.plus(offset)}
                 all+=ContextItem(itemId,ContextKind.SOURCE,excerpt.text,sourceScope,ContextTrust.UNTRUSTED_SOURCE,80,hit.fusedScore,
-                    ContextProvenance(hit.sourceId,hit.segmentId,page=hit.page,lineStart=hit.lineStart,lineEnd=hit.lineEnd,startMs=hit.startMs,endMs=hit.endMs,sourceName=hit.sourceName,documentId=hit.documentId,charStart=absoluteStart,charEnd=absoluteEnd,excerpted=excerpt.shortened,originalCharacters=excerpt.originalCharacters,cellAddresses=excerpt.cellAddresses))
+                    ContextProvenance(hit.sourceId,hit.segmentId,page=hit.page,lineStart=hit.lineStart,lineEnd=hit.lineEnd,startMs=hit.startMs,endMs=hit.endMs,sourceName=hit.sourceName,documentId=hit.documentId,charStart=absoluteStart,charEnd=absoluteEnd,excerpted=excerpt.shortened,originalCharacters=excerpt.originalCharacters,cellAddresses=excerpt.cellAddresses,evidenceIncompleteReasons=excerpt.incompleteReasons,missingCellAddresses=excerpt.missingCellAddresses))
                 evidenceHit?.let{sourceEvidenceByItem[itemId]=it}
             }
         } else if(request.sourceRetrievalMode!=SourceRetrievalMode.DISABLED) {
@@ -143,11 +148,15 @@ class ContextFoundation(private val graph:AppGraph, private val semanticLayerPro
                 check(original!=null&&original.projectId==access.projectId){"SOURCE_SCOPE_MISMATCH"}
                 if(request.selectedDocumentIds.isEmpty() || e.documentId in request.selectedDocumentIds) {
                     val excerpt=ContextEvidenceExcerptSelector.select(request.query,e.excerpt)
+                    if(excerpt.incompleteReasons.isNotEmpty()) sourceEvidenceIssues+=SourceEvidenceIssue(
+                        sourceId=e.documentId,segmentId=e.segmentId.toString(),documentId=e.documentId,
+                        reasons=excerpt.incompleteReasons,missingCellAddresses=excerpt.missingCellAddresses)
+                    if(excerpt.text.isBlank()) return@forEach
                     val start=excerpt.charStart?.let{e.charStart?.plus(it)}
                     val end=excerpt.charEnd?.let{e.charStart?.plus(it)}
                     val compact=e.copy(excerpt=excerpt.text,charStart=start,charEnd=end)
                     all+=ContextItem(e.id,ContextKind.SOURCE,excerpt.text,sourceScope,ContextTrust.UNTRUSTED_SOURCE,80,e.retrievalScore,
-                        ContextProvenance(e.documentId,e.segmentId.toString(),page=e.pageStart,sourceName=e.documentTitle,documentId=e.documentId,charStart=start,charEnd=end,excerpted=excerpt.shortened,originalCharacters=excerpt.originalCharacters,cellAddresses=excerpt.cellAddresses))
+                        ContextProvenance(e.documentId,e.segmentId.toString(),page=e.pageStart,sourceName=e.documentTitle,documentId=e.documentId,charStart=start,charEnd=end,excerpted=excerpt.shortened,originalCharacters=excerpt.originalCharacters,cellAddresses=excerpt.cellAddresses,evidenceIncompleteReasons=excerpt.incompleteReasons,missingCellAddresses=excerpt.missingCellAddresses))
                     sourceEvidenceByItem[e.id]=compact
                 }
             }
@@ -169,6 +178,6 @@ class ContextFoundation(private val graph:AppGraph, private val semanticLayerPro
         val result=ContextBuilder().build(request,all)
         val renderStart=System.nanoTime();result.conversation();val renderMs=(System.nanoTime()-renderStart)/1_000_000
         val includedSourceIds=result.included.filter{it.kind==ContextKind.SOURCE}.map{it.id}.toSet()
-        result.copy(dropped=result.dropped+relevanceDropped,memoryLookupSkipped=memorySkipped,timings=result.timings.copy(totalMs=(System.nanoTime()-started)/1_000_000,memoryMs=memoryMs,retrievalMs=retrievalMs,historyMs=historyMs,renderMs=renderMs),notice=sourceNotice ?: notice.value,sourceEvidence=sourceEvidenceByItem.filterKeys{it in includedSourceIds}.values.toList()).also{last.value=it}
+        result.copy(dropped=result.dropped+relevanceDropped,memoryLookupSkipped=memorySkipped,timings=result.timings.copy(totalMs=(System.nanoTime()-started)/1_000_000,memoryMs=memoryMs,retrievalMs=retrievalMs,historyMs=historyMs,renderMs=renderMs),notice=sourceNotice ?: notice.value,sourceEvidence=sourceEvidenceByItem.filterKeys{it in includedSourceIds}.values.toList(),sourceEvidenceIssues=sourceEvidenceIssues.distinct()).also{last.value=it}
     }
 }

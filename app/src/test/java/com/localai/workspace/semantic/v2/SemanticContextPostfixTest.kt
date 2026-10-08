@@ -162,6 +162,76 @@ class SemanticContextPostfixTest {
         assertFalse(bundle.conversation().userMessage.contains("whole unrelated workbook content"))
     }
 
+    @Test fun eg2SpreadsheetRangeKeepsInteriorCellInPromptAndProvenance()=runBlocking {
+        addProject("project-a")
+        val workbook=(1..3).joinToString("\n") { row ->
+            val value=listOf("1","5","4")[row-1]
+            org.json.JSONObject().put("sheet","Hoja1").put("row",row).put("cells",org.json.JSONArray().put(
+                org.json.JSONObject().put("address","A$row").put("column",1).put("value",value))).toString()
+        }
+        val document=addDocument("project-a","range-eg2","range.xlsx",workbook)
+        index("project-a")
+
+        val bundle=foundation.build(request("project-a",setOf(document.id)).copy(query="Suma A1:A3"),evidence=emptyList(),memoryEnabled=false)
+        val source=bundle.included.single{it.kind==com.localai.workspace.context.ContextKind.SOURCE}
+        val prompt=bundle.conversation().userMessage
+
+        assertTrue(prompt.contains("A1=1"))
+        assertTrue(prompt.contains("A2=5"))
+        assertTrue(prompt.contains("A3=4"))
+        assertEquals(listOf("A1","A2","A3"),source.provenance.cellAddresses)
+        assertEquals(source.text,bundle.sourceEvidence.single().excerpt)
+        assertTrue(bundle.sourceEvidenceIssues.isEmpty())
+    }
+
+    @Test fun lexicalFallbackSpreadsheetRangeKeepsInteriorCellInPromptAndProvenance()=runBlocking {
+        addProject("project-a")
+        val workbook=(1..3).joinToString("\n") { row ->
+            val value=listOf("1","5","4")[row-1]
+            org.json.JSONObject().put("sheet","Hoja1").put("row",row).put("cells",org.json.JSONArray().put(
+                org.json.JSONObject().put("address","A$row").put("column",1).put("value",value))).toString()
+        }
+        val document=addDocument("project-a","range-legacy","range.xlsx",workbook)
+        index("project-a")
+        driver.failNext=true
+
+        val bundle=foundation.build(request("project-a",setOf(document.id)).copy(query="Suma A1:A3"),evidence=emptyList(),memoryEnabled=false)
+        val source=bundle.included.single{it.kind==com.localai.workspace.context.ContextKind.SOURCE}
+        val prompt=bundle.conversation().userMessage
+
+        assertTrue(bundle.notice.orEmpty().contains("SOURCE_SEMANTIC_V2_SKIPPED"))
+        assertTrue(prompt.contains("A1=1"))
+        assertTrue(prompt.contains("A2=5"))
+        assertTrue(prompt.contains("A3=4"))
+        assertEquals(listOf("A1","A2","A3"),source.provenance.cellAddresses)
+        assertEquals(source.text,bundle.sourceEvidence.single().excerpt)
+        assertTrue(bundle.sourceEvidenceIssues.isEmpty())
+    }
+
+    @Test fun eg2MissingSpreadsheetDependencyReachesPromptWithMaterialDiagnostic()=runBlocking {
+        addProject("project-a")
+        val workbook=listOf(
+            org.json.JSONObject().put("sheet","Hoja1").put("row",1).put("cells",org.json.JSONArray().put(org.json.JSONObject().put("address","A1").put("column",1).put("value","1"))).toString(),
+            org.json.JSONObject().put("sheet","Hoja1").put("row",3).put("cells",org.json.JSONArray().put(org.json.JSONObject().put("address","A3").put("column",1).put("value","4").put("formula","\$A\$2-\$A\$1"))).toString(),
+            org.json.JSONObject().put("sheet","Hoja1").put("row",4).put("cells",org.json.JSONArray().put(org.json.JSONObject().put("address","A4").put("column",1).put("value","unrelated"))).toString(),
+        ).joinToString("\n")
+        val document=addDocument("project-a","missing-dependency","formula.xlsx",workbook)
+        index("project-a")
+
+        val bundle=foundation.build(request("project-a",setOf(document.id)).copy(query="Explica A3"),evidence=emptyList(),memoryEnabled=false)
+        val source=bundle.included.single{it.kind==com.localai.workspace.context.ContextKind.SOURCE}
+        val report=bundle.safeReport()
+
+        assertTrue(bundle.conversation().userMessage.contains("A3=4"))
+        assertFalse(bundle.conversation().userMessage.contains("A4=unrelated"))
+        assertEquals(listOf("A3","A1"),source.provenance.cellAddresses)
+        assertEquals(listOf("MISSING_REFERENCED_CELLS"),source.provenance.evidenceIncompleteReasons)
+        assertEquals(listOf("A2"),source.provenance.missingCellAddresses)
+        assertTrue(bundle.requiresUserNotice)
+        assertTrue(report.toString().contains("MISSING_REFERENCED_CELLS"))
+        assertTrue(report.toString().contains("A2"))
+    }
+
     @Test fun equivalentLegacyAndV2EvidenceIsIncludedOnlyOnce()=runBlocking {
         addProject("project-a")
         val document=addDocument("project-a","doc-a","notes.txt","ORCHID is one canonical passage, not two copies.")
