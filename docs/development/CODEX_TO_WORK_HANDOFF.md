@@ -1,11 +1,23 @@
 # Codex → Work handoff: 0.5.0 pre-loop stabilization
 
-**Status:** implementation and host validation candidate; not a release declaration.
+**Status:** 0.5.0 host candidate with the authorized M00-03 sheet-scope correction; no device validation for this correction.
 **Repository:** `https://github.com/javix142-gif/local-ai-workspace.git`
 **Branch:** `feat/0.5.0-skills-agents`
-**Tested source HEAD:** `b577934d1f93fd02b6d09fc5097a407d5069515f` (stabilization source commits; handoff docs follow as a separate commit).
+**Latest tested production source HEAD:** `ca3fcd7ca492ea35d2255b2665c27fa26c2466cf` (source correction; evidence and handoff are a separate documentation commit).
 **Baseline:** `v0.4.2` → `de615b772cf37a99e7e08a647c59607b271de606`
 **App:** `com.localai.workspace`, version `0.5.0` (`versionCode 27`).
+
+## Latest follow-up: M00-03 sheet-scoped references (2026-10-08)
+
+The earlier M00-03 selector follow-up below fixed range interiors, absolute/mixed references and multibyte text anchors. A separate audit then found that qualified formula references still lost their worksheet identity. At the clean feature HEAD `9c1f32c4277a187c65af715890d1061a2244e771`, the red regression selected `Hoja1!A1=999` for formula `'Hoja2'!A1` and reported no missing cell. The correction is `ca3fcd7ca492ea35d2255b2665c27fa26c2466cf`; its host validation evidence is in [M00-03 sheet-scope results](../validation/m00-03-sheet-scope/RESULTS.md).
+
+Design decision: A1 identity is the pair `(NFC + Locale.ROOT uppercase worksheet key, normalized coordinate)`, while the original sheet name is preserved for display. Unqualified formula references resolve only on the formula cell's sheet. Qualified references resolve only on the named sheet. A direct unqualified query address with multiple represented candidates is treated as ambiguous: no candidate values are sent and a material diagnostic is raised. `$` does not change identity. Qualified single-sheet references/ranges and escaped-apostrophe sheet names are supported. 3D ranges are expanded inclusively only when source metadata supplies a contiguous, conflict-free workbook sheet order; otherwise the excerpt is explicitly incomplete and does not claim endpoint-only coverage.
+
+Selection is bounded to 64 unique composite `(sheet,address)` identities and 480 UTF-8 bytes. Formula strings are masked; formulas are not evaluated or recursively followed. `LOG10` is not interpreted as a cell. External workbook references, dynamic `INDIRECT`/`OFFSET`, defined names and structured table references remain unresolved with diagnostics. Missing sheets/cells, ambiguity, 3D ordering failures and evidence-limit omissions propagate through Context provenance/Inspector and the existing material user notice. The indexed source stays unchanged.
+
+Context Foundation reuses only passages already returned by authorized Semantic V2 or lexical retrieval, grouped within the same document. It does not search globally to complete a formula or cross document/project boundaries. F1/F2 and the retrieval-before-generation-gate tests remain in the full host suite.
+
+Validation at code commit `ca3fcd7`: focused suites 99/99, app JVM 720/720, LiteRT compatibility 2/2; debug/release builds, lint and AndroidTest APK compilation succeeded. Lint reported 0 errors, 40 warnings and 1 informational item. Instrumented and Moto G86 execution are **NOT RUN**; the AndroidTest APK compilation is not an Android PASS. The required assemble tasks produced only ignored local Gradle build outputs; no APK was copied or distributed. The exact commands and raw JUnit/log evidence are in the validation folder above.
 
 ## Follow-up: M00-03 evidence selector correction (2026-10-08)
 

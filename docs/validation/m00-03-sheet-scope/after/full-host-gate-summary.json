@@ -1,0 +1,56 @@
+{
+  "scope": "host_validation_only",
+  "testedCodeCommit": "ca3fcd7ca492ea35d2255b2665c27fa26c2466cf",
+  "startedAtUtc": "2026-10-08T18:47:07Z",
+  "finishedAtUtc": "2026-10-08T18:57:01Z",
+  "duration": "9m54s",
+  "host": {
+    "os": "Linux x86_64",
+    "jdk": "Temurin 17.0.20.1+1",
+    "gradle": "8.10.2",
+    "androidSdk": "android-35",
+    "agp": "8.7.3",
+    "kotlinAndroid": "2.0.21",
+    "nativeAbi": "arm64-v8a"
+  },
+  "jvmTests": {
+    "app": {
+      "tests": 720,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "litertCompat": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "focusedClasses": {
+    "AuditHarness": 1,
+    "ContextEvidenceExcerptTest": 27,
+    "ContextFoundationTest": 38,
+    "StructuredDocumentsTest": 10,
+    "SemanticContextPostfixTest": 23,
+    "total": 99,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "buildTasks": {
+    "assembleDebug": "PASS",
+    "assembleRelease": "PASS",
+    "lintDebug": "PASS",
+    "assembleDebugAndroidTest": "PASS_COMPILED_ONLY"
+  },
+  "lint": {
+    "errors": 0,
+    "warnings": 40,
+    "information": 1
+  },
+  "androidExecution": "NOT_RUN",
+  "physicalDeviceExecution": "NOT_RUN",
+  "apkDistributed": false,
+  "gateLogSha256": "f84b3ae60d9c04e685fc019736985ae421b66c735f918275da4af7f0b0d4d77e"
+}

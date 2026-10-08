@@ -199,5 +199,88 @@
     "physicalValidation": "NOT_RUN",
     "evidenceDirectory": "docs/validation/m00-03/",
     "mainAndV042Untouched": true
+  },
+  "latestFollowUp": {
+    "name": "M00-03 sheet-scoped spreadsheet references",
+    "status": "IMPLEMENTED_TESTED_HOST_DEVICE_NOT_RUN",
+    "baseCommit": "9c1f32c4277a187c65af715890d1061a2244e771",
+    "testedCodeCommit": "ca3fcd7ca492ea35d2255b2665c27fa26c2466cf",
+    "branch": "feat/0.5.0-skills-agents",
+    "redReproduction": {
+      "status": "FAIL_AS_EXPECTED_BEFORE_FIX",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "observed": "Hoja1!A1=999 was selected for formula Hoja1!A3 containing explicit reference Hoja2!A1; no missing reference was recorded.",
+      "evidence": "docs/validation/m00-03-sheet-scope/before/"
+    },
+    "focusedHost": {
+      "status": "PASS",
+      "tests": 99,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "classes": {
+        "AuditHarness": 1,
+        "ContextEvidenceExcerptTest": 27,
+        "ContextFoundationTest": 38,
+        "StructuredDocumentsTest": 10,
+        "SemanticContextPostfixTest": 23
+      }
+    },
+    "finalHostGate": {
+      "status": "PASS",
+      "appJvmTests": 720,
+      "compatibilityJvmTests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "tasks": [
+        ":app:testDebugUnitTest",
+        ":litert-compat:testDebugUnitTest",
+        ":app:assembleDebug",
+        ":app:assembleRelease",
+        ":app:lintDebug",
+        ":app:assembleDebugAndroidTest"
+      ],
+      "lintErrors": 0,
+      "lintWarnings": 40,
+      "lintInformation": 1,
+      "startedAtUtc": "2026-10-08T18:47:07Z",
+      "finishedAtUtc": "2026-10-08T18:57:01Z",
+      "duration": "9m54s",
+      "logSha256": "f84b3ae60d9c04e685fc019736985ae421b66c735f918275da4af7f0b0d4d77e"
+    },
+    "hostEnvironment": {
+      "os": "Linux x86_64",
+      "jdk": "Temurin 17.0.20.1+1",
+      "gradle": "8.10.2",
+      "androidSdkPlatform": "android-35",
+      "androidGradlePlugin": "8.7.3",
+      "kotlinAndroidPlugin": "2.0.21",
+      "nativeBuildAbi": "arm64-v8a",
+      "jvmTests": "Robolectric on host JVM"
+    },
+    "androidExecution": {
+      "instrumentedTests": "NOT_RUN",
+      "physicalDevice": "NOT_RUN",
+      "adbAvailable": false,
+      "kvmAvailable": false,
+      "reason": "No adb executable/device and /dev/kvm absent; AndroidTest APK compilation is not execution."
+    },
+    "artifacts": {
+      "evidenceDirectory": "docs/validation/m00-03-sheet-scope/",
+      "selectorReport": "after/SELECTOR_REPRODUCCIONES.json",
+      "selectorReportSourceCommit": "ca3fcd7ca492ea35d2255b2665c27fa26c2466cf",
+      "noApkDistributed": true
+    },
+    "gitSafety": {
+      "mainModified": false,
+      "v042TagModified": false,
+      "merge": false,
+      "forcePush": false,
+      "pushAuthorized": "fast-forward only to feat/0.5.0-skills-agents"
+    }
   }
 }

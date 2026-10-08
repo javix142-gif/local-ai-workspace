@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" tests="23" skipped="0" failures="0" errors="0" timestamp="2026-10-08T18:48:14" hostname="05497ac86eb0" time="2.988">
+  <properties/>
+  <testcase name="reindexPublishesReadyGenerationAndPreservesReadyRollback" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.263"/>
+  <testcase name="projectIsolationAndSelectedDocumentScopeArePreserved" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.193"/>
+  <testcase name="changedDocumentCanBeReindexedIntoNewReadyGeneration" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.111"/>
+  <testcase name="v2FailureFallsBackToPrecomputedLegacyEvidence" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.124"/>
+  <testcase name="followUpCellQuestionSendsOnlyRelevantCellsWithCellProvenance" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.076"/>
+  <testcase name="lexicalFallbackSurfacesAmbiguousSheetValuesWithoutInjectingEitherCandidate" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.112"/>
+  <testcase name="explicitLegacyAndDisabledRetrievalPoliciesRemainAvailable" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.069"/>
+  <testcase name="eg2MissingSpreadsheetDependencyReachesPromptWithMaterialDiagnostic" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.104"/>
+  <testcase name="generationInvalidatedDuringQueryIsRejectedAfterEmbedding" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.11"/>
+  <testcase name="eg2AmbiguousUnqualifiedCellProducesEmptyEvidenceAndMaterialDiagnostic" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.165"/>
+  <testcase name="staleGenerationIsRejectedAndLexicalFallbackRemainsUsable" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.109"/>
+  <testcase name="eg2SpreadsheetRangeKeepsInteriorCellInPromptAndProvenance" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.197"/>
+  <testcase name="lexicalFallbackReportsMissingQualifiedSheetInsteadOfUsingAnotherDocument" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.286"/>
+  <testcase name="selectedDocumentDoesNotResolveQualifiedDependencyFromAnotherDocument" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.127"/>
+  <testcase name="lexicalFallbackSpreadsheetRangeKeepsInteriorCellInPromptAndProvenance" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.078"/>
+  <testcase name="v2FailureWithEmptyLegacyEvidenceRunsProductionLexicalFallback" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.094"/>
+  <testcase name="eg2QualifiedCrossSheetDependencyKeepsCompositeIdentityInFinalPromptAndInspector" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.094"/>
+  <testcase name="equivalentLegacyAndV2EvidenceIsIncludedOnlyOnce" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.063"/>
+  <testcase name="retrievalFinishesBeforeTheGenerationGateCanBeAcquired" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.061"/>
+  <testcase name="indexingFailedAndCancelledGenerationsAreNeverSearchable" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.071"/>
+  <testcase name="realDocumentIngestionAwaitsStaleGenerationMark" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.186"/>
+  <testcase name="eg2ContextBuildRunsDespiteEmptyPrecomputedEvidenceAndReachesPrompt" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.2"/>
+  <testcase name="lexicalFallbackKeepsQualifiedCrossSheetReferencesAndMaterialNotice" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.09"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

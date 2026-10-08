@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.context.ContextEvidenceExcerptTest" tests="27" skipped="0" failures="0" errors="0" timestamp="2026-10-08T18:47:44" hostname="05497ac86eb0" time="1.605">
+  <properties/>
+  <testcase name="missingInteriorRangeCellIsReportedWithoutSelectingNeighboringCells" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.074"/>
+  <testcase name="multibyteQueryAnchorStaysInsideUtf8BudgetAndOffsets" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.068"/>
+  <testcase name="conflictingThreeDimensionalSheetOrderNeverUsesAnArbitraryMapping" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.032"/>
+  <testcase name="unrelatedSheetOrderConflictDoesNotWarnForSimpleCellLookup" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.025"/>
+  <testcase name="missingQualifiedSheetAndMissingCellNeverFallBackToHomonymousAddress" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.074"/>
+  <testcase name="cellQuestionKeepsTargetFormulaDependenciesAndHeaderProvenance" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.025"/>
+  <testcase name="absoluteAndMixedFormulaReferencesKeepDependencies" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.052"/>
+  <testcase name="cellReferenceAndByteBudgetsAreExplicitAndBounded" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.04"/>
+  <testcase name="unqualifiedFormulaReferenceResolvesOnOwningSheetEvenWithHomonymousCell" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.098"/>
+  <testcase name="functionLiteralExternalAndDynamicReferencesNeverBecomeLocalDependencies" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.064"/>
+  <testcase name="unicodeWindowDoesNotExceedUtf8BudgetOrSplitSurrogatePairs" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.028"/>
+  <testcase name="quotedSheetNamesMatchIgnoringCaseAndPreserveOriginalDisplayName" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.063"/>
+  <testcase name="relevantSentenceIsSelectedWithExactOffsets" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.034"/>
+  <testcase name="unqualifiedQueryWithAddressOnMultipleSheetsIsReportedAmbiguousWithoutValues" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.021"/>
+  <testcase name="quotedThreeDimensionalRectangleExpandsAcrossEverySheetAndCell" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.048"/>
+  <testcase name="routineTextWindowingDoesNotCreateMaterialCellNotice" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.039"/>
+  <testcase name="hostileJsonTextIsCompactedToCellSummaryRatherThanExpandedIntoPrompt" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.054"/>
+  <testcase name="omittedThreeDimensionalInteriorOrderIsExplicitlyIncomplete" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.055"/>
+  <testcase name="giantNoMatchParagraphIsAlwaysBounded" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.066"/>
+  <testcase name="qualifiedFormulaDependencyNeverAliasesSameAddressOnCurrentSheet" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.093"/>
+  <testcase name="noMatchingStructuredCellsReturnsEmptyEvidenceInsteadOfAnotherCell" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.106"/>
+  <testcase name="escapedApostropheSheetAndMixedRangeQualifiersResolveExactly" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.111"/>
+  <testcase name="rectangularFormulaRangeIncludesAvailableRowAndColumnCells" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.08"/>
+  <testcase name="missingFormulaDependencyIsReportedWithoutInventingEvidence" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.084"/>
+  <testcase name="localAndQualifiedRectangularRangesAreInclusive" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.05"/>
+  <testcase name="rectangularCellRangeKeepsInteriorCells" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.067"/>
+  <testcase name="threeDimensionalRangeIncludesEveryOrderedSheetAndInteriorSheet" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.044"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

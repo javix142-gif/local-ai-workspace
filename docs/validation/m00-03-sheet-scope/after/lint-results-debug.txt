@@ -1,0 +1,206 @@
+/workspace/local-ai-workspace/app/src/main/java/com/localai/workspace/semantic/EmbeddingModels.kt:36: Warning: Consider using apply() instead; commit writes its data to persistent storage immediately, whereas apply will handle it in the background [ApplySharedPref]
+     rollback.commit();error("Config commit failed")
+              ~~~~~~~~
+/workspace/local-ai-workspace/app/src/main/java/com/localai/workspace/semantic/v2/SemanticLayer.kt:46: Warning: Consider using apply() instead; commit writes its data to persistent storage immediately, whereas apply will handle it in the background [ApplySharedPref]
+        if (manager.selected?.id == id) { manager.deselect(); prefs.edit().remove("selected").commit() }
+                                                                                              ~~~~~~~~
+/workspace/local-ai-workspace/app/src/main/java/com/localai/workspace/semantic/v2/SemanticModelState.kt:16: Warning: Consider using apply() instead; commit writes its data to persistent storage immediately, whereas apply will handle it in the background [ApplySharedPref]
+            prefs.edit().apply{previous.forEach{(key,value)->if(value==null)remove(key)else putString(key,value)}}.commit()
+                                                                                                                   ~~~~~~~~
+
+   Explanation for issues of type "ApplySharedPref":
+   Consider using apply() instead of commit on shared preferences. Whereas
+   commit blocks and writes its data to persistent storage immediately, apply
+   will handle it in the background.
+
+/workspace/local-ai-workspace/app/src/main/java/com/localai/workspace/data/ImagePreprocessor.kt:7: Warning: Avoid using android.media.ExifInterface; use androidx.exifinterface.media.ExifInterface instead [ExifInterface]
+import android.media.ExifInterface
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "ExifInterface":
+   The android.media.ExifInterface implementation has some known security bugs
+   in older versions of Android. There is a new implementation available of
+   this library in the support library, which is preferable.
+
+/workspace/local-ai-workspace/gradle/libs.versions.toml:3: Warning: A newer version of org.jetbrains.kotlin.android than 2.0.21 is available: 2.4.0 [GradleDependency]
+kotlin = "2.0.21"
+         ~~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:3: Warning: A newer version of org.jetbrains.kotlin.android than 2.0.21 is available: 2.4.0 [GradleDependency]
+kotlin = "2.0.21"
+         ~~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:3: Warning: A newer version of org.jetbrains.kotlin.android than 2.0.21 is available: 2.4.0 [GradleDependency]
+kotlin = "2.0.21"
+         ~~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.material:material-icons-extended than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.material:material-icons-extended than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.material:material-icons-extended than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.ui:ui than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.ui:ui than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.ui:ui than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.ui:ui-tooling than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.ui:ui-tooling than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.ui:ui-tooling than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.ui:ui-tooling-preview than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.ui:ui-tooling-preview than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.ui:ui-tooling-preview than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:11: Warning: A newer version of androidx.room:room-compiler than 2.6.1 is available: 2.8.5 [GradleDependency]
+room = "2.6.1"
+       ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:11: Warning: A newer version of androidx.room:room-compiler than 2.6.1 is available: 2.8.5 [GradleDependency]
+room = "2.6.1"
+       ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:11: Warning: A newer version of androidx.room:room-compiler than 2.6.1 is available: 2.8.5 [GradleDependency]
+room = "2.6.1"
+       ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:11: Warning: A newer version of androidx.room:room-ktx than 2.6.1 is available: 2.8.5 [GradleDependency]
+room = "2.6.1"
+       ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:11: Warning: A newer version of androidx.room:room-ktx than 2.6.1 is available: 2.8.5 [GradleDependency]
+room = "2.6.1"
+       ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:11: Warning: A newer version of androidx.room:room-ktx than 2.6.1 is available: 2.8.5 [GradleDependency]
+room = "2.6.1"
+       ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:11: Warning: A newer version of androidx.room:room-runtime than 2.6.1 is available: 2.8.5 [GradleDependency]
+room = "2.6.1"
+       ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:11: Warning: A newer version of androidx.room:room-runtime than 2.6.1 is available: 2.8.5 [GradleDependency]
+room = "2.6.1"
+       ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:11: Warning: A newer version of androidx.room:room-runtime than 2.6.1 is available: 2.8.5 [GradleDependency]
+room = "2.6.1"
+       ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:13: Warning: A newer version of org.jetbrains.kotlinx:kotlinx-coroutines-android than 1.9.0 is available: 1.11.0 [GradleDependency]
+coroutines = "1.9.0"
+             ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:13: Warning: A newer version of org.jetbrains.kotlinx:kotlinx-coroutines-android than 1.9.0 is available: 1.11.0 [GradleDependency]
+coroutines = "1.9.0"
+             ~~~~~~~
+/workspace/local-ai-workspace/gradle/libs.versions.toml:13: Warning: A newer version of org.jetbrains.kotlinx:kotlinx-coroutines-android than 1.9.0 is available: 1.11.0 [GradleDependency]
+coroutines = "1.9.0"
+             ~~~~~~~
+
+   Explanation for issues of type "GradleDependency":
+   This detector looks for usages of libraries where the version you are using
+   is not the current stable release. Using older versions is fine, and there
+   are cases where you deliberately want to stick with an older version.
+   However, you may simply not be aware that a more recent version is
+   available, and that is what this lint check helps find.
+
+/workspace/local-ai-workspace/app/build.gradle.kts:25: Warning: Missing x86_64 ABI support for ChromeOS [ChromeOsAbiSupport]
+                abiFilters += "arm64-v8a"
+                              ~~~~~~~~~~~
+
+   Explanation for issues of type "ChromeOsAbiSupport":
+   To properly support ChromeOS, your Android application should have an x86
+   and/or x86_64 binary as part of the build configuration. To fix the issue,
+   ensure your files are properly optimized for ARM; the binary translator
+   will then ensure compatibility with x86. Alternatively, add an abiSplit for
+   x86 within your build.gradle file and create the required x86
+   dependencies.
+
+   https://developer.android.com/ndk/guides/abis
+
+/home/agent/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk15to18/1.72/32faf4d74dbc333fb3a7a6c80c30417cf888fc7a/bcpkix-jdk15to18-1.72.jar: Warning: checkClientTrusted is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers [TrustAllX509TrustManager]
+/home/agent/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk15to18/1.72/32faf4d74dbc333fb3a7a6c80c30417cf888fc7a/bcpkix-jdk15to18-1.72.jar: Warning: checkClientTrusted is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers [TrustAllX509TrustManager]
+/home/agent/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk15to18/1.72/32faf4d74dbc333fb3a7a6c80c30417cf888fc7a/bcpkix-jdk15to18-1.72.jar: Warning: checkServerTrusted is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers [TrustAllX509TrustManager]
+
+   Explanation for issues of type "TrustAllX509TrustManager":
+   This check looks for X509TrustManager implementations whose
+   checkServerTrusted or checkClientTrusted methods do nothing (thus trusting
+   any certificate chain) which could result in insecure network traffic
+   caused by trusting arbitrary TLS/SSL certificates presented by peers.
+
+   https://goo.gle/TrustAllX509TrustManager
+
+/workspace/local-ai-workspace/app/src/main/AndroidManifest.xml:9: Warning: The attribute android:allowBackup is deprecated from Android 12 and higher and may be removed in future versions. Consider adding the attribute android:dataExtractionRules specifying an @xml resource which configures cloud backups and device transfers on Android 12 and higher. [DataExtractionRules]
+        android:allowBackup="false"
+                             ~~~~~
+
+   Explanation for issues of type "DataExtractionRules":
+   Before Android 12, the attributes android:allowBackup and
+   android:fullBackupContent were used to configure all forms of backup,
+   including cloud backups, device-to-device transfers and adb backup.
+
+   In Android 12 and higher, these attributes have been deprecated and will
+   only apply to cloud backups. You should instead use the attribute
+   android:dataExtractionRules, specifying an @xml resource that configures
+   which files to back up, for cloud backups and for device-to-device
+   transfers, separately. If your minSdkVersion supports older versions,
+   you'll still want to specify an android:fullBackupContent resource if the
+   default behavior is not right for your app.
+
+   https://developer.android.com/about/versions/12/backup-restore#xml-changes
+   https://goo.gle/DataExtractionRules
+
+/workspace/local-ai-workspace/app/src/main/java/com/localai/workspace/MainActivity.kt:393: Information: Prefer mutableIntStateOf instead of mutableStateOf [AutoboxingStateCreation from androidx.compose.runtime]
+    var tab by rememberSaveable { mutableStateOf(0) }
+                                  ~~~~~~~~~~~~~~
+
+   Explanation for issues of type "AutoboxingStateCreation":
+   Calling mutableStateOf<T>() when T is either backed by a primitive type on
+   the JVM or is a value class results in a state implementation that requires
+   all state values to be boxed. This usually causes an additional allocation
+   for each state write, and adds some additional work to auto-unbox values
+   when reading the value of the state. Instead, prefer to use a specialized
+   primitive state implementation for Int, Long, Float, and Double when the
+   state does not need to track null values and does not override the default
+   SnapshotMutationPolicy. See mutableIntStateOf(), mutableLongStateOf(),
+   mutableFloatStateOf(), and mutableDoubleStateOf() for more information.
+
+   Vendor: Jetpack Compose
+   Identifier: androidx.compose.runtime
+   Feedback: https://issuetracker.google.com/issues/new?component=612128
+
+/workspace/local-ai-workspace/app/src/main/AndroidManifest.xml:7: Warning: Should explicitly set android:icon, there is no default [MissingApplicationIcon]
+    <application
+     ~~~~~~~~~~~
+
+   Explanation for issues of type "MissingApplicationIcon":
+   You should set an icon for the application as whole because there is no
+   default. This attribute must be set as a reference to a drawable resource
+   containing the image (for example @drawable/icon).
+
+   https://developer.android.com/studio/publish/preparing#publishing-configure
+
+/workspace/local-ai-workspace/app/build.gradle.kts:89: Warning: Use version catalog instead [UseTomlInstead]
+    testImplementation("androidx.compose.ui:ui-test-junit4")
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/local-ai-workspace/app/build.gradle.kts:90: Warning: Use version catalog instead [UseTomlInstead]
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/local-ai-workspace/app/build.gradle.kts:95: Warning: Use version catalog instead [UseTomlInstead]
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "UseTomlInstead":
+   If your project is using a libs.versions.toml file, you should place all
+   Gradle dependencies in the TOML file. This lint check looks for version
+   declarations outside of the TOML file and suggests moving them (and in the
+   IDE, provides a quickfix to performing the operation automatically).
+
+0 errors, 40 warnings

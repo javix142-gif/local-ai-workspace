@@ -1,0 +1,8 @@
+timestamp=2026-10-08T18:16:45Z
+openjdk version "21.0.12.1" 2026-08-18
+OpenJDK Runtime Environment (build 21.0.12.1+1-1-deb13u1-Debian)
+OpenJDK 64-Bit Server VM (build 21.0.12.1+1-1-deb13u1-Debian, mixed mode, sharing)
+ANDROID_HOME=
+9c1f32c4277a187c65af715890d1061a2244e771
+3c80ac731fdd85ca35a0bdbd8c280f337225a1d2f2518a145ffc7bdc5028ade4  docs/validation/m00-03-sheet-scope/before/red-alias-reproduction.log
+84ef4995b5b0a22c47150d0b0323c6f3f862f8f8414c003d112dcd4cc8b2aae9  docs/validation/m00-03-sheet-scope/before/TEST-ContextEvidenceExcerptTest-red.xml

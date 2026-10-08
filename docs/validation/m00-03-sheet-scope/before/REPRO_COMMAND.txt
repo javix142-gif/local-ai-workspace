@@ -1,0 +1,10 @@
+Scope: host-only regression reproduced before production edits.
+Repository: /workspace/local-ai-workspace
+Branch: feat/0.5.0-skills-agents
+Production source commit: 9c1f32c4277a187c65af715890d1061a2244e771
+Test source: the new assertion was present in the working tree; production sources were still at the commit above.
+
+Command:
+JAVA_HOME=/workspace/.toolchain/jdk-17 ANDROID_HOME=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 '-Dorg.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8' -Pkotlin.daemon.jvmargs=-Xmx2048m :app:testDebugUnitTest --tests 'com.localai.workspace.context.ContextEvidenceExcerptTest.qualifiedFormulaDependencyNeverAliasesSameAddressOnCurrentSheet' --offline --console=plain
+
+Result: 1 test, 1 assertion failure, 0 errors, 0 skipped. The assertion output and XML are preserved alongside this file. The fixture is synthetic and contains no user workbook data.
