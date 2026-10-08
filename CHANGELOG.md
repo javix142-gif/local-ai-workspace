@@ -8,6 +8,7 @@
 - Budgeted Agent/ACTIVE Skill composition, canonical supported text path with rollback switch; all retrieval before generation gate; compact management and routing diagnostics.
 - Scoped AGENTS_SKILLS_V1 device suite and 117 bilingual JVM fixtures; physical validation pending.
 - One existing physical model, unchanged native runtime/sampling/EG2 defaults.
+- Semantic V2 context postfix: explicit source-retrieval policy now lets Context Builder use EG2 even when legacy evidence is empty, preserves selected-document/project scope and citations, and falls back to legacy evidence on unavailable/stale EG2. Searches accept only intact READY generations and recheck status after embedding; document ingestion synchronously marks the active generation stale. Focused host tests cover the V2 chat path, lexical fallback, state transitions and blue/green rollback.
 
 ## 0.4.2 — Memory Relevance Hotfix
 

@@ -208,3 +208,35 @@ See the local delivery artifact
 `git log --oneline --decorate v0.4.2..HEAD` captured at delivery. Runtime/vendor and
 historical catalog file diffs are checked separately; source models, secrets, APKs
 and build outputs remain outside Git.
+
+## Semantic V2 integration postfix
+
+The post-implementation audit found two retrieval defects in the 0.5.0 branch.
+Context Builder used `evidence == null` as the switch for EG2, while chat always
+passed a list; active Semantic V2 generations were also searched without checking
+their index-job state. The source-retrieval mode is now explicit, selected document
+IDs are passed into V2 retrieval, V2 evidence is carried into the prompt/citation
+path, and legacy evidence remains the fallback. Embedding/retrieval still completes
+before ChatViewModel acquires the Gemma generation gate.
+
+Semantic V2 now rejects active generations unless their job is intact and `READY`,
+and rechecks the active pointer/job after embedding. `NEEDS_REINDEX`, `INDEXING`,
+`FAILED`, and `CANCELLED` cannot produce semantic evidence. Document ingestion
+awaits stale marking before completing its post-index callback; reindex publishes a
+new READY generation while preserving rollback to a previous generation that is
+still READY. No Room schema or retrieval ranking policy changed.
+
+The focused postfix suite adds 12 host tests. The final host gate executed 673 app
+tests and 2 LiteRT compatibility tests with zero failures, errors or skips; debug,
+release and AndroidTest APK assembly passed, and lintDebug reported zero errors with
+40 warnings. The serial ARM64 gate completed in 9m 22s. The rebuilt signed APK is
+`dist/apk/local-ai-workspace-0.5.0-skills-agents-arm64.apk` (100,032,157 bytes,
+SHA-256 `720a346ee8ee52efb7b75ab486e70721993bd5529a397ef76a7e474425d3bc95`); its
+application ID/version remain `com.localai.workspace` / 0.5.0 (27), and its signer
+matches the 0.4.2 artifact. This is host packaging/signature verification only; no
+physical Android validation is claimed.
+
+The first full-gate attempt exposed one obsolete storage test that explicitly allowed
+`NEEDS_REINDEX` restoration. Its expectation was changed to reject stale generations;
+the separate rollback test continues to accept an older generation while it remains
+`READY`. The final full gate above was rerun after that correction.
