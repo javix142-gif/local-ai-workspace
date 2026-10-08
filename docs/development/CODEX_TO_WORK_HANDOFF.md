@@ -7,6 +7,14 @@
 **Baseline:** `v0.4.2` → `de615b772cf37a99e7e08a647c59607b271de606`
 **App:** `com.localai.workspace`, version `0.5.0` (`versionCode 27`).
 
+## Follow-up: M00-03 evidence selector correction (2026-10-08)
+
+The later authorized host correction is implemented in `594a511cc088a53b97ccb5f21b720e20e8e4639a`, based on `7da2cc71e57aed1d213ea03b01ba8b41be849939`. It fixes the range-interior omission, absolute/mixed formula reference parsing, and UTF-8 query-anchor windowing. Missing cell dependencies and cell/byte-budget omissions now remain explicit in provenance/Inspector data and trigger a concise user notice; ordinary text excerpting does not.
+
+Focused tests passed 70/70. The subsequent complete host gate passed app JVM 700/700 and LiteRT compatibility 2/2, with debug/release assemble, lintDebug and AndroidTest APK assemble successful. Lint had 0 errors, 40 warnings and 1 informational issue. The test APK was only built: instrumented tests and Motorola validation are **NOT RUN** because no ADB device, emulator binary/system image or KVM was available. The full synthetic before/after JSON, JUnit XML, gate log, summary and hashes are in [M00-03 validation evidence](../validation/m00-03/RESULTS.md).
+
+The prior sections below describe the earlier pre-loop stabilization commit and its measurements; their 686 app-test count and artifact metadata are historical for that earlier commit. The current M00-03 gate result is 700 app tests plus 2 compatibility tests.
+
 The implementation is based on the completed 0.5.0 Skills/Agents and Semantic V2 postfix. It preserves the single Gemma runtime, Skills/Agents, existing databases, Semantic V2 and the F1/F2 fixes. No merge or release tag is part of this handoff.
 
 ## Work completed in this stabilization

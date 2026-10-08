@@ -1,0 +1,96 @@
+{
+  "scope": "INDEPENDENT_HOST_SELECTOR_HARNESS_NOT_ANDROID",
+  "sourceCommit": "594a511cc088a53b97ccb5f21b720e20e8e4639a",
+  "cases": [
+    {
+      "case": "relative_formula_control",
+      "query": "Explica A3",
+      "expectedCells": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "actualCells": [
+        "A3",
+        "A1",
+        "A2"
+      ],
+      "reason": "MATCHED_CELL_REFERENCE",
+      "excerpt": "Sheet Hoja1 · row 1 · A1=1\nSheet Hoja1 · row 2 · A2=5\nSheet Hoja1 · row 3 · A3=4 · formula=A2-A1",
+      "bytes": 103,
+      "budget": 480,
+      "invariantPass": true
+    },
+    {
+      "case": "range_middle_cell",
+      "query": "Suma A1:A3",
+      "expectedCells": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "actualCells": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "reason": "MATCHED_CELL_REFERENCE",
+      "excerpt": "Sheet Hoja1 · row 1 · A1=1\nSheet Hoja1 · row 2 · A2=5\nSheet Hoja1 · row 3 · A3=4",
+      "bytes": 86,
+      "budget": 480,
+      "invariantPass": true
+    },
+    {
+      "case": "absolute_formula_dependencies",
+      "query": "Explica A3",
+      "expectedCells": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "actualCells": [
+        "A3",
+        "A1",
+        "A2"
+      ],
+      "reason": "MATCHED_CELL_REFERENCE",
+      "excerpt": "Sheet Hoja1 · row 1 · A1=1\nSheet Hoja1 · row 2 · A2=5\nSheet Hoja1 · row 3 · A3=4 · formula=$A$2-$A$1",
+      "bytes": 107,
+      "budget": 480,
+      "invariantPass": true
+    },
+    {
+      "case": "ascii_anchor_control",
+      "query": "TARGET",
+      "expectedCells": [],
+      "actualCells": [],
+      "reason": "QUERY_MATCH",
+      "excerpt": "…xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx TARGET xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…",
+      "bytes": 128,
+      "budget": 128,
+      "invariantPass": true
+    },
+    {
+      "case": "multibyte_anchor",
+      "query": "TARGET",
+      "expectedCells": [],
+      "actualCells": [],
+      "reason": "QUERY_MATCH",
+      "excerpt": "…界界界界界界界界界界界界界界界界界界界 TARGET 界界界界界界界界界界界界界界界界界界界…",
+      "bytes": 128,
+      "budget": 128,
+      "invariantPass": true
+    },
+    {
+      "case": "multibyte_anchor_default_budget",
+      "query": "TARGET",
+      "expectedCells": [],
+      "actualCells": [],
+      "reason": "QUERY_MATCH",
+      "excerpt": "…界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界 TARGET 界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界…",
+      "bytes": 479,
+      "budget": 480,
+      "invariantPass": true
+    }
+  ]
+}

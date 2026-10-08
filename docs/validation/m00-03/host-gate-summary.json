@@ -1,0 +1,159 @@
+{
+  "contract": "CORRECT_CONTEXT_EVIDENCE_M00",
+  "scope": "HOST_ONLY_SYNTHETIC_EVIDENCE",
+  "baseCommit": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
+  "testedCodeCommit": "594a511cc088a53b97ccb5f21b720e20e8e4639a",
+  "branch": "feat/0.5.0-skills-agents",
+  "baselineFocused": {
+    "tests": 9,
+    "failures": 3,
+    "errors": 0,
+    "skipped": 0
+  },
+  "afterFocused": {
+    "tests": 70,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "fullHostGate": {
+    "appJvm": {
+      "tests": 700,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "litertCompatJvm": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "overall": "PASS",
+    "exitCode": 0,
+    "startedAtUtc": "2026-10-08T17:32:19Z",
+    "finishedAtUtc": "2026-10-08T17:42:55Z"
+  },
+  "buildTasks": {
+    ":app:assembleDebug": "PASS",
+    ":app:assembleRelease": "PASS",
+    ":app:lintDebug": "PASS",
+    ":app:assembleDebugAndroidTest": "PASS_COMPILED_ONLY"
+  },
+  "lint": {
+    "errors": 0,
+    "warnings": 40,
+    "information": 1
+  },
+  "runtime": {
+    "gradle": "8.10.2",
+    "gradleJvm": "Temurin 17.0.20.1",
+    "testLauncher": "OpenJDK 21.0.12.1",
+    "androidCompileSdk": 35,
+    "abi": "arm64-v8a",
+    "workers": 1,
+    "parallel": false,
+    "offline": true
+  },
+  "androidExecution": {
+    "adbDevices": 0,
+    "instrumentedTests": "NOT_RUN",
+    "emulatorBinary": "NOT_FOUND",
+    "systemImages": 0,
+    "kvm": false,
+    "physicalDeviceValidation": "NOT_RUN"
+  },
+  "gradleCommand": "M00_SOURCE_COMMIT=594a511cc088a53b97ccb5f21b720e20e8e4639a JAVA_HOME=/workspace/.toolchain/jdk-17 ANDROID_HOME=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 -Dorg.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8 -Pkotlin.daemon.jvmargs=-Xmx2048m -I docs/validation/skills050/force-test-execution.gradle :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:assembleDebug :app:assembleRelease :app:lintDebug :app:assembleDebugAndroidTest -Parm64Only=true --offline --console=plain",
+  "harnessCases": [
+    {
+      "case": "relative_formula_control",
+      "query": "Explica A3",
+      "expectedCells": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "actualCells": [
+        "A3",
+        "A1",
+        "A2"
+      ],
+      "reason": "MATCHED_CELL_REFERENCE",
+      "excerpt": "Sheet Hoja1 · row 1 · A1=1\nSheet Hoja1 · row 2 · A2=5\nSheet Hoja1 · row 3 · A3=4 · formula=A2-A1",
+      "bytes": 103,
+      "budget": 480,
+      "invariantPass": true
+    },
+    {
+      "case": "range_middle_cell",
+      "query": "Suma A1:A3",
+      "expectedCells": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "actualCells": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "reason": "MATCHED_CELL_REFERENCE",
+      "excerpt": "Sheet Hoja1 · row 1 · A1=1\nSheet Hoja1 · row 2 · A2=5\nSheet Hoja1 · row 3 · A3=4",
+      "bytes": 86,
+      "budget": 480,
+      "invariantPass": true
+    },
+    {
+      "case": "absolute_formula_dependencies",
+      "query": "Explica A3",
+      "expectedCells": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "actualCells": [
+        "A3",
+        "A1",
+        "A2"
+      ],
+      "reason": "MATCHED_CELL_REFERENCE",
+      "excerpt": "Sheet Hoja1 · row 1 · A1=1\nSheet Hoja1 · row 2 · A2=5\nSheet Hoja1 · row 3 · A3=4 · formula=$A$2-$A$1",
+      "bytes": 107,
+      "budget": 480,
+      "invariantPass": true
+    },
+    {
+      "case": "ascii_anchor_control",
+      "query": "TARGET",
+      "expectedCells": [],
+      "actualCells": [],
+      "reason": "QUERY_MATCH",
+      "excerpt": "…xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx TARGET xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…",
+      "bytes": 128,
+      "budget": 128,
+      "invariantPass": true
+    },
+    {
+      "case": "multibyte_anchor",
+      "query": "TARGET",
+      "expectedCells": [],
+      "actualCells": [],
+      "reason": "QUERY_MATCH",
+      "excerpt": "…界界界界界界界界界界界界界界界界界界界 TARGET 界界界界界界界界界界界界界界界界界界界…",
+      "bytes": 128,
+      "budget": 128,
+      "invariantPass": true
+    },
+    {
+      "case": "multibyte_anchor_default_budget",
+      "query": "TARGET",
+      "expectedCells": [],
+      "actualCells": [],
+      "reason": "QUERY_MATCH",
+      "excerpt": "…界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界 TARGET 界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界…",
+      "bytes": 479,
+      "budget": 480,
+      "invariantPass": true
+    }
+  ]
+}

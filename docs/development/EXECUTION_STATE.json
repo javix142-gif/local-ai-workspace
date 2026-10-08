@@ -1,8 +1,8 @@
 {
   "repository": "https://github.com/javix142-gif/local-ai-workspace.git",
   "branch": "feat/0.5.0-skills-agents",
-  "startingHeadSha": "7aa57492fd3117c5b14b2a11b8167ba55c4347e3",
-  "testedCodeHeadSha": "b577934d1f93fd02b6d09fc5097a407d5069515f",
+  "startingHeadSha": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
+  "testedCodeHeadSha": "594a511cc088a53b97ccb5f21b720e20e8e4639a",
   "version": "0.5.0",
   "applicationId": "com.localai.workspace",
   "completedTasks": [
@@ -10,17 +10,44 @@
     "M00-2 query-relevant bounded evidence excerpts with provenance and precise omission severity",
     "M00-3 adaptive three-row chat header and Compose layout test",
     "M00-4 metadata-only stage timing diagnostics",
-    "Preserve Semantic V2 F1/F2 behavior"
+    "Preserve Semantic V2 F1/F2 behavior",
+    "M00-03 selector correction: bounded spreadsheet references, formula dependencies, UTF-8 anchor preservation and explicit incomplete-evidence notices"
   ],
   "blockedTasks": [
     "Android emulator execution: environment has no AVD/system image, KVM, or connected device",
     "Motorola-specific M00 validation and exact physical XLSX latency diagnosis"
   ],
   "testResults": {
-    "focusedRegression": {"status": "PASS", "evidence": "HOST", "tests": 78, "failures": 0},
-    "appJvm": {"status": "PASS", "evidence": "HOST", "tests": 686, "failures": 0, "errors": 0, "skipped": 0},
-    "litertCompatJvm": {"status": "PASS", "evidence": "HOST", "tests": 2, "failures": 0, "errors": 0, "skipped": 0},
-    "composeUiExecution": {"status": "NOT_RUN", "evidence": "EMULATOR", "reason": "No AVD/system image, no /dev/kvm, and no attached ADB device"}
+    "focusedRegression": {
+      "status": "PASS",
+      "evidence": "HOST",
+      "tests": 70,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "testedCodeHeadSha": "594a511cc088a53b97ccb5f21b720e20e8e4639a"
+    },
+    "appJvm": {
+      "status": "PASS",
+      "evidence": "HOST",
+      "tests": 700,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "litertCompatJvm": {
+      "status": "PASS",
+      "evidence": "HOST",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "composeUiExecution": {
+      "status": "NOT_RUN",
+      "evidence": "EMULATOR",
+      "reason": "No AVD/system image, no /dev/kvm, and no attached ADB device"
+    }
   },
   "finalHostGate": {
     "status": "PASS",
@@ -33,19 +60,40 @@
       ":app:lintDebug",
       ":app:assembleDebugAndroidTest"
     ],
-    "appTests": 686,
+    "appTests": 700,
     "compatibilityTests": 2,
     "failures": 0,
     "errors": 0,
     "skipped": 0,
-    "lint": {"errors": 0, "warnings": 40, "information": 1},
-    "instrumentedTestsExecuted": false
+    "lint": {
+      "errors": 0,
+      "warnings": 40,
+      "information": 1
+    },
+    "instrumentedTestsExecuted": false,
+    "testedCodeHeadSha": "594a511cc088a53b97ccb5f21b720e20e8e4639a",
+    "startedAtUtc": "2026-10-08T17:32:19Z",
+    "finishedAtUtc": "2026-10-08T17:42:55Z"
   },
   "buildResults": {
-    "assembleDebug": {"status": "PASS", "evidence": "HOST"},
-    "assembleRelease": {"status": "PASS", "evidence": "HOST"},
-    "lintDebug": {"status": "PASS", "evidence": "HOST", "errors": 0},
-    "assembleDebugAndroidTest": {"status": "PASS", "evidence": "HOST", "note": "Instrumented test APK compiled; tests were not executed"}
+    "assembleDebug": {
+      "status": "PASS",
+      "evidence": "HOST"
+    },
+    "assembleRelease": {
+      "status": "PASS",
+      "evidence": "HOST"
+    },
+    "lintDebug": {
+      "status": "PASS",
+      "evidence": "HOST",
+      "errors": 0
+    },
+    "assembleDebugAndroidTest": {
+      "status": "PASS",
+      "evidence": "HOST",
+      "note": "Instrumented test APK compiled; tests were not executed"
+    }
   },
   "emulatorResults": {
     "availability": "BLOCKED",
@@ -56,9 +104,25 @@
     "instrumentedTests": "NOT_RUN"
   },
   "physicalDeviceResults": {
-    "historicalAgentsSkillsV1": {"status": "PASS", "evidence": "PHYSICAL_DEVICE", "tests": "12/12 on prior recorded build; not this candidate"},
-    "stabilizationM00Validation": {"status": "NOT_RUN", "evidence": "PHYSICAL_DEVICE"},
-    "firstXlsxLatencyRootCause": {"status": "NOT_DETERMINED", "evidence": "PHYSICAL_DEVICE", "note": "Original workbook/device trace unavailable"}
+    "historicalAgentsSkillsV1": {
+      "status": "PASS",
+      "evidence": "PHYSICAL_DEVICE",
+      "tests": "12/12 on prior recorded build; not this candidate"
+    },
+    "stabilizationM00Validation": {
+      "status": "NOT_RUN",
+      "evidence": "PHYSICAL_DEVICE"
+    },
+    "firstXlsxLatencyRootCause": {
+      "status": "NOT_DETERMINED",
+      "evidence": "PHYSICAL_DEVICE",
+      "note": "Original workbook/device trace unavailable"
+    },
+    "correctContextEvidenceM00": {
+      "status": "NOT_RUN",
+      "evidence": "PHYSICAL_DEVICE",
+      "note": "Host selector/context tests are not a Gemma or Motorola validation."
+    }
   },
   "artifactHashes": {
     "arm64Apk": {
@@ -67,7 +131,9 @@
       "sha256": "a7bd3f5c69c2644b7de9fbe86f62aa3edf78fb60961487cd96782fe66848c0d0",
       "signature": "Verified APK Signature Scheme v3; SHA-256 signer f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
       "zipaligned": true,
-      "abi": ["arm64-v8a"],
+      "abi": [
+        "arm64-v8a"
+      ],
       "deviceValidated": false
     }
   },
@@ -90,7 +156,48 @@
   "pendingAcceptance": [
     "Moto G86 import and cold/warm timings for the original XLSX",
     "Moto G86 verification of the three-line chat header under keyboard/font-scale conditions",
-    "Moto G86 regression run for Semantic V2 F1/F2 after document update and reindex"
+    "Moto G86 regression run for Semantic V2 F1/F2 after document update and reindex",
+    "Moto G86 XLSX range/formula follow-up: verify displayed A1/A2/A3 evidence and incomplete-cell notice using a workbook with a missing dependency"
   ],
-  "nextRecommendedTask": "Validate the signed ARM64 candidate with the original XLSX on Moto G86; use the new per-stage diagnostics to identify the first-response latency source before selecting further roadmap work."
+  "nextRecommendedTask": "Validate the signed ARM64 candidate with the original XLSX on Moto G86; use the new per-stage diagnostics to identify the first-response latency source before selecting further roadmap work.",
+  "m00_03": {
+    "status": "IMPLEMENTED_TESTED_HOST_DEVICE_NOT_RUN",
+    "baseCommit": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
+    "testedCodeCommit": "594a511cc088a53b97ccb5f21b720e20e8e4639a",
+    "baselineReproduction": {
+      "tests": 9,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 0,
+      "failedCases": [
+        "range_middle_cell",
+        "absolute_formula_dependencies",
+        "multibyte_anchor"
+      ],
+      "passedControls": [
+        "relative_formula_control",
+        "ascii_anchor_control"
+      ]
+    },
+    "afterFocused": {
+      "tests": 70,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "fullHostGate": {
+      "appJvm": 700,
+      "compatJvm": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "lintErrors": 0,
+      "lintWarnings": 40,
+      "lintInformation": 1,
+      "instrumentedTests": "NOT_RUN"
+    },
+    "physicalValidation": "NOT_RUN",
+    "evidenceDirectory": "docs/validation/m00-03/",
+    "mainAndV042Untouched": true
+  }
 }

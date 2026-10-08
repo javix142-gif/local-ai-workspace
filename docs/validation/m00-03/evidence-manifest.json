@@ -1,0 +1,76 @@
+{
+  "generatedAtUtc": "2026-10-08T17:46:40Z",
+  "testedCodeCommit": "594a511cc088a53b97ccb5f21b720e20e8e4639a",
+  "files": [
+    {
+      "path": "RESULTS.md",
+      "sizeBytes": 3003,
+      "sha256": "63757c65d2a6aa5b59e3f420d63913532971c615d63215a7f3547d4d0d46dec1"
+    },
+    {
+      "path": "after/SELECTOR_REPRODUCCIONES.json",
+      "sizeBytes": 3022,
+      "sha256": "69a090471a25c9932af56ca8e2c02bc20535fc11911f3f9c53d4da1815bccd13"
+    },
+    {
+      "path": "after/TEST-com.localai.workspace.context.AuditHarness.xml",
+      "sizeBytes": 2782,
+      "sha256": "2416d3fa92951b7c3d488a19fddf7737e51683953a2482faaa21d12ab34c79cf"
+    },
+    {
+      "path": "after/TEST-com.localai.workspace.context.ContextEvidenceExcerptTest.xml",
+      "sizeBytes": 2539,
+      "sha256": "de60c78af44b18d42bd37093da1aa84a44e4396e28a6d4b13cc4a3cb3769730f"
+    },
+    {
+      "path": "after/TEST-com.localai.workspace.context.ContextFoundationTest.xml",
+      "sizeBytes": 5642,
+      "sha256": "87712307f8f61829fc4342886ea838d4e2cd87c9256ff4b6bfbfca22c4fc090e"
+    },
+    {
+      "path": "after/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml",
+      "sizeBytes": 3132,
+      "sha256": "cb2525bcdc95ad70c927d6915cdf1b98fb4f9093d80d0f8b086426d7a3ff8416"
+    },
+    {
+      "path": "after/TEST-litert-compat-NativeHistoryRoleTest.xml",
+      "sizeBytes": 643,
+      "sha256": "bf402d21143448d1933dac9f172e918d2fda1e51946ddaf76db8d27383468901"
+    },
+    {
+      "path": "after/focused-targeted.log",
+      "sizeBytes": 4678,
+      "sha256": "8ee1093dd5b1ec8694c73097508243a74df4007d012226db54298c96d1b25945"
+    },
+    {
+      "path": "after/full-host-gate.log",
+      "sizeBytes": 18478,
+      "sha256": "23e877742e29e41e9cc19aa55f3bdd331527f3f0b410589f8c5b67fac3dfcd7c"
+    },
+    {
+      "path": "before/SELECTOR_REPRODUCCIONES.json",
+      "sizeBytes": 2892,
+      "sha256": "746ba9f4bb7515310e226953f02945781ebb43c3944bd9871f6722426e636965"
+    },
+    {
+      "path": "before/TEST-com.localai.workspace.context.AuditHarness.xml",
+      "sizeBytes": 2681,
+      "sha256": "5ae2234a4fa455bd3e4bb49d6b7c645d99b0ae07a32a3350e12064e20ab28086"
+    },
+    {
+      "path": "before/TEST-com.localai.workspace.context.ContextEvidenceExcerptTest.xml",
+      "sizeBytes": 6647,
+      "sha256": "e575c16bda6bf10db7bd5291358ac762d35a5187b3758ccfb7605e1ddd25e3f8"
+    },
+    {
+      "path": "before/focused-test.log",
+      "sizeBytes": 5532,
+      "sha256": "aced8b916605a8f01926e627b05bc8f780f091df66ae6b8ac29cbfe0275e14de"
+    },
+    {
+      "path": "host-gate-summary.json",
+      "sizeBytes": 4964,
+      "sha256": "23e932f2f49334aab41140e8f49e33535b5f10a3de36d5c56656a67df489835e"
+    }
+  ]
+}
