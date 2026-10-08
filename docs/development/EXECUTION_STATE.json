@@ -72,10 +72,13 @@
     }
   },
   "gitSynchronization": {
-    "status": "PUSH_PENDING",
+    "status": "PUSHED_AND_VERIFIED",
     "remoteUrl": "https://github.com/javix142-gif/local-ai-workspace.git",
     "remoteFeatureBeforePush": "de615b772cf37a99e7e08a647c59607b271de606",
+    "verifiedFeatureHeadAfterSourceHandoff": "2e01b59d7b8aa84d53e7dc326969ecd136e63527",
+    "verifiedPushUrl": "https://github.com/javix142-gif/local-ai-workspace/commit/2e01b59d7b8aa84d53e7dc326969ecd136e63527",
     "featurePushIsFastForward": true,
+    "pushConfirmed": true,
     "mainUnchanged": true,
     "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
     "v042TagUnchanged": true,

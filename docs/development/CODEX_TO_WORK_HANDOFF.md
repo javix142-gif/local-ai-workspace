@@ -61,7 +61,7 @@ Environment inspection found no attached ADB device, no AVD, no installed Androi
 
 The current code version is built as an ARM64-only release APK, signed with the configured local update certificate, then checked with `apksigner`, `zipalign`, package metadata and ABI inspection. APK: `dist/apk/local-ai-workspace-0.5.0-preloop-stabilization-arm64.apk`, 100,130,461 bytes, SHA-256 `a7bd3f5c69c2644b7de9fbe86f62aa3edf78fb60961487cd96782fe66848c0d0`. Certificate SHA-256 `f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b` matches the previously recorded update certificate; ABI inspection found only `arm64-v8a`. It is not device validated. A companion `.sha256` file is present beside the APK. APK/model binaries remain outside Git.
 
-The feature branch push is authorized by the task. Before push, fetch and verify fast-forward ancestry, ensure the worktree has no secrets/models/APKs or user data, and confirm `main` and `v0.4.2` are unchanged. No force push, merge or `v0.5.0` tag. Exact pushed source SHA and URL are recorded in the execution state after the synchronization step.
+The authorized feature-branch push was a fast-forward from remote `de615b772cf37a99e7e08a647c59607b271de606` to `2e01b59d7b8aa84d53e7dc326969ecd136e63527`; readback confirmed local and remote HEAD equality. [Pushed source handoff commit](https://github.com/javix142-gif/local-ai-workspace/commit/2e01b59d7b8aa84d53e7dc326969ecd136e63527). The push contained no APK/model binaries or secrets. `main` and `v0.4.2` remain `de615b772cf37a99e7e08a647c59607b271de606`. No force push, merge or `v0.5.0` tag.
 
 ## Physical validations still required
 
