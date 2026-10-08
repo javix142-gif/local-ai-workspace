@@ -4,7 +4,6 @@ import com.localai.workspace.data.*
 import android.util.Xml
 import org.xmlpull.v1.XmlPullParser
 import org.json.JSONObject
-import org.json.JSONArray
 import java.io.File
 import java.nio.ByteBuffer
 import java.nio.charset.CodingErrorAction
@@ -20,25 +19,46 @@ object StructuredDocuments {
  data class Cell(val sheet: String, val row: Int, val column: Int, val address: String, val value: String, val formula: String? = null, val type: String? = null)
  data class Table(val cells: List<Cell>, val encoding: String = "UTF-8") {
   fun document(): ParsedDocument {
-   // Shared strings and sheet names can expand many times without increasing ZIP size.
-   // Bound the escaped JSON (including duplicated header candidates) before allocating it.
-   var budget = 0L
-   cells.forEach { c ->
+   // Enforce the limit against the actual UTF-8 JSON representation. A fixed
+   // per-cell allowance rejected formatted blank cells and small repeated values.
+   var serializedBytes = 0L
+   fun append(out: StringBuilder, value: String) {
     if(Thread.currentThread().isInterrupted) throw InterruptedException()
-    require(c.sheet.length <= 128 && c.value.length <= 32768 && (c.formula?.length ?: 0) <= 32768 && (c.type?.length ?: 0) <= 32) { "Structured cell exceeds limit" }
-    budget += 256L + 12L * (c.sheet.length.toLong() + c.address.length + c.value.length + (c.formula?.length ?: 0) + (c.type?.length ?: 0))
-    require(budget <= MAX_REPRESENTATION_BYTES) { "Structured document representation exceeds 8 MiB budget" }
+    serializedBytes += utf8Length(value)
+    require(serializedBytes <= MAX_REPRESENTATION_BYTES) { "Structured document representation exceeds 8 MiB budget" }
+    out.append(value)
    }
-   return ParsedDocument(cells.groupBy { it.sheet }.map { (sheet, cells) ->
-   val firstRow=cells.filter { it.row==1 }.sortedBy { it.column }
-   val header=if(firstRow.isNotEmpty() && firstRow.all { it.value.isNotBlank() && it.value.toDoubleOrNull()==null && it.formula==null } && firstRow.map { it.value }.toSet().size==firstRow.size)
-    JSONObject().put("sheet",sheet).put("headerCandidate",JSONArray().apply { firstRow.forEach { put(JSONObject().put("column",it.column).put("label",it.value)) } }).toString()+"\n" else ""
-   ParsedPage(null, header + cells.groupBy { it.row }.entries.joinToString("\n") { (row, values) ->
-    JSONObject().put("sheet", sheet).put("row", row).put("cells", JSONArray().apply { values.forEach { c ->
-     put(JSONObject().put("column", c.column).put("address", c.address).put("value", c.value).put("valueType",c.type ?: "raw").apply { c.formula?.let { put("formula", it) } })
-    } }).toString()
-   })
-  })
+   fun quoted(out: StringBuilder, value: String) = append(out, JSONObject.quote(value))
+   val pages = cells.groupBy { it.sheet }.map { (sheet, sheetCells) ->
+    require(sheet.length <= 128) { "Worksheet name exceeds limit" }
+    val out = StringBuilder()
+    val firstRow = sheetCells.asSequence().filter { it.row == 1 }.sortedBy { it.column }.toList()
+    if(firstRow.isNotEmpty() && firstRow.all { it.value.isNotBlank() && it.value.toDoubleOrNull()==null && it.formula==null } && firstRow.map { it.value }.toSet().size==firstRow.size) {
+     append(out, "{\"sheet\":"); quoted(out, sheet); append(out, ",\"headerCandidate\":[")
+     firstRow.forEachIndexed { index, cell ->
+      if(index>0) append(out, ",")
+      append(out, "{\"column\":${cell.column},\"label\":"); quoted(out, cell.value); append(out, "}")
+     }
+     append(out, "]}\n")
+    }
+    sheetCells.groupBy { it.row }.entries.forEachIndexed { rowIndex, (row, values) ->
+     if(rowIndex>0) append(out, "\n")
+     append(out, "{\"sheet\":"); quoted(out, sheet); append(out, ",\"row\":$row,\"cells\":[")
+     values.forEachIndexed { index, cell ->
+      if(Thread.currentThread().isInterrupted) throw InterruptedException()
+      require(cell.value.length <= 32768 && (cell.formula?.length ?: 0) <= 32768 && (cell.type?.length ?: 0) <= 32) { "Structured cell exceeds limit" }
+      if(index>0) append(out, ",")
+      append(out, "{\"column\":${cell.column},\"address\":"); quoted(out, cell.address)
+      append(out, ",\"value\":"); quoted(out, cell.value)
+      append(out, ",\"valueType\":"); quoted(out, cell.type ?: "raw")
+      cell.formula?.let { append(out, ",\"formula\":"); quoted(out, it) }
+      append(out, "}")
+     }
+     append(out, "]}")
+    }
+    ParsedPage(null, out.toString())
+   }
+   return ParsedDocument(pages)
   }
  }
  fun text(bytes: ByteArray): Pair<String,String> {
@@ -112,16 +132,39 @@ object StructuredDocuments {
    val name=p.getAttributeValue(null,"name") ?: "Sheet"; require(name.length<=128) { "Worksheet name exceeds limit" }
    sheets.add(name to requireNotNull(rels[id]) { "Missing worksheet relation" })
   } }
-  val cells=mutableListOf<Cell>()
+  val cells=mutableListOf<Cell>(); var seenCells=0
   sheets.forEach { (sheet,path)->
-   var address="";var type="";var value=StringBuilder();var formula=StringBuilder();var tag=""
+   var address="";var type="";var value=StringBuilder();var formula=StringBuilder();var tag="";var hasValueElement=false
    xml(bytes(path)) { p->when(p.eventType) {
-    XmlPullParser.START_TAG -> { if(p.name=="c") { address=p.getAttributeValue(null,"r")?:error("Cell missing address");type=p.getAttributeValue(null,"t").orEmpty();value=StringBuilder();formula=StringBuilder() };tag=p.name }
+    XmlPullParser.START_TAG -> { if(p.name=="c") { address=p.getAttributeValue(null,"r")?:error("Cell missing address");type=p.getAttributeValue(null,"t").orEmpty();value=StringBuilder();formula=StringBuilder();hasValueElement=false };if(p.name=="v"||p.name=="t")hasValueElement=true;tag=p.name }
     XmlPullParser.TEXT -> { if(tag=="v"||tag=="t") value.append(p.text);if(tag=="f")formula.append(p.text);require(value.length<=32768&&formula.length<=32768) }
-    XmlPullParser.END_TAG -> { if(p.name=="c") { require(cells.size<MAX_CELLS);require(Regex("[A-Z]{1,3}[1-9][0-9]{0,6}").matches(address));val col=address.takeWhile { it.isLetter() }.fold(0){a,c->a*26+c.code-64};val row=address.dropWhile { it.isLetter() }.toInt();require(col<=16384&&row<=1048576);val v=if(type=="s") shared.getOrNull(value.toString().toIntOrNull()?:-1)?:error("Invalid shared string") else value.toString();cells.add(Cell(sheet,row,col,address,v,formula.toString().takeIf { it.isNotBlank() },type.ifBlank { "n" })) };tag="" }
+    XmlPullParser.END_TAG -> { if(p.name=="c") {
+     require(++seenCells<=MAX_CELLS) { "XLSX exceeds 100000 cells" }
+     require(Regex("[A-Z]{1,3}[1-9][0-9]{0,6}").matches(address));val col=address.takeWhile { it.isLetter() }.fold(0){a,c->a*26+c.code-64};val row=address.dropWhile { it.isLetter() }.toInt();require(col<=16384&&row<=1048576)
+     val formulaText=formula.toString().takeIf { it.isNotBlank() }
+     val v=if(type=="s"&&hasValueElement) shared.getOrNull(value.toString().toIntOrNull()?:-1)?:error("Invalid shared string") else value.toString()
+     // Style-only and empty formatted cells add no document content. Keep empty
+     // cached results when a formula exists so formula provenance is preserved.
+     if(v.isNotEmpty() || formulaText!=null) cells.add(Cell(sheet,row,col,address,v,formulaText,type.ifBlank { "n" }))
+    };tag="" }
    } }
   }
   Table(cells)
+ }
+ private fun utf8Length(text: String): Int {
+  var bytes=0; var i=0
+  while(i<text.length) {
+   val c=text[i]
+   when {
+    c.code<0x80 -> bytes++
+    c.code<0x800 -> bytes+=2
+    Character.isHighSurrogate(c) && i+1<text.length && Character.isLowSurrogate(text[i+1]) -> { bytes+=4; i++ }
+    Character.isSurrogate(c) -> bytes++ // JVM UTF-8 encoder replacement for an unpaired surrogate.
+    else -> bytes+=3
+   }
+   i++
+  }
+  return bytes
  }
  fun column(n: Int): String { var x=n;var out="";while(x>0){x--;out=('A'+x%26)+out;x/=26};return out }
 }
