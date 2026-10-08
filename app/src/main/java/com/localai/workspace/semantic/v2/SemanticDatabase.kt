@@ -49,7 +49,7 @@ data class IndexedSegment(@Embedded val segment: SemanticSegmentRecord, val sour
     @Query("SELECT s.*, o.displayName AS sourceName, p.vector AS vector, e.dimension AS dimension, e.embeddingSpaceKey AS spaceKey, e.modelHash AS modelHash, e.modelId AS modelId FROM semantic_segments s JOIN semantic_sources o ON o.id=s.sourceId JOIN semantic_embeddings_v2 e ON e.segmentId=s.id JOIN semantic_vector_payloads_v2 p ON p.embeddingSpaceKey=e.embeddingSpaceKey AND p.taskType=e.taskType AND p.contentHash=e.contentHash WHERE e.indexId=:indexId AND o.scopeKey=:scope AND e.embeddingSpaceKey=:space LIMIT :limit") suspend fun corpus(indexId: String, scope: String, space: String, limit: Int): List<IndexedSegment>
 }
 /** Sidecar DB is additive: the complete version-8 workspace, including EG1 vectors, is untouched. */
-@Database(entities = [SemanticModelRecord::class, SemanticSourceRecord::class, SemanticSegmentRecord::class, SemanticEmbeddingLink::class, SemanticVectorPayload::class, SemanticIndexJob::class, SemanticActiveIndex::class], version = 1, exportSchema = false)
+@Database(entities = [SemanticModelRecord::class, SemanticSourceRecord::class, SemanticSegmentRecord::class, SemanticEmbeddingLink::class, SemanticVectorPayload::class, SemanticIndexJob::class, SemanticActiveIndex::class], version = 1, exportSchema = true)
 abstract class SemanticDatabase : RoomDatabase() {
     abstract fun dao(): SemanticDao
     companion object { fun create(context: Context): SemanticDatabase = Room.databaseBuilder(context, SemanticDatabase::class.java, "semantic_v2.db").build() }

@@ -32,7 +32,7 @@ data class ProjectBrief(@PrimaryKey val projectId:String,val projectName:String,
     @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun brief(value:ProjectBrief)
     @Query("SELECT * FROM project_briefs WHERE projectId=:id") suspend fun brief(id:String):ProjectBrief?
 }
-@Database(entities=[MemoryRecord::class,ContextVector::class,ConversationSource::class,ProjectBrief::class],version=1,exportSchema=false)
+@Database(entities=[MemoryRecord::class,ContextVector::class,ConversationSource::class,ProjectBrief::class],version=1,exportSchema=true)
 abstract class MemoryContextDatabase:RoomDatabase(){abstract fun dao():MemoryContextDao
     companion object{fun create(context:Context,name:String="memory_context.db")=Room.databaseBuilder(context,MemoryContextDatabase::class.java,name).build()}
 }

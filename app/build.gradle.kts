@@ -51,6 +51,7 @@ android {
         buildConfig = true
     }
 
+    sourceSets.getByName("androidTest").assets.srcDir("$projectDir/schemas")
     testOptions.unitTests.isIncludeAndroidResources = true
 
     packaging.resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -101,3 +102,5 @@ tasks.withType<Test>().configureEach {
         languageVersion.set(JavaLanguageVersion.of(21))
     })
 }
+
+ksp { arg("room.schemaLocation", "$projectDir/schemas") }

@@ -23,7 +23,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         PendingDocumentDeletionEntity::class, SemanticVectorEntity::class,
     ],
     version = 8,
-    exportSchema = false,
+    exportSchema = true,
 )
 abstract class WorkspaceDatabase : RoomDatabase() {
     abstract fun semanticVectorDao(): SemanticVectorDao
