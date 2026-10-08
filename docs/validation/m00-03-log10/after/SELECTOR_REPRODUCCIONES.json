@@ -1,0 +1,200 @@
+{
+  "scope": "INDEPENDENT_HOST_SELECTOR_HARNESS_NOT_ANDROID",
+  "sourceCommit": "39aea8f55aac051edd3a43bc1b09c05d319d2783",
+  "cases": [
+    {
+      "case": "relative_formula_control",
+      "query": "Explica A3",
+      "expectedCells": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "actualCells": [
+        "A3",
+        "A1",
+        "A2"
+      ],
+      "reason": "MATCHED_CELL_REFERENCE",
+      "excerpt": "Hoja1!A1=1\nHoja1!A2=5\nHoja1!A3=4 · formula=A2-A1",
+      "bytes": 49,
+      "budget": 480,
+      "invariantPass": true
+    },
+    {
+      "case": "range_middle_cell",
+      "query": "Suma A1:A3",
+      "expectedCells": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "actualCells": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "reason": "MATCHED_CELL_REFERENCE",
+      "excerpt": "Hoja1!A1=1\nHoja1!A2=5\nHoja1!A3=4",
+      "bytes": 32,
+      "budget": 480,
+      "invariantPass": true
+    },
+    {
+      "case": "absolute_formula_dependencies",
+      "query": "Explica A3",
+      "expectedCells": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "actualCells": [
+        "A3",
+        "A1",
+        "A2"
+      ],
+      "reason": "MATCHED_CELL_REFERENCE",
+      "excerpt": "Hoja1!A1=1\nHoja1!A2=5\nHoja1!A3=4 · formula=$A$2-$A$1",
+      "bytes": 53,
+      "budget": 480,
+      "invariantPass": true
+    },
+    {
+      "case": "log10_function_call_keeps_argument",
+      "expectedCellReferences": [
+        "Hoja1!A3",
+        "Hoja1!A1"
+      ],
+      "actualCellReferences": [
+        "Hoja1!A3",
+        "Hoja1!A1"
+      ],
+      "expectedMissingCellReferences": [],
+      "actualMissingCellReferences": [],
+      "incompleteReasons": [],
+      "excerpt": "Hoja1!A1=100\nHoja1!A3=2 · formula=LOG10(A1)",
+      "invariantPass": true
+    },
+    {
+      "case": "log10_direct_query",
+      "expectedCellReferences": [
+        "Hoja1!LOG10"
+      ],
+      "actualCellReferences": [
+        "Hoja1!LOG10"
+      ],
+      "expectedMissingCellReferences": [],
+      "actualMissingCellReferences": [],
+      "incompleteReasons": [],
+      "excerpt": "Hoja1!LOG10=cell-value",
+      "invariantPass": true
+    },
+    {
+      "case": "log10_formula_cell_reference",
+      "expectedCellReferences": [
+        "Hoja1!A3",
+        "Hoja1!LOG10"
+      ],
+      "actualCellReferences": [
+        "Hoja1!A3",
+        "Hoja1!LOG10"
+      ],
+      "expectedMissingCellReferences": [],
+      "actualMissingCellReferences": [],
+      "incompleteReasons": [],
+      "excerpt": "Hoja1!A3=4 · formula=LOG10\nHoja1!LOG10=cell-value",
+      "invariantPass": true
+    },
+    {
+      "case": "hoja2_log10_uses_qualified_sheet",
+      "expectedCellReferences": [
+        "Hoja2!A3",
+        "Hoja2!LOG10"
+      ],
+      "actualCellReferences": [
+        "Hoja2!A3",
+        "Hoja2!LOG10"
+      ],
+      "expectedMissingCellReferences": [],
+      "actualMissingCellReferences": [],
+      "incompleteReasons": [],
+      "excerpt": "Hoja2!LOG10=right-sheet\nHoja2!A3=4 · formula=LOG10",
+      "invariantPass": true
+    },
+    {
+      "case": "missing_qualified_log10_is_diagnostic",
+      "expectedCellReferences": [
+        "Hoja1!A3"
+      ],
+      "actualCellReferences": [
+        "Hoja1!A3"
+      ],
+      "expectedMissingCellReferences": [
+        "Hoja2!LOG10"
+      ],
+      "actualMissingCellReferences": [
+        "Hoja2!LOG10"
+      ],
+      "incompleteReasons": [
+        "SHEET_NOT_FOUND",
+        "MISSING_REFERENCED_CELLS"
+      ],
+      "excerpt": "Hoja1!A3=4 · formula='Hoja2'!LOG10",
+      "invariantPass": true
+    },
+    {
+      "case": "qualified_sheet_no_homonym_fallback",
+      "expectedCellReferences": [
+        "Hoja1!A3"
+      ],
+      "expectedMissingCellReferences": [
+        "Hoja2!A1"
+      ],
+      "actualCellReferences": [
+        "Hoja1!A3"
+      ],
+      "actualMissingCellReferences": [
+        "Hoja2!A1"
+      ],
+      "incompleteReasons": [
+        "SHEET_NOT_FOUND",
+        "MISSING_REFERENCED_CELLS"
+      ],
+      "excerpt": "Hoja1!A3=4 · formula='Hoja2'!A1",
+      "invariantPass": true
+    },
+    {
+      "case": "ascii_anchor_control",
+      "query": "TARGET",
+      "expectedCells": [],
+      "actualCells": [],
+      "reason": "QUERY_MATCH",
+      "excerpt": "…xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx TARGET xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…",
+      "bytes": 128,
+      "budget": 128,
+      "invariantPass": true
+    },
+    {
+      "case": "multibyte_anchor",
+      "query": "TARGET",
+      "expectedCells": [],
+      "actualCells": [],
+      "reason": "QUERY_MATCH",
+      "excerpt": "…界界界界界界界界界界界界界界界界界界界 TARGET 界界界界界界界界界界界界界界界界界界界…",
+      "bytes": 128,
+      "budget": 128,
+      "invariantPass": true
+    },
+    {
+      "case": "multibyte_anchor_default_budget",
+      "query": "TARGET",
+      "expectedCells": [],
+      "actualCells": [],
+      "reason": "QUERY_MATCH",
+      "excerpt": "…界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界 TARGET 界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界界…",
+      "bytes": 479,
+      "budget": 480,
+      "invariantPass": true
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+SHA-256 of uncompressed original log payloads; compressed artifact hashes are in SHA256SUMS.
+bc10bac70fd35ed53fe5c8dcf7f0b1797c27ca2dbc05a3dfc24d6db07bdc5cc3  after/diagnostics/bootstrap-missing-ignored-sources.log.gz (uncompressed bytes=105622)
+376126d30d4840a45cf0c270c08f09e9766511cbc1928677541aa6892f4a9245  after/diagnostics/bootstrap-stale-cmake-glob.log.gz (uncompressed bytes=44887)
+93137d8067cefdc2b5324baf71fd013ccc224aabc4b09e202d5aa5e2acf4e715  after/diagnostics/release-configure.log.gz (uncompressed bytes=16306)
+844fd5cfdba0ebaa754bec4e365e483fb99139c9ec75a01e1f31b358d1bb7a39  after/focused.log.gz (uncompressed bytes=4585)
+a2d7885b0297d8bb660f72a65e067cec4f3b0754b60ce813a3cada2a4ae7dfe1  after/full-host-gate.log.gz (uncompressed bytes=18157)
+12aef66e6aea286f367479a8b90713ebc5f693e332e5a7c91bd292a3ea4c4759  before/red.log.gz (uncompressed bytes=5267)

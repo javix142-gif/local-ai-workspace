@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.skills.SchemaAdditivityTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-08T21:51:40" hostname="05497ac86eb0" time="0.093">
+  <properties/>
+  <testcase name="schemasExportActualVersionsAndExistingWorkspaceDataSurvivesSidecar" classname="com.localai.workspace.skills.SchemaAdditivityTest" time="0.093"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

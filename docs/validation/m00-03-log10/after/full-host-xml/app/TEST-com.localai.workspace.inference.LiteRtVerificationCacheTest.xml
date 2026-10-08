@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.LiteRtVerificationCacheTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-08T21:51:35" hostname="05497ac86eb0" time="0.071">
+  <properties/>
+  <testcase name="repeatedConfigOrModelSwitchCanReuseActualPriorHashVerification" classname="com.localai.workspace.inference.LiteRtVerificationCacheTest" time="0.009"/>
+  <testcase name="changedFileDuringHashAndCancellationCannotCreateReceipt" classname="com.localai.workspace.inference.LiteRtVerificationCacheTest" time="0.005"/>
+  <testcase name="replacingFileWithSameLengthAndRestoredMtimeStillRequiresHash" classname="com.localai.workspace.inference.LiteRtVerificationCacheTest" time="0.003"/>
+  <testcase name="changedHashAndChangedCtimeNeverReuseOldReceipt" classname="com.localai.workspace.inference.LiteRtVerificationCacheTest" time="0.003"/>
+  <testcase name="boundedReceiptsEvictAndNewWorkerStartsWithoutTrust" classname="com.localai.workspace.inference.LiteRtVerificationCacheTest" time="0.024"/>
+  <testcase name="cachedHeaderAndExpectedSizeAreAlwaysRechecked" classname="com.localai.workspace.inference.LiteRtVerificationCacheTest" time="0.008"/>
+  <testcase name="missingStatOrMissingHashCannotProduceVerificationReuseClaim" classname="com.localai.workspace.inference.LiteRtVerificationCacheTest" time="0.018"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

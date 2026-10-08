@@ -2,7 +2,7 @@
   "repository": "https://github.com/javix142-gif/local-ai-workspace.git",
   "branch": "feat/0.5.0-skills-agents",
   "startingHeadSha": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
-  "testedCodeHeadSha": "594a511cc088a53b97ccb5f21b720e20e8e4639a",
+  "testedCodeHeadSha": "39aea8f55aac051edd3a43bc1b09c05d319d2783",
   "version": "0.5.0",
   "applicationId": "com.localai.workspace",
   "completedTasks": [
@@ -11,7 +11,8 @@
     "M00-3 adaptive three-row chat header and Compose layout test",
     "M00-4 metadata-only stage timing diagnostics",
     "Preserve Semantic V2 F1/F2 behavior",
-    "M00-03 selector correction: bounded spreadsheet references, formula dependencies, UTF-8 anchor preservation and explicit incomplete-evidence notices"
+    "M00-03 selector correction: bounded spreadsheet references, formula dependencies, UTF-8 anchor preservation and explicit incomplete-evidence notices",
+    "M00-03 LOG10 contextual distinction between function names and A1 cell references; missing-cell provenance retained"
   ],
   "blockedTasks": [
     "Android emulator execution: environment has no AVD/system image, KVM, or connected device",
@@ -21,16 +22,23 @@
     "focusedRegression": {
       "status": "PASS",
       "evidence": "HOST",
-      "tests": 70,
+      "tests": 106,
       "failures": 0,
       "errors": 0,
       "skipped": 0,
-      "testedCodeHeadSha": "594a511cc088a53b97ccb5f21b720e20e8e4639a"
+      "testedCodeHeadSha": "39aea8f55aac051edd3a43bc1b09c05d319d2783"
+    },
+    "selectorHarness": {
+      "status": "PASS",
+      "evidence": "HOST_SYNTHETIC",
+      "cases": 12,
+      "failedCases": 0,
+      "testedCodeHeadSha": "39aea8f55aac051edd3a43bc1b09c05d319d2783"
     },
     "appJvm": {
       "status": "PASS",
       "evidence": "HOST",
-      "tests": 700,
+      "tests": 727,
       "failures": 0,
       "errors": 0,
       "skipped": 0
@@ -43,14 +51,14 @@
       "errors": 0,
       "skipped": 0
     },
-    "composeUiExecution": {
+    "instrumentedTests": {
       "status": "NOT_RUN",
-      "evidence": "EMULATOR",
-      "reason": "No AVD/system image, no /dev/kvm, and no attached ADB device"
+      "evidence": "ANDROID",
+      "reason": "AndroidTest APK was compiled; no emulator/device execution."
     }
   },
   "finalHostGate": {
-    "status": "PASS",
+    "status": "COMPLETED_DEVICE_NOT_RUN",
     "evidence": "HOST",
     "commandTasks": [
       ":app:testDebugUnitTest",
@@ -60,7 +68,7 @@
       ":app:lintDebug",
       ":app:assembleDebugAndroidTest"
     ],
-    "appTests": 700,
+    "appTests": 727,
     "compatibilityTests": 2,
     "failures": 0,
     "errors": 0,
@@ -71,9 +79,11 @@
       "information": 1
     },
     "instrumentedTestsExecuted": false,
-    "testedCodeHeadSha": "594a511cc088a53b97ccb5f21b720e20e8e4639a",
-    "startedAtUtc": "2026-10-08T17:32:19Z",
-    "finishedAtUtc": "2026-10-08T17:42:55Z"
+    "testedCodeHeadSha": "39aea8f55aac051edd3a43bc1b09c05d319d2783",
+    "startedAtUtc": "2026-10-08T21:50:34Z",
+    "finishedAtUtc": "2026-10-08T21:56:27Z",
+    "duration": "5m53s",
+    "evidenceDirectory": "docs/validation/m00-03-log10/after/"
   },
   "buildResults": {
     "assembleDebug": {
@@ -87,20 +97,21 @@
     "lintDebug": {
       "status": "PASS",
       "evidence": "HOST",
-      "errors": 0
+      "errors": 0,
+      "warnings": 40,
+      "information": 1
     },
     "assembleDebugAndroidTest": {
       "status": "PASS",
       "evidence": "HOST",
-      "note": "Instrumented test APK compiled; tests were not executed"
+      "note": "Instrumented test APK compiled; tests were not executed."
     }
   },
   "emulatorResults": {
-    "availability": "BLOCKED",
-    "adbDevices": 0,
-    "avds": 0,
-    "systemImages": 0,
+    "availability": "NOT_AVAILABLE",
+    "adbAvailable": false,
     "kvm": false,
+    "systemImages": 0,
     "instrumentedTests": "NOT_RUN"
   },
   "physicalDeviceResults": {
@@ -121,45 +132,14 @@
     "correctContextEvidenceM00": {
       "status": "NOT_RUN",
       "evidence": "PHYSICAL_DEVICE",
-      "note": "Host selector/context tests are not a Gemma or Motorola validation."
+      "note": "LOG10 selector/context tests ran only on host with synthetic data."
     }
-  },
-  "artifactHashes": {
-    "arm64Apk": {
-      "path": "dist/apk/local-ai-workspace-0.5.0-preloop-stabilization-arm64.apk",
-      "bytes": 100130461,
-      "sha256": "a7bd3f5c69c2644b7de9fbe86f62aa3edf78fb60961487cd96782fe66848c0d0",
-      "signature": "Verified APK Signature Scheme v3; SHA-256 signer f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
-      "zipaligned": true,
-      "abi": [
-        "arm64-v8a"
-      ],
-      "deviceValidated": false
-    }
-  },
-  "gitSynchronization": {
-    "status": "PUSHED_AND_VERIFIED",
-    "remoteUrl": "https://github.com/javix142-gif/local-ai-workspace.git",
-    "remoteFeatureBeforePush": "de615b772cf37a99e7e08a647c59607b271de606",
-    "verifiedFeatureHeadAfterSourceHandoff": "2e01b59d7b8aa84d53e7dc326969ecd136e63527",
-    "verifiedPushUrl": "https://github.com/javix142-gif/local-ai-workspace/commit/2e01b59d7b8aa84d53e7dc326969ecd136e63527",
-    "featurePushIsFastForward": true,
-    "pushConfirmed": true,
-    "mainUnchanged": true,
-    "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
-    "v042TagUnchanged": true,
-    "v042CommitSha": "de615b772cf37a99e7e08a647c59607b271de606",
-    "forcePush": false,
-    "merge": false,
-    "releaseTagCreated": false
   },
   "pendingAcceptance": [
-    "Moto G86 import and cold/warm timings for the original XLSX",
-    "Moto G86 verification of the three-line chat header under keyboard/font-scale conditions",
-    "Moto G86 regression run for Semantic V2 F1/F2 after document update and reindex",
-    "Moto G86 XLSX range/formula follow-up: verify displayed A1/A2/A3 evidence and incomplete-cell notice using a workbook with a missing dependency"
+    "Independent audit of M00-03 LOG10 selector correction",
+    "Run relevant Android/Motorola context evidence checks on a physical device after audit approval"
   ],
-  "nextRecommendedTask": "Validate the signed ARM64 candidate with the original XLSX on Moto G86; use the new per-stage diagnostics to identify the first-response latency source before selecting further roadmap work.",
+  "nextRecommendedTask": "Independent audit of the M00-03 LOG10 correction; do not start another implementation cycle before that audit.",
   "m00_03": {
     "status": "IMPLEMENTED_TESTED_HOST_DEVICE_NOT_RUN",
     "baseCommit": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
@@ -198,13 +178,16 @@
     },
     "physicalValidation": "NOT_RUN",
     "evidenceDirectory": "docs/validation/m00-03/",
-    "mainAndV042Untouched": true
+    "mainAndV042Untouched": true,
+    "recordStatus": "HISTORICAL; measured through source commit 594a511cc088a53b97ccb5f21b720e20e8e4639a and superseded by latestFollowUp.",
+    "latestRecordIs": "39aea8f55aac051edd3a43bc1b09c05d319d2783"
   },
   "latestFollowUp": {
-    "name": "M00-03 sheet-scoped spreadsheet references",
-    "status": "IMPLEMENTED_TESTED_HOST_DEVICE_NOT_RUN",
-    "baseCommit": "9c1f32c4277a187c65af715890d1061a2244e771",
-    "testedCodeCommit": "ca3fcd7ca492ea35d2255b2665c27fa26c2466cf",
+    "name": "M00-03 LOG10 cell/function distinction and evidence trace",
+    "recordStatus": "CURRENT_FOR_THIS_WORK_ITEM",
+    "status": "IMPLEMENTED_HOST_TESTS_DEVICE_NOT_RUN",
+    "baseCommit": "020917cdb6e469983f77093130b58967ae56df56",
+    "testedCodeCommit": "39aea8f55aac051edd3a43bc1b09c05d319d2783",
     "branch": "feat/0.5.0-skills-agents",
     "redReproduction": {
       "status": "FAIL_AS_EXPECTED_BEFORE_FIX",
@@ -212,26 +195,36 @@
       "failures": 1,
       "errors": 0,
       "skipped": 0,
-      "observed": "Hoja1!A1=999 was selected for formula Hoja1!A3 containing explicit reference Hoja2!A1; no missing reference was recorded.",
-      "evidence": "docs/validation/m00-03-sheet-scope/before/"
+      "failedCase": "log10CellUsedAsFormulaReferenceIsNotDiscardedAsFunctionName",
+      "observed": "The formula dependency Hoja1!LOG10 was omitted from Hoja1!A3=4 · formula=LOG10.",
+      "sourceCommit": "020917cdb6e469983f77093130b58967ae56df56",
+      "evidence": "docs/validation/m00-03-log10/before/"
+    },
+    "selectorHarness": {
+      "status": "PASS",
+      "cases": 12,
+      "failed": 0,
+      "sourceCommit": "39aea8f55aac051edd3a43bc1b09c05d319d2783",
+      "report": "docs/validation/m00-03-log10/after/SELECTOR_REPRODUCCIONES.json"
     },
     "focusedHost": {
       "status": "PASS",
-      "tests": 99,
+      "tests": 106,
       "failures": 0,
       "errors": 0,
       "skipped": 0,
       "classes": {
         "AuditHarness": 1,
-        "ContextEvidenceExcerptTest": 27,
+        "ContextEvidenceExcerptTest": 32,
         "ContextFoundationTest": 38,
         "StructuredDocumentsTest": 10,
-        "SemanticContextPostfixTest": 23
+        "SemanticContextPostfixTest": 25
       }
     },
     "finalHostGate": {
-      "status": "PASS",
-      "appJvmTests": 720,
+      "status": "COMPLETED_DEVICE_NOT_RUN",
+      "sourceCommit": "39aea8f55aac051edd3a43bc1b09c05d319d2783",
+      "appJvmTests": 727,
       "compatibilityJvmTests": 2,
       "failures": 0,
       "errors": 0,
@@ -244,43 +237,170 @@
         ":app:lintDebug",
         ":app:assembleDebugAndroidTest"
       ],
+      "taskResults": {
+        "assembleDebug": "PASS",
+        "assembleRelease": "PASS",
+        "lintDebug": "PASS",
+        "assembleDebugAndroidTest": "PASS_COMPILE_ONLY"
+      },
       "lintErrors": 0,
       "lintWarnings": 40,
       "lintInformation": 1,
-      "startedAtUtc": "2026-10-08T18:47:07Z",
-      "finishedAtUtc": "2026-10-08T18:57:01Z",
-      "duration": "9m54s",
-      "logSha256": "f84b3ae60d9c04e685fc019736985ae421b66c735f918275da4af7f0b0d4d77e"
+      "startedAtUtc": "2026-10-08T21:50:34Z",
+      "finishedAtUtc": "2026-10-08T21:56:27Z",
+      "wallDuration": "5m53s",
+      "instrumentedTests": "NOT_RUN",
+      "physicalDevice": "NOT_RUN",
+      "log": "docs/validation/m00-03-log10/after/full-host-gate.log.gz"
     },
     "hostEnvironment": {
       "os": "Linux x86_64",
-      "jdk": "Temurin 17.0.20.1+1",
       "gradle": "8.10.2",
+      "buildJdk": "Temurin 17.0.20.1+1",
+      "testJdk": "OpenJDK 21.0.12.1",
       "androidSdkPlatform": "android-35",
       "androidGradlePlugin": "8.7.3",
       "kotlinAndroidPlugin": "2.0.21",
-      "nativeBuildAbi": "arm64-v8a",
-      "jvmTests": "Robolectric on host JVM"
+      "ndk": "27.0.12077973",
+      "cmake": "3.31.6",
+      "nativeAbi": "arm64-v8a"
     },
     "androidExecution": {
       "instrumentedTests": "NOT_RUN",
       "physicalDevice": "NOT_RUN",
       "adbAvailable": false,
       "kvmAvailable": false,
-      "reason": "No adb executable/device and /dev/kvm absent; AndroidTest APK compilation is not execution."
+      "systemImagesAvailable": false,
+      "reason": "No adb executable, no /dev/kvm and no configured Android system image."
     },
-    "artifacts": {
-      "evidenceDirectory": "docs/validation/m00-03-sheet-scope/",
-      "selectorReport": "after/SELECTOR_REPRODUCCIONES.json",
-      "selectorReportSourceCommit": "ca3fcd7ca492ea35d2255b2665c27fa26c2466cf",
-      "noApkDistributed": true
-    },
-    "gitSafety": {
-      "mainModified": false,
-      "v042TagModified": false,
-      "merge": false,
-      "forcePush": false,
-      "pushAuthorized": "fast-forward only to feat/0.5.0-skills-agents"
+    "artifactEvidence": {
+      "directory": "docs/validation/m00-03-log10/",
+      "fullJUnitSuites": 83,
+      "apkDelivered": false,
+      "note": "Gradle assemble tasks produced temporary outputs inside the isolated validation worktree; no APK was copied or distributed."
     }
+  },
+  "followUpHistory": [
+    {
+      "name": "M00-03 sheet-scoped spreadsheet references",
+      "status": "IMPLEMENTED_TESTED_HOST_DEVICE_NOT_RUN",
+      "baseCommit": "9c1f32c4277a187c65af715890d1061a2244e771",
+      "testedCodeCommit": "ca3fcd7ca492ea35d2255b2665c27fa26c2466cf",
+      "branch": "feat/0.5.0-skills-agents",
+      "redReproduction": {
+        "status": "FAIL_AS_EXPECTED_BEFORE_FIX",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "observed": "Hoja1!A1=999 was selected for formula Hoja1!A3 containing explicit reference Hoja2!A1; no missing reference was recorded.",
+        "evidence": "docs/validation/m00-03-sheet-scope/before/"
+      },
+      "focusedHost": {
+        "status": "PASS",
+        "tests": 99,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "classes": {
+          "AuditHarness": 1,
+          "ContextEvidenceExcerptTest": 27,
+          "ContextFoundationTest": 38,
+          "StructuredDocumentsTest": 10,
+          "SemanticContextPostfixTest": 23
+        }
+      },
+      "finalHostGate": {
+        "status": "PASS",
+        "appJvmTests": 720,
+        "compatibilityJvmTests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "tasks": [
+          ":app:testDebugUnitTest",
+          ":litert-compat:testDebugUnitTest",
+          ":app:assembleDebug",
+          ":app:assembleRelease",
+          ":app:lintDebug",
+          ":app:assembleDebugAndroidTest"
+        ],
+        "lintErrors": 0,
+        "lintWarnings": 40,
+        "lintInformation": 1,
+        "startedAtUtc": "2026-10-08T18:47:07Z",
+        "finishedAtUtc": "2026-10-08T18:57:01Z",
+        "duration": "9m54s",
+        "logSha256": "f84b3ae60d9c04e685fc019736985ae421b66c735f918275da4af7f0b0d4d77e"
+      },
+      "hostEnvironment": {
+        "os": "Linux x86_64",
+        "jdk": "Temurin 17.0.20.1+1",
+        "gradle": "8.10.2",
+        "androidSdkPlatform": "android-35",
+        "androidGradlePlugin": "8.7.3",
+        "kotlinAndroidPlugin": "2.0.21",
+        "nativeBuildAbi": "arm64-v8a",
+        "jvmTests": "Robolectric on host JVM"
+      },
+      "androidExecution": {
+        "instrumentedTests": "NOT_RUN",
+        "physicalDevice": "NOT_RUN",
+        "adbAvailable": false,
+        "kvmAvailable": false,
+        "reason": "No adb executable/device and /dev/kvm absent; AndroidTest APK compilation is not execution."
+      },
+      "artifacts": {
+        "evidenceDirectory": "docs/validation/m00-03-sheet-scope/",
+        "selectorReport": "after/SELECTOR_REPRODUCCIONES.json",
+        "selectorReportSourceCommit": "ca3fcd7ca492ea35d2255b2665c27fa26c2466cf",
+        "noApkDistributed": true
+      },
+      "gitSafety": {
+        "mainModified": false,
+        "v042TagModified": false,
+        "merge": false,
+        "forcePush": false,
+        "pushAuthorized": "fast-forward only to feat/0.5.0-skills-agents"
+      }
+    }
+  ],
+  "startingHeadShaHistoricalMeaning": "Historical original M00 baseline; not the base of the LOG10 correction.",
+  "historicalArtifactHashes": {
+    "arm64Apk": {
+      "path": "dist/apk/local-ai-workspace-0.5.0-preloop-stabilization-arm64.apk",
+      "bytes": 100130461,
+      "sha256": "a7bd3f5c69c2644b7de9fbe86f62aa3edf78fb60961487cd96782fe66848c0d0",
+      "signature": "Verified APK Signature Scheme v3; SHA-256 signer f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
+      "zipaligned": true,
+      "abi": [
+        "arm64-v8a"
+      ],
+      "deviceValidated": false
+    }
+  },
+  "historicalGitSynchronization": {
+    "status": "PUSHED_AND_VERIFIED",
+    "remoteUrl": "https://github.com/javix142-gif/local-ai-workspace.git",
+    "remoteFeatureBeforePush": "de615b772cf37a99e7e08a647c59607b271de606",
+    "verifiedFeatureHeadAfterSourceHandoff": "2e01b59d7b8aa84d53e7dc326969ecd136e63527",
+    "verifiedPushUrl": "https://github.com/javix142-gif/local-ai-workspace/commit/2e01b59d7b8aa84d53e7dc326969ecd136e63527",
+    "featurePushIsFastForward": true,
+    "pushConfirmed": true,
+    "mainUnchanged": true,
+    "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
+    "v042TagUnchanged": true,
+    "v042CommitSha": "de615b772cf37a99e7e08a647c59607b271de606",
+    "forcePush": false,
+    "merge": false,
+    "releaseTagCreated": false
+  },
+  "fieldSemantics": {
+    "testedCodeHeadSha": "Current production code SHA for the latest LOG10 correction.",
+    "testResults": "Current host evidence for that code SHA.",
+    "m00_03": "Historical earlier selector correction record; not current test totals.",
+    "followUpHistory": "Preserved earlier follow-up records, including sheet-scope results.",
+    "historicalArtifactHashes": "APK metadata from an earlier build; not produced by this correction.",
+    "historicalGitSynchronization": "Earlier push/readback record; final push for this correction is reported in the latest handoff."
   }
 }

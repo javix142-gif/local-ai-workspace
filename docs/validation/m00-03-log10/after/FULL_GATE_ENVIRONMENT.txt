@@ -1,0 +1,17 @@
+Code SHA (M00_SOURCE_COMMIT): 39aea8f55aac051edd3a43bc1b09c05d319d2783
+OS: Linux x86_64
+Gradle: 8.10.2
+Build JDK: Temurin 17.0.20.1+1 (/workspace/.toolchain/jdk-17)
+Test worker JVM: OpenJDK 21.0.12.1 (/usr/lib/jvm/java-21-openjdk-amd64)
+Android SDK: /workspace/.toolchain/android-sdk, android-35
+Android Gradle Plugin: 8.7.3
+Kotlin Android plugin: 2.0.21
+NDK: 27.0.12077973
+CMake: 3.31.6
+Native ABI: arm64-v8a only (-Parm64Only=true)
+Gradle dependency mode: offline
+Tests: host JVM; no instrumented test execution
+ADB: unavailable
+/dev/kvm: absent
+Android system images: none found in configured SDK
+Physical/Motorola validation: NOT_RUN

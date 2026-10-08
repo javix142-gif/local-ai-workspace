@@ -1,0 +1,7 @@
+Commands executed:
+
+1. git diff --check 020917cdb6e469983f77093130b58967ae56df56..39aea8f55aac051edd3a43bc1b09c05d319d2783
+2. git diff --cached --check
+
+Result for both commands: exit 0, no whitespace errors or output.
+The staged documentation/evidence set was also checked after this file and SHA256SUMS were staged.

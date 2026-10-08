@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.validation.ValidationIsolationTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-08T21:51:59" hostname="05497ac86eb0" time="0.417">
+  <properties/>
+  <testcase name="fixturesExerciseActualParsersAndAudioContract" classname="com.localai.workspace.validation.ValidationIsolationTest" time="0.202"/>
+  <testcase name="recoveryRetainsNormalFilesAndDeletesOrphanedValidationMedia" classname="com.localai.workspace.validation.ValidationIsolationTest" time="0.036"/>
+  <testcase name="validationRoomCannotWriteIntoNormalWorkspace" classname="com.localai.workspace.validation.ValidationIsolationTest" time="0.063"/>
+  <testcase name="cleanupRejectsNonScopedPaths" classname="com.localai.workspace.validation.ValidationIsolationTest" time="0.025"/>
+  <testcase name="cleanupDeletesOnlyScopedFixturesAndNeverTraversesSymlinks" classname="com.localai.workspace.validation.ValidationIsolationTest" time="0.016"/>
+  <testcase name="memoryPreferenceSetsAreDefensiveCopies" classname="com.localai.workspace.validation.ValidationIsolationTest" time="0.021"/>
+  <testcase name="temporaryOverridesNeverChangeNormalPreferences" classname="com.localai.workspace.validation.ValidationIsolationTest" time="0.024"/>
+  <testcase name="parserCacheIsScopedWithoutChangingNormalCache" classname="com.localai.workspace.validation.ValidationIsolationTest" time="0.028"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

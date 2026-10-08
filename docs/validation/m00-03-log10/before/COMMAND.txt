@@ -1,0 +1,5 @@
+M00_SOURCE_COMMIT=020917cdb6e469983f77093130b58967ae56df56
+JAVA_HOME=/workspace/.toolchain/jdk-17
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+M00_SOURCE_COMMIT=020917cdb6e469983f77093130b58967ae56df56 ./gradlew --no-daemon --no-parallel --max-workers=1 '-Dorg.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8' -Pkotlin.daemon.jvmargs=-Xmx2048m :app:testDebugUnitTest --tests 'com.localai.workspace.context.ContextEvidenceExcerptTest.log10CellUsedAsFormulaReferenceIsNotDiscardedAsFunctionName' --offline --console=plain
+Expected red against production HEAD 020917cdb6e469983f77093130b58967ae56df56: 1 test, 1 failure, 0 errors, 0 skipped. The only workspace modification at execution was the new test assertion.

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.model.ModelManagerDomainTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-08T21:51:35" hostname="05497ac86eb0" time="0.018">
+  <properties/>
+  <testcase name="cancelledLoadMustNeverStartCpuFallback" classname="com.localai.workspace.model.ModelManagerDomainTest" time="0.004"/>
+  <testcase name="descriptorCodecPreservesCapabilitiesFilesAndMetadata" classname="com.localai.workspace.model.ModelManagerDomainTest" time="0.009"/>
+  <testcase name="registryMapsRuntimeAndFallsBackToCpuOnlyWhenAdvertised" classname="com.localai.workspace.model.ModelManagerDomainTest" time="0.002"/>
+  <testcase name="detectsSupportedFormatsAndRejectsBadMagic" classname="com.localai.workspace.model.ModelManagerDomainTest" time="0.001"/>
+  <testcase name="sanitizesNamesAndParsesSafeHuggingFaceReferences" classname="com.localai.workspace.model.ModelManagerDomainTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

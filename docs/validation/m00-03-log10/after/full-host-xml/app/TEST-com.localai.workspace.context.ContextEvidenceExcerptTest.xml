@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.context.ContextEvidenceExcerptTest" tests="32" skipped="0" failures="0" errors="0" timestamp="2026-10-08T21:51:09" hostname="05497ac86eb0" time="1.241">
+  <properties/>
+  <testcase name="missingInteriorRangeCellIsReportedWithoutSelectingNeighboringCells" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.041"/>
+  <testcase name="multibyteQueryAnchorStaysInsideUtf8BudgetAndOffsets" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.056"/>
+  <testcase name="conflictingThreeDimensionalSheetOrderNeverUsesAnArbitraryMapping" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.026"/>
+  <testcase name="unrelatedSheetOrderConflictDoesNotWarnForSimpleCellLookup" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.029"/>
+  <testcase name="missingQualifiedSheetAndMissingCellNeverFallBackToHomonymousAddress" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.057"/>
+  <testcase name="cellQuestionKeepsTargetFormulaDependenciesAndHeaderProvenance" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.046"/>
+  <testcase name="unqualifiedMissingLog10FormulaDependencyIsCompositeAndIncomplete" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.046"/>
+  <testcase name="absoluteAndMixedFormulaReferencesKeepDependencies" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.024"/>
+  <testcase name="cellReferenceAndByteBudgetsAreExplicitAndBounded" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.064"/>
+  <testcase name="unqualifiedFormulaReferenceResolvesOnOwningSheetEvenWithHomonymousCell" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.028"/>
+  <testcase name="functionLiteralExternalAndDynamicReferencesNeverBecomeLocalDependencies" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.028"/>
+  <testcase name="unicodeWindowDoesNotExceedUtf8BudgetOrSplitSurrogatePairs" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.06"/>
+  <testcase name="quotedSheetNamesMatchIgnoringCaseAndPreserveOriginalDisplayName" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.024"/>
+  <testcase name="relevantSentenceIsSelectedWithExactOffsets" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.077"/>
+  <testcase name="unqualifiedQueryWithAddressOnMultipleSheetsIsReportedAmbiguousWithoutValues" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.031"/>
+  <testcase name="log10CellUsedAsFormulaReferenceIsNotDiscardedAsFunctionName" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.053"/>
+  <testcase name="quotedThreeDimensionalRectangleExpandsAcrossEverySheetAndCell" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.024"/>
+  <testcase name="routineTextWindowingDoesNotCreateMaterialCellNotice" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.034"/>
+  <testcase name="hostileJsonTextIsCompactedToCellSummaryRatherThanExpandedIntoPrompt" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.057"/>
+  <testcase name="omittedThreeDimensionalInteriorOrderIsExplicitlyIncomplete" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.041"/>
+  <testcase name="giantNoMatchParagraphIsAlwaysBounded" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.055"/>
+  <testcase name="qualifiedFormulaDependencyNeverAliasesSameAddressOnCurrentSheet" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.018"/>
+  <testcase name="noMatchingStructuredCellsReturnsEmptyEvidenceInsteadOfAnotherCell" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.034"/>
+  <testcase name="escapedApostropheSheetAndMixedRangeQualifiersResolveExactly" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.044"/>
+  <testcase name="rectangularFormulaRangeIncludesAvailableRowAndColumnCells" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.019"/>
+  <testcase name="log10IsAValidDirectAndUnqualifiedFormulaCellReference" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.023"/>
+  <testcase name="missingFormulaDependencyIsReportedWithoutInventingEvidence" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.052"/>
+  <testcase name="localAndQualifiedRectangularRangesAreInclusive" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.02"/>
+  <testcase name="qualifiedLog10NeverAliasesHomonymousAddressAndMissingTargetIsReported" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.029"/>
+  <testcase name="rectangularCellRangeKeepsInteriorCells" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.049"/>
+  <testcase name="threeDimensionalRangeIncludesEveryOrderedSheetAndInteriorSheet" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.02"/>
+  <testcase name="log10FunctionCallKeepsArgumentWithoutSelectingSameNamedCell" classname="com.localai.workspace.context.ContextEvidenceExcerptTest" time="0.024"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,31 +1,39 @@
 # Codex → Work handoff: 0.5.0 pre-loop stabilization
 
-**Status:** 0.5.0 host candidate with the authorized M00-03 sheet-scope correction; no device validation for this correction.
+**Status:** 0.5.0 host candidate with the focused M00-03 LOG10 correction; no Android/device validation for this correction.
 **Repository:** `https://github.com/javix142-gif/local-ai-workspace.git`
 **Branch:** `feat/0.5.0-skills-agents`
-**Latest tested production source HEAD:** `ca3fcd7ca492ea35d2255b2665c27fa26c2466cf` (source correction; evidence and handoff are a separate documentation commit).
+**Latest tested production source HEAD:** `39aea8f55aac051edd3a43bc1b09c05d319d2783` (LOG10 selector correction; validation evidence and this handoff are in a separate documentation commit).
 **Baseline:** `v0.4.2` → `de615b772cf37a99e7e08a647c59607b271de606`
 **App:** `com.localai.workspace`, version `0.5.0` (`versionCode 27`).
 
-## Latest follow-up: M00-03 sheet-scoped references (2026-10-08)
+## Latest follow-up: M00-03 LOG10 cell/function distinction (2026-10-08)
+
+The published feature base before this correction was `020917cdb6e469983f77093130b58967ae56df56`. A red test against that code failed for the intended reason: the selector skipped `LOG10` unconditionally, so formula `Hoja1!A3` with formula `LOG10` omitted the existing dependency `Hoja1!LOG10`. The correction is `39aea8f55aac051edd3a43bc1b09c05d319d2783`. It treats unqualified `LOG10` as a function name only when followed by `(` (allowing whitespace); it continues scanning function arguments. A bare or qualified `LOG10` cell reference remains a cell, and missing qualified references keep their sheet/address identity and existing incomplete-evidence notice.
+
+The selector harness reports 12/12 synthetic invariants passing. Focused Context Evidence, ContextFoundation, structured document, Semantic Context postfix and harness tests passed 106/106. The full JVM gate passed app 727/727 and LiteRT compatibility 2/2, with 0 failures/errors/skips. `assembleDebug`, `assembleRelease`, `lintDebug` and `assembleDebugAndroidTest` completed; lint reported 0 errors, 40 warnings and 1 informational issue. Instrumented tests, emulator execution and Motorola validation are **NOT RUN**. Gradle assemble tasks created only temporary outputs in the isolated validation worktree; no APK was copied, delivered, uploaded, installed or device-tested.
+
+The exact red/green XML, commands, JSON harness report, losslessly compressed logs and SHA-256 manifest are in [M00-03 LOG10 correction evidence](../validation/m00-03-log10/RESULTS.md). The full gate and harness use `M00_SOURCE_COMMIT=39aea8f55aac051edd3a43bc1b09c05d319d2783`. A clean-worktree native build needed locally ignored llama.cpp model sources and CMake regeneration; the workaround and preliminary setup logs are included in the evidence folder and did not change tracked source.
+
+## Historical follow-up: M00-03 sheet-scoped references (2026-10-08)
 
 The earlier M00-03 selector follow-up below fixed range interiors, absolute/mixed references and multibyte text anchors. A separate audit then found that qualified formula references still lost their worksheet identity. At the clean feature HEAD `9c1f32c4277a187c65af715890d1061a2244e771`, the red regression selected `Hoja1!A1=999` for formula `'Hoja2'!A1` and reported no missing cell. The correction is `ca3fcd7ca492ea35d2255b2665c27fa26c2466cf`; its host validation evidence is in [M00-03 sheet-scope results](../validation/m00-03-sheet-scope/RESULTS.md).
 
 Design decision: A1 identity is the pair `(NFC + Locale.ROOT uppercase worksheet key, normalized coordinate)`, while the original sheet name is preserved for display. Unqualified formula references resolve only on the formula cell's sheet. Qualified references resolve only on the named sheet. A direct unqualified query address with multiple represented candidates is treated as ambiguous: no candidate values are sent and a material diagnostic is raised. `$` does not change identity. Qualified single-sheet references/ranges and escaped-apostrophe sheet names are supported. 3D ranges are expanded inclusively only when source metadata supplies a contiguous, conflict-free workbook sheet order; otherwise the excerpt is explicitly incomplete and does not claim endpoint-only coverage.
 
-Selection is bounded to 64 unique composite `(sheet,address)` identities and 480 UTF-8 bytes. Formula strings are masked; formulas are not evaluated or recursively followed. `LOG10` is not interpreted as a cell. External workbook references, dynamic `INDIRECT`/`OFFSET`, defined names and structured table references remain unresolved with diagnostics. Missing sheets/cells, ambiguity, 3D ordering failures and evidence-limit omissions propagate through Context provenance/Inspector and the existing material user notice. The indexed source stays unchanged.
+Selection is bounded to 64 unique composite `(sheet,address)` identities and 480 UTF-8 bytes. Formula strings are masked; formulas are not evaluated or recursively followed. At that historical source commit, `LOG10` was skipped unconditionally; the current contextual behavior is documented above. External workbook references, dynamic `INDIRECT`/`OFFSET`, defined names and structured table references remain unresolved with diagnostics. Missing sheets/cells, ambiguity, 3D ordering failures and evidence-limit omissions propagate through Context provenance/Inspector and the existing material user notice. The indexed source stays unchanged.
 
 Context Foundation reuses only passages already returned by authorized Semantic V2 or lexical retrieval, grouped within the same document. It does not search globally to complete a formula or cross document/project boundaries. F1/F2 and the retrieval-before-generation-gate tests remain in the full host suite.
 
-Validation at code commit `ca3fcd7`: focused suites 99/99, app JVM 720/720, LiteRT compatibility 2/2; debug/release builds, lint and AndroidTest APK compilation succeeded. Lint reported 0 errors, 40 warnings and 1 informational item. Instrumented and Moto G86 execution are **NOT RUN**; the AndroidTest APK compilation is not an Android PASS. The required assemble tasks produced only ignored local Gradle build outputs; no APK was copied or distributed. The exact commands and raw JUnit/log evidence are in the validation folder above.
+Historical validation at code commit `ca3fcd7`: focused suites 99/99, app JVM 720/720, LiteRT compatibility 2/2; debug/release builds, lint and AndroidTest APK compilation succeeded. These counts are not the current LOG10 correction result; see the latest section above. Instrumented and Moto G86 execution were **NOT RUN** for that revision.
 
-## Follow-up: M00-03 evidence selector correction (2026-10-08)
+## Historical follow-up: M00-03 evidence selector correction (2026-10-08)
 
 The later authorized host correction is implemented in `594a511cc088a53b97ccb5f21b720e20e8e4639a`, based on `7da2cc71e57aed1d213ea03b01ba8b41be849939`. It fixes the range-interior omission, absolute/mixed formula reference parsing, and UTF-8 query-anchor windowing. Missing cell dependencies and cell/byte-budget omissions now remain explicit in provenance/Inspector data and trigger a concise user notice; ordinary text excerpting does not.
 
 Focused tests passed 70/70. The subsequent complete host gate passed app JVM 700/700 and LiteRT compatibility 2/2, with debug/release assemble, lintDebug and AndroidTest APK assemble successful. Lint had 0 errors, 40 warnings and 1 informational issue. The test APK was only built: instrumented tests and Motorola validation are **NOT RUN** because no ADB device, emulator binary/system image or KVM was available. The full synthetic before/after JSON, JUnit XML, gate log, summary and hashes are in [M00-03 validation evidence](../validation/m00-03/RESULTS.md).
 
-The prior sections below describe the earlier pre-loop stabilization commit and its measurements; their 686 app-test count and artifact metadata are historical for that earlier commit. The current M00-03 gate result is 700 app tests plus 2 compatibility tests.
+The prior sections below describe earlier stabilization revisions. Their 686, 700, and 720 app-test counts, APK metadata and push state are historical only; the current LOG10 correction result is recorded at the beginning of this handoff and in `EXECUTION_STATE.json` → `latestFollowUp`.
 
 The implementation is based on the completed 0.5.0 Skills/Agents and Semantic V2 postfix. It preserves the single Gemma runtime, Skills/Agents, existing databases, Semantic V2 and the F1/F2 fixes. No merge or release tag is part of this handoff.
 

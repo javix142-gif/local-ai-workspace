@@ -1,0 +1,13 @@
+M00_SOURCE_COMMIT=39aea8f55aac051edd3a43bc1b09c05d319d2783
+JAVA_HOME=/workspace/.toolchain/jdk-17
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+./gradlew --no-daemon --no-parallel --max-workers=1 \
+  '-Dorg.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8' \
+  -Pkotlin.daemon.jvmargs=-Xmx2048m \
+  :app:testDebugUnitTest \
+  --tests 'com.localai.workspace.context.ContextEvidenceExcerptTest' \
+  --tests 'com.localai.workspace.context.AuditHarness' \
+  --tests 'com.localai.workspace.context.ContextFoundationTest' \
+  --tests 'com.localai.workspace.data.StructuredDocumentsTest' \
+  --tests 'com.localai.workspace.semantic.v2.SemanticContextPostfixTest' \
+  --offline --console=plain
