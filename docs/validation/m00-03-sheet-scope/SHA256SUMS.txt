@@ -1,8 +1,8 @@
-06812d8224caa90b3ecc3b168568906e1b83484989d54b1c64b216907e9d8109  docs/validation/m00-03-sheet-scope/RESULTS.md
+8871d42453e369ba3d1408fa5c25f8227212204e5e4bbd13ca19cd3f0438c09e  docs/validation/m00-03-sheet-scope/RESULTS.md
 7976514fbcb6fd32ad4b145f380613fa826b7a51d7e9a10fc31ad66e0a1e4d6d  docs/validation/m00-03-sheet-scope/after/SELECTOR_REPRODUCCIONES.json
-5fa955246f201edacc3c01dcf1243493d2e54a722474e887bcdf759a212d334d  docs/validation/m00-03-sheet-scope/after/focused-test-run.log
+8054409678ee4e46c3f8a8d283c0d548e0822891c4662e9d6dd242755c9167d2  docs/validation/m00-03-sheet-scope/after/focused-test-run.log.gz
 497ff8b8d782a22a381dd9d067b99930a9cbc1142645f362c084b25157f5c917  docs/validation/m00-03-sheet-scope/after/full-host-gate-summary.json
-f84b3ae60d9c04e685fc019736985ae421b66c735f918275da4af7f0b0d4d77e  docs/validation/m00-03-sheet-scope/after/full-host-gate.log
+01c19704a12d58dac0b18c7b3d122e4544a9993182e8ab15dd6eed03adce0dca  docs/validation/m00-03-sheet-scope/after/full-host-gate.log.gz
 69794656c037e7b462e991f947c45f7c299cc2fa4197bd637fe80d983c1d44b1  docs/validation/m00-03-sheet-scope/after/junit-relevant/TEST-com.google.ai.edge.litertlm.NativeHistoryRoleTest.xml
 67a9f6fd3dad6ee0b76191902c811f3c73a78dfff48a05e2b2d0c9686814c49b  docs/validation/m00-03-sheet-scope/after/junit-relevant/TEST-com.localai.workspace.context.AuditHarness.xml
 2a9bd852242cb8a74c428a212d7315da36c44f4d53f5dd6c218056224d360da1  docs/validation/m00-03-sheet-scope/after/junit-relevant/TEST-com.localai.workspace.context.ContextEvidenceExcerptTest.xml
@@ -13,5 +13,5 @@ ff5bb7f9eef9f8a02d53f5b7e9581d8768bf6adb55892bee41a49b50d9e8e8b9  docs/validatio
 acfc0a9b0d70c1f7df24c7e8b4fd059c26e3a40601b644bc5552c921178d286d  docs/validation/m00-03-sheet-scope/before/ENVIRONMENT.txt
 a3c340ce539c3a3c00b515608b1fbd641fca278526b58540c6c38d79587ea34b  docs/validation/m00-03-sheet-scope/before/REPRO_COMMAND.txt
 84ef4995b5b0a22c47150d0b0323c6f3f862f8f8414c003d112dcd4cc8b2aae9  docs/validation/m00-03-sheet-scope/before/TEST-ContextEvidenceExcerptTest-red.xml
-3c80ac731fdd85ca35a0bdbd8c280f337225a1d2f2518a145ffc7bdc5028ade4  docs/validation/m00-03-sheet-scope/before/red-alias-reproduction.log
-bf6508bd519bab822227a2c338ddc3b32ccab1868df8d35aaeae6141708004f2  docs/validation/m00-03-sheet-scope/before/red-qualified-sheet-repro.log
+db9191badb5a2e757c7b9b2faa8ffadabd179a2566195ee8ad3a83e54e57ea62  docs/validation/m00-03-sheet-scope/before/red-alias-reproduction.log.gz
+37c9b5345be3617a6fadaf91f2f5d101fd252e9b156b6758665145e8597db6de  docs/validation/m00-03-sheet-scope/before/red-qualified-sheet-repro.log.gz

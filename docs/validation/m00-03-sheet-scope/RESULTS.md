@@ -12,7 +12,7 @@ Status: implemented and host-tested. Android execution: **NOT RUN**.
 
 Before editing production, a new assertion was run against the starting HEAD. The exact reproduction selected `Hoja1!A1=999` as a dependency of `Hoja1!A3`, whose formula is `'Hoja2'!A1`; it reported no missing reference. Root cause: the selector scanned formula coordinates without retaining their worksheet qualifier, then looked up the address in a workbook-wide address map. The explicit destination was therefore replaced with a homonymous local cell.
 
-The red JUnit XML, raw Gradle output, and command are preserved in [`before/`](before/). The after harness output is [`SELECTOR_REPRODUCCIONES.json`](after/SELECTOR_REPRODUCCIONES.json), explicitly labeled host-only. All its invariants pass, including the qualified-sheet no-homonym case and the earlier range, absolute-reference, and multibyte-anchor controls.
+The red JUnit XML, losslessly compressed raw Gradle logs, and command are preserved in [`before/`](before/). `gzip -dc` reproduces the captured logs byte-for-byte; the uncompressed SHA-256 is recorded in the JSON/report or can be computed from that stream. The after harness output is [`SELECTOR_REPRODUCCIONES.json`](after/SELECTOR_REPRODUCCIONES.json), explicitly labeled host-only. All its invariants pass, including the qualified-sheet no-homonym case and the earlier range, absolute-reference, and multibyte-anchor controls.
 
 ## Resolution policy and supported grammar
 
@@ -55,7 +55,7 @@ Relevant final-gate JUnit XML files are preserved under [`after/junit-relevant/`
 | `assembleDebugAndroidTest` | PASS (test APK compiled only) |
 | Instrumented/emulator/Motorola execution | **NOT RUN** |
 
-The full original Gradle gate log and focused run log are in [`after/`](after/). SHA-256 values for all preserved evidence files are in [`SHA256SUMS.txt`](SHA256SUMS.txt).
+The full original Gradle gate log and focused run log are losslessly compressed in [`after/`](after/). SHA-256 values for all preserved evidence files are in [`SHA256SUMS.txt`](SHA256SUMS.txt).
 
 ## Commands and host environment
 
