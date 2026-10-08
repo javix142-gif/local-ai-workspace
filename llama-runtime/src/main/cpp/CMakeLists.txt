@@ -33,6 +33,12 @@ if(DEFINED ANDROID_ABI)
 endif()
 
 set(LLAMA_SRC ${CMAKE_CURRENT_LIST_DIR}/../../../../third_party/llama.cpp)
+set(LLAMA_MODELS_DIR ${LLAMA_SRC}/src/models)
+file(GLOB LLAMA_MODEL_SOURCES "${LLAMA_MODELS_DIR}/*.cpp")
+if(NOT EXISTS "${LLAMA_MODELS_DIR}/models.h" OR NOT LLAMA_MODEL_SOURCES)
+    message(FATAL_ERROR
+            "Vendored llama.cpp model sources are incomplete. Expected models.h and model implementation sources in ${LLAMA_MODELS_DIR}.")
+endif()
 add_subdirectory(${LLAMA_SRC} build-llama)
 
 add_library(${CMAKE_PROJECT_NAME} SHARED

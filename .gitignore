@@ -88,6 +88,10 @@ temp/
 # Validation outputs that contain generated binaries, snapshots or signing commands.
 docs/validation/**/build-evidence/
 docs/validation/**/*.log
+
+# llama.cpp model registry implementation is source code, not model weights.
+!third_party/llama.cpp/src/models/
+!third_party/llama.cpp/src/models/**
 docs/validation/**/*.tar.gz
 docs/validation/**/*.so
 docs/validation/**/*.zip
