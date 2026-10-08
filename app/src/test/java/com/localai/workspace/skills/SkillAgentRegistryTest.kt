@@ -57,6 +57,21 @@ class SkillAgentRegistryTest {
         val s=SkillDefinition("user","User","d",instructions="edited")
         skills.update(s);skills.initialize();assertEquals("edited",skills.get(s.id)!!.instructions)
     }
+    @Test fun generalOffersInstalledSkillsWithoutForcingActivationOrExpandingCustomAgents()=runBlocking {
+        val imported=skills.install("---\nname: Budget Procedure\ndescription: Budget review\n---\nReview only the requested budget.")
+        val authored=SkillDefinition("skill.user-budget","My Budget","Budget analysis",instructions="Analyze the provided budget.",routingProfile=RoutingProfile(keywords=listOf("presupuesto")))
+        skills.update(authored)
+        val coordinator=AgentSkillCoordinator(skills,agents)
+        assertTrue(imported.id in agents.get(AgentResolver.GENERAL)!!.skillIds)
+        assertEquals(listOf(imported.id),coordinator.resolve(SkillRoutingRequest("hola",explicitSkills=setOf(imported.id)),null,null).selection.active.map{it.id})
+        assertEquals(listOf(authored.id),coordinator.resolve(SkillRoutingRequest("Analiza mi presupuesto"),null,null).selection.active.map{it.id})
+        assertTrue(coordinator.resolve(SkillRoutingRequest("presupuesto"),null,null).selection.active.isEmpty())
+        agents.update(AgentDefinition("restricted","Assigned skills only",skillIds=emptySet()))
+        val restricted=coordinator.resolve(SkillRoutingRequest("hola",explicitSkills=setOf(imported.id)),null,"restricted")
+        assertTrue(restricted.selection.active.isEmpty())
+        assertEquals(listOf("AGENT_NOT_ALLOWED"),restricted.selection.evaluations.first{it.skillId==imported.id}.reasons)
+        skills.remove(imported.id);assertFalse(imported.id in agents.get(AgentResolver.GENERAL)!!.skillIds)
+    }
     @Test fun sidecarReopenPersistsPreferencesAndOrigin()=runBlocking {
         val context=RuntimeEnvironment.getApplication();val name="agents-reopen.db";context.deleteDatabase(name)
         val first=AgentsSkillsDatabase.create(context,name)

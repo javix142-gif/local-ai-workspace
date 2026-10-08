@@ -21,14 +21,14 @@ class SkillRoutingFixturesTest(private val id:String,private val fixture:String)
         val agent=BuiltInSkills.general.copy(skillIds=if(f.has("agentSkills"))values("agentSkills")else BuiltInSkills.general.skillIds)
         val selected=SkillRouterV1().select(request,agent,skills)
         val actual=selected.active.map{it.id}.toSet();val expected=values("expected")
-        synchronized(results){results+=mapOf("id" to id,"correct" to (actual==expected),"falsePositives" to (actual-expected).size,"falseNegatives" to (expected-actual).size,"abstention" to actual.isEmpty(),"routingMs" to selected.routingMs)}
+        synchronized(results){results+=mapOf("id" to id,"correct" to (actual==expected),"correctActivations" to actual.intersect(expected).size,"falsePositives" to (actual-expected).size,"falseNegatives" to (expected-actual).size,"abstention" to actual.isEmpty(),"routingMs" to selected.routingMs)}
         assertEquals(id,expected,actual)
         assertTrue(selected.evaluations.none{it.active && (!it.eligible||!it.enabled)})
     }
     companion object {
         private val results=mutableListOf<Map<String,Any>>()
         @JvmStatic @org.junit.AfterClass fun report() {
-            val json=com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(mapOf("environment" to "TESTED_HOST","router" to "DETERMINISTIC_V1","total" to results.size,"correctActivations" to results.count{it["correct"]==true},"falsePositives" to results.sumOf{it["falsePositives"] as Int},"falseNegatives" to results.sumOf{it["falseNegatives"] as Int},"abstentions" to results.count{it["abstention"]==true},"cases" to results))
+            val json=com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(mapOf("environment" to "TESTED_HOST","router" to "DETERMINISTIC_V1","total" to results.size,"correctCases" to results.count{it["correct"]==true},"correctActivations" to results.sumOf{it["correctActivations"] as Int},"falsePositives" to results.sumOf{it["falsePositives"] as Int},"falseNegatives" to results.sumOf{it["falseNegatives"] as Int},"abstentions" to results.count{it["abstention"]==true},"cases" to results))
             java.io.File("build/reports/skills-routing-v1.json").apply{parentFile?.mkdirs();writeText(json)}
         }
         @JvmStatic @Parameterized.Parameters(name="{0}") fun cases():Collection<Array<Any>> {

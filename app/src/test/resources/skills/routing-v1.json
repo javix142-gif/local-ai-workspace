@@ -826,5 +826,32 @@
     "id": "114",
     "query": "La memoria del editor Nebula está guardada",
     "expected": []
+  },
+  {
+    "id": "115",
+    "query": "Review this class",
+    "filename": "Example.cpp",
+    "mime": "text/plain",
+    "expected": [
+      "skill.code-assistant"
+    ]
+  },
+  {
+    "id": "116",
+    "query": "Review this class",
+    "filename": "Example.rs",
+    "mime": "text/plain",
+    "expected": [
+      "skill.code-assistant"
+    ]
+  },
+  {
+    "id": "117",
+    "query": "Review this class",
+    "filename": "Example.tsx",
+    "mime": "text/plain",
+    "expected": [
+      "skill.code-assistant"
+    ]
   }
 ]

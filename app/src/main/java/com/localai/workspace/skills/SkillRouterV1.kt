@@ -8,6 +8,7 @@ import java.util.Locale
 class SkillRouterV1 {
     fun select(request:SkillRoutingRequest,agent:AgentDefinition,skills:List<SkillDefinition>):SkillSelection {
         val start=System.nanoTime();val query=normalize(request.query)
+        val specializedExtensions=BuiltInSkills.definitions.filter{it.id in setOf("skill.code-assistant","skill.spreadsheet-analysis")}.flatMap{it.routingProfile.fileExtensions}.toSet()
         val evaluations=skills.sortedBy{it.id}.map{skill->
             val profile=skill.routingProfile
             val rejection=when {
@@ -27,12 +28,17 @@ class SkillRouterV1 {
                     val specific=skill.id in setOf("skill.code-assistant","skill.spreadsheet-analysis")
                     val documentIntent=Regex("\\b(resume|resumir|summarize|summarise|documentos?|documents?|pdf|docx)\\b").containsMatchIn(query)
                     // A generic 'review' is insufficient without an appropriate document; code/table signals win.
-                    val incompatible=request.attachments.any{it.filename?.substringAfterLast('.',"")?.lowercase(Locale.ROOT) in setOf("kt","java","py","js","ts","xlsx","csv")}
+                    val incompatible=request.attachments.any{it.filename?.substringAfterLast('.',"")?.lowercase(Locale.ROOT) in specializedExtensions}
                     val negative=profile.negativeExamples.any{query==normalize(it)}
                     val intent=Regex("\\b(revisa|review|analiza|analyze|analyse|explica|explain|depura|debug|implementa|implement|escribe|write|corrige|fix|calcula|calculate|compara|compare|encuentra|find|resume|summarize|why|how|por que|que es|what is)\\b").containsMatchIn(query)
                     val spreadsheetDomain=Regex("\\b(excel|xlsx|csv|spreadsheet|planilla)\\b").containsMatchIn(query)
                     val specificStrong=specific && intent && (skill.id!="skill.spreadsheet-analysis" || ext || mime || spreadsheetDomain)
-                    val strong=keyword && (specificStrong || skill.id=="skill.general-writing" || ((ext||mime||documentIntent)&&!incompatible))
+                    val strong=keyword && when(skill.id) {
+                        "skill.code-assistant","skill.spreadsheet-analysis"->specificStrong
+                        "skill.general-writing"->true
+                        "skill.document-analysis"->(ext||mime||documentIntent)&&!incompatible
+                        else->intent
+                    }
                     if(!negative && strong) {
                         if(ext)reasons+="EXTENSION_MATCH"
                         if(mime)reasons+="MIME_MATCH"
