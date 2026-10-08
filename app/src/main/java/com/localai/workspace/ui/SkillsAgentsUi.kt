@@ -39,14 +39,14 @@ import java.util.UUID
     }}
     val exporter=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/markdown")){uri->val id=exportId;if(uri!=null&&id!=null)run{context.contentResolver.openOutputStream(uri)?.bufferedWriter()?.use{it.write(registry.export(id))} ?: error("SKILL_EXPORT_FAILED")}}
     SemanticPanel("Skills",close) {
-        Row {TextButton(onClick={importer.launch(arrayOf("text/*","application/octet-stream"))}){Text("Import SKILL.md")};TextButton(onClick={editing=SkillDefinition("skill.user-${UUID.randomUUID()}","","",instructions="")}){Text("Create")}}
-        skills.forEach{s->Card(Modifier.fillMaxWidth().clickable{editing=s}){Row(Modifier.padding(12.dp)){Column(Modifier.weight(1f)){Text(s.name);Text(s.description,style=MaterialTheme.typography.bodySmall);Text(s.origin.name.replace('_',' '),style=MaterialTheme.typography.labelSmall)};Switch(s.enabled,{run{registry.enable(s.id,it)}})}}}
+        Row {TextButton(onClick={importer.launch(arrayOf("text/*","application/octet-stream"))}){Text("Import SKILL.md")};TextButton(onClick={error=null;editing=SkillDefinition("skill.user-${UUID.randomUUID()}","","",instructions="")}){Text("Create")}}
+        skills.forEach{s->Card(Modifier.fillMaxWidth().clickable{error=null;editing=s}){Row(Modifier.padding(12.dp)){Column(Modifier.weight(1f)){Text(s.name);Text(s.description,style=MaterialTheme.typography.bodySmall);Text(s.origin.name.replace('_',' '),style=MaterialTheme.typography.labelSmall)};Switch(s.enabled,{run{registry.enable(s.id,it)}})}}}
         error?.let{Text(it,color=MaterialTheme.colorScheme.error)}
     }
-    editing?.let{s->SkillEditor(s,save={value->run{registry.update(value);editing=null}},export={exportId=s.id;exporter.launch("${s.name.replace(' ','-')}-SKILL.md")},remove={removeId=s.id},close={editing=null})}
+    editing?.let{s->SkillEditor(s,errorMessage=error,save={value->run{registry.update(value);editing=null}},export={exportId=s.id;exporter.launch("${s.name.replace(' ','-')}-SKILL.md")},remove={removeId=s.id},close={editing=null})}
     removeId?.let{id->AlertDialog(onDismissRequest={removeId=null},title={Text("Remove skill?")},text={Text("Existing chats and saved data remain. Agent assignments will ignore the missing skill.")},confirmButton={TextButton(onClick={run{registry.remove(id);removeId=null;editing=null}}){Text("Remove")}},dismissButton={TextButton(onClick={removeId=null}){Text("Cancel")}})}
 }
-@Composable private fun SkillEditor(skill:SkillDefinition,save:(SkillDefinition)->Unit,export:()->Unit,remove:()->Unit,close:()->Unit) {
+@Composable private fun SkillEditor(skill:SkillDefinition,errorMessage:String?,save:(SkillDefinition)->Unit,export:()->Unit,remove:()->Unit,close:()->Unit) {
     val readOnly=skill.origin==SkillOrigin.BUILT_IN
     var name by remember(skill.id){mutableStateOf(skill.name)};var description by remember(skill.id){mutableStateOf(skill.description)};var instructions by remember(skill.id){mutableStateOf(skill.instructions)}
     var keywords by remember(skill.id){mutableStateOf(skill.routingProfile.keywords.joinToString(", "))};var explicit by remember(skill.id){mutableStateOf(skill.routingProfile.explicitOnly)}
@@ -56,6 +56,7 @@ import java.util.UUID
         OutlinedTextField(instructions,{instructions=it},readOnly=readOnly,label={Text("Instructions")},modifier=Modifier.fillMaxWidth(),minLines=4)
         if(!readOnly){OutlinedTextField(keywords,{keywords=it},label={Text("Routing keywords, comma separated")},modifier=Modifier.fillMaxWidth());Row{Checkbox(explicit,{explicit=it});Text("Explicit selection only")}}
         if(skill.externalMetadata.isNotEmpty())Text("Additional metadata preserved; resources and scripts are not executed.",style=MaterialTheme.typography.bodySmall)
+        errorMessage?.let{Text(it,color=MaterialTheme.colorScheme.error)}
         Row {TextButton(onClick=export){Text("Export")};if(!readOnly){TextButton(onClick=remove){Text("Remove")};TextButton(enabled=name.isNotBlank()&&description.isNotBlank()&&instructions.isNotBlank(),onClick={save(skill.copy(name=name,description=description,instructions=instructions,routingProfile=skill.routingProfile.copy(keywords=keywords.split(',').map{it.trim()}.filter{it.isNotEmpty()},explicitOnly=explicit)))}){Text("Save")}}}
     }
 }
@@ -66,14 +67,14 @@ import java.util.UUID
     fun run(block:suspend()->Unit){scope.launch{try{withContext(Dispatchers.IO){block()};error=null}catch(c:CancellationException){throw c}catch(e:Exception){error=e.message}}}
     LaunchedEffect(Unit){graph.agentRegistry.initialize();graph.skillRegistry.initialize()}
     SemanticPanel("Logical Agents",close) {
-        TextButton(onClick={editing=AgentDefinition("agent.user-${UUID.randomUUID()}","",skillIds=skills.map{it.id}.toSet())}){Text("Create agent")}
-        agents.forEach{a->Card(Modifier.fillMaxWidth().clickable{editing=a}){Row(Modifier.padding(12.dp)){Column(Modifier.weight(1f)){Text(a.name);Text(a.description,style=MaterialTheme.typography.bodySmall)};if(a.id!=AgentResolver.GENERAL)Switch(a.enabled,{run{graph.agentRegistry.enable(a.id,it)}})}}}
+        TextButton(onClick={error=null;editing=AgentDefinition("agent.user-${UUID.randomUUID()}","",skillIds=skills.map{it.id}.toSet())}){Text("Create agent")}
+        agents.forEach{a->Card(Modifier.fillMaxWidth().clickable{error=null;editing=a}){Row(Modifier.padding(12.dp)){Column(Modifier.weight(1f)){Text(a.name);Text(a.description,style=MaterialTheme.typography.bodySmall)};if(a.id!=AgentResolver.GENERAL)Switch(a.enabled,{run{graph.agentRegistry.enable(a.id,it)}})}}}
         error?.let{Text(it,color=MaterialTheme.colorScheme.error)}
     }
-    editing?.let{a->AgentEditor(a,skills,save={value->run{graph.agentRegistry.update(value);editing=null}},remove={remove=a.id},close={editing=null})}
+    editing?.let{a->AgentEditor(a,skills,errorMessage=error,save={value->run{graph.agentRegistry.update(value);editing=null}},remove={remove=a.id},close={editing=null})}
     remove?.let{id->AlertDialog(onDismissRequest={remove=null},title={Text("Remove agent?")},text={Text("Projects referencing it will use General Agent. Saved memory is preserved.")},confirmButton={TextButton(onClick={run{graph.agentRegistry.remove(id);remove=null;editing=null}}){Text("Remove")}},dismissButton={TextButton(onClick={remove=null}){Text("Cancel")}})}
 }
-@Composable private fun AgentEditor(agent:AgentDefinition,skills:List<SkillDefinition>,save:(AgentDefinition)->Unit,remove:()->Unit,close:()->Unit) {
+@Composable private fun AgentEditor(agent:AgentDefinition,skills:List<SkillDefinition>,errorMessage:String?,save:(AgentDefinition)->Unit,remove:()->Unit,close:()->Unit) {
     val readOnly=agent.id==AgentResolver.GENERAL
     var name by remember(agent.id){mutableStateOf(agent.name)};var description by remember(agent.id){mutableStateOf(agent.description)};var role by remember(agent.id){mutableStateOf(agent.systemRole)}
     var assigned by remember(agent.id){mutableStateOf(agent.skillIds)};var tools by remember(agent.id){mutableStateOf(agent.allowedTools)};var sources by remember(agent.id){mutableStateOf(agent.allowedSourceTypes)};var scopes by remember(agent.id){mutableStateOf(agent.memoryScopes)}
@@ -85,6 +86,7 @@ import java.util.UUID
         Text("Tools");SkillDefinition.STANDARD_TOOLS.sorted().forEach{id->Choice(id,id in tools,!readOnly){tools=if(it)tools+id else tools-id}}
         Text("Sources");SourceType.local.forEach{type->Choice(type.name.replace('_',' '),type in sources,!readOnly){sources=if(it)sources+type else sources-type}}
         Text("Memory scopes");ScopeType.entries.forEach{type->Choice(type.name,type in scopes,!readOnly){scopes=if(it)scopes+type else scopes-type}}
+        errorMessage?.let{Text(it,color=MaterialTheme.colorScheme.error)}
         if(!readOnly)Row{TextButton(onClick=remove){Text("Remove")};TextButton(enabled=name.isNotBlank(),onClick={save(agent.copy(name=name,description=description,systemRole=role,skillIds=assigned,allowedTools=tools,allowedSourceTypes=sources,memoryScopes=scopes))}){Text("Save")}}
     }
 }
