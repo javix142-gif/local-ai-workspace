@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.sync.withLock
 
 /** Additive orchestration. It neither replaces semantic indexes nor owns a second embedding engine. */
-class ContextFoundation(private val graph:AppGraph) {
+class ContextFoundation(private val graph:AppGraph, private val semanticLayerProvider:()->SemanticLayer={graph.validationOwner?.semanticV2 ?: graph.semanticV2}) {
     val database=MemoryContextDatabase.create(graph.contextForMeasurements,graph.validationId?.let{"context-memory-$it.db"} ?: "memory_context.db")
     private val prefs=graph.contextForMeasurements.getSharedPreferences("context_foundation_v1",Context.MODE_PRIVATE)
     val enabled=MutableStateFlow(prefs.getBoolean("enabled",true))
@@ -19,7 +19,7 @@ class ContextFoundation(private val graph:AppGraph) {
     fun enable(value:Boolean){check(prefs.edit().putBoolean("enabled",value).commit());enabled.value=value}
     suspend fun embedding(input:SemanticInput,task:EmbeddingTask):EmbeddingResult?=withContext(Dispatchers.IO){
         try {
-            val layer=graph.validationOwner?.semanticV2 ?: graph.semanticV2
+            val layer=semanticLayerProvider()
             val result=if(layer.selection.choice==SemanticProviderChoice.EG2){layer.restore();layer.manager.embed(input,task,layer.dimension)}
             else graph.inferenceGate.withLock{LegacyEmbeddingProvider(graph.embeddingModels).embed(input,task,768)}
             notice.value=null;result
@@ -74,7 +74,7 @@ class ContextFoundation(private val graph:AppGraph) {
         }.sortedByDescending{it.score}.take(3)
     }
     suspend fun build(request:ContextRequest,evidence:List<Evidence>?=null,memoryEnabled:Boolean=true):ContextBundle=withContext(Dispatchers.IO){
-        val started=System.nanoTime();val access=request.access
+        val started=System.nanoTime();val access=request.access;notice.value=null
         check(access.projectId==null||graph.database.projectDao().get(access.projectId)!=null){"PROJECT_NOT_FOUND"}
         val all=mutableListOf<ContextItem>();val memoryStart=System.nanoTime()
         val memorySkipped=memoryEnabled&&MemoryRelevance.smallTalk(request.query)
@@ -87,11 +87,48 @@ class ContextFoundation(private val graph:AppGraph) {
         access.projectId?.let{id->database.dao().brief(id)?.let{all+=ContextItem("P1",ContextKind.PROJECT,it.markdown(),SemanticScope(ScopeType.PROJECT,id),ContextTrust.USER_PROJECT_DATA,70,provenance=ContextProvenance(sourceId=id))}}
         val retrieveStart=System.nanoTime()
         val sourceScope=access.projectId?.let{SemanticScope(ScopeType.PROJECT,it)} ?: SemanticScope(ScopeType.GLOBAL)
-        val layer=graph.validationOwner?.semanticV2 ?: graph.semanticV2
-        val v2Hits=if(evidence==null&&layer.selection.choice==SemanticProviderChoice.EG2)try{layer.search(SemanticInput.Text(request.query),sourceScope,limit=4)}catch(cancel:CancellationException){throw cancel}catch(failure:Exception){notice.value="SOURCE_LEXICAL_FALLBACK:${if(failure is SemanticFailure)failure.code.name else failure.javaClass.simpleName}";emptyList()}else emptyList()
-        v2Hits.forEachIndexed{i,h->all+=ContextItem("S${i+1}",ContextKind.SOURCE,h.content.orEmpty(),sourceScope,ContextTrust.UNTRUSTED_SOURCE,80,h.fusedScore,ContextProvenance(h.sourceId,h.segmentId,page=h.page,lineStart=h.lineStart,lineEnd=h.lineEnd,startMs=h.startMs,endMs=h.endMs))}
-        val sources=evidence ?: if(v2Hits.isEmpty())access.projectId?.let{graph.retrieval.retrieve(it,request.query)} ?: emptyList()else emptyList()
-        sources.forEach { e->val original=graph.database.documentDao().get(e.documentId);check(original!=null&&original.projectId==access.projectId){"SOURCE_SCOPE_MISMATCH"};all+=ContextItem(e.id,ContextKind.SOURCE,e.excerpt,sourceScope,ContextTrust.UNTRUSTED_SOURCE,80,e.retrievalScore,ContextProvenance(e.documentId,e.segmentId.toString(),page=e.pageStart,sourceName=e.documentTitle)) }
+        val layer=semanticLayerProvider()
+        var sourceNotice:String?=null
+        val canUseV2=request.sourceRetrievalMode==SourceRetrievalMode.SEMANTIC_V2_PREFERRED && layer.selection.choice==SemanticProviderChoice.EG2
+        val v2Hits=if(canUseV2)try {
+            layer.search(SemanticInput.Text(request.query),sourceScope,setOf(SemanticModality.TEXT,SemanticModality.CODE),limit=4,documentIds=request.selectedDocumentIds)
+                .filter { it.content!=null && it.modality in setOf(SemanticModality.TEXT,SemanticModality.CODE) }
+        }catch(cancel:CancellationException){throw cancel}catch(failure:Exception){
+            sourceNotice="SOURCE_SEMANTIC_V2_SKIPPED:${if(failure is SemanticFailure)failure.code.name else failure.javaClass.simpleName};LEGACY_FALLBACK"
+            emptyList()
+        }else emptyList()
+        val sourceEvidenceByItem=linkedMapOf<String,Evidence>()
+        if(v2Hits.isNotEmpty()) {
+            for(hit in v2Hits) {
+                val content=hit.content ?: continue
+                val evidenceHit=hit.legacySegmentId?.let { legacyId->
+                    evidence?.firstOrNull{it.segmentId==legacyId && it.documentId==hit.documentId} ?: run {
+                        val document=graph.database.documentDao().documentForSegment(legacyId)
+                        val segment=graph.database.documentDao().segment(legacyId)
+                        if(document==null || segment==null || document.projectId!=access.projectId || document.id!=hit.documentId)null else Evidence(
+                            id="LCL-${com.localai.workspace.semantic.VectorPersistence.hash("${access.projectId.orEmpty()}:$legacyId").take(8).uppercase()}",
+                            segmentId=legacyId,documentId=document.id,documentTitle=document.displayName,excerpt=content,
+                            pageStart=hit.page ?: segment.pageStart,pageEnd=segment.pageEnd,charStart=segment.charStart,
+                            charEnd=segment.charStart?.plus(content.length),retrievalScore=hit.fusedScore)
+                    }
+                }
+                val itemId=evidenceHit?.id ?: "SV2-${com.localai.workspace.semantic.v2.fingerprint(hit.segmentId+hit.embeddingSpace).take(16)}"
+                all+=ContextItem(itemId,ContextKind.SOURCE,content,sourceScope,ContextTrust.UNTRUSTED_SOURCE,80,hit.fusedScore,
+                    ContextProvenance(hit.sourceId,hit.segmentId,page=hit.page,lineStart=hit.lineStart,lineEnd=hit.lineEnd,startMs=hit.startMs,endMs=hit.endMs,sourceName=hit.sourceName,documentId=hit.documentId))
+                evidenceHit?.let{sourceEvidenceByItem[itemId]=it}
+            }
+        } else if(request.sourceRetrievalMode!=SourceRetrievalMode.DISABLED) {
+            val sources=evidence ?: access.projectId?.let{graph.retrieval.retrieve(it,request.query,documentIds=request.selectedDocumentIds)} ?: emptyList()
+            sources.forEach { e->
+                val original=graph.database.documentDao().get(e.documentId)
+                check(original!=null&&original.projectId==access.projectId){"SOURCE_SCOPE_MISMATCH"}
+                if(request.selectedDocumentIds.isEmpty() || e.documentId in request.selectedDocumentIds) {
+                    all+=ContextItem(e.id,ContextKind.SOURCE,e.excerpt,sourceScope,ContextTrust.UNTRUSTED_SOURCE,80,e.retrievalScore,
+                        ContextProvenance(e.documentId,e.segmentId.toString(),page=e.pageStart,sourceName=e.documentTitle,documentId=e.documentId))
+                    sourceEvidenceByItem[e.id]=e
+                }
+            }
+        }
         val retrievalMs=(System.nanoTime()-retrieveStart)/1_000_000
         val historyStart=System.nanoTime();val recentIds=mutableSetOf<String>()
         request.conversationId?.takeIf{request.includeConversation}?.let{id->val owner=graph.database.conversationDao().get(id);if(owner!=null){
@@ -108,6 +145,7 @@ class ContextFoundation(private val graph:AppGraph) {
         val historyMs=(System.nanoTime()-historyStart)/1_000_000
         val result=ContextBuilder().build(request,all)
         val renderStart=System.nanoTime();result.conversation();val renderMs=(System.nanoTime()-renderStart)/1_000_000
-        result.copy(dropped=result.dropped+relevanceDropped,memoryLookupSkipped=memorySkipped,timings=result.timings.copy(totalMs=(System.nanoTime()-started)/1_000_000,memoryMs=memoryMs,retrievalMs=retrievalMs,historyMs=historyMs,renderMs=renderMs),notice=notice.value).also{last.value=it}
+        val includedSourceIds=result.included.filter{it.kind==ContextKind.SOURCE}.map{it.id}.toSet()
+        result.copy(dropped=result.dropped+relevanceDropped,memoryLookupSkipped=memorySkipped,timings=result.timings.copy(totalMs=(System.nanoTime()-started)/1_000_000,memoryMs=memoryMs,retrievalMs=retrievalMs,historyMs=historyMs,renderMs=renderMs),notice=sourceNotice ?: notice.value,sourceEvidence=sourceEvidenceByItem.filterKeys{it in includedSourceIds}.values.toList()).also{last.value=it}
     }
 }

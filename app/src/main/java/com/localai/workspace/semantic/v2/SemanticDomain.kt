@@ -90,7 +90,7 @@ interface EmbeddingProviderV2 {
 }
 interface SourceProvider { val kind: SourceType; suspend fun sources(scope: SemanticScope): List<SemanticSource> }
 data class SemanticSource(val id: String, val scope: SemanticScope, val type: SourceType, val name: String, val contentHash: String)
-data class RetrievalHit(val sourceId: String, val segmentId: String, val sourceName: String, val modality: SemanticModality, val content: String?, val page: Int? = null, val lineStart: Int? = null, val lineEnd: Int? = null, val startMs: Long? = null, val endMs: Long? = null, val semanticScore: Double? = null, val lexicalScore: Double? = null, val fusedScore: Double, val embeddingSpace: String)
+data class RetrievalHit(val sourceId: String, val segmentId: String, val sourceName: String, val modality: SemanticModality, val content: String?, val page: Int? = null, val lineStart: Int? = null, val lineEnd: Int? = null, val startMs: Long? = null, val endMs: Long? = null, val semanticScore: Double? = null, val lexicalScore: Double? = null, val fusedScore: Double, val embeddingSpace: String, val documentId: String? = null, val legacySegmentId: Long? = null)
 data class ContextEvidence(val id: String, val hit: RetrievalHit, val estimatedTokens: Int, val priority: Int)
 data class ContextBundle(val evidence: List<ContextEvidence>, val estimatedTokens: Int)
 /** Experimental builder; does not change the baseline chat prompt. Estimates are explicitly estimates. */

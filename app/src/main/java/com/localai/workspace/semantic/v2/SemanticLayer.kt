@@ -205,33 +205,59 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
         catch(error:Throwable) { dao.job(job.copy(state="FAILED",errorCode=(error as? SemanticFailure)?.code?.name ?: "MEDIA_INDEX_FAILED"));throw error }
         finally { if(!committed) { if(prepared.method.startsWith("FRAME_"))prepared.reference.parentFile?.deleteRecursively() else prepared.reference.delete() } }
     } }
-    suspend fun markNeedsReindex(projectId:String) {
-        val active=database.dao().active(SemanticScope(ScopeType.PROJECT,projectId).key) ?: return
-        val job=database.dao().job(active.indexId) ?: return
-        database.dao().job(job.copy(state="NEEDS_REINDEX",updatedAt=System.currentTimeMillis()))
+    suspend fun markNeedsReindex(projectId:String) = operations.withLock {
+        val dao=database.dao();val active=dao.active(SemanticScope(ScopeType.PROJECT,projectId).key) ?: return@withLock
+        val job=dao.job(active.indexId) ?: return@withLock
+        if(job.state=="READY")dao.job(job.copy(state="NEEDS_REINDEX",updatedAt=System.currentTimeMillis()))
     }
-    suspend fun switchIndex(id: String) { val dao=database.dao();val job=dao.job(id) ?: error("Missing index");require(job.state in setOf("READY","NEEDS_REINDEX") && job.embeddings>0 && dao.count(id)==job.embeddings);dao.activate(SemanticActiveIndex(job.scopeKey,id,job.spaceKey)) }
-    suspend fun search(query: SemanticInput, scope: SemanticScope, modalities: Set<SemanticModality> = SemanticModality.entries.toSet(), limit: Int = 5): List<RetrievalHit> = withContext(Dispatchers.IO) {
+    suspend fun switchIndex(id: String) = operations.withLock {
+        val dao=database.dao();val job=dao.job(id) ?: error("Missing index")
+        require(job.state=="READY" && job.embeddings>0 && job.segments==job.embeddings && dao.count(id)==job.embeddings)
+        dao.activate(SemanticActiveIndex(job.scopeKey,id,job.spaceKey))
+    }
+    private suspend fun requireReadyGeneration(scope:SemanticScope,active:SemanticActiveIndex):SemanticIndexJob {
+        val dao=database.dao();val job=dao.job(active.indexId)
+        if(job==null || job.scopeKey!=scope.key || job.spaceKey!=active.spaceKey || job.state!="READY" || job.embeddings<=0 || job.segments!=job.embeddings || dao.count(active.indexId)!=job.embeddings)
+            throw SemanticFailure(SemanticError.REINDEX_REQUIRED)
+        return job
+    }
+    suspend fun search(query: SemanticInput, scope: SemanticScope, modalities: Set<SemanticModality> = SemanticModality.entries.toSet(), limit: Int = 5, documentIds:Set<String> = emptySet()): List<RetrievalHit> = withContext(Dispatchers.IO) {
         require(limit in 1..100); if(scope.type==ScopeType.PROJECT && workspace.projectDao().get(scope.id)==null)throw SemanticFailure(SemanticError.REINDEX_REQUIRED); restore();val model=manager.selected ?: throw SemanticFailure(SemanticError.MODEL_FILE_INVALID)
-        val active=database.dao().active(scope.key) ?: throw SemanticFailure(SemanticError.REINDEX_REQUIRED)
+        val dao=database.dao();val active=dao.active(scope.key) ?: throw SemanticFailure(SemanticError.REINDEX_REQUIRED)
         val space=EmbeddingEngineManager.space(model,dimension)
         if(active.spaceKey!=space.id) throw SemanticFailure(SemanticError.SPACE_MISMATCH)
+        val generation=requireReadyGeneration(scope,active)
+        if(generation.embeddings>10_000)throw SemanticFailure(SemanticError.REINDEX_REQUIRED)
+        val projectDocuments=if(scope.type==ScopeType.PROJECT)workspace.documentDao().forProject(scope.id).filter{it.extractionStatus=="READY" && it.indexingStatus=="READY"}else emptyList()
+        val documentIdByPath=projectDocuments.associate{it.localPath to it.id}
+        val validSelectedIds=if(documentIds.isEmpty())emptySet()else projectDocuments.asSequence().map{it.id}.filter{it in documentIds}.toSet()
+        if(documentIds.isNotEmpty()&&validSelectedIds.isEmpty())return@withContext emptyList()
+        val sources=if(scope.type==ScopeType.PROJECT)dao.sources(scope.key).filter{it.sourceType=="DOCUMENT"}else emptyList()
+        val sourceDocumentIds=sources.mapNotNull { source->documentIdByPath[source.reference]?.let{source.id to it} }.toMap()
+        val allowedSourceIds=if(documentIds.isEmpty())null else sourceDocumentIds.filterValues{it in validSelectedIds}.keys
+        if(allowedSourceIds!=null&&allowedSourceIds.isEmpty())return@withContext emptyList()
+        val corpus=dao.corpus(active.indexId,scope.key,space.id,10_000).filter {
+            SemanticModality.valueOf(it.segment.modality) in modalities && (allowedSourceIds==null || it.segment.sourceId in allowedSourceIds)
+        }
+        if(corpus.isEmpty())return@withContext emptyList()
         val queryVector=manager.embed(query,TaskPromptProfile.queryTask(query,modalities),dimension)
-        if(database.dao().count(active.indexId)>10_000)throw SemanticFailure(SemanticError.REINDEX_REQUIRED)
-        val corpus=database.dao().corpus(active.indexId,scope.key,space.id,10_000).filter { SemanticModality.valueOf(it.segment.modality) in modalities }
         val ranked=corpus.map { c -> c to SemanticVectors.cosine(queryVector,EmbeddingResult(space,SemanticVectors.decode(c.vector,c.dimension),0)) }.sortedByDescending { it.second }.take(30)
         // Existing FTS remains the lexical source of truth. Fuse ranks, never raw scores from different spaces.
         val lexical=if(scope.type==ScopeType.PROJECT && query is SemanticInput.Text) {
             val terms=Regex("[\\p{L}\\p{N}_]{2,}").findAll(query.content).map { "\"${it.value}\"" }.take(18).joinToString(" OR ")
-            if(terms.isBlank()) emptyList() else workspace.documentDao().searchLexical(scope.id,terms,30)
+            if(terms.isBlank()) emptyList() else if(validSelectedIds.isEmpty())workspace.documentDao().searchLexical(scope.id,terms,30)else workspace.documentDao().searchLexicalDocuments(scope.id,validSelectedIds.toList().sorted(),terms,30)
         } else emptyList()
         val lexicalIds=lexical.map { it.id }
         val candidates=(ranked.map { it.first } + corpus.filter { c -> lexicalIds.any { c.segment.legacySegmentId==it } }).distinctBy { it.segment.id }
-        candidates.map { c ->
+        val hits=candidates.map { c ->
             val semanticRank=ranked.indexOfFirst { it.first.segment.id==c.segment.id };val lexicalRank=lexicalIds.indexOfFirst { c.segment.legacySegmentId==it }
             val fused=(if(semanticRank>=0)1.0/(60+semanticRank+1)else 0.0)+(if(lexicalRank>=0)1.0/(60+lexicalRank+1)else 0.0)
             val s=c.segment
-            RetrievalHit(s.sourceId,s.id,c.sourceName,SemanticModality.valueOf(s.modality),s.textContent,s.page,s.lineStart,s.lineEnd,s.startMs,s.endMs,ranked.firstOrNull { it.first.segment.id==s.id }?.second,if(lexicalRank>=0)1.0/(lexicalRank+1)else null,fused,space.id)
+            RetrievalHit(s.sourceId,s.id,c.sourceName,SemanticModality.valueOf(s.modality),s.textContent,s.page,s.lineStart,s.lineEnd,s.startMs,s.endMs,ranked.firstOrNull { it.first.segment.id==s.id }?.second,if(lexicalRank>=0)1.0/(lexicalRank+1)else null,fused,space.id,sourceDocumentIds[s.sourceId],s.legacySegmentId)
         }.sortedByDescending { it.fusedScore }.take(limit)
+        val currentActive=dao.active(scope.key);val currentJob=dao.job(active.indexId)
+        if(currentActive!=active || currentJob?.state!="READY" || currentJob.updatedAt!=generation.updatedAt || currentJob.embeddings!=generation.embeddings)
+            throw SemanticFailure(SemanticError.REINDEX_REQUIRED)
+        hits
     }
 }

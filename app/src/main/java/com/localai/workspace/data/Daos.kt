@@ -192,6 +192,9 @@ interface DocumentDao {
     @Query("SELECT d.* FROM documents AS d INNER JOIN document_segments AS s ON d.id = s.documentId WHERE s.id = :segmentId LIMIT 1")
     suspend fun documentForSegment(segmentId: Long): DocumentEntity?
 
+    @Query("SELECT * FROM document_segments WHERE id = :segmentId LIMIT 1")
+    suspend fun segment(segmentId: Long): DocumentSegmentEntity?
+
     @Query(
         "SELECT s.* FROM document_segments AS s " +
             "INNER JOIN document_segments_fts AS f ON s.id = f.rowid " +

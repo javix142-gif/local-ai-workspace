@@ -60,18 +60,21 @@ class SemanticStorageTest {
         } finally { db.close() }
     }
 
-    @Test fun completedStaleIndexCanBeRestoredButFailedJobCannot()=runBlocking {
+    @Test fun staleOrFailedIndexCannotBeRestored()=runBlocking {
         val context=RuntimeEnvironment.getApplication()
         val db=Room.inMemoryDatabaseBuilder(context,SemanticDatabase::class.java).build()
         val workspace=Room.inMemoryDatabaseBuilder(context,WorkspaceDatabase::class.java).build()
         try {
-            val dao=db.dao();val row=SemanticEmbeddingRecord("blue","seg","space","litert","model","a".repeat(64),768,true,"DOCUMENT","hash",SemanticVectors.FORMAT,ByteArray(3072),1)
-            dao.embedding(row);dao.job(SemanticIndexJob("blue","GLOBAL:","space","NEEDS_REINDEX",1,1,1,1,1,null))
+            val dao=db.dao();val row=SemanticEmbeddingRecord("ready","seg-ready","space","litert","model","a".repeat(64),768,true,"DOCUMENT","ready-hash",SemanticVectors.FORMAT,ByteArray(3072),1)
+            dao.embedding(row);dao.job(SemanticIndexJob("ready","GLOBAL:","space","READY",1,1,1,1,1,null));dao.activate(SemanticActiveIndex("GLOBAL:","ready","space"))
+            dao.embedding(row.copy(indexId="blue",segmentId="seg-blue",contentHash="stale-hash"));dao.job(SemanticIndexJob("blue","GLOBAL:","space","NEEDS_REINDEX",1,1,1,1,1,null))
             val layer=SemanticLayer(context,workspace,kotlinx.coroutines.sync.Mutex(),db,"restore-test")
-            layer.switchIndex("blue");assertEquals("blue",dao.active("GLOBAL:")!!.indexId)
+            // Stale generations cannot be restored; rollback of an older READY generation remains covered separately.
+            try { layer.switchIndex("blue");fail("Stale index restored as current") } catch(_:IllegalArgumentException) {}
+            assertEquals("ready",dao.active("GLOBAL:")!!.indexId)
             dao.job(SemanticIndexJob("failed","GLOBAL:","space","FAILED",1,1,1,1,1,"INDEX_FAILED"))
             try { layer.switchIndex("failed");fail("Partial index restored") } catch(_:IllegalArgumentException) {}
-            assertEquals("blue",dao.active("GLOBAL:")!!.indexId)
+            assertEquals("ready",dao.active("GLOBAL:")!!.indexId)
         } finally { db.close();workspace.close() }
     }
 }

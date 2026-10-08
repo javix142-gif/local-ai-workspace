@@ -50,7 +50,11 @@ class AppGraph(context: Context,
     val runtime get() = llamaRuntime
     val workspace = WorkspaceRepository(database, java.io.File(appContext.filesDir, "documents"))
     val documents = DocumentIngestionService(appContext, database, database.documentDao(), onIndexed = { id ->
-        if(validationOwner==null)runtimeScope.launch { try { semanticV2.markNeedsReindex(id) } catch(cancel:kotlinx.coroutines.CancellationException){throw cancel} catch(error:Throwable){ android.util.Log.e("LocalAI/Semantic", "index_state_update_failed type=${error.javaClass.simpleName}") } }
+        if(validationOwner==null) {
+            // Ingestion awaits this callback: stale the active semantic generation before
+            // reporting the import complete, rather than racing chat against a fire-and-forget job.
+            kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) { semanticV2.markNeedsReindex(id) }
+        }
         if(embeddingModels.id != null) runtimeScope.launch { try { retrieval.indexProject(id) } catch(cancel: kotlinx.coroutines.CancellationException) { throw cancel } catch(error: Throwable) { embeddingModels.status.value = "Index failed: ${error.javaClass.simpleName} · lexical fallback" } }
     }, outputDirectory = validationId?.let { java.io.File(appContext.filesDir,"documents/self-test-"+it) })
     val modelImport = ModelImportService(appContext, database.modelDao(), runtimes)

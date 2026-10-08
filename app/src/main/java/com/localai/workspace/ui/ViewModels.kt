@@ -747,6 +747,7 @@ class ChatViewModel(
                     error("AGENT_SKILL_CONTEXT_BUDGET: instructions were not truncated; reduce instructions")
                 val suppliedIds = budget.included.mapNotNull { it.evidenceId }.toSet()
                 var suppliedEvidence = evidence.filter { it.id in suppliedIds }
+                var suppliedDocumentIds = suppliedEvidence.map { it.documentId }.toSet()
                 if (!useContextV1 && !diagnosticSmoke && (selectedFiles - suppliedEvidence.map { it.documentId }.toSet()).isNotEmpty()) {
                     _notices.emit("Some selected files had no relevant passage or did not fit; they remain selected for your next message")
                 }
@@ -768,14 +769,16 @@ class ChatViewModel(
                         allowedTools = routedTools.toList(),agentId=logicalAgent?.id,agentInstructions=logicalAgent?.systemRole,
                         skillIds=activeSkills.map{it.id},activeSkillInstructions=activeSkills.map{com.localai.workspace.context.SkillInstruction(it.id,it.instructions)},
                         memoryScopes=logicalAgent?.memoryScopes ?: com.localai.workspace.semantic.v2.ScopeType.entries.toSet(),
-                        includeConversation=com.localai.workspace.sources.SourceType.CONVERSATION in allowedSources),
+                        includeConversation=com.localai.workspace.sources.SourceType.CONVERSATION in allowedSources,
+                        sourceRetrievalMode=if(smallTalk || com.localai.workspace.sources.SourceType.PROJECT_DOCUMENT !in allowedSources) com.localai.workspace.context.SourceRetrievalMode.DISABLED else com.localai.workspace.context.SourceRetrievalMode.SEMANTIC_V2_PREFERRED,
+                        selectedDocumentIds=selectedFiles),
                         evidence = evidence, memoryEnabled = activeProject.memoryEnabled && com.localai.workspace.sources.SourceType.STRUCTURED_MEMORY in allowedSources)
                     trace("MEMORY_COMPLETE")
                     trace("CONTEXT_V1_BUILD_COMPLETE")
-                    val selectedSourceIds = selectedContext.included.filter { it.kind == com.localai.workspace.context.ContextKind.SOURCE }.map { it.id }.toSet()
-                    suppliedEvidence = evidence.filter { it.id in selectedSourceIds }
-                    if ((selectedFiles - suppliedEvidence.map { it.documentId }.toSet()).isNotEmpty()) _notices.emit("Some selected files had no relevant passage or did not fit; they remain selected for your next message")
-                    if (selectedFiles.isNotEmpty() && suppliedEvidence.isEmpty()) _notices.emit("No relevant document passage found for this turn")
+                    suppliedEvidence = selectedContext.sourceEvidence
+                    suppliedDocumentIds = selectedContext.included.filter { it.kind == com.localai.workspace.context.ContextKind.SOURCE }.mapNotNull { it.provenance.documentId }.toSet()
+                    if ((selectedFiles - suppliedDocumentIds).isNotEmpty()) _notices.emit("Some selected files had no relevant passage or did not fit; they remain selected for your next message")
+                    if (selectedFiles.isNotEmpty() && suppliedDocumentIds.isEmpty()) _notices.emit("No relevant document passage found for this turn")
                     if(selectedContext.droppedSkills.isNotEmpty()) {
                         agentTrace.value?.let { trace ->
                             val selection=trace.selection.copy(active=trace.selection.active.filter{it.id !in selectedContext.droppedSkills},evaluations=trace.selection.evaluations.map{if(it.skillId in selectedContext.droppedSkills)it.copy(active=false,reasons=it.reasons+"SKILL_CONTEXT_BUDGET")else it})
@@ -957,7 +960,7 @@ class ChatViewModel(
                 graph.workspace.updateGeneratedMessage(assistantId, finalText, MessageStatus.COMPLETE.name, metrics)
                 trace("PERSIST_COMPLETE")
                 // Attachments are consumed by this turn; files remain in the library for re-selection.
-                _selectedDocumentIds.value = _selectedDocumentIds.value - suppliedEvidence.map { it.documentId }.toSet()
+                _selectedDocumentIds.value = _selectedDocumentIds.value - suppliedDocumentIds
                 val validated = CitationValidator().validate(
                     CitationValidator().extractCandidates(finalText),
                     suppliedEvidence,
