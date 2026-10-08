@@ -177,8 +177,11 @@ interface DocumentDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSegments(segments: List<DocumentSegmentEntity>)
 
-    @Query("SELECT * FROM document_segments WHERE documentId IN (SELECT id FROM documents WHERE projectId = :projectId AND extractionStatus = 'READY' AND indexingStatus = 'READY') LIMIT :limit")
+    @Query("SELECT * FROM document_segments WHERE documentId IN (SELECT id FROM documents WHERE projectId = :projectId AND extractionStatus = 'READY' AND indexingStatus = 'READY') ORDER BY documentId, segmentIndex, id LIMIT :limit")
     suspend fun segmentsForProject(projectId: String, limit: Int): List<DocumentSegmentEntity>
+
+    @Query("SELECT s.* FROM document_segments s INNER JOIN documents d ON s.documentId=d.id WHERE d.projectId=:projectId AND d.id IN (:documentIds) AND d.extractionStatus='READY' AND d.indexingStatus='READY' ORDER BY s.documentId, s.segmentIndex, s.id LIMIT :limit")
+    suspend fun segmentsForDocuments(projectId: String, documentIds: List<String>, limit: Int): List<DocumentSegmentEntity>
 
     @Query("SELECT * FROM document_segments WHERE documentId = :documentId ORDER BY segmentIndex")
     suspend fun segmentsForDocument(documentId: String): List<DocumentSegmentEntity>
@@ -194,9 +197,12 @@ interface DocumentDao {
             "INNER JOIN document_segments_fts AS f ON s.id = f.rowid " +
             "INNER JOIN documents AS d ON s.documentId = d.id " +
             "WHERE d.projectId = :projectId AND d.extractionStatus = 'READY' AND d.indexingStatus = 'READY' AND document_segments_fts MATCH :query " +
-            "LIMIT :limit",
+            "ORDER BY s.documentId, s.segmentIndex, s.id LIMIT :limit",
     )
     suspend fun searchLexical(projectId: String, query: String, limit: Int): List<DocumentSegmentEntity>
+
+    @Query("SELECT s.* FROM document_segments s INNER JOIN document_segments_fts f ON s.id=f.rowid INNER JOIN documents d ON s.documentId=d.id WHERE d.projectId=:projectId AND d.id IN (:documentIds) AND d.extractionStatus='READY' AND d.indexingStatus='READY' AND document_segments_fts MATCH :query ORDER BY s.documentId, s.segmentIndex, s.id LIMIT :limit")
+    suspend fun searchLexicalDocuments(projectId: String, documentIds: List<String>, query: String, limit: Int): List<DocumentSegmentEntity>
 }
 
 @Dao
