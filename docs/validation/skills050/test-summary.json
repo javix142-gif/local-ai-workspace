@@ -1,0 +1,117 @@
+{
+  "version": "0.5.0",
+  "versionCode": 27,
+  "baseline": "v0.4.2",
+  "baselineCommit": "de615b772cf37a99e7e08a647c59607b271de606",
+  "createdAt": "2026-10-08T04:26:52.406046+00:00",
+  "environment": "TESTED_HOST",
+  "unitTests": {
+    "app": {
+      "tests": 661,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 79,
+      "testExecution": "EXECUTED_IN_FINAL_GATE"
+    },
+    "litert-compat": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 1,
+      "testExecution": "EXECUTED_IN_FINAL_GATE"
+    }
+  },
+  "commands": {
+    ":app:testDebugUnitTest": "PASS",
+    ":litert-compat:testDebugUnitTest": "PASS",
+    ":app:assembleDebug": "PASS",
+    ":app:assembleRelease": "PASS",
+    ":app:lintDebug": "PASS",
+    ":app:assembleDebugAndroidTest": "PASS"
+  },
+  "finalBuildDuration": "8m 47s",
+  "lintIssues": {
+    "Error": 0,
+    "Fatal": 0,
+    "Warning": 40,
+    "Information": 1
+  },
+  "finalHostProfile": {
+    "arm64Only": true,
+    "offline": true,
+    "parallel": false,
+    "maxWorkers": 1,
+    "gradleHeap": "2048m",
+    "kotlinDaemonHeap": "2048m",
+    "forcedTestExecution": true
+  },
+  "instrumentedTestsExecuted": false,
+  "physicalDeviceValidated": false,
+  "physicalSuite": "AGENTS_SKILLS_V1",
+  "physicalSuiteCases": 12,
+  "physicalSuiteResult": "NOT_TESTED",
+  "historicalCatalogChanged": false,
+  "semanticV2CatalogChanged": false,
+  "nativeRuntimeSourcesChanged": false,
+  "productionDatabaseVersions": {
+    "WorkspaceDatabase": 8,
+    "SemanticDatabase": 1,
+    "MemoryContextDatabase": 1,
+    "AgentsSkillsDatabase": 1
+  },
+  "attemptHistory": [
+    {
+      "description": "Initial combined gate before final small adjustments",
+      "result": "PASS",
+      "appTests": 651,
+      "duration": "21m 23s"
+    },
+    {
+      "description": "Parallel ARM64 repeat",
+      "result": "INTERRUPTED_HOST_GRADLE_DAEMON_DISAPPEARED",
+      "hostOomKillCounterObserved": 1,
+      "androidCrashAttribution": false
+    },
+    {
+      "description": "Serial unit retry",
+      "result": "PASS",
+      "appTests": 654,
+      "duration": "1m 45s"
+    },
+    {
+      "description": "Serial builds and forced compatibility tests",
+      "result": "PASS",
+      "duration": "13m 32s"
+    },
+    {
+      "description": "Final delivery gate including editor error display",
+      "result": "PASS",
+      "duration": "7m 2s"
+    },
+    {
+      "description": "Serial gate including validation reservation cleanup",
+      "result": "PASS",
+      "appTests": 657,
+      "duration": "8m 27s"
+    },
+    {
+      "description": "Targeted final routing/registries/reservation checks",
+      "result": "PASS",
+      "appTests": 133,
+      "duration": "1m 22s"
+    },
+    {
+      "description": "Final delivery gate including General custom Skills/code attachment regressions",
+      "result": "PASS",
+      "appTests": 661,
+      "duration": "8m 47s"
+    }
+  ],
+  "warnings": [
+    "40 pre-existing lint warnings and 1 informational issue",
+    "Existing native double-promotion/CMake build-info/deprecation warnings",
+    "Existing Kotlin/Python deprecations; Kotlin daemon startup retry/session warning in earlier retry"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "filename": "local-ai-workspace-0.5.0-skills-agents-arm64.apk",
+  "localPath": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.5.0-skills-agents-arm64.apk",
+  "bytes": 100015773,
+  "sha256": "be0df8a6896cd337809d53dee1d6e34e4f18be15ddf75c13ae637e6f17ab29e4",
+  "applicationId": "com.localai.workspace",
+  "versionName": "0.5.0",
+  "versionCode": 27,
+  "abi": [
+    "arm64-v8a"
+  ],
+  "certificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
+  "certificateMatchesV042": true,
+  "signatureVerified": true,
+  "physicalDeviceValidated": false,
+  "createdAt": "2026-10-08T04:26:52.406046+00:00",
+  "nativeLibraryCount": 9,
+  "nativeLibrariesMatchV042": false,
+  "nativeLibrariesByteIdentical": 7,
+  "nativeLibrariesDiffering": [
+    "libggml-base.so",
+    "libllama-common.so"
+  ],
+  "nativeSourcesChanged": false,
+  "nativeStringDifferences": {
+    "libggml-base.so": {
+      "baseline": "99b9548-dirty",
+      "current": "5ce6c88"
+    },
+    "libllama-common.so": {
+      "baseline": "99b9548",
+      "current": "5ce6c88"
+    }
+  }
+}

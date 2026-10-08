@@ -1,4 +1,4 @@
-> Historical status document: this file describes the 0.2.1-era checkpoint and is retained for release history. The current baseline is 0.4.2; see the root [STATUS.md](../STATUS.md) and [architecture overview](ARCHITECTURE_OVERVIEW.md).
+> Historical status document: this file describes the 0.2.1-era checkpoint and is retained for release history. The frozen baseline is v0.4.2; current development is 0.5.0; see the root [STATUS.md](../STATUS.md) and [architecture overview](ARCHITECTURE_OVERVIEW.md).
 
 # Part2 delivery — 0.2.0
 

@@ -2,7 +2,15 @@
 
 Local AI Workspace is an Android, local-first workspace for private on-device assistance. Once models and optional runtimes are installed, chat, project files, retrieval and user-approved memory work on-device. Network use is limited to explicit model downloads and other user-initiated online flows.
 
-**Source baseline: 0.4.2 · versionCode 26.** The 0.4.2 change adds relevance filtering to Structured Memory in Context Builder V1 and skips memory lookup for pure small talk. It passed 513 JVM tests and the host build gates. The targeted 0.4.2 memory checks have **not yet been run on a Motorola device**. User-reported 0.4.1 physical checks covered V1 on/off chat and project memory scope.
+**Development version: 0.5.0 · versionCode 27.** Frozen return point: annotated tag
+`v0.4.2`, commit `de615b772cf37a99e7e08a647c59607b271de606`.
+
+0.5.0 adds four procedural Skills, user-authored/imported SKILL.md, logical Agents
+sharing the existing model, project preferences and deterministic routing. It fixes
+production document retrieval coverage, selected-document candidate scoping and
+arbitrary unmatched evidence. See [Skills / Agents architecture](docs/SKILLS_AGENTS_ARCHITECTURE.md)
+and [status](STATUS.md) for verification and device limits. No semantic/LLM Skill router,
+Agent loops, MCP or cloud connectors are implemented.
 
 ## Current capabilities
 

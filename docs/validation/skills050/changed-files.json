@@ -1,0 +1,79 @@
+{
+  "baseline": "v0.4.2",
+  "developmentBranch": "feat/0.5.0-skills-agents",
+  "groups": {
+    "production": [
+      "app/src/main/java/com/localai/workspace/AppGraph.kt",
+      "app/src/main/java/com/localai/workspace/MainActivity.kt",
+      "app/src/main/java/com/localai/workspace/agents/AgentDefinition.kt",
+      "app/src/main/java/com/localai/workspace/agents/AgentRegistry.kt",
+      "app/src/main/java/com/localai/workspace/agents/AgentSkillCoordinator.kt",
+      "app/src/main/java/com/localai/workspace/agents/AgentsSkillsValidation.kt",
+      "app/src/main/java/com/localai/workspace/capabilities/CapabilityPolicy.kt",
+      "app/src/main/java/com/localai/workspace/context/ContextBuilder.kt",
+      "app/src/main/java/com/localai/workspace/context/ContextFoundation.kt",
+      "app/src/main/java/com/localai/workspace/context/MemoryDatabase.kt",
+      "app/src/main/java/com/localai/workspace/context/MemoryDomain.kt",
+      "app/src/main/java/com/localai/workspace/data/Daos.kt",
+      "app/src/main/java/com/localai/workspace/data/WorkspaceDatabase.kt",
+      "app/src/main/java/com/localai/workspace/domain/tools/ToolFramework.kt",
+      "app/src/main/java/com/localai/workspace/inference/LiteRtConversationPayload.kt",
+      "app/src/main/java/com/localai/workspace/semantic/SemanticRetrievalService.kt",
+      "app/src/main/java/com/localai/workspace/semantic/v2/SemanticDatabase.kt",
+      "app/src/main/java/com/localai/workspace/skills/AgentsSkillsDatabase.kt",
+      "app/src/main/java/com/localai/workspace/skills/BuiltInSkills.kt",
+      "app/src/main/java/com/localai/workspace/skills/SkillDefinition.kt",
+      "app/src/main/java/com/localai/workspace/skills/SkillPackageParser.kt",
+      "app/src/main/java/com/localai/workspace/skills/SkillRegistry.kt",
+      "app/src/main/java/com/localai/workspace/skills/SkillRouterV1.kt",
+      "app/src/main/java/com/localai/workspace/sources/SourceRegistry.kt",
+      "app/src/main/java/com/localai/workspace/ui/ContextMemoryUi.kt",
+      "app/src/main/java/com/localai/workspace/ui/SemanticSettings.kt",
+      "app/src/main/java/com/localai/workspace/ui/SkillsAgentsUi.kt",
+      "app/src/main/java/com/localai/workspace/ui/ViewModels.kt"
+    ],
+    "tests": [
+      "app/src/androidTest/java/com/localai/workspace/ui/AgentsSkillsNavigationTest.kt",
+      "app/src/test/java/com/localai/workspace/data/RetrievalIntegrityTest.kt",
+      "app/src/test/java/com/localai/workspace/skills/AgentSkillContextTest.kt",
+      "app/src/test/java/com/localai/workspace/skills/SchemaAdditivityTest.kt",
+      "app/src/test/java/com/localai/workspace/skills/SkillAgentRegistryTest.kt",
+      "app/src/test/java/com/localai/workspace/skills/SkillRoutingFixturesTest.kt",
+      "app/src/test/java/com/localai/workspace/skills/ValidationReservationTest.kt",
+      "app/src/test/java/com/localai/workspace/ui/ChatSessionPipelineTest.kt",
+      "app/src/test/java/com/localai/workspace/ui/NormalChatHotfixTest.kt",
+      "app/src/test/resources/skills/routing-v1.json"
+    ],
+    "schemas": [
+      "app/schemas/com.localai.workspace.context.MemoryContextDatabase/1.json",
+      "app/schemas/com.localai.workspace.data.WorkspaceDatabase/8.json",
+      "app/schemas/com.localai.workspace.semantic.v2.SemanticDatabase/1.json",
+      "app/schemas/com.localai.workspace.skills.AgentsSkillsDatabase/1.json"
+    ],
+    "buildMetadata": [
+      "app/build.gradle.kts"
+    ],
+    "documentationAndEvidence": [
+      "AGENTS.md",
+      "CHANGELOG.md",
+      "README.md",
+      "STATUS.md",
+      "docs/ARCHITECTURE_OVERVIEW.md",
+      "docs/SKILLS_AGENTS_050_REPORT.md",
+      "docs/SKILLS_AGENTS_ARCHITECTURE.md",
+      "docs/STATUS.md",
+      "docs/validation/skills050/apk-verification.json",
+      "docs/validation/skills050/changed-files.json",
+      "docs/validation/skills050/force-test-execution.gradle",
+      "docs/validation/skills050/routing-summary.json",
+      "docs/validation/skills050/test-summary.json"
+    ]
+  },
+  "counts": {
+    "production": 28,
+    "tests": 10,
+    "schemas": 4,
+    "buildMetadata": 1,
+    "documentationAndEvidence": 13
+  }
+}

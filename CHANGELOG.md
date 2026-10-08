@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.0 — Skills + Logical Agents Foundation
+
+- Full-passage production retrieval; document-scoped candidates/FTS before limits; deterministic bounds; no arbitrary selected-file fallback. Real EG1 TOKEN_LIMIT uses complete bounded windows rather than discarded text.
+- Four built-in Skills, data-only SKILL.md import/export, logical Agent CRUD/project defaults and deterministic activation with zero-Skill abstention.
+- Additive agents_skills.db v1 and exported current Room schemas; existing database versions unchanged.
+- Budgeted Agent/ACTIVE Skill composition, canonical supported text path with rollback switch; all retrieval before generation gate; compact management and routing diagnostics.
+- Scoped AGENTS_SKILLS_V1 device suite and 117 bilingual JVM fixtures; physical validation pending.
+- One existing physical model, unchanged native runtime/sampling/EG2 defaults.
+
 ## 0.4.2 — Memory Relevance Hotfix
 
 - Separate structured-memory relevance from ranking bonuses so pinning, importance and confidence cannot make unrelated memories eligible.

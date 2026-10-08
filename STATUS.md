@@ -1,9 +1,11 @@
-# Current source status — Local AI Workspace 0.4.2
+# Current source status — Local AI Workspace 0.5.0
 
-- Android application baseline: versionName `0.4.2`, versionCode `26`, applicationId `com.localai.workspace`.
-- Source and validation summary: [README](README.md), [architecture](docs/ARCHITECTURE_OVERVIEW.md), [0.4.2 implementation report](docs/MEMORY042_REPORT.md).
-- Host verification recorded for this baseline: 511 app JVM tests + 2 LiteRT compatibility tests passed; debug/release builds, lint and instrumented APK packaging passed. Lint reported 40 warnings and 1 informational item, no errors. Instrumented tests were built, not run.
-- The Motorola 0.4.1 chat/project checks were reported by the user. The 0.4.2 memory relevance/small-talk matrix is **not yet physically validated**.
-- 0.4.2 selection policy includes a provisional semantic cosine floor; paraphrase recall and physical EG1/EG2 score calibration need device verification.
+- Development branch: feat/0.5.0-skills-agents. versionName 0.5.0, versionCode 27.
+- Frozen baseline: v0.4.2 → de615b772cf37a99e7e08a647c59607b271de606. No main merge or new release tag.
+- IMPLEMENTED: retrieval integrity prelude, four built-in/custom/imported Skills, logical Agents, additive sidecar, deterministic router, budgeted Context Builder integration, management and safe metadata diagnostics.
+- TESTED_HOST: 661 app tests + 2 compatibility tests executed, 0 failures/errors/skips. Debug/release/lint/instrumented APK build PASS. Lint: 0 errors, 40 existing warnings + 1 information. Evidence: docs/validation/skills050/test-summary.json.
+- AGENTS_SKILLS_V1 (12 checks) and Android navigation tests: NOT_TESTED_DEVICE. No physical performance or native-success claim from Linux tests.
+- Existing historical / Semantic V2 validation catalogs remain intact. Retrieval and Context Builder production changes require targeted Motorola validation.
+- Deferred: semantic/LLM routing, Agent loops/handoffs, MCP, connectors, automation, plugins, executable imports, second LLM.
 
-Generated APKs, models, build trees and caches stay outside Git. See [external artifacts](docs/EXTERNAL_ARTIFACTS.md).
+See [architecture](docs/SKILLS_AGENTS_ARCHITECTURE.md). Models/APKs/caches remain outside Git.

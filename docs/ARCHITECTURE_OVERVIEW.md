@@ -1,4 +1,4 @@
-# Architecture overview — 0.4.2
+# Architecture overview — 0.5.0
 
 This note describes the checked-in implementation. Model files, Android toolchains and generated databases are user/device artifacts, not repository inputs.
 
@@ -22,11 +22,13 @@ The LiteRT path uses `LiteRtLmInferenceRuntime` and `LiteRtLmService` with `:lit
 
 Semantic Layer V2 has its own `semantic_v2.db` store for sources, segments, embeddings, index jobs and active indexes. `SemanticLayer` coordinates providers, indexing and retrieval. EmbeddingGemma 300M is the legacy GGUF/JNI provider; EmbeddingGemma 2 is an optional LiteRT-LM provider. Embedding spaces include provider/model identity and dimension so vectors from distinct spaces are not compared as if interchangeable.
 
-Structured Memory and Context Builder V1 are an additive sidecar (`memory_context.db`). `MemoryManager` stores explicit approved memories and vectors; `ContextFoundation` applies scope, retrieval and memory relevance before `ContextBuilder` budgets and assembles prompt context. The main chat can leave Context Builder V1 disabled. The 0.4.2 small-talk skip and relevance gate are documented in `docs/MEMORY042_REPORT.md`.
+Structured Memory and Context Builder V1 are an additive sidecar (`memory_context.db`). `MemoryManager` stores explicit approved memories and vectors; `ContextFoundation` applies scope, retrieval and memory relevance before `ContextBuilder` budgets and assembles prompt context. Compatible text chat defaults to Context Builder V1 unless the user explicitly stored OFF; diagnostics/multimodal/GGUF retain the rollback path. The 0.4.2 small-talk skip and relevance gate are documented in `docs/MEMORY042_REPORT.md`.
 
 ## Files and tools
 
-`DocumentIngestion` and `documents/StructuredDocuments` implement local document parsing, including structured formats. `rag/LocalRetrievalService` and semantic services retrieve evidence; citation validation checks returned IDs against evidence actually provided. `domain/tools` defines the bounded tool registry and app adapters. Python runs through the isolated WebView/WASM worker in `:python`; runtime assets are under `app/src/main/assets/python/`.
+`DocumentIngestion` and `documents/StructuredDocuments` implement local document parsing, including structured formats. `rag/LocalRetrievalService` and semantic services retrieve evidence; citation validation checks returned IDs against evidence actually provided. `agents/`, `skills/`, `sources/` and `capabilities/` add logical configurations and deterministic routing over existing services. See [Skills / Agents](SKILLS_AGENTS_ARCHITECTURE.md). Their independent Room v1 sidecar is `agents_skills.db`; project preferences require no workspace migration. Inactive Skills never enter prompts; all context discovery finishes before the generation gate.
+
+`domain/tools` defines the bounded tool registry and app adapters. Python runs through the isolated WebView/WASM worker in `:python`; runtime assets are under `app/src/main/assets/python/`.
 
 Vision and audio use explicit attachment preprocessing and LiteRT content types where the selected model/runtime supports them. These are not implied for every model. No cloud fallback silently receives private content.
 
