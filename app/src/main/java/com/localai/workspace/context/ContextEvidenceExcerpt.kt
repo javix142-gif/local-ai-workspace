@@ -2,6 +2,8 @@ package com.localai.workspace.context
 
 import org.json.JSONArray
 import org.json.JSONObject
+import java.text.Normalizer
+import java.util.Locale
 
 /** A bounded, query-specific passage; canonical indexed text is never modified. */
 data class ContextEvidenceExcerpt(
@@ -13,6 +15,11 @@ data class ContextEvidenceExcerpt(
     val cellAddresses: List<String> = emptyList(),
     val incompleteReasons: List<String> = emptyList(),
     val missingCellAddresses: List<String> = emptyList(),
+    /** Composite, sheet-aware references actually represented by this excerpt. */
+    val cellReferences: List<String> = emptyList(),
+    val missingCellReferences: List<String> = emptyList(),
+    val ambiguousCellReferences: List<String> = emptyList(),
+    val unresolvedCellReferences: List<String> = emptyList(),
 ) {
     val shortened: Boolean get() = reason != "FULL_PASSAGE"
 }
@@ -22,10 +29,19 @@ object ContextEvidenceExcerptSelector {
     const val DEFAULT_MAX_UTF8_BYTES = 480
     private const val MAX_REFERENCED_CELLS = 64
     private val cellReference = Regex(
-        """(?<![\p{L}\p{N}_])(\$?[A-Z]{1,3}\$?[1-9][0-9]{0,6})(?::(\$?[A-Z]{1,3}\$?[1-9][0-9]{0,6}))?(?![\p{L}\p{N}_])""",
+        """(?<![\p{L}\p{N}_])(?:(?<sheet>'(?:[^']|'')+'|[\p{L}_][\p{L}\p{N}_.]*(?::[\p{L}_][\p{L}\p{N}_.]*)?)!)?(?<first>\$?[A-Z]{1,3}\$?[1-9][0-9]{0,6})(?:\s*:\s*(?<last>\$?[A-Z]{1,3}\$?[1-9][0-9]{0,6}))?(?![\p{L}\p{N}_])""",
         RegexOption.IGNORE_CASE,
     )
     private val cellAddress = Regex("([A-Z]{1,3})([1-9][0-9]{0,6})", RegexOption.IGNORE_CASE)
+    private val externalWorkbookReference = Regex(
+        """\[[^\]\r\n]{1,256}\][^!\r\n]{0,256}!\s*\$?[A-Z]{1,3}\$?[1-9][0-9]{0,6}(?:\s*:\s*\$?[A-Z]{1,3}\$?[1-9][0-9]{0,6})?""",
+        RegexOption.IGNORE_CASE,
+    )
+    private val formulaIdentifier = Regex("(?<![\\p{L}\\p{N}_])([\\p{L}_][\\p{L}\\p{N}_.]*)(?![\\p{L}\\p{N}_])")
+    private val structuredReference = Regex("(?i)[\\p{L}\\p{N}_]+\\s*\\[[^]]+]")
+    private val dynamicReference = Regex("(?i)\\b(?:INDIRECT|OFFSET)\\s*\\(")
+    private val commonConstants = setOf("TRUE", "FALSE", "NA")
+    private val functionLikeCellTokens = setOf("LOG10")
     private val splitBoundary = Regex("(?<=[.!?])\\s+|\\n+")
     private val stopWords = setOf("the", "and", "for", "with", "from", "that", "this", "what", "which", "where", "when", "how", "are", "was", "were", "you", "your", "que", "cual", "cuál", "como", "cómo", "para", "por", "una", "uno", "del", "las", "los", "con", "valor", "casilla", "celda")
 
@@ -36,6 +52,18 @@ object ContextEvidenceExcerptSelector {
             return ContextEvidenceExcerpt(source, source.length, 0, source.length, "FULL_PASSAGE", cellAddresses(source))
         }
         return textualSelection(query, source, maxUtf8Bytes)
+    }
+
+    /** Combines only already-retrieved passages from one authorized source/document. */
+    fun selectRetrievedPassages(query: String, passages: List<String>, maxUtf8Bytes: Int = DEFAULT_MAX_UTF8_BYTES): ContextEvidenceExcerpt? {
+        require(maxUtf8Bytes >= 64)
+        if (passages.isEmpty()) return null
+        val joined = passages.joinToString("\n")
+        return structuredCellSelection(query, joined, maxUtf8Bytes)
+    }
+
+    fun isStructuredCellPassage(source: String): Boolean = lines(source).any { line ->
+        runCatching { JSONObject(line.text).optJSONArray("cells") != null }.getOrDefault(false)
     }
 
     private data class Line(val text: String, val start: Int, val end: Int)
@@ -65,92 +93,131 @@ object ContextEvidenceExcerptSelector {
 
     private data class CellRange(val first: CellCoordinate, val last: CellCoordinate) {
         val area: Long get() = (last.column - first.column + 1L) * (last.row - first.row + 1L)
-        fun contains(cell: CellCoordinate) = cell.column in first.column..last.column && cell.row in first.row..last.row
     }
 
-    private data class CellReference(val range: CellRange)
+    private data class CellReference(val sheetStart: String?, val sheetEnd: String?, val range: CellRange)
+    private data class ReferenceScan(val references: List<CellReference>, val incompleteReasons: Set<String>)
     private data class CellLine(val line: Line, val json: JSONObject, val cells: JSONArray)
-    private data class SourceCell(val line: Line, val row: JSONObject, val cell: JSONObject, val coordinate: CellCoordinate)
-    private data class CellCandidate(val start: Int, val text: String, val priority: Int, val address: String?, val truncated: Boolean = false)
-    private class ReferencePlan(val maxAddresses: Int) {
-        val addresses = linkedSetOf<String>()
-        val ranges = mutableListOf<CellRange>()
+    private data class SheetInfo(val key: String, val displayName: String, val order: Int?)
+    private data class CellIdentity(val sheetKey: String, val address: String)
+    private data class SourceCell(val line: Line, val row: JSONObject, val cell: JSONObject, val sheet: SheetInfo, val coordinate: CellCoordinate) {
+        val identity get() = CellIdentity(sheet.key, coordinate.address())
+    }
+    private data class CellCandidate(val start: Int, val text: String, val priority: Int, val cell: SourceCell?, val truncated: Boolean = false)
+    private class ReferencePlan {
+        val requested = linkedMapOf<CellIdentity, SheetInfo>()
+        val direct = linkedSetOf<CellIdentity>()
+        val missing = linkedMapOf<CellIdentity, SheetInfo>()
+        val ambiguous = linkedSetOf<String>()
+        val unresolved = linkedSetOf<String>()
         val incompleteReasons = linkedSetOf<String>()
+        val conflictedSheetKeys = linkedSetOf<String>()
+        val conflictedOrderIndices = linkedSetOf<Int>()
+        private val tracked = linkedSetOf<CellIdentity>()
+
+        fun track(identity: CellIdentity, max: Int = MAX_REFERENCED_CELLS): Boolean {
+            if (identity in tracked) return true
+            if (tracked.size >= max) {
+                incompleteReasons += "CELL_REFERENCE_LIMIT"
+                return false
+            }
+            tracked += identity
+            return true
+        }
     }
 
     /** XLSX rows are represented as JSON at rest; chat receives compact, address-preserving cell evidence. */
     private fun structuredCellSelection(query: String, source: String, budget: Int): ContextEvidenceExcerpt? {
-        val queryReferences = references(query)
-        if (queryReferences.isEmpty()) return null
+        val queryScan = scanReferences(query, formula = false)
+        if (queryScan.references.isEmpty()) return null
 
         val parsedLines = lines(source).mapNotNull { line ->
             runCatching { JSONObject(line.text).let { it to line } }.getOrNull()
         }
+        val sheetMap = linkedMapOf<String, SheetInfo>()
+        val orderMap = linkedMapOf<Int, String>()
+        val conflictedSheetKeys = linkedSetOf<String>()
+        val conflictedOrderIndices = linkedSetOf<Int>()
+        val initialIssues = linkedSetOf<String>().apply { addAll(queryScan.incompleteReasons) }
+        fun sheetInfo(json: JSONObject): SheetInfo? {
+            val display = json.optString("sheet").takeIf(String::isNotBlank) ?: return null
+            val key = normalizeSheet(display)
+            val order = json.optInt("sheetOrder").takeIf { json.has("sheetOrder") }
+            val existing = sheetMap[key]
+            val info = if (existing == null) SheetInfo(key, display, order) else existing.copy(order = existing.order ?: order)
+            if (existing?.order != null && order != null && existing.order != order) conflictedSheetKeys += key
+            sheetMap[key] = info
+            if (order != null) {
+                val previous = orderMap.putIfAbsent(order, key)
+                if (previous != null && previous != key) conflictedOrderIndices += order
+            }
+            return info
+        }
+        parsedLines.forEach { (json, _) -> sheetInfo(json) }
         val rows = parsedLines.mapNotNull { (json, line) -> json.optJSONArray("cells")?.let { CellLine(line, json, it) } }
-        if (rows.isEmpty()) return null
+        if (rows.isEmpty() || sheetMap.isEmpty()) return null
         val cells = rows.flatMap { row -> row.cells.asCells().mapNotNull { cell ->
             val coordinate = parseAddress(cell.optString("address")) ?: return@mapNotNull null
-            SourceCell(row.line, row.json, cell, coordinate)
+            val sheet = sheetMap[normalizeSheet(row.json.optString("sheet"))] ?: return@mapNotNull null
+            SourceCell(row.line, row.json, cell, sheet, coordinate)
         } }
+        val cellsByIdentity = cells.groupBy { it.identity }.mapValues { (_, found) -> found.first() }
         val cellsByAddress = cells.groupBy { it.coordinate.address() }
-
-        val directPlan = ReferencePlan(MAX_REFERENCED_CELLS)
-        addReferences(queryReferences, directPlan)
-        val directCells = selectCells(cells, cellsByAddress, directPlan)
-        if (directCells.size >= MAX_REFERENCED_CELLS && directPlan.ranges.isNotEmpty()) {
-            directPlan.incompleteReasons += "CELL_REFERENCE_LIMIT"
+        val plan = ReferencePlan().apply {
+            incompleteReasons += initialIssues
+            this.conflictedSheetKeys += conflictedSheetKeys
+            this.conflictedOrderIndices += conflictedOrderIndices
         }
+        queryScan.references.forEach { resolve(it, defaultSheet = null, queryReference = true, sheetMap, orderMap, cellsByAddress, plan) }
+        val directCells = plan.requested.keys.mapNotNull(cellsByIdentity::get)
+        plan.direct += plan.requested.keys
 
-        // Only formulas in cells selected by the user's query are inspected; dependencies are not recursively evaluated.
-        val dependencyPlan = ReferencePlan((MAX_REFERENCED_CELLS - directCells.size).coerceAtLeast(0))
+        // Inspect only directly selected cells; formulas are never evaluated or followed recursively.
         directCells.forEach { sourceCell ->
-            addReferences(references(sourceCell.cell.optString("formula")), dependencyPlan)
-        }
-        val dependencyCells = selectCells(cells, cellsByAddress, dependencyPlan)
-        val missing = linkedSetOf<String>().apply {
-            addAll(directPlan.addresses.filter { it !in cellsByAddress })
-            addAll(dependencyPlan.addresses.filter { it !in cellsByAddress })
-        }
-        val incomplete = linkedSetOf<String>().apply {
-            addAll(directPlan.incompleteReasons)
-            addAll(dependencyPlan.incompleteReasons)
-            if (missing.isNotEmpty()) add("MISSING_REFERENCED_CELLS")
+            val formula = sourceCell.cell.optString("formula")
+            if (formula.isNotBlank()) {
+                val scan = scanReferences(formula, formula = true)
+                plan.incompleteReasons += scan.incompleteReasons
+                scan.references.forEach { resolve(it, sourceCell.sheet, queryReference = false, sheetMap, orderMap, cellsByAddress, plan) }
+            }
         }
 
-        val selectedByAddress = linkedMapOf<String, SourceCell>()
-        directCells.forEach { selectedByAddress.putIfAbsent(it.coordinate.address(), it) }
-        dependencyCells.forEach { selectedByAddress.putIfAbsent(it.coordinate.address(), it) }
-        if (selectedByAddress.size > MAX_REFERENCED_CELLS) {
-            incomplete += "CELL_REFERENCE_LIMIT"
+        plan.requested.forEach { (identity, sheet) ->
+            if (identity !in cellsByIdentity) plan.missing.putIfAbsent(identity, sheet)
         }
-        val boundedCells = selectedByAddress.values.take(MAX_REFERENCED_CELLS)
-        val selectedDirectAddresses = directCells.mapTo(hashSetOf()) { it.coordinate.address() }
-        val columns = boundedCells.map { it.coordinate.column }.toSet()
+        if (plan.missing.isNotEmpty()) plan.incompleteReasons += "MISSING_REFERENCED_CELLS"
+
+        val selectedByIdentity = plan.requested.keys.mapNotNull(cellsByIdentity::get).distinctBy { it.identity }.take(MAX_REFERENCED_CELLS)
+        val selectedDirect = plan.direct
+        val selectedColumnsBySheet = selectedByIdentity.groupBy { it.sheet.key }.mapValues { (_, list) -> list.map { it.coordinate.column }.toSet() }
         val candidates = mutableListOf<CellCandidate>()
 
         parsedLines.forEach { (json, line) ->
             if (!json.has("headerCandidate")) return@forEach
             val headers = json.optJSONArray("headerCandidate") ?: return@forEach
+            val sheet = sheetMap[normalizeSheet(json.optString("sheet"))] ?: return@forEach
+            val columns = selectedColumnsBySheet[sheet.key].orEmpty()
             for (index in 0 until headers.length()) {
                 val header = headers.optJSONObject(index) ?: continue
                 if (header.optInt("column") !in columns) continue
                 val label = boundedValue(header.optString("label"), 180)
                 candidates += CellCandidate(line.start,
-                    "Sheet ${json.optString("sheet")} · header ${columnLabel(header.optInt("column"))}=$label", 1, null)
+                    "Sheet ${sheet.displayName} · header ${columnLabel(header.optInt("column"))}=$label", 1, null)
             }
         }
-        boundedCells.forEach { sourceCell ->
+        selectedByIdentity.forEach { sourceCell ->
             val address = sourceCell.coordinate.address()
             val value = boundedValueResult(sourceCell.cell.optString("value"), 180)
             val formulaValue = sourceCell.cell.optString("formula")
             val formulaResult = formulaValue.takeIf { it.isNotBlank() }?.let { boundedValueResult(it, 120) }
             val formula = formulaResult?.let { " · formula=${it.value}" }.orEmpty()
-            val direct = address in selectedDirectAddresses
+            val qualified = qualifiedAddress(sourceCell.sheet.displayName, address)
+            val direct = sourceCell.identity in selectedDirect
             candidates += CellCandidate(
                 sourceCell.line.start,
-                "Sheet ${sourceCell.row.optString("sheet")} · row ${sourceCell.row.optInt("row")} · $address=${value.value}$formula",
+                "$qualified=${value.value}$formula",
                 if (direct) 3 else 2,
-                address,
+                sourceCell,
                 value.truncated || formulaResult?.truncated == true,
             )
         }
@@ -158,30 +225,45 @@ object ContextEvidenceExcerptSelector {
         val chosen = mutableListOf<CellCandidate>()
         var bytesUsed = 0
         val selectedAddresses = linkedSetOf<String>()
-        candidates.sortedWith(compareByDescending<CellCandidate> { it.priority }.thenBy { it.start }.thenBy { it.address.orEmpty() })
+        val selectedReferences = linkedSetOf<String>()
+        val chosenIdentities = linkedSetOf<CellIdentity>()
+        candidates.sortedWith(compareByDescending<CellCandidate> { it.priority }.thenBy { it.start }.thenBy { it.cell?.sheet?.key.orEmpty() }.thenBy { it.cell?.coordinate?.address().orEmpty() })
             .forEach { candidate ->
                 val separator = if (chosen.isEmpty()) 0 else 1
                 val candidateBytes = utf8Length(candidate.text)
                 if (candidateBytes + separator <= budget - bytesUsed) {
                     chosen += candidate
                     bytesUsed += candidateBytes + separator
-                    candidate.address?.let(selectedAddresses::add)
-                    if (candidate.truncated) incomplete += "CELL_EVIDENCE_BYTE_BUDGET"
-                } else if (candidate.address != null) {
-                    incomplete += "CELL_EVIDENCE_BYTE_BUDGET"
+                    candidate.cell?.let { cell ->
+                        if (chosenIdentities.add(cell.identity)) {
+                            selectedAddresses += cell.coordinate.address()
+                            selectedReferences += qualifiedAddress(cell.sheet.displayName, cell.coordinate.address())
+                        }
+                    }
+                    if (candidate.truncated) {
+                        plan.incompleteReasons += "CELL_EVIDENCE_BYTE_BUDGET"
+                        candidate.cell?.let { plan.unresolved += qualifiedAddress(it.sheet.displayName, it.coordinate.address()) }
+                    }
+                } else if (candidate.cell != null) {
+                    plan.incompleteReasons += "CELL_EVIDENCE_BYTE_BUDGET"
+                    plan.unresolved += qualifiedAddress(candidate.cell.sheet.displayName, candidate.cell.coordinate.address())
                 }
             }
 
         if (chosen.isEmpty()) {
-            if (directCells.isNotEmpty() || dependencyCells.isNotEmpty()) incomplete += "CELL_EVIDENCE_BYTE_BUDGET"
+            if (selectedByIdentity.isNotEmpty()) plan.incompleteReasons += "CELL_EVIDENCE_BYTE_BUDGET"
             return ContextEvidenceExcerpt(
                 text = "",
                 originalCharacters = source.length,
                 charStart = null,
                 charEnd = null,
                 reason = "NO_REFERENCED_CELL_EVIDENCE_INCLUDED",
-                incompleteReasons = incomplete.toList(),
-                missingCellAddresses = missing.toList(),
+                cellAddresses = emptyList(),
+                incompleteReasons = plan.incompleteReasons.toList(),
+                missingCellAddresses = plan.missing.keys.map { it.address },
+                missingCellReferences = plan.missing.map { (identity, sheet) -> qualifiedAddress(sheet.displayName, identity.address) },
+                ambiguousCellReferences = plan.ambiguous.toList(),
+                unresolvedCellReferences = plan.unresolved.toList(),
             )
         }
         val ordered = chosen.sortedBy { it.start }
@@ -194,70 +276,258 @@ object ContextEvidenceExcerptSelector {
             charEnd = null,
             reason = "MATCHED_CELL_REFERENCE",
             cellAddresses = selectedAddresses.toList(),
-            incompleteReasons = incomplete.toList(),
-            missingCellAddresses = missing.toList(),
+            incompleteReasons = plan.incompleteReasons.toList(),
+            missingCellAddresses = plan.missing.keys.map { it.address },
+            cellReferences = selectedReferences.toList(),
+            missingCellReferences = plan.missing.map { (identity, sheet) -> qualifiedAddress(sheet.displayName, identity.address) },
+            ambiguousCellReferences = plan.ambiguous.toList(),
+            unresolvedCellReferences = plan.unresolved.toList(),
         )
     }
 
-    private fun references(text: String): List<CellReference> = cellReference.findAll(text).mapNotNull { match ->
-        val first = parseAddress(match.groupValues[1]) ?: return@mapNotNull null
-        val last = match.groupValues.getOrNull(2)?.takeIf(String::isNotBlank)?.let(::parseAddress) ?: first
-        CellReference(CellRange(
-            CellCoordinate(minOf(first.column, last.column), minOf(first.row, last.row)),
-            CellCoordinate(maxOf(first.column, last.column), maxOf(first.row, last.row)),
-        ))
-    }.toList()
+    private fun scanReferences(input: String, formula: Boolean): ReferenceScan {
+        val issues = linkedSetOf<String>()
+        val chars = input.toCharArray()
+        if (formula) maskFormulaStrings(chars)
+        val working = String(chars)
+        externalWorkbookReference.findAll(working).forEach { match ->
+            issues += "EXTERNAL_WORKBOOK_REFERENCE_UNRESOLVED"
+            for (index in match.range) chars[index] = ' '
+        }
+        if (formula && dynamicReference.containsMatchIn(working)) issues += "DYNAMIC_REFERENCE_UNRESOLVED"
+        if (formula && structuredReference.containsMatchIn(working)) issues += "STRUCTURED_REFERENCE_UNRESOLVED"
+        val masked = String(chars)
+        val covered = mutableListOf<IntRange>()
+        val references = mutableListOf<CellReference>()
+        cellReference.findAll(masked).forEach { match ->
+            covered += match.range
+            val firstRaw = match.groups["first"]?.value ?: return@forEach
+            if (firstRaw.replace("$", "").uppercase(Locale.ROOT) in functionLikeCellTokens && match.groups["sheet"] == null) return@forEach
+            val first = parseAddress(firstRaw) ?: return@forEach
+            val last = match.groups["last"]?.value?.let(::parseAddress) ?: first
+            val sheetToken = match.groups["sheet"]?.value
+            val decoded = sheetToken?.let(::decodeSheetQualifier)
+            references += CellReference(decoded?.first, decoded?.second, CellRange(
+                CellCoordinate(minOf(first.column, last.column), minOf(first.row, last.row)),
+                CellCoordinate(maxOf(first.column, last.column), maxOf(first.row, last.row)),
+            ))
+        }
+        if (formula) {
+            formulaIdentifier.findAll(masked).forEach { token ->
+                if (covered.any { token.range.first in it }) return@forEach
+                if (token.groupValues[1].uppercase(Locale.ROOT) in commonConstants) return@forEach
+                val next = masked.indexOfFirstNonWhitespace(token.range.last + 1)
+                if (next in masked.indices && masked[next] == '(') return@forEach
+                issues += "UNSUPPORTED_DEFINED_NAME_OR_REFERENCE"
+            }
+        }
+        return ReferenceScan(references, issues)
+    }
 
-    private fun addReferences(references: List<CellReference>, plan: ReferencePlan) {
-        for (reference in references) {
-            val range = reference.range
-            if (range.area == 1L) {
-                val address = range.first.address()
-                if (address !in plan.addresses) {
-                    if (plan.addresses.size < plan.maxAddresses) plan.addresses += address
-                    else plan.incompleteReasons += "CELL_REFERENCE_LIMIT"
+    private fun maskFormulaStrings(chars: CharArray) {
+        var inside = false
+        var index = 0
+        while (index < chars.size) {
+            if (chars[index] == '"') {
+                chars[index] = ' '
+                if (inside && index + 1 < chars.size && chars[index + 1] == '"') {
+                    chars[index + 1] = ' '
+                    index += 2
+                    continue
                 }
-            } else if (range.area <= MAX_REFERENCED_CELLS) {
-                for (row in range.first.row..range.last.row) {
-                    for (column in range.first.column..range.last.column) {
-                        val address = CellCoordinate(column, row).address()
-                        if (address !in plan.addresses) {
-                            if (plan.addresses.size < plan.maxAddresses) plan.addresses += address
-                            else plan.incompleteReasons += "CELL_REFERENCE_LIMIT"
-                        }
+                inside = !inside
+            } else if (inside) chars[index] = ' '
+            index++
+        }
+    }
+
+    private fun decodeSheetQualifier(raw: String): Pair<String, String?> {
+        val decoded = if (raw.startsWith('\'')) raw.drop(1).dropLast(1).replace("''", "'") else raw
+        val endpoints = decoded.split(':', limit = 2)
+        return endpoints[0] to endpoints.getOrNull(1)
+    }
+
+    private fun resolve(
+        reference: CellReference,
+        defaultSheet: SheetInfo?,
+        queryReference: Boolean,
+        sheets: Map<String, SheetInfo>,
+        orderMap: Map<Int, String>,
+        cellsByAddress: Map<String, List<SourceCell>>,
+        plan: ReferencePlan,
+    ) {
+        val coordinateCount = reference.range.area
+        val targetSheets: List<SheetInfo> = when {
+            reference.sheetStart == null && defaultSheet != null -> listOfNotNull(sheets[defaultSheet.key])
+            reference.sheetStart == null -> emptyList()
+            reference.sheetEnd == null -> {
+                val target = sheets[normalizeSheet(reference.sheetStart)]
+                if (target == null) plan.incompleteReasons += "SHEET_NOT_FOUND"
+                listOfNotNull(target)
+            }
+            else -> resolveThreeDimensional(reference, sheets, orderMap, plan)
+        }
+
+        if (queryReference && reference.sheetStart == null) {
+            val coordinates = coordinates(reference.range, plan)
+            for (coordinate in coordinates) {
+                val address = coordinate.address()
+                val candidates = cellsByAddress[address].orEmpty().distinctBy { it.sheet.key }
+                when {
+                    candidates.size == 1 -> addRequested(candidates.single().sheet, address, plan, direct = true)
+                    candidates.size > 1 -> {
+                        plan.incompleteReasons += "AMBIGUOUS_UNQUALIFIED_REFERENCE"
+                        candidates.forEach { candidate -> addAmbiguous(candidate.sheet, address, plan) }
+                    }
+                    sheets.size == 1 -> addRequested(sheets.values.single(), address, plan, direct = true)
+                    else -> {
+                        plan.incompleteReasons += "AMBIGUOUS_UNQUALIFIED_REFERENCE"
+                        sheets.values.forEach { candidate -> addAmbiguous(candidate, address, plan) }
                     }
                 }
-            } else {
-                if (plan.ranges.size < MAX_REFERENCED_CELLS) plan.ranges += range
-                plan.incompleteReasons += "CELL_REFERENCE_LIMIT"
+            }
+            return
+        }
+
+        if (reference.sheetStart != null && reference.sheetEnd == null && targetSheets.isEmpty()) {
+            val name = reference.sheetStart
+            for (coordinate in coordinates(reference.range, plan)) {
+                recordMissing(CellIdentity(normalizeSheet(name), coordinate.address()), SheetInfo(normalizeSheet(name), name, null), plan)
+            }
+            return
+        }
+        if (reference.sheetStart == null && defaultSheet != null && targetSheets.isEmpty()) {
+            plan.incompleteReasons += "SHEET_NOT_FOUND"
+            for (coordinate in coordinates(reference.range, plan)) recordMissing(
+                CellIdentity(defaultSheet.key, coordinate.address()), defaultSheet, plan,
+            )
+            return
+        }
+        if (reference.sheetEnd != null && targetSheets.isEmpty()) return
+
+        var visited = 0L
+        loop@ for (sheet in targetSheets) {
+            var stopped = false
+            for (row in reference.range.first.row..reference.range.last.row) {
+                for (column in reference.range.first.column..reference.range.last.column) {
+                    if (visited++ >= MAX_REFERENCED_CELLS || plan.requested.size + plan.missing.size + plan.ambiguous.size + plan.unresolved.size >= MAX_REFERENCED_CELLS) {
+                        plan.incompleteReasons += "CELL_REFERENCE_LIMIT"
+                        stopped = true
+                        break
+                    }
+                    addRequested(sheet, CellCoordinate(column, row).address(), plan, direct = queryReference)
+                }
+                if (stopped) break
+            }
+            if (stopped) break@loop
+        }
+        if (coordinateCount * targetSheets.size > MAX_REFERENCED_CELLS) plan.incompleteReasons += "CELL_REFERENCE_LIMIT"
+    }
+
+    private fun resolveThreeDimensional(
+        reference: CellReference,
+        sheets: Map<String, SheetInfo>,
+        orderMap: Map<Int, String>,
+        plan: ReferencePlan,
+    ): List<SheetInfo> {
+        val startName = requireNotNull(reference.sheetStart)
+        val endName = requireNotNull(reference.sheetEnd)
+        val start = sheets[normalizeSheet(startName)]
+        val end = sheets[normalizeSheet(endName)]
+        if (start == null || end == null) {
+            plan.incompleteReasons += "THREE_D_ENDPOINT_SHEET_NOT_FOUND"
+            unresolvedBoundaryReferences(reference.range, listOfNotNull(start ?: SheetInfo(normalizeSheet(startName), startName, null), end ?: SheetInfo(normalizeSheet(endName), endName, null)), plan)
+            return emptyList()
+        }
+        val from = start.order
+        val to = end.order
+        if (from == null || to == null) {
+            plan.incompleteReasons += "THREE_D_SHEET_ORDER_UNAVAILABLE"
+            unresolvedBoundaryReferences(reference.range, listOf(start, end), plan)
+            return emptyList()
+        }
+        val lower = minOf(from, to)
+        val upper = maxOf(from, to)
+        if (start.key in plan.conflictedSheetKeys || end.key in plan.conflictedSheetKeys ||
+            (lower..upper).any { it in plan.conflictedOrderIndices }) {
+            plan.incompleteReasons += "SHEET_ORDER_METADATA_CONFLICT"
+            plan.incompleteReasons += "THREE_D_SHEET_ORDER_CONFLICT"
+            unresolvedBoundaryReferences(reference.range, listOf(start, end), plan)
+            return emptyList()
+        }
+        if (upper - lower > 255) {
+            plan.incompleteReasons += "THREE_D_SHEET_ORDER_LIMIT"
+            unresolvedBoundaryReferences(reference.range, listOf(start, end), plan)
+            return emptyList()
+        }
+        val ordered = (lower..upper).mapNotNull { orderMap[it]?.let(sheets::get) }
+        if (ordered.size != upper - lower + 1 || ordered.firstOrNull()?.key != (if (from <= to) start.key else end.key) || ordered.lastOrNull()?.key != (if (from <= to) end.key else start.key)) {
+            plan.incompleteReasons += "THREE_D_SHEET_ORDER_INCOMPLETE"
+            unresolvedBoundaryReferences(reference.range, ordered.ifEmpty { listOf(start, end) }, plan)
+            return emptyList()
+        }
+        return if (from <= to) ordered else ordered.asReversed()
+    }
+
+    private fun unresolvedBoundaryReferences(range: CellRange, sheets: List<SheetInfo>, plan: ReferencePlan) {
+        var remaining = MAX_REFERENCED_CELLS - plan.requested.size - plan.missing.size - plan.ambiguous.size - plan.unresolved.size
+        loop@ for (sheet in sheets) {
+            for (row in range.first.row..range.last.row) for (column in range.first.column..range.last.column) {
+                if (remaining-- <= 0) {
+                    plan.incompleteReasons += "CELL_REFERENCE_LIMIT"
+                    break@loop
+                }
+                val address = CellCoordinate(column, row).address()
+                plan.unresolved += qualifiedAddress(sheet.displayName, address)
             }
         }
     }
 
-    private fun selectCells(
-        cells: List<SourceCell>,
-        cellsByAddress: Map<String, List<SourceCell>>,
-        plan: ReferencePlan,
-    ): List<SourceCell> {
-        val selected = linkedMapOf<String, SourceCell>()
-        for (address in plan.addresses) {
-            cellsByAddress[address]?.firstOrNull()?.let { selected.putIfAbsent(address, it) }
-        }
-        for (range in plan.ranges) {
-            val remaining = MAX_REFERENCED_CELLS - selected.size
-            if (remaining <= 0) {
+    private fun coordinates(range: CellRange, plan: ReferencePlan): List<CellCoordinate> {
+        val result = mutableListOf<CellCoordinate>()
+        loop@ for (row in range.first.row..range.last.row) for (column in range.first.column..range.last.column) {
+            if (result.size >= MAX_REFERENCED_CELLS || plan.requested.size + plan.missing.size + plan.ambiguous.size + plan.unresolved.size + result.size >= MAX_REFERENCED_CELLS) {
                 plan.incompleteReasons += "CELL_REFERENCE_LIMIT"
-                break
+                break@loop
             }
-            val matches = cells.asSequence().filter { range.contains(it.coordinate) }.distinctBy { it.coordinate.address() }.take(remaining + 1).toList()
-            if (matches.size > remaining) plan.incompleteReasons += "CELL_REFERENCE_LIMIT"
-            matches.take(remaining).forEach { selected.putIfAbsent(it.coordinate.address(), it) }
+            result += CellCoordinate(column, row)
         }
-        return selected.values.take(MAX_REFERENCED_CELLS)
+        if (range.area > result.size) plan.incompleteReasons += "CELL_REFERENCE_LIMIT"
+        return result
+    }
+
+    private fun addRequested(sheet: SheetInfo, address: String, plan: ReferencePlan, direct: Boolean) {
+        val identity = CellIdentity(sheet.key, address)
+        if (!plan.track(identity)) return
+        plan.requested.putIfAbsent(identity, sheet)
+        if (direct) plan.direct += identity
+    }
+
+    private fun addAmbiguous(sheet: SheetInfo, address: String, plan: ReferencePlan) {
+        val identity = CellIdentity(sheet.key, address)
+        if (plan.track(identity)) plan.ambiguous += qualifiedAddress(sheet.displayName, address)
+    }
+
+    private fun recordMissing(identity: CellIdentity, sheet: SheetInfo, plan: ReferencePlan) {
+        if (plan.track(identity)) plan.missing.putIfAbsent(identity, sheet)
+        plan.incompleteReasons += "MISSING_REFERENCED_CELLS"
+    }
+
+    private fun normalizeSheet(name: String) = Normalizer.normalize(name, Normalizer.Form.NFC).uppercase(Locale.ROOT)
+
+    private fun qualifiedAddress(sheet: String, address: String): String {
+        val safe = if (Regex("[\\p{L}_][\\p{L}\\p{N}_.]*").matches(sheet)) sheet else "'${sheet.replace("'", "''")}'"
+        return "$safe!$address"
+    }
+
+    private fun String.indexOfFirstNonWhitespace(from: Int): Int {
+        var index = from.coerceAtLeast(0)
+        while (index < length && this[index].isWhitespace()) index++
+        return index
     }
 
     private fun parseAddress(raw: String): CellCoordinate? {
-        val normalized = raw.replace("$", "").uppercase()
+        val normalized = raw.replace("$", "").uppercase(Locale.ROOT)
         val match = cellAddress.matchEntire(normalized) ?: return null
         val column = match.groupValues[1].fold(0) { value, char -> value * 26 + (char - 'A' + 1) }
         val row = match.groupValues[2].toIntOrNull() ?: return null

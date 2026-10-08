@@ -15,6 +15,26 @@ class StructuredDocumentsTest {
  @Test fun invalidEncodingDoesNotBecomeGibberish() { assertThrows(Exception::class.java) { S.text(byteArrayOf(0xc3.toByte(),0x28)) };assertEquals("a",S.text(byteArrayOf(-1,-2,97,0)).first) }
  @Test fun zipSlipAndBombRejected() { val f=zip(mapOf("../secret" to "x"));try { ZipFile(f).use { assertThrows(Exception::class.java) { S.inspect(it) } } } finally { f.delete() };assertFalse(S.safePath("C:/a"));assertFalse(S.safePath("a\\b"));assertTrue(S.safePath("folder/a.csv")) }
  @Test fun xlsxPreservesSheetAddressCachedValueFormula() { val f=zip(mapOf("xl/workbook.xml" to "<workbook xmlns:r='http://schemas.openxmlformats.org/officeDocument/2006/relationships'><sheets><sheet name='Sales' r:id='r1'/></sheets></workbook>", "xl/_rels/workbook.xml.rels" to "<Relationships><Relationship Id='r1' Target='worksheets/sheet1.xml'/></Relationships>", "xl/worksheets/sheet1.xml" to "<worksheet><sheetData><row r='1'><c r='B1'><f>SUM(A1:A2)</f><v>12</v></c></row></sheetData></worksheet>"));try { val c=S.xlsx(f).cells.single();assertEquals("Sales",c.sheet);assertEquals(2,c.column);assertEquals("12",c.value);assertEquals("SUM(A1:A2)",c.formula) } finally { f.delete() } }
+ @Test fun xlsxWorksheetOrderMetadataSurvivesIntoStructuredEvidence() {
+  val f=zip(mapOf(
+   "xl/workbook.xml" to "<workbook xmlns:r='http://schemas.openxmlformats.org/officeDocument/2006/relationships'><sheets><sheet name='Hoja1' r:id='r1'/><sheet name='Depto 2' r:id='r2'/><sheet name='Hoja3' r:id='r3'/></sheets></workbook>",
+   "xl/_rels/workbook.xml.rels" to "<Relationships><Relationship Id='r1' Target='worksheets/sheet1.xml'/><Relationship Id='r2' Target='worksheets/sheet2.xml'/><Relationship Id='r3' Target='worksheets/sheet3.xml'/></Relationships>",
+   "xl/worksheets/sheet1.xml" to "<worksheet><sheetData><row r='1'><c r='A1'><v>one</v></c></row></sheetData></worksheet>",
+   "xl/worksheets/sheet2.xml" to "<worksheet><sheetData><row r='1'><c r='A1'><v>two</v></c></row></sheetData></worksheet>",
+   "xl/worksheets/sheet3.xml" to "<worksheet><sheetData><row r='1'><c r='A1'><v>three</v></c></row></sheetData></worksheet>"
+  ))
+  try {
+   val parsed=S.xlsx(f).document()
+   assertEquals(3,parsed.pages.size)
+   val source=parsed.pages.joinToString("\n"){it.text}
+   val excerpt=ContextEvidenceExcerptSelector.select("Hoja1:Hoja3!A1",source)
+   assertTrue(source.contains("\"sheetOrder\":0"))
+   assertTrue(source.contains("\"sheetOrder\":1"))
+   assertTrue(source.contains("\"sheetOrder\":2"))
+   assertEquals(listOf("Hoja1!A1", "'Depto 2'!A1", "Hoja3!A1"),excerpt.cellReferences)
+   assertTrue(excerpt.incompleteReasons.isEmpty())
+  } finally { f.delete() }
+ }
  @Test fun formattedEmptyXlsxCellsDoNotConsumeRepresentationBudget() {
   val blankCells=40_000
   val rows=buildString {

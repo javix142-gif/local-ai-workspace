@@ -17,7 +17,7 @@ object StructuredDocuments {
  const val MAX_CELLS = 100000
  const val MAX_REPRESENTATION_BYTES = 8 * 1024 * 1024
  data class Cell(val sheet: String, val row: Int, val column: Int, val address: String, val value: String, val formula: String? = null, val type: String? = null)
- data class Table(val cells: List<Cell>, val encoding: String = "UTF-8") {
+ data class Table(val cells: List<Cell>, val encoding: String = "UTF-8", val sheetNames: List<String> = cells.map { it.sheet }.distinct()) {
   fun document(): ParsedDocument {
    // Enforce the limit against the actual UTF-8 JSON representation. A fixed
    // per-cell allowance rejected formatted blank cells and small repeated values.
@@ -29,12 +29,15 @@ object StructuredDocuments {
     out.append(value)
    }
    fun quoted(out: StringBuilder, value: String) = append(out, JSONObject.quote(value))
-   val pages = cells.groupBy { it.sheet }.map { (sheet, sheetCells) ->
+   val sheetsInOrder = sheetNames.ifEmpty { cells.map { it.sheet }.distinct() }
+   val pages = sheetsInOrder.mapIndexed { sheetOrder, sheet ->
+    val sheetCells = cells.filter { it.sheet == sheet }
     require(sheet.length <= 128) { "Worksheet name exceeds limit" }
     val out = StringBuilder()
+    append(out, "{\"sheet\":"); quoted(out, sheet); append(out, ",\"sheetOrder\":$sheetOrder,\"sheetMetadata\":true}\n")
     val firstRow = sheetCells.asSequence().filter { it.row == 1 }.sortedBy { it.column }.toList()
     if(firstRow.isNotEmpty() && firstRow.all { it.value.isNotBlank() && it.value.toDoubleOrNull()==null && it.formula==null } && firstRow.map { it.value }.toSet().size==firstRow.size) {
-     append(out, "{\"sheet\":"); quoted(out, sheet); append(out, ",\"headerCandidate\":[")
+     append(out, "{\"sheet\":"); quoted(out, sheet); append(out, ",\"sheetOrder\":$sheetOrder,\"headerCandidate\":[")
      firstRow.forEachIndexed { index, cell ->
       if(index>0) append(out, ",")
       append(out, "{\"column\":${cell.column},\"label\":"); quoted(out, cell.value); append(out, "}")
@@ -43,7 +46,7 @@ object StructuredDocuments {
     }
     sheetCells.groupBy { it.row }.entries.forEachIndexed { rowIndex, (row, values) ->
      if(rowIndex>0) append(out, "\n")
-     append(out, "{\"sheet\":"); quoted(out, sheet); append(out, ",\"row\":$row,\"cells\":[")
+     append(out, "{\"sheet\":"); quoted(out, sheet); append(out, ",\"sheetOrder\":$sheetOrder,\"row\":$row,\"cells\":[")
      values.forEachIndexed { index, cell ->
       if(Thread.currentThread().isInterrupted) throw InterruptedException()
       require(cell.value.length <= 32768 && (cell.formula?.length ?: 0) <= 32768 && (cell.type?.length ?: 0) <= 32) { "Structured cell exceeds limit" }
@@ -149,7 +152,7 @@ object StructuredDocuments {
     };tag="" }
    } }
   }
-  Table(cells)
+  Table(cells, sheetNames = sheets.map { it.first })
  }
  private fun utf8Length(text: String): Int {
   var bytes=0; var i=0

@@ -24,6 +24,7 @@ class ContextEvidenceExcerptTest {
         val excerpt = ContextEvidenceExcerptSelector.select("¿Cuál es el valor de la casilla A3?", source)
 
         assertEquals(listOf("A3", "A1", "A2"), excerpt.cellAddresses)
+        assertEquals(listOf("Sales!A3", "Sales!A1", "Sales!A2"), excerpt.cellReferences)
         assertTrue(excerpt.text.contains("header A=Amount"))
         assertTrue(excerpt.text.contains("A3=4 · formula=A2-A1"))
         assertTrue(utf8(excerpt.text) <= ContextEvidenceExcerptSelector.DEFAULT_MAX_UTF8_BYTES)
@@ -60,6 +61,197 @@ class ContextEvidenceExcerptTest {
             assertTrue("formula=$formula", excerpt.text.contains("A1=1"))
             assertTrue("formula=$formula", excerpt.text.contains("A2=5"))
             assertTrue("formula=$formula", excerpt.text.contains("A3=4"))
+        }
+    }
+
+    @Test fun qualifiedFormulaDependencyNeverAliasesSameAddressOnCurrentSheet() {
+        val source = listOf(
+            row(1, cell("A1", 1, "999")),
+            row(3, cell("A3", 1, "", "'Hoja2'!A1")),
+        ).joinToString("\n")
+
+        val excerpt = ContextEvidenceExcerptSelector.select("Explica A3", source)
+
+        assertFalse(
+            "Hoja1!A1 must not satisfy an explicit Hoja2!A1 dependency; selected=${excerpt.cellAddresses}, missing=${excerpt.missingCellAddresses}, text=${excerpt.text}",
+            "A1" in excerpt.cellAddresses,
+        )
+        assertTrue("the unresolved qualified dependency must be retained", excerpt.missingCellReferences.any { it.equals("Hoja2!A1", ignoreCase = true) })
+        assertTrue("the excerpt must be marked incomplete", excerpt.incompleteReasons.isNotEmpty())
+    }
+
+    @Test fun unqualifiedFormulaReferenceResolvesOnOwningSheetEvenWithHomonymousCell() {
+        val source = listOf(
+            sheetRow("Hoja1", 1, 0, cell("A1", 1, "999")),
+            sheetRow("Hoja2", 1, 1, cell("A1", 1, "5"), cell("B1", 2, "6", "A1")),
+        ).joinToString("\n")
+
+        val excerpt = ContextEvidenceExcerptSelector.select("Explica Hoja2!B1", source)
+
+        assertEquals(listOf("Hoja2!B1", "Hoja2!A1"), excerpt.cellReferences)
+        assertTrue(excerpt.text.contains("Hoja2!A1=5"))
+        assertFalse(excerpt.text.contains("Hoja1!A1=999"))
+        assertTrue(excerpt.incompleteReasons.isEmpty())
+    }
+
+    @Test fun quotedSheetNamesMatchIgnoringCaseAndPreserveOriginalDisplayName() {
+        val source = sheetRow("Hoja 2", 1, 0, cell("A1", 1, "cinco"))
+        val excerpt = ContextEvidenceExcerptSelector.select("Explica 'HOJA 2'!\$A\$1", source)
+
+        assertEquals(listOf("'Hoja 2'!A1"), excerpt.cellReferences)
+        assertTrue(excerpt.text.contains("'Hoja 2'!A1=cinco"))
+        assertTrue(excerpt.incompleteReasons.isEmpty())
+    }
+
+    @Test fun escapedApostropheSheetAndMixedRangeQualifiersResolveExactly() {
+        val source = listOf(
+            sheetRow("Calc", 1, 0, cell("C1", 3, "ok", "'O''Brien'!A$2:B$3")),
+            sheetRow("O'Brien", 1, 1, cell("A2", 1, "a2"), cell("B2", 2, "b2")),
+            sheetRow("O'Brien", 3, 1, cell("A3", 1, "a3"), cell("B3", 2, "b3")),
+            sheetRow("O'Brien", 4, 1, cell("A4", 1, "wrong-sheet")),
+        ).joinToString("\n")
+        val excerpt = ContextEvidenceExcerptSelector.select("Calc!C1", source)
+
+        assertEquals(listOf("Calc!C1", "'O''Brien'!A2", "'O''Brien'!B2", "'O''Brien'!A3", "'O''Brien'!B3"), excerpt.cellReferences)
+        assertFalse(excerpt.text.contains("wrong-sheet"))
+        assertTrue(excerpt.incompleteReasons.isEmpty())
+    }
+
+    @Test fun localAndQualifiedRectangularRangesAreInclusive() {
+        val localSource = listOf(
+            sheetRow("Hoja1", 1, 0, cell("A1", 1, "11"), cell("B1", 2, "12")),
+            sheetRow("Hoja1", 2, 0, cell("A2", 1, "21"), cell("B2", 2, "22")),
+        ).joinToString("\n")
+        val qualifiedSource = listOf(
+            sheetRow("Hoja 2", 1, 1, cell("A1", 1, "31"), cell("B1", 2, "32")),
+            sheetRow("Hoja 2", 2, 1, cell("A2", 1, "41"), cell("B2", 2, "42")),
+            sheetRow("Calc", 1, 2, cell("C1", 3, "range", "'Hoja 2'!\$A\$1:B\$2")),
+        ).joinToString("\n")
+
+        val local = ContextEvidenceExcerptSelector.select("A1:B2", localSource)
+        val qualified = ContextEvidenceExcerptSelector.select("Calc!C1", qualifiedSource)
+
+        assertEquals(listOf("Hoja1!A1", "Hoja1!B1", "Hoja1!A2", "Hoja1!B2"), local.cellReferences)
+        assertEquals(listOf("Calc!C1", "'Hoja 2'!A1", "'Hoja 2'!B1", "'Hoja 2'!A2", "'Hoja 2'!B2"), qualified.cellReferences)
+        assertFalse(qualified.text.contains("Hoja1!A1=11"))
+    }
+
+    @Test fun threeDimensionalRangeIncludesEveryOrderedSheetAndInteriorSheet() {
+        val source = listOf(
+            sheetRow("Hoja1", 1, 0, cell("A1", 1, "one")),
+            sheetRow("Hoja2", 1, 1, cell("A1", 1, "two")),
+            sheetRow("Hoja3", 1, 2, cell("A1", 1, "three")),
+        ).joinToString("\n")
+        val excerpt = ContextEvidenceExcerptSelector.select("Hoja1:Hoja3!\$A\$1", source)
+
+        assertEquals(listOf("Hoja1!A1", "Hoja2!A1", "Hoja3!A1"), excerpt.cellReferences)
+        assertTrue(excerpt.text.contains("Hoja2!A1=two"))
+        assertTrue(excerpt.incompleteReasons.isEmpty())
+    }
+
+    @Test fun quotedThreeDimensionalRectangleExpandsAcrossEverySheetAndCell() {
+        val source=listOf(
+            sheetRow("Depto 1",1,0,cell("A1",1,"11"),cell("B1",2,"12")),
+            sheetRow("Depto 1",2,0,cell("A2",1,"13"),cell("B2",2,"14")),
+            sheetRow("Depto 2",1,1,cell("A1",1,"21"),cell("B1",2,"22")),
+            sheetRow("Depto 2",2,1,cell("A2",1,"23"),cell("B2",2,"24")),
+            sheetRow("Depto 3",1,2,cell("A1",1,"31"),cell("B1",2,"32")),
+            sheetRow("Depto 3",2,2,cell("A2",1,"33"),cell("B2",2,"34")),
+        ).joinToString("\n")
+        val excerpt=ContextEvidenceExcerptSelector.select("'Depto 1:Depto 3'!\$A\$1:\$B\$2",source)
+
+        assertEquals(12,excerpt.cellReferences.size)
+        assertTrue(excerpt.cellReferences.contains("'Depto 2'!B2"))
+        assertTrue(excerpt.text.contains("'Depto 2'!B2=24"))
+        assertTrue(excerpt.incompleteReasons.isEmpty())
+        assertTrue(utf8(excerpt.text)<=480)
+    }
+
+    @Test fun omittedThreeDimensionalInteriorOrderIsExplicitlyIncomplete() {
+        val source = listOf(
+            sheetRow("Hoja1", 1, 0, cell("A1", 1, "one")),
+            sheetRow("Hoja3", 1, 2, cell("A1", 1, "three")),
+        ).joinToString("\n")
+        val excerpt = ContextEvidenceExcerptSelector.select("Hoja1:Hoja3!A1", source)
+
+        assertTrue(excerpt.cellReferences.isEmpty())
+        assertTrue("THREE_D_SHEET_ORDER_INCOMPLETE" in excerpt.incompleteReasons)
+        assertTrue(excerpt.unresolvedCellReferences.isNotEmpty())
+    }
+
+    @Test fun conflictingThreeDimensionalSheetOrderNeverUsesAnArbitraryMapping() {
+        val source = listOf(
+            sheetRow("Hoja1", 1, 0, cell("A1", 1, "one")),
+            sheetRow("Hoja2", 1, 1, cell("A1", 1, "two")),
+            sheetRow("Hoja3", 1, 1, cell("A1", 1, "three")),
+        ).joinToString("\n")
+        val excerpt = ContextEvidenceExcerptSelector.select("Hoja1:Hoja2!A1", source)
+
+        assertTrue(excerpt.cellReferences.isEmpty())
+        assertFalse(excerpt.text.contains("Hoja2!A1=two"))
+        assertTrue("SHEET_ORDER_METADATA_CONFLICT" in excerpt.incompleteReasons)
+        assertTrue("THREE_D_SHEET_ORDER_CONFLICT" in excerpt.incompleteReasons)
+        assertTrue(excerpt.unresolvedCellReferences.isNotEmpty())
+    }
+
+    @Test fun unrelatedSheetOrderConflictDoesNotWarnForSimpleCellLookup() {
+        val source = listOf(
+            sheetRow("Hoja1", 1, 0, cell("A1", 1, "one")),
+            sheetRow("Hoja2", 1, 1, cell("A1", 1, "two")),
+            sheetRow("Hoja3", 1, 1, cell("A1", 1, "three")),
+        ).joinToString("\n")
+        val excerpt = ContextEvidenceExcerptSelector.select("Hoja1!A1", source)
+
+        assertEquals(listOf("Hoja1!A1"), excerpt.cellReferences)
+        assertTrue(excerpt.text.contains("Hoja1!A1=one"))
+        assertTrue(excerpt.incompleteReasons.isEmpty())
+    }
+
+    @Test fun missingQualifiedSheetAndMissingCellNeverFallBackToHomonymousAddress() {
+        val source = listOf(
+            sheetRow("Hoja1", 1, 0, cell("A1", 1, "999"), cell("A3", 1, "4", "'Hoja ausente'!A1")),
+        ).joinToString("\n")
+        val formula = ContextEvidenceExcerptSelector.select("Hoja1!A3", source)
+        val directMissing = ContextEvidenceExcerptSelector.select("'Hoja1'!B4", source)
+
+        assertEquals(listOf("Hoja1!A3"), formula.cellReferences)
+        assertTrue(formula.missingCellReferences.contains("'Hoja ausente'!A1"))
+        assertTrue("SHEET_NOT_FOUND" in formula.incompleteReasons)
+        assertTrue(directMissing.missingCellReferences.contains("Hoja1!B4"))
+        assertTrue(directMissing.incompleteReasons.contains("MISSING_REFERENCED_CELLS"))
+    }
+
+    @Test fun unqualifiedQueryWithAddressOnMultipleSheetsIsReportedAmbiguousWithoutValues() {
+        val source = listOf(
+            sheetRow("Hoja1", 1, 0, cell("A1", 1, "one")),
+            sheetRow("Hoja2", 1, 1, cell("A1", 1, "two")),
+        ).joinToString("\n")
+        val excerpt = ContextEvidenceExcerptSelector.select("Explica A1", source)
+
+        assertTrue(excerpt.text.isEmpty())
+        assertTrue(excerpt.cellReferences.isEmpty())
+        assertEquals(listOf("Hoja1!A1", "Hoja2!A1"), excerpt.ambiguousCellReferences)
+        assertTrue("AMBIGUOUS_UNQUALIFIED_REFERENCE" in excerpt.incompleteReasons)
+    }
+
+    @Test fun functionLiteralExternalAndDynamicReferencesNeverBecomeLocalDependencies() {
+        val formulas = listOf(
+            "LOG10(\"A1\")" to null,
+            "\"A1\"" to null,
+            "'[Book.xlsx]Sheet1'!A1" to "EXTERNAL_WORKBOOK_REFERENCE_UNRESOLVED",
+            "INDIRECT(\"A1\")" to "DYNAMIC_REFERENCE_UNRESOLVED",
+            "TaxRate" to "UNSUPPORTED_DEFINED_NAME_OR_REFERENCE",
+            "Table1[Sales]" to "STRUCTURED_REFERENCE_UNRESOLVED",
+        )
+        formulas.forEach { (formula, expectedReason) ->
+            val source = listOf(
+                sheetRow("Hoja1", 1, 0, cell("A1", 1, "999")),
+                sheetRow("Hoja1", 3, 0, cell("A3", 1, "4", formula)),
+            ).joinToString("\n")
+            val excerpt = ContextEvidenceExcerptSelector.select("Explica Hoja1!A3", source)
+
+            assertFalse("formula=$formula", "Hoja1!A1" in excerpt.cellReferences)
+            assertTrue("formula=$formula", expectedReason == null || expectedReason in excerpt.incompleteReasons)
         }
     }
 
@@ -208,5 +400,9 @@ class ContextEvidenceExcerptTest {
             .apply { formula?.let { put("formula", it) } }
 
     private fun row(row: Int, vararg cells: JSONObject) = JSONObject().put("sheet", "Hoja1").put("row", row)
+        .put("cells", JSONArray().apply { cells.forEach(::put) }).toString()
+
+    private fun sheetRow(sheet: String, row: Int, order: Int, vararg cells: JSONObject) = JSONObject()
+        .put("sheet", sheet).put("sheetOrder", order).put("row", row)
         .put("cells", JSONArray().apply { cells.forEach(::put) }).toString()
 }

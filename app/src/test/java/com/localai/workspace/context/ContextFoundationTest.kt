@@ -57,14 +57,17 @@ class ContextFoundationTest {
     @Test fun incompleteSpreadsheetEvidenceHasMaterialInspectorNotice(){
         val source=item("spreadsheet-cell","A3=4 · formula=\$A\$2-\$A\$1").copy(provenance=ContextProvenance(
             sourceId="source-id",documentId="document-id",cellAddresses=listOf("A3","A1"),
-            evidenceIncompleteReasons=listOf("MISSING_REFERENCED_CELLS"),missingCellAddresses=listOf("A2")))
+            evidenceIncompleteReasons=listOf("MISSING_REFERENCED_CELLS"),missingCellAddresses=listOf("A2"),
+            cellReferences=listOf("Hoja1!A3"),missingCellReferences=listOf("Hoja2!A1")))
         val base=ContextBuilder().build(ContextRequest("Explain A3",access),listOf(source))
-        val bundle=base.copy(sourceEvidenceIssues=listOf(SourceEvidenceIssue("source-id","segment-id","document-id",listOf("MISSING_REFERENCED_CELLS"),listOf("A2"))))
+        val bundle=base.copy(sourceEvidenceIssues=listOf(SourceEvidenceIssue("source-id","segment-id","document-id",listOf("MISSING_REFERENCED_CELLS"),listOf("A2"),listOf("Hoja2!A1"))))
         val report=bundle.safeReport().toString()
         assertTrue(bundle.requiresUserNotice)
         assertEquals("IMPORTANT",bundle.safeReport()["omissionSeverity"])
         assertTrue(report.contains("MISSING_REFERENCED_CELLS"))
         assertTrue(report.contains("A2"))
+        assertTrue(report.contains("Hoja2!A1"))
+        assertTrue(bundle.conversation().userMessage.contains("missing-cell-references=\"Hoja2!A1\""))
         assertFalse(report.contains("A3=4"))
     }
     @Test fun relevantSourceOrMemoryLostToTokenBudgetRaisesPreciseNotice(){

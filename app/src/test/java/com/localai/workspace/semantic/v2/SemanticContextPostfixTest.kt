@@ -232,6 +232,145 @@ class SemanticContextPostfixTest {
         assertTrue(report.toString().contains("A2"))
     }
 
+    @Test fun eg2QualifiedCrossSheetDependencyKeepsCompositeIdentityInFinalPromptAndInspector()=runBlocking {
+        addProject("project-a")
+        val workbook=listOf(
+            spreadsheetRow("Hoja1",0,"A1","999"),
+            spreadsheetRow("Hoja1",0,"A3","4","'Hoja2'!A1"),
+            spreadsheetRow("Hoja2",1,"A1","5"),
+        ).joinToString("\n")
+        val document=addDocument("project-a","cross-sheet-eg2","cross-sheet.xlsx",workbook)
+        index("project-a")
+
+        val bundle=foundation.build(request("project-a",setOf(document.id)).copy(query="Explica A3"),evidence=emptyList(),memoryEnabled=false)
+        val source=bundle.included.single{it.kind==com.localai.workspace.context.ContextKind.SOURCE}
+        val prompt=bundle.conversation().userMessage
+
+        assertEquals(listOf("Hoja1!A3","Hoja2!A1"),source.provenance.cellReferences)
+        assertTrue(prompt.contains("Hoja2!A1=5"))
+        assertFalse(prompt.contains("Hoja1!A1=999"))
+        assertTrue(prompt.contains("cell-references=\"Hoja1!A3,Hoja2!A1\""))
+        assertTrue(bundle.sourceEvidenceIssues.isEmpty())
+    }
+
+    @Test fun selectedDocumentDoesNotResolveQualifiedDependencyFromAnotherDocument()=runBlocking {
+        addProject("project-a")
+        val selected=addDocument("project-a","formula-only","formula.xlsx",listOf(
+            spreadsheetRow("Hoja1",0,"A1","999"),
+            spreadsheetRow("Hoja1",0,"A3","4","'Hoja2'!A1"),
+        ).joinToString("\n"))
+        addDocument("project-a","other-sheet","other.xlsx",spreadsheetRow("Hoja2",0,"A1","777"))
+        index("project-a")
+
+        val bundle=foundation.build(request("project-a",setOf(selected.id)).copy(query="Explica A3"),evidence=emptyList(),memoryEnabled=false)
+        val source=bundle.included.single{it.kind==com.localai.workspace.context.ContextKind.SOURCE}
+
+        assertEquals(listOf("Hoja1!A3"),source.provenance.cellReferences)
+        assertEquals(listOf("Hoja2!A1"),source.provenance.missingCellReferences)
+        assertTrue(source.provenance.evidenceIncompleteReasons.contains("SHEET_NOT_FOUND"))
+        assertTrue(bundle.requiresUserNotice)
+        assertFalse(bundle.conversation().userMessage.contains("777"))
+    }
+
+    @Test fun eg2AmbiguousUnqualifiedCellProducesEmptyEvidenceAndMaterialDiagnostic()=runBlocking {
+        addProject("project-a")
+        val workbook=listOf(
+            spreadsheetRow("Hoja1",0,"A1","one"),
+            spreadsheetRow("Hoja2",1,"A1","two"),
+        ).joinToString("\n")
+        val document=addDocument("project-a","ambiguous-sheets","ambiguous.xlsx",workbook)
+        index("project-a")
+
+        val bundle=foundation.build(request("project-a",setOf(document.id)).copy(query="Explica A1"),evidence=emptyList(),memoryEnabled=false)
+        val prompt=bundle.conversation().userMessage
+        val issue=bundle.sourceEvidenceIssues.single()
+
+        assertTrue(bundle.requiresUserNotice)
+        assertTrue(issue.reasons.contains("AMBIGUOUS_UNQUALIFIED_REFERENCE"))
+        assertEquals(listOf("Hoja1!A1","Hoja2!A1"),issue.ambiguousCellReferences)
+        assertTrue(bundle.safeReport().toString().contains("AMBIGUOUS_UNQUALIFIED_REFERENCE"))
+        assertFalse(prompt.contains("Hoja1!A1=one"))
+        assertFalse(prompt.contains("Hoja2!A1=two"))
+    }
+
+    @Test fun lexicalFallbackKeepsQualifiedCrossSheetReferencesAndMaterialNotice()=runBlocking {
+        addProject("project-a")
+        val workbook=listOf(
+            spreadsheetRow("Hoja1",0,"A1","999"),
+            spreadsheetRow("Hoja1",0,"A3","4","'Hoja2'!A1"),
+            spreadsheetRow("Hoja2",1,"A1","5"),
+        ).joinToString("\n")
+        val document=addDocument("project-a","cross-sheet-lexical","cross-sheet.xlsx",workbook)
+        index("project-a")
+        val lexical=graph.retrieval.retrieve("project-a","Explica A3",documentIds=setOf(document.id))
+        assertTrue("the fixture must reach the production lexical retrieval path",lexical.isNotEmpty())
+        driver.failNext=true
+
+        val bundle=foundation.build(request("project-a",setOf(document.id)).copy(query="Explica A3"),evidence=lexical,memoryEnabled=false)
+        val source=bundle.included.single{it.kind==com.localai.workspace.context.ContextKind.SOURCE}
+
+        assertTrue(bundle.notice.orEmpty().contains("SOURCE_SEMANTIC_V2_SKIPPED"))
+        assertTrue(source.provenance.cellReferences.contains("Hoja2!A1"))
+        assertTrue(bundle.conversation().userMessage.contains("Hoja2!A1=5"))
+        assertFalse(bundle.conversation().userMessage.contains("Hoja1!A1=999"))
+        assertTrue(bundle.sourceEvidenceIssues.isEmpty())
+    }
+
+    @Test fun lexicalFallbackReportsMissingQualifiedSheetInsteadOfUsingAnotherDocument()=runBlocking {
+        addProject("project-a")
+        val selected=addDocument("project-a","formula-only-lexical","formula-only.xlsx",listOf(
+            spreadsheetRow("Hoja1",0,"A1","999"),
+            spreadsheetRow("Hoja1",0,"A3","4","'Hoja2'!A1"),
+        ).joinToString("\n"))
+        addDocument("project-a","other-sheet-lexical","other.xlsx",spreadsheetRow("Hoja2",0,"A1","777"))
+        index("project-a")
+        val lexical=graph.retrieval.retrieve("project-a","Explica A3",documentIds=setOf(selected.id))
+        assertTrue("the fixture must use the production lexical retrieval path",lexical.isNotEmpty())
+        driver.failNext=true
+
+        val bundle=foundation.build(request("project-a",setOf(selected.id)).copy(query="Explica A3"),evidence=lexical,memoryEnabled=false)
+        val source=bundle.included.single{it.kind==com.localai.workspace.context.ContextKind.SOURCE}
+        val issue=bundle.sourceEvidenceIssues.single()
+
+        assertTrue(bundle.notice.orEmpty().contains("SOURCE_SEMANTIC_V2_SKIPPED"))
+        assertEquals(listOf("Hoja1!A3"),source.provenance.cellReferences)
+        assertEquals(listOf("Hoja2!A1"),source.provenance.missingCellReferences)
+        assertTrue(issue.reasons.contains("SHEET_NOT_FOUND"))
+        assertTrue(bundle.requiresUserNotice)
+        assertFalse(bundle.conversation().userMessage.contains("Hoja1!A1=999"))
+        assertFalse(bundle.conversation().userMessage.contains("777"))
+    }
+
+    @Test fun lexicalFallbackSurfacesAmbiguousSheetValuesWithoutInjectingEitherCandidate()=runBlocking {
+        addProject("project-a")
+        val selected=addDocument("project-a","ambiguous-lexical","ambiguous-lexical.xlsx",listOf(
+            spreadsheetRow("Hoja1",0,"A1","one"),
+            spreadsheetRow("Hoja2",1,"A1","two"),
+        ).joinToString("\n"))
+        index("project-a")
+        val lexical=graph.retrieval.retrieve("project-a","Explica A1",documentIds=setOf(selected.id))
+        assertTrue("the fixture must use the production lexical retrieval path",lexical.isNotEmpty())
+        driver.failNext=true
+
+        val bundle=foundation.build(request("project-a",setOf(selected.id)).copy(query="Explica A1"),evidence=lexical,memoryEnabled=false)
+        val prompt=bundle.conversation().userMessage
+        val issue=bundle.sourceEvidenceIssues.single()
+
+        assertTrue(bundle.notice.orEmpty().contains("SOURCE_SEMANTIC_V2_SKIPPED"))
+        assertTrue(bundle.requiresUserNotice)
+        assertTrue(issue.reasons.contains("AMBIGUOUS_UNQUALIFIED_REFERENCE"))
+        assertEquals(listOf("Hoja1!A1","Hoja2!A1"),issue.ambiguousCellReferences)
+        assertFalse(prompt.contains("Hoja1!A1=one"))
+        assertFalse(prompt.contains("Hoja2!A1=two"))
+    }
+
+    private fun spreadsheetRow(sheet:String,order:Int,address:String,value:String,formula:String?=null):String {
+        val row=address.dropWhile{it.isLetter()}.toInt()
+        val column=address.takeWhile{it.isLetter()}.fold(0){acc,char->acc*26+char.uppercaseChar().code-64}
+        val cell=org.json.JSONObject().put("address",address).put("column",column).put("value",value).apply{formula?.let{put("formula",it)}}
+        return org.json.JSONObject().put("sheet",sheet).put("sheetOrder",order).put("row",row).put("cells",org.json.JSONArray().put(cell)).toString()
+    }
+
     @Test fun equivalentLegacyAndV2EvidenceIsIncludedOnlyOnce()=runBlocking {
         addProject("project-a")
         val document=addDocument("project-a","doc-a","notes.txt","ORCHID is one canonical passage, not two copies.")

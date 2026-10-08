@@ -104,13 +104,14 @@ class ContextFoundation(private val graph:AppGraph, private val semanticLayerPro
         val sourceEvidenceByItem=linkedMapOf<String,Evidence>()
         val sourceEvidenceIssues=mutableListOf<SourceEvidenceIssue>()
         if(v2Hits.isNotEmpty()) {
-            for(hit in v2Hits) {
-                val content=hit.content ?: continue
-                val excerpt=ContextEvidenceExcerptSelector.select(request.query,content)
+            suspend fun addV2Excerpt(hit:RetrievalHit,excerpt:ContextEvidenceExcerpt,related:List<RetrievalHit>) {
+                val relatedIds=related.map{it.segmentId}.distinct()
                 if(excerpt.incompleteReasons.isNotEmpty()) sourceEvidenceIssues+=SourceEvidenceIssue(
                     sourceId=hit.sourceId,segmentId=hit.segmentId,documentId=hit.documentId,
-                    reasons=excerpt.incompleteReasons,missingCellAddresses=excerpt.missingCellAddresses)
-                if(excerpt.text.isBlank()) continue
+                    reasons=excerpt.incompleteReasons,missingCellAddresses=excerpt.missingCellAddresses,
+                    missingCellReferences=excerpt.missingCellReferences,ambiguousCellReferences=excerpt.ambiguousCellReferences,
+                    unresolvedCellReferences=excerpt.unresolvedCellReferences,relatedSegmentIds=relatedIds)
+                if(excerpt.text.isBlank()) return
                 val evidenceHit=hit.legacySegmentId?.let { legacyId->
                     val document=graph.database.documentDao().documentForSegment(legacyId)
                     val segment=graph.database.documentDao().segment(legacyId)
@@ -132,8 +133,28 @@ class ContextFoundation(private val graph:AppGraph, private val semanticLayerPro
                 val absoluteStart=excerpt.charStart?.let{offset->segmentStart?.plus(offset)}
                 val absoluteEnd=excerpt.charEnd?.let{offset->segmentStart?.plus(offset)}
                 all+=ContextItem(itemId,ContextKind.SOURCE,excerpt.text,sourceScope,ContextTrust.UNTRUSTED_SOURCE,80,hit.fusedScore,
-                    ContextProvenance(hit.sourceId,hit.segmentId,page=hit.page,lineStart=hit.lineStart,lineEnd=hit.lineEnd,startMs=hit.startMs,endMs=hit.endMs,sourceName=hit.sourceName,documentId=hit.documentId,charStart=absoluteStart,charEnd=absoluteEnd,excerpted=excerpt.shortened,originalCharacters=excerpt.originalCharacters,cellAddresses=excerpt.cellAddresses,evidenceIncompleteReasons=excerpt.incompleteReasons,missingCellAddresses=excerpt.missingCellAddresses))
+                    ContextProvenance(hit.sourceId,hit.segmentId,page=hit.page,lineStart=hit.lineStart,lineEnd=hit.lineEnd,startMs=hit.startMs,endMs=hit.endMs,sourceName=hit.sourceName,documentId=hit.documentId,charStart=absoluteStart,charEnd=absoluteEnd,excerpted=excerpt.shortened,originalCharacters=excerpt.originalCharacters,cellAddresses=excerpt.cellAddresses,evidenceIncompleteReasons=excerpt.incompleteReasons,missingCellAddresses=excerpt.missingCellAddresses,cellReferences=excerpt.cellReferences,missingCellReferences=excerpt.missingCellReferences,ambiguousCellReferences=excerpt.ambiguousCellReferences,unresolvedCellReferences=excerpt.unresolvedCellReferences,relatedSegmentIds=relatedIds))
                 evidenceHit?.let{sourceEvidenceByItem[itemId]=it}
+            }
+
+            val handledStructuredDocuments=mutableSetOf<String>()
+            val attemptedStructuredDocuments=mutableSetOf<String>()
+            for(hit in v2Hits) {
+                val content=hit.content ?: continue
+                val documentId=hit.documentId
+                val structured=ContextEvidenceExcerptSelector.isStructuredCellPassage(content)
+                if(structured && documentId!=null) {
+                    if(documentId in handledStructuredDocuments) continue
+                    if(attemptedStructuredDocuments.add(documentId)) {
+                        val relatedCandidates=v2Hits.filter{it.documentId==documentId && it.content?.let(ContextEvidenceExcerptSelector::isStructuredCellPassage)==true}.distinctBy{it.segmentId}
+                        val segmentOrder=mutableMapOf<String,Int>()
+                        relatedCandidates.forEach{candidate->candidate.legacySegmentId?.let{id->graph.database.documentDao().segment(id)?.segmentIndex?.let{segmentOrder[candidate.segmentId]=it}}}
+                        val related=relatedCandidates.sortedWith(compareBy<RetrievalHit>{segmentOrder[it.segmentId] ?: Int.MAX_VALUE}.thenBy{it.segmentId})
+                        val excerpt=ContextEvidenceExcerptSelector.selectRetrievedPassages(request.query,related.mapNotNull{it.content})
+                        if(excerpt!=null) { handledStructuredDocuments+=documentId;addV2Excerpt(related.firstOrNull() ?: hit,excerpt,related);continue }
+                    }
+                }
+                addV2Excerpt(hit,ContextEvidenceExcerptSelector.select(request.query,content),listOf(hit))
             }
         } else if(request.sourceRetrievalMode!=SourceRetrievalMode.DISABLED) {
             // The retrieval policy, not whether a legacy list happens to be null or empty,
@@ -143,22 +164,42 @@ class ContextFoundation(private val graph:AppGraph, private val semanticLayerPro
                 access.projectId!=null -> graph.retrieval.retrieve(access.projectId,request.query,documentIds=request.selectedDocumentIds)
                 else -> emptyList()
             }
-            sources.forEach { e->
+            val allowedSources=sources.filter { e->
                 val original=graph.database.documentDao().get(e.documentId)
                 check(original!=null&&original.projectId==access.projectId){"SOURCE_SCOPE_MISMATCH"}
-                if(request.selectedDocumentIds.isEmpty() || e.documentId in request.selectedDocumentIds) {
-                    val excerpt=ContextEvidenceExcerptSelector.select(request.query,e.excerpt)
-                    if(excerpt.incompleteReasons.isNotEmpty()) sourceEvidenceIssues+=SourceEvidenceIssue(
-                        sourceId=e.documentId,segmentId=e.segmentId.toString(),documentId=e.documentId,
-                        reasons=excerpt.incompleteReasons,missingCellAddresses=excerpt.missingCellAddresses)
-                    if(excerpt.text.isBlank()) return@forEach
-                    val start=excerpt.charStart?.let{e.charStart?.plus(it)}
-                    val end=excerpt.charEnd?.let{e.charStart?.plus(it)}
-                    val compact=e.copy(excerpt=excerpt.text,charStart=start,charEnd=end)
-                    all+=ContextItem(e.id,ContextKind.SOURCE,excerpt.text,sourceScope,ContextTrust.UNTRUSTED_SOURCE,80,e.retrievalScore,
-                        ContextProvenance(e.documentId,e.segmentId.toString(),page=e.pageStart,sourceName=e.documentTitle,documentId=e.documentId,charStart=start,charEnd=end,excerpted=excerpt.shortened,originalCharacters=excerpt.originalCharacters,cellAddresses=excerpt.cellAddresses,evidenceIncompleteReasons=excerpt.incompleteReasons,missingCellAddresses=excerpt.missingCellAddresses))
-                    sourceEvidenceByItem[e.id]=compact
+                request.selectedDocumentIds.isEmpty() || e.documentId in request.selectedDocumentIds
+            }
+            suspend fun addLegacyExcerpt(primary:Evidence,excerpt:ContextEvidenceExcerpt,related:List<Evidence>) {
+                val relatedIds=related.map{it.segmentId.toString()}.distinct()
+                if(excerpt.incompleteReasons.isNotEmpty()) sourceEvidenceIssues+=SourceEvidenceIssue(
+                    sourceId=primary.documentId,segmentId=primary.segmentId.toString(),documentId=primary.documentId,
+                    reasons=excerpt.incompleteReasons,missingCellAddresses=excerpt.missingCellAddresses,
+                    missingCellReferences=excerpt.missingCellReferences,ambiguousCellReferences=excerpt.ambiguousCellReferences,
+                    unresolvedCellReferences=excerpt.unresolvedCellReferences,relatedSegmentIds=relatedIds)
+                if(excerpt.text.isBlank()) return
+                val singleSegment=related.size==1
+                val start=excerpt.charStart?.takeIf{singleSegment}?.let{primary.charStart?.plus(it)}
+                val end=excerpt.charEnd?.takeIf{singleSegment}?.let{primary.charStart?.plus(it)}
+                val compact=primary.copy(excerpt=excerpt.text,charStart=start,charEnd=end)
+                all+=ContextItem(primary.id,ContextKind.SOURCE,excerpt.text,sourceScope,ContextTrust.UNTRUSTED_SOURCE,80,primary.retrievalScore,
+                    ContextProvenance(primary.documentId,primary.segmentId.toString(),page=primary.pageStart,sourceName=primary.documentTitle,documentId=primary.documentId,charStart=start,charEnd=end,excerpted=excerpt.shortened,originalCharacters=excerpt.originalCharacters,cellAddresses=excerpt.cellAddresses,evidenceIncompleteReasons=excerpt.incompleteReasons,missingCellAddresses=excerpt.missingCellAddresses,cellReferences=excerpt.cellReferences,missingCellReferences=excerpt.missingCellReferences,ambiguousCellReferences=excerpt.ambiguousCellReferences,unresolvedCellReferences=excerpt.unresolvedCellReferences,relatedSegmentIds=relatedIds))
+                sourceEvidenceByItem[primary.id]=compact
+            }
+            val handledStructuredDocuments=mutableSetOf<String>()
+            val attemptedStructuredDocuments=mutableSetOf<String>()
+            for(source in allowedSources) {
+                if(ContextEvidenceExcerptSelector.isStructuredCellPassage(source.excerpt)) {
+                    if(source.documentId in handledStructuredDocuments) continue
+                    if(attemptedStructuredDocuments.add(source.documentId)) {
+                        val relatedCandidates=allowedSources.filter{it.documentId==source.documentId && ContextEvidenceExcerptSelector.isStructuredCellPassage(it.excerpt)}.distinctBy{it.segmentId}
+                        val segmentOrder=mutableMapOf<Long,Int>()
+                        relatedCandidates.forEach{candidate->graph.database.documentDao().segment(candidate.segmentId)?.segmentIndex?.let{segmentOrder[candidate.segmentId]=it}}
+                        val related=relatedCandidates.sortedWith(compareBy<Evidence>{segmentOrder[it.segmentId] ?: Int.MAX_VALUE}.thenBy{it.segmentId})
+                        val excerpt=ContextEvidenceExcerptSelector.selectRetrievedPassages(request.query,related.map{it.excerpt})
+                        if(excerpt!=null){handledStructuredDocuments+=source.documentId;addLegacyExcerpt(related.firstOrNull() ?: source,excerpt,related);continue}
+                    }
                 }
+                addLegacyExcerpt(source,ContextEvidenceExcerptSelector.select(request.query,source.excerpt),listOf(source))
             }
         }
         val retrievalMs=(System.nanoTime()-retrieveStart)/1_000_000

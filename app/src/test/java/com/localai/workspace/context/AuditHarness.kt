@@ -47,6 +47,21 @@ class AuditHarness {
         checkCase("relative_formula_control", "Explica A3", source("A2-A1"), setOf("A1", "A2", "A3"))
         checkCase("range_middle_cell", "Suma A1:A3", source(), setOf("A1", "A2", "A3"))
         checkCase("absolute_formula_dependencies", "Explica A3", source("\$A\$2-\$A\$1"), setOf("A1", "A2", "A3"))
+
+        val crossSheet= listOf(
+            JSONObject().put("sheet","Hoja1").put("sheetOrder",0).put("row",1).put("cells",JSONArray().put(JSONObject().put("address","A1").put("column",1).put("value","999"))).toString(),
+            JSONObject().put("sheet","Hoja1").put("sheetOrder",0).put("row",3).put("cells",JSONArray().put(JSONObject().put("address","A3").put("column",1).put("value","4").put("formula","'Hoja2'!A1"))).toString(),
+        ).joinToString("\n")
+        val qualified=ContextEvidenceExcerptSelector.select("Explica A3",crossSheet)
+        val qualifiedPassed=qualified.cellReferences==listOf("Hoja1!A3") &&
+            qualified.missingCellReferences==listOf("Hoja2!A1") && "Hoja1!A1" !in qualified.cellReferences
+        cases.put(JSONObject().put("case","qualified_sheet_no_homonym_fallback")
+            .put("expectedCellReferences",JSONArray().put("Hoja1!A3"))
+            .put("expectedMissingCellReferences",JSONArray().put("Hoja2!A1"))
+            .put("actualCellReferences",JSONArray(qualified.cellReferences))
+            .put("actualMissingCellReferences",JSONArray(qualified.missingCellReferences))
+            .put("incompleteReasons",JSONArray(qualified.incompleteReasons))
+            .put("excerpt",qualified.text).put("invariantPass",qualifiedPassed))
         val ascii = "x".repeat(200) + " TARGET " + "x".repeat(200)
         val multibyte = "界".repeat(200) + " TARGET " + "界".repeat(200)
         checkCase("ascii_anchor_control", "TARGET", ascii, anchor = "TARGET", budget = 128)
