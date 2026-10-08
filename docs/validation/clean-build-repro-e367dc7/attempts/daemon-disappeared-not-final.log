@@ -1,0 +1,166 @@
+CASE=final_host_gate_clean_checkout
+M00_SOURCE_COMMIT=e367dc75d0f952ef6a9b4e96d51e1263b70d3309
+DATE_UTC=2026-10-08T22:28:18Z
+JAVA_HOME=/workspace/.toolchain/jdk-17
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+JDK_VERSION=openjdk version "17.0.20.1" 2026-08-18
+ANDROID_SDK_BUILD_TOOLS=35.0.0 34.0.0 
+
+ANDROID_NDK=27.0.12077973
+CMAKE=3.31.6
+ABI=arm64-v8a
+COMMAND=JAVA_HOME=/workspace/.toolchain/jdk-17 ANDROID_HOME=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --no-build-cache -Dorg.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8 -Pkotlin.daemon.jvmargs=-Xmx2048m -I docs/validation/skills050/force-test-execution.gradle :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:assembleDebug :app:assembleRelease :app:lintDebug :app:assembleDebugAndroidTest -Parm64Only=true --offline --console=plain
+WORKTREE=clean
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.10.2/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Configuration 'nativeAar' was resolved during configuration time.
+This is a build performance and scalability issue.
+See https://github.com/gradle/gradle/issues/2298
+Run with --info for a stacktrace.
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugBuildConfig
+> Task :litert-compat:copyNativeBackend
+> Task :litert-compat:preBuild
+> Task :litert-compat:preDebugBuild
+> Task :litert-compat:writeDebugAarMetadata
+> Task :llama-runtime:preBuild UP-TO-DATE
+> Task :llama-runtime:preDebugBuild UP-TO-DATE
+> Task :llama-runtime:writeDebugAarMetadata
+> Task :app:checkDebugAarMetadata
+> Task :app:generateDebugResValues
+> Task :litert-compat:generateDebugResValues
+> Task :litert-compat:generateDebugResources
+> Task :litert-compat:packageDebugResources
+> Task :llama-runtime:generateDebugResValues
+> Task :llama-runtime:generateDebugResources
+> Task :llama-runtime:packageDebugResources
+> Task :app:mapDebugSourceSetPaths
+> Task :app:generateDebugResources
+> Task :app:mergeDebugResources
+> Task :app:packageDebugResources
+> Task :app:parseDebugLocalResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug
+> Task :litert-compat:extractDeepLinksDebug
+> Task :litert-compat:processDebugManifest
+> Task :llama-runtime:extractDeepLinksDebug
+> Task :llama-runtime:processDebugManifest
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
+> Task :litert-compat:compileDebugLibraryResources
+> Task :litert-compat:parseDebugLocalResources
+> Task :litert-compat:generateDebugRFile
+> Task :llama-runtime:compileDebugLibraryResources
+> Task :llama-runtime:parseDebugLocalResources
+> Task :llama-runtime:generateDebugRFile
+> Task :app:processDebugResources
+> Task :litert-compat:checkKotlinGradlePluginConfigurationErrors SKIPPED
+
+> Task :litert-compat:compileDebugKotlin
+w: file:///tmp/law-final-clean-e367dc7/litert-compat/src/main/java/com/google/ai/edge/litertlm/Engine.kt:67:40 'val numOfThreads: Int?' is deprecated. Use threadCount instead.
+w: file:///tmp/law-final-clean-e367dc7/litert-compat/src/main/java/com/google/ai/edge/litertlm/Engine.kt:71:40 'val numOfThreads: Int?' is deprecated. Use threadCount instead.
+
+> Task :litert-compat:javaPreCompileDebug
+> Task :litert-compat:compileDebugJavaWithJavac NO-SOURCE
+> Task :litert-compat:bundleLibCompileToJarDebug
+> Task :llama-runtime:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :llama-runtime:compileDebugKotlin
+> Task :llama-runtime:javaPreCompileDebug
+> Task :llama-runtime:compileDebugJavaWithJavac NO-SOURCE
+> Task :llama-runtime:bundleLibCompileToJarDebug
+> Task :app:kspDebugKotlin
+> Task :app:compileDebugKotlin
+w: file:///tmp/law-final-clean-e367dc7/app/src/main/java/com/localai/workspace/python/PythonService.kt:32:142 'var databaseEnabled: Boolean' is deprecated. Deprecated in Java.
+
+> Task :app:javaPreCompileDebug
+> Task :app:compileDebugJavaWithJavac
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:kspDebugUnitTestKotlin
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:mergeDebugShaders
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :litert-compat:mergeDebugShaders
+> Task :litert-compat:compileDebugShaders NO-SOURCE
+> Task :litert-compat:generateDebugAssets UP-TO-DATE
+> Task :litert-compat:packageDebugAssets
+> Task :llama-runtime:mergeDebugShaders
+> Task :llama-runtime:compileDebugShaders NO-SOURCE
+> Task :llama-runtime:generateDebugAssets UP-TO-DATE
+> Task :llama-runtime:packageDebugAssets
+> Task :app:mergeDebugAssets
+> Task :app:packageDebugUnitTestForUnitTest
+> Task :app:generateDebugUnitTestConfig
+> Task :app:processDebugJavaRes
+> Task :app:processDebugUnitTestJavaRes
+> Task :litert-compat:bundleLibRuntimeToJarDebug
+> Task :litert-compat:processDebugJavaRes
+> Task :llama-runtime:bundleLibRuntimeToJarDebug
+> Task :llama-runtime:processDebugJavaRes
+> Task :app:testDebugUnitTest
+> Task :litert-compat:preDebugUnitTestBuild
+> Task :litert-compat:generateDebugUnitTestStubRFile
+> Task :litert-compat:compileDebugUnitTestKotlin
+> Task :litert-compat:javaPreCompileDebugUnitTest
+> Task :litert-compat:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :litert-compat:processDebugUnitTestJavaRes
+> Task :litert-compat:testDebugUnitTest
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:compressDebugAssets
+> Task :app:desugarDebugFileDependencies
+> Task :app:dexBuilderDebug
+> Task :app:mergeDebugGlobalSynthetics
+> Task :app:mergeDebugJavaResource
+> Task :app:checkDebugDuplicateClasses
+> Task :app:mergeExtDexDebug
+> Task :llama-runtime:bundleLibRuntimeToDirDebug
+> Task :litert-compat:bundleLibRuntimeToDirDebug
+> Task :app:mergeLibDexDebug
+> Task :app:mergeProjectDexDebug
+
+The message received from the daemon indicates that the daemon has disappeared.
+Build request sent: Build{id=d969ad56-027d-44c4-9058-8daa5c91b6c5, currentDir=/tmp/law-final-clean-e367dc7}
+Attempting to read last messages from the daemon log...
+Daemon pid: 42122
+  log file: /home/agent/.gradle/daemon/8.10.2/daemon-42122.out.log
+----- Last 20 lines from daemon log file - daemon-42122.out.log -----
+2026-10-08T22:28:23.392+0000 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] resetting idle timer
+2026-10-08T22:28:23.393+0000 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] daemon is running. Sleeping until state changes.
+2026-10-08T22:28:23.395+0000 [INFO] [org.gradle.launcher.daemon.server.exec.StartBuildOrRespondWithBusy] Daemon is about to start building Build{id=d969ad56-027d-44c4-9058-8daa5c91b6c5, currentDir=/tmp/law-final-clean-e367dc7}. Dispatching build started information...
+2026-10-08T22:28:23.395+0000 [DEBUG] [org.gradle.launcher.daemon.server.SynchronizedDispatchConnection] thread 21: dispatching org.gradle.launcher.daemon.protocol.BuildStarted@1138214c
+2026-10-08T22:28:23.399+0000 [DEBUG] [org.gradle.launcher.daemon.server.exec.EstablishBuildEnvironment] Configuring env variables: [PATH, CAAS_IMAGE_VERSION, NO_PROXY, https_proxy, GIT_PAGER, CODEX_PRIMARY_RUNTIME, ANDROID_HOME, CODEX_BROWSER_DEFER_ACTIVATION, GH_PAGER, PLAYWRIGHT_NODEJS_PATH, CODEX_PRIMARY_RUNTIME_ROOT, CODEX_EXEC_SERVER_PROXY_PRIVATE_IPS_VIA_UPSTREAM, CODEX_NO_UPDATE, COLORTERM, CODEX_PRIMARY_RUNTIME_BUNDLE_VERSION, NPM_CONFIG_AUDIT, PWD, NETWORK, SHELL, PAGER, REQUESTS_CA_BUNDLE, CODEX_HOME, NPM_CONFIG_PREFIX, GRPC_DEFAULT_SSL_ROOTS_FILE_PATH, NPM_CONFIG_FUND, DEBIAN_FRONTEND, LC_ALL, CODEX_EXEC_SERVER_REMOTE_BASE_URL, LC_CTYPE, CODEX_SESSION_ID, SHLVL, CAAS_IMAGE_GIT_COMMIT_SHA, JAVA_HOME, DOCKER_TLS_CERTDIR, RUST_LOG, CODEX_ENVIRONMENT_ID, CODEX_PRIMARY_RUNTIME_NODE_MODULES, TERM, HTTP_PROXY, LANG, CODEX_APPLY_PATCH_PRESERVE_LINE_ENDINGS, HTTPS_PROXY, NODE_EXTRA_CA_CERTS, CODEX_THREAD_ID, NO_COLOR, CODEX_CAAS_SESSION_ID, NODE_PATH, _, CODEX_CI, http_proxy, SSL_CERT_FILE, no_proxy, CODEX_PRIMARY_RUNTIME_PYTHON, USER, DOCKER_IGNORE_BR_NETFILTER_ERROR, GH_TOKEN, CAAS_DIND_STORAGE_DRIVER, BROWSER_MANAGEMENT_SOCKET_PATH, CODEX_PROXY_CERT, CODEX_PRIMARY_RUNTIME_NODE, CODEX_VERSION, HOME, OPENAI_CLUSTER]
+2026-10-08T22:28:23.407+0000 [DEBUG] [org.gradle.launcher.daemon.server.exec.LogToClient] About to start relaying all logs to the client via the connection.
+2026-10-08T22:28:23.407+0000 [INFO] [org.gradle.launcher.daemon.server.exec.LogToClient] The client will now receive all logging from the daemon (pid: 42122). The daemon log file: /home/agent/.gradle/daemon/8.10.2/daemon-42122.out.log
+2026-10-08T22:28:23.410+0000 [DEBUG] [org.gradle.launcher.daemon.server.exec.RequestStopIfSingleUsedDaemon] Requesting daemon stop after processing Build{id=d969ad56-027d-44c4-9058-8daa5c91b6c5, currentDir=/tmp/law-final-clean-e367dc7}
+2026-10-08T22:28:23.410+0000 [LIFECYCLE] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] Daemon will be stopped at the end of the build 
+2026-10-08T22:28:23.410+0000 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] Stop as soon as idle requested. The daemon is busy
+2026-10-08T22:28:23.412+0000 [DEBUG] [org.gradle.launcher.daemon.server.exec.ExecuteBuild] The daemon has started executing the build.
+2026-10-08T22:28:23.413+0000 [DEBUG] [org.gradle.launcher.daemon.server.exec.ExecuteBuild] Executing build with daemon context: DefaultDaemonContext[uid=1c00b2e3-d029-41c1-baf9-ef91a3d475ed,javaHome=/workspace/.toolchain/jdk-17,javaVersion=17,javaVendor=Eclipse Adoptium,daemonRegistryDir=/home/agent/.gradle/daemon,pid=42122,idleTimeout=120000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-Xmx2048m,-Dfile.encoding=UTF-8,-Duser.country,-Duser.language=en,-Duser.variant]
+2026-10-08T22:28:23.414+0000 [DEBUG] [org.gradle.launcher.daemon.server.DaemonStateCoordinator] daemon stop has been requested. Sleeping until state changes.
+Configuration 'nativeAar' was resolved during configuration time.
+This is a build performance and scalability issue.
+See https://github.com/gradle/gradle/issues/2298
+Run with --info for a stacktrace.
+w: file:///tmp/law-final-clean-e367dc7/litert-compat/src/main/java/com/google/ai/edge/litertlm/Engine.kt:67:40 'val numOfThreads: Int?' is deprecated. Use threadCount instead.
+w: file:///tmp/law-final-clean-e367dc7/litert-compat/src/main/java/com/google/ai/edge/litertlm/Engine.kt:71:40 'val numOfThreads: Int?' is deprecated. Use threadCount instead.
+w: file:///tmp/law-final-clean-e367dc7/app/src/main/java/com/localai/workspace/python/PythonService.kt:32:142 'var databaseEnabled: Boolean' is deprecated. Deprecated in Java.----- End of the daemon log -----
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Gradle build daemon disappeared unexpectedly (it may have been killed or may have crashed)
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+EXIT_CODE=1

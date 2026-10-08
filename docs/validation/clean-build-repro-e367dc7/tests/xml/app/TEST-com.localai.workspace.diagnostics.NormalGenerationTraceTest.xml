@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.diagnostics.NormalGenerationTraceTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-08T23:03:49" hostname="05497ac86eb0" time="0.152">
+  <properties/>
+  <testcase name="corrupt_trace_does_not_block_new_request" classname="com.localai.workspace.diagnostics.NormalGenerationTraceTest" time="0.049"/>
+  <testcase name="timestamps_monotonic_and_report_contains_no_prompt_answer_or_path" classname="com.localai.workspace.diagnostics.NormalGenerationTraceTest" time="0.034"/>
+  <testcase name="old_request_cannot_overwrite_newer_trace" classname="com.localai.workspace.diagnostics.NormalGenerationTraceTest" time="0.026"/>
+  <testcase name="partial_trace_is_durable_and_restart_is_not_success" classname="com.localai.workspace.diagnostics.NormalGenerationTraceTest" time="0.043"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

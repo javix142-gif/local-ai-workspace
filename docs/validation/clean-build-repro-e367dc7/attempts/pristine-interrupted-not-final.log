@@ -1,0 +1,509 @@
+CASE=final_full_host_gate_pristine_worktree
+M00_SOURCE_COMMIT=e367dc75d0f952ef6a9b4e96d51e1263b70d3309
+DATE_UTC=2026-10-08T22:48:38Z
+WORKTREE_SOURCE_SHA=e367dc75d0f952ef6a9b4e96d51e1263b70d3309
+WORKTREE_STATUS=clean
+JAVA_HOME=/workspace/.toolchain/jdk-17
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+JDK17=17.0.20.1; app JVM test worker configured as JDK21; Gradle=8.10.2; AGP=8.7.3; Kotlin=2.0.21; SDK=35; NDK=27.0.12077973; CMake=3.31.6; ABI=arm64-v8a
+JAVA_TOOL_OPTIONS=-Djava.io.tmpdir=/workspace/law-e367dc7-tmp
+COMMAND=JAVA_HOME=/workspace/.toolchain/jdk-17 ANDROID_HOME=/workspace/.toolchain/android-sdk JAVA_TOOL_OPTIONS=-Djava.io.tmpdir=/workspace/law-e367dc7-tmp ./gradlew --no-daemon --no-parallel --max-workers=1 --no-build-cache -Dorg.gradle.jvmargs='-Xmx2048m -Dfile.encoding=UTF-8' -Pkotlin.compiler.execution.strategy=in-process -I docs/validation/skills050/force-test-execution.gradle :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:assembleDebug :app:assembleRelease :app:lintDebug :app:assembleDebugAndroidTest -Parm64Only=true --offline --console=plain
+Picked up JAVA_TOOL_OPTIONS: -Djava.io.tmpdir=/workspace/law-e367dc7-tmp
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.10.2/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Configuration 'nativeAar' was resolved during configuration time.
+This is a build performance and scalability issue.
+See https://github.com/gradle/gradle/issues/2298
+Run with --info for a stacktrace.
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugBuildConfig
+> Task :litert-compat:copyNativeBackend
+> Task :litert-compat:preBuild
+> Task :litert-compat:preDebugBuild
+> Task :litert-compat:writeDebugAarMetadata
+> Task :llama-runtime:preBuild UP-TO-DATE
+> Task :llama-runtime:preDebugBuild UP-TO-DATE
+> Task :llama-runtime:writeDebugAarMetadata
+> Task :app:checkDebugAarMetadata
+> Task :app:generateDebugResValues
+> Task :litert-compat:generateDebugResValues
+> Task :litert-compat:generateDebugResources
+> Task :litert-compat:packageDebugResources
+> Task :llama-runtime:generateDebugResValues
+> Task :llama-runtime:generateDebugResources
+> Task :llama-runtime:packageDebugResources
+> Task :app:mapDebugSourceSetPaths
+> Task :app:generateDebugResources
+> Task :app:mergeDebugResources
+> Task :app:packageDebugResources
+> Task :app:parseDebugLocalResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug
+> Task :litert-compat:extractDeepLinksDebug
+> Task :litert-compat:processDebugManifest
+> Task :llama-runtime:extractDeepLinksDebug
+> Task :llama-runtime:processDebugManifest
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
+> Task :litert-compat:compileDebugLibraryResources
+> Task :litert-compat:parseDebugLocalResources
+> Task :litert-compat:generateDebugRFile
+> Task :llama-runtime:compileDebugLibraryResources
+> Task :llama-runtime:parseDebugLocalResources
+> Task :llama-runtime:generateDebugRFile
+> Task :app:processDebugResources
+> Task :litert-compat:checkKotlinGradlePluginConfigurationErrors SKIPPED
+
+> Task :litert-compat:compileDebugKotlin
+w: file:///workspace/law-final-worktree-e367dc7/litert-compat/src/main/java/com/google/ai/edge/litertlm/Engine.kt:67:40 'val numOfThreads: Int?' is deprecated. Use threadCount instead.
+w: file:///workspace/law-final-worktree-e367dc7/litert-compat/src/main/java/com/google/ai/edge/litertlm/Engine.kt:71:40 'val numOfThreads: Int?' is deprecated. Use threadCount instead.
+
+> Task :litert-compat:javaPreCompileDebug
+> Task :litert-compat:compileDebugJavaWithJavac NO-SOURCE
+> Task :litert-compat:bundleLibCompileToJarDebug
+> Task :llama-runtime:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :llama-runtime:compileDebugKotlin
+> Task :llama-runtime:javaPreCompileDebug
+> Task :llama-runtime:compileDebugJavaWithJavac NO-SOURCE
+> Task :llama-runtime:bundleLibCompileToJarDebug
+> Task :app:kspDebugKotlin
+> Task :app:compileDebugKotlin
+w: file:///workspace/law-final-worktree-e367dc7/app/src/main/java/com/localai/workspace/python/PythonService.kt:32:142 'var databaseEnabled: Boolean' is deprecated. Deprecated in Java.
+
+> Task :app:javaPreCompileDebug
+> Task :app:compileDebugJavaWithJavac
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:kspDebugUnitTestKotlin
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:mergeDebugShaders
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :litert-compat:mergeDebugShaders
+> Task :litert-compat:compileDebugShaders NO-SOURCE
+> Task :litert-compat:generateDebugAssets UP-TO-DATE
+> Task :litert-compat:packageDebugAssets
+> Task :llama-runtime:mergeDebugShaders
+> Task :llama-runtime:compileDebugShaders NO-SOURCE
+> Task :llama-runtime:generateDebugAssets UP-TO-DATE
+> Task :llama-runtime:packageDebugAssets
+> Task :app:mergeDebugAssets
+> Task :app:packageDebugUnitTestForUnitTest
+> Task :app:generateDebugUnitTestConfig
+> Task :app:processDebugJavaRes
+> Task :app:processDebugUnitTestJavaRes
+> Task :litert-compat:bundleLibRuntimeToJarDebug
+> Task :litert-compat:processDebugJavaRes
+> Task :llama-runtime:bundleLibRuntimeToJarDebug
+> Task :llama-runtime:processDebugJavaRes
+
+> Task :app:testDebugUnitTest
+Picked up JAVA_TOOL_OPTIONS: -Djava.io.tmpdir=/workspace/law-e367dc7-tmp
+
+> Task :litert-compat:preDebugUnitTestBuild
+> Task :litert-compat:generateDebugUnitTestStubRFile
+> Task :litert-compat:compileDebugUnitTestKotlin
+> Task :litert-compat:javaPreCompileDebugUnitTest
+> Task :litert-compat:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :litert-compat:processDebugUnitTestJavaRes
+
+> Task :litert-compat:testDebugUnitTest
+Picked up JAVA_TOOL_OPTIONS: -Djava.io.tmpdir=/workspace/law-e367dc7-tmp
+
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:compressDebugAssets
+> Task :app:desugarDebugFileDependencies
+> Task :app:dexBuilderDebug
+> Task :app:mergeDebugGlobalSynthetics
+> Task :app:mergeDebugJavaResource
+> Task :app:checkDebugDuplicateClasses
+> Task :app:mergeExtDexDebug
+> Task :llama-runtime:bundleLibRuntimeToDirDebug
+> Task :litert-compat:bundleLibRuntimeToDirDebug
+> Task :app:mergeLibDexDebug
+> Task :app:mergeProjectDexDebug
+> Task :app:mergeDebugJniLibFolders
+> Task :litert-compat:mergeDebugJniLibFolders
+> Task :litert-compat:mergeDebugNativeLibs
+> Task :litert-compat:copyDebugJniLibsProjectOnly
+> Task :llama-runtime:preReleaseBuild UP-TO-DATE
+
+> Task :llama-runtime:configureCMakeRelease[arm64-v8a]
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/cmake/3.31.6/share/cmake-3.31/Modules/CMakeDetermineSystem.cmake:146 (include)
+C/C++:   CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /workspace/.toolchain/android-sdk/cmake/3.31.6/share/cmake-3.31/Modules/CMakeDetermineSystem.cmake:146 (include)
+C/C++:   CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-3rJQfw/CMakeLists.txt:2 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-3rJQfw/CMakeLists.txt:2 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-MhxJWN/CMakeLists.txt:2 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-MhxJWN/CMakeLists.txt:2 (project)
+C/C++: CMAKE_BUILD_TYPE=Release
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-vm4J6Y/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-vm4J6Y/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-EI9fwq/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-EI9fwq/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-zHGwYp/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-zHGwYp/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-waj6mi/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-waj6mi/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-iRVeyK/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-iRVeyK/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-zuKGWo/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-zuKGWo/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-SozRWq/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-SozRWq/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-nPVBLO/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-nPVBLO/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-2LrEfP/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-2LrEfP/CMakeLists.txt:3 (project)
+C/C++: CMake Warning (dev) at /workspace/.toolchain/android-sdk/cmake/3.31.6/share/cmake-3.31/Modules/FetchContent.cmake:1953 (message):
+C/C++:   Calling FetchContent_Populate(kleidiai) is deprecated, call
+C/C++:   FetchContent_MakeAvailable(kleidiai) instead.  Policy CMP0169 can be set to
+C/C++:   OLD to allow FetchContent_Populate(kleidiai) to be called directly for now,
+C/C++:   but the ability to call it with declared details will be removed completely
+C/C++:   in a future version.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/law-final-worktree-e367dc7/third_party/llama.cpp/ggml/src/ggml-cpu/CMakeLists.txt:675 (FetchContent_Populate)
+C/C++:   /workspace/law-final-worktree-e367dc7/third_party/llama.cpp/ggml/src/CMakeLists.txt:586 (ggml_add_cpu_backend_variant_impl)
+C/C++: This warning is for project developers.  Use -Wno-dev to suppress it.
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-1XGBtW/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-1XGBtW/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-A5rpUf/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-A5rpUf/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-uq5aZX/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-uq5aZX/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-TjCTUQ/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-TjCTUQ/CMakeLists.txt:3 (project)
+C/C++: CMake Warning at /workspace/law-final-worktree-e367dc7/third_party/llama.cpp/common/CMakeLists.txt:33 (message):
+C/C++:   Git repository not found; to enable automatic generation of build info,
+C/C++:   make sure Git is installed and the project is a Git repository.
+
+> Task :llama-runtime:buildCMakeRelease[arm64-v8a]
+C/C++: ninja: Entering directory `/workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a'
+C/C++: /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qsi8d32pscalef32_f16_neon.c:104:34: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   104 |             const float scale0 = absmax == 0.0F ? 0.0F : qmax / absmax;
+C/C++:       |                                  ^~~~~~ ~~
+C/C++: /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qsi8d32pscalef32_f16_neon.c:104:65: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   104 |             const float scale0 = absmax == 0.0F ? 0.0F : qmax / absmax;
+C/C++:       |                                                               ~ ^~~~~~
+C/C++: /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qsi8d32pscalef32_f16_neon.c:117:55: warning: implicit conversion increases floating-point precision: 'const float16_t' (aka 'const __fp16') to 'float' [-Wdouble-promotion]
+C/C++:   117 |                     int32_t v0_s32 = (int32_t)(roundf(src0_0 * scale0));
+C/C++:       |                                                       ^~~~~~ ~
+C/C++: 3 warnings generated.
+C/C++: /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:153:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   153 |             const float rmin0 = fminf(0.0F, min0);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:154:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   154 |             const float rmax0 = fmaxf(0.0F, max0);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:156:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   156 |             const float rmin1 = fminf(0.0F, min1);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:157:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   157 |             const float rmax1 = fmaxf(0.0F, max1);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:159:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   159 |             const float rmin2 = fminf(0.0F, min2);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:160:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   160 |             const float rmax2 = fmaxf(0.0F, max2);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:162:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   162 |             const float rmin3 = fminf(0.0F, min3);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:163:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   163 |             const float rmax3 = fmaxf(0.0F, max3);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:393:41: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   393 |         const float rmin0 = fminf(0.0F, min0);
+C/C++:       |                             ~~~~~       ^~~~
+C/C++: /workspace/law-final-worktree-e367dc7/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:394:41: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   394 |         const float rmax0 = fmaxf(0.0F, max0);
+C/C++:       |                             ~~~~~       ^~~~
+C/C++: 10 warnings generated.
+EXIT_CODE=130

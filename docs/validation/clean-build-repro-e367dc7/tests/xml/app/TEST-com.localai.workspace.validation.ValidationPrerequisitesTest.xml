@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.validation.ValidationPrerequisitesTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-08T23:04:17" hostname="05497ac86eb0" time="0.43">
+  <properties/>
+  <testcase name="missingGemmaIsBlockedAndNeverPassed" classname="com.localai.workspace.validation.ValidationPrerequisitesTest" time="0.161"/>
+  <testcase name="anotherBenchmarkPreventsReservationAndPreferenceChanges" classname="com.localai.workspace.validation.ValidationPrerequisitesTest" time="0.1"/>
+  <testcase name="aFakeLiteRtCannotProduceADevicePass" classname="com.localai.workspace.validation.ValidationPrerequisitesTest" time="0.165"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

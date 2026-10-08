@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.data.LiteRtChatDefaultsUpgradeTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-08T23:03:41" hostname="05497ac86eb0" time="0.585">
+  <properties/>
+  <testcase name="customizedTuplesAndGgufKeepAllSettings" classname="com.localai.workspace.data.LiteRtChatDefaultsUpgradeTest" time="0.169"/>
+  <testcase name="previousUpdateDefaultIsCorrectedButLaterDeliberateSmallLimitIsPreserved" classname="com.localai.workspace.data.LiteRtChatDefaultsUpgradeTest" time="0.131"/>
+  <testcase name="originalDefaultsUpgradeToLargerCeilingWithoutChangingFilesContextOrRoomSchema" classname="com.localai.workspace.data.LiteRtChatDefaultsUpgradeTest" time="0.14"/>
+  <testcase name="deletedModelDoesNotReappearAndMissingIdsStayMissing" classname="com.localai.workspace.data.LiteRtChatDefaultsUpgradeTest" time="0.143"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

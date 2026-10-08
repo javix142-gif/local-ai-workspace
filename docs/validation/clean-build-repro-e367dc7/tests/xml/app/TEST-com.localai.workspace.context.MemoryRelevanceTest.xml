@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.context.MemoryRelevanceTest" tests="16" skipped="0" failures="0" errors="0" timestamp="2026-10-08T23:03:31" hostname="05497ac86eb0" time="0.929">
+  <properties/>
+  <testcase name="small_talk_foundation_avoids_embedding_gate_and_memory_budget" classname="com.localai.workspace.context.MemoryRelevanceTest" time="0.088"/>
+  <testcase name="many_memories_only_relevant_items_selected" classname="com.localai.workspace.context.MemoryRelevanceTest" time="0.124"/>
+  <testcase name="structured_exact_match_survives_gate" classname="com.localai.workspace.context.MemoryRelevanceTest" time="0.041"/>
+  <testcase name="irrelevant_memory_is_dropped" classname="com.localai.workspace.context.MemoryRelevanceTest" time="0.042"/>
+  <testcase name="relevant_memory_is_included" classname="com.localai.workspace.context.MemoryRelevanceTest" time="0.053"/>
+  <testcase name="lexical_fallback_has_own_relevance_gate" classname="com.localai.workspace.context.MemoryRelevanceTest" time="0.045"/>
+  <testcase name="important_irrelevant_memory_is_dropped" classname="com.localai.workspace.context.MemoryRelevanceTest" time="0.043"/>
+  <testcase name="semantic_nonfinite_never_passes_gate" classname="com.localai.workspace.context.MemoryRelevanceTest" time="0.035"/>
+  <testcase name="no_candidate_above_threshold_returns_empty" classname="com.localai.workspace.context.MemoryRelevanceTest" time="0.053"/>
+  <testcase name="semantic_gate_is_independent_of_ranking_bonus" classname="com.localai.workspace.context.MemoryRelevanceTest" time="0.037"/>
+  <testcase name="project_memory_scope_and_relevance" classname="com.localai.workspace.context.MemoryRelevanceTest" time="0.064"/>
+  <testcase name="greeting_plus_real_query_does_not_skip_memory" classname="com.localai.workspace.context.MemoryRelevanceTest" time="0.041"/>
+  <testcase name="user_memory_does_not_pollute_project_query" classname="com.localai.workspace.context.MemoryRelevanceTest" time="0.069"/>
+  <testcase name="pinned_irrelevant_memory_is_dropped" classname="com.localai.workspace.context.MemoryRelevanceTest" time="0.078"/>
+  <testcase name="diagnostics_do_not_export_dropped_content" classname="com.localai.workspace.context.MemoryRelevanceTest" time="0.053"/>
+  <testcase name="small_talk_skips_memory" classname="com.localai.workspace.context.MemoryRelevanceTest" time="0.061"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

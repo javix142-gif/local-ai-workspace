@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.LiteRtModelIntegrityTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-08T23:03:51" hostname="05497ac86eb0" time="0.021">
+  <properties/>
+  <testcase name="integrityProgressReportsActualBytesWithoutClaimingUnhashedFilesWereVerified" classname="com.localai.workspace.inference.LiteRtModelIntegrityTest" time="0.011"/>
+  <testcase name="rejectsCorruptionAndIncompatibleFormatMajor" classname="com.localai.workspace.inference.LiteRtModelIntegrityTest" time="0.003"/>
+  <testcase name="detectsModificationAfterImportAndIncompleteFiles" classname="com.localai.workspace.inference.LiteRtModelIntegrityTest" time="0.003"/>
+  <testcase name="streamedHashValidationIsCancellable" classname="com.localai.workspace.inference.LiteRtModelIntegrityTest" time="0.001"/>
+  <testcase name="validatesFormatVersionSizeAndActualSha256" classname="com.localai.workspace.inference.LiteRtModelIntegrityTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

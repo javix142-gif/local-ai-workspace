@@ -1,0 +1,876 @@
+CASE=clean_checkout_base_release_repro_no_task_cache
+COMMIT=f4695b5644f1230b5f711ec8300937027fb39941
+DATE_UTC=2026-10-08T22:21:28Z
+COMMAND=JAVA_HOME=/workspace/.toolchain/jdk-17 ANDROID_HOME=/workspace/.toolchain/android-sdk ./gradlew :app:assembleRelease -Parm64Only=true --offline --rerun-tasks --no-build-cache --no-daemon --no-parallel --max-workers=1 --console=plain
+WORKTREE_STATUS=clean
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.10.2/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Configuration 'nativeAar' was resolved during configuration time.
+This is a build performance and scalability issue.
+See https://github.com/gradle/gradle/issues/2298
+Run with --info for a stacktrace.
+> Task :app:buildKotlinToolingMetadata
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preReleaseBuild UP-TO-DATE
+> Task :app:generateReleaseBuildConfig
+> Task :litert-compat:copyNativeBackend
+> Task :litert-compat:preBuild
+> Task :litert-compat:preReleaseBuild
+> Task :litert-compat:writeReleaseAarMetadata
+> Task :llama-runtime:preBuild UP-TO-DATE
+> Task :llama-runtime:preReleaseBuild UP-TO-DATE
+> Task :llama-runtime:writeReleaseAarMetadata
+> Task :app:checkReleaseAarMetadata
+> Task :app:generateReleaseResValues
+> Task :litert-compat:generateReleaseResValues
+> Task :litert-compat:generateReleaseResources
+> Task :litert-compat:packageReleaseResources
+> Task :llama-runtime:generateReleaseResValues
+> Task :llama-runtime:generateReleaseResources
+> Task :llama-runtime:packageReleaseResources
+> Task :app:mapReleaseSourceSetPaths
+> Task :app:generateReleaseResources
+> Task :app:mergeReleaseResources
+> Task :app:packageReleaseResources
+> Task :app:parseReleaseLocalResources
+> Task :app:createReleaseCompatibleScreenManifests
+> Task :app:extractDeepLinksRelease
+> Task :litert-compat:extractDeepLinksRelease
+> Task :litert-compat:processReleaseManifest
+> Task :llama-runtime:extractDeepLinksRelease
+> Task :llama-runtime:processReleaseManifest
+> Task :app:processReleaseMainManifest
+> Task :app:processReleaseManifest
+> Task :app:processReleaseManifestForPackage
+> Task :litert-compat:compileReleaseLibraryResources
+> Task :litert-compat:parseReleaseLocalResources
+> Task :litert-compat:generateReleaseRFile
+> Task :llama-runtime:compileReleaseLibraryResources
+> Task :llama-runtime:parseReleaseLocalResources
+> Task :llama-runtime:generateReleaseRFile
+> Task :app:processReleaseResources
+> Task :litert-compat:checkKotlinGradlePluginConfigurationErrors SKIPPED
+
+> Task :litert-compat:compileReleaseKotlin
+w: file:///tmp/law-clean-repro-J9h1pc/litert-compat/src/main/java/com/google/ai/edge/litertlm/Engine.kt:67:40 'val numOfThreads: Int?' is deprecated. Use threadCount instead.
+w: file:///tmp/law-clean-repro-J9h1pc/litert-compat/src/main/java/com/google/ai/edge/litertlm/Engine.kt:71:40 'val numOfThreads: Int?' is deprecated. Use threadCount instead.
+
+> Task :litert-compat:javaPreCompileRelease
+> Task :litert-compat:compileReleaseJavaWithJavac NO-SOURCE
+> Task :litert-compat:bundleLibCompileToJarRelease
+> Task :llama-runtime:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :llama-runtime:compileReleaseKotlin
+> Task :llama-runtime:javaPreCompileRelease
+> Task :llama-runtime:compileReleaseJavaWithJavac NO-SOURCE
+> Task :llama-runtime:bundleLibCompileToJarRelease
+> Task :app:kspReleaseKotlin
+> Task :app:compileReleaseKotlin
+w: file:///tmp/law-clean-repro-J9h1pc/app/src/main/java/com/localai/workspace/python/PythonService.kt:32:142 'var databaseEnabled: Boolean' is deprecated. Deprecated in Java.
+
+> Task :app:javaPreCompileRelease
+> Task :app:compileReleaseJavaWithJavac
+> Task :app:extractProguardFiles
+> Task :litert-compat:bundleLibRuntimeToJarRelease
+> Task :litert-compat:processReleaseJavaRes
+> Task :litert-compat:createFullJarRelease
+> Task :litert-compat:extractProguardFiles
+> Task :litert-compat:generateReleaseLintModel
+> Task :litert-compat:prepareLintJarForPublish
+> Task :llama-runtime:bundleLibRuntimeToJarRelease
+> Task :llama-runtime:processReleaseJavaRes
+> Task :llama-runtime:createFullJarRelease
+> Task :llama-runtime:extractProguardFiles
+> Task :llama-runtime:generateReleaseLintModel
+> Task :llama-runtime:prepareLintJarForPublish
+> Task :app:generateReleaseLintVitalReportModel
+
+> Task :llama-runtime:configureCMakeRelease[arm64-v8a]
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/cmake/3.31.6/share/cmake-3.31/Modules/CMakeDetermineSystem.cmake:146 (include)
+C/C++:   CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /workspace/.toolchain/android-sdk/cmake/3.31.6/share/cmake-3.31/Modules/CMakeDetermineSystem.cmake:146 (include)
+C/C++:   CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-abCgwO/CMakeLists.txt:2 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-abCgwO/CMakeLists.txt:2 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-OMdd57/CMakeLists.txt:2 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-OMdd57/CMakeLists.txt:2 (project)
+C/C++: CMAKE_BUILD_TYPE=Release
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-SpBvYU/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-SpBvYU/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-EDOM73/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-EDOM73/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-cnzSJY/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-cnzSJY/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-reFs2j/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-reFs2j/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-oyM3B8/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-oyM3B8/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-McydDr/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-McydDr/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-iieCFH/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-iieCFH/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-rJOTaB/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-rJOTaB/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-JVvZ7K/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-JVvZ7K/CMakeLists.txt:3 (project)
+C/C++: CMake Warning (dev) at /workspace/.toolchain/android-sdk/cmake/3.31.6/share/cmake-3.31/Modules/FetchContent.cmake:1953 (message):
+C/C++:   Calling FetchContent_Populate(kleidiai) is deprecated, call
+C/C++:   FetchContent_MakeAvailable(kleidiai) instead.  Policy CMP0169 can be set to
+C/C++:   OLD to allow FetchContent_Populate(kleidiai) to be called directly for now,
+C/C++:   but the ability to call it with declared details will be removed completely
+C/C++:   in a future version.
+C/C++: Call Stack (most recent call first):
+C/C++:   /tmp/law-clean-repro-J9h1pc/third_party/llama.cpp/ggml/src/ggml-cpu/CMakeLists.txt:675 (FetchContent_Populate)
+C/C++:   /tmp/law-clean-repro-J9h1pc/third_party/llama.cpp/ggml/src/CMakeLists.txt:586 (ggml_add_cpu_backend_variant_impl)
+C/C++: This warning is for project developers.  Use -Wno-dev to suppress it.
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-1Iou4I/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-1Iou4I/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-b5q9ZF/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-b5q9ZF/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-m0hwJR/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-m0hwJR/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-Cgyt9N/CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/CMakeScratch/TryCompile-Cgyt9N/CMakeLists.txt:3 (project)
+C/C++: CMake Warning at /tmp/law-clean-repro-J9h1pc/third_party/llama.cpp/common/CMakeLists.txt:33 (message):
+C/C++:   Git repository not found; to enable automatic generation of build info,
+C/C++:   make sure Git is installed and the project is a Git repository.
+
+> Task :llama-runtime:buildCMakeRelease[arm64-v8a]
+C/C++: ninja: Entering directory `/tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a'
+C/C++: /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qsi8d32pscalef32_f16_neon.c:104:34: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   104 |             const float scale0 = absmax == 0.0F ? 0.0F : qmax / absmax;
+C/C++:       |                                  ^~~~~~ ~~
+C/C++: /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qsi8d32pscalef32_f16_neon.c:104:65: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   104 |             const float scale0 = absmax == 0.0F ? 0.0F : qmax / absmax;
+C/C++:       |                                                               ~ ^~~~~~
+C/C++: /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qsi8d32pscalef32_f16_neon.c:117:55: warning: implicit conversion increases floating-point precision: 'const float16_t' (aka 'const __fp16') to 'float' [-Wdouble-promotion]
+C/C++:   117 |                     int32_t v0_s32 = (int32_t)(roundf(src0_0 * scale0));
+C/C++:       |                                                       ^~~~~~ ~
+C/C++: 3 warnings generated.
+C/C++: /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:153:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   153 |             const float rmin0 = fminf(0.0F, min0);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:154:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   154 |             const float rmax0 = fmaxf(0.0F, max0);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:156:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   156 |             const float rmin1 = fminf(0.0F, min1);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:157:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   157 |             const float rmax1 = fmaxf(0.0F, max1);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:159:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   159 |             const float rmin2 = fminf(0.0F, min2);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:160:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   160 |             const float rmax2 = fmaxf(0.0F, max2);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:162:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   162 |             const float rmin3 = fminf(0.0F, min3);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:163:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   163 |             const float rmax3 = fmaxf(0.0F, max3);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:393:41: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   393 |         const float rmin0 = fminf(0.0F, min0);
+C/C++:       |                             ~~~~~       ^~~~
+C/C++: /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:394:41: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   394 |         const float rmax0 = fmaxf(0.0F, max0);
+C/C++:       |                             ~~~~~       ^~~~
+C/C++: 10 warnings generated.
+C/C++: /workspace/.toolchain/android-sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android29 --sysroot=/workspace/.toolchain/android-sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/linux-x86_64/sysroot -DGGML_BACKEND_DL -DGGML_SHARED -DLLAMA_BUILD -DLLAMA_SHARED -Dllama_EXPORTS -I/tmp/law-clean-repro-J9h1pc/third_party/llama.cpp/src/. -I/tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/build-llama/src -I/tmp/law-clean-repro-J9h1pc/third_party/llama.cpp/src/../include -I/tmp/law-clean-repro-J9h1pc/third_party/llama.cpp/ggml/src/../include -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -O3 -DNDEBUG  -std=gnu++17 -fPIC -Xclang -fno-pch-timestamp -Wmissing-declarations -Wmissing-noreturn -Wall -Wextra -Wpedantic -Wcast-qual -Wno-unused-function -Wunreachable-code-break -Wunreachable-code-return -Wmissing-prototypes -Wextra-semi -MD -MT build-llama/src/CMakeFiles/llama.dir/llama-model.cpp.o -MF build-llama/src/CMakeFiles/llama.dir/llama-model.cpp.o.d -o build-llama/src/CMakeFiles/llama.dir/llama-model.cpp.o -c /tmp/law-clean-repro-J9h1pc/third_party/llama.cpp/src/llama-model.cpp
+C/C++: /tmp/law-clean-repro-J9h1pc/third_party/llama.cpp/src/llama-model.cpp:23:10: fatal error: 'models/models.h' file not found
+C/C++:    23 | #include "models/models.h"
+C/C++:       |          ^~~~~~~~~~~~~~~~~
+C/C++: 1 error generated.
+
+> Task :llama-runtime:buildCMakeRelease[arm64-v8a] FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':llama-runtime:buildCMakeRelease[arm64-v8a]'.
+> com.android.ide.common.process.ProcessException: ninja: Entering directory `/tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a'
+  [1/399] Building C object build-llama/ggml/src/CMakeFiles/ggml-base.dir/ggml-alloc.c.o
+  [2/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml-base.dir/ggml.cpp.o
+  [3/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml-base.dir/ggml-threading.cpp.o
+  [4/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml-base.dir/ggml-opt.cpp.o
+  [5/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml-base.dir/ggml-backend.cpp.o
+  [6/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f32.c.o
+  [7/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qsi8d32p_f32.c.o
+  [8/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_qsi4c32p_qsu4c32s1s0.c.o
+  [9/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_qsi4cxp_qs4cxs1s0.c.o
+  [10/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_nxk_qsi4c32p_qsu4c32s1s0.c.o
+  [11/399] Building C object build-llama/ggml/src/CMakeFiles/ggml-base.dir/ggml.c.o
+  [12/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_nxk_qsi4c32pscalef16_qsu4c32s16s0.c.o
+  [13/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_nxk_qsi4cxp_qs4cxs1s0.c.o
+  [14/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32_f32p/kai_matmul_clamp_f32_f32_f32p16x1b_6x16_neon_mla_asm.S.o
+  [15/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32_f32p/kai_matmul_clamp_f32_f32_f32p16x1b_6x16_neon_mla_cortexa55_asm.S.o
+  [16/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32_f32p/kai_matmul_clamp_f32_f32_f32p16x1b_6x16_neon_mla_cortexa55.c.o
+  [17/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32_f32p/kai_matmul_clamp_f32_f32_f32p8x1biasf32_6x8x4_neon_mla_asm.S.o
+  [18/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32_f32p/kai_matmul_clamp_f32_f32_f32p16x1b_6x16_neon_mla.c.o
+  [19/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32_f32p/kai_matmul_clamp_f32_f32_f32p8x1biasf32_6x8x4_neon_mla.c.o
+  [20/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qsi8d32p_f32_neon.c.o
+  [21/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_bf16_neon.c.o
+  [22/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qsi8d32p4x8sb_f32_neon.c.o
+  [23/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qsi8d32pscalef32_f32_neon.c.o
+  [24/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_x32p16x1b_x32_x32_neon_asm.S.o
+  [25/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_qsi8cxp_qsi8cx_neon.c.o
+  [26/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_x32p16x1b_x32_x32_neon.c.o
+  [27/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_nxk_qai4c32p_qau4c32s0s1_f32_f32_f32_neon.c.o
+  [28/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_nxk_qai4c32ps1s0nrx4_qau4c32s1s0_f32_f32_f32_neon.c.o
+  [29/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_nxk_qai4c32ps1s0nrx4_qau4c32s0s1_f32_f32_f32_neon.c.o
+  [30/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_nxk_qsi4c32pnrx4_qsu4c32s1s0_neon.c.o
+  [31/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_nxk_qsi4c32pnrx8_qsu4c32s1s0_neon.c.o
+  [32/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_nxk_qsi4c32ps1s0nrx4_qsu4c32s1s0_neon.c.o
+  [33/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_nxk_qsi4c32ps1s0scalef16_qsu4c32s16s0_neon.c.o
+  [34/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_nxk_qsi4cxps1s0_qsu4cxs1s0_neon.c.o
+  [35/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_nxk_qsi8cxp_qsi8cx_neon.c.o
+  [36/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_nxk_qsu2cxp4vlx4_qsu2cx_neon.c.o
+  [37/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_f16_f16p/kai_matmul_clamp_f16_f16_f16p32x1b_6x32_neon_mla_asm.S.o
+  [38/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_f32p8x1biasf32_f32_f32_neon.c.o
+  [39/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_f16_f16p/kai_matmul_clamp_f16_f16_f16p32x1b_6x32_neon_mla_cortexa55_asm.S.o
+  [40/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_f16_f16p/kai_matmul_clamp_f16_f16_f16p32x1b_6x32_neon_mla.c.o
+  [41/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_f16_f16p/kai_matmul_clamp_f16_f16_f16p32x1b_6x32_neon_mla_cortexa55.c.o
+  [42/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_pack_f16pmrx2_f32_neon.c.o
+  [43/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_x16p32x1b_x16_x16_neon_asm.S.o
+  [44/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_x16p32x1b_x16_x16_neon.c.o
+  [45/399] Building C object build-llama/ggml/src/CMakeFiles/ggml-base.dir/ggml-quants.c.o
+  [46/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_f16_f16p/kai_matmul_clamp_f16_f16_f16p16x1biasf16_6x16x8_neon_mla.c.o
+  [47/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_f16p16x1biasf16_f16_f16_neon.c.o
+  [48/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qai8dxp_qsi4cxp/kai_matmul_clamp_f16_qai8dxp1x4_qsi4cxp4x4_1x4_neon_dotprod_asm.S.o
+  [49/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qsi8d32pscalef32_f16_neon.c.o
+  /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qsi8d32pscalef32_f16_neon.c:104:34: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+    104 |             const float scale0 = absmax == 0.0F ? 0.0F : qmax / absmax;
+        |                                  ^~~~~~ ~~
+  /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qsi8d32pscalef32_f16_neon.c:104:65: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+    104 |             const float scale0 = absmax == 0.0F ? 0.0F : qmax / absmax;
+        |                                                               ~ ^~~~~~
+  /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qsi8d32pscalef32_f16_neon.c:117:55: warning: implicit conversion increases floating-point precision: 'const float16_t' (aka 'const __fp16') to 'float' [-Wdouble-promotion]
+    117 |                     int32_t v0_s32 = (int32_t)(roundf(src0_0 * scale0));
+        |                                                       ^~~~~~ ~
+  3 warnings generated.
+  [50/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qai8dxp_qsi4cxp/kai_matmul_clamp_f16_qai8dxp1x8_qsi4cxp4x8_1x4_neon_dotprod_asm.S.o
+  [51/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c.o
+  /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:153:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+    153 |             const float rmin0 = fminf(0.0F, min0);
+        |                                 ~~~~~       ^~~~
+  /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:154:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+    154 |             const float rmax0 = fmaxf(0.0F, max0);
+        |                                 ~~~~~       ^~~~
+  /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:156:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+    156 |             const float rmin1 = fminf(0.0F, min1);
+        |                                 ~~~~~       ^~~~
+  /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:157:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+    157 |             const float rmax1 = fmaxf(0.0F, max1);
+        |                                 ~~~~~       ^~~~
+  /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:159:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+    159 |             const float rmin2 = fminf(0.0F, min2);
+        |                                 ~~~~~       ^~~~
+  /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:160:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+    160 |             const float rmax2 = fmaxf(0.0F, max2);
+        |                                 ~~~~~       ^~~~
+  /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:162:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+    162 |             const float rmin3 = fminf(0.0F, min3);
+        |                                 ~~~~~       ^~~~
+  /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:163:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+    163 |             const float rmax3 = fmaxf(0.0F, max3);
+        |                                 ~~~~~       ^~~~
+  /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:393:41: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+    393 |         const float rmin0 = fminf(0.0F, min0);
+        |                             ~~~~~       ^~~~
+  /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:394:41: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+    394 |         const float rmax0 = fmaxf(0.0F, max0);
+        |                             ~~~~~       ^~~~
+  10 warnings generated.
+  [52/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qai8dxp_qsi4cxp/kai_matmul_clamp_f16_qai8dxp4x4_qsi4cxp4x4_16x4_neon_dotprod_asm.S.o
+  [53/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qai8dxp_qsi4cxp/kai_matmul_clamp_f16_qai8dxp1x8_qsi4cxp4x8_1x4_neon_dotprod.c.o
+  [54/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qai8dxp_qsi4cxp/kai_matmul_clamp_f16_qai8dxp1x4_qsi4cxp4x4_1x4_neon_dotprod.c.o
+  [55/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qai8dxp_qsi8cxp/kai_matmul_clamp_f16_qai8dxp1x4_qsi8cxp4x4_1x4_neon_dotprod_asm.S.o
+  [56/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml-base.dir/ggml-backend-meta.cpp.o
+  [57/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qai8dxp_qsi8cxp/kai_matmul_clamp_f16_qai8dxp1x8_qsi8cxp4x8_1x4_neon_dotprod_asm.S.o
+  [58/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qai8dxp_qsi4cxp/kai_matmul_clamp_f16_qai8dxp4x4_qsi4cxp4x4_16x4_neon_dotprod.c.o
+  [59/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qai8dxp_qsi8cxp/kai_matmul_clamp_f16_qai8dxp4x4_qsi8cxp4x4_16x4_neon_dotprod_asm.S.o
+  [60/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qai8dxp_qsi8cxp/kai_matmul_clamp_f16_qai8dxp1x4_qsi8cxp4x4_1x4_neon_dotprod.c.o
+  [61/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qai8dxp_qsi8cxp/kai_matmul_clamp_f16_qai8dxp4x4_qsi8cxp4x4_16x4_neon_dotprod.c.o
+  [62/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qsi8d32p_qai4c32p/kai_matmul_clamp_f16_qsi8d32p1x8_qai4c32p4x8_1x4_neon_dotprod_asm.S.o
+  [63/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qai8dxp_qsi8cxp/kai_matmul_clamp_f16_qai8dxp1x8_qsi8cxp4x8_1x4_neon_dotprod.c.o
+  [64/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qsi8d32p_qai4c32p/kai_matmul_clamp_f16_qsi8d32p1x4_qai4c32p4x4_1x4_neon_dotprod_asm.S.o
+  [65/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qsi8d32p_qai4c32p/kai_matmul_clamp_f16_qsi8d32p4x4_qai4c32p4x4_8x4_neon_dotprod_asm.S.o
+  [66/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qsi8d32p_qai4c32p/kai_matmul_clamp_f16_qsi8d32p1x4_qai4c32p4x4_1x4_neon_dotprod.c.o
+  [67/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qsi8d32p_qai4c32p/kai_matmul_clamp_f16_qsi8d32p4x4_qai4c32p4x4_8x4_neon_dotprod.c.o
+  [68/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qsi8d32p_qai4c32p/kai_matmul_clamp_f16_qsi8d32p4x8_qai4c32p4x8_8x4_neon_i8mm_asm.S.o
+  [69/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qsi8d32p_qai4c32p/kai_matmul_clamp_f16_qsi8d32p4x8_qai4c32p4x8_8x4_neon_i8mm.c.o
+  [70/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qai8dxp_qsi4cxp/kai_matmul_clamp_f16_qai8dxp4x8_qsi4cxp4x8_16x4_neon_i8mm_asm.S.o
+  [71/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qsi8d32p_qai4c32p/kai_matmul_clamp_f16_qsi8d32p1x8_qai4c32p4x8_1x4_neon_dotprod.c.o
+  [72/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qai8dxp_qsi8cxp/kai_matmul_clamp_f16_qai8dxp4x8_qsi8cxp4x8_16x4_neon_i8mm_asm.S.o
+  [73/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qai8dxp_qsi8cxp/kai_matmul_clamp_f16_qai8dxp4x8_qsi8cxp4x8_16x4_neon_i8mm.c.o
+  [74/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qai8dxp_qsi4cxp/kai_matmul_clamp_f16_qai8dxp4x8_qsi4cxp4x8_16x4_neon_i8mm.c.o
+  [75/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_quant_pack_bf16p1x4_f32_neon.c.o
+  [76/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_bf16p_bf16p/kai_matmul_clamp_f32_bf16p8x4_bf16p12x4b_8x12_neon_mmla.c.o
+  [77/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_quant_pack_bf16p8x4_f32_neon.c.o
+  [78/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_bf16_qai8dxp_qsi4cxp/kai_matmul_clamp_bf16_qai8dxp1x8_qsi4cxp8x8_1x8_neon_dotprod_asm.S.o
+  [79/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_bf16p_bf16p/kai_matmul_clamp_f32_bf16p1x4_bf16p12x4b_1x36_neon_dot.c.o
+  [80/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_bf16_qai8dxp_qsi4c32p/kai_matmul_clamp_bf16_qai8dxp1x8_qsi4c32p4x8_1x4_neon_dotprod_asm.S.o
+  [81/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_bf16_qai8dxp_qsi4c32p/kai_matmul_clamp_bf16_qai8dxp1x8_qsi4c32p4x8_1x4_neon_dotprod.c.o
+  [82/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_quant_pack_kxn_bf16p12x4biasf32_f32_neon.c.o
+  [83/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_bf16_qai8dxp_qsi4cxp/kai_matmul_clamp_bf16_qai8dxp4x8_qsi4cxp8x8_8x8_neon_i8mm_asm.S.o
+  [84/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_bf16_qai8dxp_qsi4cxp/kai_matmul_clamp_bf16_qai8dxp4x8_qsi4cxp8x8_8x8_neon_i8mm.c.o
+  [85/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_bf16_qai8dxp_qsi4cxp/kai_matmul_clamp_bf16_qai8dxp1x8_qsi4cxp8x8_1x8_neon_dotprod.c.o
+  [86/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_bf16_qai8dxp_qsi4c32p/kai_matmul_clamp_bf16_qai8dxp4x8_qsi4c32p4x8_16x4_neon_i8mm_asm.S.o
+  [87/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_qsi4c32ps1s0nrx4_qsu4c32s1s0_neon.c.o
+  [88/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_bf16p12x4biasf16_f16_neon.c.o
+  [89/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_bf16_qai8dxp_qsi4c32p/kai_matmul_clamp_bf16_qai8dxp4x8_qsi4c32p4x8_16x4_neon_i8mm.c.o
+  [90/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_bf16p_bf16p/kai_matmul_clamp_f16_bf16p8x4_bf16p12x4b_8x12_neon_mmla.c.o
+  [91/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp1x4_qsi4c32p4x4_1x4_neon_dotprod_asm.S.o
+  [92/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_pack_bf16p8x4_f16_neon.c.o
+  [93/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp1x4_qsi4c32p4x4_1x4_neon_dotprod.c.o
+  [94/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp1x4_qsi4c32p8x4_1x8_neon_dotprod_asm.S.o
+  [95/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_bf16p12x4biasf32_f16_neon.c.o
+  [96/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp1x8_qsi4c32p4x8_1x4x32_neon_dotprod_asm.S.o
+  [97/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp1x8_qsi4c32p4x8_1x4x32_neon_dotprod.c.o
+  [98/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp1x8_qsi4c32p8x8_1x8_neon_dotprod_asm.S.o
+  [99/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp1x4_qsi4c32p8x4_1x8_neon_dotprod.c.o
+  [100/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp1x8_qsi4c32p8x8_1x8x32_neon_dotprod_asm.S.o
+  [101/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp1x8_qsi4c32p8x8_1x8x32_neon_dotprod.c.o
+  [102/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp4x4_qsi4c32p4x4_16x4_neon_dotprod_asm.S.o
+  [103/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp1x8_qsi4c32p8x8_1x8_neon_dotprod.c.o
+  [104/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp4x4_qsi4c32p8x4_4x8_neon_dotprod.c.o
+  [105/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp4x4_qsi4c32p8x4_4x8_neon_dotprod_asm.S.o
+  [106/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp4x4_qsi4c32p4x4_16x4_neon_dotprod.c.o
+  [107/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qai4c32p/kai_matmul_clamp_f32_qsi8d32p1x4_qai4c32p4x4_1x4_neon_dotprod_asm.S.o
+  [108/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qai4c32p/kai_matmul_clamp_f32_qsi8d32p1x8_qai4c32p4x8_1x4_neon_dotprod_asm.S.o
+  [109/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qai4c32p/kai_matmul_clamp_f32_qsi8d32p1x8_qai4c32p4x8_1x4_neon_dotprod.c.o
+  [110/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qai4c32p/kai_matmul_clamp_f32_qsi8d32p4x4_qai4c32p4x4_8x4_neon_dotprod_asm.S.o
+  [111/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qai4c32p/kai_matmul_clamp_f32_qsi8d32p4x4_qai4c32p4x4_8x4_neon_dotprod.c.o
+  [112/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qai4c32p/kai_matmul_clamp_f32_qsi8d32p1x4_qai4c32p4x4_1x4_neon_dotprod.c.o
+  [113/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4cxp/kai_matmul_clamp_f32_qai8dxp1x4_qsi4cxp4x4_1x4_neon_dotprod.c.o
+  [114/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4cxp/kai_matmul_clamp_f32_qai8dxp1x8_qsi4cxp4x8_1x4x32_neon_dotprod.c.o
+  [115/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4cxp/kai_matmul_clamp_f32_qai8dxp1x8_qsi4cxp8x8_1x8x32_neon_dotprod.c.o
+  [116/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi8cxp/kai_matmul_clamp_f32_qai8dxp1x4_qsi8cxp4x4_1x4_neon_dotprod.c.o
+  [117/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi8cxp/kai_matmul_clamp_f32_qai8dxp1x8_qsi8cxp4x8_1x4_neon_dotprod.c.o
+  [118/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi8cxp/kai_matmul_clamp_f32_qai8dxp4x4_qsi8cxp4x4_16x4_neon_dotprod.c.o
+  [119/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qsi4c32p/kai_matmul_clamp_f32_qsi8d32p1x8_qsi4c32p4x8_1x4x32_neon_dotprod.c.o
+  [120/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qsi4c32p/kai_matmul_clamp_f32_qsi8d32p1x4_qsi4c32p4x4_1x4_neon_dotprod.c.o
+  [121/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4cxp/kai_matmul_clamp_f32_qai8dxp4x4_qsi4cxp8x4_8x8x32_neon_dotprod.c.o
+  [122/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qsi4c32p/kai_matmul_clamp_f32_qsi8d32p4x4_qsi4c32p4x4_16x4_neon_dotprod.c.o
+  [123/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4cxp/kai_matmul_clamp_f32_qai8dxp4x8_qsi4cxp4x4_16x4x32_neon_dotprod.c.o
+  [124/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp4x8_qsi4c32p4x8_16x4x32_neon_i8mm_asm.S.o
+  [125/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp4x8_qsi4c32p4x8_8x4x32_neon_i8mm_asm.S.o
+  [126/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp4x8_qsi4c32p4x8_8x4x32_neon_i8mm.c.o
+  [127/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp4x8_qsi4c32p4x8_16x4x32_neon_i8mm.c.o
+  [128/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp4x8_qsi4c32p8x8_4x8_neon_i8mm_asm.S.o
+  [129/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp4x8_qsi4c32p8x8_4x8x32_neon_i8mm_asm.S.o
+  [130/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qai4c32p/kai_matmul_clamp_f32_qsi8d32p4x8_qai4c32p4x8_8x4_neon_i8mm_asm.S.o
+  [131/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp4x8_qsi4c32p8x8_4x8x32_neon_i8mm.c.o
+  [132/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp4x8_qsi4c32p8x8_4x8_neon_i8mm.c.o
+  [133/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4cxp/kai_matmul_clamp_f32_qai8dxp4x8_qsi4cxp8x8_4x8x32_neon_i8mm.c.o
+  [134/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4cxp/kai_matmul_clamp_f32_qai8dxp4x8_qsi4cxp4x8_4x4x32_neon_i8mm.c.o
+  [135/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qai4c32p/kai_matmul_clamp_f32_qsi8d32p4x8_qai4c32p4x8_8x4_neon_i8mm.c.o
+  [136/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4cxp/kai_matmul_clamp_f32_qai8dxp4x8_qsi4cxp4x8_8x4x32_neon_i8mm.c.o
+  [137/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4cxp/kai_matmul_clamp_f32_qai8dxp4x8_qsi4cxp8x8_8x8x32_neon_i8mm.c.o
+  [138/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/kai_common_sve_asm.S.o
+  [139/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/imatmul_clamp_f32_f32_f32p/kai_imatmul_clamp_f32_f32_f32p4vlx1b_6x4vl_sve_mla.c.o
+  [140/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi8cxp/kai_matmul_clamp_f32_qai8dxp4x8_qsi8cxp4x8_16x4_neon_i8mm.c.o
+  [141/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qsi4c32p/kai_matmul_clamp_f32_qsi8d32p4x8_qsi4c32p4x8_16x4_neon_i8mm.c.o
+  [142/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qsi4c32p/kai_matmul_clamp_f32_qsi8d32p4x8_qsi4c32p4x8_8x4x32_neon_i8mm.c.o
+  [143/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/imatmul_clamp_f32_f32_f32p/kai_imatmul_clamp_f32_f32_f32p4vlx1b_6x4vl_sve_mla_asm.S.o
+  [144/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32_f32p/kai_matmul_clamp_f32_f32_f32p4vlx1b_6x4vl_sve_mla_asm.S.o
+  [145/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32_f32p/kai_matmul_clamp_f32_f32_f32p4vlx1b_6x4vl_sve_mla.c.o
+  [146/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_x32p4vlx1b_x32_x32_sve_asm.S.o
+  [147/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_imatmul_pack_kxn_x32p4vlx1b_x32_x32_sve_asm.S.o
+  [148/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qsi4c32p/kai_matmul_clamp_f32_qsi8d32p1x4_qsi4c32p8x4_1x8_sve_dotprod_asm.S.o
+  [149/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qsi4c32p/kai_matmul_clamp_f32_qsi8d32p1x8_qsi4c32p8x8_1x8_sve_dotprod_asm.S.o
+  [150/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qsi4c32p/kai_matmul_clamp_f32_qsi8d32p1x4_qsi4c32p8x4_1x8_sve_dotprod.c.o
+  [151/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qsi4c32p/kai_matmul_clamp_f32_qsi8d32p4x8_qsi4c32p8x8_16x8_sve_i8mm_asm.S.o
+  [152/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_imatmul_pack_kxn_x32p4vlx1b_x32_x32_sve.c.o
+  [153/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_x32p4vlx1b_x32_x32_sve.c.o
+  [154/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qsi4c32p/kai_matmul_clamp_f32_qsi8d32p4x8_qsi4c32p8x8_16x8_sve_i8mm.c.o
+  [155/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/kai_common_sme_asm.S.o
+  [156/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qsi4c32p/kai_matmul_clamp_f32_qsi8d32p1x8_qsi4c32p8x8_1x8_sve_dotprod.c.o
+  [157/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/imatmul_clamp_f16_f16p_f16p/kai_imatmul_clamp_f16_f16p2vlx2_f16p2vlx2b_2vlx2vl_sme_mopa_asm.S.o
+  [158/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/dwconv/pack/kai_rhs_dwconv_pack_x32p1vlx1b_x32_x32_sme.c.o
+  [159/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/imatmul_clamp_f16_f16p_f16p/kai_imatmul_clamp_f16_f16p2vlx2_f16p2vlx2b_2vlx2vl_sme_mopa.c.o
+  [160/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/imatmul_clamp_f32_f32p_f32p/kai_imatmul_clamp_f32_f32p2vlx1_f32p2vlx1b_2vlx2vl_sme_mopa_asm.S.o
+  [161/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/imatmul_clamp_qai8_qai8p_qsi8cxp/kai_imatmul_clamp_qai8_qai8p2vlx4_qsi8cxp2vlx4sb_2vlx2vl_sme_mopa_asm.S.o
+  [162/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_f16_f16p/kai_matmul_clamp_f16_f16_f16p2vlx2b_1x8vl_sme_mla_asm.S.o
+  [163/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/imatmul_clamp_f32_f32p_f32p/kai_imatmul_clamp_f32_f32p2vlx1_f32p2vlx1b_2vlx2vl_sme_mopa.c.o
+  [164/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_f16p_f16p/kai_matmul_clamp_f16_f16p2vlx2_f16p2vlx2b_2vlx2vl_sme_mopa.c.o
+  [165/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml-base.dir/gguf.cpp.o
+  [166/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/imatmul_clamp_qai8_qai8p_qsi8cxp/kai_imatmul_clamp_qai8_qai8p2vlx4_qsi8cxp2vlx4sb_2vlx2vl_sme_mopa.c.o
+  [167/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_f16p_f16p/kai_matmul_clamp_f16_f16p2vlx2_f16p2vlx2b_2vlx2vl_sme_mopa_asm.S.o
+  [168/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32_f32p/kai_matmul_clamp_f32_f32_f32p2vlx1b_1x8vl_sme_mla_asm.S.o
+  [169/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_f16_f16p/kai_matmul_clamp_f16_f16_f16p2vlx2b_1x8vl_sme_mla.c.o
+  [170/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32p_f32p/kai_matmul_clamp_f32_f32p2vlx1_f32p2vlx1b_2vlx2vl_sme_mopa_asm.S.o
+  [171/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4cxp/kai_matmul_clamp_f32_qai8dxp1x4_qsi4cxp4vlx4_1x4vl_sme_dot_asm.S.o
+  [172/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32_f32p/kai_matmul_clamp_f32_f32_f32p2vlx1b_1x8vl_sme_mla.c.o
+  [173/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4cxp/kai_matmul_clamp_f32_qai8dxp1vlx4_qsi4cxp4vlx4_1vlx4vl_sme_mopa_asm.S.o
+  [174/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32p_f32p/kai_matmul_clamp_f32_f32p2vlx1_f32p2vlx1b_2vlx2vl_sme_mopa.c.o
+  [175/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi8cxp/kai_matmul_clamp_f32_qai8dxp1x4_qsi8cxp4vlx4_1x4vl_sme_dot_asm.S.o
+  [176/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi8cxp/kai_matmul_clamp_f32_qai8dxp1vlx4_qsi8cxp4vlx4_1vlx4vl_sme_mopa.c.o
+  [177/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi8cxp/kai_matmul_clamp_f32_qai8dxp1vlx4_qsi8cxp4vlx4_1vlx4vl_sme_mopa_asm.S.o
+  [178/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi8cxp/kai_matmul_clamp_f32_qai8dxp1x4_qsi8cxp4vlx4_1x4vl_sme_dot.c.o
+  [179/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4cxp/kai_matmul_clamp_f32_qai8dxp1x4_qsi4cxp4vlx4_1x4vl_sme_dot.c.o
+  [180/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_qai8_qai8p_qsi8cxp/kai_matmul_clamp_qai8_qai8p2vlx4_qsi8cxp2vlx4sb_2vlx2vl_sme_mopa_asm.S.o
+  [181/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4cxp/kai_matmul_clamp_f32_qai8dxp1vlx4_qsi4cxp4vlx4_1vlx4vl_sme_mopa.c.o
+  [182/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_imatmul_pack_x16p2vlx2_x16p_sme_asm.S.o
+  [183/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_imatmul_pack_x32p2vlx1_x32p_sme_asm.S.o
+  [184/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_imatmul_pack_x32p2vlx1_x32p_sme.c.o
+  [185/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_imatmul_pack_x8p2vlx4_x8p_sme_asm.S.o
+  [186/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_qai8_qai8p_qsi8cxp/kai_matmul_clamp_qai8_qai8p2vlx4_qsi8cxp2vlx4sb_2vlx2vl_sme_mopa.c.o
+  [187/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_pack_f32p2vlx1_f32_sme_asm.S.o
+  [188/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_pack_f32p2vlx1_f32_sme.c.o
+  [189/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_imatmul_pack_x16p2vlx2_x16p_sme.c.o
+  [190/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_imatmul_pack_x8p2vlx4_x8p_sme.c.o
+  [191/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_pack_x16p2vlx2_x16_sme_asm.S.o
+  [192/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_pack_x8p2vlx4_x8_sme_asm.S.o
+  [193/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_matmul_pack_rhs_kxn_x32p4vsx1bx32_x32_x32_sme_asm.S.o
+  [194/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_pack_x16p2vlx2_x16_sme.c.o
+  [195/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_matmul_pack_lhs_mxk_x32p4vsx1_x32_sme_asm.S.o
+  [196/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_matmul_pack_rhs_nxk_x32p4vsx1bx32_x32_x32_sme_asm.S.o
+  [197/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_imatmul_pack_kxn_qsi8cxp2vlx4sb_qs8cx_f32_i32_sme_asm.S.o
+  [198/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_imatmul_pack_kxn_x16p2vlx2b_x16_x16_sme_asm.S.o
+  [199/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_pack_x8p2vlx4_x8_sme.c.o
+  [200/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_imatmul_pack_kxn_x32p2vlx1b_x32_x32_sme_asm.S.o
+  [201/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_imatmul_pack_kxn_x32p2vlx1b_x32_x32_sme.c.o
+  [202/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_f32p16vlx1b_f32_f32_sme_asm.S.o
+  [203/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_imatmul_pack_kxn_qsi8cxp2vlx4sb_qs8cx_f32_i32_sme.c.o
+  [204/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_f32p2vlx1biasf32_f32_f32_sme_asm.S.o
+  [205/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_f32p2vlx1biasf32_f32_f32_sme.c.o
+  [206/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_imatmul_pack_kxn_x16p2vlx2b_x16_x16_sme.c.o
+  [207/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_x16p2vlx2b_x16_x16_sme_asm.S.o
+  [208/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_qsi8cxp2vlx4sb_qs8cx_f32_i32_sme_asm.S.o
+  [209/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_nxk_f32p2vlx1biasf32_f32_f32_sme_asm.S.o
+  [210/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_f32p16vlx1b_f32_f32_sme.c.o
+  [211/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_nxk_x16p2vlx2b_x16_x16_sme_asm.S.o
+  [212/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_qsi8cxp2vlx4sb_qs8cx_f32_i32_sme.c.o
+  [213/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_nxk_x16p2vlx2b_x16_x16_sme.c.o
+  [214/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_x16p2vlx2b_x16_x16_sme.c.o
+  [215/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_nxk_f32p2vlx1biasf32_f32_f32_sme.c.o
+  [216/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/dwconv/dwconv_f32_f32_f32p/kai_dwconv_clamp_f32_f32_f32p1vlx1b_3x3_s1_4xc_sme2_mla_asm.S.o
+  [217/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_matmul_pack_lhs_mxk_x32p4vsx1_x32_sme.c.o
+  [218/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/imatmul_clamp_f16_f16p_f16p/kai_imatmul_clamp_f16_f16p2vlx2_f16p2vlx2_2vlx2vl_sme2_mopa_asm.S.o
+  [219/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_matmul_pack_rhs_kxn_x32p4vsx1bx32_x32_x32_sme.c.o
+  [220/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/imatmul_clamp_f32_f32p_f32p/kai_imatmul_clamp_f32_f32p2vlx1_f32p2vlx1b_2vlx2vl_sme2_mopa_asm.S.o
+  [221/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/imatmul_clamp_qai8_qai8p_qsi8cxp/kai_imatmul_clamp_qai8_qai8p2vlx4_qsi8cxpsb2vlx4_2vlx2vl_sme2_mopa_asm.S.o
+  [222/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_matmul_pack_rhs_nxk_x32p4vsx1bx32_x32_x32_sme.c.o
+  [223/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/imatmul_clamp_f16_f16p_f16p/kai_imatmul_clamp_f16_f16p2vlx2_f16p2vlx2_2vlx2vl_sme2_mopa.c.o
+  [224/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/dwconv/dwconv_f32_f32_f32p/kai_dwconv_clamp_f32_f32_f32p1vlx1b_3x3_s1_4xc_sme2_mla.c.o
+  [225/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_f16_f16p/kai_matmul_clamp_f16_f16_f16p2vlx2b_1x16vl_sme2_dot_asm.S.o
+  [226/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/imatmul_clamp_f32_f32p_f32p/kai_imatmul_clamp_f32_f32p2vlx1_f32p2vlx1b_2vlx2vl_sme2_mopa.c.o
+  [227/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_f16p_f16p/kai_matmul_clamp_f16_f16p2vlx2_f16p2vlx2_2vlx2vl_sme2_mopa_asm.S.o
+  [228/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/imatmul_clamp_qai8_qai8p_qsi8cxp/kai_imatmul_clamp_qai8_qai8p2vlx4_qsi8cxpsb2vlx4_2vlx2vl_sme2_mopa.c.o
+  [229/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_f16_f16p/kai_matmul_clamp_f16_f16_f16p2vlx2b_1x16vl_sme2_dot.c.o
+  [230/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qai8dxp_qsi8cxp/kai_matmul_clamp_f16_qai8dxp1vlx4_qsi8cxp4vlx4_1vlx4vl_sme2_mopa_asm.S.o
+  [231/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qai8dxp_qsi8cxp/kai_matmul_clamp_f16_qai8dxp1x4_qsi8cxp4vlx4_1x4vl_sme2_dot_asm.S.o
+  [232/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qsi8d32p_qai4c32p/kai_matmul_clamp_f16_qsi8d32p1vlx4_qai4c32p4vlx4_1vlx4vl_sme2_mopa_asm.S.o
+  [233/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_f16p_f16p/kai_matmul_clamp_f16_f16p2vlx2_f16p2vlx2_2vlx2vl_sme2_mopa.c.o
+  [234/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qai8dxp_qsi8cxp/kai_matmul_clamp_f16_qai8dxp1x4_qsi8cxp4vlx4_1x4vl_sme2_dot.c.o
+  [235/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qsi8d32p_qai4c32p/kai_matmul_clamp_f16_qsi8d32p1x4_qai4c32p4vlx4_1x4vl_sme2_dot_asm.S.o
+  [236/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qai8dxp_qsi8cxp/kai_matmul_clamp_f16_qai8dxp1vlx4_qsi8cxp4vlx4_1vlx4vl_sme2_mopa.c.o
+  [237/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f16p_qsi4c32p/kai_matmul_clamp_f32_f16p1vlx2_qsi4c32p4vlx2_1vlx4vl_sme2_mopa_asm.S.o
+  [238/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qsi8d32p_qai4c32p/kai_matmul_clamp_f16_qsi8d32p1vlx4_qai4c32p4vlx4_1vlx4vl_sme2_mopa.c.o
+  [239/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32_f32p/kai_matmul_clamp_f32_f32_f32p16vlx1b_1x16vl_sme2_mla_asm.S.o
+  [240/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f16_qsi8d32p_qai4c32p/kai_matmul_clamp_f16_qsi8d32p1x4_qai4c32p4vlx4_1x4vl_sme2_dot.c.o
+  [241/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32_f32p/kai_matmul_clamp_f32_f32_f32p2vlx1b_1x16vl_sme2_mla_asm.S.o
+  [242/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f16p_qsi4c32p/kai_matmul_clamp_f32_f16p1vlx2_qsi4c32p4vlx2_1vlx4vl_sme2_mopa.c.o
+  [243/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32p_f32p/kai_matmul_clamp_f32_f32p2vlx1_f32p2vlx1biasf32_sme2_mopa_asm.S.o
+  [244/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32_f32p/kai_matmul_clamp_f32_f32_f32p2vlx1b_1x16vl_sme2_mla.c.o
+  [245/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32p_f32p/kai_matmul_clamp_f32_f32p4vsx1_f32p4vsx1bf32_4vsx4vs_sme2_mopa_asm.S.o
+  [246/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32_f32p/kai_matmul_clamp_f32_f32_f32p16vlx1b_1x16vl_sme2_mla.c.o
+  [247/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32p_f32p/kai_matmul_clamp_f32_f32p4vsx1_f32p4vsx1bf32_4vsx16vs_sme2_mopa_asm.S.o
+  [248/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32p_f32p/kai_matmul_clamp_f32_f32p4vsx1_f32p4vsx1bf32_4vsx8vs_sme2_mopa_asm.S.o
+  [249/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32p_f32p/kai_matmul_clamp_f32_f32p4vsx1_f32p4vsx1bf32_16vsx4vs_sme2_mopa_asm.S.o
+  [250/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32p_f32p/kai_matmul_clamp_f32_f32p4vsx1_f32p4vsx1bf32_8vsx4vs_sme2_mopa_asm.S.o
+  [251/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32p_f32p/kai_matmul_clamp_f32_f32p2vlx1_f32p2vlx1biasf32_sme2_mopa.c.o
+  [252/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32p_f32p/kai_matmul_clamp_f32_f32p4vsx1_f32p4vsx1bf32_8vsx8vs_sme2_mopa_asm.S.o
+  [253/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsu2cxp/kai_matmul_clamp_f32_qai8dxp1vlx4_qsu2cxp4vlx4_1vlx4vl_sme2_mopa_asm.S.o
+  [254/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsu2cxp/kai_matmul_clamp_f32_qai8dxp1x4_qsu2cxp4vlx4_1x4vl_sme2_dot_asm.S.o
+  [255/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp1vlx4_qsi4c32p4vlx4_1vlx4vl_sme2_mopa_asm.S.o
+  [256/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsu2cxp/kai_matmul_clamp_f32_qai8dxp1vlx4_qsu2cxp4vlx4_1vlx4vl_sme2_mopa.c.o
+  [257/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp1x4_qsi4c32p4vlx4_1x4vl_sme2_dot_asm.S.o
+  [258/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsu2cxp/kai_matmul_clamp_f32_qai8dxp1x4_qsu2cxp4vlx4_1x4vl_sme2_dot.c.o
+  [259/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi8cxp/kai_matmul_clamp_f32_qai8dxp1vlx4_qsi8cxp4vlx4_1vlx4vl_sme2_mopa_asm.S.o
+  [260/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi8cxp/kai_matmul_clamp_f32_qai8dxp1x4_qsi8cxp4vlx4_1x4vl_sme2_dot_asm.S.o
+  [261/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp1x4_qsi4c32p4vlx4_1x4vl_sme2_dot.c.o
+  [262/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/kai_matmul_clamp_f32_qai8dxp1vlx4_qsi4c32p4vlx4_1vlx4vl_sme2_mopa.c.o
+  [263/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qai4c32p/kai_matmul_clamp_f32_qsi8d32p1vlx4_qai4c32p4vlx4_1vlx4vl_sme2_mopa_asm.S.o
+  [264/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qai4c32p/kai_matmul_clamp_f32_qsi8d32p1x4_qai4c32p4vlx4_1x4vl_sme2_dot_asm.S.o
+  [265/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_fp32_bf16p_bf16p/kai_matmul_clamp_f32_bf16p2vlx2_bf16p2vlx2_2vlx2vl_sme2_mopa_asm.S.o
+  [266/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi8cxp/kai_matmul_clamp_f32_qai8dxp1vlx4_qsi8cxp4vlx4_1vlx4vl_sme2_mopa.c.o
+  [267/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qai4c32p/kai_matmul_clamp_f32_qsi8d32p1vlx4_qai4c32p4vlx4_1vlx4vl_sme2_mopa.c.o
+  [268/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi8cxp/kai_matmul_clamp_f32_qai8dxp1x4_qsi8cxp4vlx4_1x4vl_sme2_dot.c.o
+  [269/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_qai8_qai8_qsi8cxp/kai_matmul_clamp_qai8_qai8_qsi8cxp2vlx4sb_1x16vl_sme2_dot_asm.S.o
+  [270/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_qai8_qai8_qsi8cxp/kai_matmul_clamp_qai8_qai8_qsi8cxp2vlx4sb_1x16vl_sme2_dot.c.o
+  [271/399] Building ASM object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_qai8_qai8p_qsi8cxp/kai_matmul_clamp_qai8_qai8p2vlx4_qsi8cxpsb2vlx4_2vlx2vl_sme2_mopa_asm.S.o
+  [272/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qai4c32p/kai_matmul_clamp_f32_qsi8d32p1x4_qai4c32p4vlx4_1x4vl_sme2_dot.c.o
+  [273/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_fp32_bf16p_bf16p/kai_matmul_clamp_f32_bf16p2vlx2_bf16p2vlx2_2vlx2vl_sme2_mopa.c.o
+  [274/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_qai8_qai8p_qsi8cxp/kai_matmul_clamp_qai8_qai8p2vlx4_qsi8cxpsb2vlx4_2vlx2vl_sme2_mopa.c.o
+  [275/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4cxp/kai_matmul_clamp_f32_qai8dxp1vlx8_qsi4cxp4vlx8_1vlx4vl_sme2_mopa.c.o
+  [276/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_f32p_f32p/kai_matmul_clamp_f32_f32p4vsx1_f32p4vsx1bf32_8vsx8vs_sme2_mopa.c.o
+  [277/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qsi4c32p/kai_matmul_clamp_f32_qsi8d32p1x4_qsi4c32p4vlx4_1x4vl_sme2_sdot.c.o
+  [278/399] Linking CXX shared library bin/libggml-base.so
+  [279/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4cxp/kai_matmul_clamp_f32_qai8dxp1x4_qsi4cxp4vlx4_1x4vl_sme2_sdot.c.o
+  [280/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_rhs_pack_kxn_bf16p2vlx2b_f32_x32_sme.c.o
+  [281/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/pack/kai_lhs_pack_bf16p2vlx2_f32_sme.c.o
+  [282/399] Building C object _deps/kleidiai-build/CMakeFiles/kleidiai.dir/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qsi4c32p/kai_matmul_clamp_f32_qsi8d32p1vlx4_qsi4c32p4vlx4_1vlx4vl_sme2_mopa.c.o
+  [283/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/hbm.cpp.o
+  [284/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/traits.cpp.o
+  [285/399] Building C object build-llama/ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/ggml-cpu.c.o
+  [286/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/ggml-cpu.cpp.o
+  [287/399] Building C object build-llama/ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/quants.c.o
+  [288/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/amx/amx.cpp.o
+  [289/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/amx/mmq.cpp.o
+  [290/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/tiled/tiled-kernel.cpp.o
+  [291/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/tiled/tiled.cpp.o
+  [292/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/vec.cpp.o
+  [293/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/binary-ops.cpp.o
+  [294/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/arch/arm/repack.cpp.o
+  [295/399] Building C object build-llama/ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/arch/arm/quants.c.o
+  [296/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/kleidiai/kernels.cpp.o
+  [297/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/unary-ops.cpp.o
+  [298/399] Linking C static library _deps/kleidiai-build/libkleidiai.a
+  [299/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/repack.cpp.o
+  [300/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml.dir/ggml-backend-dl.cpp.o
+  [301/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml.dir/ggml-backend-reg.cpp.o
+  [302/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/kleidiai/kleidiai.cpp.o
+  [303/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama.cpp.o
+  [304/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-arch.cpp.o
+  [305/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-chat.cpp.o
+  [306/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-adapter.cpp.o
+  [307/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-cparams.cpp.o
+  [308/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-batch.cpp.o
+  [309/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-context.cpp.o
+  [310/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-hparams.cpp.o
+  [311/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-io.cpp.o
+  [312/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-graph.cpp.o
+  [313/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-impl.cpp.o
+  [314/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-kv-cache-iswa.cpp.o
+  [315/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-kv-cache-dsa-iswa.cpp.o
+  [316/399] Building CXX object build-llama/ggml/src/CMakeFiles/ggml-cpu.dir/ggml-cpu/ops.cpp.o
+  [317/399] Linking CXX shared module bin/libggml-cpu.so
+  [318/399] Linking CXX shared library bin/libggml.so
+  [319/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-kv-cache-msa.cpp.o
+  [320/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-kv-cache-dsa.cpp.o
+  [321/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-memory.cpp.o
+  [322/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-memory-hybrid-iswa.cpp.o
+  [323/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-grammar.cpp.o
+  [324/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-memory-hybrid.cpp.o
+  [325/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-mmap.cpp.o
+  [326/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-memory-recurrent.cpp.o
+  [327/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-memory-hybrid-idx.cpp.o
+  [328/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-model-saver.cpp.o
+  [329/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-model.cpp.o
+  FAILED: build-llama/src/CMakeFiles/llama.dir/llama-model.cpp.o 
+  /workspace/.toolchain/android-sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android29 --sysroot=/workspace/.toolchain/android-sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/linux-x86_64/sysroot -DGGML_BACKEND_DL -DGGML_SHARED -DLLAMA_BUILD -DLLAMA_SHARED -Dllama_EXPORTS -I/tmp/law-clean-repro-J9h1pc/third_party/llama.cpp/src/. -I/tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/build-llama/src -I/tmp/law-clean-repro-J9h1pc/third_party/llama.cpp/src/../include -I/tmp/law-clean-repro-J9h1pc/third_party/llama.cpp/ggml/src/../include -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -O3 -DNDEBUG  -std=gnu++17 -fPIC -Xclang -fno-pch-timestamp -Wmissing-declarations -Wmissing-noreturn -Wall -Wextra -Wpedantic -Wcast-qual -Wno-unused-function -Wunreachable-code-break -Wunreachable-code-return -Wmissing-prototypes -Wextra-semi -MD -MT build-llama/src/CMakeFiles/llama.dir/llama-model.cpp.o -MF build-llama/src/CMakeFiles/llama.dir/llama-model.cpp.o.d -o build-llama/src/CMakeFiles/llama.dir/llama-model.cpp.o -c /tmp/law-clean-repro-J9h1pc/third_party/llama.cpp/src/llama-model.cpp
+  /tmp/law-clean-repro-J9h1pc/third_party/llama.cpp/src/llama-model.cpp:23:10: fatal error: 'models/models.h' file not found
+     23 | #include "models/models.h"
+        |          ^~~~~~~~~~~~~~~~~
+  1 error generated.
+  [330/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-kv-cache-dsv4.cpp.o
+  [331/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-kv-cache.cpp.o
+  [332/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-model-loader.cpp.o
+  [333/399] Building CXX object build-llama/src/CMakeFiles/llama.dir/llama-quant.cpp.o
+  ninja: build stopped: subcommand failed.
+  
+  C++ build system [build] failed while executing:
+      /workspace/.toolchain/android-sdk/cmake/3.31.6/bin/ninja \
+        -C \
+        /tmp/law-clean-repro-J9h1pc/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a \
+        ai-chat \
+        ggml \
+        ggml-base \
+        ggml-cpu \
+        llama \
+        llama-common \
+        local-embedding
+    from /tmp/law-clean-repro-J9h1pc/llama-runtime
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 4m 57s
+60 actionable tasks: 60 executed
+EXIT_CODE=1

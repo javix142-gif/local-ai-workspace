@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.inference.LiteRtConversationPayloadTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-08T23:03:50" hostname="05497ac86eb0" time="0.24">
+  <properties/>
+  <testcase name="rejectsForgedRolesUnpairedTurnsAndOversizedHistoryBeforeNativeLoad" classname="com.localai.workspace.inference.LiteRtConversationPayloadTest" time="0.04"/>
+  <testcase name="unboundedBudgetOverrideIsValidationOnly" classname="com.localai.workspace.inference.LiteRtConversationPayloadTest" time="0.058"/>
+  <testcase name="usesOfficialUserModelInitialMessagesWithCurrentUserReservedForOneSend" classname="com.localai.workspace.inference.LiteRtConversationPayloadTest" time="0.024"/>
+  <testcase name="chatMlBundleHistoryUsesActualAssistantRoleWhileLegacyModelRemainsAvailable" classname="com.localai.workspace.inference.LiteRtConversationPayloadTest" time="0.022"/>
+  <testcase name="thinkingBudgetUsesOfficialApiAndKeepsOutputCap" classname="com.localai.workspace.inference.LiteRtConversationPayloadTest" time="0.073"/>
+  <testcase name="explicitThinkingAndLegacyDefaultsRemainAvailableWhileSmokeIsMinimal" classname="com.localai.workspace.inference.LiteRtConversationPayloadTest" time="0.022"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

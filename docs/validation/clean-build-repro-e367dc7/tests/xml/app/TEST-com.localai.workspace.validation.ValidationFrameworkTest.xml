@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.validation.ValidationFrameworkTest" tests="25" skipped="0" failures="0" errors="0" timestamp="2026-10-08T23:04:16" hostname="05497ac86eb0" time="0.295">
+  <properties/>
+  <testcase name="thinkingBudgetProbesDoNotRerunOtherSubsystems" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.001"/>
+  <testcase name="nullMetricsStayUnavailable" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.001"/>
+  <testcase name="aSuiteWithNoSelectedTestsCannotPass" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.001"/>
+  <testcase name="cancellationPersistsPartialAndClosesWorker" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.01"/>
+  <testcase name="timeoutIsBlockedAndStillCleansResources" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.004"/>
+  <testcase name="timeoutPreservesSafeThinkingSubcaseEvidence" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.004"/>
+  <testcase name="blockedCriticalNeverPasses" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.0"/>
+  <testcase name="unselectedCasesDoNotChangeQuickSummary" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.001"/>
+  <testcase name="missingOptionalEncoderIsSkipNotFail" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.0"/>
+  <testcase name="inconclusiveCriticalNeverPasses" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.001"/>
+  <testcase name="allDemonstratedCasesPass" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.0"/>
+  <testcase name="evenAFakeClaimingDeviceEvidenceIsForcedToHostTested" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.004"/>
+  <testcase name="coordinatorPersistsProgressAndHostEvidence" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.017"/>
+  <testcase name="installedEncoderFailureCannotPass" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.0"/>
+  <testcase name="cleanupExceptionIsVisibleAndCannotCertifyPass" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.005"/>
+  <testcase name="runningReportNeverClaimsPass" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.0"/>
+  <testcase name="onlyFunctionalPassToFailIsReported" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.0"/>
+  <testcase name="interruptedActiveCaseIsNotFailure" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.001"/>
+  <testcase name="jsonRoundTripRetainsStatusesAndConfiguration" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.016"/>
+  <testcase name="comparisonRequiresSameModelConfigurationAndSuite" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.001"/>
+  <testcase name="cleanupFailureNeverPasses" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.001"/>
+  <testcase name="storageRetainsTenRunsAndReplacesPartialAtomically" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.219"/>
+  <testcase name="quickAndFullSelectNineAndThirtyThreeCases" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.0"/>
+  <testcase name="exportWhitelistsScalarMetricsAndOmitsPayloads" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.003"/>
+  <testcase name="corruptHistoryDoesNotInventResults" classname="com.localai.workspace.validation.ValidationFrameworkTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
