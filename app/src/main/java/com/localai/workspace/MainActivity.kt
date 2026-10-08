@@ -82,7 +82,9 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import com.localai.workspace.ui.ChatComposer
+import com.localai.workspace.ui.ChatHeaderTitle
 import com.localai.workspace.ui.ChatRichText
+import com.localai.workspace.ui.chatTopBarExpandedHeight
 import com.localai.workspace.ui.humanModelName
 import com.localai.workspace.ui.runtimeDisplayName
 import com.localai.workspace.ui.compactGenerationLabel
@@ -101,6 +103,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -888,17 +891,20 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
     Scaffold(
         topBar = {
             TopAppBar(
+                expandedHeight = chatTopBarExpandedHeight(LocalDensity.current.fontScale),
                 title = {
-                    Column(Modifier.heightIn(min = 48.dp).clickable(enabled = !generating && !deletingChat) { showModelPicker = true }) {
-                        com.localai.workspace.ui.ChatAgentLabel(viewModel)
-                        Text(if (standalone) project?.name ?: "Chat" else "${conversation?.title ?: "Chat"} · ${project?.name ?: "Project"}", maxLines = 1, overflow = TextOverflow.Ellipsis)
-                        Text(selectedModel?.let { "${humanModelName(it.displayName)} · Local · ${when {
+                    ChatHeaderTitle(
+                        agentTitle = { com.localai.workspace.ui.ChatAgentLabel(viewModel) },
+                        conversationTitle = if (standalone) project?.name ?: "Chat" else "${conversation?.title ?: "Chat"} · ${project?.name ?: "Project"}",
+                        modelStatus = selectedModel?.let { "${humanModelName(it.displayName)} · Local · ${when {
                             generating -> compactGenerationLabel(generationProgress.stage, generationProgress.cancellationRequested)
                             preparation.modelId == it.id && preparation.preparing -> compactGenerationLabel(preparation.progress.stage)
                             preparation.modelId == it.id && preparation.ready -> "Ready"
                             else -> "Not loaded"
-                        }}" } ?: "Choose a model", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    }
+                        }}" } ?: "Choose a model",
+                        onModelClick = { showModelPicker = true },
+                        enabled = !generating && !deletingChat,
+                    )
                 },
                 navigationIcon = { IconButton(onClick = { navController.popBackStack() }, enabled = !deletingChat) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back") } },
                 actions = {

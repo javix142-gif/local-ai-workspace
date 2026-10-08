@@ -1,6 +1,7 @@
 package com.localai.workspace.ui
 
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -12,6 +13,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -19,6 +22,35 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.Dp
+
+/** Keep all three chat identity lines visible at larger Android font scales. */
+fun chatTopBarExpandedHeight(fontScale: Float): Dp = (72f * fontScale.coerceAtLeast(1f) + 16f).dp
+
+@Composable
+fun ChatHeaderTitle(
+    agentTitle: @Composable () -> Unit,
+    conversationTitle: String,
+    modelStatus: String,
+    onModelClick: () -> Unit,
+    enabled: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val fontScale = LocalDensity.current.fontScale
+    Column(
+        modifier.fillMaxWidth().clickable(enabled = enabled, onClick = onModelClick)
+            .padding(vertical = (4f * fontScale.coerceAtMost(1.5f)).dp)
+            .testTag("chat-header-title"),
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Box(Modifier.fillMaxWidth().testTag("chat-header-agent")) { agentTitle() }
+        Text(conversationTitle, Modifier.fillMaxWidth().testTag("chat-header-conversation"),
+            style = MaterialTheme.typography.titleSmall, maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
+        Text(modelStatus, Modifier.fillMaxWidth().testTag("chat-header-model"),
+            style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary,
+            maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
+    }
+}
 
 @Composable
 fun ChatComposer(input: String, generating: Boolean, onInputChange: (String) -> Unit,
