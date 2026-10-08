@@ -24,6 +24,7 @@ import androidx.room.withTransaction
  Box { TextButton(onClick={choosingModel=true}) { Text(model?.displayName?.let { com.localai.workspace.ui.humanModelName(it) } ?: "Choose model") }
   DropdownMenu(choosingModel,{choosingModel=false}) { models.forEach { candidate->DropdownMenuItem(text={Text(com.localai.workspace.ui.humanModelName(candidate.displayName))},onClick={choosingModel=false;pickerScope.launch { graph.database.projectDao().setDefaultModel(projectId,candidate.id,System.currentTimeMillis()) }}) } }
  }
+ ProjectAgentPreference(projectId)
  val descriptor=model?.let { it.toDescriptor() }
  AssistantControls(profile,descriptor?.let { it.runtime==com.localai.workspace.domain.model.RuntimeType.LITERT_LM && com.localai.workspace.domain.model.ModelCapability.TOOL_CALLING in it.capabilities }==true,
   descriptor?.let { it.runtime==com.localai.workspace.domain.model.RuntimeType.LITERT_LM && com.localai.workspace.domain.model.ModelCapability.THINKING in it.capabilities }==true,true) { graph.assistantSettings.update(projectId,it) }

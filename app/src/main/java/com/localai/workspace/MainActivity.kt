@@ -875,6 +875,8 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
     var selectedMetrics by rememberSaveable { mutableStateOf<String?>(null) }
     var showDiagnostics by rememberSaveable { mutableStateOf(false) }
     var showModelPicker by rememberSaveable { mutableStateOf(false) }
+    var showAgent by rememberSaveable { mutableStateOf(false) }
+    var showSkills by rememberSaveable { mutableStateOf(false) }
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let(viewModel::attachDocument) }
     val audioPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let(viewModel::attachAudio) }
     val imagePicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let(viewModel::attachImage) }
@@ -888,6 +890,7 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
             TopAppBar(
                 title = {
                     Column(Modifier.heightIn(min = 48.dp).clickable(enabled = !generating && !deletingChat) { showModelPicker = true }) {
+                        com.localai.workspace.ui.ChatAgentLabel(viewModel)
                         Text(if (standalone) project?.name ?: "Chat" else "${conversation?.title ?: "Chat"} · ${project?.name ?: "Project"}", maxLines = 1, overflow = TextOverflow.Ellipsis)
                         Text(selectedModel?.let { "${humanModelName(it.displayName)} · Local · ${when {
                             generating -> compactGenerationLabel(generationProgress.stage, generationProgress.cancellationRequested)
@@ -906,6 +909,8 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                         DropdownMenu(expanded = showChatMenu, onDismissRequest = { showChatMenu = false }) {
                             DropdownMenuItem(text = { Text("Model") }, enabled = !generating,
                                 onClick = { showChatMenu = false; showModelPicker = true })
+                            DropdownMenuItem(text = { Text("Agent") }, enabled = !generating, onClick = { showChatMenu = false; showAgent = true })
+                            DropdownMenuItem(text = { Text("Skills") }, enabled = !generating, onClick = { showChatMenu = false; showSkills = true })
                             DropdownMenuItem(text = { Text("Files") }, onClick = { showChatMenu = false; showFiles = true })
                             DropdownMenuItem(text = { Text("Memory") }, onClick = { showChatMenu = false; navController.navigate("memory/${project?.id.orEmpty()}") })
                             DropdownMenuItem(text = { Text("Diagnostics") }, onClick = { showChatMenu = false; showDiagnostics = true })
@@ -1005,10 +1010,13 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                 } }
             }
         })
+    if (showAgent) AlertDialog(onDismissRequest = { showAgent = false }, title = { Text("Logical Agent") }, text = { com.localai.workspace.ui.ChatAgentSelector(viewModel, !generating) }, confirmButton = { TextButton(onClick = { showAgent = false }) { Text("Done") } })
+    if (showSkills) com.localai.workspace.ui.ChatSkillSelection(viewModel) { showSkills = false }
     if (showDiagnostics) AlertDialog(onDismissRequest = { showDiagnostics = false }, title = { Text("Diagnostics") },
         confirmButton = { TextButton(onClick = { showDiagnostics = false }) { Text("Close") } }, text = {
             Column(Modifier.heightIn(max = 460.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 val progress = if (generating || generationError != null) generationProgress else preparation.progress
+                com.localai.workspace.ui.AgentRoutingDetails(viewModel)
                 Text(progress.label); progress.detail?.let { Text(it) }
                 Text("Thinking: ${assistantProfile.thinking}");Text("Tools: ${toolCalls.size} calls · ${toolCalls.count { it.status != "SUCCESS" }} non-success · ${toolCalls.sumOf { (it.finishedAt ?: it.startedAt) - it.startedAt }} ms")
                 val rag by (androidx.compose.ui.platform.LocalContext.current.applicationContext as LocalAiApplication).graph.retrieval.diagnostics.collectAsStateWithLifecycle()
@@ -1249,6 +1257,7 @@ private fun SettingsScreen(openValidation: () -> Unit = {}, openPerformance: () 
         LocalModeCard()
         com.localai.workspace.ui.SemanticSettings()
         com.localai.workspace.ui.ContextMemoryEntry()
+        com.localai.workspace.ui.SkillsAgentsEntry()
         Card(Modifier.fillMaxWidth().clickable { developer = !developer }) {
             Row(Modifier.fillMaxWidth().padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                 Text("Developer / Diagnostics", Modifier.weight(1f), style = MaterialTheme.typography.titleSmall)
@@ -1256,6 +1265,7 @@ private fun SettingsScreen(openValidation: () -> Unit = {}, openPerformance: () 
             }
         }
         if (developer) com.localai.workspace.ui.ContextDiagnosticsEntry()
+        if (developer) com.localai.workspace.ui.AgentsSkillsDiagnosticsEntry()
         if (developer) TextButton(onClick = openPerformance, modifier = Modifier.fillMaxWidth()) { Text("Local AI Performance") }
         if (developer) TextButton(onClick = openValidation, modifier = Modifier.fillMaxWidth()) { Text("Device Validation") }
         TextButton(onClick = { boundaries = true }) { Text("About capabilities") }
