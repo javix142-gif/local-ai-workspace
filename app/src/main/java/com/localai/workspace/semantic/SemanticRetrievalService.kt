@@ -22,8 +22,10 @@ object VectorPersistence {
  }
 }
 data class RetrievalDiagnostics(val mode: String="LEXICAL",val retrieved: Int=0,val memoryRetrieved:Int=0,val retrievalMs:Long=0,val embeddingMs:Long=0,val notice:String?="Embedding model unavailable")
+data class RetrievalIndexDiagnostics(val status:String="NOT_RUN",val durationMs:Long?=null,val candidateSegments:Int=0,val processedSegments:Int=0,val candidateMemories:Int=0,val processedMemories:Int=0,val failureType:String?=null)
 class SemanticRetrievalService(private val db: WorkspaceDatabase, private val models: EmbeddingProvider) {
  val diagnostics=MutableStateFlow(RetrievalDiagnostics())
+ val indexingDiagnostics=MutableStateFlow(RetrievalIndexDiagnostics())
  private var nativeEmbeddingNanos=0L
  private fun embed(encoder:NeuralEmbeddings,text:String):FloatArray { val start=System.nanoTime();try{return encoder.embed(text)}finally{nativeEmbeddingNanos+=System.nanoTime()-start} }
  private suspend fun vector(encoder: NeuralEmbeddings, origin: String, content: String, documentId: String?=null,memoryId:String?=null): FloatArray {
@@ -105,7 +107,24 @@ class SemanticRetrievalService(private val db: WorkspaceDatabase, private val mo
   diagnostics.value=diagnostics.value.copy(memoryRetrieved=result.size);result
  }
  suspend fun indexProject(projectId: String) {
-  models.use { encoder->db.documentDao().segmentsForProject(projectId,1000).forEach { vector(encoder,"D:${it.id}",it.text,it.documentId) };db.memoryDao().relevant(projectId,1000).filter { it.sourceType=="USER_APPROVED" }.forEach { vector(encoder,"M:${it.id}",it.content,memoryId=it.id) } } ?: error("Embedding model unavailable")
+  val started=System.nanoTime();var segmentCount=0;var memoryCount=0;var completedSegments=0;var completedMemories=0
+  indexingDiagnostics.value=RetrievalIndexDiagnostics("RUNNING")
+  try {
+   models.use { encoder->
+    val segments=db.documentDao().segmentsForProject(projectId,1000);segmentCount=segments.size
+    val memories=db.memoryDao().relevant(projectId,1000).filter { it.sourceType=="USER_APPROVED" };memoryCount=memories.size
+    indexingDiagnostics.value=RetrievalIndexDiagnostics("RUNNING",candidateSegments=segmentCount,candidateMemories=memoryCount)
+    segments.forEach { currentCoroutineContext().ensureActive();vector(encoder,"D:${it.id}",it.text,it.documentId);completedSegments++ }
+    memories.forEach { currentCoroutineContext().ensureActive();vector(encoder,"M:${it.id}",it.content,memoryId=it.id);completedMemories++ }
+   } ?: error("Embedding model unavailable")
+   indexingDiagnostics.value=RetrievalIndexDiagnostics("COMPLETE",(System.nanoTime()-started)/1_000_000,segmentCount,completedSegments,memoryCount,completedMemories)
+  } catch(cancel:CancellationException) {
+   indexingDiagnostics.value=RetrievalIndexDiagnostics("CANCELLED",(System.nanoTime()-started)/1_000_000,segmentCount,completedSegments,memoryCount,completedMemories)
+   throw cancel
+  } catch(error:Throwable) {
+   indexingDiagnostics.value=RetrievalIndexDiagnostics("FAILED",(System.nanoTime()-started)/1_000_000,segmentCount,completedSegments,memoryCount,completedMemories,error.javaClass.simpleName)
+   throw error
+  }
  }
 }
 

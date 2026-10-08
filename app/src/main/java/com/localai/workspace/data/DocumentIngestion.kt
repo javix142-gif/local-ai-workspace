@@ -13,6 +13,8 @@ import com.tom_roush.pdfbox.text.PDFTextStripper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import org.xmlpull.v1.XmlPullParser
 import java.io.File
 import java.io.FileInputStream
@@ -36,6 +38,25 @@ data class TextChunk(
 )
 
 class UnsupportedDocumentException(message: String) : Exception(message)
+
+/** Content-free timings for the latest import. File names, paths, hashes and text are excluded. */
+data class DocumentIngestionDiagnostics(
+    val status: String,
+    val format: String,
+    val sourceBytes: Long? = null,
+    val copyHashMs: Long? = null,
+    val metadataCommitMs: Long? = null,
+    val parseMs: Long? = null,
+    val chunkMs: Long? = null,
+    val segmentCommitMs: Long? = null,
+    /** Callback duration only; background EG1 indexing has its own metric. */
+    val postImportCallbackMs: Long? = null,
+    val totalMs: Long? = null,
+    val pageCount: Int? = null,
+    val segmentCount: Int? = null,
+    val failureStage: String? = null,
+    val failureType: String? = null,
+)
 
 class DocumentParser(private val context: Context) {
     suspend fun parse(file: File, mimeType: String, displayName: String): ParsedDocument = kotlinx.coroutines.withTimeout(20_000) { kotlinx.coroutines.runInterruptible(Dispatchers.IO) {
@@ -177,6 +198,8 @@ class DocumentIngestionService(
     private val onIndexed: (suspend (String) -> Unit)? = null,
     private val outputDirectory: File? = null,
 ) {
+    private val _lastDiagnostics = MutableStateFlow<DocumentIngestionDiagnostics?>(null)
+    val lastDiagnostics = _lastDiagnostics.asStateFlow()
     private val parser = DocumentParser(context)
     private val chunker = TextChunker()
 
@@ -184,22 +207,44 @@ class DocumentIngestionService(
         displayName(uri).substringAfterLast('.', "").lowercase() in setOf("png", "jpg", "jpeg", "webp", "heic", "heif")
 
     suspend fun ingest(projectId: String, uri: Uri): Result<String> = withContext(Dispatchers.IO) {
+        val totalStarted=System.nanoTime()
+        var format="UNKNOWN"
+        var sourceBytes:Long?=null
+        var copyHashMs:Long?=null
+        var metadataCommitMs:Long?=null
+        var parseMs:Long?=null
+        var chunkMs:Long?=null
+        var segmentCommitMs:Long?=null
+        var postImportCallbackMs:Long?=null
+        var pageCount:Int?=null
+        var segmentCount:Int?=null
+        var failureStage:String?=null
+        var diagnosticStatus="IMPORTING"
         var copiedFile: File? = null
         val result = runCatching {
             check(database.projectDao().get(projectId) != null) { "This workspace was deleted" }
             val displayName = displayName(uri)
+            format=displayName.substringAfterLast('.', "").uppercase().take(12).ifBlank { "UNKNOWN" }
             val mimeType = context.contentResolver.getType(uri) ?: "application/octet-stream"
             val destinationDirectory = (outputDirectory ?: File(context.filesDir, "documents")).apply { mkdirs() }
             val destination = File(destinationDirectory, "${UUID.randomUUID()}_${safeFileName(displayName)}")
             copiedFile = destination
+            failureStage="COPY_HASH"
+            val copyStarted=System.nanoTime()
             val hashAndSize = copyWithHash(uri, destination)
+            sourceBytes=hashAndSize.first
+            copyHashMs=(System.nanoTime()-copyStarted)/1_000_000
             val existing = documents.findByHash(projectId, hashAndSize.second)
             if (existing != null) {
                 destination.delete()
+                diagnosticStatus="DUPLICATE"
+                failureStage=null
                 return@runCatching existing.id
             }
             val documentId = UUID.randomUUID().toString()
             val now = System.currentTimeMillis()
+            failureStage="DOCUMENT_METADATA"
+            val metadataStarted=System.nanoTime()
             database.withTransaction {
             check(database.projectDao().get(projectId) != null) { "This workspace was deleted during import" }
             documents.insert(
@@ -217,10 +262,21 @@ class DocumentIngestionService(
                 ),
             )
             }
+            metadataCommitMs=(System.nanoTime()-metadataStarted)/1_000_000
             try {
+                failureStage="PARSE"
+                val parseStarted=System.nanoTime()
                 val parsed = parser.parse(destination, mimeType, displayName)
+                parseMs=(System.nanoTime()-parseStarted)/1_000_000
+                pageCount=parsed.pages.size
+                failureStage="CHUNK"
+                val chunkStarted=System.nanoTime()
                 val chunks = chunker.chunk(parsed)
+                chunkMs=(System.nanoTime()-chunkStarted)/1_000_000
+                segmentCount=chunks.size
                 if (chunks.isEmpty()) throw UnsupportedDocumentException("No readable text was found. Scanned documents need OCR; add readable pages through the image button.")
+                failureStage="SEGMENT_COMMIT"
+                val segmentStarted=System.nanoTime()
                 database.withTransaction {
                     // A deletion may commit while parsing is running. Do not resurrect its index.
                     if (documents.get(documentId) == null || database.projectDao().get(projectId) == null) return@withTransaction
@@ -241,8 +297,12 @@ class DocumentIngestionService(
                     })
                     documents.updateStatus(documentId, "READY", "READY", parsed.pages.size, null, System.currentTimeMillis())
                 }
+                segmentCommitMs=(System.nanoTime()-segmentStarted)/1_000_000
+                failureStage=null
+                diagnosticStatus="READY"
             } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled }
             catch (error: Throwable) {
+                diagnosticStatus="FAILED"
                 documents.updateStatus(
                     documentId,
                     extraction = "FAILED",
@@ -252,8 +312,18 @@ class DocumentIngestionService(
                     updatedAt = System.currentTimeMillis(),
                 )
             }
-            if (documents.get(documentId)?.extractionStatus == "READY") onIndexed?.invoke(projectId)
+            if (documents.get(documentId)?.extractionStatus == "READY") {
+                failureStage="POST_IMPORT_CALLBACK"
+                val callbackStarted=System.nanoTime()
+                onIndexed?.invoke(projectId)
+                postImportCallbackMs=(System.nanoTime()-callbackStarted)/1_000_000
+                failureStage=null
+            }
             documentId
+        }
+        val failure=result.exceptionOrNull()
+        if(failure!=null) {
+            diagnosticStatus=if(failure is kotlinx.coroutines.CancellationException)"CANCELLED" else "FAILED"
         }
         if (result.isFailure) {
             copiedFile?.let { file ->
@@ -263,8 +333,10 @@ class DocumentIngestionService(
                     }
                 }
             }
-            (result.exceptionOrNull() as? kotlinx.coroutines.CancellationException)?.let { throw it }
         }
+        _lastDiagnostics.value=DocumentIngestionDiagnostics(diagnosticStatus,format,sourceBytes,copyHashMs,metadataCommitMs,parseMs,chunkMs,segmentCommitMs,postImportCallbackMs,
+            (System.nanoTime()-totalStarted)/1_000_000,pageCount,segmentCount,failureStage,failure?.javaClass?.simpleName)
+        (failure as? kotlinx.coroutines.CancellationException)?.let { throw it }
         result
     }
 

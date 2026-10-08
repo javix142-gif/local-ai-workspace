@@ -17,7 +17,11 @@ class GenerationMetricsPresentation private constructor(val raw: String, private
         timing("warmupMs", "Engine warm-up")
         timing("failedBackendInitializationMs", "Failed experimental initialization")
         timing("queueMs", "Inference gate")
-        timing("contextMs", "Context preparation")
+        timing("contextMs", "Context pipeline (inclusive)")
+        timing("skillRoutingMs", "Agent / Skill routing")
+        timing("memoryRetrievalMs", "Memory retrieval")
+        timing("sourceRetrievalMs", "Document retrieval")
+        timing("conversationRetrievalMs", "Conversation retrieval")
         timing("requestTotalMs", "End-to-end request")
         timing("totalMs", "Response generation")
         timing("loadMs", "Model initialization")
@@ -66,6 +70,8 @@ class GenerationMetricsPresentation private constructor(val raw: String, private
             warmupPerformedThisPreparation?.let { "warmupPerformed=$it" },
             failedBackendInitializationMs?.let { "failedBackendInitializationMs=$it" },
             inferenceGateWaitMs?.let { "queueMs=$it" }, contextBuildMs?.let { "contextMs=$it" },
+            skillRoutingMs?.let { "skillRoutingMs=$it" }, memoryRetrievalMs?.let { "memoryRetrievalMs=$it" },
+            sourceRetrievalMs?.let { "sourceRetrievalMs=$it" }, conversationRetrievalMs?.let { "conversationRetrievalMs=$it" },
             endToEndTotalMs?.let { "requestTotalMs=$it" }, callbackToUiStateMs?.let { "uiDeliveryMs=$it" },
             uiObservedTimeToFirstContentMs?.let { "uiObservedTtftMs=$it" },
             backendRequested?.let { "backendRequested=$it" }, backendEffective?.let { "backendEffective=$it" },

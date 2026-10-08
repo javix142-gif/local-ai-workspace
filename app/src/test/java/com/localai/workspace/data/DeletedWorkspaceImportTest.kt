@@ -68,5 +68,12 @@ class DeletedWorkspaceImportTest {
         assertTrue(File(doc.localPath).canonicalPath.startsWith(root.canonicalPath + File.separator))
         assertEquals("local source with useful words", File(doc.localPath).readText())
         assertFalse(db.documentDao().segmentsForDocument(doc.id).isEmpty())
+        val timings=service.lastDiagnostics.value!!
+        assertEquals("READY",timings.status)
+        assertEquals("TXT",timings.format)
+        assertTrue(timings.sourceBytes!! > 0)
+        assertNotNull(timings.copyHashMs);assertNotNull(timings.parseMs);assertNotNull(timings.chunkMs)
+        assertNotNull(timings.segmentCommitMs);assertNotNull(timings.totalMs)
+        assertFalse(com.google.gson.Gson().toJson(timings).contains("notes.txt"))
     }
 }

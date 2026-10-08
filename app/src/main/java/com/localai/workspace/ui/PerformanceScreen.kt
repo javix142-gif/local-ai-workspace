@@ -38,6 +38,8 @@ fun PerformanceScreen(graph: AppGraph, back: () -> Unit) {
     val records by graph.performance.records.collectAsStateWithLifecycle()
     val latest by graph.performance.lastGeneration.collectAsStateWithLifecycle()
     val chatTrace by graph.normalGenerationTrace.state.collectAsStateWithLifecycle()
+    val importDiagnostics by graph.documents.lastDiagnostics.collectAsStateWithLifecycle()
+    val retrievalIndexDiagnostics by graph.retrieval.indexingDiagnostics.collectAsStateWithLifecycle()
     val models by graph.workspace.allModels.collectAsStateWithLifecycle(emptyList())
     var iterations by rememberSaveable { mutableStateOf("1") }
     var mode by rememberSaveable { mutableStateOf("ALL") }
@@ -107,6 +109,22 @@ fun PerformanceScreen(graph: AppGraph, back: () -> Unit) {
             Text("Run: ${trace.runId}\nPhase: ${trace.phase}\nWorker checkpoint: ${trace.workerCheckpoint ?: "unavailable"}\nNative first callback: ${trace.firstCallbackMs ?: "unavailable"} ms\nFirst UI content: ${trace.firstVisibleUiMs ?: "unavailable"} ms\nNative in flight: ${trace.nativeInFlight ?: "unknown"}\nGate locked / owned: ${trace.gateLocked} / ${trace.gateOwned}\nCancelled: ${trace.cancelled}\nError class: ${trace.errorClass ?: "none"}\nProcess restart observed: ${trace.processRestartObserved}")
             TextButton(onClick = { (context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(ClipData.newPlainText("Normal chat trace", graph.normalGenerationTrace.report())) }) { Text("Copy normal chat trace") }
         } ?: Text("No normal generation recorded")
+        Text("LAST DOCUMENT PROCESSING", style = MaterialTheme.typography.titleMedium)
+        importDiagnostics?.let { item ->
+            Text(buildString {
+                append("Status: ${item.status} · Format: ${item.format} · Input: ${item.sourceBytes ?: "unavailable"} bytes\n")
+                append("Copy/hash: ${item.copyHashMs ?: "unavailable"} ms · Parse: ${item.parseMs ?: "unavailable"} ms · Chunk: ${item.chunkMs ?: "unavailable"} ms\n")
+                append("Database metadata/segments: ${item.metadataCommitMs ?: "unavailable"} / ${item.segmentCommitMs ?: "unavailable"} ms\n")
+                append("Post-import callback: ${item.postImportCallbackMs ?: "unavailable"} ms · Total: ${item.totalMs ?: "unavailable"} ms\n")
+                append("Pages: ${item.pageCount ?: "unavailable"} · Segments: ${item.segmentCount ?: "unavailable"}\n")
+                if(item.failureStage!=null) append("Failure stage/type: ${item.failureStage} / ${item.failureType ?: "unknown"}")
+            }, style = MaterialTheme.typography.bodySmall)
+        } ?: Text("No document import measured")
+        Text("Legacy EG1 background indexing: ${retrievalIndexDiagnostics.status} · ${retrievalIndexDiagnostics.durationMs ?: "unavailable"} ms · " +
+            "segments ${retrievalIndexDiagnostics.processedSegments}/${retrievalIndexDiagnostics.candidateSegments} · " +
+            "memories ${retrievalIndexDiagnostics.processedMemories}/${retrievalIndexDiagnostics.candidateMemories}" +
+            (retrievalIndexDiagnostics.failureType?.let { " · $it" } ?: ""), style = MaterialTheme.typography.bodySmall)
+        Text("Document timings contain metadata only; post-import callback does not imply background indexing finished.", style = MaterialTheme.typography.bodySmall)
         Text("LAST GENERATION", style = MaterialTheme.typography.titleMedium)
         Text(buildString {
             fun value(label: String, item: Any?) { append("$label: ${item ?: "unavailable"}\n") }
@@ -115,7 +133,9 @@ fun PerformanceScreen(graph: AppGraph, back: () -> Unit) {
             value("Failed experimental preparation ms", metrics?.failedBackendPreparationMs)
             value("Configured CPU text threads", metrics?.configuredCpuThreads)
             value("Warm-up ms", metrics?.warmupDurationMs); value("Queue ms", metrics?.inferenceGateWaitMs)
-            value("Context ms", metrics?.contextBuildMs); value("Native TTFT ms", metrics?.timeToFirstTokenMs)
+            value("Context pipeline ms (inclusive)", metrics?.contextBuildMs); value("Native TTFT ms", metrics?.timeToFirstTokenMs)
+            value("Agent / Skill routing ms", metrics?.skillRoutingMs); value("Memory retrieval ms", metrics?.memoryRetrievalMs)
+            value("Document retrieval ms", metrics?.sourceRetrievalMs); value("Conversation retrieval ms", metrics?.conversationRetrievalMs)
             value("End-to-end TTFT ms", metrics?.requestTimeToFirstTokenMs); value("Prefill tokens/s", metrics?.prefillTokensPerSecond)
             value("UI-observed TTFT ms (opt-in, active screen)", metrics?.uiObservedTimeToFirstContentMs)
             value("Decode tokens/s", metrics?.decodeTokensPerSecond); value("Output tokens", metrics?.outputTokens)
@@ -134,6 +154,7 @@ fun PerformanceScreen(graph: AppGraph, back: () -> Unit) {
             value("Available RAM bytes", metrics?.availableRamAfterBytes); value("Total RAM bytes", metrics?.totalRamBytes)
             value("Thermal", metrics?.thermalAfter); value("Adapter → UI state ms", metrics?.callbackToUiStateMs)
         }, style = MaterialTheme.typography.bodySmall)
+        Text("Routing, retrieval and context timings are also shown separately; these nested stages are not additive.", style = MaterialTheme.typography.bodySmall)
         Text("Benchmark · fixed text suite v1", style = MaterialTheme.typography.titleMedium)
         Text("Cold runs unload the engine and can take several minutes. Benchmarks use temporary conversations, unchanged model sampling, and never save prompt/answer text.")
         OutlinedTextField(value = iterations, onValueChange = { iterations = it.filter(Char::isDigit).take(2) },

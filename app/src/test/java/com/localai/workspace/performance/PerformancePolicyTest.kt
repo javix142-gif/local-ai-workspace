@@ -90,4 +90,23 @@ class PerformancePolicyTest {
         assertEquals(20L, app.inferenceGateWaitMs)
         assertNull(app.promptTokens); assertNull(app.decodeTokensPerSecond)
     }
+    @Test fun contextAndPreparationStagesRemainSeparateInRequestMetrics() {
+        val app = RequestTimings(100, gateWaitMs = 25, contextBuildMs = 90, firstStateAfterAcceptMs = 140,
+            callbackToStateMs = 3, skillRoutingMs = 4, memoryRetrievalMs = 10,
+            sourceRetrievalMs = 32, conversationRetrievalMs = 7)
+            .merge(RuntimeMetrics(modelPreparationDurationMs = 12_000, warmupDurationMs = 3_000,
+                timeToFirstTokenMs = 50, totalGenerationDurationMs = 900), 2_000)
+
+        assertEquals(25L, app.inferenceGateWaitMs)
+        assertEquals(90L, app.contextBuildMs)
+        assertEquals(4L, app.skillRoutingMs)
+        assertEquals(10L, app.memoryRetrievalMs)
+        assertEquals(32L, app.sourceRetrievalMs)
+        assertEquals(7L, app.conversationRetrievalMs)
+        assertEquals(12_000L, app.modelPreparationDurationMs)
+        assertEquals(3_000L, app.warmupDurationMs)
+        assertEquals(50L, app.timeToFirstTokenMs)
+        assertEquals(140L, app.requestTimeToFirstTokenMs)
+        assertEquals(900L, app.totalGenerationDurationMs)
+    }
 }
