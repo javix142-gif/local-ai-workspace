@@ -61,4 +61,21 @@ class RetrievalIntegrityTest {
             try {SemanticRetrievalService(db,cancel).retrieve("p","needle");fail("cancellation swallowed")}catch(_:CancellationException){}
         } finally {db.close()}
     }
+    @Test fun unicodeWindowsCoverWholePassageWithoutBreakingCodePoints() {
+        val text=("á🚲漢字 " ).repeat(200)
+        val windows=fullCoverageWindows(text)
+        assertEquals(text,windows.joinToString(""));assertTrue(windows.all{it.toByteArray(Charsets.UTF_8).size<=384})
+        assertTrue(windows.none{it.last().isHighSurrogate()||it.first().isLowSurrogate()})
+    }
+    @Test fun actualTokenLimitConditionUsesCompleteBoundedWindowsAndFiniteCentroid()=runBlocking {
+        val db=Room.inMemoryDatabaseBuilder(RuntimeEnvironment.getApplication(),WorkspaceDatabase::class.java).build()
+        val content=("á🚲漢字 ").repeat(200)+"needle"
+        val accepted=mutableListOf<String>()
+        val provider=object:EmbeddingProvider {override suspend fun <T> use(block:suspend(NeuralEmbeddings)->T):T=block(object:NeuralEmbeddings{
+            override val modelId="bounded";override fun close()=Unit
+            override fun embed(text:String):FloatArray {if(text.toByteArray().size>512)error("EMBEDDING_PROBE|TOKEN_LIMIT|Native limit");if(text.startsWith("title: none | text: "))accepted+=text.removePrefix("title: none | text: ");return FloatArray(768){if(it==0)1f else 0f}}
+        })}
+        try{insert(db,"a",content);val evidence=SemanticRetrievalService(db,provider).retrieve("p","needle").single();assertEquals(content,evidence.excerpt);assertEquals(content,accepted.joinToString(""));assertTrue(accepted.size>1)}finally{db.close()}
+    }
+
 }

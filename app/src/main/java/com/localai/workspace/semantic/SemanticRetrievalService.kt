@@ -43,12 +43,13 @@ class SemanticRetrievalService(private val db: WorkspaceDatabase, private val mo
  /** EG1 JNI has a real 512-token cap. On that explicit failure, cover the ENTIRE stored
   * passage using bounded UTF-8 windows and a length-weighted, normalized centroid.
   * No truncation and no runtime/tokenizer change. Other failures remain visible fallback. */
- private fun embedFullPassage(encoder:NeuralEmbeddings,content:String):FloatArray {
+ private suspend fun embedFullPassage(encoder:NeuralEmbeddings,content:String):FloatArray {
   try { return embed(encoder,"title: none | text: $content") }
   catch(failure:Exception) { if(failure.message?.contains("TOKEN_LIMIT")!=true)throw failure }
   val windows=fullCoverageWindows(content)
   val sum=DoubleArray(768)
   for(window in windows) {
+   currentCoroutineContext().ensureActive()
    val value=embed(encoder,"title: none | text: $window");val weight=window.toByteArray(Charsets.UTF_8).size
    require(value.size==768 && value.all{it.isFinite()})
    for(i in sum.indices)sum[i]+=value[i]*weight
