@@ -23,7 +23,7 @@ import java.util.UUID
 class AgentsSkillsValidation(private val owner:AppGraph) {
     suspend fun run():String=withContext(Dispatchers.IO) {
         check(!owner.chatSessions.hasGeneration && !owner.performance.running.value && !owner.semanticDiagnostics.running.value){"ANOTHER_OPERATION_RUNNING"}
-        check(owner.validationBusy.compareAndSet(false,true)){"VALIDATION_RUNNING"}
+        withValidationReservation(owner.validationBusy) {
         val id="agents-skills-${UUID.randomUUID()}";val context=ValidationContext(owner.contextForMeasurements)
         val workspace=Room.databaseBuilder(context,WorkspaceDatabase::class.java,"$id-workspace.db").build()
         val scope=CoroutineScope(SupervisorJob()+Dispatchers.Main.immediate)
@@ -31,8 +31,8 @@ class AgentsSkillsValidation(private val owner:AppGraph) {
         val rows=mutableListOf<Map<String,Any?>>()
         val sessions=mutableListOf<Pair<ChatViewModel,ViewModelStore>>()
         val report=File(owner.contextForMeasurements.filesDir,"agents-skills-diagnostics/validation.json").apply{parentFile?.mkdirs()}
-        val mainModel=owner.workspace.allModels.first().firstOrNull{it.id==owner.modelPreparation.state.value.modelId && it.toDescriptor().runtime==RuntimeType.LITERT_LM}
-            ?: owner.workspace.allModels.first().firstOrNull{it.toDescriptor().runtime==RuntimeType.LITERT_LM && it.importStatus==ModelImportStatus.READY.name}
+        var mainModel:ModelEntity?=null
+        var preparationPaused=false
         fun persist(state:String):String {
             val json=GsonBuilder().serializeNulls().setPrettyPrinting().create().toJson(mapOf("suite" to "AGENTS_SKILLS_V1","runId" to id,"state" to state,"timestamp" to System.currentTimeMillis(),"environment" to "DEVICE","appVersion" to com.localai.workspace.BuildConfig.VERSION_NAME,"pass" to rows.count{it["status"]=="PASS"},"fail" to rows.count{it["status"]=="FAIL"},"blocked" to rows.count{it["status"]=="BLOCKED"},"overall" to if(state!="COMPLETE")state else if(rows.all{it["status"]=="PASS"})"PASS"else"NOT_PASS","cases" to rows))
             val temp=File(report.path+".tmp");temp.writeText(json);check(temp.renameTo(report));return json
@@ -61,8 +61,11 @@ class AgentsSkillsValidation(private val owner:AppGraph) {
         }
         var greeting:ChatViewModel?=null
         var greetingCompleted=false
-        owner.modelPreparation.pauseForBenchmark()
         try {
+        mainModel=owner.workspace.allModels.first().firstOrNull{it.id==owner.modelPreparation.state.value.modelId && it.toDescriptor().runtime==RuntimeType.LITERT_LM}
+            ?: owner.workspace.allModels.first().firstOrNull{it.toDescriptor().runtime==RuntimeType.LITERT_LM && it.importStatus==ModelImportStatus.READY.name}
+            preparationPaused=true
+            owner.modelPreparation.pauseForBenchmark()
             test("general_normal_chat",true){val vm=newSession();greeting=vm;ask(vm,"hola");check(vm.agentTrace.value?.resolution?.agent?.id==AgentResolver.GENERAL);check(graph.performance.lastGeneration.value?.second?.nativeCompletionObserved==true){"NATIVE_COMPLETION_NOT_OBSERVED"};greetingCompleted=true;mapOf("nativeCompletion" to true)}
             test("zero_skill_greeting",true){val vm=if(greetingCompleted)requireNotNull(greeting) else newSession().also{ask(it,"hola");check(graph.performance.lastGeneration.value?.second?.nativeCompletionObserved==true){"NATIVE_COMPLETION_NOT_OBSERVED"}};check(vm.agentTrace.value!!.selection.active.isEmpty());mapOf("activeSkills" to 0,"nativeCompletion" to true)}
             test("spreadsheet_activation"){val t=graph.agentSkills.resolve(SkillRoutingRequest("Revisa este Excel y dime por qué no cuadran los totales",attachments=listOf(RoutingAttachment("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","report.xlsx"))),null,null);check(t.selection.active.map{it.id}==listOf("skill.spreadsheet-analysis"));t.safeReport()}
@@ -95,8 +98,15 @@ class AgentsSkillsValidation(private val owner:AppGraph) {
                 withContext(Dispatchers.Main.immediate){sessions.forEach{(vm,store)->vm.closeValidationSession();store.clear()};graph.modelPreparation.cancel()}
                 scope.coroutineContext[Job]?.cancelAndJoin();graph.contextFoundation.database.close();graph.agentsSkillsDatabase.close();workspace.close()
                 listOf("$id-workspace.db","context-memory-$id.db","agents-skills-$id.db").forEach{context.deleteDatabase(it)}
-                owner.modelPreparation.resumeAfterBenchmark();owner.validationBusy.value=false
+                if(preparationPaused)owner.modelPreparation.resumeAfterBenchmark()
             }
         }
+        }
     }
+}
+
+/** Covers startup failure/cancellation as well as the native portion of the suite. */
+internal suspend fun <T> withValidationReservation(busy:MutableStateFlow<Boolean>,block:suspend()->T):T {
+    check(busy.compareAndSet(false,true)){"VALIDATION_RUNNING"}
+    try{return block()}finally{busy.value=false}
 }
