@@ -255,6 +255,82 @@ class ContextEvidenceExcerptTest {
         }
     }
 
+    @Test fun log10CellUsedAsFormulaReferenceIsNotDiscardedAsFunctionName() {
+        val source = listOf(
+            row(3, cell("A3", 1, "4", "LOG10")),
+            row(10, cell("LOG10", 8509, "cell-value")),
+        ).joinToString("\n")
+
+        val excerpt = ContextEvidenceExcerptSelector.select("Explica A3", source)
+
+        assertTrue("LOG10 is a valid A1 cell when it is a reference, text=${excerpt.text}", excerpt.text.contains("LOG10=cell-value"))
+        assertTrue("the composite reference must identify its sheet", "Hoja1!LOG10" in excerpt.cellReferences)
+    }
+
+    @Test fun log10FunctionCallKeepsArgumentWithoutSelectingSameNamedCell() {
+        val source = listOf(
+            row(1, cell("A1", 1, "100")),
+            row(3, cell("A3", 1, "2", "LOG10(A1)")),
+            row(10, cell("LOG10", 8509, "must-not-be-a-function-dependency")),
+        ).joinToString("\n")
+
+        val excerpt = ContextEvidenceExcerptSelector.select("Explica A3", source)
+
+        assertEquals(listOf("Hoja1!A3", "Hoja1!A1"), excerpt.cellReferences)
+        assertTrue(excerpt.text.contains("A1=100"))
+        assertFalse(excerpt.text.contains("must-not-be-a-function-dependency"))
+        assertTrue(excerpt.incompleteReasons.isEmpty())
+    }
+
+    @Test fun log10IsAValidDirectAndUnqualifiedFormulaCellReference() {
+        val source = listOf(
+            row(3, cell("A3", 1, "4", "LOG10")),
+            row(10, cell("LOG10", 8509, "cell-value")),
+        ).joinToString("\n")
+
+        val direct = ContextEvidenceExcerptSelector.select("Explica LOG10", source)
+        val dependency = ContextEvidenceExcerptSelector.select("Explica A3", source)
+
+        assertEquals(listOf("Hoja1!LOG10"), direct.cellReferences)
+        assertTrue(direct.text.contains("LOG10=cell-value"))
+        assertEquals(listOf("Hoja1!A3", "Hoja1!LOG10"), dependency.cellReferences)
+        assertTrue(dependency.text.contains("LOG10=cell-value"))
+        assertTrue(dependency.incompleteReasons.isEmpty())
+    }
+
+    @Test fun qualifiedLog10NeverAliasesHomonymousAddressAndMissingTargetIsReported() {
+        val presentSource = listOf(
+            sheetRow("Hoja1", 0, 0, cell("LOG10", 8509, "wrong-sheet")),
+            sheetRow("Hoja2", 1, 1, cell("LOG10", 8509, "right-sheet"), cell("A3", 1, "4", "LOG10")),
+        ).joinToString("\n")
+        val direct = ContextEvidenceExcerptSelector.select("Hoja2!LOG10", presentSource)
+        val formula = ContextEvidenceExcerptSelector.select("Hoja2!A3", presentSource)
+
+        assertEquals(listOf("Hoja2!LOG10"), direct.cellReferences)
+        assertTrue(direct.text.contains("Hoja2!LOG10=right-sheet"))
+        assertEquals(listOf("Hoja2!A3", "Hoja2!LOG10"), formula.cellReferences)
+        assertFalse(formula.text.contains("wrong-sheet"))
+
+        val missingSource = listOf(
+            sheetRow("Hoja1", 0, 0, cell("LOG10", 8509, "wrong-sheet"), cell("A3", 1, "4", "'Hoja2'!LOG10")),
+        ).joinToString("\n")
+        val missing = ContextEvidenceExcerptSelector.select("Hoja1!A3", missingSource)
+
+        assertEquals(listOf("Hoja1!A3"), missing.cellReferences)
+        assertEquals(listOf("Hoja2!LOG10"), missing.missingCellReferences)
+        assertTrue(missing.incompleteReasons.contains("SHEET_NOT_FOUND"))
+        assertFalse(missing.text.contains("wrong-sheet"))
+    }
+
+    @Test fun unqualifiedMissingLog10FormulaDependencyIsCompositeAndIncomplete() {
+        val source = row(3, cell("A3", 1, "4", "LOG10"))
+
+        val excerpt = ContextEvidenceExcerptSelector.select("Explica A3", source)
+
+        assertEquals(listOf("Hoja1!LOG10"), excerpt.missingCellReferences)
+        assertTrue(excerpt.incompleteReasons.contains("MISSING_REFERENCED_CELLS"))
+    }
+
     @Test fun rectangularFormulaRangeIncludesAvailableRowAndColumnCells() {
         val source = listOf(
             row(1, cell("A1", 1, "1"), cell("B1", 2, "2")),

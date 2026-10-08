@@ -48,6 +48,43 @@ class AuditHarness {
         checkCase("range_middle_cell", "Suma A1:A3", source(), setOf("A1", "A2", "A3"))
         checkCase("absolute_formula_dependencies", "Explica A3", source("\$A\$2-\$A\$1"), setOf("A1", "A2", "A3"))
 
+        fun recordReferences(name:String,result:ContextEvidenceExcerpt,expected:List<String>,missing:List<String> = emptyList(),forbiddenText:String?=null) {
+            val passed=result.cellReferences==expected && result.missingCellReferences==missing &&
+                (forbiddenText==null || !result.text.contains(forbiddenText))
+            cases.put(JSONObject().put("case",name).put("expectedCellReferences",JSONArray(expected))
+                .put("actualCellReferences",JSONArray(result.cellReferences))
+                .put("expectedMissingCellReferences",JSONArray(missing))
+                .put("actualMissingCellReferences",JSONArray(result.missingCellReferences))
+                .put("incompleteReasons",JSONArray(result.incompleteReasons))
+                .put("excerpt",result.text).put("invariantPass",passed))
+        }
+        val log10Function=listOf(
+            JSONObject().put("sheet","Hoja1").put("row",1).put("cells",JSONArray().put(JSONObject().put("address","A1").put("column",1).put("value","100"))).toString(),
+            JSONObject().put("sheet","Hoja1").put("row",3).put("cells",JSONArray().put(JSONObject().put("address","A3").put("column",1).put("value","2").put("formula","LOG10(A1)"))).toString(),
+            JSONObject().put("sheet","Hoja1").put("row",10).put("cells",JSONArray().put(JSONObject().put("address","LOG10").put("column",8509).put("value","function-decoy"))).toString(),
+        ).joinToString("\n")
+        recordReferences("log10_function_call_keeps_argument",ContextEvidenceExcerptSelector.select("Explica A3",log10Function),listOf("Hoja1!A3","Hoja1!A1"),forbiddenText="function-decoy")
+        val log10Cell=listOf(
+            JSONObject().put("sheet","Hoja1").put("row",10).put("cells",JSONArray().put(JSONObject().put("address","LOG10").put("column",8509).put("value","cell-value"))).toString(),
+        ).joinToString("\n")
+        recordReferences("log10_direct_query",ContextEvidenceExcerptSelector.select("Explica LOG10",log10Cell),listOf("Hoja1!LOG10"))
+        val log10Formula=listOf(
+            JSONObject().put("sheet","Hoja1").put("row",3).put("cells",JSONArray().put(JSONObject().put("address","A3").put("column",1).put("value","4").put("formula","LOG10"))).toString(),
+            JSONObject().put("sheet","Hoja1").put("row",10).put("cells",JSONArray().put(JSONObject().put("address","LOG10").put("column",8509).put("value","cell-value"))).toString(),
+        ).joinToString("\n")
+        recordReferences("log10_formula_cell_reference",ContextEvidenceExcerptSelector.select("Explica A3",log10Formula),listOf("Hoja1!A3","Hoja1!LOG10"))
+        val log10Qualified=listOf(
+            JSONObject().put("sheet","Hoja1").put("row",10).put("cells",JSONArray().put(JSONObject().put("address","LOG10").put("column",8509).put("value","wrong-sheet"))).toString(),
+            JSONObject().put("sheet","Hoja2").put("row",10).put("cells",JSONArray().put(JSONObject().put("address","LOG10").put("column",8509).put("value","right-sheet"))).toString(),
+            JSONObject().put("sheet","Hoja2").put("row",3).put("cells",JSONArray().put(JSONObject().put("address","A3").put("column",1).put("value","4").put("formula","LOG10"))).toString(),
+        ).joinToString("\n")
+        recordReferences("hoja2_log10_uses_qualified_sheet",ContextEvidenceExcerptSelector.select("Hoja2!A3",log10Qualified),listOf("Hoja2!A3","Hoja2!LOG10"),forbiddenText="wrong-sheet")
+        val log10Missing=listOf(
+            JSONObject().put("sheet","Hoja1").put("row",10).put("cells",JSONArray().put(JSONObject().put("address","LOG10").put("column",8509).put("value","wrong-sheet"))).toString(),
+            JSONObject().put("sheet","Hoja1").put("row",3).put("cells",JSONArray().put(JSONObject().put("address","A3").put("column",1).put("value","4").put("formula","'Hoja2'!LOG10"))).toString(),
+        ).joinToString("\n")
+        recordReferences("missing_qualified_log10_is_diagnostic",ContextEvidenceExcerptSelector.select("Hoja1!A3",log10Missing),listOf("Hoja1!A3"),listOf("Hoja2!LOG10"),forbiddenText="wrong-sheet")
+
         val crossSheet= listOf(
             JSONObject().put("sheet","Hoja1").put("sheetOrder",0).put("row",1).put("cells",JSONArray().put(JSONObject().put("address","A1").put("column",1).put("value","999"))).toString(),
             JSONObject().put("sheet","Hoja1").put("sheetOrder",0).put("row",3).put("cells",JSONArray().put(JSONObject().put("address","A3").put("column",1).put("value","4").put("formula","'Hoja2'!A1"))).toString(),
@@ -70,7 +107,7 @@ class AuditHarness {
 
         val report = JSONObject()
             .put("scope", "INDEPENDENT_HOST_SELECTOR_HARNESS_NOT_ANDROID")
-            .put("sourceCommit", System.getenv("M00_SOURCE_COMMIT") ?: "7da2cc71e57aed1d213ea03b01ba8b41be849939")
+            .put("sourceCommit", System.getenv("M00_SOURCE_COMMIT") ?: "NOT_PROVIDED")
             .put("cases", cases)
         val output = File("build/reports/m00-03/SELECTOR_REPRODUCCIONES.json")
         output.parentFile?.mkdirs()

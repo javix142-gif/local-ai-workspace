@@ -302,7 +302,10 @@ object ContextEvidenceExcerptSelector {
         cellReference.findAll(masked).forEach { match ->
             covered += match.range
             val firstRaw = match.groups["first"]?.value ?: return@forEach
-            if (firstRaw.replace("$", "").uppercase(Locale.ROOT) in functionLikeCellTokens && match.groups["sheet"] == null) return@forEach
+            val next = masked.indexOfFirstNonWhitespace(match.range.last + 1)
+            val isFunctionCall = next in masked.indices && masked[next] == '('
+            if (firstRaw.replace("$", "").uppercase(Locale.ROOT) in functionLikeCellTokens &&
+                match.groups["sheet"] == null && isFunctionCall) return@forEach
             val first = parseAddress(firstRaw) ?: return@forEach
             val last = match.groups["last"]?.value?.let(::parseAddress) ?: first
             val sheetToken = match.groups["sheet"]?.value

@@ -253,6 +253,49 @@ class SemanticContextPostfixTest {
         assertTrue(bundle.sourceEvidenceIssues.isEmpty())
     }
 
+    @Test fun eg2Log10CellDependencyReachesFinalContextAndProvenance()=runBlocking {
+        addProject("project-a")
+        val document=addDocument("project-a","log10-eg2","log10.xlsx",listOf(
+            spreadsheetRow("Hoja1",0,"A3","4","LOG10"),
+            spreadsheetRow("Hoja1",0,"LOG10","cell-value"),
+        ).joinToString("\n"))
+        index("project-a")
+
+        val bundle=foundation.build(request("project-a",setOf(document.id)).copy(query="Explica A3"),evidence=emptyList(),memoryEnabled=false)
+        val source=bundle.included.single{it.kind==com.localai.workspace.context.ContextKind.SOURCE}
+        val prompt=bundle.conversation().userMessage
+
+        assertEquals(listOf("Hoja1!A3","Hoja1!LOG10"),source.provenance.cellReferences)
+        assertTrue(prompt.contains("Hoja1!LOG10=cell-value"))
+        assertTrue(prompt.contains("cell-references=\"Hoja1!A3,Hoja1!LOG10\""))
+        assertEquals(source.text,bundle.sourceEvidence.single().excerpt)
+        assertTrue(bundle.sourceEvidenceIssues.isEmpty())
+    }
+
+    @Test fun lexicalFallbackReportsMissingQualifiedLog10WithoutUsingHomonym()=runBlocking {
+        addProject("project-a")
+        val document=addDocument("project-a","log10-missing-lexical","log10-missing.xlsx",listOf(
+            spreadsheetRow("Hoja1",0,"LOG10","wrong-sheet"),
+            spreadsheetRow("Hoja1",0,"A3","4","'Hoja2'!LOG10"),
+        ).joinToString("\n"))
+        index("project-a")
+        val lexical=graph.retrieval.retrieve("project-a","Explica A3",documentIds=setOf(document.id))
+        assertTrue("the fixture must use the production lexical retrieval path",lexical.isNotEmpty())
+        driver.failNext=true
+
+        val bundle=foundation.build(request("project-a",setOf(document.id)).copy(query="Explica A3"),evidence=lexical,memoryEnabled=false)
+        val source=bundle.included.single{it.kind==com.localai.workspace.context.ContextKind.SOURCE}
+        val issue=bundle.sourceEvidenceIssues.single()
+
+        assertTrue(bundle.notice.orEmpty().contains("SOURCE_SEMANTIC_V2_SKIPPED"))
+        assertEquals(listOf("Hoja1!A3"),source.provenance.cellReferences)
+        assertEquals(listOf("Hoja2!LOG10"),source.provenance.missingCellReferences)
+        assertTrue(issue.reasons.contains("SHEET_NOT_FOUND"))
+        assertTrue(bundle.requiresUserNotice)
+        assertTrue(bundle.conversation().userMessage.contains("missing-cell-references=\"Hoja2!LOG10\""))
+        assertFalse(bundle.conversation().userMessage.contains("wrong-sheet"))
+    }
+
     @Test fun selectedDocumentDoesNotResolveQualifiedDependencyFromAnotherDocument()=runBlocking {
         addProject("project-a")
         val selected=addDocument("project-a","formula-only","formula.xlsx",listOf(
