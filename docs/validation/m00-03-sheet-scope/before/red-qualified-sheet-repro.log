@@ -1,0 +1,108 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.10.2/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Configuration 'nativeAar' was resolved during configuration time.
+This is a build performance and scalability issue.
+See https://github.com/gradle/gradle/issues/2298
+Run with --info for a stacktrace.
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :litert-compat:copyNativeBackend UP-TO-DATE
+> Task :litert-compat:preBuild UP-TO-DATE
+> Task :litert-compat:preDebugBuild UP-TO-DATE
+> Task :litert-compat:writeDebugAarMetadata UP-TO-DATE
+> Task :llama-runtime:preBuild UP-TO-DATE
+> Task :llama-runtime:preDebugBuild UP-TO-DATE
+> Task :llama-runtime:writeDebugAarMetadata UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :litert-compat:generateDebugResValues UP-TO-DATE
+> Task :litert-compat:generateDebugResources UP-TO-DATE
+> Task :litert-compat:packageDebugResources UP-TO-DATE
+> Task :llama-runtime:generateDebugResValues UP-TO-DATE
+> Task :llama-runtime:generateDebugResources UP-TO-DATE
+> Task :llama-runtime:packageDebugResources UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :litert-compat:extractDeepLinksDebug UP-TO-DATE
+> Task :litert-compat:processDebugManifest UP-TO-DATE
+> Task :llama-runtime:extractDeepLinksDebug UP-TO-DATE
+> Task :llama-runtime:processDebugManifest UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :litert-compat:compileDebugLibraryResources UP-TO-DATE
+> Task :litert-compat:parseDebugLocalResources UP-TO-DATE
+> Task :litert-compat:generateDebugRFile UP-TO-DATE
+> Task :llama-runtime:compileDebugLibraryResources UP-TO-DATE
+> Task :llama-runtime:parseDebugLocalResources UP-TO-DATE
+> Task :llama-runtime:generateDebugRFile UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :litert-compat:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :litert-compat:compileDebugKotlin UP-TO-DATE
+> Task :litert-compat:javaPreCompileDebug UP-TO-DATE
+> Task :litert-compat:compileDebugJavaWithJavac NO-SOURCE
+> Task :litert-compat:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :llama-runtime:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :llama-runtime:compileDebugKotlin UP-TO-DATE
+> Task :llama-runtime:javaPreCompileDebug UP-TO-DATE
+> Task :llama-runtime:compileDebugJavaWithJavac NO-SOURCE
+> Task :llama-runtime:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :app:kspDebugKotlin UP-TO-DATE
+> Task :app:compileDebugKotlin UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar UP-TO-DATE
+> Task :app:kspDebugUnitTestKotlin
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :litert-compat:mergeDebugShaders UP-TO-DATE
+> Task :litert-compat:compileDebugShaders NO-SOURCE
+> Task :litert-compat:generateDebugAssets UP-TO-DATE
+> Task :litert-compat:packageDebugAssets UP-TO-DATE
+> Task :llama-runtime:mergeDebugShaders UP-TO-DATE
+> Task :llama-runtime:compileDebugShaders NO-SOURCE
+> Task :llama-runtime:generateDebugAssets UP-TO-DATE
+> Task :llama-runtime:packageDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+> Task :litert-compat:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :litert-compat:processDebugJavaRes UP-TO-DATE
+> Task :llama-runtime:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :llama-runtime:processDebugJavaRes UP-TO-DATE
+
+> Task :app:testDebugUnitTest
+
+ContextEvidenceExcerptTest > qualifiedFormulaDependencyNeverAliasesSameAddressOnCurrentSheet FAILED
+    java.lang.AssertionError at ContextEvidenceExcerptTest.kt:75
+
+1 test completed, 1 failed
+
+> Task :app:testDebugUnitTest FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:testDebugUnitTest'.
+> There were failing tests. See the report at: file:///workspace/local-ai-workspace/app/build/reports/tests/testDebugUnitTest/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 53s
+63 actionable tasks: 3 executed, 60 up-to-date
