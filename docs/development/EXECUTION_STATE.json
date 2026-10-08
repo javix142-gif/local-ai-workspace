@@ -1,0 +1,93 @@
+{
+  "repository": "https://github.com/javix142-gif/local-ai-workspace.git",
+  "branch": "feat/0.5.0-skills-agents",
+  "startingHeadSha": "7aa57492fd3117c5b14b2a11b8167ba55c4347e3",
+  "testedCodeHeadSha": "b577934d1f93fd02b6d09fc5097a407d5069515f",
+  "version": "0.5.0",
+  "applicationId": "com.localai.workspace",
+  "completedTasks": [
+    "M00-1 bounded XLSX representation and omit blank/style-only cells",
+    "M00-2 query-relevant bounded evidence excerpts with provenance and precise omission severity",
+    "M00-3 adaptive three-row chat header and Compose layout test",
+    "M00-4 metadata-only stage timing diagnostics",
+    "Preserve Semantic V2 F1/F2 behavior"
+  ],
+  "blockedTasks": [
+    "Android emulator execution: environment has no AVD/system image, KVM, or connected device",
+    "Motorola-specific M00 validation and exact physical XLSX latency diagnosis"
+  ],
+  "testResults": {
+    "focusedRegression": {"status": "PASS", "evidence": "HOST", "tests": 78, "failures": 0},
+    "appJvm": {"status": "PASS", "evidence": "HOST", "tests": 686, "failures": 0, "errors": 0, "skipped": 0},
+    "litertCompatJvm": {"status": "PASS", "evidence": "HOST", "tests": 2, "failures": 0, "errors": 0, "skipped": 0},
+    "composeUiExecution": {"status": "NOT_RUN", "evidence": "EMULATOR", "reason": "No AVD/system image, no /dev/kvm, and no attached ADB device"}
+  },
+  "finalHostGate": {
+    "status": "PASS",
+    "evidence": "HOST",
+    "commandTasks": [
+      ":app:testDebugUnitTest",
+      ":litert-compat:testDebugUnitTest",
+      ":app:assembleDebug",
+      ":app:assembleRelease",
+      ":app:lintDebug",
+      ":app:assembleDebugAndroidTest"
+    ],
+    "appTests": 686,
+    "compatibilityTests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "lint": {"errors": 0, "warnings": 40, "information": 1},
+    "instrumentedTestsExecuted": false
+  },
+  "buildResults": {
+    "assembleDebug": {"status": "PASS", "evidence": "HOST"},
+    "assembleRelease": {"status": "PASS", "evidence": "HOST"},
+    "lintDebug": {"status": "PASS", "evidence": "HOST", "errors": 0},
+    "assembleDebugAndroidTest": {"status": "PASS", "evidence": "HOST", "note": "Instrumented test APK compiled; tests were not executed"}
+  },
+  "emulatorResults": {
+    "availability": "BLOCKED",
+    "adbDevices": 0,
+    "avds": 0,
+    "systemImages": 0,
+    "kvm": false,
+    "instrumentedTests": "NOT_RUN"
+  },
+  "physicalDeviceResults": {
+    "historicalAgentsSkillsV1": {"status": "PASS", "evidence": "PHYSICAL_DEVICE", "tests": "12/12 on prior recorded build; not this candidate"},
+    "stabilizationM00Validation": {"status": "NOT_RUN", "evidence": "PHYSICAL_DEVICE"},
+    "firstXlsxLatencyRootCause": {"status": "NOT_DETERMINED", "evidence": "PHYSICAL_DEVICE", "note": "Original workbook/device trace unavailable"}
+  },
+  "artifactHashes": {
+    "arm64Apk": {
+      "path": "dist/apk/local-ai-workspace-0.5.0-preloop-stabilization-arm64.apk",
+      "bytes": 100130461,
+      "sha256": "a7bd3f5c69c2644b7de9fbe86f62aa3edf78fb60961487cd96782fe66848c0d0",
+      "signature": "Verified APK Signature Scheme v3; SHA-256 signer f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
+      "zipaligned": true,
+      "abi": ["arm64-v8a"],
+      "deviceValidated": false
+    }
+  },
+  "gitSynchronization": {
+    "status": "PUSH_PENDING",
+    "remoteUrl": "https://github.com/javix142-gif/local-ai-workspace.git",
+    "remoteFeatureBeforePush": "de615b772cf37a99e7e08a647c59607b271de606",
+    "featurePushIsFastForward": true,
+    "mainUnchanged": true,
+    "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
+    "v042TagUnchanged": true,
+    "v042CommitSha": "de615b772cf37a99e7e08a647c59607b271de606",
+    "forcePush": false,
+    "merge": false,
+    "releaseTagCreated": false
+  },
+  "pendingAcceptance": [
+    "Moto G86 import and cold/warm timings for the original XLSX",
+    "Moto G86 verification of the three-line chat header under keyboard/font-scale conditions",
+    "Moto G86 regression run for Semantic V2 F1/F2 after document update and reindex"
+  ],
+  "nextRecommendedTask": "Validate the signed ARM64 candidate with the original XLSX on Moto G86; use the new per-stage diagnostics to identify the first-response latency source before selecting further roadmap work."
+}
