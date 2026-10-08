@@ -118,6 +118,7 @@ class SemanticContextPostfixTest {
         assertTrue(bundle.included.any{it.kind==com.localai.workspace.context.ContextKind.SOURCE && it.text.contains("ORCHID")})
         assertTrue(bundle.conversation().userMessage.contains("ORCHID is the semantic evidence passage"))
         assertEquals(1,bundle.sourceEvidence.size)
+        assertFalse(bundle.included.single{it.kind==com.localai.workspace.context.ContextKind.SOURCE}.provenance.excerpted)
     }
 
     @Test fun projectIsolationAndSelectedDocumentScopeArePreserved()=runBlocking {
@@ -135,6 +136,30 @@ class SemanticContextPostfixTest {
         val projectBundle=foundation.build(request("project-a"),evidence=emptyList(),memoryEnabled=false)
         assertTrue(projectBundle.included.filter{it.kind==com.localai.workspace.context.ContextKind.SOURCE}.all{it.scope.id=="project-a"})
         assertFalse(projectBundle.conversation().userMessage.contains("foreign project passage"))
+    }
+
+    @Test fun followUpCellQuestionSendsOnlyRelevantCellsWithCellProvenance()=runBlocking {
+        addProject("project-a")
+        val row1=org.json.JSONObject().put("sheet","Sales").put("row",1).put("cells",org.json.JSONArray()
+            .put(org.json.JSONObject().put("column",1).put("address","A1").put("value","1")))
+        val row2=org.json.JSONObject().put("sheet","Sales").put("row",2).put("cells",org.json.JSONArray()
+            .put(org.json.JSONObject().put("column",1).put("address","A2").put("value","5")))
+        val row3=org.json.JSONObject().put("sheet","Sales").put("row",3).put("cells",org.json.JSONArray()
+            .put(org.json.JSONObject().put("column",1).put("address","A3").put("value","4").put("formula","A2-A1")))
+        val row4=org.json.JSONObject().put("sheet","Sales").put("row",4).put("cells",org.json.JSONArray()
+            .put(org.json.JSONObject().put("column",1).put("address","A4").put("value","whole unrelated workbook content")))
+        val workbook=org.json.JSONObject().put("sheet","Sales").put("headerCandidate",org.json.JSONArray()
+            .put(org.json.JSONObject().put("column",1).put("label","Amount"))).toString()+"\n"+
+            listOf(row1,row2,row3,row4).joinToString("\n")
+        val doc=addDocument("project-a","sales","sales.xlsx",workbook)
+        index("project-a")
+
+        val bundle=foundation.build(request("project-a",setOf(doc.id)).copy(query="¿Cuál es el valor de A3?"),evidence=emptyList(),memoryEnabled=false)
+        val source=bundle.included.single{it.kind==com.localai.workspace.context.ContextKind.SOURCE}
+        assertEquals(listOf("A3","A1","A2"),source.provenance.cellAddresses)
+        assertTrue(bundle.conversation().userMessage.contains("A3=4"))
+        assertTrue(bundle.conversation().userMessage.contains("formula=A2-A1"))
+        assertFalse(bundle.conversation().userMessage.contains("whole unrelated workbook content"))
     }
 
     @Test fun equivalentLegacyAndV2EvidenceIsIncludedOnlyOnce()=runBlocking {
@@ -164,11 +189,23 @@ class SemanticContextPostfixTest {
         assertEquals(legacy.single().id,bundle.sourceEvidence.single().id)
     }
 
+    @Test fun v2FailureWithEmptyLegacyEvidenceRunsProductionLexicalFallback()=runBlocking {
+        addProject("project-a")
+        addDocument("project-a","doc-a","notes.txt","ORCHID lexical fallback must run when precomputed evidence is empty.")
+        index("project-a")
+        driver.failNext=true
+        val bundle=foundation.build(request("project-a"),evidence=emptyList(),memoryEnabled=false)
+        assertTrue(bundle.notice.orEmpty().contains("SOURCE_SEMANTIC_V2_SKIPPED"))
+        assertTrue(bundle.included.any{it.kind==com.localai.workspace.context.ContextKind.SOURCE && it.text.contains("lexical fallback")})
+        assertEquals(1,bundle.sourceEvidence.size)
+    }
+
     @Test fun retrievalFinishesBeforeTheGenerationGateCanBeAcquired()=runBlocking {
         addProject("project-a")
         addDocument("project-a","doc-a","notes.txt","ORCHID preparation must happen outside the generation lease.")
         index("project-a")
         val before=driver.calls
+        driver.onCompute={assertFalse("embedding must finish before Gemma generation gate",graph.inferenceGate.isLocked)}
         foundation.build(request("project-a"),evidence=emptyList(),memoryEnabled=false)
         assertTrue(driver.calls>before)
         assertFalse("the generation lease is not retained by context preparation",graph.inferenceGate.isLocked)

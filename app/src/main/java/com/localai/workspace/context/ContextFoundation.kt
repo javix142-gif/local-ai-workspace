@@ -90,6 +90,9 @@ class ContextFoundation(private val graph:AppGraph, private val semanticLayerPro
         val layer=semanticLayerProvider()
         var sourceNotice:String?=null
         val canUseV2=request.sourceRetrievalMode==SourceRetrievalMode.SEMANTIC_V2_PREFERRED && layer.selection.choice==SemanticProviderChoice.EG2
+        if(request.sourceRetrievalMode==SourceRetrievalMode.SEMANTIC_V2_PREFERRED && !canUseV2) {
+            sourceNotice="SOURCE_SEMANTIC_V2_UNAVAILABLE;LEGACY_FALLBACK"
+        }
         val v2Hits=if(canUseV2)try {
             layer.search(SemanticInput.Text(request.query),sourceScope,setOf(SemanticModality.TEXT,SemanticModality.CODE),limit=4,documentIds=request.selectedDocumentIds)
                 .filter { it.content!=null && it.modality in setOf(SemanticModality.TEXT,SemanticModality.CODE) }
@@ -97,35 +100,55 @@ class ContextFoundation(private val graph:AppGraph, private val semanticLayerPro
             sourceNotice="SOURCE_SEMANTIC_V2_SKIPPED:${if(failure is SemanticFailure)failure.code.name else failure.javaClass.simpleName};LEGACY_FALLBACK"
             emptyList()
         }else emptyList()
+        if(canUseV2 && v2Hits.isEmpty() && sourceNotice==null) sourceNotice="SOURCE_SEMANTIC_V2_NO_HITS;LEGACY_FALLBACK"
         val sourceEvidenceByItem=linkedMapOf<String,Evidence>()
         if(v2Hits.isNotEmpty()) {
             for(hit in v2Hits) {
                 val content=hit.content ?: continue
+                val excerpt=ContextEvidenceExcerptSelector.select(request.query,content)
                 val evidenceHit=hit.legacySegmentId?.let { legacyId->
-                    evidence?.firstOrNull{it.segmentId==legacyId && it.documentId==hit.documentId} ?: run {
-                        val document=graph.database.documentDao().documentForSegment(legacyId)
-                        val segment=graph.database.documentDao().segment(legacyId)
-                        if(document==null || segment==null || document.projectId!=access.projectId || document.id!=hit.documentId)null else Evidence(
-                            id="LCL-${com.localai.workspace.semantic.VectorPersistence.hash("${access.projectId.orEmpty()}:$legacyId").take(8).uppercase()}",
-                            segmentId=legacyId,documentId=document.id,documentTitle=document.displayName,excerpt=content,
-                            pageStart=hit.page ?: segment.pageStart,pageEnd=segment.pageEnd,charStart=segment.charStart,
-                            charEnd=segment.charStart?.plus(content.length),retrievalScore=hit.fusedScore)
+                    val document=graph.database.documentDao().documentForSegment(legacyId)
+                    val segment=graph.database.documentDao().segment(legacyId)
+                    if(document==null || segment==null || document.projectId!=access.projectId || document.id!=hit.documentId)null else {
+                        val base=segment.charStart
+                        val start=excerpt.charStart?.let{offset->base?.plus(offset)}
+                        val end=excerpt.charEnd?.let{offset->base?.plus(offset)}
+                        evidence?.firstOrNull{it.segmentId==legacyId && it.documentId==hit.documentId}
+                            ?.copy(excerpt=excerpt.text,charStart=start,charEnd=end)
+                            ?: Evidence(
+                                id="LCL-${com.localai.workspace.semantic.VectorPersistence.hash("${access.projectId.orEmpty()}:$legacyId").take(8).uppercase()}",
+                                segmentId=legacyId,documentId=document.id,documentTitle=document.displayName,excerpt=excerpt.text,
+                                pageStart=hit.page ?: segment.pageStart,pageEnd=segment.pageEnd,charStart=start,
+                                charEnd=end,retrievalScore=hit.fusedScore)
                     }
                 }
                 val itemId=evidenceHit?.id ?: "SV2-${com.localai.workspace.semantic.v2.fingerprint(hit.segmentId+hit.embeddingSpace).take(16)}"
-                all+=ContextItem(itemId,ContextKind.SOURCE,content,sourceScope,ContextTrust.UNTRUSTED_SOURCE,80,hit.fusedScore,
-                    ContextProvenance(hit.sourceId,hit.segmentId,page=hit.page,lineStart=hit.lineStart,lineEnd=hit.lineEnd,startMs=hit.startMs,endMs=hit.endMs,sourceName=hit.sourceName,documentId=hit.documentId))
+                val segmentStart=hit.legacySegmentId?.let{graph.database.documentDao().segment(it)?.charStart}
+                val absoluteStart=excerpt.charStart?.let{offset->segmentStart?.plus(offset)}
+                val absoluteEnd=excerpt.charEnd?.let{offset->segmentStart?.plus(offset)}
+                all+=ContextItem(itemId,ContextKind.SOURCE,excerpt.text,sourceScope,ContextTrust.UNTRUSTED_SOURCE,80,hit.fusedScore,
+                    ContextProvenance(hit.sourceId,hit.segmentId,page=hit.page,lineStart=hit.lineStart,lineEnd=hit.lineEnd,startMs=hit.startMs,endMs=hit.endMs,sourceName=hit.sourceName,documentId=hit.documentId,charStart=absoluteStart,charEnd=absoluteEnd,excerpted=excerpt.shortened,originalCharacters=excerpt.originalCharacters,cellAddresses=excerpt.cellAddresses))
                 evidenceHit?.let{sourceEvidenceByItem[itemId]=it}
             }
         } else if(request.sourceRetrievalMode!=SourceRetrievalMode.DISABLED) {
-            val sources=evidence ?: access.projectId?.let{graph.retrieval.retrieve(it,request.query,documentIds=request.selectedDocumentIds)} ?: emptyList()
+            // The retrieval policy, not whether a legacy list happens to be null or empty,
+            // decides whether Semantic V2 runs and whether lexical fallback is required.
+            val sources=when {
+                evidence?.isNotEmpty()==true -> evidence
+                access.projectId!=null -> graph.retrieval.retrieve(access.projectId,request.query,documentIds=request.selectedDocumentIds)
+                else -> emptyList()
+            }
             sources.forEach { e->
                 val original=graph.database.documentDao().get(e.documentId)
                 check(original!=null&&original.projectId==access.projectId){"SOURCE_SCOPE_MISMATCH"}
                 if(request.selectedDocumentIds.isEmpty() || e.documentId in request.selectedDocumentIds) {
-                    all+=ContextItem(e.id,ContextKind.SOURCE,e.excerpt,sourceScope,ContextTrust.UNTRUSTED_SOURCE,80,e.retrievalScore,
-                        ContextProvenance(e.documentId,e.segmentId.toString(),page=e.pageStart,sourceName=e.documentTitle,documentId=e.documentId))
-                    sourceEvidenceByItem[e.id]=e
+                    val excerpt=ContextEvidenceExcerptSelector.select(request.query,e.excerpt)
+                    val start=excerpt.charStart?.let{e.charStart?.plus(it)}
+                    val end=excerpt.charEnd?.let{e.charStart?.plus(it)}
+                    val compact=e.copy(excerpt=excerpt.text,charStart=start,charEnd=end)
+                    all+=ContextItem(e.id,ContextKind.SOURCE,excerpt.text,sourceScope,ContextTrust.UNTRUSTED_SOURCE,80,e.retrievalScore,
+                        ContextProvenance(e.documentId,e.segmentId.toString(),page=e.pageStart,sourceName=e.documentTitle,documentId=e.documentId,charStart=start,charEnd=end,excerpted=excerpt.shortened,originalCharacters=excerpt.originalCharacters,cellAddresses=excerpt.cellAddresses))
+                    sourceEvidenceByItem[e.id]=compact
                 }
             }
         }

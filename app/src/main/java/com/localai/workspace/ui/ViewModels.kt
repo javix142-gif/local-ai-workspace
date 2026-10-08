@@ -581,6 +581,10 @@ class ChatViewModel(
             var callbackToUiMs: Long? = null
             var requestedThinking: String? = null
             var effectiveThinking: String? = null
+            var skillRoutingMs: Long? = null
+            var contextMemoryMs: Long? = null
+            var sourceRetrievalMs: Long? = null
+            var conversationRetrievalMs: Long? = null
             var collectedMetrics: com.localai.workspace.domain.model.RuntimeMetrics? = null
             var requestRuntime: InferenceRuntime? = null
             var generationCollectionStarted = false
@@ -599,7 +603,8 @@ class ChatViewModel(
             }
             suspend fun finishMetrics(finish: String): com.localai.workspace.domain.model.RuntimeMetrics {
                 val measured = com.localai.workspace.performance.RequestTimings(requestStartedAt, gateWaitMs,
-                    contextBuildMs, requestFirstTokenMs, callbackToUiMs).merge(
+                    contextBuildMs, requestFirstTokenMs, callbackToUiMs, skillRoutingMs,
+                    contextMemoryMs, sourceRetrievalMs, conversationRetrievalMs).merge(
                     collectedMetrics ?: requestRuntime?.metrics() ?: com.localai.workspace.domain.model.RuntimeMetrics(),
                     android.os.SystemClock.elapsedRealtime(), finish).copy(thinkingRequested = requestedThinking, thinkingPolicyDecision = effectiveThinking, uiObservedTimeToFirstContentMs = firstUiObservedMs,
                     appPssBeforeBytes = appMemoryBefore?.pssBytes,
@@ -703,10 +708,14 @@ class ChatViewModel(
                 val routingTrace = if (!diagnosticSmoke && (graph.validationOwner == null || graph.agentsSkillsValidationEnabled)) {
                     val attachments = _selectedDocumentIds.value.mapNotNull { graph.database.documentDao().get(it) }
                         .map { com.localai.workspace.skills.RoutingAttachment(it.mimeType,it.displayName) }
+                    val routingStartedAt=android.os.SystemClock.elapsedRealtime()
                     withContext(Dispatchers.IO) { graph.agentSkills.resolve(com.localai.workspace.skills.SkillRoutingRequest(trimmed,
                         explicitSkills=explicitSkillIds.value,attachments=attachments,
                         sourceTypes=if(attachments.isEmpty())setOf(com.localai.workspace.sources.SourceType.CONVERSATION)else setOf(com.localai.workspace.sources.SourceType.PROJECT_DOCUMENT)),
-                        projectId,selectedAgentId.value) }.also { agentTrace.value=it;explicitSkillIds.value=emptySet() }
+                        projectId,selectedAgentId.value) }.also {
+                        skillRoutingMs=android.os.SystemClock.elapsedRealtime()-routingStartedAt
+                        agentTrace.value=it;explicitSkillIds.value=emptySet()
+                    }
                 } else null
                 val logicalAgent = routingTrace?.resolution?.agent
                 val activeSkills = routingTrace?.selection?.active.orEmpty()
@@ -714,11 +723,22 @@ class ChatViewModel(
                 val selectedFiles = _selectedDocumentIds.value
                 val smallTalk = com.localai.workspace.rag.RetrievalQuery.greeting(trimmed) && selectedFiles.isEmpty()
                 trace("RAG_START")
-                val evidence = if (diagnosticSmoke || smallTalk || com.localai.workspace.sources.SourceType.PROJECT_DOCUMENT !in allowedSources) emptyList() else graph.retrieval.retrieve(projectId, trimmed, documentIds = selectedFiles)
+                val evidence: List<com.localai.workspace.domain.model.Evidence>? = when {
+                    useContextV1 -> null.also { trace("LEGACY_RAG_BYPASSED_CONTEXT_V1") }
+                    diagnosticSmoke || smallTalk || com.localai.workspace.sources.SourceType.PROJECT_DOCUMENT !in allowedSources -> emptyList()
+                    else -> {
+                        val retrievalStartedAt=android.os.SystemClock.elapsedRealtime()
+                        graph.retrieval.retrieve(projectId, trimmed, documentIds = selectedFiles).also {
+                            sourceRetrievalMs=android.os.SystemClock.elapsedRealtime()-retrievalStartedAt
+                        }
+                    }
+                }
                 trace("RAG_COMPLETE")
                 trace("MEMORY_START")
                 val memories = if (!useContextV1 && !diagnosticSmoke && !smallTalk && activeProject.memoryEnabled && com.localai.workspace.sources.SourceType.STRUCTURED_MEMORY in allowedSources) {
+                    val memoryStartedAt=android.os.SystemClock.elapsedRealtime()
                     graph.retrieval.memories(projectId, trimmed, 4).filter{logicalAgent==null || it.scopeType in logicalAgent.memoryScopes.map{scope->scope.name}}
+                        .also { contextMemoryMs=android.os.SystemClock.elapsedRealtime()-memoryStartedAt }
                 } else emptyList()
                 trace(if (useContextV1) "LEGACY_MEMORY_BYPASSED" else "MEMORY_COMPLETE")
                 val requestedTools = if (!diagnosticSmoke && model.toDescriptor().runtime == RuntimeType.LITERT_LM && com.localai.workspace.domain.model.ModelCapability.TOOL_CALLING in model.toDescriptor().capabilities)
@@ -731,7 +751,7 @@ class ChatViewModel(
                 val toolSchemaReserve = toolOutputReserve + routedTools.sumOf { ContextBudgetManager().estimateTokens(com.localai.workspace.domain.tools.ChatToolSchemas.schema(it)) } + if(routedTools.isEmpty()) 0 else 128
                 val contextSize = if (diagnosticSmoke) 1024 else (model.configuredContext ?: model.declaredContext ?: 4_096).coerceIn(256, 8_192)
                 val outputLimit = if (diagnosticSmoke) 32 else (validationMaxOutputOverride ?: model.maxOutputTokens).coerceIn(1, 8192)
-                val contextItems = if (diagnosticSmoke || useContextV1) emptyList() else buildContextItems(activeProject, trimmed, evidence, memories,
+                val contextItems = if (diagnosticSmoke || useContextV1) emptyList() else buildContextItems(activeProject, trimmed, evidence.orEmpty(), memories,
                     if(com.localai.workspace.sources.SourceType.CONVERSATION !in allowedSources)emptyList()else history, userId, model.id) +
                     listOfNotNull(logicalAgent?.systemRole?.takeIf{it.isNotBlank()}?.let { com.localai.workspace.domain.rag.ContextItem(ContextItemKind.SYSTEM_POLICY,"Logical agent instructions:\n$it",100) }) +
                     activeSkills.map { com.localai.workspace.domain.rag.ContextItem(ContextItemKind.SYSTEM_POLICY,"User-enabled skill ${it.id}:\n${it.instructions}",100) }
@@ -746,7 +766,7 @@ class ChatViewModel(
                 if (!useContextV1 && contextItems.any{it.kind==ContextItemKind.SYSTEM_POLICY && it !in budget.included})
                     error("AGENT_SKILL_CONTEXT_BUDGET: instructions were not truncated; reduce instructions")
                 val suppliedIds = budget.included.mapNotNull { it.evidenceId }.toSet()
-                var suppliedEvidence = evidence.filter { it.id in suppliedIds }
+                var suppliedEvidence = evidence.orEmpty().filter { it.id in suppliedIds }
                 var suppliedDocumentIds = suppliedEvidence.map { it.documentId }.toSet()
                 if (!useContextV1 && !diagnosticSmoke && (selectedFiles - suppliedEvidence.map { it.documentId }.toSet()).isNotEmpty()) {
                     _notices.emit("Some selected files had no relevant passage or did not fit; they remain selected for your next message")
@@ -754,7 +774,7 @@ class ChatViewModel(
                 if (!useContextV1 && !diagnosticSmoke && selectedFiles.isNotEmpty() && suppliedEvidence.isEmpty())
                     _notices.emit("No relevant document passage found for this turn")
                 _generationProgress.value = GenerationProgress(GenerationStage.PREPARING_PROMPT,
-                    detail = if (suppliedEvidence.isEmpty()) "Preparing your message" else "Sending ${suppliedEvidence.size} document passages to the model")
+                    detail = if (suppliedEvidence.isEmpty()) "Preparing your message" else "Sending ${suppliedEvidence.size} relevant document excerpts to the model")
                 var prompt = if (diagnosticSmoke || useContextV1) trimmed else budget.included.joinToString("\n\n") { it.text }
                 var conversation = (if (diagnosticSmoke || useContextV1) ConversationPrompt(trimmed) else ConversationPromptBuilder.build(trimmed, budget.included))
                     .copy(conversationId = conversationId, enableThinking = !diagnosticSmoke && com.localai.workspace.data.AssistantRouting.thinking(
@@ -773,12 +793,20 @@ class ChatViewModel(
                         sourceRetrievalMode=if(smallTalk || com.localai.workspace.sources.SourceType.PROJECT_DOCUMENT !in allowedSources) com.localai.workspace.context.SourceRetrievalMode.DISABLED else com.localai.workspace.context.SourceRetrievalMode.SEMANTIC_V2_PREFERRED,
                         selectedDocumentIds=selectedFiles),
                         evidence = evidence, memoryEnabled = activeProject.memoryEnabled && com.localai.workspace.sources.SourceType.STRUCTURED_MEMORY in allowedSources)
+                    contextMemoryMs=selectedContext.timings.memoryMs
+                    sourceRetrievalMs=selectedContext.timings.retrievalMs
+                    conversationRetrievalMs=selectedContext.timings.historyMs
                     trace("MEMORY_COMPLETE")
                     trace("CONTEXT_V1_BUILD_COMPLETE")
                     suppliedEvidence = selectedContext.sourceEvidence
                     suppliedDocumentIds = selectedContext.included.filter { it.kind == com.localai.workspace.context.ContextKind.SOURCE }.mapNotNull { it.provenance.documentId }.toSet()
-                    if ((selectedFiles - suppliedDocumentIds).isNotEmpty()) _notices.emit("Some selected files had no relevant passage or did not fit; they remain selected for your next message")
-                    if (selectedFiles.isNotEmpty() && suppliedDocumentIds.isEmpty()) _notices.emit("No relevant document passage found for this turn")
+                    val selectedSourceDrops=selectedContext.dropped.filter { it.item.kind==com.localai.workspace.context.ContextKind.SOURCE && it.item.provenance.documentId in selectedFiles }
+                    val selectedSourceBudgetDrop=selectedSourceDrops.any { it.reason=="TOKEN_BUDGET" }
+                    if(selectedSourceBudgetDrop) _notices.emit("A relevant passage from a selected file did not fit this turn and was not sent to the model")
+                    else if ((selectedFiles - suppliedDocumentIds).isNotEmpty()) {
+                        if(suppliedDocumentIds.isEmpty()) _notices.emit("No relevant passage was found in the selected files; their contents were not sent")
+                        else _notices.emit("One or more selected files had no relevant passage for this question")
+                    }
                     if(selectedContext.droppedSkills.isNotEmpty()) {
                         agentTrace.value?.let { trace ->
                             val selection=trace.selection.copy(active=trace.selection.active.filter{it.id !in selectedContext.droppedSkills},evaluations=trace.selection.evaluations.map{if(it.skillId in selectedContext.droppedSkills)it.copy(active=false,reasons=it.reasons+"SKILL_CONTEXT_BUDGET")else it})
@@ -789,7 +817,17 @@ class ChatViewModel(
                     conversation = selectedContext.conversation().copy(enableThinking = conversation.enableThinking,
                         validationThinkingBudget = conversation.validationThinkingBudget)
                     prompt = conversation.systemInstruction.orEmpty() + "\n" + conversation.history.joinToString("\n") { it.content } + "\n" + conversation.userMessage
-                    if (selectedContext.dropped.isNotEmpty()) _notices.emit("Some context was omitted to keep this turn within its budget; saved data remains intact")
+                    if (selectedContext.requiresUserNotice && !selectedSourceBudgetDrop) {
+                        val droppedKinds=selectedContext.dropped.filter{it.reason=="TOKEN_BUDGET"}.map{it.item.kind}.toSet()
+                        val categories=listOfNotNull(
+                            "relevant document evidence".takeIf{com.localai.workspace.context.ContextKind.SOURCE in droppedKinds},
+                            "relevant memory".takeIf{com.localai.workspace.context.ContextKind.MEMORY in droppedKinds},
+                            "recent conversation context".takeIf{com.localai.workspace.context.ContextKind.RECENT_CONVERSATION in droppedKinds},
+                            "project context".takeIf{com.localai.workspace.context.ContextKind.PROJECT in droppedKinds},
+                            "tool observations".takeIf{com.localai.workspace.context.ContextKind.TOOL_OBSERVATION in droppedKinds},
+                        )
+                        if(categories.isNotEmpty()) _notices.emit("${categories.joinToString(", ").replaceFirstChar { it.uppercase() }} did not fit this turn; the answer may omit those details. Saved data remains available.")
+                    }
                 }
                 requestedThinking = graph.assistantSettings.forProject(projectId).thinking.name
                 effectiveThinking = if (conversation.enableThinking) "ON" else "OFF"
