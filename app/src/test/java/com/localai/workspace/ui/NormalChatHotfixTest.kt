@@ -58,6 +58,7 @@ class NormalChatHotfixTest {
  @Before fun open(){
   Dispatchers.setMain(main)
   listOf("app_model_preparation","litert_chat_defaults_v017","context_foundation_v1","local_assistant_profiles").forEach{context.getSharedPreferences(it,0).edit().clear().commit()}
+  context.getSharedPreferences("context_foundation_v1",0).edit().putBoolean("enabled",false).commit()
   db=Room.inMemoryDatabaseBuilder(context,WorkspaceDatabase::class.java).build()
   scope=CoroutineScope(SupervisorJob()+main);backend=Backend();graph=AppGraph(context,listOf(backend),db,scope,scope)
  }
@@ -78,7 +79,8 @@ class NormalChatHotfixTest {
   assertEquals("COMPLETE",graph.workspace.recentMessages(vm.currentConversationId.value!!,10).last().status)
   assertEquals("Hola local",vm.streamingText.value);assertFalse(graph.inferenceGate.isLocked);return turn
  }
- @Test fun plain_chat_legacy_off()=check{val vm=chat();assertTrue(vm.send("hola"));complete(vm);assertTrue(graph.normalGenerationTrace.state.value!!.events.indexOfFirst{it.phase=="CONVERSATION_GATE_ACQUIRED"}<graph.normalGenerationTrace.state.value!!.events.indexOfFirst{it.phase=="CONTEXT_BUILD_START"})}
+ // 0.5.0 deliberately prepares context before the gate on the rollback path too.
+ @Test fun plain_chat_legacy_off()=check{val vm=chat();assertTrue(vm.send("hola"));complete(vm);assertTrue(graph.normalGenerationTrace.state.value!!.events.indexOfFirst{it.phase=="CONVERSATION_GATE_ACQUIRED"}>graph.normalGenerationTrace.state.value!!.events.indexOfFirst{it.phase=="CONTEXT_BUILD_COMPLETE"})}
  @Test fun plain_chat_context_v1_on()=check{
   graph.contextFoundation.enable(true);val vm=chat();assertTrue(vm.send("hola"));val turn=complete(vm)
   assertNotNull(turn.request.conversation!!.systemInstruction)
@@ -142,4 +144,25 @@ class NormalChatHotfixTest {
   val vm=chat();vm.send("hola");vm.stop();vm.isGenerating.first{!it}
   vm.send("hola");complete(vm)
  }
+ @Test fun canonicalDefaultAndZeroSkillGreeting()=check {
+  context.getSharedPreferences("context_foundation_v1",0).edit().remove("enabled").commit()
+  val vm=chat();vm.send("hola");complete(vm)
+  assertTrue(graph.normalGenerationTrace.state.value!!.contextBuilderEnabled)
+  assertTrue(vm.agentTrace.value!!.selection.active.isEmpty());assertEquals("agent.general",vm.agentTrace.value!!.resolution.agent.id)
+ }
+ @Test fun agentInstructionsAndActiveSkillReachRealRequestButInactiveBodiesDoNot()=check {
+  graph.contextFoundation.enable(true)
+  graph.agentRegistry.update(com.localai.workspace.agents.AgentDefinition("agent.custom","Custom",systemRole="Include the marker CUSTOM_ROLE",skillIds=setOf("skill.code-assistant")))
+  val vm=chat();vm.selectAgent("agent.custom");vm.send("Revisa código Kotlin");val turn=complete(vm)
+  assertTrue(turn.request.conversation!!.systemInstruction!!.contains("CUSTOM_ROLE"))
+  assertTrue(turn.request.conversation!!.systemInstruction!!.contains(com.localai.workspace.skills.BuiltInSkills.definitions.first{it.id=="skill.code-assistant"}.instructions))
+  assertFalse(turn.request.conversation!!.systemInstruction!!.contains(com.localai.workspace.skills.BuiltInSkills.definitions.first{it.id=="skill.spreadsheet-analysis"}.instructions))
+ }
+ @Test fun embeddingCapableMemoryPreparationFinishesBeforeGenerationGate()=check {
+  graph.contextFoundation.enable(true);val vm=chat();vm.send("¿Cuál es mi editor preferido?");complete(vm)
+  val phases=graph.normalGenerationTrace.state.value!!.events.map{it.phase}
+  assertTrue(phases.indexOf("MEMORY_COMPLETE")<phases.indexOf("CONVERSATION_GATE_ACQUIRED"))
+  assertFalse(graph.inferenceGate.isLocked)
+ }
+
 }

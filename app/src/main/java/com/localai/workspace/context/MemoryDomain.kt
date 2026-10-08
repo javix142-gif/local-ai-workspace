@@ -4,11 +4,11 @@ import com.localai.workspace.semantic.v2.*
 
 enum class MemoryKind { FACT,PREFERENCE,DECISION,EVENT,RELATIONSHIP,PROJECT_CONTEXT,SUMMARY,PROCEDURE,TASK_STATE,OTHER }
 enum class MemoryStatus { PENDING,ACTIVE,SUPERSEDED,EXPIRED,DELETED }
-data class ScopeAccess(val userId:String="local",val projectId:String?=null,val sessionId:String?=null,val agentId:String?=null,val taskId:String?=null) {
+data class ScopeAccess(val userId:String="local",val projectId:String?=null,val sessionId:String?=null,val agentId:String?=null,val taskId:String?=null,val readableTypes:Set<ScopeType> = ScopeType.entries.toSet()) {
     val allowed:List<SemanticScope> get()=buildList {
         sessionId?.let{add(SemanticScope(ScopeType.SESSION,it))};taskId?.let{add(SemanticScope(ScopeType.TASK,it))};agentId?.let{add(SemanticScope(ScopeType.AGENT,it))};projectId?.let{add(SemanticScope(ScopeType.PROJECT,it))};add(SemanticScope(ScopeType.USER,userId));add(SemanticScope(ScopeType.GLOBAL))
     }
-    fun permits(type:String,id:String)=allowed.any{it.type.name==type&&it.id==id}
+    fun permits(type:String,id:String)=type in readableTypes.map{it.name} && allowed.any{it.type.name==type&&it.id==id}
 }
 object MemoryContent {
     const val NORMALIZATION="NFC_WHITESPACE_CASE_SENSITIVE_V1"

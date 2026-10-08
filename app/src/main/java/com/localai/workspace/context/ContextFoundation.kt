@@ -12,7 +12,7 @@ import kotlinx.coroutines.sync.withLock
 class ContextFoundation(private val graph:AppGraph) {
     val database=MemoryContextDatabase.create(graph.contextForMeasurements,graph.validationId?.let{"context-memory-$it.db"} ?: "memory_context.db")
     private val prefs=graph.contextForMeasurements.getSharedPreferences("context_foundation_v1",Context.MODE_PRIVATE)
-    val enabled=MutableStateFlow(prefs.getBoolean("enabled",false))
+    val enabled=MutableStateFlow(prefs.getBoolean("enabled",true))
     val notice=MutableStateFlow<String?>(null)
     val last=MutableStateFlow<ContextBundle?>(null)
     val memory=MemoryManager(database){input,task->embedding(input,task)}
@@ -79,7 +79,7 @@ class ContextFoundation(private val graph:AppGraph) {
         val all=mutableListOf<ContextItem>();val memoryStart=System.nanoTime()
         val memorySkipped=memoryEnabled&&MemoryRelevance.smallTalk(request.query)
         val vector=if(memoryEnabled&&!memorySkipped)memory.queryEmbedding(request.query)else null
-        val selection=if(memoryEnabled)memory.select(request.query,access,queryVector=vector,allowEmbedding=false)else MemorySelection(emptyList(),emptyList())
+        val selection=if(memoryEnabled)memory.select(request.query,access.copy(readableTypes=request.memoryScopes),queryVector=vector,allowEmbedding=false)else MemorySelection(emptyList(),emptyList())
         fun memoryItem(hit:MemoryHit,id:String):ContextItem {val m=hit.record;return ContextItem(id,ContextKind.MEMORY,m.text,SemanticScope(ScopeType.valueOf(m.scopeType),m.scopeId),ContextTrust.APPROVED_MEMORY,if(m.pinned)85 else 65,hit.score,ContextProvenance(sourceId=m.id,segmentId=m.sourceSegmentId,messageIds=listOfNotNull(m.sourceMessageId)),memoryRelevance=hit.relevance)}
         selection.included.forEachIndexed{i,hit->all+=memoryItem(hit,"M${i+1}")}
         val relevanceDropped=selection.dropped.mapIndexed{i,hit->DroppedContext(memoryItem(hit,"MD${i+1}"),"BELOW_RELEVANCE_THRESHOLD")}
@@ -91,10 +91,10 @@ class ContextFoundation(private val graph:AppGraph) {
         val v2Hits=if(evidence==null&&layer.selection.choice==SemanticProviderChoice.EG2)try{layer.search(SemanticInput.Text(request.query),sourceScope,limit=4)}catch(cancel:CancellationException){throw cancel}catch(failure:Exception){notice.value="SOURCE_LEXICAL_FALLBACK:${if(failure is SemanticFailure)failure.code.name else failure.javaClass.simpleName}";emptyList()}else emptyList()
         v2Hits.forEachIndexed{i,h->all+=ContextItem("S${i+1}",ContextKind.SOURCE,h.content.orEmpty(),sourceScope,ContextTrust.UNTRUSTED_SOURCE,80,h.fusedScore,ContextProvenance(h.sourceId,h.segmentId,page=h.page,lineStart=h.lineStart,lineEnd=h.lineEnd,startMs=h.startMs,endMs=h.endMs))}
         val sources=evidence ?: if(v2Hits.isEmpty())access.projectId?.let{graph.retrieval.retrieve(it,request.query)} ?: emptyList()else emptyList()
-        sources.forEach { e->val original=graph.database.documentDao().get(e.documentId);check(original!=null&&original.projectId==access.projectId){"SOURCE_SCOPE_MISMATCH"};all+=ContextItem(e.id,ContextKind.SOURCE,e.excerpt,sourceScope,ContextTrust.UNTRUSTED_SOURCE,80,e.retrievalScore,ContextProvenance(e.documentId,e.segmentId.toString(),page=e.pageStart)) }
+        sources.forEach { e->val original=graph.database.documentDao().get(e.documentId);check(original!=null&&original.projectId==access.projectId){"SOURCE_SCOPE_MISMATCH"};all+=ContextItem(e.id,ContextKind.SOURCE,e.excerpt,sourceScope,ContextTrust.UNTRUSTED_SOURCE,80,e.retrievalScore,ContextProvenance(e.documentId,e.segmentId.toString(),page=e.pageStart,sourceName=e.documentTitle)) }
         val retrievalMs=(System.nanoTime()-retrieveStart)/1_000_000
         val historyStart=System.nanoTime();val recentIds=mutableSetOf<String>()
-        request.conversationId?.let{id->val owner=graph.database.conversationDao().get(id);if(owner!=null){
+        request.conversationId?.takeIf{request.includeConversation}?.let{id->val owner=graph.database.conversationDao().get(id);if(owner!=null){
             val ownerProject=owner.projectId?.let{graph.database.projectDao().get(it)}
             val owned=owner.projectId==access.projectId||(access.projectId==null&&access.sessionId==id&&ownerProject?.workspaceKind=="CHAT")
             check(owned){"CONVERSATION_SCOPE_MISMATCH"}
@@ -104,7 +104,7 @@ class ContextFoundation(private val graph:AppGraph) {
                 all+=ContextItem("R-${u.id}",ContextKind.RECENT_CONVERSATION,(u.effectiveContent ?: u.content)+"\n"+row.content,SemanticScope(ScopeType.SESSION,id),ContextTrust.CONVERSATION,60,order=row.createdAt,provenance=ContextProvenance(sourceId=id,messageIds=listOf(u.id,row.id)),history=listOf(ChatMessage(MessageRole.USER,u.effectiveContent ?: u.content,u.imagePath,u.audioPath),ChatMessage(MessageRole.ASSISTANT,row.content)));user=null}
             }
         }}
-        all+=olderHistory(request.query,access,recentIds,vector)
+        if(request.includeConversation)all+=olderHistory(request.query,access,recentIds,vector)
         val historyMs=(System.nanoTime()-historyStart)/1_000_000
         val result=ContextBuilder().build(request,all)
         val renderStart=System.nanoTime();result.conversation();val renderMs=(System.nanoTime()-renderStart)/1_000_000

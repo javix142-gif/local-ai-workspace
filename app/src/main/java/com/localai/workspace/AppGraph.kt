@@ -37,6 +37,7 @@ class AppGraph(context: Context,
     private val preparationScope = applicationScope ?: kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.Main.immediate)
     val inferenceGate: kotlinx.coroutines.sync.Mutex = validationOwner?.inferenceGate ?: kotlinx.coroutines.sync.Mutex()
     val validationBusy: kotlinx.coroutines.flow.MutableStateFlow<Boolean> = validationOwner?.validationBusy ?: kotlinx.coroutines.flow.MutableStateFlow(false)
+    internal var agentsSkillsValidationEnabled: Boolean = false
     internal var validationRequestObserver: ((com.localai.workspace.domain.model.GenerationRequest) -> Unit)? = null
     val assistantSettings = com.localai.workspace.data.AssistantSettings(appContext)
     val performanceSettings = com.localai.workspace.performance.PerformanceSettings(appContext)
@@ -72,6 +73,10 @@ class AppGraph(context: Context,
     val semanticDiagnostics by lazy { com.localai.workspace.semantic.v2.SemanticDiagnostics(appContext,runtimeScope,{semanticV2},validationBusy,{performance.running.value || chatSessions.hasGeneration}) }
     val normalGenerationTrace by lazy { com.localai.workspace.diagnostics.NormalGenerationTrace(java.io.File(appContext.filesDir, validationId?.let { "device-validation/runs/$it/normal-generation.json" } ?: "diagnostics/normal-generation.json")) }
     val contextFoundation by lazy { com.localai.workspace.context.ContextFoundation(this) }
+    val agentsSkillsDatabase by lazy { com.localai.workspace.skills.AgentsSkillsDatabase.create(appContext, validationId?.let { "agents-skills-$it.db" } ?: "agents_skills.db") }
+    val skillRegistry by lazy { com.localai.workspace.skills.SkillRegistry(agentsSkillsDatabase) }
+    val agentRegistry by lazy { com.localai.workspace.agents.AgentRegistry(agentsSkillsDatabase) }
+    val agentSkills by lazy { com.localai.workspace.agents.AgentSkillCoordinator(skillRegistry, agentRegistry) }
     val localTools = ToolRegistry(listOf(CalculatorTool(), LocalFileReadTool()))
     val deviceValidation by lazy { com.localai.workspace.validation.DeviceValidation(this, preparationScope) }
 }

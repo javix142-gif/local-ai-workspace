@@ -242,6 +242,9 @@ interface CitationEvidenceDao {
 
 @Dao
 interface ToolCallDao {
+    @Query("SELECT toolId FROM tool_calls WHERE messageId=:messageId AND status='SUCCESS' ORDER BY toolId")
+    suspend fun successfulTools(messageId:String):List<String>
+
     @Query("UPDATE tool_calls SET status = 'INTERRUPTED', errorCode = 'INTERRUPTED', finishedAt = :time WHERE status = 'RUNNING' AND conversationId = :id")
     suspend fun recoverInterrupted(id: String, time: Long)
     @Query("DELETE FROM tool_calls WHERE conversationId = :id OR messageId IN (SELECT id FROM messages WHERE conversationId = :id)")

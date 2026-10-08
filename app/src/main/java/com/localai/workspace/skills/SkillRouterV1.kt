@@ -14,7 +14,6 @@ class SkillRouterV1 {
                 !skill.enabled->"DISABLED"
                 skill.id !in agent.skillIds->"AGENT_NOT_ALLOWED"
                 !request.capabilities.containsAll(skill.requiredCapabilities)->"CAPABILITY_UNAVAILABLE"
-                skill.allowedSourceTypes.intersect(agent.allowedSourceTypes).isEmpty()->"SOURCE_UNAVAILABLE"
                 else->null
             }
             if(rejection!=null)SkillEvaluation(skill.id,enabled=skill.enabled,eligible=false,reasons=listOf(rejection))
@@ -26,7 +25,7 @@ class SkillRouterV1 {
                     val mime=request.attachments.any{it.mimeType?.lowercase(Locale.ROOT) in profile.mimeTypes}
                     val keyword=profile.keywords.any{matches(query,normalize(it))}
                     val specific=skill.id in setOf("skill.code-assistant","skill.spreadsheet-analysis")
-                    val documentIntent=Regex("\\b(resume|resumir|summarize|summarise|documento|document|pdf|docx)\\b").containsMatchIn(query)
+                    val documentIntent=Regex("\\b(resume|resumir|summarize|summarise|documentos?|documents?|pdf|docx)\\b").containsMatchIn(query)
                     // A generic 'review' is insufficient without an appropriate document; code/table signals win.
                     val incompatible=request.attachments.any{it.filename?.substringAfterLast('.',"")?.lowercase(Locale.ROOT) in setOf("kt","java","py","js","ts","xlsx","csv")}
                     val negative=profile.negativeExamples.any{query==normalize(it)}
@@ -41,7 +40,7 @@ class SkillRouterV1 {
                         reasons+="KEYWORD_MATCH"
                     }
                     // Source-code extension + a concrete review/debug request is also decisive.
-                    if(!negative && reasons.isEmpty() && ext && specific && Regex("\\b(revisa|review|analiza|analyze|explica|explain|depura|debug)\\b").containsMatchIn(query))reasons+=listOf("EXTENSION_MATCH","KEYWORD_MATCH")
+                    if(!negative && reasons.isEmpty() && (ext || mime) && specific && Regex("\\b(revisa|review|analiza|analyze|explica|explain|depura|debug)\\b").containsMatchIn(query))reasons+=listOf(if(ext)"EXTENSION_MATCH"else"MIME_MATCH","KEYWORD_MATCH")
                 }
                 SkillEvaluation(skill.id,enabled=true,eligible=true,active=reasons.isNotEmpty(),reasons=if(reasons.isNotEmpty())reasons else listOf(if(profile.explicitOnly)"EXPLICIT_ONLY" else "NO_TRIGGER"))
             }

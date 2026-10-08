@@ -5,7 +5,7 @@ import com.localai.workspace.skills.SkillDefinition
 enum class Capability { LOCAL_READ, LOCAL_COMPUTE, LOCAL_WRITE, LOCAL_DELETE, NETWORK_READ, EXTERNAL_WRITE, EXTERNAL_SEND, PURCHASE_PAYMENT, IRREVERSIBLE_SYSTEM_ACTION, SENSITIVE_ACTION }
 enum class CapabilityDecision { ALLOW, UNAVAILABLE, CONFIRM }
 /** Operational capability resolution; never a content filter. Local read/compute need no new dialogs. */
-class CapabilityPolicy(val enabled:Set<Capability> = Capability.entries.toSet()) {
+class CapabilityPolicy(val enabled:Set<Capability> = Capability.entries.toSet()-Capability.NETWORK_READ) {
     val profile="PERMISSIVE_PERSONAL"
     fun evaluate(required:Set<Capability>, app:Set<Capability>, agent:Set<Capability>, skill:Set<Capability> = Capability.entries.toSet()):CapabilityDecision {
         if(!required.all{it in enabled && it in app && it in agent && it in skill})return CapabilityDecision.UNAVAILABLE

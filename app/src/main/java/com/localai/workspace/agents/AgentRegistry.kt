@@ -3,11 +3,15 @@ package com.localai.workspace.agents
 import com.google.gson.Gson
 import com.localai.workspace.skills.*
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 class AgentRegistry(private val db:AgentsSkillsDatabase) {
     private val gson=Gson()
+    private val initialization=Mutex()
+    private var initialized=false
     val changes=db.dao().agents().map{rows->rows.map{gson.fromJson(it.definitionJson,AgentDefinition::class.java)}}
-    suspend fun initialize() {db.dao().seedAgent(record(BuiltInSkills.general))}
+    suspend fun initialize() {initialization.withLock{if(!initialized){db.dao().seedAgent(record(BuiltInSkills.general));initialized=true}}}
     suspend fun list():List<AgentDefinition>{initialize();return db.dao().agentList().map{gson.fromJson(it.definitionJson,AgentDefinition::class.java)}}
     suspend fun get(id:String):AgentDefinition? {initialize();return db.dao().agent(id)?.let{gson.fromJson(it.definitionJson,AgentDefinition::class.java)}}
     suspend fun update(agent:AgentDefinition) {

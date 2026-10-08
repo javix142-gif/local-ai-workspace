@@ -5,11 +5,15 @@ import androidx.room.withTransaction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 class SkillRegistry(private val db:AgentsSkillsDatabase) {
     private val gson=Gson()
+    private val initialization=Mutex()
+    private var initialized=false
     val changes=db.dao().skills().map{rows->rows.map{gson.fromJson(it.definitionJson,SkillDefinition::class.java)}}
-    suspend fun initialize()=withContext(Dispatchers.IO){db.withTransaction{BuiltInSkills.definitions.forEach{db.dao().seedSkill(record(it))}}}
+    suspend fun initialize()=withContext(Dispatchers.IO){initialization.withLock{if(!initialized){db.withTransaction{BuiltInSkills.definitions.forEach{db.dao().seedSkill(record(it))}};initialized=true}}}
     suspend fun list():List<SkillDefinition> {initialize();return db.dao().skillList().map{gson.fromJson(it.definitionJson,SkillDefinition::class.java)}}
     suspend fun get(id:String):SkillDefinition? {initialize();return db.dao().skill(id)?.let{gson.fromJson(it.definitionJson,SkillDefinition::class.java)}}
     suspend fun enable(id:String,enabled:Boolean) {val skill=requireNotNull(get(id));db.dao().putSkill(record(skill.copy(enabled=enabled,updatedAt=System.currentTimeMillis())))}
@@ -22,6 +26,7 @@ class SkillRegistry(private val db:AgentsSkillsDatabase) {
         val previous=get(skill.id)
         val sameName=list().firstOrNull{it.name.equals(skill.name,true) && it.id!=skill.id}
         require(sameName==null){"SKILL_DUPLICATE_NAME"}
+        require(previous==null || skill.origin!=SkillOrigin.IMPORTED || previous.name.equals(skill.name,true)){"SKILL_ID_COLLISION"}
         require(previous==null || previous.origin==skill.origin){"SKILL_ORIGIN_MISMATCH"}
         val normalized=skill.copy(contentHash=SkillDefinition.hash(skill.instructions),createdAt=previous?.createdAt ?: skill.createdAt,updatedAt=System.currentTimeMillis())
         db.dao().putSkill(record(normalized))

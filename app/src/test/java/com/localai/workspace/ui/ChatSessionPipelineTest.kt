@@ -205,15 +205,16 @@ class ChatSessionPipelineTest {
         assertEquals(0, backend.cancellations)
     }
 
+    // 0.5.0 removes arbitrary selected-file fallback; fixtures must make a real lexical match.
     @Test fun realSafMarkdownReachesGenerationRequestAndRemainsReusableInLibrary() = check {
         val (id, vm) = chat()
         vm.attachDocument(input("notes.md", "MARCADOR_123: fuentes oficiales verificadas.".toByteArray()))
         val selected = vm.selectedDocumentIds.first { it.isNotEmpty() }.single()
         assertTrue(vm.previewDocument(selected).contains("MARCADOR_123"))
-        vm.send("¿Qué contiene?"); val turn = backend.turns.receive()
+        vm.send("¿Qué indican las fuentes oficiales verificadas?"); val turn = backend.turns.receive()
         assertTrue(turn.request.conversation!!.userMessage.contains("MARCADOR_123"))
         assertTrue(turn.request.conversation!!.userMessage.contains("notes.md"))
-        assertTrue(turn.request.conversation!!.systemInstruction!!.contains("data"))
+        assertTrue(turn.request.conversation!!.systemInstruction!!.contains("data",ignoreCase=true))
         finish(vm, turn); assertTrue(vm.selectedDocumentIds.value.isEmpty())
         assertEquals("READY", db.documentDao().forProject(id).single().indexingStatus)
         assertTrue(java.io.File(db.documentDao().get(selected)!!.localPath).isFile)
@@ -237,17 +238,17 @@ class ChatSessionPipelineTest {
             normalizedText = "unrelated passage", contentHash = "doc")))
         vm.send("Hola"); val turn = backend.turns.receive()
         assertEquals("Hola", turn.request.conversation!!.userMessage)
-        assertNull(turn.request.conversation!!.systemInstruction); finish(vm, turn)
+        assertTrue(turn.request.conversation!!.systemInstruction!!.contains("DATA")); assertFalse(turn.request.conversation!!.userMessage.contains("Unrelated passage")); finish(vm, turn)
     }
 
     @Test fun filesOmittedByTheBoundedTurnStaySelectedRatherThanBeingSilentlyConsumed() = check {
         val (_, vm) = chat()
         repeat(4) { index ->
-            vm.attachDocument(input("source$index.md", "UNIQUE_SOURCE_$index".toByteArray()))
+            vm.attachDocument(input("source$index.md", "UNIQUE_SOURCE_$index referencias comunes".toByteArray()))
             vm.selectedDocumentIds.first { it.size == index + 1 }
         }
         val before = vm.selectedDocumentIds.value
-        vm.send("Resume los archivos"); val turn = backend.turns.receive()
+        vm.send("Resume las referencias comunes"); val turn = backend.turns.receive()
         val transmitted = Regex("UNIQUE_SOURCE_[0-9]").findAll(turn.request.conversation!!.userMessage).count()
         assertEquals(3, transmitted); finish(vm, turn)
         assertEquals(1, vm.selectedDocumentIds.value.size)
@@ -256,9 +257,9 @@ class ChatSessionPipelineTest {
 
     @Test fun htmlExtractsVisibleTextAndDoesNotInjectScriptOrMarkupIntoModel() = check {
         val (_, vm) = chat()
-        vm.attachDocument(input("notes.html", "<html><script>NEVER_INCLUDE</script><p>VISIBLE_MARKER</p></html>".toByteArray()))
+        vm.attachDocument(input("notes.html", "<html><script>NEVER_INCLUDE</script><p>VISIBLE_MARKER ocean text</p></html>".toByteArray()))
         vm.selectedDocumentIds.first { it.isNotEmpty() }
-        vm.send("Resume el documento"); val turn = backend.turns.receive()
+        vm.send("Resume ocean"); val turn = backend.turns.receive()
         val actual = turn.request.conversation!!.userMessage
         assertTrue(actual.contains("VISIBLE_MARKER")); assertFalse(actual.contains("NEVER_INCLUDE"))
         assertFalse(actual.contains("<html>")); finish(vm, turn)
@@ -341,7 +342,7 @@ class ChatSessionPipelineTest {
         vm.attachDocument(uri)
         withContext(Dispatchers.IO) { assertTrue(entered.await(5, TimeUnit.SECONDS)) }
         try {
-            vm.leaveScreen(); vm.send("Resume el archivo")
+            vm.leaveScreen(); vm.send("Explica el texte extrait localement")
             assertTrue(backend.turns.tryReceive().isFailure)
         } finally { release.countDown() }
         val turn = backend.turns.receive()

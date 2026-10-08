@@ -344,6 +344,12 @@ class ChatViewModel(
     private val graph: AppGraph,
     private val requestedConversationId: String? = null,
 ) : ViewModel() {
+    val selectedAgentId = MutableStateFlow<String?>(null)
+    val explicitSkillIds = MutableStateFlow<Set<String>>(emptySet())
+    val agentTrace = MutableStateFlow<com.localai.workspace.agents.AgentSkillTrace?>(null)
+    val agentProjectId get() = projectId
+    fun selectAgent(id:String?) { if(!_isGenerating.value) { selectedAgentId.value=id;agentTrace.value=null } }
+    fun selectSkills(ids:Set<String>) { if(!_isGenerating.value)explicitSkillIds.value=ids }
     internal var validationMaxOutputOverride: Int? = null
         set(value) {
             require(graph.validationId != null) { "Validation-only output override" }
@@ -602,7 +608,7 @@ class ChatViewModel(
                 return measured
             }
             try {
-                trace("REQUEST_CREATED") { it.copy(contextBuilderEnabled = !diagnosticSmoke && graph.validationOwner == null && graph.contextForMeasurements.getSharedPreferences("context_foundation_v1", android.content.Context.MODE_PRIVATE).getBoolean("enabled", false)) }
+                trace("REQUEST_CREATED") { it.copy(contextBuilderEnabled = !diagnosticSmoke && (graph.validationOwner == null || graph.agentsSkillsValidationEnabled) && graph.contextForMeasurements.getSharedPreferences("context_foundation_v1", android.content.Context.MODE_PRIVATE).getBoolean("enabled", true)) }
                 appMemoryBefore = withContext(Dispatchers.IO) { com.localai.workspace.performance.DeviceMeasurements.capture(graph.contextForMeasurements) }
                 // Recovery must finish before inserting a new GENERATING row.
                 trace("CHAT_INITIALIZATION_WAIT")
@@ -654,10 +660,9 @@ class ChatViewModel(
                 trace("MODEL_READY") { it.copy(modelState = if (preparation.state.value.ready) "READY" else preparation.state.value.progress.stage.name, engineReused = preparation.state.value.metrics?.engineReused) }
                 if (stopRequested) throw CancellationException("Cancelled before inference")
                 _generationProgress.value = GenerationProgress(GenerationStage.PREPARING_PROMPT, detail = "Waiting for the active generation, if any")
-                val contextBuilderRequested = !diagnosticSmoke && graph.validationOwner == null &&
-                    graph.contextForMeasurements.getSharedPreferences("context_foundation_v1", android.content.Context.MODE_PRIVATE).getBoolean("enabled", false)
-                // Preserve the exact legacy gate order when OFF (including historical validation).
-                if (!contextBuilderRequested) acquireGenerationGate()
+                val contextBuilderRequested = !diagnosticSmoke && (graph.validationOwner == null || graph.agentsSkillsValidationEnabled) &&
+                    graph.contextForMeasurements.getSharedPreferences("context_foundation_v1", android.content.Context.MODE_PRIVATE).getBoolean("enabled", true)
+                // All embedding/retrieval/routing work must finish BEFORE the generation gate.
                 val activeProject = graph.workspace.observeProject(projectId).first() ?: error("Project no longer exists")
                 val availableModels = graph.workspace.allModels.first()
                 val selectedId = _selectedModelId.value ?: activeProject.defaultModelId
@@ -693,25 +698,43 @@ class ChatViewModel(
                 }
                 val contextStartedAt = android.os.SystemClock.elapsedRealtime()
                 val useContextV1 = contextBuilderRequested && submittedImage == null && submittedAudio == null && history.none { it.imagePath != null || it.audioPath != null } && model.toDescriptor().runtime == RuntimeType.LITERT_LM
-                if (!useContextV1 && !gateAcquired) acquireGenerationGate()
+
                 trace("CONTEXT_BUILD_START") { it.copy(contextBuilderEnabled = useContextV1, thinkingRequested = graph.assistantSettings.forProject(projectId).thinking.name, toolsRequested = graph.assistantSettings.forProject(projectId).tools.isNotEmpty(), projectPresent = activeProject.workspaceKind == "PROJECT") }
+                val routingTrace = if (!diagnosticSmoke && (graph.validationOwner == null || graph.agentsSkillsValidationEnabled)) {
+                    val attachments = _selectedDocumentIds.value.mapNotNull { graph.database.documentDao().get(it) }
+                        .map { com.localai.workspace.skills.RoutingAttachment(it.mimeType,it.displayName) }
+                    withContext(Dispatchers.IO) { graph.agentSkills.resolve(com.localai.workspace.skills.SkillRoutingRequest(trimmed,
+                        explicitSkills=explicitSkillIds.value,attachments=attachments,
+                        sourceTypes=if(attachments.isEmpty())setOf(com.localai.workspace.sources.SourceType.CONVERSATION)else setOf(com.localai.workspace.sources.SourceType.PROJECT_DOCUMENT)),
+                        projectId,selectedAgentId.value) }.also { agentTrace.value=it;explicitSkillIds.value=emptySet() }
+                } else null
+                val logicalAgent = routingTrace?.resolution?.agent
+                val activeSkills = routingTrace?.selection?.active.orEmpty()
+                val allowedSources = routingTrace?.sources?.filter{it.available}?.map{it.type}?.toSet() ?: com.localai.workspace.sources.SourceType.local
                 val selectedFiles = _selectedDocumentIds.value
                 val smallTalk = com.localai.workspace.rag.RetrievalQuery.greeting(trimmed) && selectedFiles.isEmpty()
                 trace("RAG_START")
-                val evidence = if (diagnosticSmoke || smallTalk) emptyList() else graph.retrieval.retrieve(projectId, trimmed, documentIds = selectedFiles)
+                val evidence = if (diagnosticSmoke || smallTalk || com.localai.workspace.sources.SourceType.PROJECT_DOCUMENT !in allowedSources) emptyList() else graph.retrieval.retrieve(projectId, trimmed, documentIds = selectedFiles)
                 trace("RAG_COMPLETE")
                 trace("MEMORY_START")
-                val memories = if (!useContextV1 && !diagnosticSmoke && !smallTalk && activeProject.memoryEnabled) {
-                    graph.retrieval.memories(projectId, trimmed, 4)
+                val memories = if (!useContextV1 && !diagnosticSmoke && !smallTalk && activeProject.memoryEnabled && com.localai.workspace.sources.SourceType.STRUCTURED_MEMORY in allowedSources) {
+                    graph.retrieval.memories(projectId, trimmed, 4).filter{logicalAgent==null || it.scopeType in logicalAgent.memoryScopes.map{scope->scope.name}}
                 } else emptyList()
                 trace(if (useContextV1) "LEGACY_MEMORY_BYPASSED" else "MEMORY_COMPLETE")
-                val routedTools = if (!diagnosticSmoke && model.toDescriptor().runtime == RuntimeType.LITERT_LM && com.localai.workspace.domain.model.ModelCapability.TOOL_CALLING in model.toDescriptor().capabilities)
+                val requestedTools = if (!diagnosticSmoke && model.toDescriptor().runtime == RuntimeType.LITERT_LM && com.localai.workspace.domain.model.ModelCapability.TOOL_CALLING in model.toDescriptor().capabilities)
                     com.localai.workspace.data.AssistantRouting.tools(graph.assistantSettings.forProject(projectId).tools, trimmed, selectedFiles.isNotEmpty()) else emptySet()
+                val toolAvailability = com.localai.workspace.capabilities.CapabilityPolicy().tools(requestedTools,
+                    logicalAgent?.allowedTools ?: com.localai.workspace.skills.SkillDefinition.STANDARD_TOOLS, activeSkills)
+                val routedTools = toolAvailability.filter { it.available }.map { it.toolId }.toSet()
+                routingTrace?.copy(tools=toolAvailability,messageId=assistantId)?.let { agentTrace.value=it;graph.agentSkills.last.value=it }
                 val toolOutputReserve = if (routedTools.any { it.startsWith("files.") }) 1000 else if ("python.execute" in routedTools) 800 else if(routedTools.isEmpty()) 0 else 64
                 val toolSchemaReserve = toolOutputReserve + routedTools.sumOf { ContextBudgetManager().estimateTokens(com.localai.workspace.domain.tools.ChatToolSchemas.schema(it)) } + if(routedTools.isEmpty()) 0 else 128
                 val contextSize = if (diagnosticSmoke) 1024 else (model.configuredContext ?: model.declaredContext ?: 4_096).coerceIn(256, 8_192)
                 val outputLimit = if (diagnosticSmoke) 32 else (validationMaxOutputOverride ?: model.maxOutputTokens).coerceIn(1, 8192)
-                val contextItems = if (diagnosticSmoke || useContextV1) emptyList() else buildContextItems(activeProject, trimmed, evidence, memories, history, userId, model.id)
+                val contextItems = if (diagnosticSmoke || useContextV1) emptyList() else buildContextItems(activeProject, trimmed, evidence, memories,
+                    if(com.localai.workspace.sources.SourceType.CONVERSATION !in allowedSources)emptyList()else history, userId, model.id) +
+                    listOfNotNull(logicalAgent?.systemRole?.takeIf{it.isNotBlank()}?.let { com.localai.workspace.domain.rag.ContextItem(ContextItemKind.SYSTEM_POLICY,"Logical agent instructions:\n$it",100) }) +
+                    activeSkills.map { com.localai.workspace.domain.rag.ContextItem(ContextItemKind.SYSTEM_POLICY,"User-enabled skill ${it.id}:\n${it.instructions}",100) }
                 val budget = ContextBudgetManager().allocate(
                     ContextBudgetInput(
                         modelContextLength = contextSize,
@@ -720,15 +743,15 @@ class ChatViewModel(
                         items = contextItems,
                     ),
                 )
+                if (!useContextV1 && contextItems.any{it.kind==ContextItemKind.SYSTEM_POLICY && it !in budget.included})
+                    error("AGENT_SKILL_CONTEXT_BUDGET: instructions were not truncated; reduce instructions")
                 val suppliedIds = budget.included.mapNotNull { it.evidenceId }.toSet()
                 var suppliedEvidence = evidence.filter { it.id in suppliedIds }
                 if (!useContextV1 && !diagnosticSmoke && (selectedFiles - suppliedEvidence.map { it.documentId }.toSet()).isNotEmpty()) {
-                    _notices.emit("Some selected files did not fit this turn; they remain selected for your next message")
+                    _notices.emit("Some selected files had no relevant passage or did not fit; they remain selected for your next message")
                 }
-                if (!useContextV1 && !diagnosticSmoke && selectedFiles.isNotEmpty() && suppliedEvidence.isEmpty()) {
-                    throw GenerationException(GenerationError(GenerationStage.PREPARING_PROMPT, "DOCUMENT_CONTEXT_UNAVAILABLE",
-                        "No selected document passage fits this context. Check file status or increase model context."))
-                }
+                if (!useContextV1 && !diagnosticSmoke && selectedFiles.isNotEmpty() && suppliedEvidence.isEmpty())
+                    _notices.emit("No relevant document passage found for this turn")
                 _generationProgress.value = GenerationProgress(GenerationStage.PREPARING_PROMPT,
                     detail = if (suppliedEvidence.isEmpty()) "Preparing your message" else "Sending ${suppliedEvidence.size} document passages to the model")
                 var prompt = if (diagnosticSmoke || useContextV1) trimmed else budget.included.joinToString("\n\n") { it.text }
@@ -739,17 +762,27 @@ class ChatViewModel(
                 if (useContextV1) {
                     trace("CONTEXT_V1_BUILD_START")
                     val selectedContext = graph.contextFoundation.build(com.localai.workspace.context.ContextRequest(
-                        trimmed, com.localai.workspace.context.ScopeAccess(projectId = projectId, sessionId = conversationId),
+                        trimmed, com.localai.workspace.context.ScopeAccess(projectId = projectId, sessionId = conversationId, agentId = logicalAgent?.id),
                         contextWindow = contextSize, reservedOutput = outputLimit, extraReserve = toolOutputReserve + routedTools.sumOf { com.localai.workspace.context.ContextTokenEstimator.count(com.localai.workspace.domain.tools.ChatToolSchemas.schema(it)) } + if (routedTools.isEmpty()) 0 else 128,
                         conversationId = conversationId, projectInstructions = activeProject?.systemInstructions,
-                        allowedTools = routedTools.toList()), evidence = evidence, memoryEnabled = activeProject?.memoryEnabled != false)
+                        allowedTools = routedTools.toList(),agentId=logicalAgent?.id,agentInstructions=logicalAgent?.systemRole,
+                        skillIds=activeSkills.map{it.id},activeSkillInstructions=activeSkills.map{com.localai.workspace.context.SkillInstruction(it.id,it.instructions)},
+                        memoryScopes=logicalAgent?.memoryScopes ?: com.localai.workspace.semantic.v2.ScopeType.entries.toSet(),
+                        includeConversation=com.localai.workspace.sources.SourceType.CONVERSATION in allowedSources),
+                        evidence = evidence, memoryEnabled = activeProject.memoryEnabled && com.localai.workspace.sources.SourceType.STRUCTURED_MEMORY in allowedSources)
                     trace("MEMORY_COMPLETE")
                     trace("CONTEXT_V1_BUILD_COMPLETE")
                     val selectedSourceIds = selectedContext.included.filter { it.kind == com.localai.workspace.context.ContextKind.SOURCE }.map { it.id }.toSet()
                     suppliedEvidence = evidence.filter { it.id in selectedSourceIds }
-                    if ((selectedFiles - suppliedEvidence.map { it.documentId }.toSet()).isNotEmpty()) _notices.emit("Some selected files did not fit this turn; they remain selected for your next message")
-                    if (selectedFiles.isNotEmpty() && suppliedEvidence.isEmpty()) throw GenerationException(GenerationError(
-                        GenerationStage.PREPARING_PROMPT, "DOCUMENT_CONTEXT_UNAVAILABLE", "No selected document passage fits this context. Check file status or shorten the message."))
+                    if ((selectedFiles - suppliedEvidence.map { it.documentId }.toSet()).isNotEmpty()) _notices.emit("Some selected files had no relevant passage or did not fit; they remain selected for your next message")
+                    if (selectedFiles.isNotEmpty() && suppliedEvidence.isEmpty()) _notices.emit("No relevant document passage found for this turn")
+                    if(selectedContext.droppedSkills.isNotEmpty()) {
+                        agentTrace.value?.let { trace ->
+                            val selection=trace.selection.copy(active=trace.selection.active.filter{it.id !in selectedContext.droppedSkills},evaluations=trace.selection.evaluations.map{if(it.skillId in selectedContext.droppedSkills)it.copy(active=false,reasons=it.reasons+"SKILL_CONTEXT_BUDGET")else it})
+                            trace.copy(selection=selection).also{agentTrace.value=it;graph.agentSkills.last.value=it}
+                        }
+                        _notices.emit("Skill instructions did not fit this turn's context budget")
+                    }
                     conversation = selectedContext.conversation().copy(enableThinking = conversation.enableThinking,
                         validationThinkingBudget = conversation.validationThinkingBudget)
                     prompt = conversation.systemInstruction.orEmpty() + "\n" + conversation.history.joinToString("\n") { it.content } + "\n" + conversation.userMessage
@@ -990,7 +1023,12 @@ class ChatViewModel(
                 _notices.emit(diagnostic.message)
             } finally {
                 progressJob?.cancel()
-                withContext(NonCancellable) { _conversationId.value?.let { graph.database.toolCallDao().recoverInterrupted(it, System.currentTimeMillis()) } }
+                withContext(NonCancellable) {
+                    _conversationId.value?.let { graph.database.toolCallDao().recoverInterrupted(it, System.currentTimeMillis()) }
+                    agentTrace.value?.takeIf{it.messageId==assistantId}?.let { trace ->
+                        trace.withSuccessfulTools(graph.database.toolCallDao().successfulTools(assistantId).toSet()).also{agentTrace.value=it;graph.agentSkills.last.value=it}
+                    }
+                }
                 val retained = activeRuntime?.metrics()?.modelRetainedAfterStop == true
                 if (gateAcquired && (diagnosticSmoke || (!retained && (stopRequested || _generationProgress.value.stage in setOf(GenerationStage.ERROR, GenerationStage.CANCELLED))))) {
                     val finishedProgress = _generationProgress.value

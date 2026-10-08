@@ -18,6 +18,7 @@ data class ToolContext(
     val projectId: String,
     val conversationId: String,
     val workingDirectory: File,
+    val grantedCapabilities: Set<com.localai.workspace.capabilities.Capability> = com.localai.workspace.capabilities.CapabilityPolicy.localCapabilities,
 )
 
 sealed interface ToolExecutionResult {
@@ -56,6 +57,10 @@ class ToolRegistry(
     ): ToolExecutionResult {
         if (state.calls >= maxCallsPerTurn) return ToolExecutionResult.Rejected("Tool-call limit reached")
         val tool = toolsById[request.toolId] ?: return ToolExecutionResult.Rejected("Unknown tool")
+        val requirements = com.localai.workspace.capabilities.CapabilityPolicy.requirements(request.toolId)
+        if (com.localai.workspace.capabilities.CapabilityPolicy().evaluate(requirements,
+            com.localai.workspace.capabilities.CapabilityPolicy.localCapabilities, context.grantedCapabilities) != com.localai.workspace.capabilities.CapabilityDecision.ALLOW)
+            return ToolExecutionResult.Rejected("CAPABILITY_UNAVAILABLE")
         val rawArguments = request.argumentsJson.trim()
         if (rawArguments.length > 32000) return ToolExecutionResult.Rejected("Arguments exceed size limit")
         if (rawArguments.length < 2 || rawArguments.first() != '{' || rawArguments.last() != '}') {
