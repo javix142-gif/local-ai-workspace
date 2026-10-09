@@ -1,0 +1,111 @@
+name: QA debug APK (ARM64)
+
+on:
+  push:
+    branches:
+      - feat/0.5.0-skills-agents
+    paths:
+      - '.github/workflows/qa-debug-arm64-apk.yml'
+      - 'scripts/ci/build_qa_debug_arm64.py'
+      - 'app/**'
+      - 'llama-runtime/**'
+      - 'litert-compat/**'
+      - 'third_party/llama.cpp/**'
+      - 'gradle/**'
+      - 'gradlew'
+      - 'gradlew.bat'
+      - 'settings.gradle*'
+      - 'build.gradle*'
+      - 'gradle.properties'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qa-debug-arm64-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-qa-apk:
+    name: Build and verify debug ARM64 APK
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    permissions:
+      contents: read
+
+    steps:
+      - name: Initialize QA artifact folder
+        env:
+          QA_ARTIFACT_DIR: ${{ runner.temp }}/local-ai-workspace-qa-arm64
+        run: |
+          mkdir -p "$QA_ARTIFACT_DIR/logs"
+          python3 - "$QA_ARTIFACT_DIR/RESULTS.json" <<'PY'
+          import json, os, sys
+          with open(sys.argv[1], "w", encoding="utf-8") as f:
+              json.dump({
+                  "status": "NOT_STARTED",
+                  "artifactType": "QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
+                  "sourceCommit": os.environ.get("GITHUB_SHA"),
+                  "runId": os.environ.get("GITHUB_RUN_ID"),
+                  "runAttempt": os.environ.get("GITHUB_RUN_ATTEMPT"),
+                  "runUrl": f"{os.environ.get('GITHUB_SERVER_URL', 'https://github.com')}/{os.environ.get('GITHUB_REPOSITORY', '')}/actions/runs/{os.environ.get('GITHUB_RUN_ID', '')}",
+                  "physicalDevice": "NOT_RUN",
+                  "emulator": "NOT_RUN"
+              }, f, indent=2)
+              f.write("\n")
+          PY
+
+      - name: Checkout tested commit
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Build and validate QA APK
+        id: build
+        timeout-minutes: 60
+        env:
+          QA_ARTIFACT_DIR: ${{ runner.temp }}/local-ai-workspace-qa-arm64
+        run: python3 scripts/ci/build_qa_debug_arm64.py
+
+      - name: Finalize QA report and hashes
+        if: always()
+        env:
+          QA_ARTIFACT_DIR: ${{ runner.temp }}/local-ai-workspace-qa-arm64
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          python3 - "$QA_ARTIFACT_DIR" "$JOB_STATUS" <<'PY'
+          import hashlib, json, os, sys
+          from pathlib import Path
+
+          root = Path(sys.argv[1])
+          job_status = sys.argv[2]
+          report = root / "RESULTS.json"
+          if report.exists():
+              data = json.loads(report.read_text(encoding="utf-8"))
+          else:
+              data = {"artifactType": "QA_DEBUG_ARM64_NOT_FOR_PRODUCTION"}
+          if data.get("status") in {"NOT_STARTED", "RUNNING"}:
+              data["status"] = "FAILED_BEFORE_BUILD_VALIDATION"
+              data["failureReason"] = "A required workflow step failed or was interrupted before APK validation completed."
+          data["workflowJobStatus"] = job_status.upper()
+          report.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+          files = sorted(p for p in root.rglob("*") if p.is_file() and p.name != "SHA256SUMS")
+          lines = [f"{hashlib.sha256(p.read_bytes()).hexdigest()}  {p.relative_to(root).as_posix()}" for p in files]
+          (root / "SHA256SUMS").write_text("\n".join(lines) + "\n", encoding="utf-8")
+          PY
+
+      - name: Upload QA APK and evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: local-ai-workspace-qa-debug-arm64-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/local-ai-workspace-qa-arm64/
+          if-no-files-found: error
+          retention-days: 7
