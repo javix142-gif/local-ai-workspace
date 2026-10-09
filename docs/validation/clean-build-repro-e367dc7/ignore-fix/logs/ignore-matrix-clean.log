@@ -1,0 +1,22 @@
+START_UTC=2026-10-08T23:50:12Z
+CODE_SHA=b6c460763b19de41e689c493859bc1ee649faf2c
+COMMAND: bash ignore-matrix.sh /workspace/law-final-clean-ignorefix
+PASS TRACKABLE third_party/llama.cpp/src/models/models.h
+PASS TRACKABLE third_party/llama.cpp/src/models/afmoe.cpp
+PASS IGNORED third_party/llama.cpp/src/models/probe.bin (third_party/llama.cpp/.gitignore:5:*.bin	third_party/llama.cpp/src/models/probe.bin)
+PASS IGNORED third_party/llama.cpp/src/models/probe.gguf (third_party/llama.cpp/.gitignore:14:*.gguf	third_party/llama.cpp/src/models/probe.gguf)
+PASS IGNORED third_party/llama.cpp/src/models/probe.litertlm (.gitignore:40:**/models/**	third_party/llama.cpp/src/models/probe.litertlm)
+PASS IGNORED third_party/llama.cpp/src/models/probe.onnx (.gitignore:40:**/models/**	third_party/llama.cpp/src/models/probe.onnx)
+PASS IGNORED third_party/llama.cpp/src/models/probe.tflite (.gitignore:40:**/models/**	third_party/llama.cpp/src/models/probe.tflite)
+PASS IGNORED third_party/llama.cpp/src/models/probe.safetensors (.gitignore:40:**/models/**	third_party/llama.cpp/src/models/probe.safetensors)
+PASS IGNORED third_party/llama.cpp/src/models/probe.pt (.gitignore:40:**/models/**	third_party/llama.cpp/src/models/probe.pt)
+PASS IGNORED third_party/llama.cpp/src/models/probe.pth (.gitignore:40:**/models/**	third_party/llama.cpp/src/models/probe.pth)
+PASS IGNORED third_party/llama.cpp/src/models/probe.ckpt (.gitignore:40:**/models/**	third_party/llama.cpp/src/models/probe.ckpt)
+PASS IGNORED third_party/llama.cpp/src/models/probe.ggml (.gitignore:40:**/models/**	third_party/llama.cpp/src/models/probe.ggml)
+PASS IGNORED third_party/llama.cpp/src/models/probe.so (third_party/llama.cpp/.gitignore:20:*.so	third_party/llama.cpp/src/models/probe.so)
+PASS IGNORED third_party/llama.cpp/src/models/probe.a (third_party/llama.cpp/.gitignore:3:*.a	third_party/llama.cpp/src/models/probe.a)
+PASS TRACKED_MODEL_SOURCE_COUNT 158
+PASS TRACKED_MODEL_SOURCE_EXTENSIONS cpp=157 h=1
+PASS CHECKOUT_UNMODIFIED
+EXIT_CODE=0
+END_UTC=2026-10-08T23:50:12Z

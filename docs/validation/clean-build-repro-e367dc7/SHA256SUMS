@@ -1,9 +1,13 @@
-635e73960a51b9908619e18065e8f4d204d54ca3bb7af030980cc55fd1b6efed  ./README.md
+f79405440894c874a0ccbb7b8891ee910bafb612a5278ae198a5a790ea44d7f7  ./README.md
 154883b99f8c231f31da493a358735e555ac6b4c52a5dbaef9ca0b8911a2e371  ./attempts/daemon-disappeared-not-final.log
 54a3ec4bdb9669f1cf9ee7939426396c96aa504947530c9449e32d95f8d200e5  ./attempts/disk-full-not-final.log
 587e6f9c20e3e330139b188b6c95c724851cf41ec33caa61dfdbab28540d7bae  ./attempts/pristine-interrupted-not-final.log
 aed10efe343e1136f8afb4e976cdfee4fe59bee80cdea4f80d2ae42f5f8256e2  ./cmake-guard/missing-header.log
 8b5b02b4cd5b25a135a05358093dd6cb89ae817488c874430f3a6ec2e8c099ba  ./cmake-guard/missing-implementations.log
+f8a90c2c00467857d785b0ab48b4f80b941c98eac279d4429ee1808c03a58caf  ./ignore-fix/RESULTS.md
+eb71e1c7eae2f3c55346587d181f39c037f61f9061e9ce79181fb32cac564cd5  ./ignore-fix/ignore-matrix.sh
+38ac3ec54da7f22c93e9d6df3d2471a04cebb56c5df538329f88c2545f56477b  ./ignore-fix/logs/assembleRelease-clean.log
+df8120efc8e9db426931dee3931ff2c64a48a298d04a0934e383a7a645c77ad7  ./ignore-fix/logs/ignore-matrix-clean.log
 14cc8269f6db42fb570a882cb1172c8664b5313c8b08ef6a6fa2f50fe55f0943  ./logs/base-red-assembleRelease.log
 5fc2280539cabbe6135c3f18b1a006c622b80caf9734cc1c96232d6b8074699d  ./logs/host-build-clean.log
 4be942d230ac863708fbd2a9cb205ef355326cbe677b2fe4d40788a8c9720188  ./logs/host-tests-clean.log

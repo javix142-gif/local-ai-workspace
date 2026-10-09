@@ -4,6 +4,12 @@ This evidence bundle records the missing-source failure on the 0.5.0 feature
 branch, the pinned-source repair, and host validation from a clean checkout.
 It does not claim emulator or physical-device validation.
 
+**Follow-up:** the initial `.gitignore` exception was too broad and could
+unignore model binaries inside the vendored registry directory. Commit
+`b6c460763b19de41e689c493859bc1ee649faf2c` narrows it to `*.cpp` plus
+`models.h`. The clean-checkout ignore matrix and release build for that SHA
+are recorded in [`ignore-fix/RESULTS.md`](ignore-fix/RESULTS.md).
+
 ## Source and branch identities
 
 - Remote branch at preflight: `feat/0.5.0-skills-agents`
