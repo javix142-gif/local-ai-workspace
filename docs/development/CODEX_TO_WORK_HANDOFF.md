@@ -1,19 +1,34 @@
-# Codex → Work handoff: 0.5.0 pre-loop stabilization
+# Codex → Work handoff: 0.5.0 clean-checkout stabilization
 
-**Status:** 0.5.0 host candidate with the focused M00-03 LOG10 correction; no Android/device validation for this correction.
+**Status:** Current focused delivery is the `.gitignore` correction plus clean-checkout `assembleRelease`; no Android/device validation for this delivery.
 **Repository:** `https://github.com/javix142-gif/local-ai-workspace.git`
 **Branch:** `feat/0.5.0-skills-agents`
-**Latest tested production source HEAD:** `39aea8f55aac051edd3a43bc1b09c05d319d2783` (LOG10 selector correction; validation evidence and this handoff are in a separate documentation commit).
+**Current production source HEAD under review:** `b6c460763b19de41e689c493859bc1ee649faf2c` (`.gitignore` only; ignore matrix 17/17 and clean-checkout `assembleRelease` PASS).
+**Evidence bundle commit:** `b5fa6a2062f7aed568f33bc66c2e4ea229f28a66`.
+**Most recent complete JVM gate:** `e367dc75d0f952ef6a9b4e96d51e1263b70d3309`, 729/729 PASS; historical relative to current source. No JVM suite was rerun on `b6c4607`.
+**Current AndroidTest compilation, instrumentation and physical-device validation:** **NOT RUN**. No APK was delivered or distributed.
 **Baseline:** `v0.4.2` → `de615b772cf37a99e7e08a647c59607b271de606`
 **App:** `com.localai.workspace`, version `0.5.0` (`versionCode 27`).
 
-## Latest follow-up: M00-03 LOG10 cell/function distinction (2026-10-08)
+## Current delivery: clean-checkout source ignore matrix and release build (2026-10-09)
+
+The published feature base was `8837517ee502b700c85a2b2c484beddcbcc879be`. Code commit `b6c460763b19de41e689c493859bc1ee649faf2c` narrows the root `.gitignore` exceptions to the vendored llama.cpp model registry's `.cpp` sources and `models.h`; the production application code is unchanged.
+
+The original clean-checkout failure is independently preserved at code SHA `f4695b5644f1230b5f711ec8300937027fb39941`: `:app:assembleRelease` failed because `third_party/llama.cpp/src/models/models.h` was absent from Git. Raw log: [`base-red-assembleRelease.log`](../validation/clean-build-repro-e367dc7/logs/base-red-assembleRelease.log), SHA-256 `14cc8269f6db42fb570a882cb1172c8664b5313c8b08ef6a6fa2f50fe55f0943`. The subsequent `e367dc7` repair tracked the pinned upstream sources; the current `.gitignore` follow-up was then verified against that complete tracked tree.
+
+From a fresh detached checkout of that exact source SHA, after `git clean -ffdx`, the deterministic `git check-ignore --no-index` matrix passed 17/17 assertions: the required C++ sources/header are trackable, all 12 probed model/binary extensions remain ignored, the registry has exactly 158 tracked source files (157 `.cpp`, one `.h`), and the checkout remains unmodified. Script, raw output and checksums are in [the ignore-fix evidence](../validation/clean-build-repro-e367dc7/ignore-fix/RESULTS.md).
+
+From the same clean checkout, `:app:assembleRelease` passed on code SHA `b6c460763b19de41e689c493859bc1ee649faf2c`: exit 0, 128/128 Gradle tasks, 2026-10-08 23:50:16 UTC–2026-10-09 00:07:30 UTC. It used Gradle 8.10.2, Temurin JDK 17.0.20.1, Android SDK 35, NDK 27.0.12077973, CMake 3.31.6 and ABI `arm64-v8a`. The exact command, environment, raw log and SHA-256 are recorded in the evidence report. The temporary build output was removed with the isolated worktree; no APK was delivered or distributed.
+
+The full host JVM gate was last run on `e367dc75d0f952ef6a9b4e96d51e1263b70d3309`: app 727/727 plus LiteRT compatibility 2/2, zero failures/errors/skips. Those results are preserved as **historical per-SHA evidence**, not attributed to `b6c4607`. AndroidTest compilation was not run for `b6c4607`; instrumented tests, emulator and Motorola validation are **NOT RUN**. This delivery's machine-readable status is in [`EXECUTION_STATE.json`](EXECUTION_STATE.json) → `latestDelivery`.
+
+## Historical follow-up: M00-03 LOG10 cell/function distinction (2026-10-08)
 
 The published feature base before this correction was `020917cdb6e469983f77093130b58967ae56df56`. A red test against that code failed for the intended reason: the selector skipped `LOG10` unconditionally, so formula `Hoja1!A3` with formula `LOG10` omitted the existing dependency `Hoja1!LOG10`. The correction is `39aea8f55aac051edd3a43bc1b09c05d319d2783`. It treats unqualified `LOG10` as a function name only when followed by `(` (allowing whitespace); it continues scanning function arguments. A bare or qualified `LOG10` cell reference remains a cell, and missing qualified references keep their sheet/address identity and existing incomplete-evidence notice.
 
-The selector harness reports 12/12 synthetic invariants passing. Focused Context Evidence, ContextFoundation, structured document, Semantic Context postfix and harness tests passed 106/106. The full JVM gate passed app 727/727 and LiteRT compatibility 2/2, with 0 failures/errors/skips. `assembleDebug`, `assembleRelease`, `lintDebug` and `assembleDebugAndroidTest` completed; lint reported 0 errors, 40 warnings and 1 informational issue. Instrumented tests, emulator execution and Motorola validation are **NOT RUN**. Gradle assemble tasks created only temporary outputs in the isolated validation worktree; no APK was copied, delivered, uploaded, installed or device-tested.
+The selector harness reports 12/12 synthetic invariants passing. Focused Context Evidence, ContextFoundation, structured document, Semantic Context postfix and harness tests passed 106/106 on source `39aea8f`. The complete host-gate results recorded for the subsequent tracked-source baseline are 727 app JVM + 2 compatibility tests on `e367dc7`; do not attribute that later run to `39aea8f`. The earlier recorded run also built debug/release/lint/AndroidTest, with lint 0 errors, 40 warnings and 1 informational issue. Instrumented tests, emulator execution and Motorola validation are **NOT RUN**. These source/log records remain historical.
 
-The exact red/green XML, commands, JSON harness report, losslessly compressed logs and SHA-256 manifest are in [M00-03 LOG10 correction evidence](../validation/m00-03-log10/RESULTS.md). The full gate and harness use `M00_SOURCE_COMMIT=39aea8f55aac051edd3a43bc1b09c05d319d2783`. A clean-worktree native build needed locally ignored llama.cpp model sources and CMake regeneration; the workaround and preliminary setup logs are included in the evidence folder and did not change tracked source.
+The exact red/green XML, commands, JSON harness report, losslessly compressed logs and SHA-256 manifest are in [M00-03 LOG10 correction evidence](../validation/m00-03-log10/RESULTS.md). The LOG10 harness uses `M00_SOURCE_COMMIT=39aea8f55aac051edd3a43bc1b09c05d319d2783`. At that historical stage, a clean-worktree native build exposed missing ignored llama.cpp model sources. The later `e367dc7` commit tracks the pinned sources and adds the CMake guard; the current `b6c4607` clean-checkout release build passed. The clean-build evidence and raw logs are in [the reproducibility bundle](../validation/clean-build-repro-e367dc7/README.md).
 
 ## Historical follow-up: M00-03 sheet-scoped references (2026-10-08)
 
@@ -33,7 +48,7 @@ The later authorized host correction is implemented in `594a511cc088a53b97ccb5f2
 
 Focused tests passed 70/70. The subsequent complete host gate passed app JVM 700/700 and LiteRT compatibility 2/2, with debug/release assemble, lintDebug and AndroidTest APK assemble successful. Lint had 0 errors, 40 warnings and 1 informational issue. The test APK was only built: instrumented tests and Motorola validation are **NOT RUN** because no ADB device, emulator binary/system image or KVM was available. The full synthetic before/after JSON, JUnit XML, gate log, summary and hashes are in [M00-03 validation evidence](../validation/m00-03/RESULTS.md).
 
-The prior sections below describe earlier stabilization revisions. Their 686, 700, and 720 app-test counts, APK metadata and push state are historical only; the current LOG10 correction result is recorded at the beginning of this handoff and in `EXECUTION_STATE.json` → `latestFollowUp`.
+The prior sections below describe earlier stabilization revisions. Their 686, 700, and 720 app-test counts, APK metadata, and push state are historical only. The LOG10 correction is also historical; current clean-checkout results are recorded at the beginning of this handoff and in `EXECUTION_STATE.json` → `latestDelivery`.
 
 The implementation is based on the completed 0.5.0 Skills/Agents and Semantic V2 postfix. It preserves the single Gemma runtime, Skills/Agents, existing databases, Semantic V2 and the F1/F2 fixes. No merge or release tag is part of this handoff.
 
@@ -87,9 +102,9 @@ Environment inspection found no attached ADB device, no AVD, no installed Androi
 
 ## Artifacts and Git synchronization
 
-The current code version is built as an ARM64-only release APK, signed with the configured local update certificate, then checked with `apksigner`, `zipalign`, package metadata and ABI inspection. APK: `dist/apk/local-ai-workspace-0.5.0-preloop-stabilization-arm64.apk`, 100,130,461 bytes, SHA-256 `a7bd3f5c69c2644b7de9fbe86f62aa3edf78fb60961487cd96782fe66848c0d0`. Certificate SHA-256 `f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b` matches the previously recorded update certificate; ABI inspection found only `arm64-v8a`. It is not device validated. A companion `.sha256` file is present beside the APK. APK/model binaries remain outside Git.
+Historical artifact from an earlier stabilization build (not the current `b6c4607` delivery): ARM64-only release APK `dist/apk/local-ai-workspace-0.5.0-preloop-stabilization-arm64.apk`, 100,130,461 bytes, SHA-256 `a7bd3f5c69c2644b7de9fbe86f62aa3edf78fb60961487cd96782fe66848c0d0`. It was not device validated. The `b6c4607` clean release output was removed with its temporary worktree and no APK was delivered. APK/model binaries remain outside Git.
 
-The authorized feature-branch push was a fast-forward from remote `de615b772cf37a99e7e08a647c59607b271de606` to `2e01b59d7b8aa84d53e7dc326969ecd136e63527`; readback confirmed local and remote HEAD equality. [Pushed source handoff commit](https://github.com/javix142-gif/local-ai-workspace/commit/2e01b59d7b8aa84d53e7dc326969ecd136e63527). The push contained no APK/model binaries or secrets. `main` and `v0.4.2` remain `de615b772cf37a99e7e08a647c59607b271de606`. No force push, merge or `v0.5.0` tag.
+Historical Git synchronization records above are not the current feature-branch publication state. For this delivery the intended code/evidence commits are `b6c460763b19de41e689c493859bc1ee649faf2c` and `b5fa6a2062f7aed568f33bc66c2e4ea229f28a66`; publication/readback status is reported after the authorized fast-forward push. `main` and peeled `v0.4.2` are expected to remain at `de615b772cf37a99e7e08a647c59607b271de606`. No force push, merge, release or `v0.5.0` tag is authorized.
 
 ## Physical validations still required
 
@@ -103,6 +118,10 @@ On the Motorola Moto G86 Power 5G, test with the original workbook when availabl
 
 Historical physical evidence (12/12 AGENTS_SKILLS_V1 and prior 0.5.0 validations) belongs to its recorded build; it does not validate this stabilization APK.
 
-## Recommended first loop cycle
+## Historical recommendation from the prior handoff
 
-First install the candidate on the Motorola and collect the above cold/warm stage timings using the actual workbook. Have the independent Work orchestrator audit those results and the code diff. Only then select the next roadmap item; do not infer the 3-minute bottleneck or start an autonomous loop from host timings alone.
+The previous handoff recommended installing its stabilization candidate and collecting cold/warm timings. That recommendation belongs to that earlier delivery.
+
+## Current next step
+
+Independently audit the `.gitignore` correction and clean-checkout evidence in `../validation/clean-build-repro-e367dc7/ignore-fix/`. Do not start Android CI or prepare/distribute an APK before that audit. After audit approval, run the separate Android QA step; host compilation is not physical validation.

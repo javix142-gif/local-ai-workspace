@@ -2,7 +2,7 @@
   "repository": "https://github.com/javix142-gif/local-ai-workspace.git",
   "branch": "feat/0.5.0-skills-agents",
   "startingHeadSha": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
-  "testedCodeHeadSha": "39aea8f55aac051edd3a43bc1b09c05d319d2783",
+  "testedCodeHeadSha": "b6c460763b19de41e689c493859bc1ee649faf2c",
   "version": "0.5.0",
   "applicationId": "com.localai.workspace",
   "completedTasks": [
@@ -26,14 +26,16 @@
       "failures": 0,
       "errors": 0,
       "skipped": 0,
-      "testedCodeHeadSha": "39aea8f55aac051edd3a43bc1b09c05d319d2783"
+      "testedCodeHeadSha": "39aea8f55aac051edd3a43bc1b09c05d319d2783",
+      "recordStatus": "HISTORICAL; ran on its recorded LOG10 source SHA."
     },
     "selectorHarness": {
       "status": "PASS",
       "evidence": "HOST_SYNTHETIC",
       "cases": 12,
       "failedCases": 0,
-      "testedCodeHeadSha": "39aea8f55aac051edd3a43bc1b09c05d319d2783"
+      "testedCodeHeadSha": "39aea8f55aac051edd3a43bc1b09c05d319d2783",
+      "recordStatus": "HISTORICAL; ran on its recorded LOG10 source SHA."
     },
     "appJvm": {
       "status": "PASS",
@@ -41,7 +43,8 @@
       "tests": 727,
       "failures": 0,
       "errors": 0,
-      "skipped": 0
+      "skipped": 0,
+      "testedCodeHeadSha": "e367dc75d0f952ef6a9b4e96d51e1263b70d3309"
     },
     "litertCompatJvm": {
       "status": "PASS",
@@ -49,13 +52,16 @@
       "tests": 2,
       "failures": 0,
       "errors": 0,
-      "skipped": 0
+      "skipped": 0,
+      "testedCodeHeadSha": "e367dc75d0f952ef6a9b4e96d51e1263b70d3309"
     },
     "instrumentedTests": {
       "status": "NOT_RUN",
       "evidence": "ANDROID",
-      "reason": "AndroidTest APK was compiled; no emulator/device execution."
-    }
+      "reason": "AndroidTest APK was compiled; no emulator/device execution.",
+      "recordStatus": "NOT_RUN; AndroidTest compilation on an earlier code SHA is not execution."
+    },
+    "recordStatus": "Historical per nested source SHA; the current delivery checks are recorded under latestDelivery."
   },
   "finalHostGate": {
     "status": "COMPLETED_DEVICE_NOT_RUN",
@@ -79,11 +85,12 @@
       "information": 1
     },
     "instrumentedTestsExecuted": false,
-    "testedCodeHeadSha": "39aea8f55aac051edd3a43bc1b09c05d319d2783",
-    "startedAtUtc": "2026-10-08T21:50:34Z",
-    "finishedAtUtc": "2026-10-08T21:56:27Z",
-    "duration": "5m53s",
-    "evidenceDirectory": "docs/validation/m00-03-log10/after/"
+    "testedCodeHeadSha": "e367dc75d0f952ef6a9b4e96d51e1263b70d3309",
+    "startedAtUtc": "2026-10-08T22:58:25Z",
+    "finishedAtUtc": "2026-10-08T23:26:32Z",
+    "duration": "28m07s (two sequential commands; test gate plus build gate)",
+    "evidenceDirectory": "docs/validation/clean-build-repro-e367dc7/",
+    "recordStatus": "HISTORICAL_FULL_GATE; not rerun on currentSourceHeadSha."
   },
   "buildResults": {
     "assembleDebug": {
@@ -105,7 +112,9 @@
       "status": "PASS",
       "evidence": "HOST",
       "note": "Instrumented test APK compiled; tests were not executed."
-    }
+    },
+    "recordStatus": "HISTORICAL_FULL_GATE_RESULTS; current-source assembleRelease is recorded separately under latestDelivery.",
+    "testedCodeHeadSha": "e367dc75d0f952ef6a9b4e96d51e1263b70d3309"
   },
   "emulatorResults": {
     "availability": "NOT_AVAILABLE",
@@ -136,10 +145,10 @@
     }
   },
   "pendingAcceptance": [
-    "Independent audit of M00-03 LOG10 selector correction",
+    "Independent audit of the clean-checkout .gitignore correction and release-build evidence in latestDelivery",
     "Run relevant Android/Motorola context evidence checks on a physical device after audit approval"
   ],
-  "nextRecommendedTask": "Independent audit of the M00-03 LOG10 correction; do not start another implementation cycle before that audit.",
+  "nextRecommendedTask": "Independent audit of latestDelivery: .gitignore ignore matrix and clean-checkout assembleRelease at b6c460763b19de41e689c493859bc1ee649faf2c. Do not start Android CI or APK preparation in this delivery.",
   "m00_03": {
     "status": "IMPLEMENTED_TESTED_HOST_DEVICE_NOT_RUN",
     "baseCommit": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
@@ -180,11 +189,11 @@
     "evidenceDirectory": "docs/validation/m00-03/",
     "mainAndV042Untouched": true,
     "recordStatus": "HISTORICAL; measured through source commit 594a511cc088a53b97ccb5f21b720e20e8e4639a and superseded by latestFollowUp.",
-    "latestRecordIs": "39aea8f55aac051edd3a43bc1b09c05d319d2783"
+    "latestRecordIs": "39aea8f55aac051edd3a43bc1b09c05d319d2783 (historical LOG10 source; see latestDelivery for current source checks)."
   },
   "latestFollowUp": {
     "name": "M00-03 LOG10 cell/function distinction and evidence trace",
-    "recordStatus": "CURRENT_FOR_THIS_WORK_ITEM",
+    "recordStatus": "HISTORICAL; LOG10 correction remains in source, but this is not the current delivery.",
     "status": "IMPLEMENTED_HOST_TESTS_DEVICE_NOT_RUN",
     "baseCommit": "020917cdb6e469983f77093130b58967ae56df56",
     "testedCodeCommit": "39aea8f55aac051edd3a43bc1b09c05d319d2783",
@@ -396,11 +405,129 @@
     "releaseTagCreated": false
   },
   "fieldSemantics": {
-    "testedCodeHeadSha": "Current production code SHA for the latest LOG10 correction.",
-    "testResults": "Current host evidence for that code SHA.",
-    "m00_03": "Historical earlier selector correction record; not current test totals.",
+    "startingHeadSha": "Historical original M00 baseline; not the base of later deliveries.",
+    "testedCodeHeadSha": "Current source SHA covered by the latest delivery-specific checks; see latestDelivery for exact checks and per-check provenance.",
+    "currentSourceHeadSha": "Current production source SHA under review in the latest delivery.",
+    "lastFullJvmTestCodeSha": "Source SHA of the most recent complete app + LiteRT compatibility JVM gate; it may precede a later documentation or ignore-only commit.",
+    "testResults": "Historical or per-source results; each nested recordStatus/testedCodeHeadSha governs attribution. Do not transfer counts to another SHA.",
+    "finalHostGate": "Historical complete host gate; not rerun on latestDelivery.codeCommit.",
+    "latestDelivery": "Current .gitignore-only delivery, its clean-checkout matrix and release build, inherited full JVM gate provenance, and Android NOT_RUN statuses.",
+    "m00_03": "Historical earlier selector correction record; its latestRecordIs is historical, not the current delivery.",
+    "latestFollowUp": "Preserved historical LOG10 selector correction details; not current delivery.",
     "followUpHistory": "Preserved earlier follow-up records, including sheet-scope results.",
     "historicalArtifactHashes": "APK metadata from an earlier build; not produced by this correction.",
-    "historicalGitSynchronization": "Earlier push/readback record; final push for this correction is reported in the latest handoff."
+    "historicalGitSynchronization": "Earlier push/readback record; latestDelivery contains this correction’s own code/evidence commits."
+  },
+  "currentSourceHeadSha": "b6c460763b19de41e689c493859bc1ee649faf2c",
+  "lastFullJvmTestCodeSha": "e367dc75d0f952ef6a9b4e96d51e1263b70d3309",
+  "latestDelivery": {
+    "name": "Clean-checkout model-source ignore matrix and release reproducibility follow-up",
+    "status": "HOST_IGNORE_MATRIX_AND_RELEASE_PASS; FULL_JVM_GATE_HISTORICAL; ANDROID_NOT_RUN",
+    "baseCommit": "8837517ee502b700c85a2b2c484beddcbcc879be",
+    "codeCommit": "b6c460763b19de41e689c493859bc1ee649faf2c",
+    "evidenceCommit": "b5fa6a2062f7aed568f33bc66c2e4ea229f28a66",
+    "branch": "feat/0.5.0-skills-agents",
+    "changedProductionFiles": [
+      ".gitignore"
+    ],
+    "ignoreMatrix": {
+      "status": "PASS",
+      "assertionsPassed": 17,
+      "assertionsFailed": 0,
+      "checkout": "fresh detached worktree; git clean -ffdx; no tracked or ignored residue at start",
+      "trackedSourceFiles": 158,
+      "trackedCpp": 157,
+      "trackedHeaders": 1,
+      "sourceExceptionsTrackable": [
+        "third_party/llama.cpp/src/models/models.h",
+        "third_party/llama.cpp/src/models/afmoe.cpp"
+      ],
+      "binaryExtensionsIgnored": [
+        "bin",
+        "gguf",
+        "litertlm",
+        "onnx",
+        "tflite",
+        "safetensors",
+        "pt",
+        "pth",
+        "ckpt",
+        "ggml",
+        "so",
+        "a"
+      ],
+      "unmodifiedCheckout": true,
+      "script": "docs/validation/clean-build-repro-e367dc7/ignore-fix/ignore-matrix.sh",
+      "log": "docs/validation/clean-build-repro-e367dc7/ignore-fix/logs/ignore-matrix-clean.log",
+      "logSha256": "df8120efc8e9db426931dee3931ff2c64a48a298d04a0934e383a7a645c77ad7",
+      "scriptSha256": "eb71e1c7eae2f3c55346587d181f39c037f61f9061e9ce79181fb32cac564cd5"
+    },
+    "assembleRelease": {
+      "status": "PASS",
+      "testedCodeHeadSha": "b6c460763b19de41e689c493859bc1ee649faf2c",
+      "exitCode": 0,
+      "gradleTasksExecuted": 128,
+      "startedAtUtc": "2026-10-08T23:50:16Z",
+      "finishedAtUtc": "2026-10-09T00:07:30Z",
+      "duration": "17m13s",
+      "command": "JAVA_HOME=/workspace/.toolchain/jdk-17 ANDROID_HOME=/workspace/.toolchain/android-sdk JAVA_TOOL_OPTIONS=-Djava.io.tmpdir=/workspace/law-b6c4607-tmp ./gradlew :app:assembleRelease -Parm64Only=true --offline --rerun-tasks --no-build-cache --no-daemon --no-parallel --max-workers=1 --console=plain",
+      "hostEnvironment": {
+        "os": "Linux x86_64",
+        "gradle": "8.10.2",
+        "buildJdk": "Temurin 17.0.20.1",
+        "androidSdkPlatform": "35",
+        "ndk": "27.0.12077973",
+        "cmake": "3.31.6",
+        "abi": "arm64-v8a"
+      },
+      "log": "docs/validation/clean-build-repro-e367dc7/ignore-fix/logs/assembleRelease-clean.log",
+      "logSha256": "38ac3ec54da7f22c93e9d6df3d2471a04cebb56c5df538329f88c2545f56477b",
+      "verificationArtifact": "Local output was removed with the clean worktree; no APK was delivered or distributed."
+    },
+    "inheritedFullJvmGate": {
+      "status": "PASS_HISTORICAL_NOT_RERUN_FOR_CURRENT_CODE_COMMIT",
+      "testedCodeHeadSha": "e367dc75d0f952ef6a9b4e96d51e1263b70d3309",
+      "appJvm": {
+        "tests": 727,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "litertCompatJvm": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "totalTests": 729,
+      "evidenceDirectory": "docs/validation/clean-build-repro-e367dc7/",
+      "testLogSha256": "4be942d230ac863708fbd2a9cb205ef355326cbe677b2fe4d40788a8c9720188",
+      "buildGateLogSha256": "5fc2280539cabbe6135c3f18b1a006c622b80caf9734cc1c96232d6b8074699d",
+      "startedAtUtc": "2026-10-08T22:58:25Z",
+      "finishedAtUtc": "2026-10-08T23:26:32Z"
+    },
+    "currentAndroidValidation": {
+      "androidTestCompilation": "NOT_RUN_FOR_THIS_COMMIT",
+      "instrumentedTests": "NOT_RUN",
+      "emulator": "NOT_RUN",
+      "physicalDevice": "NOT_RUN"
+    },
+    "gitSafety": {
+      "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
+      "v042TagCommitSha": "de615b772cf37a99e7e08a647c59607b271de606",
+      "forcePush": false,
+      "merge": false,
+      "releaseTagCreated": false
+    },
+    "evidenceDirectory": "docs/validation/clean-build-repro-e367dc7/ignore-fix/",
+    "baseFailureReproduction": {
+      "status": "FAIL_EXPECTED_BEFORE_TRACKED_SOURCE_REPAIR",
+      "testedCodeHeadSha": "f4695b5644f1230b5f711ec8300937027fb39941",
+      "startedAtUtc": "2026-10-08T22:21:28Z",
+      "command": "JAVA_HOME=/workspace/.toolchain/jdk-17 ANDROID_HOME=/workspace/.toolchain/android-sdk ./gradlew :app:assembleRelease -Parm64Only=true --offline --rerun-tasks --no-build-cache --no-daemon --no-parallel --max-workers=1 --console=plain",
+      "observedFailure": "Fresh clean checkout could not compile llama.cpp because third_party/llama.cpp/src/models/models.h was absent; the root ignore rule had kept required sources out of Git.",
+      "log": "docs/validation/clean-build-repro-e367dc7/logs/base-red-assembleRelease.log",
+      "logSha256": "14cc8269f6db42fb570a882cb1172c8664b5313c8b08ef6a6fa2f50fe55f0943"
+    }
   }
 }
