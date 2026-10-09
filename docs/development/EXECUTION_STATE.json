@@ -13,10 +13,10 @@
     "Preserve Semantic V2 F1/F2 behavior",
     "M00-03 selector correction: bounded spreadsheet references, formula dependencies, UTF-8 anchor preservation and explicit incomplete-evidence notices",
     "M00-03 LOG10 contextual distinction between function names and A1 cell references; missing-cell provenance retained",
-    "M01-05 Context budget and relevance deduplication (host validated on 260a3f7)"
+    "M01-05 Context budget and relevance deduplication — VALIDADA_HOST (independent audit; host only; tested code 260a3f7)"
   ],
   "blockedTasks": [
-    "BLOCKED_ANDROID_CI: run 37865813921 could not discover the named AVD. Complete artifact/job-log inspection did not capture effective AVD path variables or an AVD directory listing, so the creation/location root cause remains unproven; instrumentation is NOT_RUN.",
+    "BLOCKED_ANDROID_CI_CAUSE_UNPROVEN: run 37865813921 proved the named API 35 AVD was not discoverable; the retained artifact lacks effective AVD-home variables, avdmanager/emulator AVD listings, and AVD file inventory, so why creation/discovery failed remains unproven. No workflow fix or new run was made.",
     "Motorola-specific M00 validation and exact physical XLSX latency diagnosis."
   ],
   "testResults": {
@@ -209,11 +209,11 @@
     }
   },
   "pendingAcceptance": [
-    "Android emulator CI remains BLOCKED_ANDROID_CI_CAUSE_UNPROVEN. Any further AVD root-cause diagnostic requires separate authorization; do not infer a fix or rerun from the existing evidence.",
     "M00 Motorola validation is blocked until both the exact original workbook is accessible and the Moto G86 Power is connected/ADB-authorized; the current preflight executed no install or tests.",
-    "Independent audit of the M01-05 host evidence is pending; this task does not claim emulator or Motorola validation."
+    "M01-06 “Ingesta e indexación reanudable” remains PENDING (requires_device=true in the original 97-task plan); do not start or mark complete until the required device is available.",
+    "Android emulator CI remains BLOCKED_ANDROID_CI_CAUSE_UNPROVEN; do not edit or relaunch until the AVD creation/discovery cause is demonstrated."
   ],
-  "nextRecommendedTask": "Stop for independent audit of M01-05 host evidence. The original 97-task user attachment remains the source for subsequent IDs/order/dependencies. M00 Motorola validation is still blocked on the exact original XLSX and an ADB-authorized Moto G86 Power; Android emulator CI remains BLOCKED_ANDROID_CI_CAUSE_UNPROVEN.",
+  "nextRecommendedTask": "Stop for independent audit of the Android emulator CI diagnosis. M01-05 is VALIDADA_HOST only. M01-06 “Ingesta e indexación reanudable” remains pending and requires a device; preserve the original 97-task source and dependencies.",
   "m00_03": {
     "status": "IMPLEMENTED_TESTED_HOST_DEVICE_NOT_RUN",
     "baseCommit": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
@@ -487,7 +487,8 @@
     "physicalDeviceResults.latestM00FocusedPreflight": "Latest focused Motorola preflight. A blocked preflight with no serial/workbook means PHYSICAL_DEVICE tests were NOT_RUN; it is not a failed product test.",
     "latestM01_05": "Current M01-05 result, including source SHA, focused/full suite counts, build gate, and evidence links; no Android or device execution is implied.",
     "latestM01_05.evidencePublicationCorrection": "Supplemental tracked-log and manifest readback correction; does not rerun or change the tested code/results.",
-    "latestM01_05.priorEvidenceCommitSha": "Previously published M01-05 evidence commit, superseded as the complete evidence publication by evidencePublicationCorrection."
+    "latestM01_05.priorEvidenceCommitSha": "Previously published M01-05 evidence commit, superseded as the complete evidence publication by evidencePublicationCorrection.",
+    "latestAndroidCi.followUpReview": "Current executor reinspection of the retained artifact and GitHub run metadata; preserves prior latestInvestigation details and does not change the root-cause status."
   },
   "currentSourceHeadSha": "260a3f7c6267cc5a90a9cf516356951aec0627a1",
   "lastFullJvmTestCodeSha": "260a3f7c6267cc5a90a9cf516356951aec0627a1",
@@ -774,7 +775,49 @@
       "adbBinaryAvailable": true,
       "adbEmulatorConnected": false
     },
-    "workflowDispatch": "Declared but NOT_TESTED; GitHub requires the workflow file on the default branch for manual dispatch, and main was left untouched."
+    "workflowDispatch": "Declared but NOT_TESTED; GitHub requires the workflow file on the default branch for manual dispatch, and main was left untouched.",
+    "followUpReview": {
+      "reviewedAtUtc": "2026-10-09T04:39:17Z",
+      "sourceCodeSha": "bdae87820b73dbcc0decfde3a65c391c6fb63279",
+      "runId": "37865813921",
+      "jobId": "113612155627",
+      "artifactId": "11588945524",
+      "artifactSha256": "007278791dc27fcda430694be6f3b5d7e3620932548145ba5b28e9907bebb9ac",
+      "artifactBytes": 23012,
+      "artifactManifestEntriesVerified": 11,
+      "freshArtifactFetch": "Attempted with gh run download; GitHub blob download returned HTTP Forbidden. The previously extracted complete artifact was available locally and all 11 internal manifest entries were reverified.",
+      "freshJobLogFetch": "gh run view --job 113612155627 --log returned zero bytes; REST job-log download did not yield a payload. Job step metadata was read from the GitHub API.",
+      "jobStepMetadata": {
+        "sdkInstall": "SUCCESS",
+        "kvmPreflight": "SUCCESS",
+        "createAndBootAvd": "FAILURE",
+        "connectedInstrumentation": "SKIPPED",
+        "evidenceCollector": "FAILURE",
+        "artifactUpload": "SUCCESS"
+      },
+      "artifactObservations": {
+        "avdmanagerLog": "Repository load/fetch and Auto-selecting single ABI x86_64 only; no resolved AVD path or explicit creation confirmation.",
+        "emulatorLog": "Unknown AVD name localai-api35-x86_64; no matching .ini reported under displayed $HOME/.android/avd; search-path template is unexpanded.",
+        "adbDevices": "List of devices attached; no serials.",
+        "summary": "status FAIL; gradleExitCode null; instrumentationXmlCount 0; executed 0; EMULATOR label; physicalDeviceValidation NOT_RUN.",
+        "toolchain": "sdkmanager and avdmanager executable paths are under /usr/local/lib/android/sdk; installed API 35 google_apis x86_64 revision 9, emulator 37.2.12, platform-tools 37.0.1."
+      },
+      "avdEnvironment": {
+        "workflowSetsExplicitAvdHome": false,
+        "workflowSetsExplicitUserHome": false,
+        "workflowSetsExplicitSdkHome": false,
+        "avdCreateAndEmulatorLaunchSameStep": true,
+        "effectiveHomeAndAndroidAvdVariablesCaptured": false,
+        "avdmanagerListAvdCaptured": false,
+        "emulatorListAvdsCaptured": false,
+        "iniAndConfigInventoryCaptured": false
+      },
+      "established": "The emulator could not discover a usable named AVD; no connected emulator or instrumentation results existed.",
+      "rootCause": "UNPROVEN: evidence cannot distinguish a missing/partial avdmanager creation from creation in a path the emulator did not search or another cause.",
+      "changesMade": false,
+      "newActionsRun": false,
+      "disposition": "Stop. No workflow/script change and no new run because the root cause was not demonstrated; no speculative AVD-path fix."
+    }
   },
   "latestQaArm64Artifact": {
     "name": "QA ARM64 Debug APK build and artifact verification",
@@ -934,8 +977,8 @@
   "latestM01_05": {
     "taskId": "M01-05",
     "name": "Context budget and relevance deduplication",
-    "status": "HOST_PASS_AWAITING_INDEPENDENT_AUDIT",
-    "recordStatus": "Current host results remain tied to testedCodeCommit; this evidence-publication correction only restores the original raw logs to the tracked evidence tree. Independent audit remains pending.",
+    "status": "VALIDADA_HOST",
+    "recordStatus": "Independently accepted 2026-10-09 for HOST only; no Android/emulator/physical-device validation is implied.",
     "baseCommit": "4c5fce553b007c7e565f55b389a162c9b0ecb880",
     "testedCodeCommit": "260a3f7c6267cc5a90a9cf516356951aec0627a1",
     "branch": "feat/0.5.0-skills-agents",
@@ -1020,14 +1063,14 @@
       "newDependencies": false
     },
     "validationStates": {
-      "HOST": "PASS_AWAITING_INDEPENDENT_AUDIT",
+      "HOST": "VALIDADA_HOST",
       "EMULATOR": "NOT_RUN",
       "PHYSICAL_DEVICE": "NOT_RUN"
     },
     "evidenceDirectory": "docs/validation/m01-05",
     "resultsFile": "docs/validation/m01-05/RESULTS.md",
     "checksumManifest": "docs/validation/m01-05/SHA256SUMS",
-    "checksumManifestSha256": "6a3a6fb3bb9eb8cb7d733a7154aeb5ccd461413690dba483a8fb30ab9c6aec2b",
+    "checksumManifestSha256": "33446fd4af5bcf27aac64eeaecb89f7c62dbaeb89a56c8bf589a60fe8d062e78",
     "checksumManifestEntries": 114,
     "priorEvidenceCommitSha": "b086adf8fad3e37d718d9c41e3499384bc83c7ef",
     "evidencePublicationCorrection": {
@@ -1036,10 +1079,50 @@
       "recovery": "Original log bytes retained from checkout and force-added; no rerun or reconstruction.",
       "rawLogCount": 8,
       "manifestEntries": 114,
-      "manifestSha256": "6a3a6fb3bb9eb8cb7d733a7154aeb5ccd461413690dba483a8fb30ab9c6aec2b",
+      "manifestSha256": "33446fd4af5bcf27aac64eeaecb89f7c62dbaeb89a56c8bf589a60fe8d062e78",
       "manifestVerification": "PASS against all 114 working-tree files; original ignored logs match their hashes in the prior manifest; every manifest path is present in the staged Git index. Remote tree readback is to be checked after push.",
       "publicationCommit": "This documentation-only commit; exact SHA is identified by Git history and the delivery report.",
-      "status": "EVIDENCE_SUPPLEMENT_ONLY; HOST_PASS_AWAITING_INDEPENDENT_AUDIT"
+      "status": "EVIDENCE_SUPPLEMENT_ONLY; M01-05 VALIDADA_HOST (host only)"
+    },
+    "independentAudit": {
+      "accepted": true,
+      "acceptedAtUtc": "2026-10-09",
+      "scope": "HOST only",
+      "baseCommit": "4c5fce553b007c7e565f55b389a162c9b0ecb880",
+      "testedCodeCommit": "260a3f7c6267cc5a90a9cf516356951aec0627a1",
+      "evidenceCommits": [
+        "b086adf8fad3e37d718d9c41e3499384bc83c7ef",
+        "26ab7199ebcc553b775d97d5d0c45e11eaaa388a"
+      ],
+      "reviewedCounts": {
+        "baselineExpectedRed": {
+          "tests": 6,
+          "expectedFailures": 3
+        },
+        "focusedPostFix": {
+          "passed": 70,
+          "failed": 0
+        },
+        "appJvm": {
+          "passed": 733,
+          "failed": 0
+        },
+        "litertCompat": {
+          "passed": 2,
+          "failed": 0
+        }
+      },
+      "hostBuildGateAccepted": true,
+      "instrumentedTests": "NOT_RUN; assembleDebugAndroidTest was compile-only",
+      "emulator": "NOT_RUN",
+      "physicalDevice": "NOT_RUN"
     }
+  },
+  "nextOriginalBacklogTask": {
+    "taskId": "M01-06",
+    "name": "Ingesta e indexación reanudable",
+    "status": "PENDING_REQUIRES_DEVICE",
+    "requires_device": true,
+    "source": "Original user-provided 97-task plan attachment; not reconstructed or edited"
   }
 }

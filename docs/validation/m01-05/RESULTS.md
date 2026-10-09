@@ -4,9 +4,9 @@
 
 A GitHub tree audit of the previous evidence commit `d170173aee31a9503f5b9a9f539b797e3e202645` found that eight `.log` files listed in the checksum manifest were absent from that commit. The raw logs were still present locally as ignored files: the root `.gitignore` rules `*.log` and `docs/validation/**/*.log` had excluded them. Thus the earlier `sha256sum -c` verified the working directory, not the published Git tree. The XML and exit-code records were tracked.
 
-The eight original log files have now been added verbatim with `git add -f`; they were recovered from this checkout and were not reconstructed or rerun. `SHA256SUMS` has been regenerated from the evidence files in this directory (excluding the manifest itself), and the complete manifest is checked against the staged/indexed tree before publication. The expected inventory is 114 files. The documentation-only follow-up keeps M01-05 at `HOST_PASS_AWAITING_INDEPENDENT_AUDIT`; it does not rerun or change any test/build result. Instrumented, emulator, and physical-device validation remain `NOT_RUN`.
+The eight original log files have now been added verbatim with `git add -f`; they were recovered from this checkout and were not reconstructed or rerun. `SHA256SUMS` has been regenerated from the evidence files in this directory (excluding the manifest itself), and the complete manifest is checked against the staged/indexed tree before publication. The expected inventory is 114 files. The documentation-only follow-up did not rerun or change any test/build result. Independent audit subsequently accepted M01-05 as `VALIDADA_HOST`, limited to host evidence. Instrumented, emulator, and physical-device validation remain `NOT_RUN`.
 
-**Host result:** `PASS` for code commit `260a3f7c6267cc5a90a9cf516356951aec0627a1` on `feat/0.5.0-skills-agents`. **Current audit state:** `HOST_PASS_AWAITING_INDEPENDENT_AUDIT`.
+**Host result:** `PASS` for code commit `260a3f7c6267cc5a90a9cf516356951aec0627a1` on `feat/0.5.0-skills-agents`. **Independent audit:** `VALIDADA_HOST`, host only; Android, emulator, and physical device remain `NOT_RUN`.
 **Base:** `4c5fce553b007c7e565f55b389a162c9b0ecb880`.
 **Date:** 2026-10-09 UTC.
 
@@ -20,6 +20,10 @@ M01-05 was partially present: Context Builder deduplicated equal text and packed
 - The user query remains intact. Tests compare the same 4096-window fixture with and without duplicates and with reversed input order; no query truncation or budget overflow is accepted.
 
 Retrieval and embedding remain before `inferenceGate`; Context Builder OFF/legacy behavior, F1/F2 and selected-document/project isolation remain covered. No database, model/runtime, dependency, sampling, Android UI, or context-window change was made.
+
+## Independent audit acceptance (2026-10-09)
+
+The independent audit accepted M01-05 as `VALIDADA_HOST` for host validation only. The source review covered code commit `260a3f7c6267cc5a90a9cf516356951aec0627a1` relative to base `4c5fce553b007c7e565f55b389a162c9b0ecb880`. It verified the red reproduction (6 tests, 3 expected failures), focused post-fix XML (70/70), full JVM XML (app 733/733 and LiteRT compatibility 2/2), and host build logs. Evidence is in original evidence commit `b086adf8fad3e37d718d9c41e3499384bc83c7ef` plus the raw-log publication correction `26ab7199ebcc553b775d97d5d0c45e11eaaa388a`; the current corrected manifest hash is recorded in `docs/development/EXECUTION_STATE.json` under `latestM01_05.checksumManifestSha256`. AndroidTest was compilation only. `EMULATOR` and `PHYSICAL_DEVICE` remain `NOT_RUN`; no device inference or physical behavior is claimed.
 
 ## Red reproduction against the base
 

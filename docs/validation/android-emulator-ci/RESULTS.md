@@ -1,6 +1,6 @@
 # Android emulator CI setup and execution record
 
-**Outcome: `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`.** The workflow reached a GitHub-hosted accelerated runner, but the API 35 AVD was not discoverable in the final run. `adb` listed no devices, Gradle connected instrumentation did not run, and no JUnit XML was produced. This is not an Android test pass. A follow-up inspection of the complete retained artifact and job log could not establish why the AVD was missing.
+**Outcome: `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`.** The workflow reached a GitHub-hosted accelerated runner, but the API 35 AVD was not discoverable in the final run. `adb` listed no devices, Gradle connected instrumentation did not run, and no JUnit XML was produced. This is not an Android test pass. The retained complete artifact was re-inspected; it still does not establish why the AVD was missing. The current executor could not retrieve a fresh copy of the job log (the job-log command returned zero bytes).
 
 Repository: `https://github.com/javix142-gif/local-ai-workspace.git`
 
@@ -11,6 +11,20 @@ Workflow source code commit: `bdae87820b73dbcc0decfde3a65c391c6fb63279`
 Final run: [37865813921](https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865813921)
 
 Final evidence artifact: [android-emulator-evidence-37865813921-1.zip](https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865813921/artifacts/11588945524), 23,012 bytes, SHA-256 `007278791dc27fcda430694be6f3b5d7e3620932548145ba5b28e9907bebb9ac` (expires 2026-10-16).
+
+## Follow-up inspection (2026-10-09)
+
+This executor inspected the retained complete extraction of artifact `11588945524` for run `37865813921` and verified all 11 files against its internal `SHA256SUMS`. The artifact API reports 23,012 bytes and `expired=false`; a fresh `gh run download` attempt returned `Forbidden` from the blob endpoint. A fresh `gh run view --job 113612155627 --log` returned zero bytes, and the REST job-log endpoint returned no payload. The GitHub Jobs API did provide step conclusions: SDK install `SUCCESS`, KVM preflight `SUCCESS`, AVD create/boot `FAILURE`, connected instrumentation `SKIPPED`, evidence collection `FAILURE`, upload `SUCCESS`.
+
+Observed artifact details:
+
+- `logs/android-toolchain.txt` resolves `sdkmanager` and `avdmanager` beneath `/usr/local/lib/android/sdk`; installed components include API 35 `google_apis;x86_64` system image revision 9, emulator 37.2.12 and platform-tools 37.0.1. This identifies executable locations, not the literal effective value of `ANDROID_HOME`.
+- `logs/avdmanager.log` contains repository loading/fetch progress and `Auto-selecting single ABI x86_64`; it contains no explicit creation confirmation, resolved AVD home or AVD listing.
+- `logs/emulator.log` reports `Unknown AVD name [localai-api35-x86_64]` and no matching `.ini` under the displayed `$HOME/.android/avd`; the printed search-order variables are not expanded.
+- `adb-devices.txt` has no devices. `summary.json` records `FAIL`, `gradleExitCode: null`, XML count 0 and executed 0. `adb-after-tests.txt` says no booted emulator was available.
+- The workflow creates the AVD and launches the emulator in the same step and does not explicitly set `ANDROID_AVD_HOME`, `ANDROID_USER_HOME`, `ANDROID_SDK_HOME` or `HOME`. The artifact does not record the inherited values. It also has no `avdmanager list avd`, `emulator -list-avds`, or `.ini`/`config.ini` inventory.
+
+Therefore the directly observed failure is established: the configured emulator could not discover a usable named AVD. The reason the AVD was absent from emulator discovery remains **UNPROVEN**; the evidence cannot distinguish an absent/partial creation from creation under a non-discoverable path or another cause. No workflow or script was changed and no new Actions run was launched. The conditional run was not started because its prerequisite—demonstrated root cause—was not met. Status remains `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`; `EMULATOR` and `PHYSICAL_DEVICE` remain `NOT_RUN`.
 
 ## Workflow
 
@@ -74,4 +88,4 @@ The exact creation and launch commands are preserved in the [workflow source](ht
 - **PHYSICAL_DEVICE:** **NOT RUN**. Moto G86 validation is still pending.
 - No APK was generated, retained, or distributed by this task.
 
-Disposition: `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`. Stop here for independent audit. Do not infer the cause or make a speculative workflow change from this run; any further diagnostic run needs separate authorization. This investigation did not prepare an APK or alter application/runtime behavior.
+Disposition: `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`. Stop for independent audit. Do not infer the cause or make a speculative workflow change from this run. The user-authorized single run was conditional on proving the cause; that condition was not met, so no run was launched. This investigation did not prepare an APK or alter application/runtime behavior.

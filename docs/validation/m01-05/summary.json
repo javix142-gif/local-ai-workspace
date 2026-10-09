@@ -1,7 +1,7 @@
 {
   "taskId": "M01-05",
   "name": "Context budget and relevance deduplication",
-  "recordStatus": "CURRENT_HOST_VALIDATION; EVIDENCE_PUBLICATION_CORRECTED; INDEPENDENT_AUDIT_PENDING",
+  "recordStatus": "VALIDADA_HOST; independently accepted; host scope only",
   "branch": "feat/0.5.0-skills-agents",
   "baseCodeSha": "4c5fce553b007c7e565f55b389a162c9b0ecb880",
   "testedCodeSha": "260a3f7c6267cc5a90a9cf516356951aec0627a1",
@@ -88,7 +88,41 @@
     ],
     "manifestEntryCount": 114,
     "manifestVerifiedAgainst": "working tree and Git index before publication; remote readback performed after push",
-    "status": "EVIDENCE_SUPPLEMENT_ONLY; M01-05 HOST_PASS_AWAITING_INDEPENDENT_AUDIT",
+    "status": "EVIDENCE_SUPPLEMENT_ONLY; M01-05 VALIDADA_HOST (host only)",
     "manifestHashLocation": "docs/development/EXECUTION_STATE.json -> latestM01_05.evidencePublicationCorrection.manifestSha256 and CODEX_TO_WORK_HANDOFF.md"
+  },
+  "hostStatus": "VALIDADA_HOST",
+  "emulatorStatus": "NOT_RUN",
+  "physicalDeviceStatus": "NOT_RUN",
+  "independentAudit": {
+    "accepted": true,
+    "dateUtc": "2026-10-09",
+    "scope": "HOST only; no Android, emulator, or Motorola execution",
+    "baseCodeSha": "4c5fce553b007c7e565f55b389a162c9b0ecb880",
+    "testedCodeSha": "260a3f7c6267cc5a90a9cf516356951aec0627a1",
+    "evidenceCommits": [
+      "b086adf8fad3e37d718d9c41e3499384bc83c7ef",
+      "26ab7199ebcc553b775d97d5d0c45e11eaaa388a"
+    ],
+    "reviewedCounts": {
+      "baselineExpectedRed": {
+        "tests": 6,
+        "expectedFailures": 3
+      },
+      "focusedPostFix": {
+        "passed": 70,
+        "failed": 0
+      },
+      "appJvm": {
+        "passed": 733,
+        "failed": 0
+      },
+      "litertCompat": {
+        "passed": 2,
+        "failed": 0
+      }
+    },
+    "hostBuildLogAccepted": true,
+    "androidTestExecution": "NOT_RUN; compile only"
   }
 }
