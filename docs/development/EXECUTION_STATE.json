@@ -213,7 +213,7 @@
     "M01-06 “Ingesta e indexación reanudable” remains PENDING (requires_device=true in the original 97-task plan); do not start or mark complete until the required device is available.",
     "Android emulator CI remains BLOCKED_ANDROID_CI_CAUSE_UNPROVEN; do not edit or relaunch until the AVD creation/discovery cause is demonstrated."
   ],
-  "nextRecommendedTask": "Diagnose and prove the exact AVD creation/discovery cause for Android CI run 37865813921 before changing workflow or launching another run; keep instrumentation and Motorola states separate.",
+  "nextRecommendedTask": "Keep Android CI blocked until a diagnostic execution records the AVD-step HOME/ANDROID_* values, avdmanager and emulator AVD listings, and .ini/config.ini inventory; do not apply a path fix or launch CI without causal evidence.",
   "m00_03": {
     "status": "IMPLEMENTED_TESTED_HOST_DEVICE_NOT_RUN",
     "baseCommit": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
@@ -744,7 +744,8 @@
         "HOST": "ARTIFACT_AND_LOG_INSPECTION_COMPLETED; no local Android reproduction or Gradle suite",
         "EMULATOR": "NOT_RUN; previous workflow attempt failed before instrumentation, not PASS",
         "PHYSICAL_DEVICE": "NOT_RUN"
-      }
+      },
+      "recordStatus": "HISTORICAL: created before the latest assignment reinspection; its artifact/job-log retrieval limitation was superseded by assignmentReinspection."
     },
     "hostSmokeChecks": {
       "gitDiffCheck": "PASS",
@@ -860,7 +861,103 @@
         },
         "conclusion": "BLOCKED_ANDROID_CI_CAUSE_UNPROVEN; the failure to discover a usable AVD is established, but creation-vs-path/search cause is not.",
         "independentAuditorAction": "No workflow change and no new Actions run; report only. Instrumentation remains NOT_RUN."
-      }
+      },
+      "recordStatus": "HISTORICAL: this earlier fetch attempt returned no payload; assignmentReinspection later retrieved the full job log and artifact."
+    },
+    "assignmentReinspection": {
+      "recordedAtUtc": "2026-10-09T06:34:51Z",
+      "assignedHeadSha": "ba3117bca90494514cd7f2c78f65d53e69625c1a",
+      "fetchedAndInspectedHeadSha": "ba3117bca90494514cd7f2c78f65d53e69625c1a",
+      "checkoutMode": "detached worktree; clean tracked/untracked/ignored status; primary checkout untouched",
+      "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
+      "v042TagCommitSha": "de615b772cf37a99e7e08a647c59607b271de606",
+      "workflowSourceCommit": "bdae87820b73dbcc0decfde3a65c391c6fb63279",
+      "ciSourceComparison": {
+        "workflowPath": ".github/workflows/android-emulator-instrumented.yml",
+        "workflowSha256AtBdaeAndBa3117": "4ec258a5d880da00c878255e745e1ae7f35d6cdbef481d8dca1896d7c418cabd",
+        "collectorPath": "scripts/ci/collect_android_emulator_evidence.py",
+        "collectorSha256AtBdaeAndBa3117": "e23551e9e94bf5801fc86d46a141cb727472ee90268679ebdf443c032f43e792",
+        "workflowOrCollectorChangedSinceIncidentSource": false
+      },
+      "run": {
+        "runId": "37865813921",
+        "jobId": "113612155627",
+        "sourceSha": "bdae87820b73dbcc0decfde3a65c391c6fb63279",
+        "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865813921",
+        "jobLog": "Freshly fetched from GitHub Actions job logs API; 211335 characters, 1541 lines.",
+        "observedTimesUtc": {
+          "avdCommandStarted": "2026-10-09T00:39:52.748Z",
+          "avdManagerOutput": "2026-10-09T00:39:53.621Z",
+          "adbDaemonStarted": "2026-10-09T00:39:54.407Z",
+          "adbWaitTimeout": "2026-10-09T00:49:53.956Z"
+        },
+        "stepConclusions": {
+          "sdkInstall": "SUCCESS",
+          "kvmPreflight": "SUCCESS",
+          "createAndBootAvd": "FAILURE; exit 124 from timeout 600 adb wait-for-device",
+          "connectedInstrumentation": "SKIPPED",
+          "evidenceCollector": "FAILURE",
+          "artifactUpload": "SUCCESS"
+        }
+      },
+      "artifact": {
+        "id": "11588945524",
+        "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865813921/artifacts/11588945524",
+        "freshDownloadHttpStatus": 200,
+        "bytes": 23012,
+        "apiSha256": "007278791dc27fcda430694be6f3b5d7e3620932548145ba5b28e9907bebb9ac",
+        "downloadedZipSha256": "007278791dc27fcda430694be6f3b5d7e3620932548145ba5b28e9907bebb9ac",
+        "zipEntries": 12,
+        "internalManifestSha256": "52a7c701a7400a31c083a675c00b892e264d333f2975e9d8b053e5d31a29b753",
+        "manifestEntriesVerified": 11,
+        "manifestFailures": 0,
+        "artifactSummarySha256": "76bd871f1474c888625b2effd273f7177300a7157ceb5ebf6f9faf3151589c14"
+      },
+      "environmentAndPaths": {
+        "sdkManager": "/usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager",
+        "avdManager": "/usr/local/lib/android/sdk/cmdline-tools/latest/bin/avdmanager",
+        "androidHome": "Derived in the SDK-install step from the logged manager paths as /usr/local/lib/android/sdk; its value was not separately dumped in the AVD step.",
+        "emulatorInvocation": "$ANDROID_HOME/emulator/emulator -avd localai-api35-x86_64; emulator version 37.2.12 is in emulator.log.",
+        "home": "Not captured for the AVD step. Checkout action logged only a temporary HOME override during checkout; that does not establish the later value.",
+        "androidSdkRoot": "Not recorded in the AVD step log.",
+        "androidUserHome": "Not recorded; not explicitly set by this workflow.",
+        "androidAvdHome": "Not recorded; not explicitly set by this workflow.",
+        "androidSdkHome": "Not recorded; not explicitly set by this workflow.",
+        "avdmanagerListAvd": "NOT_RUN",
+        "emulatorListAvds": "NOT_RUN",
+        "iniConfigInventory": "NOT_CAPTURED",
+        "emulatorSearchPaths": "Only variable-name templates were printed; no expanded paths."
+      },
+      "observations": {
+        "avdManager": "Captured repository loading/fetch and Auto-selecting single ABI x86_64 only; the workflow proceeded to the emulator launch under set -euo pipefail, but no resolved output path or AVD inventory was captured.",
+        "emulator": "Unknown AVD name localai-api35-x86_64; the log states its .ini is absent from the displayed $HOME/.android/avd path and lists the unexpanded search-order templates.",
+        "adb": "Daemon started; adb-devices.txt contains only the header; no device serial.",
+        "instrumentation": "Connected task skipped; XML count 0 and executed 0. No test-level pass/fail/skip results exist.",
+        "kvm": "KVM preflight succeeded; this does not explain the missing AVD configuration."
+      },
+      "causeStatus": "BLOCKED_ANDROID_CI_CAUSE_UNPROVEN",
+      "establishedFailure": "The emulator process could not discover a usable AVD named localai-api35-x86_64; no ADB device appeared and the wait timed out.",
+      "rootCause": "UNPROVEN: evidence cannot distinguish absent/partial AVD creation from creation in a path the emulator did not search or another cause.",
+      "workflowOrScriptChanged": false,
+      "newActionsRunStarted": false,
+      "apkGenerated": false,
+      "counts": {
+        "xml": 0,
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "executed": 0,
+        "gradleTask": "NOT_RUN",
+        "gradleExitCode": null
+      },
+      "states": {
+        "HOST": "GitHub source, complete job log and fresh full artifact inspected; no local Gradle/AVD reproduction.",
+        "EMULATOR": "Instrumentation NOT_RUN; run failed in AVD setup.",
+        "PHYSICAL_DEVICE": "NOT_RUN"
+      },
+      "plan": "Original user-provided 97 task IDs/order/dependencies unchanged; M01-06 remains PENDING and requires a physical device."
     }
   },
   "latestQaArm64Artifact": {

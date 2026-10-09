@@ -1,5 +1,13 @@
 # Codex → Work handoff: M01-05 context budget and deduplication
 
+## Latest Android emulator CI reinspection (2026-10-09)
+
+The assignment head `ba3117bca90494514cd7f2c78f65d53e69625c1a` was fetched and checked in a clean detached worktree. The Android emulator workflow and evidence collector are byte-identical to the files used at incident SHA `bdae87820b73dbcc0decfde3a65c391c6fb63279`; only documentation was updated. The fresh GitHub job-log response (211,335 characters / 1,541 lines) and newly downloaded artifact 11588945524 (23,012 bytes; SHA-256 `007278791dc27fcda430694be6f3b5d7e3620932548145ba5b28e9907bebb9ac`) were inspected. All 11 manifest entries verified; job steps show AVD setup failed, connected instrumentation was skipped, XML=0 and executed=0.
+
+The log establishes that `avdmanager create avd` did not abort the shell pipeline and the emulator was launched, but the emulator then reported `Unknown AVD name`; ADB remained empty and `wait-for-device` exited 124. SDK tool paths expand under `/usr/local/lib/android/sdk` in the SDK install step. The AVD-step environment dump does not include the direct values of `HOME` or `ANDROID_HOME`; values for `ANDROID_SDK_ROOT`, `ANDROID_USER_HOME`, `ANDROID_AVD_HOME`, and `ANDROID_SDK_HOME` are also absent. The log additionally lacks `avdmanager list avd`, `emulator -list-avds`, and `.ini/config.ini` inventory, were not captured. The cause of the discovery failure is therefore still **UNPROVEN**. No workflow/script edit and no CI run were made; no speculative path correction was applied.
+
+Current state remains `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`; instrumented tests, `EMULATOR` validation, and `PHYSICAL_DEVICE` validation are **NOT_RUN** (the prior workflow attempt failed before instrumentation). Main and `v0.4.2` remain at `de615b772cf37a99e7e08a647c59607b271de606`. M01-06 remains pending and device-required; the source plan of 97 IDs/dependencies is unchanged. Details and hashes are in [Android emulator CI results](../validation/android-emulator-ci/RESULTS.md).
+
 ## Latest verification: Release from a clean Git checkout (2026-10-09)
 
 The remote feature branch was fetched at `83affa67584292137a17dd544a4f6e207cf7c96f`. A new detached worktree was created from that exact commit. Before the build, its tracked, untracked and ignored status counts were all zero, and no project `.gradle`, `build`, native `.cxx`, or `local.properties` output existed. The primary checkout remained untouched; its 197 pre-existing ignored paths were excluded from the verification. All 1,865 tracked llama.cpp vendor files matched their Git blobs, including `src/models/models.h`; the model-weight ignore probes passed 12/12.

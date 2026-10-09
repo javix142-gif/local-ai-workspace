@@ -1,6 +1,6 @@
 # Android emulator CI setup and execution record
 
-**Outcome: `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`.** The workflow reached a GitHub-hosted accelerated runner, but the API 35 AVD was not discoverable in the final run. `adb` listed no devices, Gradle connected instrumentation did not run, and no JUnit XML was produced. This is not an Android test pass. The retained complete artifact was re-inspected; it still does not establish why the AVD was missing. The current executor could not retrieve a fresh copy of the job log (the job-log command returned zero bytes).
+**Outcome: `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`.** The workflow reached a GitHub-hosted accelerated runner, but the API 35 AVD was not discoverable in the final run. `adb` listed no devices, Gradle connected instrumentation did not run, and no JUnit XML was produced. This is not an Android test pass. A latest assignment reinspection fetched the full job log and artifact anew; it adds the exact failure sequence but still does not establish why the AVD was absent.
 
 Repository: `https://github.com/javix142-gif/local-ai-workspace.git`
 
@@ -12,9 +12,9 @@ Final run: [37865813921](https://github.com/javix142-gif/local-ai-workspace/acti
 
 Final evidence artifact: [android-emulator-evidence-37865813921-1.zip](https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865813921/artifacts/11588945524), 23,012 bytes, SHA-256 `007278791dc27fcda430694be6f3b5d7e3620932548145ba5b28e9907bebb9ac` (expires 2026-10-16).
 
-## Follow-up inspection (2026-10-09)
+## Earlier follow-up inspection (2026-10-09; retrieval note superseded below)
 
-This executor inspected the retained complete extraction of artifact `11588945524` for run `37865813921` and verified all 11 files against its internal `SHA256SUMS`. The artifact API reports 23,012 bytes and `expired=false`; a fresh `gh run download` attempt returned `Forbidden` from the blob endpoint. A fresh `gh run view --job 113612155627 --log` returned zero bytes, and the REST job-log endpoint returned no payload. The GitHub Jobs API did provide step conclusions: SDK install `SUCCESS`, KVM preflight `SUCCESS`, AVD create/boot `FAILURE`, connected instrumentation `SKIPPED`, evidence collection `FAILURE`, upload `SUCCESS`.
+This executor inspected the retained complete extraction of artifact `11588945524` for run `37865813921` and verified all 11 files against its internal `SHA256SUMS`. At that earlier inspection, the artifact API reported 23,012 bytes and `expired=false`; that attempt to fetch the blob and job log returned no payload. The later assignment reinspection below successfully fetched both through the GitHub connector. The GitHub Jobs API did provide step conclusions: SDK install `SUCCESS`, KVM preflight `SUCCESS`, AVD create/boot `FAILURE`, connected instrumentation `SKIPPED`, evidence collection `FAILURE`, upload `SUCCESS`.
 
 Observed artifact details:
 
@@ -89,3 +89,27 @@ The exact creation and launch commands are preserved in the [workflow source](ht
 - No APK was generated, retained, or distributed by this task.
 
 Disposition: `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`. Stop for independent audit. Do not infer the cause or make a speculative workflow change from this run. The user-authorized single run was conditional on proving the cause; that condition was not met, so no run was launched. This investigation did not prepare an APK or alter application/runtime behavior.
+
+## Latest assignment reinspection (2026-10-09)
+
+The assigned feature head `ba3117bca90494514cd7f2c78f65d53e69625c1a` was fetched and inspected in a clean detached worktree. The workflow and collector source are unchanged from incident source `bdae87820b73dbcc0decfde3a65c391c6fb63279`: workflow SHA-256 `4ec258a5d880da00c878255e745e1ae7f35d6cdbef481d8dca1896d7c418cabd`; collector SHA-256 `e23551e9e94bf5801fc86d46a141cb727472ee90268679ebdf443c032f43e792` (file-content hashes). No application, workflow, collector, model, or test files were modified.
+
+A fresh download of artifact `11588945524` returned HTTP 200 and 23,012 bytes. The downloaded ZIP SHA-256 matches the GitHub artifact API digest `007278791dc27fcda430694be6f3b5d7e3620932548145ba5b28e9907bebb9ac`. It contains 12 ZIP entries: `SHA256SUMS` plus 11 listed files; `sha256sum -c SHA256SUMS` passed 11/11. The manifest itself has SHA-256 `52a7c701a7400a31c083a675c00b892e264d333f2975e9d8b053e5d31a29b753`.
+
+The complete GitHub job log was freshly retrieved (211,335 characters; 1,541 lines). It shows:
+
+- At `00:39:52.748Z`, the step ran `avdmanager create avd --force --name localai-api35-x86_64 --package system-images;android-35;google_apis;x86_64 --device pixel_2`, then launched `emulator -avd localai-api35-x86_64`. The pipeline proceeds under `set -euo pipefail`; this establishes that it did not stop on a nonzero pipeline status, but does not prove a usable AVD was written or where.
+- `avdmanager.log` ends with `Auto-selecting single ABI x86_64`; it contains no explicit creation path, `list avd`, or file inventory.
+- At `00:39:54.407Z`, the ADB daemon had started. The emulator log reports `Unknown AVD name [localai-api35-x86_64]` and a missing `.ini` under the displayed `$HOME/.android/avd` template. At `00:49:53.956Z`, `timeout 600 adb wait-for-device` exited 124. The artifact's ADB list is empty.
+- Job metadata marks connected instrumentation `SKIPPED`. `summary.json` records Gradle exit `null`, XML=0 and total/passed/failed/errors/skipped/executed all 0. No test was executed; zero test-level skips is not a test result.
+
+Environment/path findings are limited:
+
+| Item | What this run establishes | What remains unavailable |
+|---|---|---|
+| SDK root / `ANDROID_HOME` | `android-toolchain.txt` records expanded `SDKMANAGER=/usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager` and `AVDMANAGER=/usr/local/lib/android/sdk/cmdline-tools/latest/bin/avdmanager`; the workflow formed these from `$ANDROID_HOME`, so the SDK root is established for that install step. | The AVD step did not dump its effective environment; it did not separately print `ANDROID_HOME`. |
+| `HOME` | Checkout logs a temporary HOME override used during checkout only. The emulator error says HOME is defined and prints a variable template. | Effective HOME during AVD create/launch is not captured. |
+| `ANDROID_SDK_ROOT`, `ANDROID_USER_HOME`, `ANDROID_AVD_HOME`, `ANDROID_SDK_HOME` | The workflow does not set these variables explicitly. | Their inherited effective values are not present in the job log/artifact. The emulator search paths are unexpanded templates. |
+| AVD tools/files | Emulator 37.2.12 started; the configured invocation uses `$ANDROID_HOME/emulator/emulator`. | No `avdmanager list avd`, `emulator -list-avds`, resolved AVD-home path, or `.ini/config.ini` inventory was recorded. |
+
+Therefore the immediate failure is confirmed, but the causal distinction is not: the retained evidence cannot tell whether creation was absent/partial, wrote somewhere not searched, or failed for another reason. KVM passed its check and is not evidence for the AVD cause. No workflow/script edit and no new Actions run were made because the required causal proof is missing. Status remains `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`; connected instrumentation and `EMULATOR` test validation remain `NOT_RUN`; `PHYSICAL_DEVICE` remains `NOT_RUN`. The original 97-task plan is unchanged and M01-06 remains pending/device-required.
