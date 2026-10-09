@@ -2,7 +2,7 @@
   "repository": "https://github.com/javix142-gif/local-ai-workspace.git",
   "branch": "feat/0.5.0-skills-agents",
   "startingHeadSha": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
-  "testedCodeHeadSha": "b6c460763b19de41e689c493859bc1ee649faf2c",
+  "testedCodeHeadSha": "bdae87820b73dbcc0decfde3a65c391c6fb63279",
   "version": "0.5.0",
   "applicationId": "com.localai.workspace",
   "completedTasks": [
@@ -15,8 +15,8 @@
     "M00-03 LOG10 contextual distinction between function names and A1 cell references; missing-cell provenance retained"
   ],
   "blockedTasks": [
-    "Android emulator execution: environment has no AVD/system image, KVM, or connected device",
-    "Motorola-specific M00 validation and exact physical XLSX latency diagnosis"
+    "Android emulator instrumentation: final GitHub-hosted run reached KVM preparation but the named AVD was not discoverable; adb had no emulator and instrumentation remained NOT_RUN (run 37865813921).",
+    "Motorola-specific M00 validation and exact physical XLSX latency diagnosis."
   ],
   "testResults": {
     "focusedRegression": {
@@ -61,7 +61,7 @@
       "reason": "AndroidTest APK was compiled; no emulator/device execution.",
       "recordStatus": "NOT_RUN; AndroidTest compilation on an earlier code SHA is not execution."
     },
-    "recordStatus": "Historical per nested source SHA; the current delivery checks are recorded under latestDelivery."
+    "recordStatus": "Historical per nested source SHA; b6c4607 release/ignore checks are under latestDelivery; current Android CI attempts are under latestAndroidCi."
   },
   "finalHostGate": {
     "status": "COMPLETED_DEVICE_NOT_RUN",
@@ -90,7 +90,7 @@
     "finishedAtUtc": "2026-10-08T23:26:32Z",
     "duration": "28m07s (two sequential commands; test gate plus build gate)",
     "evidenceDirectory": "docs/validation/clean-build-repro-e367dc7/",
-    "recordStatus": "HISTORICAL_FULL_GATE; not rerun on currentSourceHeadSha."
+    "recordStatus": "Historical full host gate at its recorded source SHA; not rerun for b6c4607 or the current Android CI source."
   },
   "buildResults": {
     "assembleDebug": {
@@ -117,11 +117,20 @@
     "testedCodeHeadSha": "e367dc75d0f952ef6a9b4e96d51e1263b70d3309"
   },
   "emulatorResults": {
-    "availability": "NOT_AVAILABLE",
-    "adbAvailable": false,
-    "kvm": false,
-    "systemImages": 0,
-    "instrumentedTests": "NOT_RUN"
+    "availability": "GITHUB_HOSTED_RUNNER_KVM_AVAILABLE_AVD_NOT_DISCOVERABLE",
+    "adbAvailable": true,
+    "kvm": true,
+    "systemImages": 1,
+    "instrumentedTests": "NOT_RUN",
+    "latestRunId": "37865813921",
+    "priorLocalEnvironment": {
+      "availability": "NOT_AVAILABLE",
+      "adbAvailable": false,
+      "kvm": false,
+      "systemImages": 0,
+      "instrumentedTests": "NOT_RUN",
+      "recordStatus": "HISTORICAL local executor inspection before GitHub-hosted workflow."
+    }
   },
   "physicalDeviceResults": {
     "historicalAgentsSkillsV1": {
@@ -145,10 +154,10 @@
     }
   },
   "pendingAcceptance": [
-    "Independent audit of the clean-checkout .gitignore correction and release-build evidence in latestDelivery",
-    "Run relevant Android/Motorola context evidence checks on a physical device after audit approval"
+    "After independent audit, make AVD creation and emulator lookup deterministic and obtain a real connected instrumentation run with executed tests > 0.",
+    "Run relevant M00 context-evidence checks on the Motorola Moto G86 Power after emulator CI audit."
   ],
-  "nextRecommendedTask": "Independent audit of latestDelivery: .gitignore ignore matrix and clean-checkout assembleRelease at b6c460763b19de41e689c493859bc1ee649faf2c. Do not start Android CI or APK preparation in this delivery.",
+  "nextRecommendedTask": "After independent audit of docs/validation/android-emulator-ci/RESULTS.md, proceed with the requested ARM64 APK milestone. Keep Android emulator instrumentation BLOCKED/NOT_RUN until the AVD creation issue is separately resolved and a run executes tests.",
   "m00_03": {
     "status": "IMPLEMENTED_TESTED_HOST_DEVICE_NOT_RUN",
     "baseCommit": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
@@ -406,19 +415,20 @@
   },
   "fieldSemantics": {
     "startingHeadSha": "Historical original M00 baseline; not the base of later deliveries.",
-    "testedCodeHeadSha": "Current source SHA covered by the latest delivery-specific checks; see latestDelivery for exact checks and per-check provenance.",
-    "currentSourceHeadSha": "Current production source SHA under review in the latest delivery.",
-    "lastFullJvmTestCodeSha": "Source SHA of the most recent complete app + LiteRT compatibility JVM gate; it may precede a later documentation or ignore-only commit.",
+    "testedCodeHeadSha": "Source SHA attempted by the latest delivery checks; a failed pre-instrumentation workflow is not a PASS. See latestAndroidCi.",
+    "currentSourceHeadSha": "Current production/workflow source SHA on the feature branch; validation status is per latestAndroidCi and is not implied by this field.",
+    "lastFullJvmTestCodeSha": "e367dc75d0f952ef6a9b4e96d51e1263b70d3309 is the historical full JVM gate (727 app + 2 compatibility = 729); not rerun for b6c4607 or bdae878.",
     "testResults": "Historical or per-source results; each nested recordStatus/testedCodeHeadSha governs attribution. Do not transfer counts to another SHA.",
     "finalHostGate": "Historical complete host gate; not rerun on latestDelivery.codeCommit.",
-    "latestDelivery": "Current .gitignore-only delivery, its clean-checkout matrix and release build, inherited full JVM gate provenance, and Android NOT_RUN statuses.",
+    "latestDelivery": "Accepted preceding .gitignore-only source/release check at b6c4607; Android CI is tracked separately in latestAndroidCi.",
     "m00_03": "Historical earlier selector correction record; its latestRecordIs is historical, not the current delivery.",
     "latestFollowUp": "Preserved historical LOG10 selector correction details; not current delivery.",
     "followUpHistory": "Preserved earlier follow-up records, including sheet-scope results.",
     "historicalArtifactHashes": "APK metadata from an earlier build; not produced by this correction.",
-    "historicalGitSynchronization": "Earlier push/readback record; latestDelivery contains this correction’s own code/evidence commits."
+    "historicalGitSynchronization": "Earlier push/readback record; latestDelivery contains this correction’s own code/evidence commits.",
+    "latestAndroidCi": "Current GitHub-hosted Android emulator workflow attempts, with per-run SHA, artifact, counts and explicit EMULATOR/PHYSICAL_DEVICE status."
   },
-  "currentSourceHeadSha": "b6c460763b19de41e689c493859bc1ee649faf2c",
+  "currentSourceHeadSha": "bdae87820b73dbcc0decfde3a65c391c6fb63279",
   "lastFullJvmTestCodeSha": "e367dc75d0f952ef6a9b4e96d51e1263b70d3309",
   "latestDelivery": {
     "name": "Clean-checkout model-source ignore matrix and release reproducibility follow-up",
@@ -528,6 +538,120 @@
       "observedFailure": "Fresh clean checkout could not compile llama.cpp because third_party/llama.cpp/src/models/models.h was absent; the root ignore rule had kept required sources out of Git.",
       "log": "docs/validation/clean-build-repro-e367dc7/logs/base-red-assembleRelease.log",
       "logSha256": "14cc8269f6db42fb570a882cb1172c8664b5313c8b08ef6a6fa2f50fe55f0943"
+    },
+    "independentAudit": {
+      "status": "VALIDADA_HOST",
+      "sourceCodeSha": "b6c460763b19de41e689c493859bc1ee649faf2c",
+      "reviewType": "Independent documentary GitHub audit; the auditor did not execute Gradle locally.",
+      "checks": "17/17 ignore-matrix assertions and clean-checkout assembleRelease log/hash were independently read back and verified."
     }
+  },
+  "latestAndroidCi": {
+    "name": "GitHub-hosted API 35 x86_64 connected instrumentation workflow setup",
+    "workflowPath": ".github/workflows/android-emulator-instrumented.yml",
+    "branch": "feat/0.5.0-skills-agents",
+    "workflowCodeCommit": "bdae87820b73dbcc0decfde3a65c391c6fb63279",
+    "runs": [
+      {
+        "runId": "37865314837",
+        "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865314837",
+        "sourceCommit": "b61bb49c1fcf11838885f90c0cb0ab1e6087f150",
+        "status": "FAILED_WORKFLOW_REJECTED_BEFORE_JOB",
+        "instrumentation": "NOT_RUN",
+        "reason": "Invalid runner.temp context at job scope; corrected in 6287485."
+      },
+      {
+        "runId": "37865443624",
+        "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865443624",
+        "sourceCommit": "628748536850876eed800c83329835a3f12e5b28",
+        "status": "FAILED_KVM_PREFLIGHT",
+        "instrumentation": "NOT_RUN",
+        "adbEvidence": "collector could not resolve adb by bare name",
+        "artifactId": "11587932236",
+        "artifactSha256": "94d70ae0ddcc5f9b1194bed327b529adea9efc439bdd710c95a540f067b93c08",
+        "deviceConnected": false,
+        "xmlCount": 0,
+        "executed": 0,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "runId": "37865813921",
+        "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865813921",
+        "sourceCommit": "bdae87820b73dbcc0decfde3a65c391c6fb63279",
+        "status": "FAILED_AVD_NOT_DISCOVERABLE_BEFORE_INSTRUMENTATION",
+        "failedStep": "Create and boot accelerated API 35 emulator",
+        "evidence": "KVM preparation passed; avdmanager log only reported ABI auto-selection; emulator reported Unknown AVD name; adb devices was empty; timeout 600 adb wait-for-device exited 124.",
+        "label": "EMULATOR",
+        "api": 35,
+        "abi": "x86_64",
+        "systemImage": "google_apis",
+        "gradleTask": "NOT_RUN",
+        "gradleExitCode": null,
+        "xmlCount": 0,
+        "counts": {
+          "total": 0,
+          "passed": 0,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0,
+          "executed": 0
+        },
+        "deviceConnected": false,
+        "instrumentation": "NOT_RUN",
+        "physicalDevice": "NOT_RUN",
+        "artifactId": "11588945524",
+        "artifactUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865813921/artifacts/11588945524",
+        "artifactFile": "android-emulator-evidence-37865813921-1.zip",
+        "artifactBytes": 23012,
+        "artifactSha256": "007278791dc27fcda430694be6f3b5d7e3620932548145ba5b28e9907bebb9ac",
+        "manifestVerified": true,
+        "fileSha256": {
+          "logs/kvm-check.txt": "8502e277b25a23ce374142ac005ddcecf4a556f54117ba429bc48fcb2c8e8630",
+          "logs/avdmanager.log": "0b5da32a7559d38a2203eeae77b3b5553d08688a9f2b7984e23644dba000e007",
+          "logs/emulator.log": "0514e3760109faffa47a46e56a6e2c8e09256fe6aa675510e3bb2fe884a8a497",
+          "adb-devices.txt": "36f15c2fe32964a6fbe902e914a47739d4e6304b0d3e812bf08096ff0419b7ae",
+          "summary.json": "76bd871f1474c888625b2effd273f7177300a7157ceb5ebf6f9faf3151589c14"
+        },
+        "startedAtUtc": "2026-10-09T00:38:37Z",
+        "finishedAtUtc": "2026-10-09T00:49:58Z",
+        "duration": "11m21s"
+      }
+    ],
+    "finalStatus": "BLOCKED_BEFORE_INSTRUMENTATION",
+    "attemptsExhausted": true,
+    "rootCauseBoundary": "avdmanager returned without a discoverable named AVD configuration; the underlying reason is not established by the retained logs.",
+    "hostSmokeChecks": {
+      "gitDiffCheck": "PASS",
+      "pythonByteCompile": "PASS",
+      "syntheticAdbPath": "PASS; no-device summary correctly remained FAIL",
+      "commands": [
+        "git diff --check",
+        "python3 -m py_compile scripts/ci/collect_android_emulator_evidence.py",
+        "synthetic collector run with a temporary SDK/platform-tools/adb returning an empty device list"
+      ]
+    },
+    "hostGradleSuites": "NOT_RUN_FOR_THIS_CI_ONLY_CHANGE",
+    "actionsPermissions": "contents:read",
+    "runner": "GitHub-hosted standard ubuntu-24.04",
+    "modelDownloads": "none",
+    "apkGeneratedOrDistributed": false,
+    "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
+    "v042TagCommitSha": "de615b772cf37a99e7e08a647c59607b271de606",
+    "documentation": "docs/validation/android-emulator-ci/RESULTS.md",
+    "runnerEmulatorDetails": {
+      "runnerImage": "ubuntu-24.04",
+      "runnerVersion": "20261004.327.1",
+      "emulatorPackageVersion": "37.2.12",
+      "api": 35,
+      "abi": "x86_64",
+      "systemImage": "google_apis",
+      "kvmDevicePresent": true,
+      "kvmReadWriteAfterPreparation": true,
+      "adbBinaryAvailable": true,
+      "adbEmulatorConnected": false
+    },
+    "workflowDispatch": "Declared but NOT_TESTED; GitHub requires the workflow file on the default branch for manual dispatch, and main was left untouched."
   }
 }

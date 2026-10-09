@@ -1,16 +1,25 @@
-# Codex → Work handoff: 0.5.0 clean-checkout stabilization
+# Codex → Work handoff: 0.5.0 clean-checkout stabilization and Android CI setup
 
-**Status:** Current focused delivery is the `.gitignore` correction plus clean-checkout `assembleRelease`; no Android/device validation for this delivery.
+**Status:** The `.gitignore` correction and clean-checkout `assembleRelease` were independently accepted as `VALIDADA_HOST` (documentary audit, not an auditor-run Gradle build). The subsequent Android CI setup is published, but its final run failed before instrumentation because the named AVD was not discoverable. Do not report Android CI or device validation as PASS.
 **Repository:** `https://github.com/javix142-gif/local-ai-workspace.git`
 **Branch:** `feat/0.5.0-skills-agents`
-**Current production source HEAD under review:** `b6c460763b19de41e689c493859bc1ee649faf2c` (`.gitignore` only; ignore matrix 17/17 and clean-checkout `assembleRelease` PASS).
-**Evidence bundle commit:** `b5fa6a2062f7aed568f33bc66c2e4ea229f28a66`.
-**Most recent complete JVM gate:** `e367dc75d0f952ef6a9b4e96d51e1263b70d3309`, 729/729 PASS; historical relative to current source. No JVM suite was rerun on `b6c4607`.
-**Current AndroidTest compilation, instrumentation and physical-device validation:** **NOT RUN**. No APK was delivered or distributed.
+**Current code SHA:** `bdae87820b73dbcc0decfde3a65c391c6fb63279` (workflow/KVM/ADB evidence changes; Actions run attempted, instrumentation NOT_RUN).
+**Accepted preceding source SHA:** `b6c460763b19de41e689c493859bc1ee649faf2c` (`.gitignore` only; ignore matrix 17/17 and clean-checkout `assembleRelease` PASS, accepted by independent documentary audit).
+**Accepted preceding source-build evidence commit:** `b5fa6a2062f7aed568f33bc66c2e4ea229f28a66`.
+**Most recent complete JVM gate:** `e367dc75d0f952ef6a9b4e96d51e1263b70d3309`, app 727/727 + compatibility 2/2 = 729/729 PASS; historical, not rerun on `b6c4607` or `bdae878`.
+**AndroidTest compilation/instrumentation:** final workflow run `37865813921` failed before `:app:connectedDebugAndroidTest`; XML 0, executed 0. **PHYSICAL_DEVICE:** NOT_RUN. No APK was generated or distributed.
 **Baseline:** `v0.4.2` → `de615b772cf37a99e7e08a647c59607b271de606`
 **App:** `com.localai.workspace`, version `0.5.0` (`versionCode 27`).
 
-## Current delivery: clean-checkout source ignore matrix and release build (2026-10-09)
+## Latest Android CI follow-up (2026-10-09)
+
+The workflow and its evidence are described in [Android emulator CI results](../validation/android-emulator-ci/RESULTS.md). Final source commit `bdae87820b73dbcc0decfde3a65c391c6fb63279` was tested by [Actions run 37865813921](https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865813921), artifact [11588945524](https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865813921/artifacts/11588945524). GitHub-hosted `ubuntu-24.04` had `/dev/kvm`; the workflow enabled access and the KVM verification passed. `avdmanager` then failed to leave a discoverable `localai-api35-x86_64` AVD; the emulator reported `Unknown AVD name`, ADB had no connected emulator and its 600-second wait timed out. Instrumentation was skipped by the job dependency and no JUnit XML exists. `summary.json` correctly records `FAIL`, zero tests, and physical validation `NOT_RUN`.
+
+The first run (37865314837) was rejected before a job because of an invalid runner-context location; the second run (37865443624) stopped in the KVM preflight and exposed the collector's missing SDK-path `adb` lookup. The follow-up corrected both KVM preparation and ADB lookup. The final run confirms those checks pass but reveals the remaining AVD creation/location blocker. The two available correction attempts are exhausted; no further workflow change or rerun was made in this handoff.
+
+The final artifact contains the ADB listing, SDK inventory, KVM report, `avdmanager`/emulator logs, summary, and SHA-256 manifest. Its ZIP SHA-256 is `007278791dc27fcda430694be6f3b5d7e3620932548145ba5b28e9907bebb9ac`. The artifact is retained by GitHub through 2026-10-16. No APK, model, secret, or personal data is included.
+
+## Accepted preceding delivery: clean-checkout source ignore matrix and release build (2026-10-09)
 
 The published feature base was `8837517ee502b700c85a2b2c484beddcbcc879be`. Code commit `b6c460763b19de41e689c493859bc1ee649faf2c` narrows the root `.gitignore` exceptions to the vendored llama.cpp model registry's `.cpp` sources and `models.h`; the production application code is unchanged.
 
@@ -124,4 +133,4 @@ The previous handoff recommended installing its stabilization candidate and coll
 
 ## Current next step
 
-Independently audit the `.gitignore` correction and clean-checkout evidence in `../validation/clean-build-repro-e367dc7/ignore-fix/`. Do not start Android CI or prepare/distribute an APK before that audit. After audit approval, run the separate Android QA step; host compilation is not physical validation.
+Independently audit the Android CI attempt and evidence in `../validation/android-emulator-ci/RESULTS.md`. The `.gitignore` correction has already been accepted by the independent documentary audit. The next requested milestone after that audit is the ARM64 APK; keep the AVD creation blocker explicit, and do not describe the APK as emulator-tested unless connected instrumentation actually runs. Host compilation and workflow configuration are not Android test execution.
