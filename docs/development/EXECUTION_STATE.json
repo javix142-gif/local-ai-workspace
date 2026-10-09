@@ -213,7 +213,7 @@
     "M01-06 “Ingesta e indexación reanudable” remains PENDING (requires_device=true in the original 97-task plan); do not start or mark complete until the required device is available.",
     "Android emulator CI remains BLOCKED_ANDROID_CI_CAUSE_UNPROVEN; do not edit or relaunch until the AVD creation/discovery cause is demonstrated."
   ],
-  "nextRecommendedTask": "Wait for new verified AVD diagnostic evidence or the required physical-device/workbook prerequisites; do not create task IDs or start speculative CI.",
+  "nextRecommendedTask": "Diagnose and prove the exact AVD creation/discovery cause for Android CI run 37865813921 before changing workflow or launching another run; keep instrumentation and Motorola states separate.",
   "m00_03": {
     "status": "IMPLEMENTED_TESTED_HOST_DEVICE_NOT_RUN",
     "baseCommit": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
@@ -1278,6 +1278,19 @@
     "evidenceManifestEntries": 6,
     "resultsSha256": "be1480c655394b7a193dd58942178800c3e25736182bb58a3f42563f7a5f8008",
     "summarySha256": "74efc0b1e45ef2541e5b859da5061b015348f4c85262206bc6a70241ab6e5df8",
-    "gitDiffCheck": "PASS for staged docs/evidence excluding the byte-for-byte raw Gradle log; that log contains 15 generated trailing-whitespace lines."
+    "gitDiffCheck": "PASS for staged docs/evidence excluding the byte-for-byte raw Gradle log; that log contains 15 generated trailing-whitespace lines.",
+    "independentAudit": {
+      "status": "ACCEPTED_HOST_CLEAN_CHECKOUT_RELEASE",
+      "auditedAtUtc": "2026-10-09 06:29:25 UTC",
+      "baseCommit": "83affa67584292137a17dd544a4f6e207cf7c96f",
+      "evidenceCommit": "c60ac50f0af627ac24550e2deb835a226536f48c",
+      "checks": [
+        "Branch compare confirms evidence commit is a single fast-forward documentation/evidence commit; no product files changed.",
+        "Clean worktree preflight, tracked source inventory, full CMake/Ninja ARM64 execution, and BUILD SUCCESSFUL log independently inspected.",
+        "Six SHA256SUMS entries recomputed against files read from the remote Git tree; all six match. Manifest SHA-256 matches EXECUTION_STATE.json.",
+        "Feature branch, main, and peeled v0.4.2 references verified; main and tag target remain de615b772cf37a99e7e08a647c59607b271de606."
+      ],
+      "limits": "HOST Release build only. JVM tests, AndroidTest, emulator, Android CI execution, APK retention/distribution, and PHYSICAL_DEVICE validation were not performed."
+    }
   }
 }
