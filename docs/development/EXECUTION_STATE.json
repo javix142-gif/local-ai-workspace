@@ -154,10 +154,10 @@
     }
   },
   "pendingAcceptance": [
-    "Independent audit of the AVD investigation. Do not change the workflow or start another run until a cause is established or a separately authorized diagnostic captures the effective AVD environment, resolved AVD locations, avdmanager list and expected config files.",
-    "Run relevant M00 context-evidence checks on the Motorola Moto G86 Power after emulator CI audit."
+    "Android emulator CI remains BLOCKED_ANDROID_CI_CAUSE_UNPROVEN. Any further AVD root-cause diagnostic requires separate authorization; do not infer a fix or rerun from the existing evidence.",
+    "Run relevant M00 context-evidence checks on the Motorola Moto G86 Power after the independent QA APK artifact audit."
   ],
-  "nextRecommendedTask": "Stop for independent audit of docs/validation/android-emulator-ci/RESULTS.md. Android CI remains BLOCKED_ANDROID_CI_CAUSE_UNPROVEN; no workflow correction or rerun is authorized by the current evidence. A future CI attempt must execute connected instrumentation and produce XML with executed tests > 0 before it can be called EMULATOR PASS.",
+  "nextRecommendedTask": "Stop for independent audit of docs/validation/qa-debug-arm64/RESULTS.md and the GitHub Actions artifact. Android emulator CI remains BLOCKED_ANDROID_CI_CAUSE_UNPROVEN; EMULATOR and PHYSICAL_DEVICE validation remain NOT_RUN. After audit, perform only the separately authorized Motorola QA validation.",
   "m00_03": {
     "status": "IMPLEMENTED_TESTED_HOST_DEVICE_NOT_RUN",
     "baseCommit": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
@@ -415,9 +415,9 @@
   },
   "fieldSemantics": {
     "startingHeadSha": "Historical original M00 baseline; not the base of later deliveries.",
-    "testedCodeHeadSha": "Source SHA attempted by the latest delivery checks; a failed pre-instrumentation workflow is not a PASS. See latestAndroidCi.",
-    "currentSourceHeadSha": "Current production/workflow source SHA on the feature branch; validation status is per latestAndroidCi and is not implied by this field.",
-    "lastFullJvmTestCodeSha": "e367dc75d0f952ef6a9b4e96d51e1263b70d3309 is the historical full JVM gate (727 app + 2 compatibility = 729); not rerun for b6c4607 or bdae878.",
+    "testedCodeHeadSha": "Historical Android emulator CI source SHA from the latestAndroidCi attempt; the QA APK build source is separately recorded in latestQaArm64Artifact.",
+    "currentSourceHeadSha": "Latest non-documentation workflow/source commit on the feature branch; documentation-only commits may follow. QA artifact build source is recorded in latestQaArm64Artifact.",
+    "lastFullJvmTestCodeSha": "e367dc75d0f952ef6a9b4e96d51e1263b70d3309 is the historical full JVM gate (727 app + 2 compatibility = 729); no JVM suite was run for b6c4607, bdae878, or the QA artifact source 4ef2b39.",
     "testResults": "Historical or per-source results; each nested recordStatus/testedCodeHeadSha governs attribution. Do not transfer counts to another SHA.",
     "finalHostGate": "Historical complete host gate; not rerun on latestDelivery.codeCommit.",
     "latestDelivery": "Accepted preceding .gitignore-only source/release check at b6c4607; Android CI is tracked separately in latestAndroidCi.",
@@ -426,9 +426,10 @@
     "followUpHistory": "Preserved earlier follow-up records, including sheet-scope results.",
     "historicalArtifactHashes": "APK metadata from an earlier build; not produced by this correction.",
     "historicalGitSynchronization": "Earlier push/readback record; latestDelivery contains this correction’s own code/evidence commits.",
-    "latestAndroidCi": "Current GitHub-hosted Android emulator workflow attempts, with per-run SHA, artifact, counts and explicit EMULATOR/PHYSICAL_DEVICE status."
+    "latestAndroidCi": "Current GitHub-hosted Android emulator workflow attempts, with per-run SHA, artifact, counts and explicit EMULATOR/PHYSICAL_DEVICE status.",
+    "latestQaArm64Artifact": "Current QA-only ARM64 Debug APK artifact built and independently checked from its recorded source SHA; this does not imply emulator or physical-device execution."
   },
-  "currentSourceHeadSha": "bdae87820b73dbcc0decfde3a65c391c6fb63279",
+  "currentSourceHeadSha": "4ef2b39b9cba6aa1def081171d42d9146bbd968c",
   "lastFullJvmTestCodeSha": "e367dc75d0f952ef6a9b4e96d51e1263b70d3309",
   "latestDelivery": {
     "name": "Clean-checkout model-source ignore matrix and release reproducibility follow-up",
@@ -714,5 +715,106 @@
       "adbEmulatorConnected": false
     },
     "workflowDispatch": "Declared but NOT_TESTED; GitHub requires the workflow file on the default branch for manual dispatch, and main was left untouched."
+  },
+  "latestQaArm64Artifact": {
+    "name": "QA ARM64 Debug APK build and artifact verification",
+    "status": "HOST_BUILD_AND_ARTIFACT_VERIFICATION_PASS; EMULATOR_NOT_RUN; PHYSICAL_DEVICE_NOT_RUN",
+    "branch": "feat/0.5.0-skills-agents",
+    "sourceCodeSha": "4ef2b39b9cba6aa1def081171d42d9146bbd968c",
+    "workflowPath": ".github/workflows/qa-debug-arm64-apk.yml",
+    "buildScript": "scripts/ci/build_qa_debug_arm64.py",
+    "buildCommand": "./gradlew :app:clean :app:assembleDebug -Parm64Only=true --no-daemon --no-parallel --max-workers=2 --stacktrace --console=plain",
+    "workflowRun": {
+      "id": "37874837502",
+      "attempt": 1,
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/37874837502",
+      "jobId": "113640935577",
+      "status": "SUCCESS",
+      "startedAtUtc": "2026-10-09T02:29:53.957143Z",
+      "completedAtUtc": "2026-10-09T02:37:55.964132Z",
+      "gradleResult": "BUILD SUCCESSFUL in 7m 36s"
+    },
+    "buildEnvironment": {
+      "runner": "GitHub-hosted ubuntu-24.04",
+      "jdk": "Temurin 17",
+      "gradle": "8.10.2",
+      "androidPlatform": "35",
+      "buildTools": "35.0.0",
+      "ndk": "27.0.12077973",
+      "cmake": "3.31.6",
+      "abi": "arm64-v8a"
+    },
+    "artifact": {
+      "id": "11592306483",
+      "name": "local-ai-workspace-qa-debug-arm64-37874837502-1",
+      "browserUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/37874837502/artifacts/11592306483",
+      "apiDownloadUrl": "https://api.github.com/repos/javix142-gif/local-ai-workspace/actions/artifacts/11592306483/zip",
+      "bytes": 47787296,
+      "sha256": "5ef240ea08899079e85835bcd2778eeda2b5bd11abde5472f113a974bf6884a4",
+      "sha256SumsFileSha256": "f472ba4d6af778983cc2eeb64023c7ba9aefdbf0c444f008e984925adfccf690",
+      "createdAtUtc": "2026-10-09T02:37:59Z",
+      "expiresAtUtc": "2026-10-16T02:37:56Z",
+      "retentionDays": 7,
+      "expiredAtReadback": false
+    },
+    "apk": {
+      "filename": "local-ai-workspace-0.5.0-debug-arm64.apk",
+      "bytes": 119281567,
+      "sha256": "287ac97d6ce4e0563d1618e59726177355673321e401085c6383fe19b9ba4650",
+      "packageName": "com.localai.workspace.debug",
+      "versionCode": 27,
+      "versionName": "0.5.0-debug",
+      "abis": [
+        "arm64-v8a"
+      ],
+      "nativeLibraryCount": 9,
+      "signature": {
+        "status": "PASS",
+        "scheme": "APK Signature Scheme v2",
+        "signingVariant": "Gradle Debug build type; runner-generated standard debug keystore; keystore not exported",
+        "certificateDn": "C=US, O=Android, CN=Android Debug",
+        "certificateSha256": "56d5fb674b00a7aa2c86ff4835690e5b1ef3a1fcc525b08f2a1ec0c355129ffa"
+      }
+    },
+    "artifactFiles": {
+      "RESULTS.json": {
+        "sha256": "0d5aa0fb2c6637f8195cc1a253762fdf7a59eaa0cf3339ddccc67e774db7e952",
+        "bytes": 1848
+      },
+      "logs/qa-build-sanitized.log": {
+        "sha256": "30f2f8b41eb34bb5ff9deb5b888547f83bf993ec85801f45a3e36704d53b140d",
+        "bytes": 173956
+      },
+      "SHA256SUMS": {
+        "sha256": "f472ba4d6af778983cc2eeb64023c7ba9aefdbf0c444f008e984925adfccf690",
+        "bytes": 280,
+        "allEntriesVerified": true
+      }
+    },
+    "independentHostReadback": {
+      "status": "PASS",
+      "checks": [
+        "artifact ZIP SHA-256 and size",
+        "all artifact member SHA-256 values",
+        "apksigner verify --verbose --print-certs",
+        "aapt package/version",
+        "APK native library ABI inventory"
+      ],
+      "apkSha256MatchesManifest": true,
+      "signatureVerified": true,
+      "abiInventory": "arm64-v8a only",
+      "packageAndVersionVerified": true,
+      "jvmTests": "NOT_RUN_FOR_THIS_QA_ARTIFACT_TASK"
+    },
+    "validationStates": {
+      "HOST": "PASS for GitHub build, artifact readback, checksums, signature, package/version and ABI verification; no JVM suite was run for this task.",
+      "EMULATOR": "NOT_RUN; separate Android emulator CI remains BLOCKED_ANDROID_CI_CAUSE_UNPROVEN; run 37865813921 had XML=0 and executed=0.",
+      "PHYSICAL_DEVICE": "NOT_RUN; Motorola Moto G86 Power validation remains pending."
+    },
+    "appRuntimeChanged": false,
+    "apkIsQaDebugNotRelease": true,
+    "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
+    "v042TagCommitSha": "de615b772cf37a99e7e08a647c59607b271de606",
+    "documentation": "docs/validation/qa-debug-arm64/RESULTS.md"
   }
 }

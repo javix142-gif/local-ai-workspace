@@ -1,15 +1,28 @@
-# Codex → Work handoff: 0.5.0 clean-checkout stabilization and Android CI setup
+# Codex → Work handoff: 0.5.0 QA ARM64 artifact and Android CI status
 
-**Status:** The `.gitignore` correction and clean-checkout `assembleRelease` were independently accepted as `VALIDADA_HOST` (documentary audit, not an auditor-run Gradle build). Android CI remains `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`: the named AVD was not discoverable, and inspection of the full retained artifact/job log cannot distinguish an AVD created elsewhere from absent/partial creation or another cause. Instrumentation and physical-device validation are NOT_RUN; do not report them as PASS.
+**Status:** A QA-only ARM64 Debug APK was built and its downloaded artifact, signature, package/version and ABI were verified. Android emulator CI remains `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`: the named AVD was not discoverable, and the retained evidence cannot distinguish an AVD created elsewhere from absent/partial creation or another cause. Instrumentation and Motorola validation are NOT_RUN; do not report them as PASS.
 **Repository:** `https://github.com/javix142-gif/local-ai-workspace.git`
 **Branch:** `feat/0.5.0-skills-agents`
-**Current code SHA:** `bdae87820b73dbcc0decfde3a65c391c6fb63279` (workflow/KVM/ADB evidence changes; Actions run attempted, instrumentation NOT_RUN).
+**QA APK source SHA:** `4ef2b39b9cba6aa1def081171d42d9146bbd968c` (QA build workflow and verification script; app/runtime behavior was not changed for this artifact task).
+**Android CI attempt SHA:** `bdae87820b73dbcc0decfde3a65c391c6fb63279` (separate emulator workflow attempt; instrumentation NOT_RUN).
 **Accepted preceding source SHA:** `b6c460763b19de41e689c493859bc1ee649faf2c` (`.gitignore` only; ignore matrix 17/17 and clean-checkout `assembleRelease` PASS, accepted by independent documentary audit).
 **Accepted preceding source-build evidence commit:** `b5fa6a2062f7aed568f33bc66c2e4ea229f28a66`.
-**Most recent complete JVM gate:** `e367dc75d0f952ef6a9b4e96d51e1263b70d3309`, app 727/727 + compatibility 2/2 = 729/729 PASS; historical, not rerun on `b6c4607` or `bdae878`.
-**AndroidTest compilation/instrumentation:** final workflow run `37865813921` failed before `:app:connectedDebugAndroidTest`; XML 0, executed 0. **PHYSICAL_DEVICE:** NOT_RUN. No APK was generated or distributed.
+**Most recent complete JVM gate:** `e367dc75d0f952ef6a9b4e96d51e1263b70d3309`, app 727/727 + compatibility 2/2 = 729/729 PASS; historical, not rerun on `b6c4607`, `bdae878`, or the QA workflow source `4ef2b39`.
+**AndroidTest compilation/instrumentation:** final emulator workflow run `37865813921` failed before `:app:connectedDebugAndroidTest`; XML 0, executed 0. The separate QA artifact below is a Debug APK, not evidence of instrumentation. **PHYSICAL_DEVICE:** NOT_RUN.
 **Baseline:** `v0.4.2` → `de615b772cf37a99e7e08a647c59607b271de606`
 **App:** `com.localai.workspace`, version `0.5.0` (`versionCode 27`).
+
+## Latest delivery: QA ARM64 Debug APK (2026-10-09)
+
+The [GitHub Actions artifact ZIP](https://github.com/javix142-gif/local-ai-workspace/actions/runs/37874837502/artifacts/11592306483) contains `local-ai-workspace-0.5.0-debug-arm64.apk`, `RESULTS.json`, `SHA256SUMS`, and the sanitized build log. Run `37874837502` completed successfully from source SHA `4ef2b39b9cba6aa1def081171d42d9146bbd968c`; job `113640935577` ran `:app:clean :app:assembleDebug -Parm64Only=true` using the project-pinned Android toolchain. The artifact is retained for seven days through `2026-10-16T02:37:56Z`.
+
+- APK: 119,281,567 bytes; SHA-256 `287ac97d6ce4e0563d1618e59726177355673321e401085c6383fe19b9ba4650`.
+- Package/version: `com.localai.workspace.debug`, `0.5.0-debug`, versionCode 27.
+- Signing: `apksigner` verified the standard Gradle Debug signature (v2); certificate SHA-256 `56d5fb674b00a7aa2c86ff4835690e5b1ef3a1fcc525b08f2a1ec0c355129ffa`. The ephemeral debug keystore was not exported.
+- ABI: `arm64-v8a` only, 9 native libraries. The artifact ZIP is 47,787,296 bytes; SHA-256 `5ef240ea08899079e85835bcd2778eeda2b5bd11abde5472f113a974bf6884a4`.
+- `RESULTS.json`, log, and member checksums match the downloaded artifact. Full hashes, exact command, toolchain, and verification details are in [QA ARM64 artifact results](../validation/qa-debug-arm64/RESULTS.md).
+
+Status for this delivery: **HOST build/artifact verification PASS**; JVM tests not run for this task; **EMULATOR NOT_RUN**; **PHYSICAL_DEVICE NOT_RUN**. Emulator CI remains blocked as described below. No APK is tracked in Git, and no application/runtime changes were made for this QA delivery.
 
 ## Latest Android CI follow-up (2026-10-09)
 
@@ -141,4 +154,4 @@ The previous handoff recommended installing its stabilization candidate and coll
 
 ## Current next step
 
-Stop for independent audit of the AVD investigation in `../validation/android-emulator-ci/RESULTS.md`. Do not make a speculative workflow change or start another run from the current evidence. Any subsequent diagnostic attempt requires separate authorization and must capture the effective AVD environment, resolved locations, `avdmanager list avd`, and expected `.ini`/`config.ini` before emulator launch. Only connected instrumentation with XML for the tested SHA and `executed > 0` can become `EMULATOR PASS`; Motorola remains `PHYSICAL_DEVICE: NOT_RUN`. This investigation did not generate or distribute an APK.
+Stop for independent audit of this QA APK artifact and its evidence in `../validation/qa-debug-arm64/RESULTS.md`. After audit, Motorola installation and validation may proceed under the authorized QA plan. Android emulator CI remains `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`; do not treat the failed AVD attempt as a test pass or make another workflow change/run without separate authorization. Any future emulator run must produce connected instrumentation XML with `executed > 0`; Motorola remains `PHYSICAL_DEVICE: NOT_RUN` until actually tested.
