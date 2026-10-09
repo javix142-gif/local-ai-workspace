@@ -1,6 +1,12 @@
 # M01-05 — Context budget and relevance deduplication
 
-**Result:** `HOST_PASS` for code commit `260a3f7c6267cc5a90a9cf516356951aec0627a1` on `feat/0.5.0-skills-agents`.
+## Evidence publication correction (2026-10-09)
+
+A GitHub tree audit of the previous evidence commit `d170173aee31a9503f5b9a9f539b797e3e202645` found that eight `.log` files listed in the checksum manifest were absent from that commit. The raw logs were still present locally as ignored files: the root `.gitignore` rules `*.log` and `docs/validation/**/*.log` had excluded them. Thus the earlier `sha256sum -c` verified the working directory, not the published Git tree. The XML and exit-code records were tracked.
+
+The eight original log files have now been added verbatim with `git add -f`; they were recovered from this checkout and were not reconstructed or rerun. `SHA256SUMS` has been regenerated from the evidence files in this directory (excluding the manifest itself), and the complete manifest is checked against the staged/indexed tree before publication. The expected inventory is 114 files. The documentation-only follow-up keeps M01-05 at `HOST_PASS_AWAITING_INDEPENDENT_AUDIT`; it does not rerun or change any test/build result. Instrumented, emulator, and physical-device validation remain `NOT_RUN`.
+
+**Host result:** `PASS` for code commit `260a3f7c6267cc5a90a9cf516356951aec0627a1` on `feat/0.5.0-skills-agents`. **Current audit state:** `HOST_PASS_AWAITING_INDEPENDENT_AUDIT`.
 **Base:** `4c5fce553b007c7e565f55b389a162c9b0ecb880`.
 **Date:** 2026-10-09 UTC.
 
@@ -81,4 +87,4 @@ AndroidTest was compiled only. Instrumented execution, emulator validation, and 
 
 ## Evidence integrity
 
-The red/green XML, focused logs, full-suite logs, and summary are hashed in [`SHA256SUMS`](SHA256SUMS). `summary.json` identifies the exact code SHA for every current result. The original 97-task plan remains the attached source of task IDs/order/dependencies; this repository has no `ROADMAP.md`, `BACKLOG.json`, or `LOOP_RULES.md`, and none were created or reconstructed.
+The corrected [`SHA256SUMS`](SHA256SUMS) contains 114 entries and covers the red/green XML, all eight original logs, exit-code records, and summary. Every entry passed `sha256sum -c`; the manifest path set exactly matches the tracked evidence files, and each recovered log hash matches its value in the previous manifest. The post-push remote tree was checked against the published commit. `summary.json` identifies the exact code SHA for every current result. The original 97-task plan remains the attached source of task IDs/order/dependencies; this repository has no `ROADMAP.md`, `BACKLOG.json`, or `LOOP_RULES.md`, and none were created or reconstructed.

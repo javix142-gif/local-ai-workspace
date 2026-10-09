@@ -1,0 +1,88 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.10.2/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Configuration 'nativeAar' was resolved during configuration time.
+This is a build performance and scalability issue.
+See https://github.com/gradle/gradle/issues/2298
+Run with --info for a stacktrace.
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :litert-compat:copyNativeBackend UP-TO-DATE
+> Task :litert-compat:preBuild UP-TO-DATE
+> Task :litert-compat:preDebugBuild UP-TO-DATE
+> Task :litert-compat:writeDebugAarMetadata UP-TO-DATE
+> Task :llama-runtime:preBuild UP-TO-DATE
+> Task :llama-runtime:preDebugBuild UP-TO-DATE
+> Task :llama-runtime:writeDebugAarMetadata UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :litert-compat:generateDebugResValues UP-TO-DATE
+> Task :litert-compat:generateDebugResources UP-TO-DATE
+> Task :litert-compat:packageDebugResources UP-TO-DATE
+> Task :llama-runtime:generateDebugResValues UP-TO-DATE
+> Task :llama-runtime:generateDebugResources UP-TO-DATE
+> Task :llama-runtime:packageDebugResources UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :litert-compat:extractDeepLinksDebug UP-TO-DATE
+> Task :litert-compat:processDebugManifest UP-TO-DATE
+> Task :llama-runtime:extractDeepLinksDebug UP-TO-DATE
+> Task :llama-runtime:processDebugManifest UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :litert-compat:compileDebugLibraryResources UP-TO-DATE
+> Task :litert-compat:parseDebugLocalResources UP-TO-DATE
+> Task :litert-compat:generateDebugRFile UP-TO-DATE
+> Task :llama-runtime:compileDebugLibraryResources UP-TO-DATE
+> Task :llama-runtime:parseDebugLocalResources UP-TO-DATE
+> Task :llama-runtime:generateDebugRFile UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :litert-compat:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :litert-compat:compileDebugKotlin UP-TO-DATE
+> Task :litert-compat:javaPreCompileDebug UP-TO-DATE
+> Task :litert-compat:compileDebugJavaWithJavac NO-SOURCE
+> Task :litert-compat:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :llama-runtime:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :llama-runtime:compileDebugKotlin UP-TO-DATE
+> Task :llama-runtime:javaPreCompileDebug UP-TO-DATE
+> Task :llama-runtime:compileDebugJavaWithJavac NO-SOURCE
+> Task :llama-runtime:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :app:kspDebugKotlin
+> Task :app:compileDebugKotlin FROM-CACHE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac FROM-CACHE
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:kspDebugUnitTestKotlin
+
+> Task :app:compileDebugUnitTestKotlin FAILED
+e: file:///workspace/local-ai-workspace/app/src/test/java/com/localai/workspace/context/ContextDeduplicationAblationTest.kt:3:43 Unresolved reference 'ContextItem'.
+e: file:///workspace/local-ai-workspace/app/src/test/java/com/localai/workspace/context/ContextDeduplicationAblationTest.kt:4:43 Unresolved reference 'ContextKind'.
+e: file:///workspace/local-ai-workspace/app/src/test/java/com/localai/workspace/context/ContextDeduplicationAblationTest.kt:5:43 Unresolved reference 'ContextProvenance'.
+e: file:///workspace/local-ai-workspace/app/src/test/java/com/localai/workspace/context/ContextDeduplicationAblationTest.kt:6:43 Unresolved reference 'ContextTrust'.
+e: file:///workspace/local-ai-workspace/app/src/test/java/com/localai/workspace/context/ContextFoundationDeduplicationTest.kt:65:118 Unresolved reference 'ContextKind'.
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileDebugUnitTestKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 4m 8s
+47 actionable tasks: 5 executed, 2 from cache, 40 up-to-date
+
+GRADLE_EXIT_CODE=1

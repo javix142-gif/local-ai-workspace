@@ -485,7 +485,9 @@
     "latestAndroidCi": "Current GitHub-hosted Android emulator workflow attempts, with per-run SHA, artifact, counts and explicit EMULATOR/PHYSICAL_DEVICE status.",
     "latestQaArm64Artifact": "Current QA-only ARM64 Debug APK artifact built and independently checked from its recorded source SHA; this does not imply emulator or physical-device execution.",
     "physicalDeviceResults.latestM00FocusedPreflight": "Latest focused Motorola preflight. A blocked preflight with no serial/workbook means PHYSICAL_DEVICE tests were NOT_RUN; it is not a failed product test.",
-    "latestM01_05": "Current M01-05 result, including source SHA, focused/full suite counts, build gate, and evidence links; no Android or device execution is implied."
+    "latestM01_05": "Current M01-05 result, including source SHA, focused/full suite counts, build gate, and evidence links; no Android or device execution is implied.",
+    "latestM01_05.evidencePublicationCorrection": "Supplemental tracked-log and manifest readback correction; does not rerun or change the tested code/results.",
+    "latestM01_05.priorEvidenceCommitSha": "Previously published M01-05 evidence commit, superseded as the complete evidence publication by evidencePublicationCorrection."
   },
   "currentSourceHeadSha": "260a3f7c6267cc5a90a9cf516356951aec0627a1",
   "lastFullJvmTestCodeSha": "260a3f7c6267cc5a90a9cf516356951aec0627a1",
@@ -933,7 +935,7 @@
     "taskId": "M01-05",
     "name": "Context budget and relevance deduplication",
     "status": "HOST_PASS_AWAITING_INDEPENDENT_AUDIT",
-    "recordStatus": "Current host results for the code SHA below; earlier M00/M01 records remain historical and unchanged.",
+    "recordStatus": "Current host results remain tied to testedCodeCommit; this evidence-publication correction only restores the original raw logs to the tracked evidence tree. Independent audit remains pending.",
     "baseCommit": "4c5fce553b007c7e565f55b389a162c9b0ecb880",
     "testedCodeCommit": "260a3f7c6267cc5a90a9cf516356951aec0627a1",
     "branch": "feat/0.5.0-skills-agents",
@@ -1018,15 +1020,26 @@
       "newDependencies": false
     },
     "validationStates": {
-      "HOST": "PASS",
+      "HOST": "PASS_AWAITING_INDEPENDENT_AUDIT",
       "EMULATOR": "NOT_RUN",
       "PHYSICAL_DEVICE": "NOT_RUN"
     },
     "evidenceDirectory": "docs/validation/m01-05",
     "resultsFile": "docs/validation/m01-05/RESULTS.md",
     "checksumManifest": "docs/validation/m01-05/SHA256SUMS",
-    "checksumManifestSha256": "a320256e7053c0754e2bd9c7ef587995cbb83f619e45522221ec725ea648bcb6",
+    "checksumManifestSha256": "6a3a6fb3bb9eb8cb7d733a7154aeb5ccd461413690dba483a8fb30ab9c6aec2b",
     "checksumManifestEntries": 114,
-    "evidenceCommitSha": "b086adf8fad3e37d718d9c41e3499384bc83c7ef"
+    "priorEvidenceCommitSha": "b086adf8fad3e37d718d9c41e3499384bc83c7ef",
+    "evidencePublicationCorrection": {
+      "observedPriorPublishedHead": "d170173aee31a9503f5b9a9f539b797e3e202645",
+      "finding": "Eight .log files were excluded from Git by ignore rules although they existed locally and appeared in SHA256SUMS.",
+      "recovery": "Original log bytes retained from checkout and force-added; no rerun or reconstruction.",
+      "rawLogCount": 8,
+      "manifestEntries": 114,
+      "manifestSha256": "6a3a6fb3bb9eb8cb7d733a7154aeb5ccd461413690dba483a8fb30ab9c6aec2b",
+      "manifestVerification": "PASS against all 114 working-tree files; original ignored logs match their hashes in the prior manifest; every manifest path is present in the staged Git index. Remote tree readback is to be checked after push.",
+      "publicationCommit": "This documentation-only commit; exact SHA is identified by Git history and the delivery report.",
+      "status": "EVIDENCE_SUPPLEMENT_ONLY; HOST_PASS_AWAITING_INDEPENDENT_AUDIT"
+    }
   }
 }

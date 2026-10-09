@@ -1,7 +1,7 @@
 {
   "taskId": "M01-05",
   "name": "Context budget and relevance deduplication",
-  "recordStatus": "CURRENT_HOST_VALIDATION",
+  "recordStatus": "CURRENT_HOST_VALIDATION; EVIDENCE_PUBLICATION_CORRECTED; INDEPENDENT_AUDIT_PENDING",
   "branch": "feat/0.5.0-skills-agents",
   "baseCodeSha": "4c5fce553b007c7e565f55b389a162c9b0ecb880",
   "testedCodeSha": "260a3f7c6267cc5a90a9cf516356951aec0627a1",
@@ -71,5 +71,24 @@
   "androidTestExecution": "NOT_RUN",
   "emulator": "NOT_RUN",
   "physicalDevice": "NOT_RUN",
-  "evidenceDirectory": "docs/validation/m01-05"
+  "evidenceDirectory": "docs/validation/m01-05",
+  "evidencePublicationCorrection": {
+    "priorPublishedHead": "d170173aee31a9503f5b9a9f539b797e3e202645",
+    "finding": "Eight raw .log files were listed in SHA256SUMS but absent from the published tree because .gitignore excluded *.log and docs/validation/**/*.log.",
+    "recovery": "Original ignored checkout files were added verbatim with git add -f; no logs were reconstructed or rerun.",
+    "rawLogsAdded": [
+      "before/focused-red.log",
+      "before/focused-red-2.log",
+      "before/focused-red-offline.log",
+      "after/first-attempt/focused.log",
+      "after/final/focused.log",
+      "after/final/full-tests.log",
+      "after/final/full-host.log",
+      "after/final/full-host-interrupted-01.log"
+    ],
+    "manifestEntryCount": 114,
+    "manifestVerifiedAgainst": "working tree and Git index before publication; remote readback performed after push",
+    "status": "EVIDENCE_SUPPLEMENT_ONLY; M01-05 HOST_PASS_AWAITING_INDEPENDENT_AUDIT",
+    "manifestHashLocation": "docs/development/EXECUTION_STATE.json -> latestM01_05.evidencePublicationCorrection.manifestSha256 and CODEX_TO_WORK_HANDOFF.md"
+  }
 }

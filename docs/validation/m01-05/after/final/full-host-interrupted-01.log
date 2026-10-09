@@ -1,0 +1,301 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.10.2/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Configuration 'nativeAar' was resolved during configuration time.
+This is a build performance and scalability issue.
+See https://github.com/gradle/gradle/issues/2298
+Run with --info for a stacktrace.
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :litert-compat:copyNativeBackend UP-TO-DATE
+> Task :litert-compat:preBuild UP-TO-DATE
+> Task :litert-compat:preDebugBuild UP-TO-DATE
+> Task :litert-compat:writeDebugAarMetadata UP-TO-DATE
+> Task :llama-runtime:preBuild UP-TO-DATE
+> Task :llama-runtime:preDebugBuild UP-TO-DATE
+> Task :llama-runtime:writeDebugAarMetadata UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :litert-compat:generateDebugResValues UP-TO-DATE
+> Task :litert-compat:generateDebugResources UP-TO-DATE
+> Task :litert-compat:packageDebugResources UP-TO-DATE
+> Task :llama-runtime:generateDebugResValues UP-TO-DATE
+> Task :llama-runtime:generateDebugResources UP-TO-DATE
+> Task :llama-runtime:packageDebugResources UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :litert-compat:extractDeepLinksDebug UP-TO-DATE
+> Task :litert-compat:processDebugManifest UP-TO-DATE
+> Task :llama-runtime:extractDeepLinksDebug UP-TO-DATE
+> Task :llama-runtime:processDebugManifest UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :litert-compat:compileDebugLibraryResources UP-TO-DATE
+> Task :litert-compat:parseDebugLocalResources UP-TO-DATE
+> Task :litert-compat:generateDebugRFile UP-TO-DATE
+> Task :llama-runtime:compileDebugLibraryResources UP-TO-DATE
+> Task :llama-runtime:parseDebugLocalResources UP-TO-DATE
+> Task :llama-runtime:generateDebugRFile UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :litert-compat:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :litert-compat:compileDebugKotlin UP-TO-DATE
+> Task :litert-compat:javaPreCompileDebug UP-TO-DATE
+> Task :litert-compat:compileDebugJavaWithJavac NO-SOURCE
+> Task :litert-compat:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :llama-runtime:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :llama-runtime:compileDebugKotlin UP-TO-DATE
+> Task :llama-runtime:javaPreCompileDebug UP-TO-DATE
+> Task :llama-runtime:compileDebugJavaWithJavac NO-SOURCE
+> Task :llama-runtime:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :app:kspDebugKotlin UP-TO-DATE
+> Task :app:compileDebugKotlin UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar UP-TO-DATE
+> Task :app:kspDebugUnitTestKotlin UP-TO-DATE
+> Task :app:compileDebugUnitTestKotlin UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :litert-compat:mergeDebugShaders UP-TO-DATE
+> Task :litert-compat:compileDebugShaders NO-SOURCE
+> Task :litert-compat:generateDebugAssets UP-TO-DATE
+> Task :litert-compat:packageDebugAssets UP-TO-DATE
+> Task :llama-runtime:mergeDebugShaders UP-TO-DATE
+> Task :llama-runtime:compileDebugShaders NO-SOURCE
+> Task :llama-runtime:generateDebugAssets UP-TO-DATE
+> Task :llama-runtime:packageDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+> Task :litert-compat:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :litert-compat:processDebugJavaRes UP-TO-DATE
+> Task :llama-runtime:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :llama-runtime:processDebugJavaRes UP-TO-DATE
+> Task :app:testDebugUnitTest
+> Task :litert-compat:preDebugUnitTestBuild UP-TO-DATE
+> Task :litert-compat:generateDebugUnitTestStubRFile UP-TO-DATE
+> Task :litert-compat:compileDebugUnitTestKotlin UP-TO-DATE
+> Task :litert-compat:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :litert-compat:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :litert-compat:processDebugUnitTestJavaRes UP-TO-DATE
+> Task :litert-compat:testDebugUnitTest UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:compressDebugAssets UP-TO-DATE
+> Task :app:desugarDebugFileDependencies UP-TO-DATE
+> Task :app:dexBuilderDebug
+> Task :app:mergeDebugGlobalSynthetics UP-TO-DATE
+> Task :app:mergeDebugJavaResource
+> Task :app:checkDebugDuplicateClasses UP-TO-DATE
+> Task :app:mergeExtDexDebug UP-TO-DATE
+> Task :llama-runtime:bundleLibRuntimeToDirDebug UP-TO-DATE
+> Task :litert-compat:bundleLibRuntimeToDirDebug UP-TO-DATE
+> Task :app:mergeLibDexDebug UP-TO-DATE
+> Task :app:mergeProjectDexDebug
+> Task :app:mergeDebugJniLibFolders UP-TO-DATE
+> Task :litert-compat:mergeDebugJniLibFolders UP-TO-DATE
+> Task :litert-compat:mergeDebugNativeLibs UP-TO-DATE
+> Task :litert-compat:copyDebugJniLibsProjectOnly UP-TO-DATE
+> Task :llama-runtime:preReleaseBuild UP-TO-DATE
+
+> Task :llama-runtime:configureCMakeRelease[arm64-v8a]
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/local-ai-workspace/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   CMakeLists.txt:3 (project)
+C/C++: CMake Deprecation Warning at /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+C/C++:   Compatibility with CMake < 3.10 will be removed from a future version of
+C/C++:   CMake.
+C/C++:   Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+C/C++:   to tell CMake that the project requires at least <min> but has been updated
+C/C++:   to work with policies introduced by <max> or earlier.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/.toolchain/android-sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+C/C++:   /workspace/local-ai-workspace/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/CMakeFiles/3.31.6/CMakeSystem.cmake:6 (include)
+C/C++:   CMakeLists.txt:3 (project)
+C/C++: CMAKE_BUILD_TYPE=Release
+C/C++: CMake Warning (dev) at /workspace/.toolchain/android-sdk/cmake/3.31.6/share/cmake-3.31/Modules/FetchContent.cmake:1953 (message):
+C/C++:   Calling FetchContent_Populate(kleidiai) is deprecated, call
+C/C++:   FetchContent_MakeAvailable(kleidiai) instead.  Policy CMP0169 can be set to
+C/C++:   OLD to allow FetchContent_Populate(kleidiai) to be called directly for now,
+C/C++:   but the ability to call it with declared details will be removed completely
+C/C++:   in a future version.
+C/C++: Call Stack (most recent call first):
+C/C++:   /workspace/local-ai-workspace/third_party/llama.cpp/ggml/src/ggml-cpu/CMakeLists.txt:675 (FetchContent_Populate)
+C/C++:   /workspace/local-ai-workspace/third_party/llama.cpp/ggml/src/CMakeLists.txt:586 (ggml_add_cpu_backend_variant_impl)
+C/C++: This warning is for project developers.  Use -Wno-dev to suppress it.
+C/C++: CMake Warning at /workspace/local-ai-workspace/third_party/llama.cpp/common/CMakeLists.txt:33 (message):
+C/C++:   Git repository not found; to enable automatic generation of build info,
+C/C++:   make sure Git is installed and the project is a Git repository.
+
+> Task :llama-runtime:buildCMakeRelease[arm64-v8a]
+C/C++: ninja: Entering directory `/workspace/local-ai-workspace/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a'
+C/C++: /workspace/local-ai-workspace/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qsi8d32pscalef32_f16_neon.c:104:34: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   104 |             const float scale0 = absmax == 0.0F ? 0.0F : qmax / absmax;
+C/C++:       |                                  ^~~~~~ ~~
+C/C++: /workspace/local-ai-workspace/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qsi8d32pscalef32_f16_neon.c:104:65: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   104 |             const float scale0 = absmax == 0.0F ? 0.0F : qmax / absmax;
+C/C++:       |                                                               ~ ^~~~~~
+C/C++: /workspace/local-ai-workspace/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qsi8d32pscalef32_f16_neon.c:117:55: warning: implicit conversion increases floating-point precision: 'const float16_t' (aka 'const __fp16') to 'float' [-Wdouble-promotion]
+C/C++:   117 |                     int32_t v0_s32 = (int32_t)(roundf(src0_0 * scale0));
+C/C++:       |                                                       ^~~~~~ ~
+C/C++: 3 warnings generated.
+C/C++: /workspace/local-ai-workspace/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:153:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   153 |             const float rmin0 = fminf(0.0F, min0);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /workspace/local-ai-workspace/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:154:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   154 |             const float rmax0 = fmaxf(0.0F, max0);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /workspace/local-ai-workspace/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:156:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   156 |             const float rmin1 = fminf(0.0F, min1);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /workspace/local-ai-workspace/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:157:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   157 |             const float rmax1 = fmaxf(0.0F, max1);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /workspace/local-ai-workspace/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:159:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   159 |             const float rmin2 = fminf(0.0F, min2);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /workspace/local-ai-workspace/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:160:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   160 |             const float rmax2 = fmaxf(0.0F, max2);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /workspace/local-ai-workspace/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:162:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   162 |             const float rmin3 = fminf(0.0F, min3);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /workspace/local-ai-workspace/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:163:45: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   163 |             const float rmax3 = fmaxf(0.0F, max3);
+C/C++:       |                                 ~~~~~       ^~~~
+C/C++: /workspace/local-ai-workspace/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:393:41: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   393 |         const float rmin0 = fminf(0.0F, min0);
+C/C++:       |                             ~~~~~       ^~~~
+C/C++: /workspace/local-ai-workspace/llama-runtime/.cxx/Release/6zg541b1/arm64-v8a/_deps/kleidiai-src/kai/ukernels/matmul/pack/kai_lhs_quant_pack_qai8dxp_f16_neon.c:394:41: warning: implicit conversion increases floating-point precision: 'float16_t' (aka '__fp16') to 'float' [-Wdouble-promotion]
+C/C++:   394 |         const float rmax0 = fmaxf(0.0F, max0);
+C/C++:       |                             ~~~~~       ^~~~
+C/C++: 10 warnings generated.
+
+> Task :llama-runtime:mergeDebugJniLibFolders UP-TO-DATE
+> Task :llama-runtime:mergeDebugNativeLibs
+> Task :llama-runtime:copyDebugJniLibsProjectOnly
+> Task :app:mergeDebugNativeLibs
+> Task :app:stripDebugDebugSymbols
+> Task :app:validateSigningDebug UP-TO-DATE
+> Task :app:writeDebugAppMetadata UP-TO-DATE
+> Task :app:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect UP-TO-DATE
+> Task :app:assembleDebug
+> Task :app:buildKotlinToolingMetadata UP-TO-DATE
+> Task :app:preReleaseBuild UP-TO-DATE
+> Task :app:generateReleaseBuildConfig UP-TO-DATE
+> Task :litert-compat:preReleaseBuild UP-TO-DATE
+> Task :litert-compat:writeReleaseAarMetadata UP-TO-DATE
+> Task :llama-runtime:writeReleaseAarMetadata UP-TO-DATE
+> Task :app:checkReleaseAarMetadata UP-TO-DATE
+> Task :app:generateReleaseResValues UP-TO-DATE
+> Task :litert-compat:generateReleaseResValues UP-TO-DATE
+> Task :litert-compat:generateReleaseResources UP-TO-DATE
+> Task :litert-compat:packageReleaseResources UP-TO-DATE
+> Task :llama-runtime:generateReleaseResValues UP-TO-DATE
+> Task :llama-runtime:generateReleaseResources UP-TO-DATE
+> Task :llama-runtime:packageReleaseResources UP-TO-DATE
+> Task :app:mapReleaseSourceSetPaths UP-TO-DATE
+> Task :app:generateReleaseResources UP-TO-DATE
+> Task :app:mergeReleaseResources UP-TO-DATE
+> Task :app:packageReleaseResources UP-TO-DATE
+> Task :app:parseReleaseLocalResources UP-TO-DATE
+> Task :app:createReleaseCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksRelease UP-TO-DATE
+> Task :litert-compat:extractDeepLinksRelease UP-TO-DATE
+> Task :litert-compat:processReleaseManifest UP-TO-DATE
+> Task :llama-runtime:extractDeepLinksRelease UP-TO-DATE
+> Task :llama-runtime:processReleaseManifest UP-TO-DATE
+> Task :app:processReleaseMainManifest UP-TO-DATE
+> Task :app:processReleaseManifest UP-TO-DATE
+> Task :app:processReleaseManifestForPackage UP-TO-DATE
+> Task :litert-compat:compileReleaseLibraryResources UP-TO-DATE
+> Task :litert-compat:parseReleaseLocalResources UP-TO-DATE
+> Task :litert-compat:generateReleaseRFile UP-TO-DATE
+> Task :llama-runtime:compileReleaseLibraryResources UP-TO-DATE
+> Task :llama-runtime:parseReleaseLocalResources UP-TO-DATE
+> Task :llama-runtime:generateReleaseRFile UP-TO-DATE
+> Task :app:processReleaseResources UP-TO-DATE
+> Task :litert-compat:compileReleaseKotlin UP-TO-DATE
+> Task :litert-compat:javaPreCompileRelease UP-TO-DATE
+> Task :litert-compat:compileReleaseJavaWithJavac NO-SOURCE
+> Task :litert-compat:bundleLibCompileToJarRelease UP-TO-DATE
+> Task :llama-runtime:compileReleaseKotlin UP-TO-DATE
+> Task :llama-runtime:javaPreCompileRelease UP-TO-DATE
+> Task :llama-runtime:compileReleaseJavaWithJavac NO-SOURCE
+> Task :llama-runtime:bundleLibCompileToJarRelease UP-TO-DATE
+> Task :app:kspReleaseKotlin
+> Task :app:compileReleaseKotlin
+> Task :app:javaPreCompileRelease UP-TO-DATE
+> Task :app:compileReleaseJavaWithJavac UP-TO-DATE
+> Task :app:extractProguardFiles UP-TO-DATE
+> Task :litert-compat:bundleLibRuntimeToJarRelease UP-TO-DATE
+> Task :litert-compat:processReleaseJavaRes UP-TO-DATE
+> Task :litert-compat:createFullJarRelease UP-TO-DATE
+> Task :litert-compat:extractProguardFiles UP-TO-DATE
+> Task :litert-compat:generateReleaseLintModel UP-TO-DATE
+> Task :litert-compat:prepareLintJarForPublish UP-TO-DATE
+> Task :llama-runtime:bundleLibRuntimeToJarRelease UP-TO-DATE
+> Task :llama-runtime:processReleaseJavaRes UP-TO-DATE
+> Task :llama-runtime:createFullJarRelease UP-TO-DATE
+> Task :llama-runtime:extractProguardFiles UP-TO-DATE
+> Task :llama-runtime:generateReleaseLintModel UP-TO-DATE
+> Task :llama-runtime:prepareLintJarForPublish UP-TO-DATE
+> Task :app:generateReleaseLintVitalReportModel
+> Task :llama-runtime:mergeReleaseJniLibFolders UP-TO-DATE
+> Task :llama-runtime:mergeReleaseNativeLibs
+> Task :llama-runtime:stripReleaseDebugSymbols
+> Task :llama-runtime:copyReleaseJniLibsProjectAndLocalJars
+> Task :llama-runtime:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :llama-runtime:extractReleaseAnnotations UP-TO-DATE
+> Task :llama-runtime:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :llama-runtime:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :llama-runtime:mergeReleaseShaders UP-TO-DATE
+> Task :llama-runtime:compileReleaseShaders NO-SOURCE
+> Task :llama-runtime:generateReleaseAssets UP-TO-DATE
+> Task :llama-runtime:packageReleaseAssets UP-TO-DATE
+> Task :llama-runtime:prepareReleaseArtProfile UP-TO-DATE
+> Task :llama-runtime:mergeReleaseJavaResource UP-TO-DATE
+> Task :llama-runtime:syncReleaseLibJars UP-TO-DATE
+> Task :llama-runtime:bundleReleaseLocalLintAar
+> Task :litert-compat:mergeReleaseJniLibFolders UP-TO-DATE
+> Task :litert-compat:mergeReleaseNativeLibs UP-TO-DATE
+> Task :litert-compat:stripReleaseDebugSymbols UP-TO-DATE
+> Task :litert-compat:copyReleaseJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :litert-compat:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :litert-compat:extractReleaseAnnotations UP-TO-DATE
+> Task :litert-compat:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :litert-compat:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :litert-compat:mergeReleaseShaders UP-TO-DATE
+> Task :litert-compat:compileReleaseShaders NO-SOURCE
+> Task :litert-compat:generateReleaseAssets UP-TO-DATE
+> Task :litert-compat:packageReleaseAssets UP-TO-DATE
+> Task :litert-compat:prepareReleaseArtProfile UP-TO-DATE
+> Task :litert-compat:mergeReleaseJavaResource UP-TO-DATE
+> Task :litert-compat:syncReleaseLibJars UP-TO-DATE
+> Task :litert-compat:bundleReleaseLocalLintAar UP-TO-DATE
+> Task :litert-compat:lintVitalAnalyzeRelease UP-TO-DATE
+> Task :litert-compat:writeReleaseLintModelMetadata UP-TO-DATE
+> Task :llama-runtime:lintVitalAnalyzeRelease UP-TO-DATE
+> Task :llama-runtime:writeReleaseLintModelMetadata UP-TO-DATE
+> Task :app:lintVitalAnalyzeRelease
