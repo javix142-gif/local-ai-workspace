@@ -42,3 +42,16 @@ The complete unmodified wrapper output is `assembleRelease.log`; `task-outcomes.
 No JVM tests, AndroidTest compilation, instrumentation, emulator, Android CI, or Motorola run was made. `HOST` covers only clean-checkout/vendor preflight and the observed wrapper block; `EMULATOR` and `PHYSICAL_DEVICE` remain **NOT_RUN**. Android emulator CI separately remains `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`. The original 97-task plan and its IDs/dependencies were not changed; M01-06 remains pending with `requires_device=true`.
 
 `SHA256SUMS` covers every evidence file in this directory except itself. No APK is retained or distributed.
+
+
+## Independent orchestration audit: final clean-home ARM64 Release attempt (2026-10-09 22:56 UTC)
+
+**Finding: `BLOCKED_BEFORE_GRADLE_START_NETWORK_CONFIRMED`.** This is a documentary audit of the published run at tested checkout `6d1b256b23c4e76dad72413ced9b10419425c134`; the auditor did not execute a local build or tests.
+
+- GitHub comparison confirms the evidence delivery `7b1997589328852ff81dddc2ce0355b1342e1913` is one fast-forward commit after the tested checkout; the changed paths are documentation/evidence only. The application-source baseline remains `260a3f7c6267cc5a90a9cf516356951aec0627a1`.
+- The published preflight records a fresh detached worktree at the exact tested SHA, empty tracked/untracked/ignored status, no Gradle/app/native build residue, and a newly empty `GRADLE_USER_HOME`. Its vendor inventory is 1,865/1,865 llama.cpp files with zero missing/extra/blob-mismatched files; `models.h` is Git-tracked and blob-matched. All 16/16 model/binary ignore probes are recorded as ignored. These are artifact-backed records; this auditor did not independently recreate the worktree.
+- I fetched every file named by `SHA256SUMS` from the published commit and independently recomputed SHA-256 over its UTF-8 contents: **17/17 matched**. The raw `assembleRelease.log` hash is `3caee44390cf5c8ccec0423a07baf95079d50a7112b328b126f003501b76fe6c`; its text shows the wrapper's Gradle 8.10.2 download and `java.net.ConnectException: Connection refused`.
+- The command exited 1 before Gradle startup: 0 tasks, no task outcomes, CMake/Ninja not reached, and no APK. The managed-environment record says connected/unrestricted policy, while the socket was refused; the lower-level network cause is **NOT DETERMINED**. This is neither an application compile failure nor a PASS. The two authorized empty-home attempts are exhausted; no retry or cache/source copy was made.
+- Remote refs in the run evidence and GitHub comparison agree that `main` and peeled `v0.4.2` remain at `de615b772cf37a99e7e08a647c59607b271de606`. JVM, AndroidTest, emulator, Android CI and Motorola execution remain NOT_RUN for this attempt; Android CI separately remains `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`.
+
+The evidence manifest was refreshed to include this audit. The prior clean Release PASS at `83affa67584292137a17dd544a4f6e207cf7c96f` remains scoped to that exact SHA and recorded cache policy. Fresh empty-home Release reproducibility remains unresolved pending a verifiable infrastructure path; do not describe this blocked run as a source build failure.

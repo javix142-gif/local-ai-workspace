@@ -211,7 +211,8 @@
   "pendingAcceptance": [
     "M00 Motorola validation is blocked until both the exact original workbook is accessible and the Moto G86 Power is connected/ADB-authorized; the current preflight executed no install or tests.",
     "M01-06 “Ingesta e indexación reanudable” remains PENDING (requires_device=true in the original 97-task plan); do not start or mark complete until the required device is available.",
-    "Android emulator CI remains BLOCKED_ANDROID_CI_CAUSE_UNPROVEN; do not edit or relaunch until the AVD creation/discovery cause is demonstrated."
+    "Android emulator CI remains BLOCKED_ANDROID_CI_CAUSE_UNPROVEN; do not edit or relaunch until the AVD creation/discovery cause is demonstrated.",
+    "Fresh empty-home ARM64 assembleRelease reproducibility remains unverified after the two authorized attempts (4559b5 and 6d1b25); both stopped before Gradle startup when the wrapper received java.net.ConnectException: Connection refused fetching Gradle 8.10.2. The lower-level network cause remains NOT_DETERMINED. This is an infrastructure block, not evidence that application source compilation fails; no further retry/cache/source workaround is authorized under this contract."
   ],
   "nextRecommendedTask": "Keep Android CI blocked until a diagnostic execution records the AVD-step HOME/ANDROID_* values, avdmanager and emulator AVD listings, and .ini/config.ini inventory; do not apply a path fix or launch CI without causal evidence.",
   "m00_03": {
@@ -1370,9 +1371,9 @@
     },
     "evidenceDirectory": "docs/validation/clean-release-repro-6d1b25/",
     "evidenceManifest": "docs/validation/clean-release-repro-6d1b25/SHA256SUMS",
-    "evidenceManifestSha256": "94a4aed7a0ae3ea52fed26ebba583ab87fc61bc2d62595f016120440a65ad7f5",
+    "evidenceManifestSha256": "b92cb4d60e103f65326965d32c7951d70f55a8ad02f9fedc6c1ea74a4345c8c4",
     "evidenceManifestEntries": 17,
-    "resultsSha256": "575fa3955567ee2408723b4dd5afbeab8d5efde72ac3de6d95ef1a09842813dc",
+    "resultsSha256": "c5f7bc2f5f77d3731179b9188c4567e4150d0294ef39827e97926df308d4615f",
     "summarySha256": "f7a07693b065059f8da094ebb846ec46b54ffe02f7699fbf937c51bc0530037c",
     "gitDiffCheck": "PASS for staged documentation/evidence only; raw build log preserved byte-for-byte and staged explicitly."
   },
@@ -1536,10 +1537,80 @@
     }
   },
   "latestIndependentCleanReleaseAttemptAudit": {
-    "status": "NOT_YET_AUDITED",
+    "recordedAtUtc": "2026-10-09 22:56:53 UTC",
+    "status": "BLOCKED_BEFORE_GRADLE_START_NETWORK_CONFIRMED",
+    "scope": "Independent documentary audit of final empty-home ARM64 Release attempt 2/2; no local build or tests were executed by the auditor.",
+    "sourceBranch": "feat/0.5.0-skills-agents",
+    "sourceBranchHeadSha": "7b1997589328852ff81dddc2ce0355b1342e1913",
     "testedCheckoutSha": "6d1b256b23c4e76dad72413ced9b10419425c134",
-    "publishedEvidenceHead": "PENDING",
-    "note": "The prior attempt audit remains in priorIndependentCleanReleaseAttemptAudits; this attempt has not been independently audited."
+    "applicationSourceSha": "260a3f7c6267cc5a90a9cf516356951aec0627a1",
+    "compareFromTestedCheckout": {
+      "status": "ahead",
+      "aheadBy": 1,
+      "behindBy": 0,
+      "changedPathsAllDocumentationOrEvidence": true,
+      "productOrBuildPathsChanged": false,
+      "evidenceHead": "7b1997589328852ff81dddc2ce0355b1342e1913"
+    },
+    "preflightEvidence": {
+      "recordedDetachedHead": "6d1b256b23c4e76dad72413ced9b10419425c134",
+      "publishedStatusTrackedUntrackedIgnoredEmpty": true,
+      "independentlyReproducedByAuditor": false,
+      "llamaCppTrackedAndDiskFiles": "1865/1865",
+      "missing": 0,
+      "extras": 0,
+      "blobMismatches": 0,
+      "modelsHeaderBlob": "387a4adcb239db69d72349ee57e2fbfe2db04e5a",
+      "binaryIgnoreProbes": "16/16 ignored",
+      "gradleUserHome": "new and empty before invocation"
+    },
+    "execution": {
+      "command": "./gradlew :app:assembleRelease -Parm64Only=true --rerun-tasks --no-build-cache --no-daemon --no-parallel --max-workers=1 --console=plain --info",
+      "log": "docs/validation/clean-release-repro-6d1b25/assembleRelease.log",
+      "rawLogSha256": "3caee44390cf5c8ccec0423a07baf95079d50a7112b328b126f003501b76fe6c",
+      "rawLogHashMatchesManifest": true,
+      "logShows": "Wrapper attempted Gradle 8.10.2 download and received java.net.ConnectException: Connection refused.",
+      "exitCode": 1,
+      "gradleStarted": false,
+      "gradleTasksExecuted": 0,
+      "cmake": "NOT_REACHED",
+      "ninjaArm64": "NOT_REACHED",
+      "apk": "NOT_GENERATED",
+      "retries": 0,
+      "attemptBudget": "2/2 exhausted"
+    },
+    "evidenceAudit": {
+      "sha256ManifestEntries": 17,
+      "entriesRecomputedFromPublishedGitHubFileContents": 17,
+      "entriesMatching": 17,
+      "mismatches": 0,
+      "hashInput": "UTF-8 content from each GitHub file readback",
+      "sha256TestVectors": "PASS: empty string and abc",
+      "rawLogSha256": "3caee44390cf5c8ccec0423a07baf95079d50a7112b328b126f003501b76fe6c",
+      "finalResultsSha256": "c5f7bc2f5f77d3731179b9188c4567e4150d0294ef39827e97926df308d4615f",
+      "refreshedManifestSha256": "b92cb4d60e103f65326965d32c7951d70f55a8ad02f9fedc6c1ea74a4345c8c4"
+    },
+    "networkObservation": {
+      "recordedStatus": "connected; unrestricted/enforced policy",
+      "observedSocketError": "Connection refused",
+      "lowerLevelCause": "NOT_DETERMINED"
+    },
+    "remoteRefs": {
+      "featureAtAuditedDelivery": "7b1997589328852ff81dddc2ce0355b1342e1913",
+      "main": "de615b772cf37a99e7e08a647c59607b271de606",
+      "v042Peeled": "de615b772cf37a99e7e08a647c59607b271de606"
+    },
+    "validations": {
+      "HOST": "Published clean-checkout and vendor preflight evidence audited; requested assembleRelease blocked before Gradle startup.",
+      "JVM": "NOT_RUN",
+      "ANDROID_TEST_COMPILATION": "NOT_RUN",
+      "EMULATOR": "NOT_RUN",
+      "ANDROID_CI": "BLOCKED_ANDROID_CI_CAUSE_UNPROVEN",
+      "PHYSICAL_DEVICE": "NOT_RUN"
+    },
+    "original97TaskPlan": "Preserved; IDs/order/dependencies not altered by this audit.",
+    "executorStatus": "Idle after completed attempt; wait_threads verified idle. send_message_to_thread is available, but no new instruction was sent because the 2/2 build-attempt budget is exhausted and no actionable network-cause evidence changed.",
+    "nextAction": "Keep the clean empty-home Release gate unresolved and do not repeat this contract. Continue only with other original tasks whose dependencies and evidence prerequisites are satisfied; keep Android CI/Motorola statuses as blocked or NOT_RUN until real evidence."
   },
   "priorCleanReleaseReproAttempts": [
     {
