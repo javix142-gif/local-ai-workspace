@@ -18,6 +18,37 @@ data class ContextRequest(val query:String,val access:ScopeAccess=ScopeAccess(),
 data class DroppedContext(val item:ContextItem,val reason:String)
 data class SourceEvidenceIssue(val sourceId:String?=null,val segmentId:String?=null,val documentId:String?=null,val reasons:List<String>,val missingCellAddresses:List<String> = emptyList(),val missingCellReferences:List<String> = emptyList(),val ambiguousCellReferences:List<String> = emptyList(),val unresolvedCellReferences:List<String> = emptyList(),val relatedSegmentIds:List<String> = emptyList())
 data class ContextTimings(val totalMs:Long=0,val memoryMs:Long=0,val retrievalMs:Long=0,val historyMs:Long=0,val rankingMs:Long=0,val tokenCountingMs:Long=0,val renderMs:Long=0)
+private data class ContextDeduplicationKey(
+    val kind:ContextKind,
+    val scopeType:String,
+    val scopeId:String,
+    val sourceId:String?,
+    val documentId:String?,
+    val segmentId:String?,
+    val messageIds:List<String>,
+    val page:Int?,
+    val lineStart:Int?,
+    val lineEnd:Int?,
+    val startMs:Long?,
+    val endMs:Long?,
+    val charStart:Int?,
+    val charEnd:Int?,
+    val relatedSegmentIds:List<String>,
+    val cellReferences:List<String>,
+    val textHash:String,
+)
+private fun ContextItem.deduplicationKey():ContextDeduplicationKey {
+    val p=provenance
+    val hasOrigin=p.sourceId!=null||p.documentId!=null||p.segmentId!=null||p.messageIds.isNotEmpty()
+    return ContextDeduplicationKey(
+        kind=kind,scopeType=scope.type.name,scopeId=scope.id,
+        sourceId=p.sourceId ?: if(hasOrigin)null else id,
+        documentId=p.documentId,segmentId=p.segmentId,messageIds=p.messageIds,
+        page=p.page,lineStart=p.lineStart,lineEnd=p.lineEnd,startMs=p.startMs,endMs=p.endMs,
+        charStart=p.charStart,charEnd=p.charEnd,relatedSegmentIds=p.relatedSegmentIds,
+        cellReferences=p.cellReferences,textHash=hash,
+    )
+}
 data class ContextBundle(val request:ContextRequest,val included:List<ContextItem>,val dropped:List<DroppedContext>,val inputBudget:Int,val estimatedInputTokens:Int,val safetyMargin:Int,val timings:ContextTimings=ContextTimings(),val notice:String?=null,val memoryLookupSkipped:Boolean=false,val droppedSkills:Map<String,String> = emptyMap(),val blockCosts:Map<String,Int> = emptyMap(),val sourceEvidence:List<com.localai.workspace.domain.model.Evidence> = emptyList(),val sourceEvidenceIssues:List<SourceEvidenceIssue> = emptyList()) {
     val perSection get()=included.groupBy{it.kind}.mapValues{(_,v)->v.sumOf{it.estimatedTokens}}
     /** Routine deduplication, scope filtering and old-history trimming stay diagnostic-only. */
@@ -65,7 +96,7 @@ class ContextBuilder {
         request=request.copy(skillIds=if(request.activeSkillInstructions.isEmpty())request.skillIds.takeIf{admitted.isNotEmpty()} ?: emptyList() else admitted.map{it.id},skillInstructions=admitted.takeIf{it.isNotEmpty()}?.joinToString("\n\n"){it.instructions},activeSkillInstructions=admitted)
         costs["SKILLS"]=skillCost
         val critical=base+skillCost
-        var remaining=budget-critical;val included=mutableListOf<ContextItem>();val dropped=mutableListOf<DroppedContext>();val seen=mutableSetOf<String>();val families=mutableMapOf<String,Int>()
+        var remaining=budget-critical;val included=mutableListOf<ContextItem>();val dropped=mutableListOf<DroppedContext>();val seen=mutableSetOf<ContextDeduplicationKey>();val families=mutableMapOf<Triple<String,String,String>,Int>()
         var recentFull=false
         val rankingStart=System.nanoTime()
         val ordered=items.sortedWith(compareByDescending<ContextItem>{it.priority}.thenByDescending{it.score}.thenByDescending{it.order}.thenBy{it.id})
@@ -76,15 +107,15 @@ class ContextBuilder {
             val reason=when {
                 !request.access.permits(item.scope.type.name,item.scope.id)->"SCOPE_NOT_ALLOWED"
                 item.kind==ContextKind.MEMORY && item.scope.type !in request.memoryScopes->"MEMORY_SCOPE_NOT_ALLOWED"
-                item.hash in seen->"DUPLICATE_CONTENT"
+                item.deduplicationKey() in seen->"DUPLICATE_CONTENT"
                 item.kind==ContextKind.RECENT_CONVERSATION&&recentFull->"OLDER_HISTORY_OUTSIDE_WINDOW"
-                item.kind==ContextKind.SOURCE&&(families[item.provenance.sourceId] ?: 0)>=3->"SOURCE_DIVERSITY_LIMIT"
+                item.kind==ContextKind.SOURCE&&(families[Triple(item.scope.type.name,item.scope.id,item.provenance.sourceId.orEmpty())] ?: 0)>=3->"SOURCE_DIVERSITY_LIMIT"
                 cost>remaining->"TOKEN_BUDGET"
                 else->null
             }
             if(reason!=null){dropped+=DroppedContext(item,reason);if(item.kind==ContextKind.RECENT_CONVERSATION&&reason=="TOKEN_BUDGET")recentFull=true;continue}
-            seen+=item.hash;remaining-=cost;included+=item
-            item.provenance.sourceId?.let{families[it]=(families[it] ?: 0)+1}
+            seen+=item.deduplicationKey();remaining-=cost;included+=item
+            item.provenance.sourceId?.let{sourceId->val key=Triple(item.scope.type.name,item.scope.id,sourceId);families[key]=(families[key] ?: 0)+1}
         }
         return ContextBundle(request,included,dropped,budget,budget-remaining,safety,ContextTimings(totalMs=(System.nanoTime()-started)/1_000_000,rankingMs=rankingMs,tokenCountingMs=countingNs/1_000_000),droppedSkills=omitted,blockCosts=costs+mapOf("MEMORY" to included.filter{it.kind==ContextKind.MEMORY}.sumOf{it.estimatedTokens},"SOURCES" to included.filter{it.kind==ContextKind.SOURCE}.sumOf{it.estimatedTokens},"HISTORY" to included.filter{it.kind in setOf(ContextKind.RECENT_CONVERSATION,ContextKind.OLD_CONVERSATION)}.sumOf{it.estimatedTokens}))
     }

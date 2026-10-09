@@ -838,10 +838,10 @@ class ChatViewModel(
                 if (model.toDescriptor().runtime == RuntimeType.LITERT_LM) {
                     graph.database.messageDao().setEffectiveTurn(userId, conversation.userMessage, model.id)
                 }
-                if (!useContextV1 && budget.excluded.any { it.kind == ContextItemKind.HISTORY }) {
+                if (!useContextV1 && budget.budgetExcluded.any { it.kind == ContextItemKind.HISTORY }) {
                     _notices.emit("Only the most recent complete turns that fit were sent; older history remains saved")
                 }
-                if (!useContextV1 && budget.excluded.any { it.kind == ContextItemKind.LOCAL_EVIDENCE }) {
+                if (!useContextV1 && budget.budgetExcluded.any { it.kind == ContextItemKind.LOCAL_EVIDENCE }) {
                     _notices.emit("Some source passages were excluded by the active context budget")
                 }
                 val descriptor = model.toDescriptor()
@@ -1260,6 +1260,8 @@ class ChatViewModel(
                         priority = 70,
                         evidenceId = item.id,
                         mustPreserveWhole = true,
+                        evidenceScopeId = project.id,
+                        evidenceSourceId = item.documentId,
                     ),
                 )
             }
