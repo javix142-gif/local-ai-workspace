@@ -213,7 +213,7 @@
     "M01-06 “Ingesta e indexación reanudable” remains PENDING (requires_device=true in the original 97-task plan); do not start or mark complete until the required device is available.",
     "Android emulator CI remains BLOCKED_ANDROID_CI_CAUSE_UNPROVEN; do not edit or relaunch until the AVD creation/discovery cause is demonstrated."
   ],
-  "nextRecommendedTask": "Stop for independent audit of the Android emulator CI diagnosis. M01-05 is VALIDADA_HOST only. M01-06 “Ingesta e indexación reanudable” remains pending and requires a device; preserve the original 97-task source and dependencies.",
+  "nextRecommendedTask": "Wait for new verified AVD diagnostic evidence or the required physical-device/workbook prerequisites; do not create task IDs or start speculative CI.",
   "m00_03": {
     "status": "IMPLEMENTED_TESTED_HOST_DEVICE_NOT_RUN",
     "baseCommit": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
@@ -816,7 +816,50 @@
       "rootCause": "UNPROVEN: evidence cannot distinguish a missing/partial avdmanager creation from creation in a path the emulator did not search or another cause.",
       "changesMade": false,
       "newActionsRun": false,
-      "disposition": "Stop. No workflow/script change and no new run because the root cause was not demonstrated; no speculative AVD-path fix."
+      "disposition": "Stop. No workflow/script change and no new run because the root cause was not demonstrated; no speculative AVD-path fix.",
+      "independentAudit": {
+        "reviewedAtUtc": "2026-10-09 04:50:23 UTC",
+        "sourceBranchHeadSha": "d5ad0de3bac7c58f28423f7efa5d83a79c59a6c8",
+        "sourceBranchParentSha": "26ab7199ebcc553b775d97d5d0c45e11eaaa388a",
+        "sourceHeadDiff": "One documentation-only commit; six changed documentation/evidence files, no app, workflow or script source.",
+        "workflowSourceSha": "bdae87820b73dbcc0decfde3a65c391c6fb63279",
+        "runId": "37865813921",
+        "jobId": "113612155627",
+        "runConclusion": "failure",
+        "jobStepConclusions": {
+          "sdkInstall": "success",
+          "kvmPreflight": "success",
+          "createAndBootAvd": "failure",
+          "connectedInstrumentation": "skipped",
+          "evidenceCollector": "failure",
+          "artifactUpload": "success"
+        },
+        "artifact": {
+          "id": "11588945524",
+          "bytes": 23012,
+          "sha256": "007278791dc27fcda430694be6f3b5d7e3620932548145ba5b28e9907bebb9ac",
+          "freshDownloadHttpStatus": 200,
+          "sha256RecomputedFromDownloadedZip": true,
+          "zipEntries": 12,
+          "internalManifestEntries": 11,
+          "internalManifestVerified": 11,
+          "manifestFailures": 0
+        },
+        "observedEvidence": {
+          "avdmanager": "Captured output ends at Auto-selecting single ABI x86_64; no creation success or AVD listing.",
+          "emulator": "Unknown AVD name localai-api35-x86_64; missing .ini under $HOME/.android/avd; search variables shown but not expanded.",
+          "adb": "No attached devices; wait-for-device timed out with exit 124.",
+          "instrumentation": "Skipped; collector records XML=0 and executed=0.",
+          "missingDiagnostics": [
+            "effective HOME/ANDROID_AVD_HOME/ANDROID_USER_HOME/ANDROID_SDK_HOME",
+            "avdmanager list avd",
+            "emulator -list-avds",
+            "AVD .ini/config.ini inventory"
+          ]
+        },
+        "conclusion": "BLOCKED_ANDROID_CI_CAUSE_UNPROVEN; the failure to discover a usable AVD is established, but creation-vs-path/search cause is not.",
+        "independentAuditorAction": "No workflow change and no new Actions run; report only. Instrumentation remains NOT_RUN."
+      }
     }
   },
   "latestQaArm64Artifact": {
@@ -1124,5 +1167,13 @@
     "status": "PENDING_REQUIRES_DEVICE",
     "requires_device": true,
     "source": "Original user-provided 97-task plan attachment; not reconstructed or edited"
+  },
+  "nextTaskSelectionAudit": {
+    "reviewedAtUtc": "2026-10-09 04:50:23 UTC",
+    "planSource": "User-supplied Local_AI_Workspace_Planificacion_Completa.zip, docs/development/BACKLOG.json",
+    "planTaskCount": 97,
+    "selection": "NONE",
+    "reason": "M01-05 is VALIDADA_HOST. M01-06 requires a device; M01-01 depends on M00-10; M00-10 depends on device-required M00-07, M00-08 and M00-09. M02-01 also depends on M00-10 and its downstream M02 tasks chain from M02-01. The physical preflight has no authorized device or exact workbook, and Android emulator CI root cause remains unproven. No eligible independent original task was identified.",
+    "nextAction": "Wait for new verified AVD diagnostic evidence or the required physical-device/workbook prerequisites; do not create task IDs or start speculative CI."
   }
 }
