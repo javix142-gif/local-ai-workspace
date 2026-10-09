@@ -151,13 +151,67 @@
       "status": "NOT_RUN",
       "evidence": "PHYSICAL_DEVICE",
       "note": "LOG10 selector/context tests ran only on host with synthetic data."
+    },
+    "latestM00FocusedPreflight": {
+      "name": "M00 Motorola Moto G86 physical validation preflight",
+      "status": "BLOCKED_PREREQUISITES_UNAVAILABLE; PHYSICAL_DEVICE_NOT_RUN",
+      "recordedAtUtc": "2026-10-09T03:26:22Z",
+      "branch": "feat/0.5.0-skills-agents",
+      "repositoryHeadAtPreflight": "f7cb41b073687112bc49eae707aa2eb1f35448e8",
+      "qaApkSourceSha": "4ef2b39b9cba6aa1def081171d42d9146bbd968c",
+      "qaArtifactRunId": "37874837502",
+      "qaArtifactId": "11592306483",
+      "preflight": {
+        "adbExecutable": "/workspace/.toolchain/android-sdk/platform-tools/adb",
+        "adbDevicesCommand": "/workspace/.toolchain/android-sdk/platform-tools/adb devices -l",
+        "adbDevicesExitCode": 0,
+        "adbDevicesOutput": "List of devices attached; no device entries",
+        "deviceSerial": "NONE",
+        "getprop": "NOT_RUN_NO_CONNECTED_DEVICE",
+        "motoG86Identity": "NOT_CONFIRMED"
+      },
+      "workbook": {
+        "originalWorkbook": "NOT_FOUND",
+        "searchedLocations": [
+          "/workspace",
+          "/tmp",
+          "/mnt/data"
+        ],
+        "searchedExtensions": [
+          ".xlsx",
+          ".xlsm",
+          ".xls"
+        ],
+        "onlyCandidate": "/workspace/local-ai-workspace/docs/validation/part2/moto-fixtures/sales.xlsx",
+        "candidateDisposition": "SYNTHETIC_FIXTURE_NOT_USED_AS_SUBSTITUTE"
+      },
+      "gateDisposition": {
+        "artifactDownloadedThisAttempt": false,
+        "apkHashReverifiedThisAttempt": false,
+        "installation": "NOT_RUN",
+        "workbookImport": "NOT_RUN",
+        "m00ContextAndProvenanceChecks": "NOT_RUN",
+        "incompleteEvidenceNotice": "NOT_RUN",
+        "chatHeaderKeyboardCheck": "NOT_RUN",
+        "coldWarmMotorolaTiming": "NOT_RUN"
+      },
+      "validationStates": {
+        "HOST": "PREFLIGHT_ONLY; no JVM suite or APK byte verification in this attempt",
+        "EMULATOR": "NOT_RUN; Android emulator CI was not invoked and remains BLOCKED_ANDROID_CI_CAUSE_UNPROVEN",
+        "PHYSICAL_DEVICE": "NOT_RUN; blocked because no device was attached and the original workbook was absent"
+      },
+      "evidence": "docs/validation/m00-physical-device/RESULTS.md",
+      "privateContentCaptured": false,
+      "appRuntimeWorkflowApkChanged": false,
+      "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
+      "v042TagCommitSha": "de615b772cf37a99e7e08a647c59607b271de606"
     }
   },
   "pendingAcceptance": [
     "Android emulator CI remains BLOCKED_ANDROID_CI_CAUSE_UNPROVEN. Any further AVD root-cause diagnostic requires separate authorization; do not infer a fix or rerun from the existing evidence.",
-    "Run relevant M00 context-evidence checks on the Motorola Moto G86 Power after the independent QA APK artifact audit."
+    "M00 Motorola validation is blocked until both the exact original workbook is accessible and the Moto G86 Power is connected/ADB-authorized; the current preflight executed no install or tests."
   ],
-  "nextRecommendedTask": "Stop for independent audit of docs/validation/qa-debug-arm64/RESULTS.md and the GitHub Actions artifact. Android emulator CI remains BLOCKED_ANDROID_CI_CAUSE_UNPROVEN; EMULATOR and PHYSICAL_DEVICE validation remain NOT_RUN. After audit, perform only the separately authorized Motorola QA validation.",
+  "nextRecommendedTask": "Stop. M00 physical validation preflight is BLOCKED_PREREQUISITES_UNAVAILABLE: connect the Motorola Moto G86 Power with ADB authorization and provide the exact original XLSX. Resume this focused validation only when both are accessible. Do not substitute a synthetic workbook/device or claim PHYSICAL_DEVICE execution.",
   "m00_03": {
     "status": "IMPLEMENTED_TESTED_HOST_DEVICE_NOT_RUN",
     "baseCommit": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
@@ -427,7 +481,8 @@
     "historicalArtifactHashes": "APK metadata from an earlier build; not produced by this correction.",
     "historicalGitSynchronization": "Earlier push/readback record; latestDelivery contains this correction’s own code/evidence commits.",
     "latestAndroidCi": "Current GitHub-hosted Android emulator workflow attempts, with per-run SHA, artifact, counts and explicit EMULATOR/PHYSICAL_DEVICE status.",
-    "latestQaArm64Artifact": "Current QA-only ARM64 Debug APK artifact built and independently checked from its recorded source SHA; this does not imply emulator or physical-device execution."
+    "latestQaArm64Artifact": "Current QA-only ARM64 Debug APK artifact built and independently checked from its recorded source SHA; this does not imply emulator or physical-device execution.",
+    "physicalDeviceResults.latestM00FocusedPreflight": "Latest focused Motorola preflight. A blocked preflight with no serial/workbook means PHYSICAL_DEVICE tests were NOT_RUN; it is not a failed product test."
   },
   "currentSourceHeadSha": "4ef2b39b9cba6aa1def081171d42d9146bbd968c",
   "lastFullJvmTestCodeSha": "e367dc75d0f952ef6a9b4e96d51e1263b70d3309",
@@ -816,5 +871,59 @@
     "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
     "v042TagCommitSha": "de615b772cf37a99e7e08a647c59607b271de606",
     "documentation": "docs/validation/qa-debug-arm64/RESULTS.md"
+  },
+  "latestM00PhysicalValidation": {
+    "name": "M00 Motorola Moto G86 physical validation preflight",
+    "status": "BLOCKED_PREREQUISITES_UNAVAILABLE; PHYSICAL_DEVICE_NOT_RUN",
+    "recordedAtUtc": "2026-10-09T03:26:22Z",
+    "branch": "feat/0.5.0-skills-agents",
+    "repositoryHeadAtPreflight": "f7cb41b073687112bc49eae707aa2eb1f35448e8",
+    "qaApkSourceSha": "4ef2b39b9cba6aa1def081171d42d9146bbd968c",
+    "qaArtifactRunId": "37874837502",
+    "qaArtifactId": "11592306483",
+    "preflight": {
+      "adbExecutable": "/workspace/.toolchain/android-sdk/platform-tools/adb",
+      "adbDevicesCommand": "/workspace/.toolchain/android-sdk/platform-tools/adb devices -l",
+      "adbDevicesExitCode": 0,
+      "adbDevicesOutput": "List of devices attached; no device entries",
+      "deviceSerial": "NONE",
+      "getprop": "NOT_RUN_NO_CONNECTED_DEVICE",
+      "motoG86Identity": "NOT_CONFIRMED"
+    },
+    "workbook": {
+      "originalWorkbook": "NOT_FOUND",
+      "searchedLocations": [
+        "/workspace",
+        "/tmp",
+        "/mnt/data"
+      ],
+      "searchedExtensions": [
+        ".xlsx",
+        ".xlsm",
+        ".xls"
+      ],
+      "onlyCandidate": "/workspace/local-ai-workspace/docs/validation/part2/moto-fixtures/sales.xlsx",
+      "candidateDisposition": "SYNTHETIC_FIXTURE_NOT_USED_AS_SUBSTITUTE"
+    },
+    "gateDisposition": {
+      "artifactDownloadedThisAttempt": false,
+      "apkHashReverifiedThisAttempt": false,
+      "installation": "NOT_RUN",
+      "workbookImport": "NOT_RUN",
+      "m00ContextAndProvenanceChecks": "NOT_RUN",
+      "incompleteEvidenceNotice": "NOT_RUN",
+      "chatHeaderKeyboardCheck": "NOT_RUN",
+      "coldWarmMotorolaTiming": "NOT_RUN"
+    },
+    "validationStates": {
+      "HOST": "PREFLIGHT_ONLY; no JVM suite or APK byte verification in this attempt",
+      "EMULATOR": "NOT_RUN; Android emulator CI was not invoked and remains BLOCKED_ANDROID_CI_CAUSE_UNPROVEN",
+      "PHYSICAL_DEVICE": "NOT_RUN; blocked because no device was attached and the original workbook was absent"
+    },
+    "evidence": "docs/validation/m00-physical-device/RESULTS.md",
+    "privateContentCaptured": false,
+    "appRuntimeWorkflowApkChanged": false,
+    "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
+    "v042TagCommitSha": "de615b772cf37a99e7e08a647c59607b271de606"
   }
 }

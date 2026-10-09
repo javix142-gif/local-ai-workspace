@@ -1,6 +1,6 @@
 # Codex → Work handoff: 0.5.0 QA ARM64 artifact and Android CI status
 
-**Status:** A QA-only ARM64 Debug APK was built and its downloaded artifact, signature, package/version and ABI were verified. Android emulator CI remains `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`: the named AVD was not discoverable, and the retained evidence cannot distinguish an AVD created elsewhere from absent/partial creation or another cause. Instrumentation and Motorola validation are NOT_RUN; do not report them as PASS.
+**Status:** The QA-only ARM64 Debug build was independently accepted as `VALIDADA_HOST_QA_BUILD`. The focused Motorola preflight on 2026-10-09 is `BLOCKED_PREREQUISITES_UNAVAILABLE`: ADB found no device and the original workbook is absent. No APK was downloaded or installed in that attempt; all physical checks are **NOT_RUN**. Android emulator CI separately remains `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`.
 **Repository:** `https://github.com/javix142-gif/local-ai-workspace.git`
 **Branch:** `feat/0.5.0-skills-agents`
 **QA APK source SHA:** `4ef2b39b9cba6aa1def081171d42d9146bbd968c` (QA build workflow and verification script; app/runtime behavior was not changed for this artifact task).
@@ -23,6 +23,12 @@ The [GitHub Actions artifact ZIP](https://github.com/javix142-gif/local-ai-works
 - `RESULTS.json`, log, and member checksums match the downloaded artifact. Full hashes, exact command, toolchain, and verification details are in [QA ARM64 artifact results](../validation/qa-debug-arm64/RESULTS.md).
 
 Status for this delivery: **HOST build/artifact verification PASS**; JVM tests not run for this task; **EMULATOR NOT_RUN**; **PHYSICAL_DEVICE NOT_RUN**. Emulator CI remains blocked as described below. No APK is tracked in Git, and no application/runtime changes were made for this QA delivery.
+
+## M00 Motorola physical validation preflight (2026-10-09)
+
+Preflight stopped before APK download, installation, or testing because both required inputs were not available. The SDK ADB executable `/workspace/.toolchain/android-sdk/platform-tools/adb` ran `adb devices -l` successfully but returned only `List of devices attached` with no serials. Therefore no Motorola identity could be confirmed and `getprop` was not run. Searching `/workspace`, `/tmp`, and `/mnt/data` for `.xlsx`, `.xlsm`, and `.xls` found no original user workbook. The only relevant candidate was `docs/validation/part2/moto-fixtures/sales.xlsx`, a synthetic fixture, which was deliberately not used as a substitute. The exact user workbook had also been recorded as unavailable in the earlier M00 handoff.
+
+Consequently, artifact download/hash recheck, installed-package check, install, workbook import, M00 context/provenance/notice checks, keyboard/header check, and cold/warm Motorola timing are all **NOT_RUN**. This is a prerequisite block, not a product test failure. The detailed read-only evidence is in [M00 Motorola preflight results](../validation/m00-physical-device/RESULTS.md); machine-readable state is `EXECUTION_STATE.json` → `physicalDeviceResults.latestM00FocusedPreflight`. The accepted QA artifact and its hashes remain recorded separately above.
 
 ## Latest Android CI follow-up (2026-10-09)
 
@@ -154,4 +160,4 @@ The previous handoff recommended installing its stabilization candidate and coll
 
 ## Current next step
 
-Stop for independent audit of this QA APK artifact and its evidence in `../validation/qa-debug-arm64/RESULTS.md`. After audit, Motorola installation and validation may proceed under the authorized QA plan. Android emulator CI remains `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`; do not treat the failed AVD attempt as a test pass or make another workflow change/run without separate authorization. Any future emulator run must produce connected instrumentation XML with `executed > 0`; Motorola remains `PHYSICAL_DEVICE: NOT_RUN` until actually tested.
+Resume the focused M00 Motorola validation only when the exact original XLSX is accessible and a Motorola Moto G86 Power is connected and ADB-authorized. Then use only the accepted artifact from run `37874837502`, recheck its ZIP/APK hashes before installation, and stop if `com.localai.workspace.debug` is already installed. Do not substitute the synthetic fixture or another device. Until those prerequisites are met, `PHYSICAL_DEVICE` remains **NOT_RUN**. Android emulator CI remains `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`; this preflight did not invoke or diagnose it.
