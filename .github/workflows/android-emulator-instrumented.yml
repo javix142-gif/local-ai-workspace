@@ -70,16 +70,39 @@ jobs:
             'emulator' \
             'system-images;android-35;google_apis;x86_64' \
             2>&1 | tee "$RUNNER_TEMP/sdkmanager.log"
+          printf '%s\n%s\n' "$ANDROID_HOME/platform-tools" "$ANDROID_HOME/emulator" >> "$GITHUB_PATH"
           printf 'SDKMANAGER=%s\nAVDMANAGER=%s\n' "$SDKMANAGER" "$AVDMANAGER" > "$RUNNER_TEMP/android-toolchain.txt"
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --list_installed | tee -a "$RUNNER_TEMP/android-toolchain.txt"
+
+      - name: Verify and enable ephemeral runner KVM access
+        run: |
+          set -euo pipefail
+          report="$RUNNER_TEMP/kvm-check.txt"
+          {
+            printf 'runner_user=%s\n' "$(id -un)"
+            printf 'runner_groups=%s\n' "$(id -Gn)"
+            printf 'device_present=%s\n' "$([[ -c /dev/kvm ]] && echo true || echo false)"
+            ls -l /dev/kvm 2>&1 || true
+          } | tee "$report"
+          if [[ ! -c /dev/kvm ]]; then
+            echo 'KVM_DEVICE_MISSING' | tee -a "$report" >&2
+            exit 1
+          fi
+          sudo chmod 0666 /dev/kvm
+          {
+            printf 'device_readable=%s\n' "$([[ -r /dev/kvm ]] && echo true || echo false)"
+            printf 'device_writable=%s\n' "$([[ -w /dev/kvm ]] && echo true || echo false)"
+            ls -l /dev/kvm
+          } | tee -a "$report"
+          if [[ ! -r /dev/kvm || ! -w /dev/kvm ]]; then
+            echo 'KVM_DEVICE_NOT_ACCESSIBLE' | tee -a "$report" >&2
+            exit 1
+          fi
 
       - name: Create and boot accelerated API 35 emulator
         timeout-minutes: 15
         run: |
           set -euo pipefail
-          test -c /dev/kvm
-          test -r /dev/kvm
-          test -w /dev/kvm
           AVDMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager"
           printf 'no\n' | "$AVDMANAGER" create avd --force \
             --name localai-api35-x86_64 \

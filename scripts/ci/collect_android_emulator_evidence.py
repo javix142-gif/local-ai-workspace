@@ -17,6 +17,8 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 OUT = Path(os.environ.get("ANDROID_CI_EVIDENCE_DIR", "/tmp/android-emulator-evidence"))
 RUNNER_TEMP = Path(os.environ.get("RUNNER_TEMP", "/tmp"))
+ANDROID_HOME = Path(os.environ.get("ANDROID_HOME", "/nonexistent/android-sdk"))
+ADB = str(ANDROID_HOME / "platform-tools" / "adb") if (ANDROID_HOME / "platform-tools" / "adb").is_file() else (shutil.which("adb") or "adb")
 
 
 def command(args: list[str], timeout: int = 20) -> subprocess.CompletedProcess[str]:
@@ -62,10 +64,10 @@ def adb_facts(serial: str | None) -> dict[str, object]:
         "emulator": "ro.kernel.qemu",
     }
     for key, prop in properties.items():
-        result = command(["adb", "-s", serial, "shell", "getprop", prop])
+        result = command([ADB, "-s", serial, "shell", "getprop", prop])
         facts[key] = result.stdout.strip() if result.returncode == 0 else None
-    size = command(["adb", "-s", serial, "shell", "wm", "size"])
-    density = command(["adb", "-s", serial, "shell", "wm", "density"])
+    size = command([ADB, "-s", serial, "shell", "wm", "size"])
+    density = command([ADB, "-s", serial, "shell", "wm", "density"])
     facts["screenSize"] = size.stdout.strip() if size.returncode == 0 else None
     facts["screenDensity"] = density.stdout.strip() if density.returncode == 0 else None
     return facts
@@ -144,7 +146,7 @@ def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "workflow-started.json").unlink(missing_ok=True)
     sha = command(["git", "-C", str(REPO), "rev-parse", "HEAD"]).stdout.strip()
-    devices = command(["adb", "devices", "-l"])
+    devices = command([ADB, "devices", "-l"])
     write_text(OUT / "adb-devices.txt", redact_log(devices.stdout + devices.stderr))
     serial = None
     for line in devices.stdout.splitlines()[1:]:
@@ -155,15 +157,15 @@ def main() -> int:
 
     for filename in (
         "sdkmanager.log", "sdk-licenses.log", "avdmanager.log", "emulator.log",
-        "emulator-boot.log", "gradle-connected.log", "adb-before-tests.txt", "android-toolchain.txt",
+        "emulator-boot.log", "gradle-connected.log", "adb-before-tests.txt", "android-toolchain.txt", "kvm-check.txt",
     ):
         safe_copy(RUNNER_TEMP / filename, OUT / "logs" / filename)
 
     if serial:
-        logcat = command(["adb", "-s", serial, "logcat", "-d", "-t", "2000", "-v", "time",
+        logcat = command([ADB, "-s", serial, "logcat", "-d", "-t", "2000", "-v", "time",
                           "-s", "AndroidRuntime:E", "TestRunner:I", "Instrumentation:I"], timeout=60)
         write_text(OUT / "logs/logcat-filtered-sanitized.txt", redact_log(logcat.stdout + logcat.stderr))
-        write_text(OUT / "adb-after-tests.txt", redact_log(command(["adb", "devices", "-l"]).stdout))
+        write_text(OUT / "adb-after-tests.txt", redact_log(command([ADB, "devices", "-l"]).stdout))
     else:
         write_text(OUT / "logs/logcat-filtered-sanitized.txt", "NOT_AVAILABLE: no booted emulator detected\n")
         write_text(OUT / "adb-after-tests.txt", "NOT_AVAILABLE: no booted emulator detected\n")
