@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "status": "BLOCKED_BEFORE_GRADLE_START_NETWORK",
+  "repository": "https://github.com/javix142-gif/local-ai-workspace.git",
+  "branch": "feat/0.5.0-skills-agents",
+  "testedCheckoutSha": "6d1b256b23c4e76dad72413ced9b10419425c134",
+  "applicationSourceCommit": "260a3f7c6267cc5a90a9cf516356951aec0627a1",
+  "sourceDiff": "Documentation paths only",
+  "preflightPass": true,
+  "command": "./gradlew :app:assembleRelease -Parm64Only=true --rerun-tasks --no-build-cache --no-daemon --no-parallel --max-workers=1 --console=plain --info",
+  "startedAtUtc": "2026-10-09T21:50:17Z",
+  "finishedAtUtc": "2026-10-09T21:50:23Z",
+  "exitCode": 1,
+  "failure": "Gradle wrapper distribution download failed with java.net.ConnectException: Connection refused",
+  "gradleStarted": false,
+  "gradleTasksExecuted": 0,
+  "cmakeConfigure": "NOT_REACHED",
+  "cmakeBuild": "NOT_REACHED",
+  "ninjaArm64": "NOT_REACHED",
+  "apk": "NOT_GENERATED",
+  "retryCount": 0,
+  "toolchain": {
+    "os": "Linux x86_64",
+    "jdk": "Eclipse Temurin 17.0.20.1+1",
+    "gradleWrapper": "8.10.2",
+    "agp": "8.7.3",
+    "androidPlatform": "35 revision 2",
+    "buildTools": "35.0.0",
+    "ndk": "27.0.12077973",
+    "cmake": "3.31.6",
+    "ninja": "1.12.1",
+    "abiRequested": "arm64-v8a"
+  },
+  "vendorAudit": {
+    "trackedFiles": 1865,
+    "diskFiles": 1865,
+    "missing": 0,
+    "extras": 0,
+    "blobMismatches": 0,
+    "modelsHeaderBlob": "387a4adcb239db69d72349ee57e2fbfe2db04e5a",
+    "binaryIgnoreProbesPassed": 16
+  },
+  "remoteRefs": {
+    "featureBeforeBuild": "6d1b256b23c4e76dad72413ced9b10419425c134",
+    "featureAfterBuild": "6d1b256b23c4e76dad72413ced9b10419425c134",
+    "main": "de615b772cf37a99e7e08a647c59607b271de606",
+    "v042Peeled": "de615b772cf37a99e7e08a647c59607b271de606"
+  },
+  "validation": {
+    "HOST": "PREFLIGHT_PASSED_BUILD_BLOCKED_BEFORE_GRADLE_START",
+    "JVM": "NOT_RUN",
+    "ANDROID_TEST_COMPILATION": "NOT_RUN",
+    "EMULATOR": "NOT_RUN",
+    "ANDROID_CI": "BLOCKED_ANDROID_CI_CAUSE_UNPROVEN",
+    "PHYSICAL_DEVICE": "NOT_RUN"
+  },
+  "original97TaskPlanModified": false,
+  "M01-06": "PENDING_REQUIRES_DEVICE",
+  "apkRetainedOrDistributed": false
+}

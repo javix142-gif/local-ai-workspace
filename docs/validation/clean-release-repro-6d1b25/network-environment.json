@@ -1,0 +1,20 @@
+{
+  "timeBoundary": "Queried before preflight/build; exact observation timestamp was not captured.",
+  "environmentStatus": {
+    "connectivity": "connected",
+    "desiredPhase": "running",
+    "observedPhase": "running",
+    "observationsCurrent": true,
+    "networkPolicy": {
+      "mode": "unrestricted",
+      "state": "enforced"
+    },
+    "capabilities": [],
+    "runtimeVariables": [],
+    "secrets": [],
+    "outboundIdentities": [],
+    "vpnConfigured": false
+  },
+  "gradleWrapperObservation": "The Java wrapper attempted services.gradle.org/distributions/gradle-8.10.2-bin.zip and received java.net.ConnectException: Connection refused.",
+  "interpretation": "Records the environment status and command error only; it does not establish the lower-level cause of the refusal. No alternate URL, cache, proxy override, or direct-network route was attempted."
+}

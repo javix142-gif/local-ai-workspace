@@ -1,0 +1,102 @@
+{
+  "recordedAtUtc": "2026-10-09T21:50:07Z",
+  "repository": "javix142-gif/local-ai-workspace",
+  "branchState": "DETACHED",
+  "head": "6d1b256b23c4e76dad72413ced9b10419425c134",
+  "expectedHead": "6d1b256b23c4e76dad72413ced9b10419425c134",
+  "gitStatusPorcelainV1IgnoredEmpty": true,
+  "gitStatusLineCount": 0,
+  "projectBuildResidue": [],
+  "cxxPaths": [],
+  "vendor": {
+    "trackedFiles": 1865,
+    "diskFiles": 1865,
+    "missing": [],
+    "extras": [],
+    "blobMismatches": [],
+    "modelsHeader": {
+      "path": "third_party/llama.cpp/src/models/models.h",
+      "tracked": true,
+      "gitBlob": "387a4adcb239db69d72349ee57e2fbfe2db04e5a",
+      "diskBlob": "387a4adcb239db69d72349ee57e2fbfe2db04e5a"
+    },
+    "sampleCpp": {
+      "path": "third_party/llama.cpp/src/models/afmoe.cpp",
+      "tracked": true,
+      "gitBlob": "08c22b6ed8234b1288bdcda0083e0af13e3c0022",
+      "diskBlob": "08c22b6ed8234b1288bdcda0083e0af13e3c0022"
+    }
+  },
+  "binaryIgnoreMatrix": [
+    {
+      "extension": "bin",
+      "ignored": true
+    },
+    {
+      "extension": "gguf",
+      "ignored": true
+    },
+    {
+      "extension": "litertlm",
+      "ignored": true
+    },
+    {
+      "extension": "onnx",
+      "ignored": true
+    },
+    {
+      "extension": "tflite",
+      "ignored": true
+    },
+    {
+      "extension": "safetensors",
+      "ignored": true
+    },
+    {
+      "extension": "pt",
+      "ignored": true
+    },
+    {
+      "extension": "pth",
+      "ignored": true
+    },
+    {
+      "extension": "ckpt",
+      "ignored": true
+    },
+    {
+      "extension": "ggml",
+      "ignored": true
+    },
+    {
+      "extension": "so",
+      "ignored": true
+    },
+    {
+      "extension": "a",
+      "ignored": true
+    },
+    {
+      "extension": "apk",
+      "ignored": true
+    },
+    {
+      "extension": "aab",
+      "ignored": true
+    },
+    {
+      "extension": "keystore",
+      "ignored": true
+    },
+    {
+      "extension": "jks",
+      "ignored": true
+    }
+  ],
+  "gradleUserHome": {
+    "path": "/workspace/law-clean-release-6d1b25-gradle-home",
+    "existedBefore": false,
+    "createdEmpty": true
+  },
+  "preflightPass": true
+}

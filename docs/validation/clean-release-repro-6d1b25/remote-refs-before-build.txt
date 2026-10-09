@@ -1,0 +1,7 @@
+observedAtUtc=2026-10-09T21:50:09Z
+fetchedBranchHeadBeforeBuild=6d1b256b23c4e76dad72413ced9b10419425c134
+currentRemoteRefs:
+6d1b256b23c4e76dad72413ced9b10419425c134	refs/heads/feat/0.5.0-skills-agents
+de615b772cf37a99e7e08a647c59607b271de606	refs/heads/main
+b0ca65237aafeccf1f1c7198ad6945f8039206b5	refs/tags/v0.4.2
+de615b772cf37a99e7e08a647c59607b271de606	refs/tags/v0.4.2^{}

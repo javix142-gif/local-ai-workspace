@@ -1,0 +1,4 @@
+GRADLE_USER_HOME=/workspace/law-clean-release-6d1b25-gradle-home
+State immediately before invocation: newly created directory and empty.
+State after wrapper failure: only two zero-byte wrapper files existed: gradle-8.10.2-bin.zip.lck and gradle-8.10.2-bin.zip.part under wrapper/dists/gradle-8.10.2-bin/<distribution-hash>/.
+No Gradle distribution, dependency artifacts, build outputs, or copied caches were present.

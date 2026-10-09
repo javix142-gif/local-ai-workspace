@@ -1,0 +1,20 @@
+Repository: https://github.com/javix142-gif/local-ai-workspace.git
+Authorized branch: feat/0.5.0-skills-agents
+Tested checkout SHA: 6d1b256b23c4e76dad72413ced9b10419425c134
+Checkout: fresh detached worktree from the fetched remote branch SHA
+Preflight: passed; git status --porcelain=v1 --ignored was empty (0 lines); .gradle/, app/build/, llama-runtime/build/, any .cxx/, and local.properties absent.
+Vendored tree: 1,865 tracked files / 1,865 disk files; no missing files, extras, or blob mismatches. models.h tracked and blob-matched.
+Build start UTC: 2026-10-09T21:50:17Z
+Build end UTC: 2026-10-09T21:50:23Z
+Command:
+./gradlew :app:assembleRelease -Parm64Only=true --rerun-tasks --no-build-cache --no-daemon --no-parallel --max-workers=1 --console=plain --info
+Environment:
+JAVA_HOME=/workspace/.toolchain/jdk-17
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk
+GRADLE_USER_HOME=/workspace/law-clean-release-6d1b25-gradle-home (new and empty before invocation)
+TMPDIR=/workspace/law-clean-release-6d1b25-tmp
+JAVA_TOOL_OPTIONS=-Djava.io.tmpdir=/workspace/law-clean-release-6d1b25-tmp
+Exit code: 1
+Result: BLOCKED_BEFORE_GRADLE_START_NETWORK. The wrapper distribution request to https://services.gradle.org/distributions/gradle-8.10.2-bin.zip failed with java.net.ConnectException: Connection refused. This was the single authorized attempt; no retry or alternate cache/source was used.
+Remote feature SHA before and after the build: 6d1b256b23c4e76dad72413ced9b10419425c134. main and peeled v0.4.2 remained de615b772cf37a99e7e08a647c59607b271de606.

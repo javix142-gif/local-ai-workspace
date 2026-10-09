@@ -1,0 +1,11 @@
+Requested task: :app:assembleRelease
+Gradle Wrapper invocation exit code: 1
+Wrapper action: attempted download of pinned Gradle 8.10.2 distribution from services.gradle.org.
+Observed error: java.net.ConnectException: Connection refused.
+Gradle process/task graph: NOT STARTED; wrapper could not download/unpack Gradle.
+Gradle tasks executed: 0
+Gradle task outcome lines: none
+CMake configure: NOT_REACHED
+CMake build: NOT_REACHED
+Ninja ARM64 compile/link: NOT_REACHED
+APK output: NOT_GENERATED
