@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.rag.DocumentRetrievalTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-09T04:21:07" hostname="05497ac86eb0" time="0.281">
+  <properties/>
+  <testcase name="zeroSimilarityAndCommonQuestionWordsDoNotBecomeEvidence" classname="com.localai.workspace.rag.DocumentRetrievalTest" time="0.052"/>
+  <testcase name="selectedFileProducesRealBoundedSourceEvenForGenericQuestion" classname="com.localai.workspace.rag.DocumentRetrievalTest" time="0.035"/>
+  <testcase name="greetingDoesNotScanOrEmbedUnrelatedDocuments" classname="com.localai.workspace.rag.DocumentRetrievalTest" time="0.031"/>
+  <testcase name="requestingDocumentsUsesReadableIndexedContentWithoutExplicitSelection" classname="com.localai.workspace.rag.DocumentRetrievalTest" time="0.043"/>
+  <testcase name="boundedExcerptsHaveActualSourceRangeAndMultipleFilesGetRepresentation" classname="com.localai.workspace.rag.DocumentRetrievalTest" time="0.042"/>
+  <testcase name="failedOrOtherProjectSourcesCannotLeakViaSelectionOrLexicalQuery" classname="com.localai.workspace.rag.DocumentRetrievalTest" time="0.041"/>
+  <testcase name="genuineTermMatchStillProducesCitationEvidence" classname="com.localai.workspace.rag.DocumentRetrievalTest" time="0.037"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

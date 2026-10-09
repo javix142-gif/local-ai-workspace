@@ -1,0 +1,75 @@
+{
+  "taskId": "M01-05",
+  "name": "Context budget and relevance deduplication",
+  "recordStatus": "CURRENT_HOST_VALIDATION",
+  "branch": "feat/0.5.0-skills-agents",
+  "baseCodeSha": "4c5fce553b007c7e565f55b389a162c9b0ecb880",
+  "testedCodeSha": "260a3f7c6267cc5a90a9cf516356951aec0627a1",
+  "dateUtc": "2026-10-09",
+  "baselineReproduction": {
+    "status": "EXPECTED_RED",
+    "tests": 6,
+    "passed": 3,
+    "failures": 3,
+    "errors": 0,
+    "skipped": 0,
+    "defects": [
+      "ContextBuilder deduplicated distinct source/document/scope evidence by text alone",
+      "ContextFoundation production path lost the second selected document with equal passage text",
+      "Legacy budget counted repeated evidence and displaced the secondary passage"
+    ]
+  },
+  "focusedPostFix": {
+    "status": "PASS",
+    "tests": 70,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "xmlDirectory": "after/final/xml",
+    "log": "after/final/focused.log"
+  },
+  "fullJvm": {
+    "status": "PASS",
+    "app": {
+      "tests": 733,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "litertCompat": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "xmlDirectory": "after/full-tests",
+    "log": "after/final/full-tests.log"
+  },
+  "hostBuildGate": {
+    "status": "PASS",
+    "assembleDebug": "PASS",
+    "assembleRelease": "PASS",
+    "lintDebug": {
+      "status": "PASS",
+      "errors": 0,
+      "warnings": 40
+    },
+    "assembleDebugAndroidTest": "PASS_COMPILE_ONLY",
+    "log": "after/final/full-host.log",
+    "exitCode": 0
+  },
+  "platform": {
+    "os": "Linux",
+    "gradle": "8.10.2",
+    "jdk": "Eclipse Temurin 17.0.20.1",
+    "androidApi": 35,
+    "ndk": "27.0.12077973",
+    "cmake": "3.31.6",
+    "abi": "arm64-v8a",
+    "offline": true
+  },
+  "androidTestExecution": "NOT_RUN",
+  "emulator": "NOT_RUN",
+  "physicalDevice": "NOT_RUN",
+  "evidenceDirectory": "docs/validation/m01-05"
+}

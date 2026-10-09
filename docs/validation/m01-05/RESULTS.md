@@ -1,0 +1,84 @@
+# M01-05 — Context budget and relevance deduplication
+
+**Result:** `HOST_PASS` for code commit `260a3f7c6267cc5a90a9cf516356951aec0627a1` on `feat/0.5.0-skills-agents`.
+**Base:** `4c5fce553b007c7e565f55b389a162c9b0ecb880`.
+**Date:** 2026-10-09 UTC.
+
+M01-05 was partially present: Context Builder deduplicated equal text and packed by priority, but text alone was treated as identity. The regression run proved that this could erase separate evidence from different documents/scopes. The legacy budget path did not deduplicate repeated evidence at all; repeated copies could consume the 4096-context allowance and displace a unique lower-priority passage.
+
+## Production changes
+
+- Context Builder now identifies duplicates using context kind, scope, source/document/segment or message provenance, location metadata, and content fingerprint. Equal text from distinct authorized origins remains separate. Its per-source diversity cap is also scoped by context scope.
+- The legacy `ContextBudgetManager` deduplicates only when scope, source, evidence ID, and exact passage text all match. Missing provenance is not guessed, and equal text with distinct source IDs is retained.
+- `ContextBudgetResult` distinguishes routine `deduplicated` items from unique `budgetExcluded` items while keeping `excluded` as the combined compatibility view. Chat's budget warning now considers only actual budget exclusions.
+- The user query remains intact. Tests compare the same 4096-window fixture with and without duplicates and with reversed input order; no query truncation or budget overflow is accepted.
+
+Retrieval and embedding remain before `inferenceGate`; Context Builder OFF/legacy behavior, F1/F2 and selected-document/project isolation remain covered. No database, model/runtime, dependency, sampling, Android UI, or context-window change was made.
+
+## Red reproduction against the base
+
+The focused regression suite was first run with production at base SHA `4c5fce553b007c7e565f55b389a162c9b0ecb880`. The offline run executed 6 tests: 3 passed, 3 failed, 0 errors, 0 skipped. The failures were the intended assertions:
+
+1. Context Builder retained only `10-global` when the same passage existed in global, project, and separate document origins.
+2. The real `ContextFoundation → ContextBuilder → ContextBundle.conversation()` path retained `E-A` but lost `E-B` from another selected document with identical text.
+3. The legacy budget path included repeated `E-HIGH` copies and displaced `E-SECONDARY`.
+
+The exact JUnit XML and the Gradle log are preserved under [`before/`](before/). An earlier attempt with incorrect imports is preserved separately as a harness-compilation failure; another online attempt stalled on an HTTPS connection and was interrupted before test execution. Neither is counted as the red reproduction.
+
+## Focused post-fix tests
+
+On code SHA `260a3f7c6267cc5a90a9cf516356951aec0627a1`, the focused run executed **70 tests: 70 passed, 0 failures, 0 errors, 0 skipped**. It covers the new ablation, real ContextFoundation provenance, Context Builder, budget management, and existing `SemanticContextPostfixTest` F1/F2 coverage.
+
+Command:
+
+```sh
+export JAVA_HOME=/workspace/.toolchain/jdk-17
+export ANDROID_HOME=/workspace/.toolchain/android-sdk
+export ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk
+./gradlew --no-daemon --no-parallel --max-workers=1 --offline --rerun-tasks --console=plain \
+  :app:testDebugUnitTest \
+  --tests com.localai.workspace.context.ContextDeduplicationAblationTest \
+  --tests com.localai.workspace.context.ContextFoundationDeduplicationTest \
+  --tests com.localai.workspace.domain.ContextBudgetManagerTest \
+  --tests com.localai.workspace.context.ContextFoundationTest \
+  --tests com.localai.workspace.semantic.v2.SemanticContextPostfixTest
+```
+
+JUnit XML: [`after/final/xml/`](after/final/xml/). Log: [`after/final/focused.log`](after/final/focused.log).
+
+## Full host validation
+
+Environment: Linux host; Gradle wrapper 8.10.2; `JAVA_HOME=/workspace/.toolchain/jdk-17` (Eclipse Temurin 17.0.20.1); Android SDK platform/compile/target API 35; NDK 27.0.12077973; CMake 3.31.6; build ABI `arm64-v8a`. Gradle was run offline because the first online attempt remained in `SYN-SENT` while resolving an HTTPS metadata request. No model was loaded and no Android device/emulator was used.
+
+The full build/lint command completed with exit 0 and `BUILD SUCCESSFUL`:
+
+```sh
+export JAVA_HOME=/workspace/.toolchain/jdk-17
+export ANDROID_HOME=/workspace/.toolchain/android-sdk
+export ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk
+./gradlew --no-daemon --no-parallel --max-workers=1 \
+  -Dorg.gradle.jvmargs='-Xmx2048m -Dfile.encoding=UTF-8' \
+  -Pkotlin.daemon.jvmargs=-Xmx2048m \
+  :app:testDebugUnitTest :litert-compat:testDebugUnitTest \
+  :app:assembleDebug :app:assembleRelease :app:lintDebug \
+  :app:assembleDebugAndroidTest -Parm64Only=true --offline --console=plain
+```
+
+The initial gate output marked JVM tests `UP-TO-DATE`, so a follow-up forced both suites without filters. That actual full JVM run also exited 0:
+
+```sh
+./gradlew --no-daemon --no-parallel --max-workers=1 --offline --rerun-tasks \
+  -Dorg.gradle.jvmargs='-Xmx2048m -Dfile.encoding=UTF-8' \
+  -Pkotlin.daemon.jvmargs=-Xmx2048m --console=plain \
+  :app:testDebugUnitTest :litert-compat:testDebugUnitTest
+```
+
+Results from the regenerated JUnit XML: app **733/733 passed**, compatibility **2/2 passed**, zero failures/errors/skips. All 84 app XML files and the compatibility XML are preserved under [`after/full-tests/`](after/full-tests/).
+
+Build/lint results: `assembleDebug` successful (also reported successful in the first same-SHA gate attempt before it was interrupted later); `assembleRelease` successful; `lintDebug` successful with 0 errors and 40 warnings; `assembleDebugAndroidTest` successful as a build task. The complete gate log is [`after/final/full-host.log`](after/final/full-host.log), and the forced full-suite log is [`after/final/full-tests.log`](after/final/full-tests.log). One interrupted first build-gate attempt is retained as `full-host-interrupted-01.log` and is not counted as a result.
+
+AndroidTest was compiled only. Instrumented execution, emulator validation, and Motorola physical validation are **NOT_RUN**. The existing M00 Motorola prerequisite block and Android emulator CI blocker remain unchanged.
+
+## Evidence integrity
+
+The red/green XML, focused logs, full-suite logs, and summary are hashed in [`SHA256SUMS`](SHA256SUMS). `summary.json` identifies the exact code SHA for every current result. The original 97-task plan remains the attached source of task IDs/order/dependencies; this repository has no `ROADMAP.md`, `BACKLOG.json`, or `LOOP_RULES.md`, and none were created or reconstructed.

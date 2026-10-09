@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.performance.PerformanceDiagnosticsIntegrationTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-09T04:21:07" hostname="05497ac86eb0" time="0.392">
+  <properties/>
+  <testcase name="fullSuiteIsIsolatedReproducibleAndContinuationUsesSameOwner" classname="com.localai.workspace.performance.PerformanceDiagnosticsIntegrationTest" time="0.303"/>
+  <testcase name="effectiveTurnsSurvivePrivateDatabaseReopenAndDeletionRemovesThem" classname="com.localai.workspace.performance.PerformanceDiagnosticsIntegrationTest" time="0.089"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

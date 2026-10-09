@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.domain.ContextBudgetManagerTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-09T04:21:03" hostname="05497ac86eb0" time="0.01">
+  <properties/>
+  <testcase name="sameTextAndEvidenceIdAcrossProjectsOrDocumentsIsNotCollapsed" classname="com.localai.workspace.domain.ContextBudgetManagerTest" time="0.005"/>
+  <testcase name="preservesPolicyAndUserAndDropsLowPriorityHistoryFirst" classname="com.localai.workspace.domain.ContextBudgetManagerTest" time="0.0"/>
+  <testcase name="repeatedEvidenceAblationAt4096KeepsUniqueHighAndSecondaryPassages" classname="com.localai.workspace.domain.ContextBudgetManagerTest" time="0.001"/>
+  <testcase name="equalTextFromDifferentEvidenceIdsIsNotCollapsed" classname="com.localai.workspace.domain.ContextBudgetManagerTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

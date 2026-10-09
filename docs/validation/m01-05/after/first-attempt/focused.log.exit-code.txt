@@ -1,0 +1,1 @@
+1 — test assertion compared mandatory policy/query list order; evidence ordering passed. The assertion was narrowed to evidence order before final run.

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.semantic.v2.SemanticDomainTest" tests="22" skipped="0" failures="0" errors="0" timestamp="2026-10-09T04:21:11" hostname="05497ac86eb0" time="0.014">
+  <properties/>
+  <testcase name="exactModelHashIsRequired" classname="com.localai.workspace.semantic.v2.SemanticDomainTest" time="0.0"/>
+  <testcase name="qualityMetricsUseGroundTruth" classname="com.localai.workspace.semantic.v2.SemanticDomainTest" time="0.001"/>
+  <testcase name="codeTaskIsSpecialized" classname="com.localai.workspace.semantic.v2.SemanticDomainTest" time="0.001"/>
+  <testcase name="floatSerializationIsLittleEndian" classname="com.localai.workspace.semantic.v2.SemanticDomainTest" time="0.002"/>
+  <testcase name="naturalLanguageCodeSearchUsesCodeTaskOnlyForCodeScope" classname="com.localai.workspace.semantic.v2.SemanticDomainTest" time="0.001"/>
+  <testcase name="canonicalQueryPrefix" classname="com.localai.workspace.semantic.v2.SemanticDomainTest" time="0.0"/>
+  <testcase name="sameDimensionDifferentFamiliesAreNotCompatible" classname="com.localai.workspace.semantic.v2.SemanticDomainTest" time="0.0"/>
+  <testcase name="truncationRenormalizes" classname="com.localai.workspace.semantic.v2.SemanticDomainTest" time="0.0"/>
+  <testcase name="budgetNeverOverflows" classname="com.localai.workspace.semantic.v2.SemanticDomainTest" time="0.001"/>
+  <testcase name="normalizedVectorHasUnitNorm" classname="com.localai.workspace.semantic.v2.SemanticDomainTest" time="0.0"/>
+  <testcase name="infinityRejected" classname="com.localai.workspace.semantic.v2.SemanticDomainTest" time="0.0"/>
+  <testcase name="documentIncludesTitle" classname="com.localai.workspace.semantic.v2.SemanticDomainTest" time="0.0"/>
+  <testcase name="dimensionsAreIsolated" classname="com.localai.workspace.semantic.v2.SemanticDomainTest" time="0.0"/>
+  <testcase name="nanRejected" classname="com.localai.workspace.semantic.v2.SemanticDomainTest" time="0.001"/>
+  <testcase name="impossibleDimensionRejected" classname="com.localai.workspace.semantic.v2.SemanticDomainTest" time="0.001"/>
+  <testcase name="profileIsPartOfIdentity" classname="com.localai.workspace.semantic.v2.SemanticDomainTest" time="0.0"/>
+  <testcase name="badVectorSizeRejected" classname="com.localai.workspace.semantic.v2.SemanticDomainTest" time="0.001"/>
+  <testcase name="scopesDoNotMix" classname="com.localai.workspace.semantic.v2.SemanticDomainTest" time="0.0"/>
+  <testcase name="provenancePreservedInContext" classname="com.localai.workspace.semantic.v2.SemanticDomainTest" time="0.001"/>
+  <testcase name="zeroRejected" classname="com.localai.workspace.semantic.v2.SemanticDomainTest" time="0.001"/>
+  <testcase name="normalizationIsPartOfIdentity" classname="com.localai.workspace.semantic.v2.SemanticDomainTest" time="0.0"/>
+  <testcase name="comparisonRefusesSpaceMixing" classname="com.localai.workspace.semantic.v2.SemanticDomainTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

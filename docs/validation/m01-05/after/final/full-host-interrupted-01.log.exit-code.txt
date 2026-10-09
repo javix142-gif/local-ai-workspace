@@ -1,0 +1,1 @@
+INTERRUPTED — execution ended while lintVitalAnalyzeRelease was running; no final Gradle exit code was observed. Excluded from validation totals.

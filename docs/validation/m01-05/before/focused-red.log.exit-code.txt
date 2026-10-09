@@ -1,0 +1,1 @@
+1 — initial regression-test harness had four unresolved type imports; no tests executed. Imports were corrected before the valid red reproduction.
