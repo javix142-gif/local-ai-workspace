@@ -12,7 +12,8 @@
     "M00-4 metadata-only stage timing diagnostics",
     "Preserve Semantic V2 F1/F2 behavior",
     "M00-03 selector correction: bounded spreadsheet references, formula dependencies, UTF-8 anchor preservation and explicit incomplete-evidence notices",
-    "M00-03 LOG10 contextual distinction between function names and A1 cell references; missing-cell provenance retained"
+    "M00-03 LOG10 contextual distinction between function names and A1 cell references; missing-cell provenance retained",
+    "M01-05 Context budget and relevance deduplication (host validated on 260a3f7)"
   ],
   "blockedTasks": [
     "BLOCKED_ANDROID_CI: run 37865813921 could not discover the named AVD. Complete artifact/job-log inspection did not capture effective AVD path variables or an AVD directory listing, so the creation/location root cause remains unproven; instrumentation is NOT_RUN.",
@@ -209,9 +210,10 @@
   },
   "pendingAcceptance": [
     "Android emulator CI remains BLOCKED_ANDROID_CI_CAUSE_UNPROVEN. Any further AVD root-cause diagnostic requires separate authorization; do not infer a fix or rerun from the existing evidence.",
-    "M00 Motorola validation is blocked until both the exact original workbook is accessible and the Moto G86 Power is connected/ADB-authorized; the current preflight executed no install or tests."
+    "M00 Motorola validation is blocked until both the exact original workbook is accessible and the Moto G86 Power is connected/ADB-authorized; the current preflight executed no install or tests.",
+    "Independent audit of the M01-05 host evidence is pending; this task does not claim emulator or Motorola validation."
   ],
-  "nextRecommendedTask": "Stop. M00 physical validation preflight is BLOCKED_PREREQUISITES_UNAVAILABLE: connect the Motorola Moto G86 Power with ADB authorization and provide the exact original XLSX. Resume this focused validation only when both are accessible. Do not substitute a synthetic workbook/device or claim PHYSICAL_DEVICE execution.",
+  "nextRecommendedTask": "Stop for independent audit of M01-05 host evidence. The original 97-task user attachment remains the source for subsequent IDs/order/dependencies. M00 Motorola validation is still blocked on the exact original XLSX and an ADB-authorized Moto G86 Power; Android emulator CI remains BLOCKED_ANDROID_CI_CAUSE_UNPROVEN.",
   "m00_03": {
     "status": "IMPLEMENTED_TESTED_HOST_DEVICE_NOT_RUN",
     "baseCommit": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
@@ -470,8 +472,8 @@
   "fieldSemantics": {
     "startingHeadSha": "Historical original M00 baseline; not the base of later deliveries.",
     "testedCodeHeadSha": "Historical Android emulator CI source SHA from the latestAndroidCi attempt; the QA APK build source is separately recorded in latestQaArm64Artifact.",
-    "currentSourceHeadSha": "Latest non-documentation workflow/source commit on the feature branch; documentation-only commits may follow. QA artifact build source is recorded in latestQaArm64Artifact.",
-    "lastFullJvmTestCodeSha": "e367dc75d0f952ef6a9b4e96d51e1263b70d3309 is the historical full JVM gate (727 app + 2 compatibility = 729); no JVM suite was run for b6c4607, bdae878, or the QA artifact source 4ef2b39.",
+    "currentSourceHeadSha": "Current production code commit for M01-05; documentation/evidence commits may follow. The tested code is latestM01_05.testedCodeCommit.",
+    "lastFullJvmTestCodeSha": "Latest full JVM run is 733 app + 2 LiteRT compatibility tests on latestM01_05.testedCodeCommit; the earlier 727 + 2 run at e367dc7 remains historical under its original records.",
     "testResults": "Historical or per-source results; each nested recordStatus/testedCodeHeadSha governs attribution. Do not transfer counts to another SHA.",
     "finalHostGate": "Historical complete host gate; not rerun on latestDelivery.codeCommit.",
     "latestDelivery": "Accepted preceding .gitignore-only source/release check at b6c4607; Android CI is tracked separately in latestAndroidCi.",
@@ -482,10 +484,11 @@
     "historicalGitSynchronization": "Earlier push/readback record; latestDelivery contains this correction’s own code/evidence commits.",
     "latestAndroidCi": "Current GitHub-hosted Android emulator workflow attempts, with per-run SHA, artifact, counts and explicit EMULATOR/PHYSICAL_DEVICE status.",
     "latestQaArm64Artifact": "Current QA-only ARM64 Debug APK artifact built and independently checked from its recorded source SHA; this does not imply emulator or physical-device execution.",
-    "physicalDeviceResults.latestM00FocusedPreflight": "Latest focused Motorola preflight. A blocked preflight with no serial/workbook means PHYSICAL_DEVICE tests were NOT_RUN; it is not a failed product test."
+    "physicalDeviceResults.latestM00FocusedPreflight": "Latest focused Motorola preflight. A blocked preflight with no serial/workbook means PHYSICAL_DEVICE tests were NOT_RUN; it is not a failed product test.",
+    "latestM01_05": "Current M01-05 result, including source SHA, focused/full suite counts, build gate, and evidence links; no Android or device execution is implied."
   },
-  "currentSourceHeadSha": "4ef2b39b9cba6aa1def081171d42d9146bbd968c",
-  "lastFullJvmTestCodeSha": "e367dc75d0f952ef6a9b4e96d51e1263b70d3309",
+  "currentSourceHeadSha": "260a3f7c6267cc5a90a9cf516356951aec0627a1",
+  "lastFullJvmTestCodeSha": "260a3f7c6267cc5a90a9cf516356951aec0627a1",
   "latestDelivery": {
     "name": "Clean-checkout model-source ignore matrix and release reproducibility follow-up",
     "status": "HOST_IGNORE_MATRIX_AND_RELEASE_PASS; FULL_JVM_GATE_HISTORICAL; ANDROID_NOT_RUN",
@@ -925,5 +928,105 @@
     "appRuntimeWorkflowApkChanged": false,
     "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
     "v042TagCommitSha": "de615b772cf37a99e7e08a647c59607b271de606"
+  },
+  "latestM01_05": {
+    "taskId": "M01-05",
+    "name": "Context budget and relevance deduplication",
+    "status": "HOST_PASS_AWAITING_INDEPENDENT_AUDIT",
+    "recordStatus": "Current host results for the code SHA below; earlier M00/M01 records remain historical and unchanged.",
+    "baseCommit": "4c5fce553b007c7e565f55b389a162c9b0ecb880",
+    "testedCodeCommit": "260a3f7c6267cc5a90a9cf516356951aec0627a1",
+    "branch": "feat/0.5.0-skills-agents",
+    "taskPlanSource": "Original user-provided 97-task plan attachment; IDs/order/dependencies were not reconstructed or changed.",
+    "baselineReproduction": {
+      "productionCodeSha": "4c5fce553b007c7e565f55b389a162c9b0ecb880",
+      "status": "EXPECTED_RED",
+      "tests": 6,
+      "passed": 3,
+      "failures": [
+        "ContextBuilder collapsed equal passage text across origins/scopes",
+        "ContextFoundation lost the same-text passage from a second selected document",
+        "Legacy budget counted duplicate evidence and displaced the secondary passage"
+      ],
+      "errors": 0,
+      "skipped": 0,
+      "log": "docs/validation/m01-05/before/focused-red-offline.log",
+      "xml": "docs/validation/m01-05/before/xml"
+    },
+    "focusedPostFix": {
+      "status": "PASS",
+      "tests": 70,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "command": "./gradlew --no-daemon --no-parallel --max-workers=1 --offline --rerun-tasks --console=plain :app:testDebugUnitTest --tests com.localai.workspace.context.ContextDeduplicationAblationTest --tests com.localai.workspace.context.ContextFoundationDeduplicationTest --tests com.localai.workspace.domain.ContextBudgetManagerTest --tests com.localai.workspace.context.ContextFoundationTest --tests com.localai.workspace.semantic.v2.SemanticContextPostfixTest",
+      "log": "docs/validation/m01-05/after/final/focused.log",
+      "xml": "docs/validation/m01-05/after/final/xml"
+    },
+    "fullJvm": {
+      "status": "PASS",
+      "app": {
+        "tests": 733,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "litertCompat": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "command": "./gradlew --no-daemon --no-parallel --max-workers=1 --offline --rerun-tasks -Dorg.gradle.jvmargs='-Xmx2048m -Dfile.encoding=UTF-8' -Pkotlin.daemon.jvmargs=-Xmx2048m --console=plain :app:testDebugUnitTest :litert-compat:testDebugUnitTest",
+      "log": "docs/validation/m01-05/after/final/full-tests.log",
+      "xml": "docs/validation/m01-05/after/full-tests"
+    },
+    "hostBuildGate": {
+      "status": "PASS",
+      "exitCode": 0,
+      "tasks": [
+        ":app:testDebugUnitTest",
+        ":litert-compat:testDebugUnitTest",
+        ":app:assembleDebug",
+        ":app:assembleRelease",
+        ":app:lintDebug",
+        ":app:assembleDebugAndroidTest"
+      ],
+      "lint": {
+        "errors": 0,
+        "warnings": 40
+      },
+      "instrumentedExecution": false,
+      "log": "docs/validation/m01-05/after/final/full-host.log",
+      "note": "JVM counts are attributed to the separate forced full-suite run; the first build-gate log marked those test tasks UP-TO-DATE. Debug assemble completed in the preserved same-SHA attempt interrupted later; final gate completed Release, lint and AndroidTest APK build.",
+      "command": "./gradlew --no-daemon --no-parallel --max-workers=1 -Dorg.gradle.jvmargs='-Xmx2048m -Dfile.encoding=UTF-8' -Pkotlin.daemon.jvmargs=-Xmx2048m :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:assembleDebug :app:assembleRelease :app:lintDebug :app:assembleDebugAndroidTest -Parm64Only=true --offline --console=plain"
+    },
+    "hostEnvironment": {
+      "os": "Linux",
+      "gradle": "8.10.2",
+      "jdk": "Eclipse Temurin 17.0.20.1",
+      "androidApi": 35,
+      "ndk": "27.0.12077973",
+      "cmake": "3.31.6",
+      "abi": "arm64-v8a",
+      "offline": true
+    },
+    "applicationChanges": {
+      "databaseSchema": false,
+      "runtimeOrModel": false,
+      "contextWindowChanged": false,
+      "newDependencies": false
+    },
+    "validationStates": {
+      "HOST": "PASS",
+      "EMULATOR": "NOT_RUN",
+      "PHYSICAL_DEVICE": "NOT_RUN"
+    },
+    "evidenceDirectory": "docs/validation/m01-05",
+    "resultsFile": "docs/validation/m01-05/RESULTS.md",
+    "checksumManifest": "docs/validation/m01-05/SHA256SUMS",
+    "checksumManifestSha256": "a320256e7053c0754e2bd9c7ef587995cbb83f619e45522221ec725ea648bcb6",
+    "checksumManifestEntries": 114,
+    "evidenceCommitSha": "b086adf8fad3e37d718d9c41e3499384bc83c7ef"
   }
 }

@@ -1,6 +1,11 @@
-# Codex → Work handoff: 0.5.0 QA ARM64 artifact and Android CI status
+# Codex → Work handoff: M01-05 context budget and deduplication
 
-**Status:** The QA-only ARM64 Debug build was independently accepted as `VALIDADA_HOST_QA_BUILD`. The focused Motorola preflight on 2026-10-09 is `BLOCKED_PREREQUISITES_UNAVAILABLE`: ADB found no device and the original workbook is absent. No APK was downloaded or installed in that attempt; all physical checks are **NOT_RUN**. Android emulator CI separately remains `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`.
+**Current task:** M01-05 is `HOST_PASS_AWAITING_INDEPENDENT_AUDIT`, tested against code commit `260a3f7c6267cc5a90a9cf516356951aec0627a1`. The base was `4c5fce553b007c7e565f55b389a162c9b0ecb880`. Focused tests passed 70/70; the full JVM suites passed app 733/733 and LiteRT compatibility 2/2; debug/release/lint and AndroidTest APK build tasks completed successfully. The AndroidTest APK was compiled only; instrumented, emulator, and Motorola execution are **NOT_RUN**.
+**M01-05 report:** [Context budget and relevance deduplication results](../validation/m01-05/RESULTS.md). Raw logs, red/green XML, summary JSON and checksums are under `docs/validation/m01-05/`.
+**M01-05 commits:** code `260a3f7c6267cc5a90a9cf516356951aec0627a1`; evidence `b086adf8fad3e37d718d9c41e3499384bc83c7ef`. The evidence checksum manifest SHA-256 is `a320256e7053c0754e2bd9c7ef587995cbb83f619e45522221ec725ea648bcb6` (114 entries).
+**Task-plan source:** The original user-provided attachment containing 97 tasks remains the source of IDs, order and dependencies. The repository has no `ROADMAP.md`, `BACKLOG.json`, or `LOOP_RULES.md`; none were reconstructed or changed.
+
+**Earlier QA/M00 status (unchanged):** The QA-only ARM64 Debug build was independently accepted as `VALIDADA_HOST_QA_BUILD`. The focused Motorola preflight on 2026-10-09 is `BLOCKED_PREREQUISITES_UNAVAILABLE`: ADB found no device and the original workbook is absent. No APK was downloaded or installed in that attempt; all physical checks are **NOT_RUN**. Android emulator CI separately remains `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`.
 **Repository:** `https://github.com/javix142-gif/local-ai-workspace.git`
 **Branch:** `feat/0.5.0-skills-agents`
 **QA APK source SHA:** `4ef2b39b9cba6aa1def081171d42d9146bbd968c` (QA build workflow and verification script; app/runtime behavior was not changed for this artifact task).
