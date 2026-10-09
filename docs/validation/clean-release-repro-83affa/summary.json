@@ -1,0 +1,110 @@
+{
+  "kind": "CLEAN_CHECKOUT_RELEASE_REPRODUCTION",
+  "status": "PASS",
+  "branch": "feat/0.5.0-skills-agents",
+  "testedCheckoutCommit": "83affa67584292137a17dd544a4f6e207cf7c96f",
+  "applicationSourceCommit": "260a3f7c6267cc5a90a9cf516356951aec0627a1",
+  "checkout": {
+    "method": "git worktree add --detach from fetched remote branch SHA",
+    "detached": true,
+    "trackedChangesBeforeBuild": 0,
+    "untrackedOrIgnoredPathsBeforeBuild": 0,
+    "projectGradleCacheBeforeBuild": false,
+    "appBuildOutputBeforeBuild": false,
+    "nativeBuildOutputBeforeBuild": false,
+    "localPropertiesBeforeBuild": false,
+    "primaryCheckoutIgnoredPathsObservedButUntouched": 197,
+    "buildWorktreeRemovedAfterEvidenceCapture": true
+  },
+  "vendoredLlamaCpp": {
+    "trackedFiles": 1865,
+    "diskFiles": 1865,
+    "missing": 0,
+    "untracked": 0,
+    "blobMismatches": 0,
+    "trackedCppSources": 497,
+    "modelRegistryFiles": 158,
+    "modelRegistryCpp": 157,
+    "modelsHeaderTracked": true,
+    "modelsHeaderBlobSha1": "387a4adcb239db69d72349ee57e2fbfe2db04e5a"
+  },
+  "weightIgnoreMatrix": {
+    "passed": 12,
+    "failed": 0,
+    "extensions": [
+      "bin",
+      "gguf",
+      "litertlm",
+      "onnx",
+      "tflite",
+      "safetensors",
+      "pt",
+      "pth",
+      "ckpt",
+      "ggml",
+      "so",
+      "a"
+    ]
+  },
+  "build": {
+    "task": ":app:assembleRelease",
+    "command": "./gradlew :app:assembleRelease -Parm64Only=true --offline --rerun-tasks --no-build-cache --no-daemon --no-parallel --max-workers=1 --console=plain --info",
+    "exitCode": 0,
+    "gradleSummary": "128 actionable tasks: 128 executed",
+    "startedAtUtc": "2026-10-09T05:32:04+00:00",
+    "finishedAtUtc": "2026-10-09T06:00:37+00:00",
+    "gradleReportedDuration": "28m32s",
+    "cmakeConfigureTask": ":llama-runtime:configureCMakeRelease[arm64-v8a] executed, not UP-TO-DATE",
+    "cmakeBuildTask": ":llama-runtime:buildCMakeRelease[arm64-v8a] executed, Ninja exit 0, not UP-TO-DATE",
+    "apkRetainedOrDistributed": false
+  },
+  "toolchain": {
+    "os": "Linux x86_64",
+    "jdk": "Eclipse Temurin 17.0.20.1+1",
+    "gradle": "8.10.2",
+    "androidSdk": "/workspace/.toolchain/android-sdk",
+    "androidPlatform": "android-35, package revision 2",
+    "androidBuildTools": "35.0.0",
+    "ndk": "27.0.12077973",
+    "cmake": "3.31.6",
+    "abi": "arm64-v8a",
+    "gradleUserHome": "/home/agent/.gradle"
+  },
+  "cacheIsolation": {
+    "checkoutProjectOutputsCopied": false,
+    "checkoutProjectCachesPresentAtStart": false,
+    "gradleBuildCache": "disabled",
+    "tasks": "rerun",
+    "offlineDependencyAndWrapperArtifacts": "Resolved from shared external Gradle User Home, including dependency/transform artifacts; no generated task outputs or project caches were copied from the primary checkout."
+  },
+  "validation": {
+    "jvmTests": "NOT_RUN",
+    "androidTestCompilation": "NOT_RUN",
+    "instrumentedTests": "NOT_RUN",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "androidCi": "BLOCKED_ANDROID_CI_CAUSE_UNPROVEN"
+  },
+  "preservedPlanState": {
+    "M01-05": "VALIDADA_HOST",
+    "M01-06": "PENDING_REQUIRES_DEVICE",
+    "originalTaskPlan": "User-provided 97-task plan; IDs, order and dependencies unchanged"
+  },
+  "evidence": {
+    "preflight": "preflight.txt",
+    "preflightSha256": "cfcd0076cb6c21715631500cd91bc52a44e816f390bd1dffd1669ad0f8b98622",
+    "runMetadata": "run-metadata.txt",
+    "runMetadataSha256": "2e1070d3e4d2aa1613df9f0f2092250fbd6a12444a6d8c804c3a2f0985b1756e",
+    "taskOutcomes": "gradle-task-outcomes.txt",
+    "taskOutcomesSha256": "e94c99fec22ae8cd264406db5500f1684d0148acd8c9f811de9334b7c6799fc8",
+    "fullGradleLog": "assembleRelease.log",
+    "fullGradleLogBytes": 980521,
+    "fullGradleLogSha256": "e49c71329acd899edd0b8ebfde10db990404315fa4ee948d9c5c8c01298ef079",
+    "resultsSha256": "be1480c655394b7a193dd58942178800c3e25736182bb58a3f42563f7a5f8008",
+    "sha256ManifestEntries": 6
+  },
+  "gitDiffCheck": {
+    "documentationAndEvidenceExcludingRawLog": "PASS",
+    "rawGradleLog": "Preserved byte-for-byte; full diff check reports 15 trailing-whitespace lines emitted by Gradle."
+  }
+}

@@ -1,0 +1,147 @@
+> Task :app:buildKotlinToolingMetadata
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preReleaseBuild UP-TO-DATE
+> Task :app:generateReleaseBuildConfig
+> Task :litert-compat:copyNativeBackend
+> Task :litert-compat:preBuild
+> Task :litert-compat:preReleaseBuild
+> Task :litert-compat:writeReleaseAarMetadata
+> Task :llama-runtime:preBuild UP-TO-DATE
+> Task :llama-runtime:preReleaseBuild UP-TO-DATE
+> Task :llama-runtime:writeReleaseAarMetadata
+> Task :app:checkReleaseAarMetadata
+> Task :app:generateReleaseResValues
+> Task :litert-compat:generateReleaseResValues
+> Task :litert-compat:generateReleaseResources
+> Task :litert-compat:packageReleaseResources
+> Task :llama-runtime:generateReleaseResValues
+> Task :llama-runtime:generateReleaseResources
+> Task :llama-runtime:packageReleaseResources
+> Task :app:mapReleaseSourceSetPaths
+> Task :app:generateReleaseResources
+> Task :app:mergeReleaseResources
+> Task :app:packageReleaseResources
+> Task :app:parseReleaseLocalResources
+> Task :app:createReleaseCompatibleScreenManifests
+> Task :app:extractDeepLinksRelease
+> Task :litert-compat:extractDeepLinksRelease
+> Task :litert-compat:processReleaseManifest
+> Task :llama-runtime:extractDeepLinksRelease
+> Task :llama-runtime:processReleaseManifest
+> Task :app:processReleaseMainManifest
+> Task :app:processReleaseManifest
+> Task :app:processReleaseManifestForPackage
+> Task :litert-compat:compileReleaseLibraryResources
+> Task :litert-compat:parseReleaseLocalResources
+> Task :litert-compat:generateReleaseRFile
+> Task :llama-runtime:compileReleaseLibraryResources
+> Task :llama-runtime:parseReleaseLocalResources
+> Task :llama-runtime:generateReleaseRFile
+> Task :app:processReleaseResources
+> Task :litert-compat:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :litert-compat:compileReleaseKotlin
+> Task :litert-compat:javaPreCompileRelease
+> Task :litert-compat:compileReleaseJavaWithJavac NO-SOURCE
+> Task :litert-compat:bundleLibCompileToJarRelease
+> Task :llama-runtime:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :llama-runtime:compileReleaseKotlin
+> Task :llama-runtime:javaPreCompileRelease
+> Task :llama-runtime:compileReleaseJavaWithJavac NO-SOURCE
+> Task :llama-runtime:bundleLibCompileToJarRelease
+> Task :app:kspReleaseKotlin
+> Task :app:compileReleaseKotlin
+> Task :app:javaPreCompileRelease
+> Task :app:compileReleaseJavaWithJavac
+> Task :app:extractProguardFiles
+> Task :litert-compat:bundleLibRuntimeToJarRelease
+> Task :litert-compat:processReleaseJavaRes
+> Task :litert-compat:createFullJarRelease
+> Task :litert-compat:extractProguardFiles
+> Task :litert-compat:generateReleaseLintModel
+> Task :litert-compat:prepareLintJarForPublish
+> Task :llama-runtime:bundleLibRuntimeToJarRelease
+> Task :llama-runtime:processReleaseJavaRes
+> Task :llama-runtime:createFullJarRelease
+> Task :llama-runtime:extractProguardFiles
+> Task :llama-runtime:generateReleaseLintModel
+> Task :llama-runtime:prepareLintJarForPublish
+> Task :app:generateReleaseLintVitalReportModel
+> Task :llama-runtime:configureCMakeRelease[arm64-v8a]
+> Task :llama-runtime:buildCMakeRelease[arm64-v8a]
+> Task :llama-runtime:buildCMakeRelease[arm64-v8a]
+> Task :llama-runtime:mergeReleaseJniLibFolders
+> Task :llama-runtime:mergeReleaseNativeLibs
+> Task :llama-runtime:stripReleaseDebugSymbols
+> Task :llama-runtime:copyReleaseJniLibsProjectAndLocalJars
+> Task :llama-runtime:extractDeepLinksForAarRelease
+> Task :llama-runtime:extractReleaseAnnotations
+> Task :llama-runtime:mergeReleaseGeneratedProguardFiles
+> Task :llama-runtime:mergeReleaseConsumerProguardFiles
+> Task :llama-runtime:mergeReleaseShaders
+> Task :llama-runtime:compileReleaseShaders NO-SOURCE
+> Task :llama-runtime:generateReleaseAssets UP-TO-DATE
+> Task :llama-runtime:packageReleaseAssets
+> Task :llama-runtime:prepareReleaseArtProfile
+> Task :llama-runtime:mergeReleaseJavaResource
+> Task :llama-runtime:syncReleaseLibJars
+> Task :llama-runtime:bundleReleaseLocalLintAar
+> Task :litert-compat:mergeReleaseJniLibFolders
+> Task :litert-compat:mergeReleaseNativeLibs
+> Task :litert-compat:stripReleaseDebugSymbols
+> Task :litert-compat:copyReleaseJniLibsProjectAndLocalJars
+> Task :litert-compat:extractDeepLinksForAarRelease
+> Task :litert-compat:extractReleaseAnnotations
+> Task :litert-compat:mergeReleaseGeneratedProguardFiles
+> Task :litert-compat:mergeReleaseConsumerProguardFiles
+> Task :litert-compat:mergeReleaseShaders
+> Task :litert-compat:compileReleaseShaders NO-SOURCE
+> Task :litert-compat:generateReleaseAssets UP-TO-DATE
+> Task :litert-compat:packageReleaseAssets
+> Task :litert-compat:prepareReleaseArtProfile
+> Task :litert-compat:mergeReleaseJavaResource
+> Task :litert-compat:syncReleaseLibJars
+> Task :litert-compat:bundleReleaseLocalLintAar
+> Task :litert-compat:lintVitalAnalyzeRelease
+> Task :litert-compat:writeReleaseLintModelMetadata
+> Task :llama-runtime:lintVitalAnalyzeRelease
+> Task :llama-runtime:writeReleaseLintModelMetadata
+> Task :app:lintVitalAnalyzeRelease
+> Task :litert-compat:generateReleaseLintVitalModel
+> Task :llama-runtime:generateReleaseLintVitalModel
+> Task :app:lintVitalReportRelease
+> Task :app:lintVitalRelease
+> Task :app:mergeReleaseJniLibFolders
+> Task :litert-compat:copyReleaseJniLibsProjectOnly
+> Task :llama-runtime:copyReleaseJniLibsProjectOnly
+> Task :app:mergeReleaseNativeLibs
+> Task :app:stripReleaseDebugSymbols
+> Task :app:extractReleaseNativeSymbolTables
+> Task :app:mergeReleaseNativeDebugMetadata
+> Task :llama-runtime:bundleLibRuntimeToDirRelease
+> Task :litert-compat:bundleLibRuntimeToDirRelease
+> Task :app:checkReleaseDuplicateClasses
+> Task :app:dexBuilderRelease
+> Task :app:desugarReleaseFileDependencies
+> Task :app:mergeReleaseStartupProfile
+> Task :app:mergeExtDexRelease
+> Task :app:mergeDexRelease
+> Task :app:mergeReleaseArtProfile
+> Task :app:mergeReleaseGlobalSynthetics
+> Task :app:compileReleaseArtProfile
+> Task :app:mergeReleaseShaders
+> Task :app:compileReleaseShaders NO-SOURCE
+> Task :app:generateReleaseAssets UP-TO-DATE
+> Task :app:mergeReleaseAssets
+> Task :app:compressReleaseAssets
+> Task :app:extractReleaseVersionControlInfo
+> Task :app:processReleaseJavaRes
+> Task :app:mergeReleaseJavaResource
+> Task :app:optimizeReleaseResources
+> Task :app:collectReleaseDependencies
+> Task :app:sdkReleaseDependencyData
+> Task :app:writeReleaseAppMetadata
+> Task :app:writeReleaseSigningConfigVersions
+> Task :app:packageRelease
+> Task :app:createReleaseApkListingFileRedirect
+> Task :app:assembleRelease

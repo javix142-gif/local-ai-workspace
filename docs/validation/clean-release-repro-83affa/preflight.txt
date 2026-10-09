@@ -1,0 +1,58 @@
+capturedAtUtc=2026-10-09T05:31:42+00:00
+sourceHead=83affa67584292137a17dd544a4f6e207cf7c96f
+checkoutMode=detached-worktree-created-from-remote-branch-HEAD
+branch=trackedStatusCount=0
+trackedUntrackedIgnoredStatusCount=0
+projectGradleCachePresent=no
+appBuildOutputPresent=no
+nativeBuildOutputPresent=no
+localPropertiesPresent=no
+trackedVendorFiles=1865
+trackedVendorCpp=497
+trackedModelRegistryFiles=158
+trackedModelRegistryCpp=157
+modelsHeaderTracked=third_party/llama.cpp/src/models/models.h
+modelsHeaderGitBlob=387a4adcb239db69d72349ee57e2fbfe2db04e5a
+modelsHeaderWorkingHash=387a4adcb239db69d72349ee57e2fbfe2db04e5a
+requiredSourceTreeIntegrity=tracked=1865 disk=1865 missing=0 untracked=0 blobMismatches=0
+weightIgnoreMatrix=12/12 ignored
+sourceExceptionMatrix=models.h and .cpp not ignored
+javaHome=/workspace/.toolchain/jdk-17
+androidHome=/workspace/.toolchain/android-sdk
+androidSdkRoot=/workspace/.toolchain/android-sdk
+gradleUserHome=/home/agent/.gradle
+javaExecutable=/workspace/.toolchain/jdk-17/bin/java
+openjdk version "17.0.20.1" 2026-08-18
+OpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)
+OpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)
+
+------------------------------------------------------------
+Gradle 8.10.2
+------------------------------------------------------------
+
+Build time:    2024-09-23 21:28:39 UTC
+Revision:      415adb9e06a516c44b391edff552fd42139443f7
+
+Kotlin:        1.9.24
+Groovy:        3.0.22
+Ant:           Apache Ant(TM) version 1.10.14 compiled on August 16 2023
+Launcher JVM:  17.0.20.1 (Eclipse Adoptium 17.0.20.1+1)
+Daemon JVM:    /workspace/.toolchain/jdk-17 (no JDK specified, using current Java home)
+OS:            Linux 6.18.44 amd64
+
+androidPlatform=Pkg.Revision=2
+androidBuildTools=Pkg.Revision=35.0.0
+androidNdk=Pkg.Revision = 27.0.12077973
+androidCMake=cmake version 3.31.6
+projectVersion=18:        versionCode = 27
+19:        versionName = "0.5.0"
+25:                abiFilters += "arm64-v8a"
+33:            versionNameSuffix = "-debug"
+diskAtStart=overlay          32G   27G  3.8G  88% /
+appVersionSource=736c5d5409999d98d0e6483e27c82b19105a1834ce3c84e6007b5fa30489ca10  -
+primaryCheckoutBranch=feat/0.5.0-skills-agents
+primaryCheckoutHeadAtStart=d5ad0de3bac7c58f28423f7efa5d83a79c59a6c8
+primaryCheckoutTrackedStatusCount=0
+primaryCheckoutIgnoredPathCount=197
+primaryCheckoutBuildOrCleanCommandRun=false
+primaryCheckoutTouchedByReleaseBuild=false

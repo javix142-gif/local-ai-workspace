@@ -1,0 +1,10 @@
+startedAtUtc=2026-10-09T05:32:04+00:00
+sourceSha=83affa67584292137a17dd544a4f6e207cf7c96f
+command=./gradlew :app:assembleRelease -Parm64Only=true --offline --rerun-tasks --no-build-cache --no-daemon --no-parallel --max-workers=1 --console=plain --info
+exitCode=0
+finishedAtUtc=2026-10-09T06:00:37+00:00
+JAVA_HOME=/workspace/.toolchain/jdk-17
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk
+JAVA_TOOL_OPTIONS=-Djava.io.tmpdir=/tmp/law-clean-release-evidence.UKjh27/java-tmp
+GRADLE_USER_HOME=/home/agent/.gradle (inherited default)

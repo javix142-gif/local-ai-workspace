@@ -488,7 +488,8 @@
     "latestM01_05": "Current M01-05 result, including source SHA, focused/full suite counts, build gate, and evidence links; no Android or device execution is implied.",
     "latestM01_05.evidencePublicationCorrection": "Supplemental tracked-log and manifest readback correction; does not rerun or change the tested code/results.",
     "latestM01_05.priorEvidenceCommitSha": "Previously published M01-05 evidence commit, superseded as the complete evidence publication by evidencePublicationCorrection.",
-    "latestAndroidCi.followUpReview": "Current executor reinspection of the retained artifact and GitHub run metadata; preserves prior latestInvestigation details and does not change the root-cause status."
+    "latestAndroidCi.followUpReview": "Current executor reinspection of the retained artifact and GitHub run metadata; preserves prior latestInvestigation details and does not change the root-cause status.",
+    "latestCleanReleaseRepro": "Single current host clean-checkout :app:assembleRelease run at testedCheckoutCommit; it does not imply tests, instrumentation, emulator, physical-device validation, or artifact delivery."
   },
   "currentSourceHeadSha": "260a3f7c6267cc5a90a9cf516356951aec0627a1",
   "lastFullJvmTestCodeSha": "260a3f7c6267cc5a90a9cf516356951aec0627a1",
@@ -1175,5 +1176,108 @@
     "selection": "NONE",
     "reason": "M01-05 is VALIDADA_HOST. M01-06 requires a device; M01-01 depends on M00-10; M00-10 depends on device-required M00-07, M00-08 and M00-09. M02-01 also depends on M00-10 and its downstream M02 tasks chain from M02-01. The physical preflight has no authorized device or exact workbook, and Android emulator CI root cause remains unproven. No eligible independent original task was identified.",
     "nextAction": "Wait for new verified AVD diagnostic evidence or the required physical-device/workbook prerequisites; do not create task IDs or start speculative CI."
+  },
+  "latestCleanReleaseRepro": {
+    "name": "Clean Git checkout Release reproducibility verification",
+    "status": "PASS_HOST_CLEAN_CHECKOUT_RELEASE_ONLY",
+    "testedCheckoutCommit": "83affa67584292137a17dd544a4f6e207cf7c96f",
+    "applicationSourceCommit": "260a3f7c6267cc5a90a9cf516356951aec0627a1",
+    "remoteFeatureHeadObservedBeforeAndAfterBuild": "83affa67584292137a17dd544a4f6e207cf7c96f",
+    "branch": "feat/0.5.0-skills-agents",
+    "scope": "Evidence/documentation only; no application, runtime, test, model, dependency, workflow, database, or build configuration changed.",
+    "sourceDiff": "All paths between application source commit 260a3f7 and tested checkout 83affa6 are under docs/.",
+    "checkoutPreflight": {
+      "method": "Fresh detached Git worktree from fetched remote branch SHA",
+      "trackedChanges": 0,
+      "untrackedOrIgnoredPaths": 0,
+      "projectGradleCachePresent": false,
+      "appBuildOutputPresent": false,
+      "nativeBuildOutputPresent": false,
+      "localPropertiesPresent": false,
+      "primaryCheckoutHeadAtStart": "d5ad0de3bac7c58f28423f7efa5d83a79c59a6c8",
+      "primaryCheckoutTrackedChanges": 0,
+      "primaryCheckoutIgnoredPaths": 197,
+      "primaryCheckoutUsedOrModified": false
+    },
+    "vendoredSourceAudit": {
+      "llamaCppTrackedFiles": 1865,
+      "llamaCppDiskFiles": 1865,
+      "missing": 0,
+      "untracked": 0,
+      "blobMismatches": 0,
+      "llamaCppTrackedCpp": 497,
+      "modelRegistryTrackedFiles": 158,
+      "modelRegistryCpp": 157,
+      "modelsHeader": "third_party/llama.cpp/src/models/models.h",
+      "modelsHeaderTracked": true,
+      "modelsHeaderBlobSha1": "387a4adcb239db69d72349ee57e2fbfe2db04e5a",
+      "modelWeightIgnoreMatrix": "12/12 ignored for bin, gguf, litertlm, onnx, tflite, safetensors, pt, pth, ckpt, ggml, so, a"
+    },
+    "releaseBuild": {
+      "task": ":app:assembleRelease",
+      "command": "./gradlew :app:assembleRelease -Parm64Only=true --offline --rerun-tasks --no-build-cache --no-daemon --no-parallel --max-workers=1 --console=plain --info",
+      "startedAtUtc": "2026-10-09T05:32:04+00:00",
+      "finishedAtUtc": "2026-10-09T06:00:37+00:00",
+      "duration": "28m32s as reported by Gradle; 28m33s UTC wall interval",
+      "exitCode": 0,
+      "result": "BUILD SUCCESSFUL",
+      "gradleTasks": "128 actionable tasks: 128 executed",
+      "cmakeConfigure": ":llama-runtime:configureCMakeRelease[arm64-v8a] executed from empty .cxx; configure task not UP-TO-DATE",
+      "cmakeBuild": ":llama-runtime:buildCMakeRelease[arm64-v8a] executed Ninja ARM64 targets; process result 0; build complete; not UP-TO-DATE",
+      "warningDiagnostics": "13 C/C++ warning lines, 3 Kotlin compiler warning lines, and missing baseline-profile informational warning; build succeeded.",
+      "generatedReleaseOutput": "Normal task output existed in isolated build worktree and was discarded when that worktree was removed; no APK retained or distributed."
+    },
+    "toolchain": {
+      "os": "Linux x86_64",
+      "jdk": "Eclipse Temurin 17.0.20.1+1",
+      "gradle": "8.10.2",
+      "androidSdk": "/workspace/.toolchain/android-sdk",
+      "androidPlatform": "android-35 package revision 2",
+      "buildTools": "35.0.0",
+      "ndk": "27.0.12077973",
+      "cmake": "3.31.6",
+      "abi": "arm64-v8a",
+      "gradleUserHome": "/home/agent/.gradle"
+    },
+    "cachePolicy": {
+      "sharedGradleUserHome": "Provided wrapper, offline dependency resolution and Gradle transform artifacts; outside both checkouts. No generated task outputs or project caches copied from the primary checkout.",
+      "projectOutputsOrCachesCopiedFromPrimaryCheckout": false,
+      "primaryCheckoutIgnoredPathsUsed": false,
+      "buildCache": "Disabled by --no-build-cache",
+      "tasks": "Forced by --rerun-tasks"
+    },
+    "testsAndDevice": {
+      "jvmTests": "NOT_RUN",
+      "androidTestCompilation": "NOT_RUN",
+      "instrumentedTests": "NOT_RUN",
+      "emulator": "NOT_RUN",
+      "physicalDevice": "NOT_RUN",
+      "androidCi": "BLOCKED_ANDROID_CI_CAUSE_UNPROVEN"
+    },
+    "planState": {
+      "M01-05": "VALIDADA_HOST (host only; independent audit accepted)",
+      "M01-06": {
+        "name": "Ingesta e indexación reanudable",
+        "status": "PENDING_REQUIRES_DEVICE",
+        "requires_device": true
+      },
+      "originalPlan": "User-provided source of 97 task IDs/order/dependencies; none reconstructed or modified."
+    },
+    "preservedBaselines": {
+      "main": "de615b772cf37a99e7e08a647c59607b271de606",
+      "v0.4.2": "de615b772cf37a99e7e08a647c59607b271de606"
+    },
+    "evidenceDirectory": "docs/validation/clean-release-repro-83affa/",
+    "fullGradleLogSha256": "e49c71329acd899edd0b8ebfde10db990404315fa4ee948d9c5c8c01298ef079",
+    "fullGradleLogBytes": 980521,
+    "preflightSha256": "cfcd0076cb6c21715631500cd91bc52a44e816f390bd1dffd1669ad0f8b98622",
+    "runMetadataSha256": "2e1070d3e4d2aa1613df9f0f2092250fbd6a12444a6d8c804c3a2f0985b1756e",
+    "taskOutcomesSha256": "e94c99fec22ae8cd264406db5500f1684d0148acd8c9f811de9334b7c6799fc8",
+    "evidenceManifest": "docs/validation/clean-release-repro-83affa/SHA256SUMS",
+    "evidenceManifestSha256": "1de83f15c40961760f4acd5c544b883eb5c7411c9e48da117ac9c13e79209d81",
+    "evidenceManifestEntries": 6,
+    "resultsSha256": "be1480c655394b7a193dd58942178800c3e25736182bb58a3f42563f7a5f8008",
+    "summarySha256": "74efc0b1e45ef2541e5b859da5061b015348f4c85262206bc6a70241ab6e5df8",
+    "gitDiffCheck": "PASS for staged docs/evidence excluding the byte-for-byte raw Gradle log; that log contains 15 generated trailing-whitespace lines."
   }
 }
