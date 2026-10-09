@@ -1,0 +1,10 @@
+Requested task: :app:assembleRelease
+Command invocation exit code: 1
+Gradle distribution: Gradle 8.10.2 wrapper download was attempted, then failed with java.net.ConnectException: Connection refused.
+Gradle process/task graph: NOT STARTED; the wrapper could not download/unpack the pinned distribution.
+Gradle tasks executed: 0
+Gradle task outcome lines: none
+CMake configure: NOT_REACHED
+CMake build: NOT_REACHED
+Ninja ARM64 compile/link: NOT_REACHED
+APK output: NOT_GENERATED

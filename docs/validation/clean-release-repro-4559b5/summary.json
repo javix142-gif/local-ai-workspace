@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-10-09T08:32:12Z",
+  "status": "BLOCKED_BEFORE_GRADLE_START_NETWORK",
+  "repository": "https://github.com/javix142-gif/local-ai-workspace.git",
+  "branch": "feat/0.5.0-skills-agents",
+  "testedCheckoutSha": "4559b502c55497f9f3c932c3e428f708fb086fd2",
+  "sourceDiffFromApplicationCommit": "260a3f7c6267cc5a90a9cf516356951aec0627a1 contains docs-only paths",
+  "freshDetachedCheckout": true,
+  "preflight": {
+    "gitStatusPorcelainV1IgnoredLines": 0,
+    "projectGradleCachePresent": false,
+    "appBuildPresent": false,
+    "nativeBuildPresent": false,
+    "cxxPresent": false,
+    "localPropertiesPresent": false,
+    "llamaCppTrackedFiles": 1865,
+    "llamaCppDiskFiles": 1865,
+    "missing": 0,
+    "extras": 0,
+    "blobMismatches": 0,
+    "modelsHeaderBlob": "387a4adcb239db69d72349ee57e2fbfe2db04e5a",
+    "ignoredBinaryProbes": 15,
+    "trackableCppSourcesAndHeader": true
+  },
+  "command": "./gradlew :app:assembleRelease -Parm64Only=true --rerun-tasks --no-build-cache --no-daemon --no-parallel --max-workers=1 --console=plain --info",
+  "startedAtUtc": "2026-10-09T08:31:52Z",
+  "finishedAtUtc": "2026-10-09T08:31:58Z",
+  "exitCode": 1,
+  "failure": "Gradle wrapper could not fetch https://services.gradle.org/distributions/gradle-8.10.2-bin.zip: java.net.ConnectException: Connection refused",
+  "gradleStarted": false,
+  "gradleTasksExecuted": 0,
+  "cmakeConfigure": "NOT_REACHED",
+  "cmakeBuild": "NOT_REACHED",
+  "ninjaArm64": "NOT_REACHED",
+  "apk": "NOT_GENERATED",
+  "gradleUserHome": {
+    "path": "/workspace/law-clean-release-4559b5-gradle-home",
+    "emptyBeforeInvocation": true,
+    "postFailureContents": "only zero-byte wrapper .zip.part and .lck files"
+  },
+  "toolchain": {
+    "os": "Linux x86_64",
+    "jdk": "Eclipse Temurin 17.0.20.1+1",
+    "gradle": "8.10.2 (wrapper-pinned; download blocked)",
+    "androidSdkPlatform": "35 revision 2",
+    "buildTools": "35.0.0",
+    "ndk": "27.0.12077973",
+    "cmake": "3.31.6",
+    "ninja": "1.12.1",
+    "abiRequested": "arm64-v8a"
+  },
+  "remoteRefs": {
+    "featureBefore": "4559b502c55497f9f3c932c3e428f708fb086fd2",
+    "featureAfter": "4559b502c55497f9f3c932c3e428f708fb086fd2",
+    "main": "de615b772cf37a99e7e08a647c59607b271de606",
+    "v042Peeled": "de615b772cf37a99e7e08a647c59607b271de606"
+  },
+  "validation": {
+    "HOST": "PREFLIGHT_ONLY; Release task blocked before Gradle startup",
+    "EMULATOR": "NOT_RUN",
+    "ANDROID_INSTRUMENTED": "NOT_RUN",
+    "PHYSICAL_DEVICE": "NOT_RUN",
+    "ANDROID_CI": "BLOCKED_ANDROID_CI_CAUSE_UNPROVEN"
+  },
+  "jvmTests": "NOT_RUN",
+  "androidTestCompilation": "NOT_RUN",
+  "retryCount": 0,
+  "apkRetained": false,
+  "apkDistributed": false
+}

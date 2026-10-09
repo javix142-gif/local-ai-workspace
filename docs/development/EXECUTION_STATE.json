@@ -1275,6 +1275,154 @@
     "nextAction": "Wait for new verified AVD diagnostic evidence or the required physical-device/workbook prerequisites; do not create task IDs or start speculative CI."
   },
   "latestCleanReleaseRepro": {
+    "name": "Fresh-checkout ARM64 Release reproducibility attempt",
+    "status": "BLOCKED_BEFORE_GRADLE_START_NETWORK",
+    "testedCheckoutCommit": "4559b502c55497f9f3c932c3e428f708fb086fd2",
+    "applicationSourceCommit": "260a3f7c6267cc5a90a9cf516356951aec0627a1",
+    "sourceDiff": "All paths between application source commit 260a3f7c and tested checkout 4559b5 are documentation/evidence only.",
+    "branch": "feat/0.5.0-skills-agents",
+    "remoteFeatureHeadBeforeAndAfter": "4559b502c55497f9f3c932c3e428f708fb086fd2",
+    "checkoutPreflight": {
+      "method": "Fresh detached Git worktree from fetched remote SHA",
+      "trackedUntrackedOrIgnoredLines": 0,
+      "projectGradleCachePresent": false,
+      "appBuildPresent": false,
+      "nativeBuildPresent": false,
+      "cxxPresent": false,
+      "localPropertiesPresent": false,
+      "llamaCppTrackedFiles": 1865,
+      "llamaCppDiskFiles": 1865,
+      "llamaCppMissing": 0,
+      "llamaCppExtras": 0,
+      "llamaCppBlobMismatches": 0,
+      "modelsHeader": "third_party/llama.cpp/src/models/models.h",
+      "modelsHeaderTracked": true,
+      "modelsHeaderBlobSha1": "387a4adcb239db69d72349ee57e2fbfe2db04e5a",
+      "binaryIgnoreProbes": 15,
+      "weightsAndBinariesRemainIgnored": true,
+      "preflightEvidence": "docs/validation/clean-release-repro-4559b5/preflight.json"
+    },
+    "releaseBuild": {
+      "taskRequested": ":app:assembleRelease",
+      "command": "./gradlew :app:assembleRelease -Parm64Only=true --rerun-tasks --no-build-cache --no-daemon --no-parallel --max-workers=1 --console=plain --info",
+      "startedAtUtc": "2026-10-09T08:31:52Z",
+      "finishedAtUtc": "2026-10-09T08:31:58Z",
+      "exitCode": 1,
+      "result": "Gradle wrapper failed before Gradle startup; distribution download received java.net.ConnectException: Connection refused.",
+      "requestedGradleVersion": "8.10.2",
+      "gradleTasksExecuted": 0,
+      "cmakeConfigure": "NOT_REACHED",
+      "cmakeBuild": "NOT_REACHED",
+      "ninjaArm64": "NOT_REACHED",
+      "apk": "NOT_GENERATED",
+      "retryCount": 0,
+      "log": "docs/validation/clean-release-repro-4559b5/assembleRelease.log",
+      "logSha256": "8242e5bf0c6a9426897567f3614eb6606fffe8a03155b7758e0c9feb2a3425d9",
+      "logBytes": 2136,
+      "taskOutcomes": "docs/validation/clean-release-repro-4559b5/task-outcomes.txt"
+    },
+    "toolchain": {
+      "os": "Linux x86_64",
+      "jdk": "Eclipse Temurin 17.0.20.1+1",
+      "gradle": "8.10.2 wrapper-pinned; distribution fetch failed",
+      "agp": "8.7.3",
+      "androidSdk": "/workspace/.toolchain/android-sdk",
+      "androidPlatform": "android-35 revision 2",
+      "buildTools": "35.0.0",
+      "ndk": "27.0.12077973",
+      "cmake": "3.31.6",
+      "ninja": "1.12.1",
+      "abiRequested": "arm64-v8a",
+      "evidence": "docs/validation/clean-release-repro-4559b5/toolchain.txt"
+    },
+    "gradleUserHome": {
+      "path": "/workspace/law-clean-release-4559b5-gradle-home",
+      "createdForRun": true,
+      "emptyBeforeInvocation": true,
+      "postFailure": "only zero-byte .zip.part and .lck files for Gradle 8.10.2 wrapper download; no distribution/dependencies cached",
+      "evidence": "docs/validation/clean-release-repro-4559b5/gradle-user-home-after.txt"
+    },
+    "validationStates": {
+      "HOST": "Fresh checkout and vendor preflight passed; requested Release build BLOCKED before Gradle startup.",
+      "JVM": "NOT_RUN",
+      "ANDROID_TEST_COMPILATION": "NOT_RUN",
+      "EMULATOR": "NOT_RUN",
+      "ANDROID_CI": "BLOCKED_ANDROID_CI_CAUSE_UNPROVEN",
+      "PHYSICAL_DEVICE": "NOT_RUN"
+    },
+    "testsAndDevice": {
+      "jvmTests": "NOT_RUN",
+      "androidTestCompilation": "NOT_RUN",
+      "instrumentedTests": "NOT_RUN",
+      "emulator": "NOT_RUN",
+      "physicalDevice": "NOT_RUN",
+      "apkRetainedOrDistributed": false
+    },
+    "planState": {
+      "originalPlan": "User-supplied source of 97 task IDs/order/dependencies; none reconstructed or modified.",
+      "M01-05": "VALIDADA_HOST (host only; independent audit accepted)",
+      "M01-06": {
+        "name": "Ingesta e indexación reanudable",
+        "status": "PENDING_REQUIRES_DEVICE",
+        "requires_device": true
+      }
+    },
+    "preservedBaselines": {
+      "main": "de615b772cf37a99e7e08a647c59607b271de606",
+      "v0.4.2": "de615b772cf37a99e7e08a647c59607b271de606"
+    },
+    "evidenceDirectory": "docs/validation/clean-release-repro-4559b5/",
+    "evidenceManifest": "docs/validation/clean-release-repro-4559b5/SHA256SUMS",
+    "evidenceManifestSha256": "2b73b5a25c01e2aee96a279188a03b31686fc3ce8ea9a4760952f31756ba58b1",
+    "evidenceManifestEntries": 13,
+    "resultsSha256": "4c1c252d7867e2823a197ec9a48b3b716cd195be2792237b98d4214012233944",
+    "summarySha256": "0d7e1749dc3c17599ac0f824b3049e1712212faafb7c543938c77a1ee65e0cff",
+    "gitDiffCheck": "PASS; all staged changes are documentation/evidence and whitespace check clean."
+  },
+  "latestIndependentOrchestrationAudit": {
+    "auditedAtUtc": "2026-10-09 07:35:50 UTC",
+    "status": "BLOCKED_ANDROID_CI_CAUSE_UNPROVEN",
+    "scope": "Independent documentary audit of the AVD failure investigation; no product or workflow changes.",
+    "sourceBranch": "feat/0.5.0-skills-agents",
+    "sourceBranchHeadSha": "a18f1fc99be211fe2346799218233548a15adf16",
+    "compareBaseSha": "ba3117bca90494514cd7f2c78f65d53e69625c1a",
+    "branchCompare": "ahead_by=1, behind_by=0; fast-forward documentation-only commit",
+    "changedPaths": [
+      "docs/development/CODEX_TO_WORK_HANDOFF.md",
+      "docs/development/EXECUTION_STATE.json",
+      "docs/validation/android-emulator-ci/RESULTS.md"
+    ],
+    "workflowSourceCommit": "bdae87820b73dbcc0decfde3a65c391c6fb63279",
+    "runId": 37865813921,
+    "jobId": 113612155627,
+    "observedFromGitHub": {
+      "avdStep": "FAILURE",
+      "connectedInstrumentation": "SKIPPED",
+      "evidenceCollector": "FAILURE",
+      "artifactUpload": "SUCCESS",
+      "avdCreateCommandAndEmulatorLaunch": "Present in the job log; command proceeds to emulator launch, but the log does not establish a usable AVD was written or its path.",
+      "waitForDevice": "timeout 600 adb wait-for-device exited 124",
+      "junitXmlCount": 0,
+      "executedTests": 0,
+      "gradleTask": "NOT_RUN",
+      "physicalDevice": "NOT_RUN"
+    },
+    "artifact": {
+      "id": 11588945524,
+      "bytes": 23012,
+      "githubApiSha256": "007278791dc27fcda430694be6f3b5d7e3620932548145ba5b28e9907bebb9ac",
+      "limitation": "The artifact download connector returned a file reference; this audit did not read the ZIP bytes or independently recompute its archive/internal manifest hashes. The executor's reported 11/11 internal checks are retained as executor evidence, not re-labeled as recalculated by this auditor."
+    },
+    "finding": "Confirmed: emulator could not discover a usable AVD named localai-api35-x86_64. Unproven: whether creation was absent/partial, stored outside the emulator search path, or failed for another reason. Effective AVD environment values and directory/listing diagnostics are absent.",
+    "workflowChanged": false,
+    "newActionsRunStarted": false,
+    "hostOrAndroidTestsRunByAuditor": false,
+    "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
+    "v042PeeledCommitSha": "de615b772cf37a99e7e08a647c59607b271de606",
+    "executorStatus": "Idle after completed assignment; direct read/wait access worked. No additional instruction sent because current bounded investigation ended blocked and attempt budget was exhausted.",
+    "nextAction": "Keep the AVD cause blocked; do not claim EMULATOR validation. Resume only when new evidence or a bounded, authorized diagnostic opportunity can establish the creation/discovery cause. The original 97-task plan remains unchanged; M01-06 and physical Motorola validation remain pending their prerequisites."
+  },
+  "previousCleanReleaseRepro": {
     "name": "Clean Git checkout Release reproducibility verification",
     "status": "PASS_HOST_CLEAN_CHECKOUT_RELEASE_ONLY",
     "testedCheckoutCommit": "83affa67584292137a17dd544a4f6e207cf7c96f",
@@ -1389,48 +1537,5 @@
       ],
       "limits": "HOST Release build only. JVM tests, AndroidTest, emulator, Android CI execution, APK retention/distribution, and PHYSICAL_DEVICE validation were not performed."
     }
-  },
-  "latestIndependentOrchestrationAudit": {
-    "auditedAtUtc": "2026-10-09 07:35:50 UTC",
-    "status": "BLOCKED_ANDROID_CI_CAUSE_UNPROVEN",
-    "scope": "Independent documentary audit of the AVD failure investigation; no product or workflow changes.",
-    "sourceBranch": "feat/0.5.0-skills-agents",
-    "sourceBranchHeadSha": "a18f1fc99be211fe2346799218233548a15adf16",
-    "compareBaseSha": "ba3117bca90494514cd7f2c78f65d53e69625c1a",
-    "branchCompare": "ahead_by=1, behind_by=0; fast-forward documentation-only commit",
-    "changedPaths": [
-      "docs/development/CODEX_TO_WORK_HANDOFF.md",
-      "docs/development/EXECUTION_STATE.json",
-      "docs/validation/android-emulator-ci/RESULTS.md"
-    ],
-    "workflowSourceCommit": "bdae87820b73dbcc0decfde3a65c391c6fb63279",
-    "runId": 37865813921,
-    "jobId": 113612155627,
-    "observedFromGitHub": {
-      "avdStep": "FAILURE",
-      "connectedInstrumentation": "SKIPPED",
-      "evidenceCollector": "FAILURE",
-      "artifactUpload": "SUCCESS",
-      "avdCreateCommandAndEmulatorLaunch": "Present in the job log; command proceeds to emulator launch, but the log does not establish a usable AVD was written or its path.",
-      "waitForDevice": "timeout 600 adb wait-for-device exited 124",
-      "junitXmlCount": 0,
-      "executedTests": 0,
-      "gradleTask": "NOT_RUN",
-      "physicalDevice": "NOT_RUN"
-    },
-    "artifact": {
-      "id": 11588945524,
-      "bytes": 23012,
-      "githubApiSha256": "007278791dc27fcda430694be6f3b5d7e3620932548145ba5b28e9907bebb9ac",
-      "limitation": "The artifact download connector returned a file reference; this audit did not read the ZIP bytes or independently recompute its archive/internal manifest hashes. The executor's reported 11/11 internal checks are retained as executor evidence, not re-labeled as recalculated by this auditor."
-    },
-    "finding": "Confirmed: emulator could not discover a usable AVD named localai-api35-x86_64. Unproven: whether creation was absent/partial, stored outside the emulator search path, or failed for another reason. Effective AVD environment values and directory/listing diagnostics are absent.",
-    "workflowChanged": false,
-    "newActionsRunStarted": false,
-    "hostOrAndroidTestsRunByAuditor": false,
-    "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
-    "v042PeeledCommitSha": "de615b772cf37a99e7e08a647c59607b271de606",
-    "executorStatus": "Idle after completed assignment; direct read/wait access worked. No additional instruction sent because current bounded investigation ended blocked and attempt budget was exhausted.",
-    "nextAction": "Keep the AVD cause blocked; do not claim EMULATOR validation. Resume only when new evidence or a bounded, authorized diagnostic opportunity can establish the creation/discovery cause. The original 97-task plan remains unchanged; M01-06 and physical Motorola validation remain pending their prerequisites."
   }
 }

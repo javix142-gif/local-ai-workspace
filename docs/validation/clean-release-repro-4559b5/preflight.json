@@ -1,0 +1,117 @@
+{
+  "recordedAtUtc": "2026-10-09T08:31:00Z",
+  "repository": "javix142-gif/local-ai-workspace",
+  "branch": "DETACHED",
+  "head": "4559b502c55497f9f3c932c3e428f708fb086fd2",
+  "expectedHead": "4559b502c55497f9f3c932c3e428f708fb086fd2",
+  "gitStatusPorcelainV1IgnoredOutputPath": "git-status-porcelain-ignored.txt",
+  "gitStatusEmpty": true,
+  "vendor": {
+    "trackedFiles": 1865,
+    "diskFiles": 1865,
+    "missing": [],
+    "extras": [],
+    "blobMismatches": [],
+    "modelsHeaderBlob": "387a4adcb239db69d72349ee57e2fbfe2db04e5a"
+  },
+  "trackedSourceChecks": [
+    {
+      "path": "third_party/llama.cpp/src/models/models.h",
+      "tracked": true,
+      "gitBlob": "387a4adcb239db69d72349ee57e2fbfe2db04e5a",
+      "ignoreRule": ".gitignore:95:!third_party/llama.cpp/src/models/models.h\tthird_party/llama.cpp/src/models/models.h",
+      "ignored": false
+    },
+    {
+      "path": "third_party/llama.cpp/src/models/afmoe.cpp",
+      "tracked": true,
+      "gitBlob": "08c22b6ed8234b1288bdcda0083e0af13e3c0022",
+      "ignoreRule": ".gitignore:94:!third_party/llama.cpp/src/models/*.cpp\tthird_party/llama.cpp/src/models/afmoe.cpp",
+      "ignored": false
+    }
+  ],
+  "binaryIgnoreMatrix": [
+    {
+      "path": "third_party/llama.cpp/src/models/__release_probe__.bin",
+      "ignored": true,
+      "rule": "third_party/llama.cpp/.gitignore:5:*.bin\tthird_party/llama.cpp/src/models/__release_probe__.bin"
+    },
+    {
+      "path": "third_party/llama.cpp/src/models/__release_probe__.gguf",
+      "ignored": true,
+      "rule": "third_party/llama.cpp/.gitignore:14:*.gguf\tthird_party/llama.cpp/src/models/__release_probe__.gguf"
+    },
+    {
+      "path": "third_party/llama.cpp/src/models/__release_probe__.litertlm",
+      "ignored": true,
+      "rule": ".gitignore:40:**/models/**\tthird_party/llama.cpp/src/models/__release_probe__.litertlm"
+    },
+    {
+      "path": "third_party/llama.cpp/src/models/__release_probe__.onnx",
+      "ignored": true,
+      "rule": ".gitignore:40:**/models/**\tthird_party/llama.cpp/src/models/__release_probe__.onnx"
+    },
+    {
+      "path": "third_party/llama.cpp/src/models/__release_probe__.tflite",
+      "ignored": true,
+      "rule": ".gitignore:40:**/models/**\tthird_party/llama.cpp/src/models/__release_probe__.tflite"
+    },
+    {
+      "path": "third_party/llama.cpp/src/models/__release_probe__.safetensors",
+      "ignored": true,
+      "rule": ".gitignore:40:**/models/**\tthird_party/llama.cpp/src/models/__release_probe__.safetensors"
+    },
+    {
+      "path": "third_party/llama.cpp/src/models/__release_probe__.pt",
+      "ignored": true,
+      "rule": ".gitignore:40:**/models/**\tthird_party/llama.cpp/src/models/__release_probe__.pt"
+    },
+    {
+      "path": "third_party/llama.cpp/src/models/__release_probe__.pth",
+      "ignored": true,
+      "rule": ".gitignore:40:**/models/**\tthird_party/llama.cpp/src/models/__release_probe__.pth"
+    },
+    {
+      "path": "third_party/llama.cpp/src/models/__release_probe__.ckpt",
+      "ignored": true,
+      "rule": ".gitignore:40:**/models/**\tthird_party/llama.cpp/src/models/__release_probe__.ckpt"
+    },
+    {
+      "path": "third_party/llama.cpp/src/models/__release_probe__.ggml",
+      "ignored": true,
+      "rule": ".gitignore:40:**/models/**\tthird_party/llama.cpp/src/models/__release_probe__.ggml"
+    },
+    {
+      "path": "third_party/llama.cpp/src/models/__release_probe__.so",
+      "ignored": true,
+      "rule": "third_party/llama.cpp/.gitignore:20:*.so\tthird_party/llama.cpp/src/models/__release_probe__.so"
+    },
+    {
+      "path": "third_party/llama.cpp/src/models/__release_probe__.a",
+      "ignored": true,
+      "rule": "third_party/llama.cpp/.gitignore:3:*.a\tthird_party/llama.cpp/src/models/__release_probe__.a"
+    },
+    {
+      "path": "third_party/llama.cpp/src/models/__release_probe__.apk",
+      "ignored": true,
+      "rule": ".gitignore:40:**/models/**\tthird_party/llama.cpp/src/models/__release_probe__.apk"
+    },
+    {
+      "path": "third_party/llama.cpp/src/models/__release_probe__.aab",
+      "ignored": true,
+      "rule": ".gitignore:40:**/models/**\tthird_party/llama.cpp/src/models/__release_probe__.aab"
+    },
+    {
+      "path": "third_party/llama.cpp/src/models/__release_probe__.keystore",
+      "ignored": true,
+      "rule": ".gitignore:58:*.keystore\tthird_party/llama.cpp/src/models/__release_probe__.keystore"
+    }
+  ],
+  "projectBuildResidue": [],
+  "gradleUserHome": {
+    "path": "/workspace/law-clean-release-4559b5-gradle-home",
+    "existedBeforeRun": false,
+    "emptyBeforeRun": true
+  },
+  "preflightPass": true
+}

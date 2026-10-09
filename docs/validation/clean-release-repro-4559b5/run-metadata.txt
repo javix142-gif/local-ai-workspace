@@ -1,0 +1,19 @@
+Repository: https://github.com/javix142-gif/local-ai-workspace.git
+Branch target: feat/0.5.0-skills-agents
+Tested checkout SHA: 4559b502c55497f9f3c932c3e428f708fb086fd2
+Checkout type: fresh detached git worktree fetched from the branch
+Preflight: PASS; git status --porcelain=v1 --ignored was empty (0 lines); project .gradle, app/build, llama-runtime/build, .cxx and local.properties absent.
+Build start UTC: 2026-10-09T08:31:52Z
+Build end UTC: 2026-10-09T08:31:58Z
+Exact Gradle task command:
+./gradlew :app:assembleRelease -Parm64Only=true --rerun-tasks --no-build-cache --no-daemon --no-parallel --max-workers=1 --console=plain --info
+Environment:
+JAVA_HOME=/workspace/.toolchain/jdk-17
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk
+GRADLE_USER_HOME=/workspace/law-clean-release-4559b5-gradle-home (new, empty before command)
+TMPDIR=/workspace/law-clean-release-4559b5-tmp
+JAVA_TOOL_OPTIONS=-Djava.io.tmpdir=/workspace/law-clean-release-4559b5-tmp
+Exit code: 1
+Result: BLOCKED_BEFORE_GRADLE_START; wrapper distribution request to https://services.gradle.org/distributions/gradle-8.10.2-bin.zip failed with java.net.ConnectException: Connection refused. No retry was made.
+Remote feature ref was 4559b502c55497f9f3c932c3e428f708fb086fd2 before build and remained the same in the post-build ls-remote observation; main and peeled v0.4.2 remained de615b772cf37a99e7e08a647c59607b271de606.

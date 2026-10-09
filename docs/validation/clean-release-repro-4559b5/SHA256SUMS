@@ -1,0 +1,13 @@
+4c1c252d7867e2823a197ec9a48b3b716cd195be2792237b98d4214012233944  docs/validation/clean-release-repro-4559b5/RESULTS.md
+8242e5bf0c6a9426897567f3614eb6606fffe8a03155b7758e0c9feb2a3425d9  docs/validation/clean-release-repro-4559b5/assembleRelease.log
+d8a48f6e8c142df7619f199726c306f2d0e5e074139b48fe57f7f861b30cc76b  docs/validation/clean-release-repro-4559b5/build-end-utc.txt
+4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865  docs/validation/clean-release-repro-4559b5/build-exit-code.txt
+6ca501e30fe4735cbd85289a64a99e879b134602b5ddaab4329f5a79b3ee4a6e  docs/validation/clean-release-repro-4559b5/build-start-utc.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  docs/validation/clean-release-repro-4559b5/git-status-porcelain-ignored.txt
+d56ae4049ca9007629df83411b912ca57b3532e52a4ac5c5d426d0a60253eb77  docs/validation/clean-release-repro-4559b5/gradle-user-home-after.txt
+40c02beec87486703bd576ee7b221c07e044de3c62c0ad70763a6f3a3ddeadb3  docs/validation/clean-release-repro-4559b5/preflight.json
+c7f5ed5b72e3ffc6481d0cf58a4ab07b235ee2b282df97aae8034537f5395c7a  docs/validation/clean-release-repro-4559b5/remote-refs.txt
+5d36f3f1c82f63d6482b0395baef088112b2261d8155f45e105b8edb64aa4bf6  docs/validation/clean-release-repro-4559b5/run-metadata.txt
+0d7e1749dc3c17599ac0f824b3049e1712212faafb7c543938c77a1ee65e0cff  docs/validation/clean-release-repro-4559b5/summary.json
+945a605154b55ffb4f9aec9fbe6bddc880e58e367a1ef278f8043376c5cb0334  docs/validation/clean-release-repro-4559b5/task-outcomes.txt
+fc2f6775ecfec0c0fb08845c9cb409a48e3a85de04a5bbb9e46a2f82ba0de385  docs/validation/clean-release-repro-4559b5/toolchain.txt

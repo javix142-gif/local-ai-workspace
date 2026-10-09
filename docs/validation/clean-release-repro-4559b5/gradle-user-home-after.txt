@@ -1,0 +1,5 @@
+GRADLE_USER_HOME=/workspace/law-clean-release-4559b5-gradle-home
+State before invocation: path absent; created empty for this run.
+State after wrapper failure: only wrapper/dists/gradle-8.10.2-bin/<wrapper-hash>/gradle-8.10.2-bin.zip.part (0 bytes) and gradle-8.10.2-bin.zip.lck (0 bytes) were present.
+No Gradle distribution, dependency cache, or task output was downloaded/used.
+No cache was copied from another checkout.
