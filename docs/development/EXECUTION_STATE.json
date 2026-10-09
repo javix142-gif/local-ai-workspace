@@ -1537,5 +1537,66 @@
       ],
       "limits": "HOST Release build only. JVM tests, AndroidTest, emulator, Android CI execution, APK retention/distribution, and PHYSICAL_DEVICE validation were not performed."
     }
+  },
+  "latestIndependentCleanReleaseAttemptAudit": {
+    "recordedAtUtc": "2026-10-09 09:35:53 UTC",
+    "status": "BLOCKED_BEFORE_GRADLE_START_NETWORK_CONFIRMED",
+    "scope": "Independent audit of the fresh-checkout ARM64 Release attempt; documentary evidence review only, no local build execution.",
+    "sourceBranch": "feat/0.5.0-skills-agents",
+    "sourceBranchHeadSha": "fcae468dc2a776d6e86709547a8bc3f295d1063d",
+    "previousTestedCheckoutSha": "4559b502c55497f9f3c932c3e428f708fb086fd2",
+    "compareFromPreviousTestedCheckout": {
+      "status": "ahead",
+      "aheadBy": 1,
+      "behindBy": 0,
+      "changedPathsAllDocumentationOrEvidence": true,
+      "productOrBuildPathsChanged": false
+    },
+    "commitUnderAudit": "fcae468dc2a776d6e86709547a8bc3f295d1063d",
+    "checkoutAndPreflight": {
+      "recordedDetachedHead": "4559b502c55497f9f3c932c3e428f708fb086fd2",
+      "publishedPorcelainIgnoredFileEmpty": true,
+      "llamaCppTrackedAndDiskFiles": "1865/1865",
+      "missing": 0,
+      "extras": 0,
+      "blobMismatches": 0,
+      "modelsHeaderBlob": "387a4adcb239db69d72349ee57e2fbfe2db04e5a",
+      "binaryIgnoreProbes": "15/15 ignored",
+      "gradleUserHome": "new and empty before invocation"
+    },
+    "execution": {
+      "command": "./gradlew :app:assembleRelease -Parm64Only=true --rerun-tasks --no-build-cache --no-daemon --no-parallel --max-workers=1 --console=plain --info",
+      "logEvidence": "Gradle wrapper attempted the pinned Gradle 8.10.2 distribution from services.gradle.org and returned java.net.ConnectException: Connection refused.",
+      "exitCode": 1,
+      "gradleStarted": false,
+      "gradleTasksExecuted": 0,
+      "cmake": "NOT_REACHED",
+      "ninjaArm64": "NOT_REACHED",
+      "apk": "NOT_GENERATED",
+      "retries": 0
+    },
+    "evidenceAudit": {
+      "sha256ManifestEntries": 13,
+      "manifestSha256": "2b73b5a25c01e2aee96a279188a03b31686fc3ce8ea9a4760952f31756ba58b1",
+      "entriesRecomputedFromPublishedGitHubFileContents": 13,
+      "entriesMatching": 13,
+      "rawLogSha256": "8242e5bf0c6a9426897567f3614eb6606fffe8a03155b7758e0c9feb2a3425d9",
+      "rawLogHashMatchesManifest": true,
+      "logContainsConnectionRefused": true
+    },
+    "remoteRefs": {
+      "featureAtDelivery": "fcae468dc2a776d6e86709547a8bc3f295d1063d",
+      "main": "de615b772cf37a99e7e08a647c59607b271de606",
+      "v042Peeled": "de615b772cf37a99e7e08a647c59607b271de606"
+    },
+    "previousCleanReleasePass": "The earlier clean-checkout PASS at 83affa67584292137a17dd544a4f6e207cf7c96f remains historical and is not replaced; this empty-Gradle-home attempt was blocked before Gradle startup.",
+    "validations": {
+      "HOST": "Fresh-checkout/source preflight is supported by published evidence; Release build blocked before Gradle start.",
+      "JVM": "NOT_RUN",
+      "ANDROID_TEST_COMPILATION": "NOT_RUN",
+      "EMULATOR": "NOT_RUN",
+      "PHYSICAL_DEVICE": "NOT_RUN"
+    },
+    "nextAction": "Stop this attempt as instructed. A new attempt requires the Gradle distribution endpoint to be reachable or a separately authorized reproducibility setup; do not copy caches or artifacts to bypass the recorded constraint."
   }
 }
