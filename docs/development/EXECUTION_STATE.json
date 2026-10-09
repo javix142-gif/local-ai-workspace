@@ -1373,9 +1373,9 @@
     },
     "evidenceDirectory": "docs/validation/clean-release-repro-4559b5/",
     "evidenceManifest": "docs/validation/clean-release-repro-4559b5/SHA256SUMS",
-    "evidenceManifestSha256": "2b73b5a25c01e2aee96a279188a03b31686fc3ce8ea9a4760952f31756ba58b1",
+    "evidenceManifestSha256": "5e90aa48fceb77720c76082814bae9ccc8e251bd301939f7dae3d1acc1e340aa",
     "evidenceManifestEntries": 13,
-    "resultsSha256": "4c1c252d7867e2823a197ec9a48b3b716cd195be2792237b98d4214012233944",
+    "resultsSha256": "e1ffe740f09314ec3f831a8fff62137523995be10a5c051d596ab43a9a65525d",
     "summarySha256": "0d7e1749dc3c17599ac0f824b3049e1712212faafb7c543938c77a1ee65e0cff",
     "gitDiffCheck": "PASS; all staged changes are documentation/evidence and whitespace check clean."
   },
@@ -1577,12 +1577,15 @@
     },
     "evidenceAudit": {
       "sha256ManifestEntries": 13,
-      "manifestSha256": "2b73b5a25c01e2aee96a279188a03b31686fc3ce8ea9a4760952f31756ba58b1",
+      "manifestSha256": "5e90aa48fceb77720c76082814bae9ccc8e251bd301939f7dae3d1acc1e340aa",
       "entriesRecomputedFromPublishedGitHubFileContents": 13,
       "entriesMatching": 13,
       "rawLogSha256": "8242e5bf0c6a9426897567f3614eb6606fffe8a03155b7758e0c9feb2a3425d9",
       "rawLogHashMatchesManifest": true,
-      "logContainsConnectionRefused": true
+      "logContainsConnectionRefused": true,
+      "priorManifestSha256": "2b73b5a25c01e2aee96a279188a03b31686fc3ce8ea9a4760952f31756ba58b1",
+      "resultsSha256": "e1ffe740f09314ec3f831a8fff62137523995be10a5c051d596ab43a9a65525d",
+      "finalManifestRefresh": "RESULTS.md was appended with this independent audit; SHA256SUMS was refreshed and all 13 entries reverified from published file contents."
     },
     "remoteRefs": {
       "featureAtDelivery": "fcae468dc2a776d6e86709547a8bc3f295d1063d",
