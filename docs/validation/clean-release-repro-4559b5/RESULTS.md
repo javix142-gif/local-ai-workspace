@@ -42,3 +42,12 @@ The raw, unmodified output is in `assembleRelease.log`. `task-outcomes.txt` dist
 `SHA256SUMS` covers the evidence files in this directory except the manifest itself. The JSON summary records `BLOCKED_BEFORE_GRADLE_START_NETWORK` and zero task/CMake/Ninja execution.
 
 No JVM suite, AndroidTest compilation, instrumentation, emulator run, Android CI run, or Motorola validation was performed. `EMULATOR`, Android, and `PHYSICAL_DEVICE` validation remain **NOT_RUN** for this attempt; Android emulator CI separately remains `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`. This attempt generated no APK and provides no Android or device validation.
+
+## Independent orchestration audit (2026-10-09 09:35:53 UTC)
+
+**Disposition: `BLOCKED_BEFORE_GRADLE_START_NETWORK_CONFIRMED`.** I independently reviewed the commit comparison, current branch reference, published preflight, run metadata, task outcomes, raw Gradle-wrapper log, remote refs, and SHA manifest. Commit `fcae468dc2a776d6e86709547a8bc3f295d1063d` is one fast-forward commit beyond tested checkout `4559b502c55497f9f3c932c3e428f708fb086fd2`; the diff contains documentation/evidence only. The reported clean detached preflight has 0 porcelain/ignored lines, 1,865/1,865 llama.cpp files with no missing, extra or blob-mismatched files, and 15/15 binary ignore probes. These are independently read-back records, not a build I ran locally.
+
+The raw log shows the wrapper attempted the pinned Gradle 8.10.2 download and failed with `java.net.ConnectException: Connection refused`. The recorded exit code is 1, but the evidence also confirms Gradle never started: zero tasks ran and CMake/Ninja were not reached. No APK was produced. The correct status is a network-blocked attempt, not build PASS or application build failure. I recalculated all 13 published evidence hashes from the GitHub file contents; all match `SHA256SUMS`, whose SHA-256 matches the execution state. The raw log hash also matches its manifest entry.
+
+The feature branch was `fcae468dc2a776d6e86709547a8bc3f295d1063d`; `main` and peeled `v0.4.2` remain at `de615b772cf37a99e7e08a647c59607b271de606`. No JVM, AndroidTest, emulator, CI, or physical-device tests were run. The historical successful clean-checkout build at `83affa67584292137a17dd544a4f6e207cf7c96f` remains valid for that SHA and is not replaced by this blocked empty-Gradle-home attempt. No retry was started because the contract required stopping on the network failure without copying caches.
+
