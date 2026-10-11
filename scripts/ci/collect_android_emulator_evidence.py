@@ -123,6 +123,14 @@ def parse_results(xml_files: list[Path]) -> tuple[dict[str, int], list[dict[str,
     return counts, skipped_cases
 
 
+def read_json_if_available(path: Path) -> dict[str, object] | None:
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    return value if isinstance(value, dict) else None
+
+
 def collect_xml() -> list[Path]:
     bases = [
         REPO / "app/build/outputs/androidTest-results/connected",
@@ -158,8 +166,14 @@ def main() -> int:
     for filename in (
         "sdkmanager.log", "sdk-licenses.log", "avdmanager.log", "emulator.log",
         "emulator-boot.log", "gradle-connected.log", "adb-before-tests.txt", "android-toolchain.txt", "kvm-check.txt",
+        "avd-environment.txt", "avd-resolved-paths.txt", "avdmanager-create-exit-code.txt",
+        "avdmanager-create-pipeline-exit-code.txt", "avdmanager-create-pipeline-status.txt",
+        "avdmanager-list-avd.txt", "avdmanager-list-avd.txt.exit-code",
+        "emulator-list-avds.txt", "emulator-list-avds.txt.exit-code", "avd-storage-inventory.txt",
     ):
         safe_copy(RUNNER_TEMP / filename, OUT / "logs" / filename)
+    safe_copy(RUNNER_TEMP / "avd-prelaunch.json", OUT / "avd-prelaunch.json")
+    safe_copy(RUNNER_TEMP / "avd-prelaunch-json-exit-code.txt", OUT / "avd-prelaunch-json-exit-code.txt")
 
     if serial:
         logcat = command([ADB, "-s", serial, "logcat", "-d", "-t", "2000", "-v", "time",
@@ -178,6 +192,7 @@ def main() -> int:
     except ValueError:
         gradle_exit = None
     facts = adb_facts(serial)
+    avd_prelaunch = read_json_if_available(OUT / "avd-prelaunch.json")
     run_id = os.environ.get("GITHUB_RUN_ID", "")
     server = os.environ.get("GITHUB_SERVER_URL", "https://github.com").rstrip("/")
     repository = os.environ.get("GITHUB_REPOSITORY", "")
@@ -189,6 +204,7 @@ def main() -> int:
         "runUrl": f"{server}/{repository}/actions/runs/{run_id}" if run_id and repository else None,
         "expected": {"api": 35, "abi": "x86_64", "systemImage": "google_apis"},
         "device": facts,
+        "avdPrelaunchDiagnostics": avd_prelaunch,
         "physicalDeviceValidation": "NOT_RUN",
         "gradleExitCode": gradle_exit,
         "instrumentationXmlCount": len(xml_files),

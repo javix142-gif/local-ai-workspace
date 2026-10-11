@@ -959,6 +959,24 @@
         "PHYSICAL_DEVICE": "NOT_RUN"
       },
       "plan": "Original user-provided 97 task IDs/order/dependencies unchanged; M01-06 remains PENDING and requires a physical device."
+    },
+    "diagnosticPreparation": {
+      "recordedAtUtc": "2026-10-11T16:14:20Z",
+      "assignedHeadSha": "fcad2eca9bfb4d0b286e1508f1eaeb67ab726a7b",
+      "previousIncidentSourceSha": "bdae87820b73dbcc0decfde3a65c391c6fb63279",
+      "previousWorkflowAndCollectorUnchangedFromIncident": true,
+      "originalArtifactId": "11588945524",
+      "originalArtifactZipBytes": 23012,
+      "originalArtifactZipSha256": "007278791dc27fcda430694be6f3b5d7e3620932548145ba5b28e9907bebb9ac",
+      "originalArtifactManifestEntriesVerified": "11/11",
+      "observed": "The emulator reported Unknown AVD name; adb had no device; wait-for-device exited 124; instrumentation was skipped; XML=0 and executed=0.",
+      "causeBeforeNewRun": "UNPROVEN; prior artifact lacks effective AVD environment values, independent AVD listings and filesystem inventory.",
+      "pushTrigger": "The existing emulator workflow push paths include its own workflow file; the QA Debug workflow does not match these diagnostic paths.",
+      "runCountAuthorized": 1,
+      "avdCreateLaunchAndWaitBehaviorChanged": false,
+      "worktreeHead": "fcad2eca9bfb4d0b286e1508f1eaeb67ab726a7b",
+      "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
+      "v042PeeledSha": "de615b772cf37a99e7e08a647c59607b271de606"
     }
   },
   "latestQaArm64Artifact": {
@@ -1784,5 +1802,59 @@
       },
       "nextAction": "Stop this attempt as instructed. A new attempt requires the Gradle distribution endpoint to be reachable or a separately authorized reproducibility setup; do not copy caches or artifacts to bypass the recorded constraint."
     }
-  ]
+  ],
+  "latestGradleEvidenceClassification": {
+    "recordedAtUtc": "2026-10-11T16:14:20Z",
+    "branch": "feat/0.5.0-skills-agents",
+    "branchHeadObserved": "fcad2eca9bfb4d0b286e1508f1eaeb67ab726a7b",
+    "freshEmptyGradleHome": {
+      "classification": "INFRASTRUCTURE_FAILURE",
+      "retryStatus": "RETRY_EXHAUSTED",
+      "attemptCount": 2,
+      "finalAttemptCheckoutSha": "6d1b256b23c4e76dad72413ced9b10419425c134",
+      "commandTask": ":app:assembleRelease -Parm64Only=true",
+      "observedFailure": "Gradle wrapper received java.net.ConnectException: Connection refused while fetching Gradle 8.10.2, before Gradle startup.",
+      "gradleTasksExecuted": 0,
+      "cmakeNinja": "NOT_REACHED",
+      "apk": "NOT_GENERATED",
+      "lowerLevelNetworkCause": "NOT_DETERMINED",
+      "retryOrWorkaroundAuthorized": false,
+      "evidence": "docs/validation/clean-release-repro-6d1b25/RESULTS.md"
+    },
+    "historicalPreprovisionedReleasePass": {
+      "classification": "PASS_HOST_CLEAN_CHECKOUT_RELEASE_WITH_PREPROVISIONED_DEPENDENCIES",
+      "checkoutSha": "83affa67584292137a17dd544a4f6e207cf7c96f",
+      "applicationSourceSha": "260a3f7c6267cc5a90a9cf516356951aec0627a1",
+      "task": ":app:assembleRelease",
+      "abi": "arm64-v8a",
+      "outcome": "128/128 Gradle tasks executed; ARM64 CMake configure and Ninja build completed successfully.",
+      "dependencyPolicy": "Used shared pre-provisioned /home/agent/.gradle with --offline; this does not prove build startup from an empty Gradle User Home.",
+      "apkRetainedOrDistributed": false,
+      "evidence": "docs/validation/clean-release-repro-83affa/RESULTS.md"
+    },
+    "existingArm64ActionsEvidence": {
+      "workflowFiles": [
+        ".github/workflows/qa-debug-arm64-apk.yml",
+        ".github/workflows/android-emulator-instrumented.yml"
+      ],
+      "releaseArtifactWorkflowPresent": false,
+      "qaRunId": "37874837502",
+      "qaJobId": "113640935577",
+      "qaArtifactId": "11592306483",
+      "qaSourceSha": "4ef2b39b9cba6aa1def081171d42d9146bbd968c",
+      "qaTask": ":app:assembleDebug",
+      "qaOutcome": "BUILD SUCCESSFUL; Debug/QA, not Release",
+      "qaPackage": "com.localai.workspace.debug",
+      "qaVersion": "0.5.0-debug",
+      "qaVersionCode": 27,
+      "qaAbi": "arm64-v8a only",
+      "artifactBytes": 47787296,
+      "artifactSha256": "5ef240ea08899079e85835bcd2778eeda2b5bd11abde5472f113a974bf6884a4",
+      "apkSha256": "287ac97d6ce4e0563d1618e59726177355673321e401085c6383fe19b9ba4650",
+      "classification": "HOST_QA_DEBUG_ARTIFACT; not evidence of a Release artifact or Release task.",
+      "evidence": "docs/validation/qa-debug-arm64/RESULTS.md"
+    },
+    "noBuildOrArtifactGeneratedForThisClassification": true,
+    "mainAndV042PeeledSha": "de615b772cf37a99e7e08a647c59607b271de606"
+  }
 }
