@@ -7,6 +7,7 @@ on:
     paths:
       - '.github/workflows/qa-debug-arm64-apk.yml'
       - 'scripts/ci/build_qa_debug_arm64.py'
+      - 'scripts/ci/wait_for_android_emulator_success.py'
       - 'app/**'
       - 'llama-runtime/**'
       - 'litert-compat/**'
@@ -19,6 +20,7 @@ on:
       - 'gradle.properties'
 
 permissions:
+  actions: read
   contents: read
 
 concurrency:
@@ -29,8 +31,9 @@ jobs:
   build-qa-apk:
     name: Build and verify debug ARM64 APK
     runs-on: ubuntu-24.04
-    timeout-minutes: 75
+    timeout-minutes: 160
     permissions:
+      actions: read
       contents: read
 
     steps:
@@ -49,6 +52,7 @@ jobs:
                   "runId": os.environ.get("GITHUB_RUN_ID"),
                   "runAttempt": os.environ.get("GITHUB_RUN_ATTEMPT"),
                   "runUrl": f"{os.environ.get('GITHUB_SERVER_URL', 'https://github.com')}/{os.environ.get('GITHUB_REPOSITORY', '')}/actions/runs/{os.environ.get('GITHUB_RUN_ID', '')}",
+                  "androidInstrumentation": {"status": "WAITING_FOR_EXACT_SHA_SUCCESS"},
                   "physicalDevice": "NOT_RUN",
                   "emulator": "NOT_RUN"
               }, f, indent=2)
@@ -58,7 +62,16 @@ jobs:
       - name: Checkout tested commit
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
+          ref: ${{ github.sha }}
           persist-credentials: false
+
+      - name: Wait for matching Android instrumentation run to succeed
+        id: android-gate
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          ANDROID_GATE_TIMEOUT_SECONDS: '5400'
+          ANDROID_GATE_POLL_SECONDS: '20'
+        run: python3 scripts/ci/wait_for_android_emulator_success.py
 
       - name: Set up JDK 17
         uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00
@@ -78,6 +91,10 @@ jobs:
         env:
           QA_ARTIFACT_DIR: ${{ runner.temp }}/local-ai-workspace-qa-arm64
           JOB_STATUS: ${{ job.status }}
+          ANDROID_GATE_PASSED: ${{ steps.android-gate.outputs.gate_passed }}
+          ANDROID_RUN_ID: ${{ steps.android-gate.outputs.android_run_id }}
+          ANDROID_RUN_URL: ${{ steps.android-gate.outputs.android_run_url }}
+          ANDROID_RUN_SHA: ${{ steps.android-gate.outputs.android_run_sha }}
         run: |
           python3 - "$QA_ARTIFACT_DIR" "$JOB_STATUS" <<'PY'
           import hashlib, json, os, sys
@@ -94,6 +111,13 @@ jobs:
               data["status"] = "FAILED_BEFORE_BUILD_VALIDATION"
               data["failureReason"] = "A required workflow step failed or was interrupted before APK validation completed."
           data["workflowJobStatus"] = job_status.upper()
+          gate_passed = os.environ.get("ANDROID_GATE_PASSED") == "true"
+          data["androidInstrumentation"] = {
+              "status": "PASS" if gate_passed else "NOT_PASSED",
+              "runId": os.environ.get("ANDROID_RUN_ID") or None,
+              "runUrl": os.environ.get("ANDROID_RUN_URL") or None,
+              "sourceCommit": os.environ.get("ANDROID_RUN_SHA") or os.environ.get("GITHUB_SHA"),
+          }
           report.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
           files = sorted(p for p in root.rglob("*") if p.is_file() and p.name != "SHA256SUMS")
@@ -102,7 +126,7 @@ jobs:
           PY
 
       - name: Upload QA APK and evidence
-        if: always()
+        if: ${{ always() && steps.android-gate.outputs.gate_passed == 'true' }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: local-ai-workspace-qa-debug-arm64-${{ github.run_id }}-${{ github.run_attempt }}

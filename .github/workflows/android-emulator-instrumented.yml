@@ -344,6 +344,23 @@ jobs:
           test "$api" = '35'
           test "$abi" = 'x86_64'
 
+          buffer_report="$RUNNER_TEMP/logcat-buffer-setup.txt"
+          set +e
+          printf 'command=adb logcat -c\n' > "$buffer_report"
+          "$ANDROID_HOME/platform-tools/adb" logcat -c >> "$buffer_report" 2>&1
+          clear_status=$?
+          printf 'clear_exit_code=%s\ncommand=adb logcat -G 16M\n' "$clear_status" >> "$buffer_report"
+          "$ANDROID_HOME/platform-tools/adb" logcat -G 16M >> "$buffer_report" 2>&1
+          resize_status=$?
+          printf 'resize_exit_code=%s\ncommand=adb logcat -g\n' "$resize_status" >> "$buffer_report"
+          "$ANDROID_HOME/platform-tools/adb" logcat -g >> "$buffer_report" 2>&1
+          inspect_status=$?
+          printf 'inspect_exit_code=%s\n' "$inspect_status" >> "$buffer_report"
+          set -e
+          test "$clear_status" -eq 0
+          test "$resize_status" -eq 0
+          test "$inspect_status" -eq 0
+
       - name: Run all connected Android instrumentation tests
         id: connected
         timeout-minutes: 55

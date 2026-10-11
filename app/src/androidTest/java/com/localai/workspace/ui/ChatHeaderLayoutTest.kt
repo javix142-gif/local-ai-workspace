@@ -2,6 +2,7 @@ package com.localai.workspace.ui
 
 import android.graphics.Bitmap
 import android.os.Build
+import android.util.Base64
 import android.util.Log
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.statusBars
@@ -27,8 +28,8 @@ import androidx.compose.ui.unit.Density
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import java.io.File
-import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.security.MessageDigest
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.roundToInt
 import org.junit.Assert.assertTrue
@@ -148,27 +149,32 @@ class ChatHeaderLayoutTest {
             FileOutputStream(captureFile).use { output ->
                 assertTrue("PNG compression failed for $label", bitmap.compress(Bitmap.CompressFormat.PNG, 100, output))
             }
-            val screenshotPath = "/sdcard/Download/local-ai-chat-header-$label.png"
-            val dollar = '$'
-            val exportCommand = listOf(
-                "mkdir -p /sdcard/Download",
-                "rm -f '$screenshotPath'",
-                "run-as '${targetContext.packageName}' cat '${captureFile.absolutePath}' > '$screenshotPath'",
-                "copy_exit=$dollar?",
-                "bytes=$dollar(wc -c < '$screenshotPath' | tr -d ' ')",
-                "printf 'copy_exit=%s bytes=%s\\n' $dollar{copy_exit} $dollar{bytes}",
-            ).joinToString("; ")
-            val descriptor = instrumentation.uiAutomation.executeShellCommand(exportCommand)
-            val exportResult = FileInputStream(descriptor.fileDescriptor).bufferedReader().use { it.readText() }.trim()
-            descriptor.close()
+            val png = captureFile.readBytes()
+            val sha256 = MessageDigest.getInstance("SHA-256").digest(png)
+                .joinToString("") { "%02x".format(it) }
+            val encoded = Base64.encodeToString(png, Base64.NO_WRAP)
+            val chunks = encoded.chunked(PNG_LOG_CHUNK_CHARACTERS)
+            Log.i(
+                PNG_LOG_TAG,
+                "M00PNG|BEGIN|$label|${bitmap.width}|${bitmap.height}|${png.size}|$sha256|${chunks.size}",
+            )
+            chunks.forEachIndexed { index, chunk ->
+                Log.i(PNG_LOG_TAG, "M00PNG|CHUNK|$label|$index|$chunk")
+            }
+            Log.i(PNG_LOG_TAG, "M00PNG|END|$label|$sha256")
             Log.i(
                 "ChatHeaderLayout",
                 "captureSource=UiAutomation.takeScreenshot case=$label bitmap=${bitmap.width}x${bitmap.height} " +
-                    "cacheBytes=${captureFile.length()} transferPath=$screenshotPath transfer=$exportResult",
+                    "cacheBytes=${captureFile.length()} cacheFileRetained=true transport=logcat_base64_chunks_v1 " +
+                    "chunks=${chunks.size} sha256=$sha256",
             )
         } finally {
             bitmap.recycle()
-            captureFile.delete()
         }
+    }
+
+    private companion object {
+        const val PNG_LOG_TAG = "M00HeaderPng"
+        const val PNG_LOG_CHUNK_CHARACTERS = 512
     }
 }

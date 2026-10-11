@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import hashlib
+import base64
 import json
 import os
 import re
@@ -12,6 +13,7 @@ import struct
 import subprocess
 import sys
 import xml.etree.ElementTree as ET
+import zlib
 from pathlib import Path
 
 
@@ -52,16 +54,62 @@ def safe_copy(source: Path, destination: Path) -> None:
         shutil.copyfile(source, destination)
 
 
+def validate_png(payload: bytes) -> tuple[int, int] | None:
+    """Validate the PNG chunk structure, CRCs, and compressed image stream."""
+    signature = b"\x89PNG\r\n\x1a\n"
+    if not payload.startswith(signature):
+        return None
+    offset = len(signature)
+    width = height = 0
+    saw_ihdr = saw_idat = saw_iend = False
+    compressed = bytearray()
+    while offset + 12 <= len(payload):
+        length = struct.unpack_from(">I", payload, offset)[0]
+        chunk_type = payload[offset + 4:offset + 8]
+        end = offset + 12 + length
+        if end > len(payload):
+            return None
+        chunk_data = payload[offset + 8:offset + 8 + length]
+        expected_crc = struct.unpack_from(">I", payload, offset + 8 + length)[0]
+        actual_crc = zlib.crc32(chunk_type + chunk_data) & 0xFFFFFFFF
+        if actual_crc != expected_crc:
+            return None
+        if not saw_ihdr:
+            if chunk_type != b"IHDR" or length != 13:
+                return None
+            width, height = struct.unpack_from(">II", chunk_data)
+            saw_ihdr = width > 0 and height > 0
+            if not saw_ihdr:
+                return None
+        elif chunk_type == b"IHDR":
+            return None
+        if chunk_type == b"IDAT":
+            if saw_iend:
+                return None
+            saw_idat = True
+            compressed.extend(chunk_data)
+        elif chunk_type == b"IEND":
+            if length != 0 or not saw_idat:
+                return None
+            saw_iend = True
+            offset = end
+            break
+        offset = end
+    if not saw_ihdr or not saw_idat or not saw_iend or offset != len(payload):
+        return None
+    try:
+        if not zlib.decompress(compressed):
+            return None
+    except zlib.error:
+        return None
+    return width, height
+
+
 def png_dimensions(path: Path) -> tuple[int, int] | None:
     try:
-        with path.open("rb") as stream:
-            header = stream.read(24)
+        return validate_png(path.read_bytes())
     except OSError:
         return None
-    if len(header) < 24 or header[:8] != b"\x89PNG\r\n\x1a\n" or header[12:16] != b"IHDR":
-        return None
-    width, height = struct.unpack(">II", header[16:24])
-    return (width, height) if width > 0 and height > 0 else None
 
 
 def adb_facts(serial: str | None) -> dict[str, object]:
@@ -207,13 +255,11 @@ def collect_header_screenshots(serial: str | None) -> list[Path]:
         for name in names:
             records.append({
                 "name": name,
-                "remotePath": f"/sdcard/Download/local-ai-chat-header-{name}.png",
-                "remoteCheckExitCode": None,
-                "remoteFilePresent": None,
-                "pullExitCode": None,
+                "transport": "logcat_base64_chunks_v1",
+                "logcatExitCode": None,
                 "localPath": (destination / f"chat-header-{name}.png").relative_to(OUT).as_posix(),
                 "localFilePresent": False,
-                "pngHeaderValid": False,
+                "pngValid": False,
                 "widthPixels": None,
                 "heightPixels": None,
                 "bytes": 0,
@@ -221,40 +267,139 @@ def collect_header_screenshots(serial: str | None) -> list[Path]:
                 "reason": "NO_CONNECTED_EMULATOR",
             })
         write_text(OUT / "ui-diagnostics/screenshot-pull.json", json.dumps({"screenshots": records}, indent=2) + "\n")
-        write_text(OUT / "ui-diagnostics/screenshot-pull.txt", "NO_CONNECTED_EMULATOR\n")
+        write_text(OUT / "ui-diagnostics/screenshot-transport.txt", "NO_CONNECTED_EMULATOR\n")
         return copied
+
+    result = command([ADB, "-s", serial, "logcat", "-d", "-v", "raw", "-s", "M00HeaderPng:I"], timeout=60)
+    groups: dict[str, list[dict[str, object]]] = {name: [] for name in names}
+    active: dict[str, dict[str, object]] = {}
+    protocol_errors: list[str] = []
+    for line in result.stdout.splitlines():
+        fields = line.split("|")
+        if len(fields) < 2 or fields[0] != "M00PNG":
+            continue
+        kind = fields[1]
+        if kind == "BEGIN":
+            if len(fields) != 8:
+                protocol_errors.append("MALFORMED_BEGIN")
+                continue
+            _, _, name, width, height, byte_count, sha256, chunk_count = fields
+            if name not in groups:
+                protocol_errors.append("UNEXPECTED_CAPTURE_NAME")
+                continue
+            try:
+                group: dict[str, object] = {
+                    "width": int(width), "height": int(height), "byteCount": int(byte_count),
+                    "sha256": sha256, "chunkCount": int(chunk_count), "chunks": {}, "ended": False,
+                    "endSha256": None, "errors": [],
+                }
+            except ValueError:
+                protocol_errors.append("INVALID_BEGIN_METADATA")
+                continue
+            groups[name].append(group)
+            active[name] = group
+        elif kind == "CHUNK":
+            if len(fields) != 5:
+                protocol_errors.append("MALFORMED_CHUNK")
+                continue
+            _, _, name, index = fields[:4]
+            if name not in active:
+                protocol_errors.append("CHUNK_WITHOUT_BEGIN")
+                continue
+            try:
+                index_value = int(index)
+            except ValueError:
+                active[name]["errors"].append("INVALID_CHUNK_INDEX")
+                continue
+            chunks = active[name]["chunks"]
+            assert isinstance(chunks, dict)
+            if index_value in chunks:
+                active[name]["errors"].append("DUPLICATE_CHUNK")
+            chunks[index_value] = fields[4]
+        elif kind == "END":
+            if len(fields) != 4:
+                protocol_errors.append("MALFORMED_END")
+                continue
+            _, _, name, sha256 = fields
+            if name not in active:
+                protocol_errors.append("END_WITHOUT_BEGIN")
+                continue
+            active[name]["ended"] = True
+            active[name]["endSha256"] = sha256
+            active.pop(name, None)
+
     for name in names:
-        remote = f"/sdcard/Download/local-ai-chat-header-{name}.png"
         local = destination / f"chat-header-{name}.png"
-        remote_check = command([ADB, "-s", serial, "shell", "ls", "-l", remote], timeout=20)
-        result = command([ADB, "-s", serial, "pull", remote, str(local)], timeout=30)
-        exists = local.is_file() and local.stat().st_size > 0
-        dimensions = png_dimensions(local) if exists else None
-        records.append({
+        candidates = groups[name]
+        record: dict[str, object] = {
             "name": name,
-            "remotePath": remote,
-            "remoteCheckExitCode": remote_check.returncode,
-            "remoteFilePresent": remote_check.returncode == 0,
-            "pullExitCode": result.returncode,
+            "transport": "logcat_base64_chunks_v1",
+            "collectorCommand": "adb -s <serial> logcat -d -v raw -s M00HeaderPng:I",
+            "logcatExitCode": result.returncode,
+            "logcatBytes": len(result.stdout.encode("utf-8")),
             "localPath": local.relative_to(OUT).as_posix(),
-            "localFilePresent": exists,
-            "pngHeaderValid": dimensions is not None,
-            "widthPixels": dimensions[0] if dimensions else None,
-            "heightPixels": dimensions[1] if dimensions else None,
-            "bytes": local.stat().st_size if exists else 0,
-            "sha256": hashlib.sha256(local.read_bytes()).hexdigest() if exists else None,
-            "pullStdout": redact_log(result.stdout.strip())[:500],
-            "pullStderr": redact_log(result.stderr.strip())[:500],
-        })
-        if dimensions is not None:
-            copied.append(local)
+            "localFilePresent": False,
+            "pngValid": False,
+            "widthPixels": None,
+            "heightPixels": None,
+            "bytes": 0,
+            "sha256": None,
+            "captureRecordsFound": len(candidates),
+        }
+        errors = list(protocol_errors)
+        if result.returncode != 0:
+            errors.append("LOGCAT_READ_FAILED")
+        if len(candidates) != 1:
+            errors.append("CAPTURE_MISSING" if not candidates else "DUPLICATE_CAPTURE")
+        if len(candidates) == 1:
+            candidate = candidates[0]
+            errors.extend(candidate["errors"])
+            chunks = candidate["chunks"]
+            assert isinstance(chunks, dict)
+            expected_count = candidate["chunkCount"]
+            expected_indices = set(range(expected_count)) if isinstance(expected_count, int) and expected_count > 0 else set()
+            if candidate["ended"] is not True:
+                errors.append("CAPTURE_END_MISSING")
+            if not expected_indices or set(chunks) != expected_indices:
+                errors.append("CHUNK_SET_INCOMPLETE")
+            encoded = "".join(chunks[index] for index in sorted(chunks))
+            try:
+                payload = base64.b64decode(encoded, validate=True)
+            except (ValueError, base64.binascii.Error):
+                payload = b""
+                errors.append("BASE64_INVALID")
+            dimensions = validate_png(payload) if payload else None
+            if dimensions is None:
+                errors.append("PNG_INVALID")
+            if len(payload) != candidate["byteCount"]:
+                errors.append("BYTE_COUNT_MISMATCH")
+            digest = hashlib.sha256(payload).hexdigest() if payload else None
+            if digest != candidate["sha256"] or digest != candidate["endSha256"]:
+                errors.append("SHA256_MISMATCH")
+            if dimensions != (candidate["width"], candidate["height"]):
+                errors.append("DIMENSION_MISMATCH")
+            if not errors:
+                local.write_bytes(payload)
+                record.update({
+                    "localFilePresent": True,
+                    "pngValid": True,
+                    "widthPixels": dimensions[0],
+                    "heightPixels": dimensions[1],
+                    "bytes": len(payload),
+                    "sha256": digest,
+                    "expectedChunkCount": expected_count,
+                    "receivedChunkCount": len(chunks),
+                    "endMarkerReceived": True,
+                })
+                copied.append(local)
+        record["errors"] = sorted(set(errors))
+        records.append(record)
     write_text(OUT / "ui-diagnostics/screenshot-pull.json", json.dumps({"screenshots": records}, indent=2) + "\n")
-    write_text(OUT / "ui-diagnostics/screenshot-pull.txt", "\n".join(
-        f"name={item['name']} remoteCheckExitCode={item['remoteCheckExitCode']} "
-        f"remoteFilePresent={item['remoteFilePresent']} pullExitCode={item['pullExitCode']} "
-        f"localFilePresent={item['localFilePresent']} pngHeaderValid={item.get('pngHeaderValid')} "
-        f"dimensions={item.get('widthPixels')}x{item.get('heightPixels')} "
-        f"bytes={item['bytes']} sha256={item['sha256']}"
+    write_text(OUT / "ui-diagnostics/screenshot-transport.txt", "\n".join(
+        f"name={item['name']} transport={item['transport']} logcatExitCode={item['logcatExitCode']} "
+        f"captureRecords={item['captureRecordsFound']} localFilePresent={item['localFilePresent']} "
+        f"pngValid={item['pngValid']} dimensions={item['widthPixels']}x{item['heightPixels']} "
+        f"bytes={item['bytes']} sha256={item['sha256']} errors={','.join(item['errors'])}"
         for item in records
     ) + "\n")
     return copied
@@ -276,6 +421,7 @@ def main() -> int:
     for filename in (
         "sdkmanager.log", "sdk-licenses.log", "avdmanager.log", "emulator.log",
         "emulator-boot.log", "gradle-connected.log", "adb-before-tests.txt", "android-toolchain.txt", "kvm-check.txt",
+        "logcat-buffer-setup.txt",
         "avd-environment.txt", "avd-resolved-paths.txt", "avdmanager-create-exit-code.txt",
         "avdmanager-create-pipeline-exit-code.txt", "avdmanager-create-pipeline-status.txt",
         "avdmanager-list-avd.txt", "avdmanager-list-avd.txt.exit-code",
