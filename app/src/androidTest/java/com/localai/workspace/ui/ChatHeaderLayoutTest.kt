@@ -1,5 +1,6 @@
 package com.localai.workspace.ui
 
+import android.graphics.Bitmap
 import android.os.Build
 import android.util.Log
 import androidx.compose.foundation.layout.WindowInsets
@@ -25,7 +26,9 @@ import androidx.compose.ui.test.printToLog
 import androidx.compose.ui.unit.Density
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import java.io.File
 import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.roundToInt
 import org.junit.Assert.assertTrue
@@ -76,9 +79,9 @@ class ChatHeaderLayoutTest {
     @Test fun standardFontScaleKeepsAgentTitleAndModelInsideHeader() {
         render(1f)
         captureLayoutDiagnostics("standard", 1f)
-        compose.onNodeWithTag("chat-header-agent").assertIsDisplayed()
-        compose.onNodeWithTag("chat-header-conversation").assertIsDisplayed()
-        compose.onNodeWithTag("chat-header-model").assertIsDisplayed()
+        compose.onNodeWithTag("chat-header-agent", useUnmergedTree = true).assertIsDisplayed()
+        compose.onNodeWithTag("chat-header-conversation", useUnmergedTree = true).assertIsDisplayed()
+        compose.onNodeWithTag("chat-header-model", useUnmergedTree = true).assertIsDisplayed()
         assertModelLinePrecedesChatBody()
     }
 
@@ -86,15 +89,17 @@ class ChatHeaderLayoutTest {
         assertTrue(chatTopBarExpandedHeight(1.6f) > chatTopBarExpandedHeight(1f))
         render(1.6f)
         captureLayoutDiagnostics("large-font", 1.6f)
-        compose.onNodeWithTag("chat-header-agent").assertIsDisplayed()
-        compose.onNodeWithTag("chat-header-conversation").assertIsDisplayed()
-        compose.onNodeWithTag("chat-header-model").assertIsDisplayed()
+        compose.onNodeWithTag("chat-header-agent", useUnmergedTree = true).assertIsDisplayed()
+        compose.onNodeWithTag("chat-header-conversation", useUnmergedTree = true).assertIsDisplayed()
+        compose.onNodeWithTag("chat-header-model", useUnmergedTree = true).assertIsDisplayed()
         assertModelLinePrecedesChatBody()
     }
 
     private fun assertModelLinePrecedesChatBody() {
-        val model = compose.onNodeWithTag("chat-header-model").fetchSemanticsNode().boundsInRoot
-        val body = compose.onNodeWithTag("chat-body").fetchSemanticsNode().boundsInRoot
+        val model = compose.onNodeWithTag("chat-header-model", useUnmergedTree = true)
+            .fetchSemanticsNode().boundsInRoot
+        val body = compose.onNodeWithTag("chat-body", useUnmergedTree = true)
+            .fetchSemanticsNode().boundsInRoot
         assertTrue("Model status should not be clipped under the header", model.bottom <= body.top)
     }
 
@@ -105,7 +110,9 @@ class ChatHeaderLayoutTest {
             "chat-header-agent", "chat-header-conversation", "chat-header-model", "chat-body",
         )
         val bounds = tags.joinToString("\n") { tag ->
-            val value = runCatching { compose.onNodeWithTag(tag).fetchSemanticsNode().boundsInRoot }
+            val value = runCatching {
+                compose.onNodeWithTag(tag, useUnmergedTree = true).fetchSemanticsNode().boundsInRoot
+            }
                 .getOrNull()
             "$tag.boundsInRootPx=${value ?: "UNAVAILABLE"}"
         }
@@ -129,14 +136,39 @@ class ChatHeaderLayoutTest {
             append(bounds)
         }
         Log.i("ChatHeaderLayout", diagnostic)
-        compose.onRoot().printToLog("ChatHeaderLayout")
+        compose.onRoot(useUnmergedTree = true).printToLog("ChatHeaderLayout")
 
-        val screenshotPath = "/sdcard/Download/local-ai-chat-header-$label.png"
-        val screenshotCommand = "mkdir -p /sdcard/Download && screencap -p $screenshotPath; printf 'exit=%s\\n' \$?"
-        val descriptor = InstrumentationRegistry.getInstrumentation().uiAutomation
-            .executeShellCommand(screenshotCommand)
-        val screenshotResult = FileInputStream(descriptor.fileDescriptor).bufferedReader().use { it.readText() }.trim()
-        descriptor.close()
-        Log.i("ChatHeaderLayout", "screenshot=$screenshotPath $screenshotResult")
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val targetContext = instrumentation.targetContext
+        val bitmap = requireNotNull(instrumentation.uiAutomation.takeScreenshot()) {
+            "UiAutomation.takeScreenshot returned no image for $label"
+        }
+        val captureFile = File(targetContext.cacheDir, "chat-header-$label.png")
+        try {
+            FileOutputStream(captureFile).use { output ->
+                assertTrue("PNG compression failed for $label", bitmap.compress(Bitmap.CompressFormat.PNG, 100, output))
+            }
+            val screenshotPath = "/sdcard/Download/local-ai-chat-header-$label.png"
+            val dollar = '$'
+            val exportCommand = listOf(
+                "mkdir -p /sdcard/Download",
+                "rm -f '$screenshotPath'",
+                "run-as '${targetContext.packageName}' cat '${captureFile.absolutePath}' > '$screenshotPath'",
+                "copy_exit=$dollar?",
+                "bytes=$dollar(wc -c < '$screenshotPath' | tr -d ' ')",
+                "printf 'copy_exit=%s bytes=%s\\n' $dollar{copy_exit} $dollar{bytes}",
+            ).joinToString("; ")
+            val descriptor = instrumentation.uiAutomation.executeShellCommand(exportCommand)
+            val exportResult = FileInputStream(descriptor.fileDescriptor).bufferedReader().use { it.readText() }.trim()
+            descriptor.close()
+            Log.i(
+                "ChatHeaderLayout",
+                "captureSource=UiAutomation.takeScreenshot case=$label bitmap=${bitmap.width}x${bitmap.height} " +
+                    "cacheBytes=${captureFile.length()} transferPath=$screenshotPath transfer=$exportResult",
+            )
+        } finally {
+            bitmap.recycle()
+            captureFile.delete()
+        }
     }
 }

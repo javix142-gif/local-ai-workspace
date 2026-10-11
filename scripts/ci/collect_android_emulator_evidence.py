@@ -8,6 +8,7 @@ import json
 import os
 import re
 import shutil
+import struct
 import subprocess
 import sys
 import xml.etree.ElementTree as ET
@@ -49,6 +50,18 @@ def safe_copy(source: Path, destination: Path) -> None:
     if source.is_file():
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source, destination)
+
+
+def png_dimensions(path: Path) -> tuple[int, int] | None:
+    try:
+        with path.open("rb") as stream:
+            header = stream.read(24)
+    except OSError:
+        return None
+    if len(header) < 24 or header[:8] != b"\x89PNG\r\n\x1a\n" or header[12:16] != b"IHDR":
+        return None
+    width, height = struct.unpack(">II", header[16:24])
+    return (width, height) if width > 0 and height > 0 else None
 
 
 def adb_facts(serial: str | None) -> dict[str, object]:
@@ -194,12 +207,15 @@ def collect_header_screenshots(serial: str | None) -> list[Path]:
         for name in names:
             records.append({
                 "name": name,
-                "remotePath": f"/sdcard/Download/localai-chat-header-{name}.png",
+                "remotePath": f"/sdcard/Download/local-ai-chat-header-{name}.png",
                 "remoteCheckExitCode": None,
                 "remoteFilePresent": None,
                 "pullExitCode": None,
                 "localPath": (destination / f"chat-header-{name}.png").relative_to(OUT).as_posix(),
                 "localFilePresent": False,
+                "pngHeaderValid": False,
+                "widthPixels": None,
+                "heightPixels": None,
                 "bytes": 0,
                 "sha256": None,
                 "reason": "NO_CONNECTED_EMULATOR",
@@ -213,6 +229,7 @@ def collect_header_screenshots(serial: str | None) -> list[Path]:
         remote_check = command([ADB, "-s", serial, "shell", "ls", "-l", remote], timeout=20)
         result = command([ADB, "-s", serial, "pull", remote, str(local)], timeout=30)
         exists = local.is_file() and local.stat().st_size > 0
+        dimensions = png_dimensions(local) if exists else None
         records.append({
             "name": name,
             "remotePath": remote,
@@ -221,18 +238,23 @@ def collect_header_screenshots(serial: str | None) -> list[Path]:
             "pullExitCode": result.returncode,
             "localPath": local.relative_to(OUT).as_posix(),
             "localFilePresent": exists,
+            "pngHeaderValid": dimensions is not None,
+            "widthPixels": dimensions[0] if dimensions else None,
+            "heightPixels": dimensions[1] if dimensions else None,
             "bytes": local.stat().st_size if exists else 0,
             "sha256": hashlib.sha256(local.read_bytes()).hexdigest() if exists else None,
             "pullStdout": redact_log(result.stdout.strip())[:500],
             "pullStderr": redact_log(result.stderr.strip())[:500],
         })
-        if exists:
+        if dimensions is not None:
             copied.append(local)
     write_text(OUT / "ui-diagnostics/screenshot-pull.json", json.dumps({"screenshots": records}, indent=2) + "\n")
     write_text(OUT / "ui-diagnostics/screenshot-pull.txt", "\n".join(
         f"name={item['name']} remoteCheckExitCode={item['remoteCheckExitCode']} "
         f"remoteFilePresent={item['remoteFilePresent']} pullExitCode={item['pullExitCode']} "
-        f"localFilePresent={item['localFilePresent']} bytes={item['bytes']} sha256={item['sha256']}"
+        f"localFilePresent={item['localFilePresent']} pngHeaderValid={item.get('pngHeaderValid')} "
+        f"dimensions={item.get('widthPixels')}x{item.get('heightPixels')} "
+        f"bytes={item['bytes']} sha256={item['sha256']}"
         for item in records
     ) + "\n")
     return copied
