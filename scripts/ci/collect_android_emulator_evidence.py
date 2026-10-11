@@ -184,6 +184,29 @@ def collect_xml() -> list[Path]:
     return copied
 
 
+def collect_header_screenshots(serial: str | None) -> list[Path]:
+    names = ("standard", "large-font")
+    destination = OUT / "ui-diagnostics" / "screenshots"
+    report: list[str] = []
+    copied: list[Path] = []
+    if serial is None:
+        write_text(OUT / "ui-diagnostics/screenshot-pull.txt", "NO_CONNECTED_EMULATOR\n")
+        return copied
+    for name in names:
+        remote = f"/sdcard/Download/local-ai-chat-header-{name}.png"
+        local = destination / f"chat-header-{name}.png"
+        result = command([ADB, "-s", serial, "pull", remote, str(local)], timeout=30)
+        report.append(f"name={name} exitCode={result.returncode}")
+        if result.stdout.strip():
+            report.append(redact_log(result.stdout.strip()))
+        if result.stderr.strip():
+            report.append(redact_log(result.stderr.strip()))
+        if result.returncode == 0 and local.is_file() and local.stat().st_size > 0:
+            copied.append(local)
+    write_text(OUT / "ui-diagnostics/screenshot-pull.txt", "\n".join(report) + "\n")
+    return copied
+
+
 def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "workflow-started.json").unlink(missing_ok=True)
@@ -212,12 +235,14 @@ def main() -> int:
 
     if serial:
         logcat = command([ADB, "-s", serial, "logcat", "-d", "-t", "2000", "-v", "time",
-                          "-s", "AndroidRuntime:E", "TestRunner:I", "Instrumentation:I"], timeout=60)
+                          "-s", "AndroidRuntime:E", "TestRunner:I", "Instrumentation:I", "ChatHeaderLayout:I"], timeout=60)
         write_text(OUT / "logs/logcat-filtered-sanitized.txt", redact_log(logcat.stdout + logcat.stderr))
         write_text(OUT / "adb-after-tests.txt", redact_log(command([ADB, "devices", "-l"]).stdout))
     else:
         write_text(OUT / "logs/logcat-filtered-sanitized.txt", "NOT_AVAILABLE: no booted emulator detected\n")
         write_text(OUT / "adb-after-tests.txt", "NOT_AVAILABLE: no booted emulator detected\n")
+
+    header_screenshots = collect_header_screenshots(serial)
 
     xml_files = collect_xml()
     counts, skipped_cases = parse_results(xml_files)
@@ -246,6 +271,7 @@ def main() -> int:
         "junitCountsConsistent": counts_consistent,
         "testsExecuted": counts["executed"] > 0,
         "noTestFailuresOrErrors": counts["failed"] == 0 and counts["errors"] == 0,
+        "headerUiDiagnosticsCaptured": len(header_screenshots) == 2,
     }
     summary: dict[str, object] = {
         "label": "EMULATOR",
@@ -266,6 +292,10 @@ def main() -> int:
         "instrumentationXmlCount": len(xml_files),
         "counts": counts,
         "skippedCases": skipped_cases,
+        "headerUiDiagnostics": {
+            "screenshots": [path.relative_to(OUT).as_posix() for path in header_screenshots],
+            "requiredScreenshots": 2,
+        },
         "acceptanceChecks": checks,
         "status": "PASS" if all(checks.values()) else "FAIL",
         "failureReasons": [key for key, passed in checks.items() if not passed],

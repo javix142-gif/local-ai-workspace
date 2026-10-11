@@ -75,7 +75,8 @@ class LiteRtLmDeviceSmokeTest {
         }
     }
 
-    @Test fun normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole() = runBlocking {
+    @Test fun normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole() {
+        runBlocking {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val database = WorkspaceDatabase.create(context)
         val model = database.modelDao().observeAll().first().firstOrNull {
@@ -133,6 +134,7 @@ class LiteRtLmDeviceSmokeTest {
         } finally {
             try { runtime.unload() }
             finally { runtime.close(); database.close() }
+        }
         }
     }
 
