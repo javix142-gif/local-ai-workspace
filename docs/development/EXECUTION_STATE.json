@@ -227,9 +227,10 @@
     "M00 Motorola validation remains blocked until both the exact original workbook is accessible and the Moto G86 Power is connected/ADB-authorized; no install or physical test was performed in this contract.",
     "M01-06 “Ingesta e indexación reanudable” remains PENDING (requires_device=true in the original 97-task plan); do not start or mark complete until the required device is available.",
     "Fresh empty-home ARM64 assembleRelease remains an infrastructure failure/retry exhausted before Gradle startup; lower-level network cause NOT_DETERMINED. Do not retry or use a cache workaround.",
-    "M00 recovery run 38178581012 on ff4c9f2 executed and failed one Room test; both ChatHeader assertions pass, but screenshot transfer/visual inspection remains unresolved. Stop for independent audit; no further run is authorized by this contract."
+    "M00 recovery run 38178581012 on ff4c9f2 executed and failed one Room test; both ChatHeader assertions pass, but screenshot transfer/visual inspection remains unresolved. Stop for independent audit; no further run is authorized by this contract.",
+    "The code push automatically triggered QA ARM64 run 38178580941 and uploaded artifact 11716383219 before the emulator gate completed FAIL. This is an unintended sequencing side effect; the executor did not download or install it. Do not report it as device validation."
   ],
-  "nextRecommendedTask": "Stop for independent audit of code ff4c9f2 and run 38178581012. The API 35 emulator ran connected instrumentation (9 pass, 1 Room v1 fixture failure, 6 real-model skips). Both ChatHeader tests pass using the unmerged tree, but screenshot transfer returned no output and both remote files are absent; visual validation is NOT_RUN. Do not invent a Room schema or claim screenshot PASS. M01-06 remains PENDING_REQUIRES_DEVICE and Motorola PHYSICAL_DEVICE remains NOT_RUN.",
+  "nextRecommendedTask": "Stop for independent audit of code ff4c9f2 and emulator run 38178581012. Record the automatic QA workflow side effect: run 38178580941 uploaded artifact 11716383219 before emulator completion; do not treat it as emulator/device PASS. No APK was downloaded or installed by this executor. The emulator run remains FAIL (Room fixture unavailable, screenshot transfer unresolved); M01-06 remains PENDING_REQUIRES_DEVICE and Motorola PHYSICAL_DEVICE remains NOT_RUN.",
   "m00_03": {
     "status": "IMPLEMENTED_TESTED_HOST_DEVICE_NOT_RUN",
     "baseCommit": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
@@ -2782,15 +2783,50 @@
       "jobLogPath": "docs/validation/android-emulator-ci/diagnostic-runs/38178581012/job.log.gz",
       "jobLogCompressedSha256": "bb17f7c62ee60d045ce1043873318008c603c801b2f3566cfa0b8df3c7a9a5d0"
     },
-    "apkHandling": "No local APK assembly or deliverable APK. Connected instrumentation used transient CI app/test packages; Actions artifact contains no APK/model. Post-task package query returned absent, but XML proves actual instrumentation execution.",
+    "apkHandling": "No local APK was assembled by this executor. However, pushing code under app/** automatically triggered the existing QA ARM64 workflow, which generated and uploaded a QA/debug APK artifact (run 38178580941, artifact 11716383219) before the emulator gate finished FAIL. The artifact was not downloaded, installed, or independently rehashed here; record this as an unintended automation side effect and sequencing deviation.",
     "physicalDevice": "NOT_RUN",
     "originalPlan": "Original user-provided 97 task IDs/order/dependencies unchanged; M01-06 PENDING_REQUIRES_DEVICE; no workbook used.",
     "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
     "v042PeeledCommitSha": "de615b772cf37a99e7e08a647c59607b271de606",
     "evidenceDirectory": "docs/validation/android-emulator-ci/diagnostic-runs/38178581012/",
-    "durableEvidenceRootManifestSha256": "d664dc10adcb14dffd04547fc88beaed53a9569bdc02687bc3c546be09952e56",
+    "durableEvidenceRootManifestSha256": "97537205356fc5f5df09c5a12ca9a667bdafa73490169aa143f445e11808d26c",
     "durableEvidenceManifestEntries": 21,
-    "xmlValidationReportSha256": "12172a77f8286b3463036f3922ff7b2a1609feb85ec50ee714296f660716a655"
+    "xmlValidationReportSha256": "12172a77f8286b3463036f3922ff7b2a1609feb85ec50ee714296f660716a655",
+    "automaticQaWorkflowSideEffect": {
+      "status": "AUTOMATICALLY_TRIGGERED_AND_UPLOADED_BEFORE_EMULATOR_GATE_COMPLETED; UNINTENDED_SEQUENCE_DEVIATION",
+      "sourceSha": "ff4c9f2f8a5c2c09a240f2e9346856767432489c",
+      "trigger": "The code push changed app/**, matching the existing QA workflow push path filter; no manual dispatch was made.",
+      "workflowPath": ".github/workflows/qa-debug-arm64-apk.yml",
+      "runId": "38178580941",
+      "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38178580941",
+      "jobId": "114586118645",
+      "jobConclusion": "success",
+      "artifact": {
+        "id": "11716383219",
+        "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38178580941/artifacts/11716383219",
+        "name": "local-ai-workspace-qa-debug-arm64-38178580941-1",
+        "bytes": 47793824,
+        "githubApiDigest": "sha256:badd53df1d801ea5164288e876f60c0c662f3edade88913bfd952eb0e591f145",
+        "presentAtReadback": true,
+        "retentionDaysConfigured": 7
+      },
+      "apkReportedByWorkflowLog": {
+        "filename": "local-ai-workspace-0.5.0-debug-arm64.apk",
+        "bytes": 119297951,
+        "sha256": "59a033edc60d7e06300b35b22a3c59cf5d728a4938f4063c602039f61a58e816",
+        "package": "com.localai.workspace.debug",
+        "versionName": "0.5.0-debug",
+        "versionCode": 27,
+        "abis": [
+          "arm64-v8a"
+        ],
+        "signatureVerifiedByWorkflow": true,
+        "certificateSha256ReportedByWorkflow": "ab660bd12cb93714ec2c91e1124dca81cf6579c95c909fba5542b78429177c6c",
+        "independentlyDownloadedOrRehashed": false
+      },
+      "executorDownloadedInstalledOrDistributed": false,
+      "emulatorGateStatus": "FAIL; artifact does not imply emulator or physical validation"
+    }
   },
   "historicalM00Recovery38171385512": {
     "name": "M00 recovery: Room history, Skills navigation race, header diagnostics and LiteRT verification",

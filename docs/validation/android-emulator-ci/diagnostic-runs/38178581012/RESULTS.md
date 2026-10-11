@@ -58,6 +58,16 @@ Original GitHub Actions artifact: [artifact 11717233240](https://github.com/javi
 
 `SHA256SUMS` in this directory covers each retained evidence file other than the manifest itself. The exact Actions ZIP, review extracts, normalized XML and host/job logs are preserved here.
 
+
+## Automatic QA workflow side effect (discovered after the emulator run)
+
+The code push for `ff4c9f2f8a5c2c09a240f2e9346856767432489c` changed a path under `app/**`, which matched the existing `.github/workflows/qa-debug-arm64-apk.yml` push filter. That workflow ran automatically in parallel with the authorized emulator workflow. This was not manually dispatched. It completed successfully before the emulator run finished and **generated/uploaded a QA/debug APK despite the instruction to defer APK creation until the emulator gate passed**. The emulator gate later finished `FAIL`, so the QA build does not satisfy that gate and is not a device validation.
+
+- QA Actions run: [38178580941](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38178580941), job `114586118645`, source SHA `ff4c9f2f8a5c2c09a240f2e9346856767432489c`; status `success`.
+- Artifact: [11716383219](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38178580941/artifacts/11716383219), `local-ai-workspace-qa-debug-arm64-38178580941-1`, 47,793,824 bytes, GitHub API digest `sha256:badd53df1d801ea5164288e876f60c0c662f3edade88913bfd952eb0e591f145`, present at readback, workflow retention configured for 7 days.
+- The workflow log reports an APK `local-ai-workspace-0.5.0-debug-arm64.apk`, 119,297,951 bytes, SHA-256 `59a033edc60d7e06300b35b22a3c59cf5d728a4938f4063c602039f61a58e816`, package `com.localai.workspace.debug`, version `0.5.0-debug` / code 27, ABI `arm64-v8a`, and signature verification passed with certificate SHA-256 `ab660bd12cb93714ec2c91e1124dca81cf6579c95c909fba5542b78429177c6c`. These APK details are **workflow-log-reported only**; this executor did not download or independently recompute the APK bytes.
+- The artifact was not downloaded, installed, or otherwise distributed by this executor. No artifact deletion or further workflow was attempted. This is an unintended automation side effect and a sequencing deviation; it does not change the emulator result (**FAIL**) or `PHYSICAL_DEVICE=NOT_RUN`.
+
 ## Scope and disposition
 
 No production app/runtime, Room migration, schema, workflow, AVD configuration, models, or test expectations were changed by this follow-up. The two ChatHeader tests now pass on the emulator, but screenshot transfer is unresolved and visual verification remains incomplete. The single authorized run is consumed; stop for independent audit rather than attempt another transfer strategy in this contract. The authentic Room v1 schema remains unavailable and its migration test still fails.
