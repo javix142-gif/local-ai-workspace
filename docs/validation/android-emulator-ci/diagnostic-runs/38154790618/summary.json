@@ -1,0 +1,49 @@
+{
+  "label": "EMULATOR",
+  "sourceCommit": "d0d4d7608c8e8149bdb05d003da2742260c1b8dd",
+  "runId": "38154790618",
+  "runAttempt": "1",
+  "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38154790618",
+  "expected": {
+    "api": 35,
+    "abi": "x86_64",
+    "systemImage": "google_apis"
+  },
+  "device": {
+    "connected": false
+  },
+  "avdPrelaunchDiagnostics": {
+    "capturedBeforeLaunch": true,
+    "expectedAvdName": "localai-api35-x86_64",
+    "avdmanagerCreateExitCode": 0,
+    "createPipelineExitCode": 0,
+    "avdmanagerListExitCode": 0,
+    "avdmanagerListedExpected": true,
+    "emulatorListExitCode": 0,
+    "emulatorListedExpected": false,
+    "searchPaths": [
+      {
+        "searchDirectory": "/home/runner/.android/avd",
+        "directoryExists": false,
+        "expectedIni": "/home/runner/.android/avd/localai-api35-x86_64.ini",
+        "iniExists": false,
+        "expectedConfig": "/home/runner/.android/avd/localai-api35-x86_64/config.ini",
+        "configExists": false
+      }
+    ]
+  },
+  "physicalDeviceValidation": "NOT_RUN",
+  "gradleExitCode": null,
+  "instrumentationXmlCount": 0,
+  "counts": {
+    "total": 0,
+    "passed": 0,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "executed": 0
+  },
+  "skippedCases": [],
+  "status": "FAIL",
+  "apkOrModelArtifactsIncluded": false
+}

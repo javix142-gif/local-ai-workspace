@@ -1,0 +1,16 @@
+bf6faee748d258e77401c02e79d10271213143ec4dfcdf9cfe19d2ba0a6365ab  ./actions-artifact.zip
+302557bdb3845403c7f5a676129fcf7d3387a70c3a82b7d9790bf13fa2bd904b  ./artifact-SHA256SUMS.txt
+030521b2e7bd5c3d2199ed1cbc3c43f8a6eae4c2c01674eefc5d5019cc693f81  ./avd-environment.txt
+b15b8de0136c5f86754e5b8121244d6f228170359281f80a530d33246ad03637  ./avd-prelaunch.json
+67be14189da0594406b343c65132a39b75a8166a69725740564491b6d8ed59de  ./avd-resolved-paths.txt
+2f3d3e98cf6626a4618a4f3083e3c9155bf9e413df03a93f98fe750eb65df61b  ./avd-storage-inventory.txt
+9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./avdmanager-create-exit-code.txt
+9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./avdmanager-create-pipeline-exit-code.txt
+a17138988e1387532b5cb0bd7a23f18a11d537123873e67154dada3c6359e53e  ./avdmanager-create-pipeline-status.txt
+d96532a3ceb9396595f5ea2eb4a3e3caed71812a548915d387645699e726e7f5  ./avdmanager-list-avd.txt
+9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./avdmanager-list-avd.txt.exit-code
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./emulator-list-avds.txt
+9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./emulator-list-avds.txt.exit-code
+f563c74fd84b1ca2ca1a7d05a73ba8e2a3fd1ba73a482abbc622c22018864c2a  ./job.log.sanitized.txt.gz
+bd0f860e0f7cce1d7d017c07cc9ca591eda4fdff443d34a1656c690a9509d1a6  ./run-metadata.json
+351397f12e8bcd8e58c26070768a2b71e9e548a64764667f25097ebda630a4a1  ./summary.json

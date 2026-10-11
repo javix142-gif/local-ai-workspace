@@ -1,0 +1,4 @@
+search_directory=/home/runner/.android/avd
+directory_exists=false
+expected_ini=/home/runner/.android/avd/localai-api35-x86_64.ini exists=false
+expected_config=/home/runner/.android/avd/localai-api35-x86_64/config.ini exists=false

@@ -1,0 +1,61 @@
+{
+  "repository": "javix142-gif/local-ai-workspace",
+  "branch": "feat/0.5.0-skills-agents",
+  "runId": "38154790618",
+  "runAttempt": 1,
+  "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38154790618",
+  "jobId": "114515427123",
+  "jobName": "API 35 x86_64 emulator tests",
+  "workflowSourceSha": "d0d4d7608c8e8149bdb05d003da2742260c1b8dd",
+  "conclusion": "failure",
+  "jobDuration": "11m31s",
+  "stepConclusions": {
+    "sdkInstall": "success",
+    "kvmPreflight": "success",
+    "createAndBootAvd": "failure; timeout 600 adb wait-for-device exit 124",
+    "connectedInstrumentation": "skipped",
+    "evidenceCollector": "failure; expected because device absent and XML=0",
+    "artifactUpload": "success"
+  },
+  "command": "gh run view 38154790618 --job 114515427123 --log",
+  "jobLog": {
+    "sanitizedPath": "job.log.sanitized.txt",
+    "originalBytes": 358861,
+    "originalSha256": "70c5f3194fa986db19801064fa2d1360cff80f55dc86eed5b61b946987aa1fd4",
+    "sanitizedBytes": 358853,
+    "sanitizedSha256": "4ac57c7ed5a5dfd2c0f001e790b6216f1402981aa0ac3af469ef213c18f2eeda",
+    "redactedCredentialLikeFieldCount": 1,
+    "redactionNote": "One server-password-like log field was replaced with [REDACTED_CREDENTIAL]; the unredacted raw log is not persisted.",
+    "sanitizedCompressedPath": "job.log.sanitized.txt.gz",
+    "sanitizedCompressedSha256": "f563c74fd84b1ca2ca1a7d05a73ba8e2a3fd1ba73a482abbc622c22018864c2a",
+    "sanitizedCompressedBytes": 56123
+  },
+  "artifact": {
+    "id": "11708477219",
+    "name": "android-emulator-evidence-38154790618-1",
+    "filename": "github-actions-artifact-11708477219.zip",
+    "bytes": 26361,
+    "apiSha256": "bf6faee748d258e77401c02e79d10271213143ec4dfcdf9cfe19d2ba0a6365ab",
+    "downloadedZipSha256": "bf6faee748d258e77401c02e79d10271213143ec4dfcdf9cfe19d2ba0a6365ab",
+    "internalManifest": "artifact-SHA256SUMS.txt",
+    "internalManifestEntries": "23/23 verified",
+    "retentionExpiresAtUtc": "2026-10-18T16:28:18Z",
+    "apkOrModelIncluded": false
+  },
+  "instrumentation": {
+    "connectedTask": ":app:connectedDebugAndroidTest",
+    "taskExecuted": false,
+    "gradleExitCode": null,
+    "xmlCount": 0,
+    "total": 0,
+    "passed": 0,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "executed": 0,
+    "status": "NOT_RUN"
+  },
+  "physicalDevice": "NOT_RUN",
+  "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
+  "v042PeeledSha": "de615b772cf37a99e7e08a647c59607b271de606"
+}

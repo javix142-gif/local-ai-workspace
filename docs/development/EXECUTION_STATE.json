@@ -2,7 +2,7 @@
   "repository": "https://github.com/javix142-gif/local-ai-workspace.git",
   "branch": "feat/0.5.0-skills-agents",
   "startingHeadSha": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
-  "testedCodeHeadSha": "bdae87820b73dbcc0decfde3a65c391c6fb63279",
+  "testedCodeHeadSha": "d0d4d7608c8e8149bdb05d003da2742260c1b8dd",
   "version": "0.5.0",
   "applicationId": "com.localai.workspace",
   "completedTasks": [
@@ -16,7 +16,7 @@
     "M01-05 Context budget and relevance deduplication — VALIDADA_HOST (independent audit; host only; tested code 260a3f7)"
   ],
   "blockedTasks": [
-    "BLOCKED_ANDROID_CI_CAUSE_UNPROVEN: run 37865813921 proved the named API 35 AVD was not discoverable; the retained artifact lacks effective AVD-home variables, avdmanager/emulator AVD listings, and AVD file inventory, so why creation/discovery failed remains unproven. No workflow fix or new run was made.",
+    "Android emulator CI remains blocked pending independent audit: run 38154790618 demonstrated an AVD discovery path mismatch, but no correction or post-fix run has been made. Instrumentation is NOT_RUN.",
     "Motorola-specific M00 validation and exact physical XLSX latency diagnosis."
   ],
   "testResults": {
@@ -118,12 +118,12 @@
     "testedCodeHeadSha": "e367dc75d0f952ef6a9b4e96d51e1263b70d3309"
   },
   "emulatorResults": {
-    "availability": "BLOCKED_ANDROID_CI_CAUSE_UNPROVEN",
+    "availability": "BLOCKED_ANDROID_CI_CAUSE_PROVEN_AWAITING_INDEPENDENT_AUDIT",
     "adbAvailable": true,
     "kvm": true,
     "systemImages": 1,
     "instrumentedTests": "NOT_RUN",
-    "latestRunId": "37865813921",
+    "latestRunId": "38154790618",
     "priorLocalEnvironment": {
       "availability": "NOT_AVAILABLE",
       "adbAvailable": false,
@@ -131,7 +131,9 @@
       "systemImages": 0,
       "instrumentedTests": "NOT_RUN",
       "recordStatus": "HISTORICAL local executor inspection before GitHub-hosted workflow."
-    }
+    },
+    "latestRunSourceSha": "d0d4d7608c8e8149bdb05d003da2742260c1b8dd",
+    "latestRunStatus": "FAILED_BEFORE_INSTRUMENTATION; AVD discovery path mismatch demonstrated; awaiting independent audit."
   },
   "physicalDeviceResults": {
     "historicalAgentsSkillsV1": {
@@ -211,10 +213,10 @@
   "pendingAcceptance": [
     "M00 Motorola validation is blocked until both the exact original workbook is accessible and the Moto G86 Power is connected/ADB-authorized; the current preflight executed no install or tests.",
     "M01-06 “Ingesta e indexación reanudable” remains PENDING (requires_device=true in the original 97-task plan); do not start or mark complete until the required device is available.",
-    "Android emulator CI remains BLOCKED_ANDROID_CI_CAUSE_UNPROVEN; do not edit or relaunch until the AVD creation/discovery cause is demonstrated.",
+    "Android emulator CI: AVD manager/emulator path mismatch demonstrated by run 38154790618; await independent audit before any correction or further run. Instrumentation remains NOT_RUN.",
     "Fresh empty-home ARM64 assembleRelease reproducibility remains unverified after the two authorized attempts (4559b5 and 6d1b25); both stopped before Gradle startup when the wrapper received java.net.ConnectException: Connection refused fetching Gradle 8.10.2. The lower-level network cause remains NOT_DETERMINED. This is an infrastructure block, not evidence that application source compilation fails; no further retry/cache/source workaround is authorized under this contract."
   ],
-  "nextRecommendedTask": "Keep Android CI blocked until a diagnostic execution records the AVD-step HOME/ANDROID_* values, avdmanager and emulator AVD listings, and .ini/config.ini inventory; do not apply a path fix or launch CI without causal evidence.",
+  "nextRecommendedTask": "Await independent audit of the single diagnostics run 38154790618; only after acceptance may a narrowly scoped AVD discovery correction be considered. Do not start another run before that audit.",
   "m00_03": {
     "status": "IMPLEMENTED_TESTED_HOST_DEVICE_NOT_RUN",
     "baseCommit": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
@@ -614,7 +616,7 @@
     "name": "GitHub-hosted API 35 x86_64 connected instrumentation workflow setup",
     "workflowPath": ".github/workflows/android-emulator-instrumented.yml",
     "branch": "feat/0.5.0-skills-agents",
-    "workflowCodeCommit": "bdae87820b73dbcc0decfde3a65c391c6fb63279",
+    "workflowCodeCommit": "d0d4d7608c8e8149bdb05d003da2742260c1b8dd",
     "runs": [
       {
         "runId": "37865314837",
@@ -681,11 +683,45 @@
         "startedAtUtc": "2026-10-09T00:38:37Z",
         "finishedAtUtc": "2026-10-09T00:49:58Z",
         "duration": "11m21s"
+      },
+      {
+        "runId": "38154790618",
+        "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38154790618",
+        "sourceCommit": "d0d4d7608c8e8149bdb05d003da2742260c1b8dd",
+        "status": "FAILED_AVD_DISCOVERY_PATH_MISMATCH_DEMONSTRATED",
+        "failedStep": "Create and boot accelerated API 35 emulator",
+        "evidence": "avdmanager returned 0 and listed the AVD under .config/.android/avd; emulator -list-avds was empty and recorded .android/avd search directory did not exist.",
+        "label": "EMULATOR",
+        "api": 35,
+        "abi": "x86_64",
+        "systemImage": "google_apis",
+        "gradleTask": "NOT_RUN",
+        "gradleExitCode": null,
+        "xmlCount": 0,
+        "counts": {
+          "total": 0,
+          "passed": 0,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0,
+          "executed": 0
+        },
+        "deviceConnected": false,
+        "instrumentation": "NOT_RUN",
+        "physicalDevice": "NOT_RUN",
+        "artifactId": "11708477219",
+        "artifactBytes": 26361,
+        "artifactSha256": "bf6faee748d258e77401c02e79d10271213143ec4dfcdf9cfe19d2ba0a6365ab",
+        "manifestEntriesVerified": "23/23",
+        "evidenceDirectory": "docs/validation/android-emulator-ci/diagnostic-runs/38154790618/",
+        "startedAtUtc": "2026-10-11T16:16:47Z",
+        "finishedAtUtc": "2026-10-11T16:28:18Z",
+        "duration": "11m31s"
       }
     ],
-    "finalStatus": "BLOCKED_ANDROID_CI_CAUSE_UNPROVEN",
+    "finalStatus": "BLOCKED_ANDROID_CI_CAUSE_PROVEN_AWAITING_INDEPENDENT_AUDIT",
     "attemptsExhausted": true,
-    "rootCauseBoundary": "The emulator could not discover a usable named AVD. The evidence cannot distinguish a successful avdmanager creation in another search directory from an absent/partial creation or another cause: effective AVD environment values, resolved search paths and an AVD directory inventory were not captured.",
+    "rootCauseBoundary": "Run 38154790618 proves the AVD discovery path mismatch: avdmanager lists the named AVD under /home/runner/.config/.android/avd, while emulator -list-avds is empty and the recorded emulator search candidate /home/runner/.android/avd is absent. Why avdmanager selected .config is not established; the inventory did not inspect that alternate directory.",
     "latestInvestigation": {
       "status": "BLOCKED_ANDROID_CI_CAUSE_UNPROVEN",
       "investigatedAtUtc": "2026-10-09",
@@ -746,7 +782,7 @@
         "EMULATOR": "NOT_RUN; previous workflow attempt failed before instrumentation, not PASS",
         "PHYSICAL_DEVICE": "NOT_RUN"
       },
-      "recordStatus": "HISTORICAL: created before the latest assignment reinspection; its artifact/job-log retrieval limitation was superseded by assignmentReinspection."
+      "recordStatus": "HISTORICAL; the 2026-10-11 diagnosticFollowUp records the newer run and cause classification."
     },
     "hostSmokeChecks": {
       "gitDiffCheck": "PASS",
@@ -863,7 +899,7 @@
         "conclusion": "BLOCKED_ANDROID_CI_CAUSE_UNPROVEN; the failure to discover a usable AVD is established, but creation-vs-path/search cause is not.",
         "independentAuditorAction": "No workflow change and no new Actions run; report only. Instrumentation remains NOT_RUN."
       },
-      "recordStatus": "HISTORICAL: this earlier fetch attempt returned no payload; assignmentReinspection later retrieved the full job log and artifact."
+      "recordStatus": "HISTORICAL; superseded by diagnosticFollowUp for run 38154790618."
     },
     "assignmentReinspection": {
       "recordedAtUtc": "2026-10-09T06:34:51Z",
@@ -958,7 +994,8 @@
         "EMULATOR": "Instrumentation NOT_RUN; run failed in AVD setup.",
         "PHYSICAL_DEVICE": "NOT_RUN"
       },
-      "plan": "Original user-provided 97 task IDs/order/dependencies unchanged; M01-06 remains PENDING and requires a physical device."
+      "plan": "Original user-provided 97 task IDs/order/dependencies unchanged; M01-06 remains PENDING and requires a physical device.",
+      "recordStatus": "HISTORICAL; the 2026-10-11 diagnosticFollowUp records the newer run and cause classification."
     },
     "diagnosticPreparation": {
       "recordedAtUtc": "2026-10-11T16:14:20Z",
@@ -975,6 +1012,115 @@
       "runCountAuthorized": 1,
       "avdCreateLaunchAndWaitBehaviorChanged": false,
       "worktreeHead": "fcad2eca9bfb4d0b286e1508f1eaeb67ab726a7b",
+      "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
+      "v042PeeledSha": "de615b772cf37a99e7e08a647c59607b271de606"
+    },
+    "diagnosticFollowUp": {
+      "name": "Single AVD discovery diagnostics run",
+      "status": "AVD_DISCOVERY_PATH_MISMATCH_DEMONSTRATED_AWAITING_INDEPENDENT_AUDIT",
+      "recordedAtUtc": "2026-10-11T16:28:19Z",
+      "sourceBranch": "feat/0.5.0-skills-agents",
+      "sourceCommit": "d0d4d7608c8e8149bdb05d003da2742260c1b8dd",
+      "workflowPath": ".github/workflows/android-emulator-instrumented.yml",
+      "collectorPath": "scripts/ci/collect_android_emulator_evidence.py",
+      "runId": "38154790618",
+      "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38154790618",
+      "jobId": "114515427123",
+      "jobConclusion": "failure",
+      "jobDuration": "11m31s",
+      "startedAtUtc": "2026-10-11T16:16:47Z",
+      "finishedAtUtc": "2026-10-11T16:28:18Z",
+      "stepConclusions": {
+        "sdkInstall": "success",
+        "kvmPreflight": "success",
+        "createAndBootAvd": "failure; timeout 600 adb wait-for-device exit 124",
+        "connectedInstrumentation": "skipped",
+        "collector": "failure; no connected device/XML",
+        "artifactUpload": "success"
+      },
+      "environment": {
+        "HOME": "/home/runner",
+        "ANDROID_HOME": "/usr/local/lib/android/sdk",
+        "ANDROID_SDK_ROOT": "/usr/local/lib/android/sdk",
+        "ANDROID_USER_HOME": "UNSET",
+        "ANDROID_AVD_HOME": "UNSET",
+        "ANDROID_SDK_HOME": "UNSET",
+        "resolvedAndroidSdkRoot": "/usr/local/lib/android/sdk",
+        "avdmanager": "/usr/local/lib/android/sdk/cmdline-tools/latest/bin/avdmanager",
+        "emulator": "/usr/local/lib/android/sdk/emulator/emulator"
+      },
+      "avdDiagnostics": {
+        "expectedName": "localai-api35-x86_64",
+        "createExitCode": 0,
+        "createPipelineStatuses": "0 0 0",
+        "createPipelineExitCode": 0,
+        "avdmanagerListExitCode": 0,
+        "avdmanagerListedExpected": true,
+        "avdmanagerReportedPath": "/home/runner/.config/.android/avd/localai-api35-x86_64.avd",
+        "emulatorListExitCode": 0,
+        "emulatorListedExpected": false,
+        "resolvedEmulatorSearchDirectories": [
+          "/home/runner/.android/avd"
+        ],
+        "resolvedSearchDirectoryExists": false,
+        "expectedIniThere": false,
+        "expectedConfigThere": false,
+        "emulatorError": "Unknown AVD name; no expected .ini in /home/runner/.android/avd."
+      },
+      "causeClassification": {
+        "demonstrated": "AVD manager/emulator discovery path mismatch: manager reports the named AVD in .config/.android/avd; emulator discovery is empty and the recorded search directory is a different, absent .android/avd.",
+        "notEstablished": "Why avdmanager selected .config/.android/avd; XDG_CONFIG_HOME and other unrequested variables were not recorded and are not attributed.",
+        "inventoryLimitation": "The file inventory covers the resolved environment-derived search directory but did not inspect the alternate .config path reported by avdmanager; file-level .ini/config.ini hashes there are unavailable.",
+        "workflowCorrectionMade": false,
+        "additionalRunStarted": false,
+        "next": "Wait for independent audit before any correction or further run."
+      },
+      "instrumentation": {
+        "task": ":app:connectedDebugAndroidTest",
+        "status": "NOT_RUN",
+        "gradleExitCode": null,
+        "xmlCount": 0,
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "executed": 0
+      },
+      "artifact": {
+        "id": "11708477219",
+        "name": "android-emulator-evidence-38154790618-1",
+        "bytes": 26361,
+        "apiSha256": "bf6faee748d258e77401c02e79d10271213143ec4dfcdf9cfe19d2ba0a6365ab",
+        "downloadedZipSha256": "bf6faee748d258e77401c02e79d10271213143ec4dfcdf9cfe19d2ba0a6365ab",
+        "internalManifestEntriesVerified": "23/23",
+        "internalManifestSha256": "302557bdb3845403c7f5a676129fcf7d3387a70c3a82b7d9790bf13fa2bd904b",
+        "localEvidenceDirectory": "docs/validation/android-emulator-ci/diagnostic-runs/38154790618/",
+        "durableEvidenceManifestSha256": "a049ac05c74dc807c7ad62da68d1a94da5a3766903bda4e40ef125a029e310e3"
+      },
+      "jobLog": {
+        "command": "gh run view 38154790618 --job 114515427123 --log",
+        "originalBytes": 358861,
+        "originalSha256": "70c5f3194fa986db19801064fa2d1360cff80f55dc86eed5b61b946987aa1fd4",
+        "persistedLog": "job.log.sanitized.txt.gz",
+        "sanitizedBytes": 358853,
+        "sanitizedSha256": "4ac57c7ed5a5dfd2c0f001e790b6216f1402981aa0ac3af469ef213c18f2eeda",
+        "sanitizedCompressedSha256": "f563c74fd84b1ca2ca1a7d05a73ba8e2a3fd1ba73a482abbc622c22018864c2a",
+        "credentialLikeFieldsRedacted": 1,
+        "rawUnredactedLogPersisted": false
+      },
+      "evidence": {
+        "results": "docs/validation/android-emulator-ci/RESULTS.md",
+        "handoff": "docs/development/CODEX_TO_WORK_HANDOFF.md",
+        "state": "docs/development/EXECUTION_STATE.json"
+      },
+      "hostChecks": {
+        "workflowYamlParse": "PASS (PyYAML)",
+        "workflowShellBashN": "PASS",
+        "collectorPythonAst": "PASS",
+        "syntheticPrelaunchAndCollectorSmoke": "PASS; synthetic only, summary correctly remained FAIL/zero tests",
+        "instrumentation": "NOT_RUN"
+      },
       "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
       "v042PeeledSha": "de615b772cf37a99e7e08a647c59607b271de606"
     }

@@ -142,3 +142,36 @@ The original run artifact was freshly downloaded from artifact ID `11588945524`.
 The workflow change records only the six requested HOME/ANDROID_* variables, resolved SDK/AVD search paths, the independent output/exit status of `avdmanager list avd` and `emulator -list-avds`, `.ini`/`config.ini` inventory, and the `avdmanager create` command's own exit status before launch. The collector copies these records into the always-uploaded artifact and summary. The existing AVD create input/name, launch arguments, and ADB wait sequence are unchanged. The workflow's existing push path includes its own workflow file, so the authorized single verification run is push-triggered; the QA Debug workflow's paths do not match these changes.
 
 Static/host checks before that run: extracted workflow shell passes `bash -n`; collector parses with Python `ast`; a temporary stub-tool smoke check verified exit-code capture and artifact collection while correctly producing `FAIL`, zero executed tests. This synthetic check is not Android/emulator execution. `actionlint` is unavailable in this environment. The new GitHub Actions run and its diagnostic outcome are recorded in the next section after its single authorized execution.
+
+## Single diagnostic execution (2026-10-11)
+
+The diagnostics-only change at source SHA `d0d4d7608c8e8149bdb05d003da2742260c1b8dd` was exercised once by the existing push trigger: [Actions run 38154790618](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38154790618), job `114515427123`. The runner was GitHub-hosted `ubuntu-24.04`; SDK/API 35 setup and KVM preparation succeeded. The AVD setup step failed after `timeout 600 .../adb wait-for-device` returned 124. The connected instrumentation step was **SKIPPED**; the collector and artifact upload ran via `always()`. No second run was started.
+
+### Cause established at the discovery boundary
+
+The captured AVD-step environment was:
+
+- `HOME=/home/runner`
+- `ANDROID_HOME=/usr/local/lib/android/sdk`
+- `ANDROID_SDK_ROOT=/usr/local/lib/android/sdk`
+- `ANDROID_USER_HOME`, `ANDROID_AVD_HOME`, and `ANDROID_SDK_HOME` were unset.
+
+`avdmanager create avd` returned **0**; the full pipeline status was `0 0 0`. `avdmanager list avd` also returned **0** and listed `localai-api35-x86_64` with its path under `/home/runner/.config/.android/avd/localai-api35-x86_64.avd`. In contrast, `emulator -list-avds` returned **0** with empty output. The emulator error names the missing AVD under `/home/runner/.android/avd`; that was the only resolved search directory recorded by the workflow, and it did not exist. Therefore the causal discovery failure is **AVD home/path mismatch**: avdmanager's listing places the AVD in `.config/.android/avd`, outside the emulator's discovered home in this run.
+
+The evidence does **not** identify why the Android command-line tools selected the `.config` directory; no unrecorded variable such as `XDG_CONFIG_HOME` is attributed as the cause. The diagnostic inventory searched the resolved environment-derived AVD directories and `HOME/.android/avd`, but did not expand the separate `.config/.android/avd` path printed by `avdmanager list avd`; consequently this run does not provide file-level hashes for `.ini`/`config.ini` in that alternate directory. The list/path mismatch itself is directly observed, while that file-level detail and the reason for the manager's path choice remain unresolved. No AVD path/create/launch fix was applied. The result is recorded as **`AVD_DISCOVERY_PATH_MISMATCH_DEMONSTRATED; AWAITING_INDEPENDENT_AUDIT`**; stop here until that audit.
+
+### Instrumentation outcome
+
+The ADB list remained empty. `:app:connectedDebugAndroidTest` did not execute; Gradle exit is `null`; XML count and all test counts are zero (`executed=0`). The run and collector are **FAIL**, not a device-test pass. `EMULATOR` instrumentation is `NOT_RUN`; `PHYSICAL_DEVICE` is `NOT_RUN`. No model or APK was included. This Actions runner result says nothing about Motorola behavior.
+
+### Evidence and integrity
+
+The uploaded artifact is [11708477219](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38154790618/artifacts/11708477219), `android-emulator-evidence-38154790618-1`, 26,361 bytes. GitHub API digest and downloaded ZIP SHA-256 both equal `bf6faee748d258e77401c02e79d10271213143ec4dfcdf9cfe19d2ba0a6365ab`; all 23 internal manifest entries verified. It expires `2026-10-18T16:28:18Z`.
+
+Durable copies of the original ZIP, readable diagnostic records, the original artifact manifest, and a sanitized compressed job log are in [the run evidence directory](diagnostic-runs/38154790618/). The full job log was captured with `gh run view 38154790618 --job 114515427123 --log`; its original SHA-256 is `70c5f3194fa986db19801064fa2d1360cff80f55dc86eed5b61b946987aa1fd4` (358,861 bytes). One server-password-like field was redacted before persisting the job log; the sanitized decompressed log SHA-256 is `4ac57c7ed5a5dfd2c0f001e790b6216f1402981aa0ac3af469ef213c18f2eeda`; compressed file SHA-256 is `f563c74fd84b1ca2ca1a7d05a73ba8e2a3fd1ba73a482abbc622c22018864c2a`. The run directory `SHA256SUMS` covers the durable files; the Actions ZIP's own `SHA256SUMS` remains preserved and was independently rechecked.
+
+### Classification carried forward
+
+The empty-`GRADLE_USER_HOME` Release attempts remain separately classified `INFRASTRUCTURE_FAILURE` / `RETRY_EXHAUSTED`, because the wrapper was refused while downloading Gradle 8.10.2 before Gradle startup; the lower-level network cause is `NOT_DETERMINED`. The earlier `83affa6` Release pass remains limited to its clean checkout with shared pre-provisioned dependencies. Actions run `37874837502` remains a Debug/QA ARM64 artifact only, not Release evidence. No build was run for this classification. Main and peeled `v0.4.2` remain `de615b772cf37a99e7e08a647c59607b271de606`; the original 97 task IDs/order/dependencies are unchanged and M01-06 remains `PENDING_REQUIRES_DEVICE`.
+
+The durable evidence-directory manifest SHA-256 is `a049ac05c74dc807c7ad62da68d1a94da5a3766903bda4e40ef125a029e310e3`; `sha256sum -c` passed for every retained run file. The exact Actions artifact ZIP is preserved at `diagnostic-runs/38154790618/actions-artifact.zip`.
