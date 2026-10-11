@@ -43,8 +43,9 @@ class ChatHeaderLayoutTest {
     private fun render(fontScale: Float) {
         compose.setContent {
             val density = LocalDensity.current
+            val statusBarTopPx = WindowInsets.statusBars.getTop(density)
             SideEffect {
-                statusBarInsetPx.set(WindowInsets.statusBars.getTop(density))
+                statusBarInsetPx.set(statusBarTopPx)
                 composeDensityDpi.set((density.density * 160f).roundToInt())
             }
             CompositionLocalProvider(LocalDensity provides Density(density.density, fontScale)) {
