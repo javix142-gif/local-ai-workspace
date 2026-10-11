@@ -1,0 +1,4 @@
+49d7ccf11a682d04ad28c400f07e5fb577e573fb	refs/heads/feat/0.5.0-skills-agents
+de615b772cf37a99e7e08a647c59607b271de606	refs/heads/main
+b0ca65237aafeccf1f1c7198ad6945f8039206b5	refs/tags/v0.4.2
+de615b772cf37a99e7e08a647c59607b271de606	refs/tags/v0.4.2^{}

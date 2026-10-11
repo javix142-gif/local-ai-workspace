@@ -1,0 +1,10 @@
+command=adb logcat -c
+clear_exit_code=0
+command=adb logcat -G 16M
+resize_exit_code=0
+command=adb logcat -g
+main: ring buffer is 16 MiB (512 KiB consumed, 16 KiB readable), max entry is 5120 B, max payload is 4068 B
+system: ring buffer is 16 MiB (512 KiB consumed, 1 KiB readable), max entry is 5120 B, max payload is 4068 B
+crash: ring buffer is 16 MiB (0 B consumed, 0 B readable), max entry is 5120 B, max payload is 4068 B
+kernel: ring buffer is 16 MiB (0 B consumed, 0 B readable), max entry is 5120 B, max payload is 4068 B
+inspect_exit_code=0

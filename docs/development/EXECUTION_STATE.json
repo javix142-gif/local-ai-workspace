@@ -2,7 +2,7 @@
   "repository": "https://github.com/javix142-gif/local-ai-workspace.git",
   "branch": "feat/0.5.0-skills-agents",
   "startingHeadSha": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
-  "testedCodeHeadSha": "ff4c9f2f8a5c2c09a240f2e9346856767432489c",
+  "testedCodeHeadSha": "49d7ccf11a682d04ad28c400f07e5fb577e573fb",
   "version": "0.5.0",
   "applicationId": "com.localai.workspace",
   "completedTasks": [
@@ -67,15 +67,19 @@
       "errors": 0,
       "skipped": 6,
       "executed": 10,
-      "testedCodeHeadSha": "ff4c9f2f8a5c2c09a240f2e9346856767432489c",
-      "runId": "38178581012",
-      "jobId": "114586118884",
-      "artifactId": "11717233240",
-      "xml": "docs/validation/android-emulator-ci/diagnostic-runs/38178581012/instrumented-results.normalized.xml",
-      "recordStatus": "Current one-run recovery result: Room migration fixture unavailable; both ChatHeader semantics/visibility tests passed; screenshot transfer failed, so visual inspection is NOT_RUN; six model-gated cases skipped.",
-      "rawXmlEntryInActionsZip": "instrumented-xml/debug/TEST-emulator-5554 - 15-_app-.xml"
+      "testedCodeHeadSha": "49d7ccf11a682d04ad28c400f07e5fb577e573fb",
+      "runId": "38182644492",
+      "jobId": "114598286399",
+      "artifactId": "11718008584",
+      "artifactBytes": 84293,
+      "artifactSha256": "25fdb63d4bc051abbde7cc6b4a2a0dd164834472492ca1bcceb0e036de67e7dc",
+      "xml": "docs/validation/android-emulator-ci/diagnostic-runs/38182644492/artifact/instrumented-xml/TEST-emulator-5554-15-app.xml.gz",
+      "xmlSha256": "77437afc9b748cdc9197c62de5e810c87c071c4e3876b1695354daae6ada4855",
+      "failure": "WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords: authentic WorkspaceDatabase/1.json unavailable",
+      "recordStatus": "Latest actual instrumentation result for code SHA 49d7ccf; ChatHeader assertions pass; large-font screenshot is representative, standard screenshot is not; six real-model cases skipped.",
+      "xmlOriginalSha256": "a5c49e9873c7bbf6f3bf94bb4eb73a1430ea3f9e91b00432d5517ae2168d6355"
     },
-    "recordStatus": "Current emulator XML is run 38178581012 on ff4c9f2; current targeted host checks are recorded under latestM00Recovery.host. Full JVM results remain per their historical testedCodeHeadSha."
+    "recordStatus": "Latest emulator XML is run 38182644492 on code SHA 49d7ccf. Focused host checks and AndroidTest Kotlin compilation are recorded separately under latestM00CaptureRecovery; full JVM counts remain attributed to their recorded historical source SHA."
   },
   "finalHostGate": {
     "status": "COMPLETED_DEVICE_NOT_RUN",
@@ -136,7 +140,13 @@
     "kvm": true,
     "systemImages": 1,
     "instrumentedTests": "EXECUTED_WITH_FAILURES: 9 passed, 1 failed, 6 skipped; XML 1; 10 executed",
-    "latestRunId": "38178581012",
+    "latestRunId": "38182644492",
+    "latestRunSourceSha": "49d7ccf11a682d04ad28c400f07e5fb577e573fb",
+    "latestRunStatus": "API 35 x86_64 AVD/ADB passed (emulator-5554); connectedDebugAndroidTest executed; Room v1 test failed because authentic schema export is unavailable; both ChatHeader assertions passed; large-font capture is representative, standard capture is visually almost entirely white and is not representative; six real-model tests skipped; artifact 11718008584.",
+    "latestRunUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38182644492",
+    "latestJobId": "114598286399",
+    "latestArtifactId": "11718008584",
+    "latestArtifactSha256": "25fdb63d4bc051abbde7cc6b4a2a0dd164834472492ca1bcceb0e036de67e7dc",
     "priorLocalEnvironment": {
       "availability": "NOT_AVAILABLE",
       "adbAvailable": false,
@@ -145,8 +155,7 @@
       "instrumentedTests": "NOT_RUN",
       "recordStatus": "HISTORICAL local executor inspection before GitHub-hosted workflow."
     },
-    "latestRunSourceSha": "ff4c9f2f8a5c2c09a240f2e9346856767432489c",
-    "latestRunStatus": "API 35 x86_64 AVD/ADB passed; connectedDebugAndroidTest executed 16 XML cases and exited 1; both header tests passed, Room v1 fixture missing, screenshots not transferred; artifact 11717233240."
+    "physicalDevice": "NOT_RUN"
   },
   "physicalDeviceResults": {
     "historicalAgentsSkillsV1": {
@@ -224,13 +233,13 @@
     }
   },
   "pendingAcceptance": [
+    "Latest M00 emulator run 38182644492 executed 10 cases and failed the unchanged Room migration test because the authentic WorkspaceDatabase/1.json fixture is unavailable; no schema was fabricated. The standard header PNG was transferred and validated but is visually almost entirely white, so that capture is not representative. The one-run allowance is consumed; stop for independent audit.",
     "M00 Motorola validation remains blocked until both the exact original workbook is accessible and the Moto G86 Power is connected/ADB-authorized; no install or physical test was performed in this contract.",
     "M01-06 “Ingesta e indexación reanudable” remains PENDING (requires_device=true in the original 97-task plan); do not start or mark complete until the required device is available.",
     "Fresh empty-home ARM64 assembleRelease remains an infrastructure failure/retry exhausted before Gradle startup; lower-level network cause NOT_DETERMINED. Do not retry or use a cache workaround.",
-    "M00 recovery run 38178581012 on ff4c9f2 executed and failed one Room test; both ChatHeader assertions pass, but screenshot transfer/visual inspection remains unresolved. Stop for independent audit; no further run is authorized by this contract.",
-    "The code push automatically triggered QA ARM64 run 38178580941 and uploaded artifact 11716383219 before the emulator gate completed FAIL. This is an unintended sequencing side effect; the executor did not download or install it. Do not report it as device validation."
+    "The QA gate run 38182644499 failed closed after the same-SHA emulator workflow failed; no APK artifact was produced by that run. The previously recorded QA Debug artifact remains historical and was not accessed, installed, distributed, or deleted in this contract."
   ],
-  "nextRecommendedTask": "Stop for independent audit of code ff4c9f2 and emulator run 38178581012. Record the automatic QA workflow side effect: run 38178580941 uploaded artifact 11716383219 before emulator completion; do not treat it as emulator/device PASS. No APK was downloaded or installed by this executor. The emulator run remains FAIL (Room fixture unavailable, screenshot transfer unresolved); M01-06 remains PENDING_REQUIRES_DEVICE and Motorola PHYSICAL_DEVICE remains NOT_RUN.",
+  "nextRecommendedTask": "Stop for independent audit of code SHA 49d7ccf11a682d04ad28c400f07e5fb577e573fb and evidence for emulator run 38182644492 / QA gate run 38182644499. Do not launch another Android workflow under this consumed one-run contract. Preserve the Room v1 schema blocker and the non-representative standard screenshot as open findings. M01-06 remains PENDING_REQUIRES_DEVICE; PHYSICAL_DEVICE remains NOT_RUN.",
   "m00_03": {
     "status": "IMPLEMENTED_TESTED_HOST_DEVICE_NOT_RUN",
     "baseCommit": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
@@ -488,8 +497,8 @@
   },
   "fieldSemantics": {
     "startingHeadSha": "Historical original M00 baseline; not the base of later deliveries.",
-    "testedCodeHeadSha": "Source SHA used by the latest Android emulator run, documented in latestM00Recovery; older run counts remain under historical records.",
-    "currentSourceHeadSha": "Current product/test/collector source commit; docs-only evidence commits may follow.",
+    "testedCodeHeadSha": "Exact source SHA for latest Android emulator run 38182644492; documentation-only evidence commits may follow.",
+    "currentSourceHeadSha": "Current product/test/collector source commit; documentation-only evidence commits may follow.",
     "lastFullJvmTestCodeSha": "Latest actual full JVM suite SHA; current targeted Python tests and AndroidTest Kotlin compilation do not replace that full suite.",
     "testResults": "Historical or per-source results; each nested recordStatus/testedCodeHeadSha governs attribution. Do not transfer counts to another SHA.",
     "finalHostGate": "Historical complete host gate; not rerun on latestDelivery.codeCommit.",
@@ -508,9 +517,10 @@
     "latestAndroidCi.followUpReview": "Current executor reinspection of the retained artifact and GitHub run metadata; preserves prior latestInvestigation details and does not change the root-cause status.",
     "latestCleanReleaseRepro": "Single current host clean-checkout :app:assembleRelease run at testedCheckoutCommit; it does not imply tests, instrumentation, emulator, physical-device validation, or artifact delivery.",
     "latestInstrumentedCorrection": "The previous run 38165315028 is retained under historicalInstrumentedCorrection38165315028; latest run details are in latestM00Recovery.",
-    "latestM00Recovery": "Current M00 header capture recovery run, with exact source SHA, host compile/focused checks, emulator XML/artifact, screenshot transfer boundary, and explicit physical-device status; previous recovery remains historicalM00Recovery38171385512."
+    "latestM00Recovery": "Historical M00 recovery run 38178581012; superseded by latestM00CaptureRecovery. Preserve its original run-specific findings as history.",
+    "latestM00CaptureRecovery": "Current bounded M00 screenshot/Room-search/QA-gate follow-up: exact source SHA, host checks, emulator/QA runs, artifact and screenshot limitations; no PHYSICAL_DEVICE validation implied."
   },
-  "currentSourceHeadSha": "ff4c9f2f8a5c2c09a240f2e9346856767432489c",
+  "currentSourceHeadSha": "49d7ccf11a682d04ad28c400f07e5fb577e573fb",
   "lastFullJvmTestCodeSha": "e80a8ed8d7f9389639d1a9c35cd313ed0ea1b567",
   "latestDelivery": {
     "name": "Clean-checkout model-source ignore matrix and release reproducibility follow-up",
@@ -632,7 +642,7 @@
     "name": "GitHub-hosted API 35 x86_64 connected instrumentation workflow setup",
     "workflowPath": ".github/workflows/android-emulator-instrumented.yml",
     "branch": "feat/0.5.0-skills-agents",
-    "workflowCodeCommit": "3c5589e7592cb52a88bb2132b1b30fc30d737e03",
+    "workflowCodeCommit": "49d7ccf11a682d04ad28c400f07e5fb577e573fb",
     "runs": [
       {
         "runId": "37865314837",
@@ -1001,6 +1011,48 @@
         "startedAtUtc": "2026-10-11T21:59:16Z",
         "finishedAtUtc": "2026-10-11T22:13:37Z",
         "evidenceDirectory": "docs/validation/android-emulator-ci/diagnostic-runs/38178581012/"
+      },
+      {
+        "runId": "38182644492",
+        "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38182644492",
+        "sourceCommit": "49d7ccf11a682d04ad28c400f07e5fb577e573fb",
+        "status": "FAIL_EXECUTED_WITH_FAILURES",
+        "label": "EMULATOR",
+        "api": 35,
+        "abi": "x86_64",
+        "deviceSerial": "emulator-5554",
+        "deviceModel": "sdk_gphone64_x86_64",
+        "androidRelease": "15",
+        "avdBoot": "PASS",
+        "adbConnected": true,
+        "gradleTask": ":app:connectedDebugAndroidTest",
+        "gradleExitCode": 1,
+        "xmlCount": 1,
+        "counts": {
+          "total": 16,
+          "passed": 9,
+          "failed": 1,
+          "errors": 0,
+          "skipped": 6,
+          "executed": 10
+        },
+        "failedTests": [
+          "com.localai.workspace.data.WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords"
+        ],
+        "skippedCases": [
+          "2 LiteRtLmDeviceSmokeTest cases; 4 NormalChatNativeDeviceTest cases; real models absent"
+        ],
+        "artifactId": "11718008584",
+        "artifactBytes": 84293,
+        "artifactSha256": "25fdb63d4bc051abbde7cc6b4a2a0dd164834472492ca1bcceb0e036de67e7dc",
+        "evidenceDirectory": "docs/validation/android-emulator-ci/diagnostic-runs/38182644492/",
+        "evidenceDirectoryManifest": "SHA256SUMS",
+        "physicalDevice": "NOT_RUN",
+        "startedAtUtc": "2026-10-11T23:00:37Z",
+        "finishedAtUtc": "2026-10-11T23:13:08Z",
+        "xml": "docs/validation/android-emulator-ci/diagnostic-runs/38182644492/artifact/instrumented-xml/TEST-emulator-5554-15-app.xml.gz",
+        "xmlSha256": "77437afc9b748cdc9197c62de5e810c87c071c4e3876b1695354daae6ada4855",
+        "xmlOriginalSha256": "a5c49e9873c7bbf6f3bf94bb4eb73a1430ea3f9e91b00432d5517ae2168d6355"
       }
     ],
     "finalStatus": "AVD/API35 x86_64 passed. Latest run 38178581012 on ff4c9f2 executed 10 tests (9 pass, 1 Room fixture fail, 6 model skips); both ChatHeader tests pass but screenshot transfer is unresolved and visual validation is NOT_RUN. Await independent audit.",
@@ -1544,11 +1596,14 @@
       "runId": "38165315028",
       "sourceSha": "ee6909d86c9a3477734addc5e933cfc2dfe40fd7",
       "status": "EMULATOR_EXECUTED_WITH_FAILURES: 6 passed, 4 failed, 6 skipped; XML=1; 10 executed; overall FAIL."
-    }
+    },
+    "latestRunId": "38182644492",
+    "latestQaGateRunId": "38182644499",
+    "latestRunStatus": "FAIL_EXECUTED_WITH_FAILURES; artifact evidence and results are recorded in latestM00CaptureRecovery."
   },
   "latestQaArm64Artifact": {
     "name": "QA ARM64 Debug APK build and artifact verification",
-    "status": "HOST_BUILD_AND_ARTIFACT_VERIFICATION_PASS; EMULATOR_NOT_RUN; PHYSICAL_DEVICE_NOT_RUN",
+    "status": "HISTORICAL_HOST_QA_BUILD_PASS; LATEST_SAME_SHA_GATE_ATTEMPT_FAILED_CLOSED; NO_NEW_ARTIFACT",
     "branch": "feat/0.5.0-skills-agents",
     "sourceCodeSha": "4ef2b39b9cba6aa1def081171d42d9146bbd968c",
     "workflowPath": ".github/workflows/qa-debug-arm64-apk.yml",
@@ -1645,7 +1700,23 @@
     "apkIsQaDebugNotRelease": true,
     "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
     "v042TagCommitSha": "de615b772cf37a99e7e08a647c59607b271de606",
-    "documentation": "docs/validation/qa-debug-arm64/RESULTS.md"
+    "documentation": "docs/validation/qa-debug-arm64/RESULTS.md",
+    "recordStatus": "Historical latest successfully produced QA Debug artifact is from run 37874837502/source 4ef2b39. Newer same-SHA QA run 38182644499 for source 49d7ccf failed closed after emulator conclusion failure and produced zero artifacts; no APK was built by this contract.",
+    "latestGateAttempt": {
+      "runId": "38182644499",
+      "jobId": "114598286222",
+      "sourceCodeSha": "49d7ccf11a682d04ad28c400f07e5fb577e573fb",
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38182644499",
+      "conclusion": "failure_closed_by_instrumentation_gate",
+      "observedEmulatorRunId": "38182644492",
+      "observedEmulatorConclusion": "failure",
+      "gateReason": "ANDROID_INSTRUMENTATION_NOT_SUCCESSFUL",
+      "jdkSetup": "SKIPPED",
+      "apkBuild": "SKIPPED",
+      "upload": "SKIPPED",
+      "artifactCount": 0,
+      "physicalDevice": "NOT_RUN"
+    }
   },
   "latestM00PhysicalValidation": {
     "name": "M00 Motorola Moto G86 physical validation preflight",
@@ -2601,7 +2672,7 @@
   },
   "latestM00Recovery": {
     "name": "M00 ChatHeader screenshot transfer recovery",
-    "status": "EMULATOR_FAIL; CHATHEADER_TESTS_PASS; SCREENSHOT_TRANSFER_UNRESOLVED; ROOM_ENVIRONMENT_UNAVAILABLE; AWAITING_INDEPENDENT_AUDIT",
+    "status": "HISTORICAL_EMULATOR_FAIL; CHATHEADER_ASSERTIONS_PASS; SCREENSHOT_TRANSFER_FAILED_IN_RUN_38178581012; ROOM_ENVIRONMENT_UNAVAILABLE",
     "branch": "feat/0.5.0-skills-agents",
     "baseEvidenceRunId": "38171385512",
     "codeCommitSha": "ff4c9f2f8a5c2c09a240f2e9346856767432489c",
@@ -2826,7 +2897,10 @@
       },
       "executorDownloadedInstalledOrDistributed": false,
       "emulatorGateStatus": "FAIL; artifact does not imply emulator or physical validation"
-    }
+    },
+    "recordStatus": "HISTORICAL; superseded by latestM00CaptureRecovery on code SHA 49d7ccf. Its screenshot transfer failure describes run 38178581012, not the current run.",
+    "supersededBySourceSha": "49d7ccf11a682d04ad28c400f07e5fb577e573fb",
+    "supersededByRunId": "38182644492"
   },
   "historicalM00Recovery38171385512": {
     "name": "M00 recovery: Room history, Skills navigation race, header diagnostics and LiteRT verification",
@@ -3002,5 +3076,201 @@
     "evidenceDirectory": "docs/validation/android-emulator-ci/diagnostic-runs/38171385512/",
     "durableEvidenceRootManifestSha256": "91335974e2dec2631c398aa1dfc814be1e0757e068c88b636a0ceaa10085b051",
     "durableEvidenceRootManifestEntries": 126
+  },
+  "latestM00CaptureRecovery": {
+    "name": "M00 screenshot transfer, bounded Room v1 source lookup, and same-SHA QA gate recovery",
+    "status": "EMULATOR_FAIL; PNG_TRANSFER_PASS; STANDARD_CAPTURE_NOT_REPRESENTATIVE; ROOM_ENVIRONMENT_UNAVAILABLE; QA_GATE_FAIL_CLOSED; AWAITING_INDEPENDENT_AUDIT",
+    "branch": "feat/0.5.0-skills-agents",
+    "baseRemoteHead": "a50f0a14d6bb04c44541f815cf13ef9d1f08bd31",
+    "codeCommitSha": "49d7ccf11a682d04ad28c400f07e5fb577e573fb",
+    "codeCommitParent": "a50f0a14d6bb04c44541f815cf13ef9d1f08bd31",
+    "scope": "Only test screenshot transport, CI evidence collection/QA gating, and documentation; no product runtime/UI, Room schema/test, model or roadmap change.",
+    "roomV1": {
+      "status": "ENVIRONMENT_UNAVAILABLE",
+      "migrationTestChanged": false,
+      "schemaChanged": false,
+      "schemaFabricated": false,
+      "additionalSearch": "One bounded public GitHub refs/path/content search on this repository; no v1 schema source found.",
+      "observed": "Feature branch has only WorkspaceDatabase/8.json; main has no v1 schema JSON; path-specific history for app/schemas/com.localai.workspace.data.WorkspaceDatabase/1.json returned zero commits; direct content lookup not found.",
+      "priorLocalUnreachableObjectScanRepeated": false
+    },
+    "host": {
+      "status": "TARGETED_HOST_PASS; ANDROID_TEST_KOTLIN_COMPILE_PASS; FULL_JVM_NOT_RUN; LOCAL_APK_ASSEMBLE_NOT_RUN",
+      "environment": "Linux x86_64; Temurin 17.0.20.1+1; Gradle 8.10.2; Android SDK /workspace/.toolchain/android-sdk; adb 1.0.41 version 37.0.1; Python 3.12.14; PyYAML 6.0.3",
+      "checks": [
+        {
+          "name": "collector tests",
+          "command": "python3 scripts/ci/test_collect_android_emulator_evidence.py",
+          "passed": 7,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0,
+          "exitCode": 0,
+          "log": "docs/validation/android-emulator-ci/diagnostic-runs/38182644492/host/collector-tests.txt"
+        },
+        {
+          "name": "QA gate tests",
+          "command": "python3 scripts/ci/test_wait_for_android_emulator_success.py",
+          "passed": 6,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0,
+          "exitCode": 0,
+          "log": "docs/validation/android-emulator-ci/diagnostic-runs/38182644492/host/qa-gate-tests.txt"
+        },
+        {
+          "name": "python syntax",
+          "command": "python3 -m py_compile scripts/ci/collect_android_emulator_evidence.py scripts/ci/test_collect_android_emulator_evidence.py scripts/ci/wait_for_android_emulator_success.py scripts/ci/test_wait_for_android_emulator_success.py",
+          "exitCode": 0
+        },
+        {
+          "name": "workflow YAML parse",
+          "parser": "PyYAML BaseLoader",
+          "exitCode": 0,
+          "files": [
+            ".github/workflows/android-emulator-instrumented.yml",
+            ".github/workflows/qa-debug-arm64-apk.yml"
+          ]
+        },
+        {
+          "name": "AndroidTest Kotlin compile",
+          "command": "env ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:/workspace/.toolchain/android-sdk/platform-tools:/usr/bin:/bin ./gradlew :app:compileDebugAndroidTestKotlin --rerun-tasks --no-daemon --no-parallel --max-workers=1 --console=plain",
+          "result": "BUILD SUCCESSFUL",
+          "executedTasks": 54,
+          "upToDateTasks": 0,
+          "duration": "2m 53s",
+          "exitCode": 0,
+          "log": "docs/validation/android-emulator-ci/diagnostic-runs/38182644492/host/compileDebugAndroidTestKotlin.log.gz",
+          "logSha256": "bdf4405586dea1ee04e5c9d4d2eaf367fbc94094966b1542fc8d094e0080b4ad",
+          "apkAssembleTaskRun": false,
+          "uncompressedLogSha256": "35d12b449bbd14fa7e606be284a291f4e72505689fbd436cf1179b1a773bfdf6"
+        },
+        {
+          "name": "git diff --check",
+          "exitCode": 0
+        }
+      ],
+      "fullJvmSuites": "NOT_RUN_FOR_THIS_SHA",
+      "localApkAssembly": "NOT_RUN"
+    },
+    "emulator": {
+      "status": "FAIL_EXECUTED_WITH_FAILURES",
+      "label": "EMULATOR",
+      "runId": "38182644492",
+      "jobId": "114598286399",
+      "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38182644492",
+      "event": "push",
+      "sourceSha": "49d7ccf11a682d04ad28c400f07e5fb577e573fb",
+      "startedAtUtc": "2026-10-11T23:00:37Z",
+      "completedAtUtc": "2026-10-11T23:13:08Z",
+      "conclusion": "failure",
+      "avdBoot": "PASS",
+      "adbConnected": true,
+      "deviceSerial": "emulator-5554",
+      "deviceModel": "sdk_gphone64_x86_64",
+      "androidRelease": "15",
+      "api": 35,
+      "abi": "x86_64",
+      "screen": "1080x1920",
+      "densityDpi": 420,
+      "gradleTask": ":app:connectedDebugAndroidTest",
+      "gradleCommand": "./gradlew :app:connectedDebugAndroidTest --no-daemon --no-parallel --max-workers=2 --stacktrace --console=plain",
+      "gradleExitCode": 1,
+      "counts": {
+        "total": 16,
+        "passed": 9,
+        "failed": 1,
+        "errors": 0,
+        "skipped": 6,
+        "executed": 10
+      },
+      "failedTests": [
+        "com.localai.workspace.data.WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords"
+      ],
+      "skippedTests": [
+        "2 LiteRtLmDeviceSmokeTest tests: actual model unavailable",
+        "4 NormalChatNativeDeviceTest tests: actual model unavailable"
+      ],
+      "xml": "docs/validation/android-emulator-ci/diagnostic-runs/38182644492/artifact/instrumented-xml/TEST-emulator-5554-15-app.xml.gz",
+      "xmlSha256": "77437afc9b748cdc9197c62de5e810c87c071c4e3876b1695354daae6ada4855",
+      "artifact": {
+        "id": "11718008584",
+        "name": "android-emulator-evidence-38182644492-1",
+        "bytes": 84293,
+        "sha256": "25fdb63d4bc051abbde7cc6b4a2a0dd164834472492ca1bcceb0e036de67e7dc",
+        "apiDigest": "sha256:25fdb63d4bc051abbde7cc6b4a2a0dd164834472492ca1bcceb0e036de67e7dc",
+        "payloadEntriesVerified": 32,
+        "outerZipEntries": 33,
+        "zipIntegrity": "PASS"
+      },
+      "sanitizedJobLog": "docs/validation/android-emulator-ci/diagnostic-runs/38182644492/logs/android-job-sanitized.txt.gz",
+      "sanitizedJobLogSha256": "79a761f4de444953ebf1eb3a8c188f85520217ea132efe290edb607e606d63cc",
+      "physicalDevice": "NOT_RUN",
+      "xmlOriginalSha256": "a5c49e9873c7bbf6f3bf94bb4eb73a1430ea3f9e91b00432d5517ae2168d6355",
+      "sanitizedJobLogOriginalSha256": "e0b1ae077398c0bdda767363acfb5e78781c9fb4299692b8702d93825203ab2d"
+    },
+    "screenshots": {
+      "transport": "UiAutomation.takeScreenshot to app cache; dedicated M00HeaderPng logcat base64 chunks; collector verifies markers/chunks/base64/PNG CRC+stream/dimensions/bytes/SHA; cache file not deleted before collection.",
+      "standard": {
+        "path": "docs/validation/android-emulator-ci/diagnostic-runs/38182644492/artifact/ui-diagnostics/screenshots/chat-header-standard.png",
+        "width": 1080,
+        "height": 1920,
+        "bytes": 11720,
+        "sha256": "b80a24417e71289a59d86941b5d7d603f0c42a5ce408bd8fdbb703cdb6fd7fc6",
+        "transfer": "PASS",
+        "pngValidation": "PASS",
+        "visualReview": "NOT_REPRESENTATIVE; almost entirely white; header not visible; cause NOT_DETERMINED"
+      },
+      "largeFont": {
+        "path": "docs/validation/android-emulator-ci/diagnostic-runs/38182644492/artifact/ui-diagnostics/screenshots/chat-header-large-font.png",
+        "width": 1080,
+        "height": 1920,
+        "bytes": 45338,
+        "sha256": "c89f1647dab2e19721761744ef5931c1134aac170d9ffac3c062338b9512bd3f",
+        "transfer": "PASS",
+        "pngValidation": "PASS",
+        "visualReview": "shows tested three-line header"
+      },
+      "chatHeaderInstrumentedAssertions": "Both standard and large-font tests passed individual assertIsDisplayed checks for agent, conversation and model and model-before-body bounds assertion."
+    },
+    "qaGate": {
+      "status": "FAIL_CLOSED_AS_EXPECTED_AFTER_EMULATOR_FAILURE",
+      "runId": "38182644499",
+      "jobId": "114598286222",
+      "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38182644499",
+      "sourceSha": "49d7ccf11a682d04ad28c400f07e5fb577e573fb",
+      "observedEmulatorRunId": "38182644492",
+      "observedConclusion": "failure",
+      "reason": "ANDROID_INSTRUMENTATION_NOT_SUCCESSFUL",
+      "jdkSetup": "SKIPPED",
+      "apkBuild": "SKIPPED",
+      "upload": "SKIPPED",
+      "artifactCount": 0,
+      "sanitizedJobLog": "docs/validation/android-emulator-ci/diagnostic-runs/38182644492/logs/qa-gate-job-sanitized.txt.gz",
+      "sanitizedJobLogSha256": "f6b7637b67c2ca1aa29a7d158d8cc82a0945ce3d2bd3f04eaeda0e75bc9c413b",
+      "sanitizedJobLogOriginalSha256": "da89bd5b6a473f0c273c1d562e5db0dd420556a3bb426ac2ee2d471910269537"
+    },
+    "evidenceDirectory": "docs/validation/android-emulator-ci/diagnostic-runs/38182644492/",
+    "rootChecksumManifest": "docs/validation/android-emulator-ci/diagnostic-runs/38182644492/SHA256SUMS",
+    "oneRunAllowanceConsumed": true,
+    "noFurtherAndroidRunAuthorizedUnderThisContract": true,
+    "validationStates": {
+      "HOST": "TARGETED_PASS; ANDROID_TEST_KOTLIN_COMPILE_PASS; FULL_JVM_NOT_RUN",
+      "EMULATOR": "FAIL; 10 executed, one Room failure, six model skips",
+      "PHYSICAL_DEVICE": "NOT_RUN"
+    },
+    "originalPlan": "97 task IDs/order/dependencies unchanged; M01-06 PENDING_REQUIRES_DEVICE; no workbook used.",
+    "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
+    "v042PeeledCommitSha": "de615b772cf37a99e7e08a647c59607b271de606",
+    "rootChecksumManifestSha256": "22254f64622dca29597505cd378304b309c4b2024478bf149acc35c3923ac2f8",
+    "rootChecksumManifestEntries": 33,
+    "evidenceIntegrity": "Run directory SHA256SUMS covers every retained file except itself; sha256sum -c passed for all entries after final evidence files were written.",
+    "compressedEvidenceSha256": {
+      "xml": "77437afc9b748cdc9197c62de5e810c87c071c4e3876b1695354daae6ada4855",
+      "gradle": "c2a18c1f756291542bf4f44dbf234133fa08e885b8dfac33657ecc47efc96a72",
+      "hostCompile": "bdf4405586dea1ee04e5c9d4d2eaf367fbc94094966b1542fc8d094e0080b4ad",
+      "androidLog": "79a761f4de444953ebf1eb3a8c188f85520217ea132efe290edb607e606d63cc",
+      "qaLog": "f6b7637b67c2ca1aa29a7d158d8cc82a0945ce3d2bd3f04eaeda0e75bc9c413b"
+    }
   }
 }

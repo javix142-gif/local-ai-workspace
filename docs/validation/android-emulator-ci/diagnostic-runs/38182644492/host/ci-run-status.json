@@ -1,0 +1,40 @@
+{
+  "label": "EMULATOR_AND_QA_GATE",
+  "sourceCodeSha": "49d7ccf11a682d04ad28c400f07e5fb577e573fb",
+  "emulatorRun": {
+    "id": "38182644492",
+    "jobId": "114598286399",
+    "conclusion": "failure",
+    "startedAtUtc": "2026-10-11T23:00:37Z",
+    "completedAtUtc": "2026-10-11T23:13:08Z",
+    "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38182644492",
+    "connectedTask": ":app:connectedDebugAndroidTest",
+    "gradleExitCode": 1,
+    "xml": {
+      "total": 16,
+      "passed": 9,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 6,
+      "executed": 10
+    },
+    "failure": "WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords: authentic WorkspaceDatabase/1.json unavailable"
+  },
+  "qaArm64Run": {
+    "id": "38182644499",
+    "jobId": "114598286222",
+    "conclusion": "failure_closed_by_instrumentation_gate",
+    "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38182644499",
+    "instrumentationRunObserved": "38182644492",
+    "instrumentationConclusion": "failure",
+    "buildStep": "skipped",
+    "uploadStep": "skipped",
+    "artifactCount": 0
+  },
+  "validation": {
+    "host": "targeted checks and AndroidTest Kotlin compile PASS",
+    "emulator": "FAIL_EXECUTED_WITH_FAILURES",
+    "physicalDevice": "NOT_RUN",
+    "additionalAndroidRunAuthorized": false
+  }
+}

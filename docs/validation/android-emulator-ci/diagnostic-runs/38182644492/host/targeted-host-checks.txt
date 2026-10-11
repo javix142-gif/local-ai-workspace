@@ -1,0 +1,29 @@
+source_commit=49d7ccf11a682d04ad28c400f07e5fb577e573fb
+captured_at_utc=2026-10-11T23:16:11Z
+
+$ python3 scripts/ci/test_collect_android_emulator_evidence.py
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.007s
+
+OK
+exit_code=0
+
+$ python3 scripts/ci/test_wait_for_android_emulator_success.py
+......
+----------------------------------------------------------------------
+Ran 6 tests in 0.001s
+
+OK
+exit_code=0
+
+$ python3 -m py_compile scripts/ci/collect_android_emulator_evidence.py scripts/ci/test_collect_android_emulator_evidence.py scripts/ci/wait_for_android_emulator_success.py scripts/ci/test_wait_for_android_emulator_success.py
+exit_code=0
+
+$ python YAML BaseLoader parse for both workflows
+.github/workflows/android-emulator-instrumented.yml: parsed; jobs=['connected-instrumentation']
+.github/workflows/qa-debug-arm64-apk.yml: parsed; jobs=['build-qa-apk']
+exit_code=0
+
+$ git diff --check
+exit_code=0

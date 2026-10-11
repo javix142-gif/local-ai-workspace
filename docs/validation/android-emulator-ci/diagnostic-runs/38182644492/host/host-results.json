@@ -1,0 +1,55 @@
+{
+  "sourceCommit": "49d7ccf11a682d04ad28c400f07e5fb577e573fb",
+  "collectorTests": {
+    "command": "python3 scripts/ci/test_collect_android_emulator_evidence.py",
+    "passed": 7,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "log": "collector-tests.txt"
+  },
+  "qaGateTests": {
+    "command": "python3 scripts/ci/test_wait_for_android_emulator_success.py",
+    "passed": 6,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "log": "qa-gate-tests.txt"
+  },
+  "pythonCompile": {
+    "command": "python3 -m py_compile scripts/ci/collect_android_emulator_evidence.py scripts/ci/test_collect_android_emulator_evidence.py scripts/ci/wait_for_android_emulator_success.py scripts/ci/test_wait_for_android_emulator_success.py",
+    "exitCode": 0
+  },
+  "workflowYamlParse": {
+    "loader": "PyYAML BaseLoader",
+    "exitCode": 0,
+    "files": {
+      ".github/workflows/android-emulator-instrumented.yml": [
+        "connected-instrumentation"
+      ],
+      ".github/workflows/qa-debug-arm64-apk.yml": [
+        "build-qa-apk"
+      ]
+    }
+  },
+  "gitDiffCheck": {
+    "command": "git diff --check",
+    "exitCode": 0
+  },
+  "androidTestCompile": {
+    "command": "env ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:/workspace/.toolchain/android-sdk/platform-tools:/usr/bin:/bin ./gradlew :app:compileDebugAndroidTestKotlin --rerun-tasks --no-daemon --no-parallel --max-workers=1 --console=plain",
+    "task": ":app:compileDebugAndroidTestKotlin",
+    "result": "BUILD SUCCESSFUL",
+    "exitCode": 0,
+    "duration": "2m 53s",
+    "actionableTasks": 54,
+    "executed": 54,
+    "upToDate": 0,
+    "log": "compileDebugAndroidTestKotlin.log.gz",
+    "logSha256": "bdf4405586dea1ee04e5c9d4d2eaf367fbc94094966b1542fc8d094e0080b4ad",
+    "apkAssembleTaskRun": false,
+    "uncompressedLogSha256": "35d12b449bbd14fa7e606be284a291f4e72505689fbd436cf1179b1a773bfdf6"
+  }
+}

@@ -1,0 +1,13 @@
+Execution host: local workspace; host checks are not emulator or Motorola execution.
+OS/architecture: Linux x86_64
+JAVA_HOME=/workspace/.toolchain/jdk-17
+JDK: Temurin 17.0.20.1+1
+Gradle wrapper: 8.10.2
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk
+ADB: 1.0.41, version 37.0.1-15733141
+Python: 3.12.14
+PyYAML: 6.0.3
+No Gradle APK assemble task was run locally; only :app:compileDebugAndroidTestKotlin was requested.
+python=3.12.14
+pyyaml=6.0.3
