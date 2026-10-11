@@ -73,6 +73,33 @@ def adb_facts(serial: str | None) -> dict[str, object]:
     return facts
 
 
+def installed_package_facts(serial: str | None) -> dict[str, object]:
+    expected = {
+        "application": "com.localai.workspace.debug",
+        "instrumentationTest": "com.localai.workspace.debug.test",
+    }
+    if serial is None:
+        return {
+            "checked": False,
+            "reason": "NO_CONNECTED_EMULATOR",
+            "packages": {key: {"packageName": value, "installed": None} for key, value in expected.items()},
+        }
+    result = command([ADB, "-s", serial, "shell", "pm", "list", "packages"])
+    installed = {
+        line.strip().removeprefix("package:")
+        for line in result.stdout.splitlines()
+        if line.strip().startswith("package:")
+    }
+    return {
+        "checked": True,
+        "listPackagesExitCode": result.returncode,
+        "packages": {
+            key: {"packageName": value, "installed": result.returncode == 0 and value in installed}
+            for key, value in expected.items()
+        },
+    }
+
+
 def parse_results(xml_files: list[Path]) -> tuple[dict[str, int], list[dict[str, str]]]:
     counts = {"total": 0, "passed": 0, "failed": 0, "errors": 0, "skipped": 0, "executed": 0}
     skipped_cases: list[dict[str, str]] = []
@@ -131,6 +158,13 @@ def read_json_if_available(path: Path) -> dict[str, object] | None:
     return value if isinstance(value, dict) else None
 
 
+def read_int_if_available(path: Path) -> int | None:
+    try:
+        return int(path.read_text(encoding="utf-8").strip())
+    except (OSError, ValueError):
+        return None
+
+
 def collect_xml() -> list[Path]:
     bases = [
         REPO / "app/build/outputs/androidTest-results/connected",
@@ -170,6 +204,7 @@ def main() -> int:
         "avdmanager-create-pipeline-exit-code.txt", "avdmanager-create-pipeline-status.txt",
         "avdmanager-list-avd.txt", "avdmanager-list-avd.txt.exit-code",
         "emulator-list-avds.txt", "emulator-list-avds.txt.exit-code", "avd-storage-inventory.txt",
+        "avd-preflight-exit-code.txt",
     ):
         safe_copy(RUNNER_TEMP / filename, OUT / "logs" / filename)
     safe_copy(RUNNER_TEMP / "avd-prelaunch.json", OUT / "avd-prelaunch.json")
@@ -193,9 +228,25 @@ def main() -> int:
         gradle_exit = None
     facts = adb_facts(serial)
     avd_prelaunch = read_json_if_available(OUT / "avd-prelaunch.json")
+    packages = installed_package_facts(serial)
     run_id = os.environ.get("GITHUB_RUN_ID", "")
     server = os.environ.get("GITHUB_SERVER_URL", "https://github.com").rstrip("/")
     repository = os.environ.get("GITHUB_REPOSITORY", "")
+    preflight_passed = bool(avd_prelaunch and avd_prelaunch.get("preflightPassed") is True)
+    api_abi_valid = facts.get("api") == "35" and facts.get("abi") == "x86_64" and facts.get("emulator") == "1"
+    application_installed = packages.get("packages", {}).get("application", {}).get("installed") is True
+    counts_consistent = counts["total"] == counts["passed"] + counts["failed"] + counts["errors"] + counts["skipped"]
+    checks = {
+        "avdPreflightPassed": preflight_passed,
+        "adbConnected": serial is not None,
+        "api35X86_64Emulator": api_abi_valid,
+        "applicationApkInstalled": application_installed,
+        "connectedTaskSucceeded": gradle_exit == 0,
+        "junitXmlPresent": bool(xml_files),
+        "junitCountsConsistent": counts_consistent,
+        "testsExecuted": counts["executed"] > 0,
+        "noTestFailuresOrErrors": counts["failed"] == 0 and counts["errors"] == 0,
+    }
     summary: dict[str, object] = {
         "label": "EMULATOR",
         "sourceCommit": sha,
@@ -204,13 +255,20 @@ def main() -> int:
         "runUrl": f"{server}/{repository}/actions/runs/{run_id}" if run_id and repository else None,
         "expected": {"api": 35, "abi": "x86_64", "systemImage": "google_apis"},
         "device": facts,
+        "adbDevicesExitCode": devices.returncode,
         "avdPrelaunchDiagnostics": avd_prelaunch,
+        "avdPreflightExitCode": read_int_if_available(RUNNER_TEMP / "avd-preflight-exit-code.txt"),
+        "apkInstallState": packages,
         "physicalDeviceValidation": "NOT_RUN",
+        "connectedTask": ":app:connectedDebugAndroidTest",
+        "connectedTaskCommand": "./gradlew :app:connectedDebugAndroidTest --no-daemon --no-parallel --max-workers=2 --stacktrace --console=plain",
         "gradleExitCode": gradle_exit,
         "instrumentationXmlCount": len(xml_files),
         "counts": counts,
         "skippedCases": skipped_cases,
-        "status": "PASS" if serial and gradle_exit == 0 and xml_files and counts["executed"] > 0 and counts["failed"] == 0 and counts["errors"] == 0 else "FAIL",
+        "acceptanceChecks": checks,
+        "status": "PASS" if all(checks.values()) else "FAIL",
+        "failureReasons": [key for key, passed in checks.items() if not passed],
         "apkOrModelArtifactsIncluded": False,
     }
     write_text(OUT / "summary.json", json.dumps(summary, indent=2, ensure_ascii=False) + "\n")
@@ -223,6 +281,10 @@ def main() -> int:
         "runnerVersion": os.environ.get("ImageVersion", "unknown"),
         "expectedApi": 35,
         "expectedAbi": "x86_64",
+        "connectedTask": summary["connectedTask"],
+        "adbDevicesExitCode": devices.returncode,
+        "apkInstallState": packages,
+        "avdPreflightPassed": preflight_passed,
         "runnerClass": "GitHub-hosted standard ubuntu-24.04",
         "modelDownloads": "none",
         "label": "EMULATOR",

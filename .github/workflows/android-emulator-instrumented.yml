@@ -107,9 +107,12 @@ jobs:
           AVD_ANDROID_HOME="${ANDROID_HOME:-}"
           AVDMANAGER="$AVD_ANDROID_HOME/cmdline-tools/latest/bin/avdmanager"
           EMULATOR="$AVD_ANDROID_HOME/emulator/emulator"
+          AVD_HOME="${HOME:?HOME must be set}/.android/avd"
+          mkdir -p "$AVD_HOME"
+          export ANDROID_AVD_HOME="$(realpath -m "$AVD_HOME")"
 
           {
-            for variable in HOME ANDROID_HOME ANDROID_SDK_ROOT ANDROID_USER_HOME ANDROID_AVD_HOME ANDROID_SDK_HOME; do
+            for variable in HOME ANDROID_HOME ANDROID_SDK_ROOT ANDROID_USER_HOME ANDROID_AVD_HOME ANDROID_SDK_HOME XDG_CONFIG_HOME; do
               if [[ -v "$variable" ]]; then
                 printf '%s=%s\n' "$variable" "${!variable}"
               else
@@ -137,6 +140,8 @@ jobs:
           if [[ -n "${ANDROID_USER_HOME:-}" ]]; then add_avd_search_dir "$ANDROID_USER_HOME/avd"; fi
           if [[ -n "${ANDROID_SDK_HOME:-}" ]]; then add_avd_search_dir "$ANDROID_SDK_HOME/avd"; fi
           if [[ -n "${HOME:-}" ]]; then add_avd_search_dir "$HOME/.android/avd"; fi
+          if [[ -n "${HOME:-}" ]]; then add_avd_search_dir "$HOME/.config/.android/avd"; fi
+          if [[ -n "${XDG_CONFIG_HOME:-}" ]]; then add_avd_search_dir "$XDG_CONFIG_HOME/.android/avd"; fi
           {
             printf 'expected_avd_name=%s\n' "$AVD_NAME"
             printf 'resolved_search_directory_count=%s\n' "${#AVD_SEARCH_DIRS[@]}"
@@ -164,8 +169,8 @@ jobs:
           printf '%s\n' "$create_pipeline_exit_code" > "$RUNNER_TEMP/avdmanager-create-pipeline-exit-code.txt"
           printf '%s\n' "${create_pipeline_status[*]}" > "$RUNNER_TEMP/avdmanager-create-pipeline-status.txt"
 
-          # Diagnostics are best-effort and must not alter the previous create,
-          # launch, or wait behavior. Each command gets its own exit-code file.
+          # Capture independent discovery results before deciding whether launch
+          # is safe. Each command has its own exit-code file for the always-run collector.
           set +e
           run_avd_diagnostic() {
             local output="$1"
@@ -191,8 +196,12 @@ jobs:
                 [[ -n "$file" ]] || continue
                 printf 'file=%s\n' "$file" >> "$inventory"
                 sha256sum "$file" >> "$inventory" 2>&1
+                hash_exit_code=$?
+                printf 'sha256sum_exit_code=%s\n' "$hash_exit_code" >> "$inventory"
                 if [[ "$(basename "$file")" == "$AVD_NAME.ini" || "$(basename "$file")" == config.ini ]]; then
-                  grep -E '^(path|path\.rel|target|image\.sysdir\.1|abi\.type)=' "$file" >> "$inventory" 2>&1 || true
+                  grep -E '^(path|path\.rel|target|image\.sysdir\.1|abi\.type)=' "$file" >> "$inventory" 2>&1
+                  grep_exit_code=$?
+                  printf 'metadata_grep_exit_code=%s\n' "$grep_exit_code" >> "$inventory"
                 fi
               done < "$file_list"
             else
@@ -200,11 +209,12 @@ jobs:
             fi
             printf 'expected_ini=%s/%s.ini exists=' "$directory" "$AVD_NAME" >> "$inventory"
             if [[ -f "$directory/$AVD_NAME.ini" ]]; then printf 'true\n' >> "$inventory"; else printf 'false\n' >> "$inventory"; fi
-            printf 'expected_config=%s/%s/config.ini exists=' "$directory" "$AVD_NAME" >> "$inventory"
-            if [[ -f "$directory/$AVD_NAME/config.ini" ]]; then printf 'true\n' >> "$inventory"; else printf 'false\n' >> "$inventory"; fi
+            printf 'expected_config=%s/%s.avd/config.ini exists=' "$directory" "$AVD_NAME" >> "$inventory"
+            if [[ -f "$directory/$AVD_NAME.avd/config.ini" ]]; then printf 'true\n' >> "$inventory"; else printf 'false\n' >> "$inventory"; fi
           done
 
-          AVD_NAME="$AVD_NAME" python3 - "$RUNNER_TEMP" "${AVD_SEARCH_DIRS[@]}" > "$RUNNER_TEMP/avd-prelaunch.json" <<'PY'
+          AVD_NAME="$AVD_NAME" ANDROID_AVD_HOME="$ANDROID_AVD_HOME" XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-}" \
+            python3 - "$RUNNER_TEMP" "${AVD_SEARCH_DIRS[@]}" > "$RUNNER_TEMP/avd-prelaunch.json" <<'PY'
           import json
           import os
           import sys
@@ -228,11 +238,27 @@ jobs:
               except OSError:
                   return False
 
+          def manager_paths():
+              try:
+                  lines = (root / "avdmanager-list-avd.txt").read_text(encoding="utf-8").splitlines()
+              except OSError:
+                  return []
+              paths = []
+              current_is_expected = False
+              for line in lines:
+                  stripped = line.strip()
+                  if stripped.startswith("Name:"):
+                      current_is_expected = stripped == f"Name: {name}"
+                  elif current_is_expected and stripped.startswith("Path:"):
+                      paths.append(stripped.partition(":")[2].strip())
+                      current_is_expected = False
+              return paths
+
           paths = []
           for value in sys.argv[2:]:
               directory = Path(value)
               ini = directory / f"{name}.ini"
-              config = directory / name / "config.ini"
+              config = directory / f"{name}.avd" / "config.ini"
               paths.append({
                   "searchDirectory": str(directory),
                   "directoryExists": directory.is_dir(),
@@ -242,27 +268,57 @@ jobs:
                   "configExists": config.is_file(),
               })
 
+          manager_reported_paths = manager_paths()
+          canonical_home = Path(os.environ["ANDROID_AVD_HOME"]).resolve()
+          canonical = next((item for item in paths if Path(item["searchDirectory"]).resolve() == canonical_home), None)
+          canonical_avd_path = (canonical_home / f"{name}.avd").resolve()
+          reported_path_matches = any(Path(value).resolve() == canonical_avd_path for value in manager_reported_paths)
+          checks = {
+              "createCommandSucceeded": read_code("avdmanager-create-exit-code.txt") == 0,
+              "createPipelineSucceeded": read_code("avdmanager-create-pipeline-exit-code.txt") == 0,
+              "avdmanagerListSucceeded": read_code("avdmanager-list-avd.txt.exit-code") == 0,
+              "avdmanagerListedExpected": listed("avdmanager-list-avd.txt"),
+              "emulatorListSucceeded": read_code("emulator-list-avds.txt.exit-code") == 0,
+              "emulatorListedExpected": listed("emulator-list-avds.txt"),
+              "managerReportedCanonicalPath": reported_path_matches,
+              "canonicalDirectoryExists": canonical is not None and canonical["directoryExists"],
+              "canonicalIniExists": canonical is not None and canonical["iniExists"],
+              "canonicalConfigExists": canonical is not None and canonical["configExists"],
+          }
+          failures = [key for key, passed in checks.items() if not passed]
+
           result = {
               "capturedBeforeLaunch": True,
               "expectedAvdName": name,
+              "androidAvdHome": str(canonical_home),
+              "xdgConfigHome": os.environ.get("XDG_CONFIG_HOME") or None,
               "avdmanagerCreateExitCode": read_code("avdmanager-create-exit-code.txt"),
               "createPipelineExitCode": read_code("avdmanager-create-pipeline-exit-code.txt"),
               "avdmanagerListExitCode": read_code("avdmanager-list-avd.txt.exit-code"),
               "avdmanagerListedExpected": listed("avdmanager-list-avd.txt"),
+              "avdmanagerReportedPaths": manager_reported_paths,
               "emulatorListExitCode": read_code("emulator-list-avds.txt.exit-code"),
               "emulatorListedExpected": listed("emulator-list-avds.txt"),
               "searchPaths": paths,
+              "checks": checks,
+              "preflightPassed": not failures,
+              "preflightFailures": failures,
           }
           json.dump(result, sys.stdout, indent=2)
           sys.stdout.write("\n")
+          raise SystemExit(0 if not failures else 1)
           PY
           prelaunch_json_exit_code=$?
           printf '%s\n' "$prelaunch_json_exit_code" > "$RUNNER_TEMP/avd-prelaunch-json-exit-code.txt"
+          printf '%s\n' "$prelaunch_json_exit_code" > "$RUNNER_TEMP/avd-preflight-exit-code.txt"
           set -e
 
-          # Keep the original fail-fast result for the create pipeline, after
-          # writing diagnostics that the always-run collector can upload.
-          if (( create_pipeline_exit_code != 0 )); then exit "$create_pipeline_exit_code"; fi
+          # A failed preflight stops before emulator launch; the always-run
+          # collector still uploads the creation/listing/path evidence.
+          if (( prelaunch_json_exit_code != 0 )); then
+            echo 'AVD_PREFLIGHT_FAILED; see avd-prelaunch.json and avd-storage-inventory.txt' >&2
+            exit 1
+          fi
 
           nohup "$ANDROID_HOME/emulator/emulator" \
             -avd localai-api35-x86_64 \
