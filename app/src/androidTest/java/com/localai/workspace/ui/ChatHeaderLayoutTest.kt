@@ -17,9 +17,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onRoot
@@ -141,9 +143,12 @@ class ChatHeaderLayoutTest {
 
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val targetContext = instrumentation.targetContext
-        val bitmap = requireNotNull(instrumentation.uiAutomation.takeScreenshot()) {
-            "UiAutomation.takeScreenshot returned no image for $label"
-        }
+        // Capture the Compose root after waitForIdle instead of the device display surface.
+        // UiAutomation returned an almost-white standard-font frame even though Compose had
+        // completed layout and the semantics assertions passed.
+        val root = compose.onRoot(useUnmergedTree = true)
+        val bitmap = root.captureToImage().asAndroidBitmap()
+        val rootBounds = root.fetchSemanticsNode().boundsInRoot
         val captureFile = File(targetContext.cacheDir, "chat-header-$label.png")
         try {
             FileOutputStream(captureFile).use { output ->
@@ -164,7 +169,8 @@ class ChatHeaderLayoutTest {
             Log.i(PNG_LOG_TAG, "M00PNG|END|$label|$sha256")
             Log.i(
                 "ChatHeaderLayout",
-                "captureSource=UiAutomation.takeScreenshot case=$label bitmap=${bitmap.width}x${bitmap.height} " +
+                "captureSource=ComposeTestRule.onRoot.captureToImage case=$label bitmap=${bitmap.width}x${bitmap.height} " +
+                    "rootBoundsInRootPx=$rootBounds " +
                     "cacheBytes=${captureFile.length()} cacheFileRetained=true transport=logcat_base64_chunks_v1 " +
                     "chunks=${chunks.size} sha256=$sha256",
             )
