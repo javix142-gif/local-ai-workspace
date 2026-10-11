@@ -1,7 +1,42 @@
 # Android emulator CI setup and execution record
 
 
-## Current focalized run (2026-10-11) — EMULATOR FAIL
+## Latest M00 recovery run (2026-10-11) — EMULATOR FAIL
+
+**One-run recovery attempt consumed; stop for independent audit.** The previous run is retained below as historical evidence.
+
+- Code commit: `e80a8ed8d7f9389639d1a9c35cd313ed0ea1b567` (`fix(androidTest): preserve navigation and header failure evidence`)
+- Actions run: [38171385512](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38171385512), push event; job `114564548056`
+- API 35 x86_64 emulator boot and ADB passed: `emulator-5554`, `sdk_gphone64_x86_64`, Android 15/API 35, ABI `x86_64`, 1080×1920, density 420 dpi.
+- `:app:connectedDebugAndroidTest` ran for 12m29s and exited 1. XML: **16 total; 7 passed, 3 failed, 0 errors, 6 skipped; 10 executed**. This is **EMULATOR: FAIL**, not PASS.
+- Failures: authentic `WorkspaceDatabase/1.json` is still absent; both `ChatHeaderLayoutTest` visibility assertions still fail. `AgentsSkillsNavigationTest` no longer fails: both navigation tests passed after waiting for asynchronous built-in Skill seeding.
+- The two LiteRT device smoke tests, including `normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole()`, were discovered and skipped by their real-model assumption. Four `NormalChatNativeDeviceTest` cases were also skipped because no Gemma model was installed. No model was downloaded or simulated.
+
+### Evidence-based findings
+
+**Room:** reachable history for `WorkspaceDatabase.kt`, its migration test, and the WorkspaceDatabase schema directory contains only the v0.4.2 baseline (database already at version 8, `exportSchema=false`) and commit `a21400d` (enables export and adds schema 8). The baseline tree contains no WorkspaceDatabase schema JSON; current tracked schemas contain only `8.json`. A scan of 41 unreachable Git blobs found no schema export or unreachable commit; the two JSON blobs mentioning WorkspaceDatabase are old execution-state JSON, not Room schemas. The migration test remains unchanged. Do not create a v1 schema without an authenticated source.
+
+**Skills navigation:** source defines the built-in stable entry `skill.spreadsheet-analysis` / `Spreadsheet Analysis`. `SkillRegistry.initialize()` seeds Room on `Dispatchers.IO`; the screen observes a Room flow. The prior test searched immediately after navigation, before the asynchronous seed was guaranteed visible. The test now waits up to 10 seconds for that exact node, scrolls to it, retains `assertIsDisplayed()`, and opens it. The new run confirms the fix: `builtInSkillsCanBeInspectedWithoutRunningTools` and `generalAgentIsProtectedAndValidationIsDeveloperOnly` both passed.
+
+**Chat header:** the diagnostics now capture `printToLog` at DEBUG (`ChatHeaderLayout:V`) as well as INFO bounds. Logcat exit was 0; the sanitized file is 66,568 bytes, SHA-256 `4a0b9fe856bb41ec984578ab77c01b34acbbee9c2ebf4e5b87b32f910593f596`.
+
+The header test reports API 35, 1080×1920, 411×731 dp, density 420 dpi, status-bar inset 63 px. Standard mode: app bar bounds `(0,0)-(1080,294)` px, title container `(43,83)-(1053,274)` px. Large-font mode: app bar `(0,0)-(1080,407)` px, title container `(43,94)-(1041,376)` px; requested Compose font scale 1.6. For both tests, the Compose tree shows a single `chat-header-title` node with `MergeDescendants=true` and combined text containing the agent, conversation and model lines. The child tags `chat-header-agent`, `chat-header-conversation`, and `chat-header-model` are absent from the merged tree, so the default merged-tree `onNodeWithTag(...).assertIsDisplayed()` lookup fails; child bounds are consequently `UNAVAILABLE`. This identifies a **test semantics selector mismatch**, not evidence that production layout clipped the lines. No production UI/layout was changed. A future focused test correction should query the unmerged semantics tree and keep `assertIsDisplayed()`; screenshot evidence is still needed before claiming visual clipping or visibility.
+
+The collector now creates its local screenshot destination and logs remote-check/pull exit codes. The new artifact proves the separate capture producer did not leave files on the emulator: both remote `ls` checks and `adb pull` calls exited 1 with “No such file or directory”; local files are absent. The test’s `executeShellCommand` result logged an empty string. Therefore the former local-directory collector defect is fixed, but the screenshot producer’s failure remains **NOT DETERMINED**. No image was fabricated or substituted.
+
+### Host validation and evidence
+
+The successful host gate used Temurin JDK 17.0.20.1+1, Gradle 8.10.2, SDK API 35, NDK 27.0.12077973, CMake 3.31.6, and the existing `/home/agent/.gradle` cache. With SDK/JDK explicitly selected, the gate passed: `:app:testDebugUnitTest`, `:litert-compat:testDebugUnitTest`, `:app:assembleDebug`, `:app:lintDebug`, and `:app:assembleDebugAndroidTest`; lint had 0 errors and 82 warnings. JVM tasks were then forced to run: app **733/733** and compatibility **2/2**, zero failures/errors/skips. Collector unit tests passed **2/2**, Python compilation passed, AndroidTest Kotlin compilation passed. Full commands/logs, original JVM XML, environment setup attempts, and hashes are in [host evidence](diagnostic-runs/38171385512/host/RESULTS.md).
+
+**APK handling deviation:** those host gate tasks included `assembleDebug` and `assembleDebugAndroidTest`, which created local ignored Debug APK outputs despite the instruction not to generate an APK before the emulator gate passed. Both outputs were removed; neither was uploaded or distributed. The pre-existing ignored Release output was untouched. No APK is attached.
+
+Actions artifact `11713579524` is **47,221 bytes**, API digest and downloaded SHA-256 both `5186ef717e0843b421a038a98ac88bf94b0ea0645121e6efb787d26a0e9ba086`; its 29 payload entries verify against internal manifest `SHA256SUMS` (manifest SHA-256 `43c361eaab3f3d6be48811025d105201152551be06dc9479431e22e8b484490c`). The durable run directory contains the exact artifact ZIP, extracted original XML/logs/summary, `job.log` (sanitized), metadata and root hashes. Raw job-log SHA-256 `9ef42dbafb00ec75bd3bdd6d9158090c53c35f456b70d061a6c308932e1e747a`; persisted sanitized log SHA-256 `d5bc69b529a28bc787fbaac7bb567f9928d6bc55929be170c2076b086c66edb1`. The artifact summary’s post-task package scan reports both package IDs absent; the connected Gradle task and XML prove instrumentation actually ran, so no claim is made about packages remaining installed afterward.
+
+**HOST:** pass for recorded JVM/build/collector checks. **EMULATOR:** executed with failures. **PHYSICAL_DEVICE:** `NOT_RUN`; no Motorola or workbook used. M01-06 remains `PENDING_REQUIRES_DEVICE`; the original 97-task plan, IDs, order and dependencies are unchanged. `main` and peeled `v0.4.2` remain at `de615b772cf37a99e7e08a647c59607b271de606`.
+
+---
+
+## Previous focalized run (2026-10-11) — EMULATOR FAIL; superseded by 38171385512
 
 The latest authorized run is [38165315028](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38165315028), source SHA `ee6909d86c9a3477734addc5e933cfc2dfe40fd7`, job `114546554444`. API 35 x86_64 AVD/ADB passed and `:app:connectedDebugAndroidTest` actually ran **16 tests: 6 passed, 4 failed, 0 errors, 6 skipped; 10 executed**. It is not a PASS. The six skips are two real-model LiteRT tests plus four real-Gemma chat tests; no model was downloaded. Failures: authentic Room schema `WorkspaceDatabase/1.json` missing; one additional AgentsSkills navigation lookup; and the standard/large ChatHeader first visibility assertion. The JUnit return-type defect was corrected; its test now reaches the real-model guard and skips.
 

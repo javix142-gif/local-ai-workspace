@@ -1,4 +1,22 @@
-## Current Android emulator CI run (2026-10-11) — EXECUTED_WITH_FAILURES / stop for audit
+## Current M00 recovery result (2026-10-11) — EMULATOR FAIL / stop for independent audit
+
+The only authorized recovery run is [38171385512](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38171385512), code SHA `e80a8ed8d7f9389639d1a9c35cd313ed0ea1b567`, job `114564548056`. API35 x86_64 AVD and ADB passed; `:app:connectedDebugAndroidTest` executed 16 cases and exited 1: **7 passed, 3 failed, 0 errors, 6 skipped; 10 executed**. Failures are the unavailable authentic Room v1 schema and two ChatHeader `assertIsDisplayed()` lookups. Both `AgentsSkillsNavigationTest` cases now pass. This is **EMULATOR: FAIL**; the one-run budget is consumed.
+
+Room history was inspected through all reachable commits and unreachable objects. The oldest tracked WorkspaceDatabase code is already version 8 with schema export disabled; only schema 8 was later exported. No authenticated v1 schema exists in Git history or the scanned unreachable blobs. The migration test remains intact; no schema was fabricated.
+
+The Skills failure was a test race against Room-backed built-in seeding on `Dispatchers.IO`. The updated test waits for the exact `Spreadsheet Analysis` node, scrolls, asserts displayed, and opens it; the new XML confirms both navigation tests passed.
+
+Header diagnostics captured the Compose tree and device metrics. The tree merges descendants on `chat-header-title`, and its combined text contains all three expected lines; child test tags/bounds are absent from the default merged tree. The two `assertIsDisplayed()` calls query those child tags in that merged tree, explaining the assertion failures as a test semantics lookup issue. This does not prove visual clipping. No production UI change was made. The screenshot collector’s local-directory bug is fixed, but both remote screenshot files were absent (remote-check and pull exit 1); the test’s shell-capture output was empty. Screenshot production remains unresolved, and no image was fabricated. Next focused step, after independent review: query header nodes in the unmerged Compose tree while retaining visibility assertions, and repair screenshot capture using a verified method before any visual claim.
+
+The LiteRT `@Test` method is still `Unit`/void, preserves setup/assertions and its exact real-model assumption; both LiteRT device tests were skipped because no model was present. Four real Gemma cases were also skipped. No models were downloaded or faked.
+
+Host evidence is in [run 38171385512 host results](../validation/android-emulator-ci/diagnostic-runs/38171385512/host/RESULTS.md): app JVM 733/733, LiteRT compatibility 2/2, focused collector tests 2/2; debug build, lint (0 errors, 82 warnings) and AndroidTest compilation passed. `PHYSICAL_DEVICE=NOT_RUN`; no workbook/Moto was used. M01-06 remains `PENDING_REQUIRES_DEVICE`; all 97 task IDs, order and dependencies remain unchanged. No further run, APK, main/tag change, merge or release was made.
+
+**APK handling deviation:** the host command included Debug app and test APK assembly and produced local ignored outputs despite the instruction not to generate an APK before the emulator gate passed. Those two new outputs were removed and not uploaded/distributed; the older ignored Release output was untouched. This deviation is documented in the host evidence.
+
+Full artifact/XML/log hashes, run metadata and root evidence manifest are in [the run evidence directory](../validation/android-emulator-ci/diagnostic-runs/38171385512/RESULTS.md). `main` and peeled `v0.4.2` remain `de615b772cf37a99e7e08a647c59607b271de606`.
+
+## Previous Android emulator CI run (2026-10-11; run 38165315028) — superseded by the recovery result above
 
 The single authorized follow-up was tested from code SHA `ee6909d86c9a3477734addc5e933cfc2dfe40fd7` (commits `8fdc40a` and `ee6909d`). Host validation passed: app JVM 733/733 + LiteRT compatibility 2/2, debug assemble, lintDebug and AndroidTest compilation; no host command executed instrumentation. GitHub Actions [run 38165315028](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38165315028), job `114546554444`, used the existing API 35 x86_64 workflow. AVD preflight/boot and ADB passed (`emulator-5554`, `sdk_gphone64_x86_64`, Android 15/API 35, ABI x86_64). The real `:app:connectedDebugAndroidTest` task ran 16 tests and exited 1: **6 passed, 4 failed, 0 errors, 6 skipped; 10 executed**. This is **EMULATOR: FAIL**, not PASS.
 

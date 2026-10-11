@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuite name="com.localai.workspace.data.WorkspaceDatabaseMigrationTest" tests="16" failures="3" errors="0" skipped="6" time="70.299" timestamp="2026-10-11T20:28:52" hostname="localhost">
+  <properties>
+    <property name="device" value="emulator-5554 - 15" />
+    <property name="flavor" value="" />
+    <property name="project" value=":app" />
+  </properties>
+  <testcase name="v1ModelsAreExtendedWithoutLosingExistingRecords" classname="com.localai.workspace.data.WorkspaceDatabaseMigrationTest" time="0.011">
+    <failure>java.io.FileNotFoundException: Cannot find the schema file in the assets folder. Make sure to include the exported json schemas in your test assert inputs. See https://developer.android.com/training/data-storage/room/migrating-db-versions#export-schema for details. Missing file: com.localai.workspace.data.WorkspaceDatabase/1.json
+at androidx.room.testing.MigrationTestHelper.loadSchema(MigrationTestHelper.kt:440)
+at androidx.room.testing.MigrationTestHelper.createDatabase(MigrationTestHelper.kt:196)
+at com.localai.workspace.data.WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords(WorkspaceDatabaseMigrationTest.kt:23)
+</failure>
+  </testcase>
+  <testcase name="normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole" classname="com.localai.workspace.inference.LiteRtLmDeviceSmokeTest" time="0.001">
+    <skipped />
+  </testcase>
+  <testcase name="cpuFirstTokenStreamingCompletionCancelRetryAndUnload" classname="com.localai.workspace.inference.LiteRtLmDeviceSmokeTest" time="0.007">
+    <skipped />
+  </testcase>
+  <testcase name="modelsExposeExperimentalSemanticDialogWithoutAddingAnotherNavigationRoute" classname="com.localai.workspace.semantic.SemanticV2NavigationTest" time="8.172" />
+  <testcase name="builtInSkillsCanBeInspectedWithoutRunningTools" classname="com.localai.workspace.ui.AgentsSkillsNavigationTest" time="7.572" />
+  <testcase name="generalAgentIsProtectedAndValidationIsDeveloperOnly" classname="com.localai.workspace.ui.AgentsSkillsNavigationTest" time="7.022" />
+  <testcase name="largeFontScaleExpandsHeaderAndKeepsAllThreeLinesVisible" classname="com.localai.workspace.ui.ChatHeaderLayoutTest" time="2.375">
+    <failure>java.lang.AssertionError: Assert failed: The component is not displayed!
+at androidx.compose.ui.test.AssertionsKt.assertIsDisplayed(Assertions.kt:34)
+at com.localai.workspace.ui.ChatHeaderLayoutTest.largeFontScaleExpandsHeaderAndKeepsAllThreeLinesVisible(ChatHeaderLayoutTest.kt:89)
+</failure>
+  </testcase>
+  <testcase name="standardFontScaleKeepsAgentTitleAndModelInsideHeader" classname="com.localai.workspace.ui.ChatHeaderLayoutTest" time="2.917">
+    <failure>java.lang.AssertionError: Assert failed: The component is not displayed!
+at androidx.compose.ui.test.AssertionsKt.assertIsDisplayed(Assertions.kt:34)
+at com.localai.workspace.ui.ChatHeaderLayoutTest.standardFontScaleKeepsAgentTitleAndModelInsideHeader(ChatHeaderLayoutTest.kt:79)
+</failure>
+  </testcase>
+  <testcase name="inspectorDoesNotStartGenerationAutomatically" classname="com.localai.workspace.ui.ContextMemoryDeviceTest" time="5.265" />
+  <testcase name="structuredMemoryEntryAndEditorAreAccessible" classname="com.localai.workspace.ui.ContextMemoryDeviceTest" time="7.042" />
+  <testcase name="developerEntryOpensQuickAndFullScreen" classname="com.localai.workspace.ui.DeviceValidationNavigationTest" time="3.797" />
+  <testcase name="plain_chat_legacy_off_real_native" classname="com.localai.workspace.ui.NormalChatNativeDeviceTest" time="2.247">
+    <skipped />
+  </testcase>
+  <testcase name="plain_chat_context_v1_on_real_native" classname="com.localai.workspace.ui.NormalChatNativeDeviceTest" time="2.81">
+    <skipped />
+  </testcase>
+  <testcase name="cancel_then_retry_real_native" classname="com.localai.workspace.ui.NormalChatNativeDeviceTest" time="2.961">
+    <skipped />
+  </testcase>
+  <testcase name="project_chat_context_v1_on_real_native" classname="com.localai.workspace.ui.NormalChatNativeDeviceTest" time="2.324">
+    <skipped />
+  </testcase>
+  <testcase name="createProjectAndExplicitlySaveEditRemoveMemory" classname="com.localai.workspace.ui.ProjectUiDeviceTest" time="13.465" />
+</testsuite>

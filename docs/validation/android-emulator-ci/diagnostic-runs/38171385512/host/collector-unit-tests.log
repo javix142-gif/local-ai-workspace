@@ -1,0 +1,9 @@
+test_creates_destination_before_pull_and_records_hashes (test_collect_android_emulator_evidence.HeaderScreenshotCollectorTest.test_creates_destination_before_pull_and_records_hashes) ... ok
+test_missing_remote_and_local_files_are_recorded_without_claiming_capture (test_collect_android_emulator_evidence.HeaderScreenshotCollectorTest.test_missing_remote_and_local_files_are_recorded_without_claiming_capture) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.007s
+
+OK
+unittest_exit_code=0
+py_compile_exit_code=0

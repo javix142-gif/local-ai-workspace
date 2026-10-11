@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.data.WorkspaceLifecycleTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-11T20:13:13" hostname="05497ac86eb0" time="0.644">
+  <properties/>
+  <testcase name="projectContainsMultipleIndependentlyAddressableChats" classname="com.localai.workspace.data.WorkspaceLifecycleTest" time="0.084"/>
+  <testcase name="deletedWorkCannotBeRecreatedByLateChatOrCitationWrites" classname="com.localai.workspace.data.WorkspaceLifecycleTest" time="0.07"/>
+  <testcase name="deletingOneProjectChatKeepsSiblingsFilesAndMemory" classname="com.localai.workspace.data.WorkspaceLifecycleTest" time="0.067"/>
+  <testcase name="pendingPrivateFilesAreRetriedAfterRepositoryRestart" classname="com.localai.workspace.data.WorkspaceLifecycleTest" time="0.049"/>
+  <testcase name="directChatIsIndependentAndNamedFromItsFirstMessage" classname="com.localai.workspace.data.WorkspaceLifecycleTest" time="0.049"/>
+  <testcase name="standaloneChatDeletionRemovesItsListEntryFilesAndLocalMemory" classname="com.localai.workspace.data.WorkspaceLifecycleTest" time="0.043"/>
+  <testcase name="explicitConversationIdCannotOpenAnotherProjectsHistory" classname="com.localai.workspace.data.WorkspaceLifecycleTest" time="0.047"/>
+  <testcase name="storageFailureRollsBackProjectAndItsCleanupOutbox" classname="com.localai.workspace.data.WorkspaceLifecycleTest" time="0.044"/>
+  <testcase name="cleanupKeepsFilesStillReferencedByAnotherWorkspace" classname="com.localai.workspace.data.WorkspaceLifecycleTest" time="0.051"/>
+  <testcase name="cleanupNeverDeletesModelsOriginalsOrSymlinkTargetsOutsideDocuments" classname="com.localai.workspace.data.WorkspaceLifecycleTest" time="0.037"/>
+  <testcase name="deletingProjectRemovesItsCardAndEveryOwnedResourceButKeepsOtherWorkAndModels" classname="com.localai.workspace.data.WorkspaceLifecycleTest" time="0.1"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

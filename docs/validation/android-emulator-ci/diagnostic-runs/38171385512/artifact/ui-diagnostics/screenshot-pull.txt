@@ -1,0 +1,2 @@
+name=standard remoteCheckExitCode=1 remoteFilePresent=False pullExitCode=1 localFilePresent=False bytes=0 sha256=None
+name=large-font remoteCheckExitCode=1 remoteFilePresent=False pullExitCode=1 localFilePresent=False bytes=0 sha256=None

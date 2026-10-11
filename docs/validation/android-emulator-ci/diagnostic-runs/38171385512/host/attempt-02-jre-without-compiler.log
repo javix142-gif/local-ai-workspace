@@ -1,0 +1,25 @@
+started_utc=2026-10-11T19:55:28Z
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk
+GRADLE_USER_HOME=default-user-gradle-home
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.10.2/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Could not determine the dependencies of task ':app:testDebugUnitTest'.
+> Could not create task ':app:compileDebugUnitTestJavaWithJavac'.
+   > Failed to calculate the value of task ':app:compileDebugUnitTestJavaWithJavac' property 'javaCompiler'.
+      > Toolchain installation '/usr/lib/jvm/java-21-openjdk-amd64' does not provide the required capabilities: [JAVA_COMPILER]
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 18s
+gradle_exit_code=1
+finished_utc=2026-10-11T19:55:47Z
+1848e1f853ec6d3cc431355586e2b1f19e16a0da0870b4006b546f1f4cd08282  /tmp/local-ai-m00-recovery-host-sdk.log

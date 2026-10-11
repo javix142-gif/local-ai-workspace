@@ -1,0 +1,7 @@
+runner_user=runner
+runner_groups=runner adm users docker systemd-journal
+device_present=true
+crw-rw---- 1 root kvm 10, 232 Oct 11 20:14 /dev/kvm
+device_readable=true
+device_writable=true
+crw-rw-rw- 1 root kvm 10, 232 Oct 11 20:14 /dev/kvm
