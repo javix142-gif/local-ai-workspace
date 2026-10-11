@@ -1,0 +1,124 @@
+{
+  "sourceCommit": "ff4c9f2f8a5c2c09a240f2e9346856767432489c",
+  "runId": "38178581012",
+  "xmlSuiteAttributes": {
+    "name": "com.localai.workspace.data.WorkspaceDatabaseMigrationTest",
+    "tests": "16",
+    "failures": "1",
+    "errors": "0",
+    "skipped": "6",
+    "time": "70.621",
+    "timestamp": "2026-10-11T22:13:29"
+  },
+  "derivedCounts": {
+    "total": 16,
+    "passed": 9,
+    "failed": 1,
+    "error": 0,
+    "skipped": 6,
+    "executed": 10
+  },
+  "consistentWithSuiteAttributes": true,
+  "cases": [
+    {
+      "classname": "com.localai.workspace.data.WorkspaceDatabaseMigrationTest",
+      "name": "v1ModelsAreExtendedWithoutLosingExistingRecords",
+      "status": "failed",
+      "failureText": "java.io.FileNotFoundException: Cannot find the schema file in the assets folder. Make sure to include the exported json schemas in your test assert inputs. See https://developer.android.com/training/data-storage/room/migrating-db-versions#export-schema for details. Missing file: com.localai.workspace.data.WorkspaceDatabase/1.json\nat androidx.room.testing.MigrationTestHelper.loadSchema(MigrationTestHelper.kt:440)\nat androidx.room.testing.MigrationTestHelper.createDatabase(MigrationTestHelper.kt:196)\nat com.localai.workspace.data.WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords(WorkspaceDatabaseMigrationTest.kt:23)\n"
+    },
+    {
+      "classname": "com.localai.workspace.inference.LiteRtLmDeviceSmokeTest",
+      "name": "normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole",
+      "status": "skipped",
+      "failureText": null
+    },
+    {
+      "classname": "com.localai.workspace.inference.LiteRtLmDeviceSmokeTest",
+      "name": "cpuFirstTokenStreamingCompletionCancelRetryAndUnload",
+      "status": "skipped",
+      "failureText": null
+    },
+    {
+      "classname": "com.localai.workspace.semantic.SemanticV2NavigationTest",
+      "name": "modelsExposeExperimentalSemanticDialogWithoutAddingAnotherNavigationRoute",
+      "status": "passed",
+      "failureText": null
+    },
+    {
+      "classname": "com.localai.workspace.ui.AgentsSkillsNavigationTest",
+      "name": "builtInSkillsCanBeInspectedWithoutRunningTools",
+      "status": "passed",
+      "failureText": null
+    },
+    {
+      "classname": "com.localai.workspace.ui.AgentsSkillsNavigationTest",
+      "name": "generalAgentIsProtectedAndValidationIsDeveloperOnly",
+      "status": "passed",
+      "failureText": null
+    },
+    {
+      "classname": "com.localai.workspace.ui.ChatHeaderLayoutTest",
+      "name": "largeFontScaleExpandsHeaderAndKeepsAllThreeLinesVisible",
+      "status": "passed",
+      "failureText": null
+    },
+    {
+      "classname": "com.localai.workspace.ui.ChatHeaderLayoutTest",
+      "name": "standardFontScaleKeepsAgentTitleAndModelInsideHeader",
+      "status": "passed",
+      "failureText": null
+    },
+    {
+      "classname": "com.localai.workspace.ui.ContextMemoryDeviceTest",
+      "name": "inspectorDoesNotStartGenerationAutomatically",
+      "status": "passed",
+      "failureText": null
+    },
+    {
+      "classname": "com.localai.workspace.ui.ContextMemoryDeviceTest",
+      "name": "structuredMemoryEntryAndEditorAreAccessible",
+      "status": "passed",
+      "failureText": null
+    },
+    {
+      "classname": "com.localai.workspace.ui.DeviceValidationNavigationTest",
+      "name": "developerEntryOpensQuickAndFullScreen",
+      "status": "passed",
+      "failureText": null
+    },
+    {
+      "classname": "com.localai.workspace.ui.NormalChatNativeDeviceTest",
+      "name": "plain_chat_legacy_off_real_native",
+      "status": "skipped",
+      "failureText": null
+    },
+    {
+      "classname": "com.localai.workspace.ui.NormalChatNativeDeviceTest",
+      "name": "plain_chat_context_v1_on_real_native",
+      "status": "skipped",
+      "failureText": null
+    },
+    {
+      "classname": "com.localai.workspace.ui.NormalChatNativeDeviceTest",
+      "name": "cancel_then_retry_real_native",
+      "status": "skipped",
+      "failureText": null
+    },
+    {
+      "classname": "com.localai.workspace.ui.NormalChatNativeDeviceTest",
+      "name": "project_chat_context_v1_on_real_native",
+      "status": "skipped",
+      "failureText": null
+    },
+    {
+      "classname": "com.localai.workspace.ui.ProjectUiDeviceTest",
+      "name": "createProjectAndExplicitlySaveEditRemoveMemory",
+      "status": "passed",
+      "failureText": null
+    }
+  ],
+  "rawXmlEntryInActionsZip": "instrumented-xml/debug/TEST-emulator-5554 - 15-_app-.xml",
+  "normalizedReviewCopy": "instrumented-results.normalized.xml",
+  "normalizedReviewCopySha256": "b96671933481c0a1e3759e489328151ad21c09abca47be2f319d095ca1d3e2be",
+  "rawXmlSha256": "5d3d9d8bd1bd0f77162db5dc1e615237f0a7d735897b5753a85392722b5e8356"
+}

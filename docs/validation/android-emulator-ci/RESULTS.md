@@ -1,7 +1,19 @@
 # Android emulator CI setup and execution record
 
+## Latest M00 header-capture recovery (2026-10-11) — EMULATOR FAIL
 
-## Latest M00 recovery run (2026-10-11) — EMULATOR FAIL
+**One authorized run consumed; stop for independent audit.** The current code SHA is `ff4c9f2f8a5c2c09a240f2e9346856767432489c`. [Actions run 38178581012](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38178581012), job `114586118884`, started the API 35 x86_64 AVD and connected ADB. The real `:app:connectedDebugAndroidTest` task ran and exited 1. JUnit reports **16 total, 9 passed, 1 failed, 0 errors, 6 skipped; 10 executed**. The only failed test is the unchanged Room migration test, which cannot find the authentic `WorkspaceDatabase/1.json`; no schema was fabricated. Both `ChatHeaderLayoutTest` methods now PASS using the unmerged Compose tree, with all three independent visibility assertions retained. Two LiteRT and four Gemma-dependent cases remain SKIPPED without models.
+
+The test called `UiAutomation.takeScreenshot()` and logged bitmap sizes 1080×1920 (45,927 bytes large-font; 65,313 bytes standard) in app cache. Transfer output was empty for both; the collector records remote file check and `adb pull` exit 1, and the Actions artifact contains no PNG. Therefore screenshot transfer’s exact failing shell operation is **NOT DETERMINED** and visual/image validation is **NOT_RUN**. Bounds, insets and semantics logs show the model line ends before the chat body, but these are not a substitute for inspecting the requested captures. No production UI/layout changed.
+
+Targeted host checks on ff4c9f2: collector Python tests 4/4 PASS; Python syntax check PASS; `:app:compileDebugAndroidTestKotlin` PASS (compile only); `git diff --check` PASS. Full JVM suites were not rerun on this SHA. No local APK assembly or distributable APK was performed. Artifact [11717233240](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38178581012/artifacts/11717233240) is 46,460 bytes, SHA-256 `18bf2ab6d03a8b5e7e6907a3869a8c864516b8b3c28781d0712ed9c65bb5df2a`; all entries in its internal manifest verify. Full report, original artifact ZIP, normalized XML review copy, selected logs and hashes: [run 38178581012 evidence](diagnostic-runs/38178581012/RESULTS.md).
+
+**HOST:** targeted checks pass on ff4c9f2; last full JVM suite is historical on its recorded SHA. **EMULATOR:** executed, FAIL (Room + evidence collector screenshot requirement). **PHYSICAL_DEVICE:** NOT_RUN. M01-06 remains `PENDING_REQUIRES_DEVICE`; all original 97 task IDs/order/dependencies remain unchanged. `main` and peeled `v0.4.2` remain at `de615b772cf37a99e7e08a647c59607b271de606`.
+
+---
+
+
+## Previous M00 recovery run (2026-10-11) — superseded by run 38178581012
 
 **One-run recovery attempt consumed; stop for independent audit.** The previous run is retained below as historical evidence.
 

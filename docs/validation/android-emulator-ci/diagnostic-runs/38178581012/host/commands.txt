@@ -1,0 +1,11 @@
+Source code SHA: ff4c9f2f8a5c2c09a240f2e9346856767432489c
+Python focused tests (exit 0):
+  python3 scripts/ci/test_collect_android_emulator_evidence.py
+Python syntax check (exit 0):
+  python3 -m py_compile scripts/ci/collect_android_emulator_evidence.py scripts/ci/test_collect_android_emulator_evidence.py
+AndroidTest source compilation only (exit 0; no APK assembly task):
+  JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 :app:compileDebugAndroidTestKotlin --no-daemon --no-parallel --max-workers=1 --console=plain --stacktrace
+The compile log reports BUILD SUCCESSFUL in 1m 4s; 54 actionable tasks, 2 executed and 52 up-to-date.
+No local assembleDebug or assembleDebugAndroidTest command was run. No APK was generated for delivery.
+Source diff whitespace check (exit 0):
+  git diff --check ff4c9f2f8a5c2c09a240f2e9346856767432489c^ ff4c9f2f8a5c2c09a240f2e9346856767432489c

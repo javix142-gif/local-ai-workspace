@@ -1,0 +1,471 @@
+--------- beginning of main
+10-11 22:12:18.112 I/TestRunner( 4405): run started: 16 tests
+10-11 22:12:18.113 I/TestRunner( 4405): started: v1ModelsAreExtendedWithoutLosingExistingRecords(com.localai.workspace.data.WorkspaceDatabaseMigrationTest)
+10-11 22:12:18.119 E/TestRunner( 4405): failed: v1ModelsAreExtendedWithoutLosingExistingRecords(com.localai.workspace.data.WorkspaceDatabaseMigrationTest)
+10-11 22:12:18.122 E/TestRunner( 4405): ----- begin exception -----
+10-11 22:12:18.122 E/TestRunner( 4405): java.io.FileNotFoundException: Cannot find the schema file in the assets folder. Make sure to include the exported json schemas in your test assert inputs. See https://developer.android.com/training/data-storage/room/migrating-db-versions#export-schema for details. Missing file: com.localai.workspace.data.WorkspaceDatabase/1.json
+10-11 22:12:18.122 E/TestRunner( 4405): 	at androidx.room.testing.MigrationTestHelper.loadSchema(MigrationTestHelper.kt:440)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at androidx.room.testing.MigrationTestHelper.createDatabase(MigrationTestHelper.kt:196)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at com.localai.workspace.data.WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords(WorkspaceDatabaseMigrationTest.kt:23)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at java.lang.reflect.Method.invoke(Native Method)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.rules.TestWatcher$1.evaluate(TestWatcher.java:61)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at androidx.test.ext.junit.runners.AndroidJUnit4.run(AndroidJUnit4.java:162)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.Suite.runChild(Suite.java:128)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.Suite.runChild(Suite.java:27)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at org.junit.runner.JUnitCore.run(JUnitCore.java:115)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:463)
+10-11 22:12:18.122 E/TestRunner( 4405): 	at android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2594)
+10-11 22:12:18.122 E/TestRunner( 4405): ----- end exception -----
+10-11 22:12:18.124 I/TestRunner( 4405): finished: v1ModelsAreExtendedWithoutLosingExistingRecords(com.localai.workspace.data.WorkspaceDatabaseMigrationTest)
+10-11 22:12:18.126 I/TestRunner( 4405): started: normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole(com.localai.workspace.inference.LiteRtLmDeviceSmokeTest)
+10-11 22:12:18.177 E/TestRunner( 4405): assumption failed: normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole(com.localai.workspace.inference.LiteRtLmDeviceSmokeTest)
+10-11 22:12:18.181 E/TestRunner( 4405): ----- begin exception -----
+10-11 22:12:18.181 E/TestRunner( 4405): org.junit.AssumptionViolatedException: Import the exact model in the debug app; warm-engine validation needs real inference
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.Assume.assumeTrue(Assume.java:68)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at com.localai.workspace.inference.LiteRtLmDeviceSmokeTest$normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole$1.invokeSuspend(LiteRtLmDeviceSmokeTest.kt:86)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:99)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at com.localai.workspace.inference.LiteRtLmDeviceSmokeTest.normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole(LiteRtLmDeviceSmokeTest.kt:79)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at java.lang.reflect.Method.invoke(Native Method)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.Suite.runChild(Suite.java:128)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.Suite.runChild(Suite.java:27)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at org.junit.runner.JUnitCore.run(JUnitCore.java:115)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:463)
+10-11 22:12:18.181 E/TestRunner( 4405): 	at android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2594)
+10-11 22:12:18.181 E/TestRunner( 4405): ----- end exception -----
+10-11 22:12:18.182 I/TestRunner( 4405): finished: normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole(com.localai.workspace.inference.LiteRtLmDeviceSmokeTest)
+10-11 22:12:18.184 I/TestRunner( 4405): started: cpuFirstTokenStreamingCompletionCancelRetryAndUnload(com.localai.workspace.inference.LiteRtLmDeviceSmokeTest)
+10-11 22:12:18.202 E/TestRunner( 4405): assumption failed: cpuFirstTokenStreamingCompletionCancelRetryAndUnload(com.localai.workspace.inference.LiteRtLmDeviceSmokeTest)
+10-11 22:12:18.202 E/TestRunner( 4405): ----- begin exception -----
+10-11 22:12:18.202 E/TestRunner( 4405): org.junit.AssumptionViolatedException: Import Qwen3.5-2B_int8.litertlm in the target debug app first; no runtime PASS without it
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.Assume.assumeTrue(Assume.java:68)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at com.localai.workspace.inference.LiteRtLmDeviceSmokeTest$cpuFirstTokenStreamingCompletionCancelRetryAndUnload$1.invokeSuspend(LiteRtLmDeviceSmokeTest.kt:35)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:99)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at com.localai.workspace.inference.LiteRtLmDeviceSmokeTest.cpuFirstTokenStreamingCompletionCancelRetryAndUnload(LiteRtLmDeviceSmokeTest.kt:28)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at java.lang.reflect.Method.invoke(Native Method)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.Suite.runChild(Suite.java:128)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.Suite.runChild(Suite.java:27)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at org.junit.runner.JUnitCore.run(JUnitCore.java:115)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:463)
+10-11 22:12:18.202 E/TestRunner( 4405): 	at android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2594)
+10-11 22:12:18.202 E/TestRunner( 4405): ----- end exception -----
+10-11 22:12:18.203 I/TestRunner( 4405): finished: cpuFirstTokenStreamingCompletionCancelRetryAndUnload(com.localai.workspace.inference.LiteRtLmDeviceSmokeTest)
+10-11 22:12:18.205 I/TestRunner( 4405): started: modelsExposeExperimentalSemanticDialogWithoutAddingAnotherNavigationRoute(com.localai.workspace.semantic.SemanticV2NavigationTest)
+10-11 22:12:26.181 I/TestRunner( 4405): finished: modelsExposeExperimentalSemanticDialogWithoutAddingAnotherNavigationRoute(com.localai.workspace.semantic.SemanticV2NavigationTest)
+10-11 22:12:26.205 I/TestRunner( 4405): started: builtInSkillsCanBeInspectedWithoutRunningTools(com.localai.workspace.ui.AgentsSkillsNavigationTest)
+10-11 22:12:33.504 I/TestRunner( 4405): finished: builtInSkillsCanBeInspectedWithoutRunningTools(com.localai.workspace.ui.AgentsSkillsNavigationTest)
+10-11 22:12:33.528 I/TestRunner( 4405): started: generalAgentIsProtectedAndValidationIsDeveloperOnly(com.localai.workspace.ui.AgentsSkillsNavigationTest)
+10-11 22:12:39.778 I/TestRunner( 4405): finished: generalAgentIsProtectedAndValidationIsDeveloperOnly(com.localai.workspace.ui.AgentsSkillsNavigationTest)
+10-11 22:12:39.780 I/TestRunner( 4405): started: largeFontScaleExpandsHeaderAndKeepsAllThreeLinesVisible(com.localai.workspace.ui.ChatHeaderLayoutTest)
+10-11 22:12:41.532 I/ChatHeaderLayout( 4405): case=large-font
+10-11 22:12:41.532 I/ChatHeaderLayout( 4405): requestedComposeFontScale=1.6
+10-11 22:12:41.532 I/ChatHeaderLayout( 4405): resourceFontScale=1.0
+10-11 22:12:41.532 I/ChatHeaderLayout( 4405): composeDensityDpi=420
+10-11 22:12:41.532 I/ChatHeaderLayout( 4405): statusBarInsetPx=63
+10-11 22:12:41.532 I/ChatHeaderLayout( 4405): screenPx=1080x1920
+10-11 22:12:41.532 I/ChatHeaderLayout( 4405): displayDensityDpi=420
+10-11 22:12:41.532 I/ChatHeaderLayout( 4405): screenDp=411x731
+10-11 22:12:41.532 I/ChatHeaderLayout( 4405): orientation=1
+10-11 22:12:41.532 I/ChatHeaderLayout( 4405): sdk=35
+10-11 22:12:41.532 I/ChatHeaderLayout( 4405): model=sdk_gphone64_x86_64
+10-11 22:12:41.532 I/ChatHeaderLayout( 4405): abis=x86_64,arm64-v8a
+10-11 22:12:41.532 I/ChatHeaderLayout( 4405): requestedTopBarHeight=131.20001.dp
+10-11 22:12:41.532 I/ChatHeaderLayout( 4405): chat-layout-root.boundsInRootPx=Rect.fromLTRB(0.0, 0.0, 1080.0, 1920.0)
+10-11 22:12:41.532 I/ChatHeaderLayout( 4405): chat-header-appbar.boundsInRootPx=Rect.fromLTRB(0.0, 0.0, 1080.0, 407.0)
+10-11 22:12:41.532 I/ChatHeaderLayout( 4405): chat-header-title.boundsInRootPx=Rect.fromLTRB(43.0, 94.0, 1041.0, 376.0)
+10-11 22:12:41.532 I/ChatHeaderLayout( 4405): chat-header-agent.boundsInRootPx=Rect.fromLTRB(43.0, 110.0, 1041.0, 206.0)
+10-11 22:12:41.532 I/ChatHeaderLayout( 4405): chat-header-conversation.boundsInRootPx=Rect.fromLTRB(43.0, 206.0, 1041.0, 292.0)
+10-11 22:12:41.532 I/ChatHeaderLayout( 4405): chat-header-model.boundsInRootPx=Rect.fromLTRB(43.0, 292.0, 1041.0, 360.0)
+10-11 22:12:41.532 I/ChatHeaderLayout( 4405): chat-body.boundsInRootPx=Rect.fromLTRB(0.0, 407.0, 1080.0, 1857.0)
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405): printToLog:
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405): Printing with useUnmergedTree = 'true'
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405): Node #621 at (l=0.0, t=0.0, r=1080.0, b=1920.0)px
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):  |-Node #622 at (l=0.0, t=0.0, r=1080.0, b=1920.0)px, Tag: 'chat-layout-root'
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):    IsTraversalGroup = 'true'
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):     |-Node #642 at (l=0.0, t=407.0, r=1080.0, b=1857.0)px, Tag: 'chat-body'
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):     |-Node #625 at (l=0.0, t=0.0, r=1080.0, b=407.0)px, Tag: 'chat-header-appbar'
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):       IsTraversalGroup = 'true'
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):        |-Node #628 at (l=11.0, t=187.0, r=31.0, b=282.0)px
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):        | Text = '[‹]'
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):        | Actions = [SetTextSubstitution, ShowTextSubstitution, ClearTextSubstitution, GetTextLayoutResult]
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):        |-Node #630 at (l=43.0, t=94.0, r=1041.0, b=376.0)px, Tag: 'chat-header-title'
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):        | Focused = 'false'
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):        | Actions = [OnClick, RequestFocus]
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):        | MergeDescendants = 'true'
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):        |  |-Node #631 at (l=43.0, t=110.0, r=1041.0, b=206.0)px, Tag: 'chat-header-agent'
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):        |  |  |-Node #632 at (l=43.0, t=110.0, r=514.0, b=206.0)px
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):        |  |    Text = '[General Agent]'
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):        |  |    Actions = [SetTextSubstitution, ShowTextSubstitution, ClearTextSubstitution, GetTextLayoutResult]
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):        |  |-Node #633 at (l=43.0, t=206.0, r=1041.0, b=292.0)px, Tag: 'chat-header-conversation'
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):        |  | Text = '[A deliberately long conversation title that must end with an ellipsis on narrow screens]'
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):        |  | Actions = [SetTextSubstitution, ShowTextSubstitution, ClearTextSubstitution, GetTextLayoutResult]
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):        |  |-Node #634 at (l=43.0, t=292.0, r=1041.0, b=360.0)px, Tag: 'chat-header-model'
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):        |    Text = '[Gemma 4 E2B · Local · Ready]'
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):        |    Actions = [SetTextSubstitution, ShowTextSubstitution, ClearTextSubstitution, GetTextLayoutResult]
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):        |-Node #637 at (l=1051.0, t=187.0, r=1069.0, b=282.0)px
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):          Text = '[⋮]'
+10-11 22:12:41.545 D/ChatHeaderLayout( 4405):          Actions = [SetTextSubstitution, ShowTextSubstitution, ClearTextSubstitution, GetTextLayoutResult]
+10-11 22:12:41.827 I/ChatHeaderLayout( 4405): captureSource=UiAutomation.takeScreenshot case=large-font bitmap=1080x1920 cacheBytes=45927 transferPath=/sdcard/Download/local-ai-chat-header-large-font.png transfer=
+10-11 22:12:42.340 I/TestRunner( 4405): finished: largeFontScaleExpandsHeaderAndKeepsAllThreeLinesVisible(com.localai.workspace.ui.ChatHeaderLayoutTest)
+10-11 22:12:42.341 I/TestRunner( 4405): started: standardFontScaleKeepsAgentTitleAndModelInsideHeader(com.localai.workspace.ui.ChatHeaderLayoutTest)
+10-11 22:12:43.848 I/ChatHeaderLayout( 4405): case=standard
+10-11 22:12:43.848 I/ChatHeaderLayout( 4405): requestedComposeFontScale=1.0
+10-11 22:12:43.848 I/ChatHeaderLayout( 4405): resourceFontScale=1.0
+10-11 22:12:43.848 I/ChatHeaderLayout( 4405): composeDensityDpi=420
+10-11 22:12:43.848 I/ChatHeaderLayout( 4405): statusBarInsetPx=63
+10-11 22:12:43.848 I/ChatHeaderLayout( 4405): screenPx=1080x1920
+10-11 22:12:43.848 I/ChatHeaderLayout( 4405): displayDensityDpi=420
+10-11 22:12:43.848 I/ChatHeaderLayout( 4405): screenDp=411x731
+10-11 22:12:43.848 I/ChatHeaderLayout( 4405): orientation=1
+10-11 22:12:43.848 I/ChatHeaderLayout( 4405): sdk=35
+10-11 22:12:43.848 I/ChatHeaderLayout( 4405): model=sdk_gphone64_x86_64
+10-11 22:12:43.848 I/ChatHeaderLayout( 4405): abis=x86_64,arm64-v8a
+10-11 22:12:43.848 I/ChatHeaderLayout( 4405): requestedTopBarHeight=88.0.dp
+10-11 22:12:43.848 I/ChatHeaderLayout( 4405): chat-layout-root.boundsInRootPx=Rect.fromLTRB(0.0, 0.0, 1080.0, 1920.0)
+10-11 22:12:43.848 I/ChatHeaderLayout( 4405): chat-header-appbar.boundsInRootPx=Rect.fromLTRB(0.0, 0.0, 1080.0, 294.0)
+10-11 22:12:43.848 I/ChatHeaderLayout( 4405): chat-header-title.boundsInRootPx=Rect.fromLTRB(43.0, 83.0, 1053.0, 274.0)
+10-11 22:12:43.848 I/ChatHeaderLayout( 4405): chat-header-agent.boundsInRootPx=Rect.fromLTRB(43.0, 94.0, 1053.0, 168.0)
+10-11 22:12:43.848 I/ChatHeaderLayout( 4405): chat-header-conversation.boundsInRootPx=Rect.fromLTRB(43.0, 168.0, 1053.0, 221.0)
+10-11 22:12:43.848 I/ChatHeaderLayout( 4405): chat-header-model.boundsInRootPx=Rect.fromLTRB(43.0, 221.0, 1053.0, 263.0)
+10-11 22:12:43.848 I/ChatHeaderLayout( 4405): chat-body.boundsInRootPx=Rect.fromLTRB(0.0, 294.0, 1080.0, 1857.0)
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405): printToLog:
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405): Printing with useUnmergedTree = 'true'
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405): Node #643 at (l=0.0, t=0.0, r=1080.0, b=1920.0)px
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):  |-Node #644 at (l=0.0, t=0.0, r=1080.0, b=1920.0)px, Tag: 'chat-layout-root'
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):    IsTraversalGroup = 'true'
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):     |-Node #664 at (l=0.0, t=294.0, r=1080.0, b=1857.0)px, Tag: 'chat-body'
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):     |-Node #647 at (l=0.0, t=0.0, r=1080.0, b=294.0)px, Tag: 'chat-header-appbar'
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):       IsTraversalGroup = 'true'
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):        |-Node #650 at (l=11.0, t=147.0, r=25.0, b=210.0)px
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):        | Text = '[‹]'
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):        | Actions = [SetTextSubstitution, ShowTextSubstitution, ClearTextSubstitution, GetTextLayoutResult]
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):        |-Node #652 at (l=43.0, t=83.0, r=1053.0, b=274.0)px, Tag: 'chat-header-title'
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):        | Focused = 'false'
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):        | Actions = [OnClick, RequestFocus]
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):        | MergeDescendants = 'true'
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):        |  |-Node #653 at (l=43.0, t=94.0, r=1053.0, b=168.0)px, Tag: 'chat-header-agent'
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):        |  |  |-Node #654 at (l=43.0, t=94.0, r=399.0, b=168.0)px
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):        |  |    Text = '[General Agent]'
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):        |  |    Actions = [SetTextSubstitution, ShowTextSubstitution, ClearTextSubstitution, GetTextLayoutResult]
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):        |  |-Node #655 at (l=43.0, t=168.0, r=1053.0, b=221.0)px, Tag: 'chat-header-conversation'
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):        |  | Text = '[A deliberately long conversation title that must end with an ellipsis on narrow screens]'
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):        |  | Actions = [SetTextSubstitution, ShowTextSubstitution, ClearTextSubstitution, GetTextLayoutResult]
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):        |  |-Node #656 at (l=43.0, t=221.0, r=1053.0, b=263.0)px, Tag: 'chat-header-model'
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):        |    Text = '[Gemma 4 E2B · Local · Ready]'
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):        |    Actions = [SetTextSubstitution, ShowTextSubstitution, ClearTextSubstitution, GetTextLayoutResult]
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):        |-Node #659 at (l=1057.0, t=147.0, r=1069.0, b=210.0)px
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):          Text = '[⋮]'
+10-11 22:12:43.939 D/ChatHeaderLayout( 4405):          Actions = [SetTextSubstitution, ShowTextSubstitution, ClearTextSubstitution, GetTextLayoutResult]
+10-11 22:12:44.422 I/ChatHeaderLayout( 4405): captureSource=UiAutomation.takeScreenshot case=standard bitmap=1080x1920 cacheBytes=65313 transferPath=/sdcard/Download/local-ai-chat-header-standard.png transfer=
+10-11 22:12:45.118 I/TestRunner( 4405): finished: standardFontScaleKeepsAgentTitleAndModelInsideHeader(com.localai.workspace.ui.ChatHeaderLayoutTest)
+10-11 22:12:45.127 I/TestRunner( 4405): started: inspectorDoesNotStartGenerationAutomatically(com.localai.workspace.ui.ContextMemoryDeviceTest)
+10-11 22:12:50.176 I/TestRunner( 4405): finished: inspectorDoesNotStartGenerationAutomatically(com.localai.workspace.ui.ContextMemoryDeviceTest)
+10-11 22:12:50.177 I/TestRunner( 4405): started: structuredMemoryEntryAndEditorAreAccessible(com.localai.workspace.ui.ContextMemoryDeviceTest)
+10-11 22:12:57.833 I/TestRunner( 4405): finished: structuredMemoryEntryAndEditorAreAccessible(com.localai.workspace.ui.ContextMemoryDeviceTest)
+10-11 22:12:57.846 I/TestRunner( 4405): started: developerEntryOpensQuickAndFullScreen(com.localai.workspace.ui.DeviceValidationNavigationTest)
+10-11 22:13:01.996 I/TestRunner( 4405): finished: developerEntryOpensQuickAndFullScreen(com.localai.workspace.ui.DeviceValidationNavigationTest)
+10-11 22:13:02.000 I/TestRunner( 4405): started: plain_chat_legacy_off_real_native(com.localai.workspace.ui.NormalChatNativeDeviceTest)
+10-11 22:13:04.458 E/TestRunner( 4405): assumption failed: plain_chat_legacy_off_real_native(com.localai.workspace.ui.NormalChatNativeDeviceTest)
+10-11 22:13:04.460 E/TestRunner( 4405): ----- begin exception -----
+10-11 22:13:04.460 E/TestRunner( 4405): org.junit.AssumptionViolatedException: got: <[Installed Gemma E2B required; never fake native output, null]>, expected: every item is not null
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.Assume.assumeThat(Assume.java:106)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.Assume.assumeNotNull(Assume.java:84)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at com.localai.workspace.ui.NormalChatNativeDeviceTest$run$1.invokeSuspend(NormalChatNativeDeviceTest.kt:31)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:99)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at com.localai.workspace.ui.NormalChatNativeDeviceTest.run(NormalChatNativeDeviceTest.kt:26)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at com.localai.workspace.ui.NormalChatNativeDeviceTest.run$default(NormalChatNativeDeviceTest.kt:26)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at com.localai.workspace.ui.NormalChatNativeDeviceTest.plain_chat_legacy_off_real_native(NormalChatNativeDeviceTest.kt:60)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at java.lang.reflect.Method.invoke(Native Method)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at androidx.test.ext.junit.runners.AndroidJUnit4.run(AndroidJUnit4.java:162)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.Suite.runChild(Suite.java:128)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.Suite.runChild(Suite.java:27)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at org.junit.runner.JUnitCore.run(JUnitCore.java:115)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:463)
+10-11 22:13:04.460 E/TestRunner( 4405): 	at android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2594)
+10-11 22:13:04.462 E/TestRunner( 4405): ----- end exception -----
+10-11 22:13:04.463 I/TestRunner( 4405): finished: plain_chat_legacy_off_real_native(com.localai.workspace.ui.NormalChatNativeDeviceTest)
+10-11 22:13:04.469 I/TestRunner( 4405): started: plain_chat_context_v1_on_real_native(com.localai.workspace.ui.NormalChatNativeDeviceTest)
+10-11 22:13:07.225 E/TestRunner( 4405): assumption failed: plain_chat_context_v1_on_real_native(com.localai.workspace.ui.NormalChatNativeDeviceTest)
+10-11 22:13:07.226 E/TestRunner( 4405): ----- begin exception -----
+10-11 22:13:07.226 E/TestRunner( 4405): org.junit.AssumptionViolatedException: got: <[Installed Gemma E2B required; never fake native output, null]>, expected: every item is not null
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.Assume.assumeThat(Assume.java:106)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.Assume.assumeNotNull(Assume.java:84)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at com.localai.workspace.ui.NormalChatNativeDeviceTest$run$1.invokeSuspend(NormalChatNativeDeviceTest.kt:31)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:99)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at com.localai.workspace.ui.NormalChatNativeDeviceTest.run(NormalChatNativeDeviceTest.kt:26)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at com.localai.workspace.ui.NormalChatNativeDeviceTest.run$default(NormalChatNativeDeviceTest.kt:26)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at com.localai.workspace.ui.NormalChatNativeDeviceTest.plain_chat_context_v1_on_real_native(NormalChatNativeDeviceTest.kt:61)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at java.lang.reflect.Method.invoke(Native Method)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at androidx.test.ext.junit.runners.AndroidJUnit4.run(AndroidJUnit4.java:162)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.Suite.runChild(Suite.java:128)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.Suite.runChild(Suite.java:27)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at org.junit.runner.JUnitCore.run(JUnitCore.java:115)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:463)
+10-11 22:13:07.226 E/TestRunner( 4405): 	at android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2594)
+10-11 22:13:07.226 E/TestRunner( 4405): ----- end exception -----
+10-11 22:13:07.227 I/TestRunner( 4405): finished: plain_chat_context_v1_on_real_native(com.localai.workspace.ui.NormalChatNativeDeviceTest)
+10-11 22:13:07.295 I/TestRunner( 4405): started: cancel_then_retry_real_native(com.localai.workspace.ui.NormalChatNativeDeviceTest)
+10-11 22:13:10.237 E/TestRunner( 4405): assumption failed: cancel_then_retry_real_native(com.localai.workspace.ui.NormalChatNativeDeviceTest)
+10-11 22:13:10.237 E/TestRunner( 4405): ----- begin exception -----
+10-11 22:13:10.237 E/TestRunner( 4405): org.junit.AssumptionViolatedException: got: <[Installed Gemma E2B required; never fake native output, null]>, expected: every item is not null
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.Assume.assumeThat(Assume.java:106)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.Assume.assumeNotNull(Assume.java:84)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at com.localai.workspace.ui.NormalChatNativeDeviceTest$run$1.invokeSuspend(NormalChatNativeDeviceTest.kt:31)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:99)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at com.localai.workspace.ui.NormalChatNativeDeviceTest.run(NormalChatNativeDeviceTest.kt:26)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at com.localai.workspace.ui.NormalChatNativeDeviceTest.run$default(NormalChatNativeDeviceTest.kt:26)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at com.localai.workspace.ui.NormalChatNativeDeviceTest.cancel_then_retry_real_native(NormalChatNativeDeviceTest.kt:63)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at java.lang.reflect.Method.invoke(Native Method)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at androidx.test.ext.junit.runners.AndroidJUnit4.run(AndroidJUnit4.java:162)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.Suite.runChild(Suite.java:128)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.Suite.runChild(Suite.java:27)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at org.junit.runner.JUnitCore.run(JUnitCore.java:115)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:463)
+10-11 22:13:10.237 E/TestRunner( 4405): 	at android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2594)
+10-11 22:13:10.253 E/TestRunner( 4405): ----- end exception -----
+10-11 22:13:10.254 I/TestRunner( 4405): finished: cancel_then_retry_real_native(com.localai.workspace.ui.NormalChatNativeDeviceTest)
+10-11 22:13:10.321 I/TestRunner( 4405): started: project_chat_context_v1_on_real_native(com.localai.workspace.ui.NormalChatNativeDeviceTest)
+10-11 22:13:12.776 E/TestRunner( 4405): assumption failed: project_chat_context_v1_on_real_native(com.localai.workspace.ui.NormalChatNativeDeviceTest)
+10-11 22:13:12.777 E/TestRunner( 4405): ----- begin exception -----
+10-11 22:13:12.777 E/TestRunner( 4405): org.junit.AssumptionViolatedException: got: <[Installed Gemma E2B required; never fake native output, null]>, expected: every item is not null
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.Assume.assumeThat(Assume.java:106)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.Assume.assumeNotNull(Assume.java:84)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at com.localai.workspace.ui.NormalChatNativeDeviceTest$run$1.invokeSuspend(NormalChatNativeDeviceTest.kt:31)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:99)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:95)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:69)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source:1)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:47)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source:1)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at com.localai.workspace.ui.NormalChatNativeDeviceTest.run(NormalChatNativeDeviceTest.kt:26)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at com.localai.workspace.ui.NormalChatNativeDeviceTest.project_chat_context_v1_on_real_native(NormalChatNativeDeviceTest.kt:62)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at java.lang.reflect.Method.invoke(Native Method)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at androidx.test.ext.junit.runners.AndroidJUnit4.run(AndroidJUnit4.java:162)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.Suite.runChild(Suite.java:128)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.Suite.runChild(Suite.java:27)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at org.junit.runner.JUnitCore.run(JUnitCore.java:115)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:68)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:59)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:463)
+10-11 22:13:12.777 E/TestRunner( 4405): 	at android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2594)
+10-11 22:13:12.777 E/TestRunner( 4405): ----- end exception -----
+10-11 22:13:12.778 I/TestRunner( 4405): finished: project_chat_context_v1_on_real_native(com.localai.workspace.ui.NormalChatNativeDeviceTest)
+10-11 22:13:12.785 I/TestRunner( 4405): started: createProjectAndExplicitlySaveEditRemoveMemory(com.localai.workspace.ui.ProjectUiDeviceTest)
+10-11 22:13:26.807 I/TestRunner( 4405): finished: createProjectAndExplicitlySaveEditRemoveMemory(com.localai.workspace.ui.ProjectUiDeviceTest)
+10-11 22:13:26.813 I/TestRunner( 4405): run finished: 16 tests, 1 failed, 0 ignored

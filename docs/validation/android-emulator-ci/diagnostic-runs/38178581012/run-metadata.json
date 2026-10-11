@@ -1,0 +1,76 @@
+{
+  "runId": "38178581012",
+  "jobId": "114586118884",
+  "artifactId": "11717233240",
+  "artifactName": "android-emulator-evidence-38178581012-1",
+  "artifactBytes": 46460,
+  "artifactSha256": "18bf2ab6d03a8b5e7e6907a3869a8c864516b8b3c28781d0712ed9c65bb5df2a",
+  "branch": "feat/0.5.0-skills-agents",
+  "sourceCommit": "ff4c9f2f8a5c2c09a240f2e9346856767432489c",
+  "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38178581012",
+  "startedAtUtc": "2026-10-11T21:59:16Z",
+  "finishedAtUtc": "2026-10-11T22:13:37Z",
+  "workflowConclusion": "failure",
+  "jobSteps": {
+    "sdkAndToolchain": "success",
+    "kvmPreflight": "success",
+    "createAndBootApi35Avd": "success",
+    "connectedDebugAndroidTest": "failure; real instrumentation executed",
+    "collectAndValidateEvidence": "failure because Room failure and screenshot evidence/package checks did not satisfy collector acceptance",
+    "uploadArtifact": "success"
+  },
+  "connectedTask": ":app:connectedDebugAndroidTest",
+  "connectedTaskCommand": "./gradlew :app:connectedDebugAndroidTest --no-daemon --no-parallel --max-workers=2 -Dorg.gradle.jvmargs='-Xmx3g -Dfile.encoding=UTF-8' --stacktrace --console=plain",
+  "connectedTaskExitCode": 1,
+  "gradleFailure": "JUnit reports one failure: WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords, missing the authentic Room WorkspaceDatabase/1.json asset.",
+  "device": {
+    "serial": "emulator-5554",
+    "model": "sdk_gphone64_x86_64",
+    "android": "15/API 35",
+    "abi": "x86_64",
+    "screen": "1080x1920",
+    "densityDpi": 420,
+    "adbConnected": true
+  },
+  "counts": {
+    "total": 16,
+    "passed": 9,
+    "failed": 1,
+    "errors": 0,
+    "skipped": 6,
+    "executed": 10
+  },
+  "chatHeaderTests": {
+    "standard": "PASS assertions; screenshot unavailable",
+    "largeFont": "PASS assertions; screenshot unavailable"
+  },
+  "screenshot": {
+    "captureApi": "UiAutomation.takeScreenshot",
+    "largeFontAppCacheBytes": 45927,
+    "standardAppCacheBytes": 65313,
+    "transferOutput": "empty for both tests",
+    "remoteChecks": {
+      "standardExitCode": 1,
+      "largeFontExitCode": 1
+    },
+    "pulls": {
+      "standardExitCode": 1,
+      "largeFontExitCode": 1
+    },
+    "pngFilesInArtifact": 0,
+    "visualInspection": "NOT_RUN"
+  },
+  "room": "ENVIRONMENT_UNAVAILABLE: authentic schema v1 missing; test retained, no schema fabricated",
+  "physicalDevice": "NOT_RUN",
+  "apkDeliverable": "none; no APK/model included in Actions artifact",
+  "xmlValidationReport": "xml-validation.json",
+  "xmlValidationReportSha256": "12172a77f8286b3463036f3922ff7b2a1609feb85ec50ee714296f660716a655",
+  "rawXmlEntryInActionsZip": "instrumented-xml/debug/TEST-emulator-5554 - 15-_app-.xml",
+  "normalizedReviewXml": "instrumented-results.normalized.xml",
+  "normalizedReviewXmlSha256": "b96671933481c0a1e3759e489328151ad21c09abca47be2f319d095ca1d3e2be",
+  "rawXmlSha256": "5d3d9d8bd1bd0f77162db5dc1e615237f0a7d735897b5753a85392722b5e8356",
+  "jobLogPath": "job.log.gz",
+  "jobLogCompressedSha256": "bb17f7c62ee60d045ce1043873318008c603c801b2f3566cfa0b8df3c7a9a5d0",
+  "hostAndroidTestCompileLogPath": "host/androidTest-kotlin-compile.log.gz",
+  "hostAndroidTestCompileLogCompressedSha256": "e9ff29997368329b83392e0f994e0af34c5ec959404a58051d3aa8b95ebc926b"
+}

@@ -1,0 +1,36 @@
+{
+  "screenshots": [
+    {
+      "name": "standard",
+      "remotePath": "/sdcard/Download/local-ai-chat-header-standard.png",
+      "remoteCheckExitCode": 1,
+      "remoteFilePresent": false,
+      "pullExitCode": 1,
+      "localPath": "ui-diagnostics/screenshots/chat-header-standard.png",
+      "localFilePresent": false,
+      "pngHeaderValid": false,
+      "widthPixels": null,
+      "heightPixels": null,
+      "bytes": 0,
+      "sha256": null,
+      "pullStdout": "",
+      "pullStderr": "adb: error: failed to stat remote object '/sdcard/Download/local-ai-chat-header-standard.png': No such file or directory"
+    },
+    {
+      "name": "large-font",
+      "remotePath": "/sdcard/Download/local-ai-chat-header-large-font.png",
+      "remoteCheckExitCode": 1,
+      "remoteFilePresent": false,
+      "pullExitCode": 1,
+      "localPath": "ui-diagnostics/screenshots/chat-header-large-font.png",
+      "localFilePresent": false,
+      "pngHeaderValid": false,
+      "widthPixels": null,
+      "heightPixels": null,
+      "bytes": 0,
+      "sha256": null,
+      "pullStdout": "",
+      "pullStderr": "adb: error: failed to stat remote object '/sdcard/Download/local-ai-chat-header-large-font.png': No such file or directory"
+    }
+  ]
+}
