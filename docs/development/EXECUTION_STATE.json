@@ -3271,6 +3271,8 @@
       "hostCompile": "bdf4405586dea1ee04e5c9d4d2eaf367fbc94094966b1542fc8d094e0080b4ad",
       "androidLog": "79a761f4de444953ebf1eb3a8c188f85520217ea132efe290edb607e606d63cc",
       "qaLog": "f6b7637b67c2ca1aa29a7d158d8cc82a0945ce3d2bd3f04eaeda0e75bc9c413b"
-    }
+    },
+    "evidencePublicationCommitSha": "455f579cbf0f172d2cd3b6daf93e98b10ad46d8b",
+    "evidencePublicationCommitType": "documentation and run evidence only; follows tested code commit 49d7ccf11a682d04ad28c400f07e5fb577e573fb"
   }
 }
