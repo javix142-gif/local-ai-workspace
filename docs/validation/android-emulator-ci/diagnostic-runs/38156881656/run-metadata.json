@@ -1,0 +1,147 @@
+{
+  "repository": "javix142-gif/local-ai-workspace",
+  "branch": "feat/0.5.0-skills-agents",
+  "sourceCommit": "3c5589e7592cb52a88bb2132b1b30fc30d737e03",
+  "runId": "38156881656",
+  "runAttempt": 1,
+  "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38156881656",
+  "jobId": "114521577365",
+  "jobName": "API 35 x86_64 emulator tests",
+  "runEvent": "push",
+  "runConclusion": "failure",
+  "startedAtUtc": "2026-10-11T16:46:54Z",
+  "jobStartedAtUtc": "2026-10-11T16:46:59Z",
+  "jobFinishedAtUtc": "2026-10-11T17:01:35Z",
+  "jobDuration": "14m36s",
+  "workflowSteps": {
+    "sdkInstall": "success",
+    "kvmPreflight": "success",
+    "avdCreateAndBoot": "success",
+    "connectedDebugAndroidTest": "failure; exit 1; 4 test failures",
+    "evidenceCollector": "failure; summary FAIL due test failures and post-run package inventory",
+    "artifactUpload": "success"
+  },
+  "artifact": {
+    "id": "11709571451",
+    "name": "android-emulator-evidence-38156881656-1",
+    "bytes": 40894,
+    "sha256": "b6152538416c30e5b8d2b94521f36b0344b00ae42044ba994f154b4d8bb7ddd7",
+    "expiresAtUtc": "2026-10-18T17:01:30Z",
+    "internalManifestEntries": 27,
+    "internalManifestVerified": true,
+    "zipEntriesIncludingManifest": 28,
+    "internalManifestSha256": "55a2b726a1bf379b7bb8273f74be3987389f9bcf0b89991f0955287fe550662d"
+  },
+  "avdPreflight": {
+    "capturedBeforeLaunch": true,
+    "expectedAvdName": "localai-api35-x86_64",
+    "androidAvdHome": "/home/runner/.android/avd",
+    "xdgConfigHome": "/home/runner/.config",
+    "avdmanagerCreateExitCode": 0,
+    "createPipelineExitCode": 0,
+    "avdmanagerListExitCode": 0,
+    "avdmanagerListedExpected": true,
+    "avdmanagerReportedPaths": [
+      "/home/runner/.android/avd/localai-api35-x86_64.avd"
+    ],
+    "emulatorListExitCode": 0,
+    "emulatorListedExpected": true,
+    "searchPaths": [
+      {
+        "searchDirectory": "/home/runner/.android/avd",
+        "directoryExists": true,
+        "expectedIni": "/home/runner/.android/avd/localai-api35-x86_64.ini",
+        "iniExists": true,
+        "expectedConfig": "/home/runner/.android/avd/localai-api35-x86_64.avd/config.ini",
+        "configExists": true
+      },
+      {
+        "searchDirectory": "/home/runner/.config/.android/avd",
+        "directoryExists": false,
+        "expectedIni": "/home/runner/.config/.android/avd/localai-api35-x86_64.ini",
+        "iniExists": false,
+        "expectedConfig": "/home/runner/.config/.android/avd/localai-api35-x86_64.avd/config.ini",
+        "configExists": false
+      }
+    ],
+    "checks": {
+      "createCommandSucceeded": true,
+      "createPipelineSucceeded": true,
+      "avdmanagerListSucceeded": true,
+      "avdmanagerListedExpected": true,
+      "emulatorListSucceeded": true,
+      "emulatorListedExpected": true,
+      "managerReportedCanonicalPath": true,
+      "canonicalDirectoryExists": true,
+      "canonicalIniExists": true,
+      "canonicalConfigExists": true
+    },
+    "preflightPassed": true,
+    "preflightFailures": []
+  },
+  "adb": {
+    "serial": "emulator-5554",
+    "connected": true,
+    "api": "35",
+    "abi": "x86_64",
+    "model": "sdk_gphone64_x86_64",
+    "release": "15"
+  },
+  "apkInstallState": "Post-test pm package inventory did not find com.localai.workspace.debug or com.localai.workspace.debug.test. Instrumentation XML proves test cases executed; artifact does not retain a separate pre-test package install snapshot.",
+  "connectedTask": {
+    "name": ":app:connectedDebugAndroidTest",
+    "exitCode": 1,
+    "command": "./gradlew :app:connectedDebugAndroidTest --no-daemon --no-parallel --max-workers=2 -Dorg.gradle.jvmargs='-Xmx3g -Dfile.encoding=UTF-8' --stacktrace --console=plain"
+  },
+  "counts": {
+    "total": 15,
+    "passed": 7,
+    "failed": 4,
+    "errors": 0,
+    "skipped": 4,
+    "executed": 11
+  },
+  "xmlCount": 1,
+  "physicalDevice": "NOT_RUN",
+  "jobLog": {
+    "originalBytes": 558314,
+    "originalSha256": "529e1e95d45c786e9f39e0fe57df9fc3f176849c5fe813d0ea8a9e0b06a7f730",
+    "persistedPath": "job.log.sanitized.txt.gz",
+    "sanitizedBytes": 555003,
+    "sanitizedSha256": "b71a3d67ed067fcaf2ed700349c2d0c9103a3e9b6857160221d6a576f903cdd0",
+    "compressedSha256": "74b94f7e4c0f0963b026d00f7116c36f1dd1866c7fbb30a62de267029ddff13e",
+    "redactionsByRule": [
+      0,
+      4,
+      1,
+      0,
+      0,
+      0,
+      608
+    ],
+    "rawUnredactedPersisted": false
+  },
+  "summaryStatus": "FAIL",
+  "summaryFailureReasons": [
+    "applicationApkInstalled",
+    "connectedTaskSucceeded",
+    "noTestFailuresOrErrors"
+  ],
+  "instrumentedXml": {
+    "path": "instrumented-results.xml",
+    "bytes": 5495,
+    "sha256": "346a773d82c8a632c3192f00996a7eecb728a896baa1e2c28f61624bd91a7cd5",
+    "lineEndings": "CRLF normalized to LF for clean text review",
+    "originalArtifactEntry": "instrumented-xml/debug/TEST-emulator-5554 - 15-_app-.xml",
+    "originalArtifactEntryBytes": 5533,
+    "originalArtifactEntrySha256": "3cbb54410bcaa7a18c5597f1115ca599712d403a5e8ca0422c985dd5bccd52d4",
+    "counts": {
+      "total": 15,
+      "passed": 7,
+      "failed": 4,
+      "errors": 0,
+      "skipped": 4,
+      "executed": 11
+    }
+  }
+}

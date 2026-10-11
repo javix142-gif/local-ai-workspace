@@ -2,7 +2,7 @@
   "repository": "https://github.com/javix142-gif/local-ai-workspace.git",
   "branch": "feat/0.5.0-skills-agents",
   "startingHeadSha": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
-  "testedCodeHeadSha": "d0d4d7608c8e8149bdb05d003da2742260c1b8dd",
+  "testedCodeHeadSha": "3c5589e7592cb52a88bb2132b1b30fc30d737e03",
   "version": "0.5.0",
   "applicationId": "com.localai.workspace",
   "completedTasks": [
@@ -16,7 +16,7 @@
     "M01-05 Context budget and relevance deduplication — VALIDADA_HOST (independent audit; host only; tested code 260a3f7)"
   ],
   "blockedTasks": [
-    "Android emulator CI remains blocked pending independent audit: run 38154790618 demonstrated an AVD discovery path mismatch, but no correction or post-fix run has been made. Instrumentation is NOT_RUN.",
+    "Android emulator AVD path correction is verified by run 38156881656, but connected instrumentation is not green: 4 failures in Room migration schema asset, JUnit test declaration, and ChatHeader layout assertions; stop for independent audit before further changes/runs.",
     "Motorola-specific M00 validation and exact physical XLSX latency diagnosis."
   ],
   "testResults": {
@@ -118,12 +118,12 @@
     "testedCodeHeadSha": "e367dc75d0f952ef6a9b4e96d51e1263b70d3309"
   },
   "emulatorResults": {
-    "availability": "BLOCKED_ANDROID_CI_CAUSE_PROVEN_AWAITING_INDEPENDENT_AUDIT",
+    "availability": "EMULATOR_INSTRUMENTATION_FAILED_AFTER_AVD_PATH_FIX",
     "adbAvailable": true,
     "kvm": true,
     "systemImages": 1,
-    "instrumentedTests": "NOT_RUN",
-    "latestRunId": "38154790618",
+    "instrumentedTests": "EXECUTED_WITH_FAILURES: 7 passed, 4 failed, 4 skipped; XML 1",
+    "latestRunId": "38156881656",
     "priorLocalEnvironment": {
       "availability": "NOT_AVAILABLE",
       "adbAvailable": false,
@@ -132,8 +132,8 @@
       "instrumentedTests": "NOT_RUN",
       "recordStatus": "HISTORICAL local executor inspection before GitHub-hosted workflow."
     },
-    "latestRunSourceSha": "d0d4d7608c8e8149bdb05d003da2742260c1b8dd",
-    "latestRunStatus": "FAILED_BEFORE_INSTRUMENTATION; AVD discovery path mismatch demonstrated; awaiting independent audit."
+    "latestRunSourceSha": "3c5589e7592cb52a88bb2132b1b30fc30d737e03",
+    "latestRunStatus": "AVD preflight/boot/ADB passed; connectedDebugAndroidTest executed 15 cases and failed 4; artifact 11709571451."
   },
   "physicalDeviceResults": {
     "historicalAgentsSkillsV1": {
@@ -211,12 +211,12 @@
     }
   },
   "pendingAcceptance": [
-    "M00 Motorola validation is blocked until both the exact original workbook is accessible and the Moto G86 Power is connected/ADB-authorized; the current preflight executed no install or tests.",
+    "M00 Motorola validation remains blocked until both the exact original workbook is accessible and the Moto G86 Power is connected/ADB-authorized; no install or physical test was performed in this contract.",
     "M01-06 “Ingesta e indexación reanudable” remains PENDING (requires_device=true in the original 97-task plan); do not start or mark complete until the required device is available.",
-    "Android emulator CI: AVD manager/emulator path mismatch demonstrated by run 38154790618; await independent audit before any correction or further run. Instrumentation remains NOT_RUN.",
-    "Fresh empty-home ARM64 assembleRelease reproducibility remains unverified after the two authorized attempts (4559b5 and 6d1b25); both stopped before Gradle startup when the wrapper received java.net.ConnectException: Connection refused fetching Gradle 8.10.2. The lower-level network cause remains NOT_DETERMINED. This is an infrastructure block, not evidence that application source compilation fails; no further retry/cache/source workaround is authorized under this contract."
+    "Android emulator path mismatch is corrected and verified; run 38156881656 executed instrumentation but failed 4 tests (7 pass, 4 skip). Await independent audit; this contract permits no further run.",
+    "Fresh empty-home ARM64 assembleRelease remains an infrastructure failure/retry exhausted before Gradle startup; lower-level network cause NOT_DETERMINED. Do not retry or use a cache workaround."
   ],
-  "nextRecommendedTask": "Await independent audit of the single diagnostics run 38154790618; only after acceptance may a narrowly scoped AVD discovery correction be considered. Do not start another run before that audit.",
+  "nextRecommendedTask": "Stop for independent audit of run 38156881656. If accepted, a separately authorized follow-up must address the four observed instrumentation failures before another emulator run; do not change the 97-task plan or M01-06 prerequisites.",
   "m00_03": {
     "status": "IMPLEMENTED_TESTED_HOST_DEVICE_NOT_RUN",
     "baseCommit": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
@@ -616,7 +616,7 @@
     "name": "GitHub-hosted API 35 x86_64 connected instrumentation workflow setup",
     "workflowPath": ".github/workflows/android-emulator-instrumented.yml",
     "branch": "feat/0.5.0-skills-agents",
-    "workflowCodeCommit": "d0d4d7608c8e8149bdb05d003da2742260c1b8dd",
+    "workflowCodeCommit": "3c5589e7592cb52a88bb2132b1b30fc30d737e03",
     "runs": [
       {
         "runId": "37865314837",
@@ -717,11 +717,118 @@
         "startedAtUtc": "2026-10-11T16:16:47Z",
         "finishedAtUtc": "2026-10-11T16:28:18Z",
         "duration": "11m31s"
+      },
+      {
+        "runId": "38156881656",
+        "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38156881656",
+        "sourceCommit": "3c5589e7592cb52a88bb2132b1b30fc30d737e03",
+        "status": "FAILED_CONNECTED_ANDROID_TESTS_AFTER_AVD_PATH_FIX",
+        "failedStep": "Run all connected Android instrumentation tests",
+        "label": "EMULATOR",
+        "api": 35,
+        "abi": "x86_64",
+        "systemImage": "google_apis",
+        "avd": {
+          "expectedName": "localai-api35-x86_64",
+          "home": "/home/runner/.android/avd",
+          "xdgConfigHome": "/home/runner/.config",
+          "createExitCode": 0,
+          "createPipelineStatuses": "0 0 0",
+          "avdmanagerListExitCode": 0,
+          "avdmanagerListedExpected": true,
+          "avdmanagerReportedPath": "/home/runner/.android/avd/localai-api35-x86_64.avd",
+          "emulatorListExitCode": 0,
+          "emulatorListedExpected": true,
+          "iniExists": true,
+          "configIniExists": true,
+          "preflightPassed": true,
+          "preflightExitCode": 0,
+          "boot": "PASS"
+        },
+        "device": {
+          "serial": "emulator-5554",
+          "adbConnected": true,
+          "model": "sdk_gphone64_x86_64",
+          "androidRelease": "15",
+          "api": 35,
+          "abi": "x86_64"
+        },
+        "gradleTask": ":app:connectedDebugAndroidTest",
+        "gradleCommand": "./gradlew :app:connectedDebugAndroidTest --no-daemon --no-parallel --max-workers=2 -Dorg.gradle.jvmargs='-Xmx3g -Dfile.encoding=UTF-8' --stacktrace --console=plain",
+        "gradleExitCode": 1,
+        "taskDuration": "12m31s",
+        "postTestApkInventory": {
+          "exitCode": 0,
+          "applicationPackageFound": false,
+          "instrumentationTestPackageFound": false,
+          "note": "Post-task pm list packages did not find either package; XML shows tests executed. No pre-task install-state snapshot was captured."
+        },
+        "xmlCount": 1,
+        "counts": {
+          "total": 15,
+          "passed": 7,
+          "failed": 4,
+          "errors": 0,
+          "skipped": 4,
+          "executed": 11
+        },
+        "failureDetails": [
+          "com.localai.workspace.data.WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords: missing Room schema asset com.localai.workspace.data.WorkspaceDatabase/1.json",
+          "com.localai.workspace.inference.LiteRtLmDeviceSmokeTest initializationError: JUnit rejects normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole because the @Test method is not void",
+          "com.localai.workspace.ui.ChatHeaderLayoutTest.largeFontScaleExpandsHeaderAndKeepsAllThreeLinesVisible: component not displayed at line 68",
+          "com.localai.workspace.ui.ChatHeaderLayoutTest.standardFontScaleKeepsAgentTitleAndModelInsideHeader: component not displayed at line 59"
+        ],
+        "skippedCases": {
+          "count": 4,
+          "class": "NormalChatNativeDeviceTest",
+          "xmlReasonText": "empty",
+          "sourceGuard": "Assume.assumeNotNull requires an installed Gemma E2B model; workflow downloaded no model"
+        },
+        "instrumentation": "EXECUTED_WITH_FAILURES",
+        "physicalDevice": "NOT_RUN",
+        "artifactId": "11709571451",
+        "artifactName": "android-emulator-evidence-38156881656-1",
+        "artifactBytes": 40894,
+        "artifactSha256": "b6152538416c30e5b8d2b94521f36b0344b00ae42044ba994f154b4d8bb7ddd7",
+        "manifestEntriesVerified": "27/27 payload entries; 28 ZIP entries including SHA256SUMS",
+        "evidenceDirectory": "docs/validation/android-emulator-ci/diagnostic-runs/38156881656/",
+        "startedAtUtc": "2026-10-11T16:46:54Z",
+        "finishedAtUtc": "2026-10-11T17:01:35Z",
+        "duration": "14m41s",
+        "jobId": "114521577365",
+        "jobConclusion": "failure",
+        "stepConclusions": {
+          "sdkInstall": "success",
+          "kvmPreflight": "success",
+          "avdCreateAndBoot": "success",
+          "connectedInstrumentation": "failure; exit 1",
+          "collector": "failure; evidence validation status FAIL",
+          "artifactUpload": "success"
+        },
+        "artifactInternalManifestSha256": "55a2b726a1bf379b7bb8273f74be3987389f9bcf0b89991f0955287fe550662d",
+        "artifactDurableEvidenceManifestSha256": "66c7b7732e7bc131912ee79927cf1a5eb6e6527d33871778e5f274b34e9dcdef",
+        "artifactZipEntriesIncludingManifest": 28,
+        "instrumentedXml": {
+          "path": "docs/validation/android-emulator-ci/diagnostic-runs/38156881656/instrumented-results.xml",
+          "sha256": "346a773d82c8a632c3192f00996a7eecb728a896baa1e2c28f61624bd91a7cd5",
+          "bytes": 5495,
+          "lineEndings": "CRLF normalized to LF; original artifact entry preserved in actions-artifact.zip",
+          "originalArtifactEntry": "instrumented-xml/debug/TEST-emulator-5554 - 15-_app-.xml",
+          "originalArtifactEntrySha256": "3cbb54410bcaa7a18c5597f1115ca599712d403a5e8ca0422c985dd5bccd52d4",
+          "counts": {
+            "total": 15,
+            "passed": 7,
+            "failed": 4,
+            "errors": 0,
+            "skipped": 4,
+            "executed": 11
+          }
+        }
       }
     ],
-    "finalStatus": "BLOCKED_ANDROID_CI_CAUSE_PROVEN_AWAITING_INDEPENDENT_AUDIT",
+    "finalStatus": "AVD_PATH_CORRECTION_VERIFIED; EMULATOR_INSTRUMENTATION_EXECUTED_WITH_FAILURES; AWAITING_AUDIT",
     "attemptsExhausted": true,
-    "rootCauseBoundary": "Run 38154790618 proves the AVD discovery path mismatch: avdmanager lists the named AVD under /home/runner/.config/.android/avd, while emulator -list-avds is empty and the recorded emulator search candidate /home/runner/.android/avd is absent. Why avdmanager selected .config is not established; the inventory did not inspect that alternate directory.",
+    "rootCauseBoundary": "The original AVD path mismatch was corrected and verified by run 38156881656: ANDROID_AVD_HOME was pinned to /home/runner/.android/avd; avdmanager and emulator both listed the same AVD, its .ini/config.ini existed there, and the API 35 x86_64 emulator connected. The real connected instrumentation task then ran 15 test cases and failed 4; this is not EMULATOR PASS. No further run is authorized in this contract.",
     "latestInvestigation": {
       "status": "BLOCKED_ANDROID_CI_CAUSE_UNPROVEN",
       "investigatedAtUtc": "2026-10-09",
@@ -1123,6 +1230,91 @@
       },
       "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
       "v042PeeledSha": "de615b772cf37a99e7e08a647c59607b271de606"
+    },
+    "verificationRunLimitReached": true,
+    "correctionVerification": {
+      "status": "AVD_FIX_CONFIRMED; INSTRUMENTATION_FAILURES; STOP_FOR_AUDIT",
+      "recordedAtUtc": "2026-10-11T17:01:35Z",
+      "sourceBranch": "feat/0.5.0-skills-agents",
+      "sourceCommit": "3c5589e7592cb52a88bb2132b1b30fc30d737e03",
+      "runId": "38156881656",
+      "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38156881656",
+      "jobId": "114521577365",
+      "artifactId": "11709571451",
+      "workflowPath": ".github/workflows/android-emulator-instrumented.yml",
+      "collectorPath": "scripts/ci/collect_android_emulator_evidence.py",
+      "changes": [
+        "Exported ANDROID_AVD_HOME=/home/runner/.android/avd before AVD creation; same step launches emulator with that environment.",
+        "Preflight enumerates avdmanager and emulator results, inventories canonical/observed/XDG candidate paths and stops before launch if required facts are absent.",
+        "Collector records post-run package inventory, exact connected task, ADB/API/ABI and strict acceptance reasons."
+      ],
+      "avdPreflight": "PASS; create/list exit codes 0; manager and emulator list expected AVD; reported canonical path matches; .ini and .avd/config.ini exist; emulator boot and ADB connection succeeded.",
+      "instrumentation": {
+        "task": ":app:connectedDebugAndroidTest",
+        "exitCode": 1,
+        "xmlCount": 1,
+        "counts": {
+          "total": 15,
+          "passed": 7,
+          "failed": 4,
+          "errors": 0,
+          "skipped": 4,
+          "executed": 11
+        },
+        "status": "EXECUTED_WITH_FAILURES",
+        "failures": [
+          "com.localai.workspace.data.WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords: missing Room schema asset com.localai.workspace.data.WorkspaceDatabase/1.json",
+          "com.localai.workspace.inference.LiteRtLmDeviceSmokeTest initializationError: JUnit rejects normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole because the @Test method is not void",
+          "com.localai.workspace.ui.ChatHeaderLayoutTest.largeFontScaleExpandsHeaderAndKeepsAllThreeLinesVisible: component not displayed at line 68",
+          "com.localai.workspace.ui.ChatHeaderLayoutTest.standardFontScaleKeepsAgentTitleAndModelInsideHeader: component not displayed at line 59"
+        ]
+      },
+      "postTestPackageInventory": "Neither expected package was listed after the task; XML confirms instrumentation did execute. No separate pre-task install snapshot was recorded.",
+      "artifact": {
+        "id": "11709571451",
+        "name": "android-emulator-evidence-38156881656-1",
+        "bytes": 40894,
+        "sha256": "b6152538416c30e5b8d2b94521f36b0344b00ae42044ba994f154b4d8bb7ddd7",
+        "internalManifestEntriesVerified": "27/27; 28 ZIP entries including SHA256SUMS",
+        "durableEvidencePath": "docs/validation/android-emulator-ci/diagnostic-runs/38156881656/",
+        "manifestEntriesVerified": "27/27 payload entries; 28 ZIP entries including SHA256SUMS",
+        "internalManifestSha256": "55a2b726a1bf379b7bb8273f74be3987389f9bcf0b89991f0955287fe550662d",
+        "durableEvidenceManifestSha256": "66c7b7732e7bc131912ee79927cf1a5eb6e6527d33871778e5f274b34e9dcdef",
+        "zipEntriesIncludingManifest": 28
+      },
+      "jobLog": {
+        "originalBytes": 558314,
+        "originalSha256": "529e1e95d45c786e9f39e0fe57df9fc3f176849c5fe813d0ea8a9e0b06a7f730",
+        "sanitizedBytes": 555003,
+        "sanitizedSha256": "b71a3d67ed067fcaf2ed700349c2d0c9103a3e9b6857160221d6a576f903cdd0",
+        "compressedSha256": "74b94f7e4c0f0963b026d00f7116c36f1dd1866c7fbb30a62de267029ddff13e",
+        "credentialLikeFieldsRedacted": 1,
+        "unredactedLogPersisted": false
+      },
+      "validationStates": {
+        "HOST": "Workflow syntax/synthetic checks only; no JVM/assemble gate in this contract.",
+        "EMULATOR": "AVD and API35 x86_64 boot PASS; connected instrumentation executed, 7 passed / 4 failed / 4 skipped; overall FAIL.",
+        "PHYSICAL_DEVICE": "NOT_RUN"
+      },
+      "nextUnlock": "A new human-reviewed task must address the missing Room schema test asset, invalid non-void @Test method, and the two ChatHeader layout assertions before any further emulator run. Do not rerun under this contract.",
+      "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
+      "v042PeeledSha": "de615b772cf37a99e7e08a647c59607b271de606",
+      "instrumentedXml": {
+        "path": "docs/validation/android-emulator-ci/diagnostic-runs/38156881656/instrumented-results.xml",
+        "sha256": "346a773d82c8a632c3192f00996a7eecb728a896baa1e2c28f61624bd91a7cd5",
+        "bytes": 5495,
+        "lineEndings": "CRLF normalized to LF; original artifact entry preserved in actions-artifact.zip",
+        "originalArtifactEntry": "instrumented-xml/debug/TEST-emulator-5554 - 15-_app-.xml",
+        "originalArtifactEntrySha256": "3cbb54410bcaa7a18c5597f1115ca599712d403a5e8ca0422c985dd5bccd52d4",
+        "counts": {
+          "total": 15,
+          "passed": 7,
+          "failed": 4,
+          "errors": 0,
+          "skipped": 4,
+          "executed": 11
+        }
+      }
     }
   },
   "latestQaArm64Artifact": {
@@ -1437,7 +1629,8 @@
     "planTaskCount": 97,
     "selection": "NONE",
     "reason": "M01-05 is VALIDADA_HOST. M01-06 requires a device; M01-01 depends on M00-10; M00-10 depends on device-required M00-07, M00-08 and M00-09. M02-01 also depends on M00-10 and its downstream M02 tasks chain from M02-01. The physical preflight has no authorized device or exact workbook, and Android emulator CI root cause remains unproven. No eligible independent original task was identified.",
-    "nextAction": "Wait for new verified AVD diagnostic evidence or the required physical-device/workbook prerequisites; do not create task IDs or start speculative CI."
+    "nextAction": "Wait for new verified AVD diagnostic evidence or the required physical-device/workbook prerequisites; do not create task IDs or start speculative CI.",
+    "recordStatus": "HISTORICAL selection snapshot from 2026-10-09; the Android CI status changed in run 38156881656. Original 97 task IDs/order/dependencies are preserved."
   },
   "latestCleanReleaseRepro": {
     "name": "Final fresh-checkout ARM64 Release reproducibility attempt (2/2)",

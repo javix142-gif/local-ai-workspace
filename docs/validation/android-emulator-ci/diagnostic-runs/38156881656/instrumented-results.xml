@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuite name="com.localai.workspace.data.WorkspaceDatabaseMigrationTest" tests="15" failures="4" errors="0" skipped="4" time="68.565" timestamp="2026-10-11T17:01:26" hostname="localhost">
+  <properties>
+    <property name="device" value="emulator-5554 - 15" />
+    <property name="flavor" value="" />
+    <property name="project" value=":app" />
+  </properties>
+  <testcase name="v1ModelsAreExtendedWithoutLosingExistingRecords" classname="com.localai.workspace.data.WorkspaceDatabaseMigrationTest" time="0.018">
+    <failure>java.io.FileNotFoundException: Cannot find the schema file in the assets folder. Make sure to include the exported json schemas in your test assert inputs. See https://developer.android.com/training/data-storage/room/migrating-db-versions#export-schema for details. Missing file: com.localai.workspace.data.WorkspaceDatabase/1.json
+at androidx.room.testing.MigrationTestHelper.loadSchema(MigrationTestHelper.kt:440)
+at androidx.room.testing.MigrationTestHelper.createDatabase(MigrationTestHelper.kt:196)
+at com.localai.workspace.data.WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords(WorkspaceDatabaseMigrationTest.kt:23)
+</failure>
+  </testcase>
+  <testcase name="initializationError" classname="com.localai.workspace.inference.LiteRtLmDeviceSmokeTest" time="0.0">
+    <failure>org.junit.runners.model.InvalidTestClassError: Invalid test class 'com.localai.workspace.inference.LiteRtLmDeviceSmokeTest':
+1. Method normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole() should be void
+at org.junit.runners.ParentRunner.validate(ParentRunner.java:525)
+at org.junit.runners.ParentRunner.&lt;init&gt;(ParentRunner.java:92)
+at org.junit.runners.BlockJUnit4ClassRunner.&lt;init&gt;(BlockJUnit4ClassRunner.java:74)
+at androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner.&lt;init&gt;(AndroidJUnit4ClassRunner.java:50)
+at androidx.test.internal.runner.junit4.AndroidJUnit4Builder.runnerForClass(AndroidJUnit4Builder.java:81)
+at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:70)
+at org.junit.internal.builders.AllDefaultPossibilitiesBuilder.runnerForClass(AllDefaultPossibilitiesBuilder.java:37)
+at androidx.test.internal.runner.AndroidRunnerBuilder.runnerForClass(AndroidRunnerBuilder.java:152)
+at androidx.test.internal.runner.ScanningTestLoader.doCreateRunner(ScanningTestLoader.java:50)
+at androidx.test.internal.runner.TestLoader.getRunnersFor(TestLoader.java:64)
+at androidx.test.internal.runner.TestRequestBuilder.build(TestRequestBuilder.java:842)
+at androidx.test.runner.AndroidJUnitRunner.buildRequest(AndroidJUnitRunner.java:663)
+at androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:437)
+at android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2594)
+</failure>
+  </testcase>
+  <testcase name="modelsExposeExperimentalSemanticDialogWithoutAddingAnotherNavigationRoute" classname="com.localai.workspace.semantic.SemanticV2NavigationTest" time="6.799" />
+  <testcase name="builtInSkillsCanBeInspectedWithoutRunningTools" classname="com.localai.workspace.ui.AgentsSkillsNavigationTest" time="7.809" />
+  <testcase name="generalAgentIsProtectedAndValidationIsDeveloperOnly" classname="com.localai.workspace.ui.AgentsSkillsNavigationTest" time="6.193" />
+  <testcase name="largeFontScaleExpandsHeaderAndKeepsAllThreeLinesVisible" classname="com.localai.workspace.ui.ChatHeaderLayoutTest" time="2.02">
+    <failure>java.lang.AssertionError: Assert failed: The component is not displayed!
+at androidx.compose.ui.test.AssertionsKt.assertIsDisplayed(Assertions.kt:34)
+at com.localai.workspace.ui.ChatHeaderLayoutTest.largeFontScaleExpandsHeaderAndKeepsAllThreeLinesVisible(ChatHeaderLayoutTest.kt:68)
+</failure>
+  </testcase>
+  <testcase name="standardFontScaleKeepsAgentTitleAndModelInsideHeader" classname="com.localai.workspace.ui.ChatHeaderLayoutTest" time="3.079">
+    <failure>java.lang.AssertionError: Assert failed: The component is not displayed!
+at androidx.compose.ui.test.AssertionsKt.assertIsDisplayed(Assertions.kt:34)
+at com.localai.workspace.ui.ChatHeaderLayoutTest.standardFontScaleKeepsAgentTitleAndModelInsideHeader(ChatHeaderLayoutTest.kt:59)
+</failure>
+  </testcase>
+  <testcase name="inspectorDoesNotStartGenerationAutomatically" classname="com.localai.workspace.ui.ContextMemoryDeviceTest" time="5.081" />
+  <testcase name="structuredMemoryEntryAndEditorAreAccessible" classname="com.localai.workspace.ui.ContextMemoryDeviceTest" time="7.742" />
+  <testcase name="developerEntryOpensQuickAndFullScreen" classname="com.localai.workspace.ui.DeviceValidationNavigationTest" time="3.503" />
+  <testcase name="plain_chat_legacy_off_real_native" classname="com.localai.workspace.ui.NormalChatNativeDeviceTest" time="2.573">
+    <skipped />
+  </testcase>
+  <testcase name="plain_chat_context_v1_on_real_native" classname="com.localai.workspace.ui.NormalChatNativeDeviceTest" time="2.545">
+    <skipped />
+  </testcase>
+  <testcase name="cancel_then_retry_real_native" classname="com.localai.workspace.ui.NormalChatNativeDeviceTest" time="2.032">
+    <skipped />
+  </testcase>
+  <testcase name="project_chat_context_v1_on_real_native" classname="com.localai.workspace.ui.NormalChatNativeDeviceTest" time="2.583">
+    <skipped />
+  </testcase>
+  <testcase name="createProjectAndExplicitlySaveEditRemoveMemory" classname="com.localai.workspace.ui.ProjectUiDeviceTest" time="13.428" />
+</testsuite>

@@ -1,6 +1,33 @@
 # Android emulator CI setup and execution record
 
-**Outcome: `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`.** The workflow reached a GitHub-hosted accelerated runner, but the API 35 AVD was not discoverable in the final run. `adb` listed no devices, Gradle connected instrumentation did not run, and no JUnit XML was produced. This is not an Android test pass. A latest assignment reinspection fetched the full job log and artifact anew; it adds the exact failure sequence but still does not establish why the AVD was absent.
+**Latest result (2026-10-11): `EMULATOR_EXECUTED_WITH_FAILURES`; overall workflow FAIL.** The AVD path correction was verified, and real API 35 x86_64 connected instrumentation ran. The test suite did not pass: 7 passed, 4 failed, 4 skipped (15 total; 11 executed). Motorola physical validation remains `NOT_RUN`.
+
+## Latest run after AVD path correction — stop for independent audit
+
+- **Run:** [38156881656](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38156881656), push-triggered, source/workflow SHA `3c5589e7592cb52a88bb2132b1b30fc30d737e03`.
+- **Job:** `114521577365`; run time `2026-10-11T16:46:54Z`–`2026-10-11T17:01:35Z`; job conclusion `failure`.
+- **AVD path diagnosis/fix:** the prior run showed `avdmanager` storing/listing the AVD in `/home/runner/.config/.android/avd`, while the emulator searched `/home/runner/.android/avd`. This run pins `ANDROID_AVD_HOME=/home/runner/.android/avd` before creation and retains it through emulator launch. Preflight recorded create/pipeline/list exit codes 0; both `avdmanager list avd` and `emulator -list-avds` listed `localai-api35-x86_64`; the expected `.ini` and `.avd/config.ini` existed; preflight passed. The emulator booted and ADB connected.
+- **Emulator:** serial `emulator-5554`; model `sdk_gphone64_x86_64`; Android 15/API 35; ABI `x86_64`; `ro.kernel.qemu=1`.
+- **Instrumented task:** `:app:connectedDebugAndroidTest`; command: `./gradlew :app:connectedDebugAndroidTest --no-daemon --no-parallel --max-workers=2 -Dorg.gradle.jvmargs='-Xmx3g -Dfile.encoding=UTF-8' --stacktrace --console=plain`; exit code **1**. One JUnit XML records **15 total, 7 passed, 4 failed, 0 errors, 4 skipped; 11 executed**.
+
+Four failures, as recorded in the XML:
+
+1. `WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords` — missing test schema asset `com.localai.workspace.data.WorkspaceDatabase/1.json`.
+2. `LiteRtLmDeviceSmokeTest initializationError` — JUnit rejects `normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole()` because an `@Test` method is not `void`.
+3. `ChatHeaderLayoutTest.largeFontScaleExpandsHeaderAndKeepsAllThreeLinesVisible` — “The component is not displayed” (assertion at line 68).
+4. `ChatHeaderLayoutTest.standardFontScaleKeepsAgentTitleAndModelInsideHeader` — “The component is not displayed” (assertion at line 59).
+
+The four skipped cases are `NormalChatNativeDeviceTest` cases guarded by `Assume` on Gemma E2B availability. The workflow downloads no model, and the XML’s skip-reason text is empty; the source guard is the basis for this interpretation. The task ran, but the collector’s post-task `pm list packages` did not find either expected package. There is no pre-task package snapshot, so do not infer persistent post-task installation state from that check; the XML is direct evidence that the instrumentation runner executed.
+
+**Classification:** AVD creation/discovery path mismatch is confirmed resolved for this run. `EMULATOR=EXECUTED_WITH_FAILURES`, overall CI `FAIL`; this is not an emulator PASS. `PHYSICAL_DEVICE=NOT_RUN`. Do not rerun or fix the failures under this contract; stop for independent audit. No APK or model was retained/distributed.
+
+### Run artifact and durable evidence
+
+Artifact [11709571451](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38156881656/artifacts/11709571451), `android-emulator-evidence-38156881656-1`: 40,894 bytes, SHA-256 `b6152538416c30e5b8d2b94521f36b0344b00ae42044ba994f154b4d8bb7ddd7`. The artifact ZIP has 28 entries including its manifest; all **27/27 payload entries** in that manifest verified; the durable directory [diagnostic-runs/38156881656](diagnostic-runs/38156881656/) includes the exact artifact ZIP, original internal manifest, XML, AVD environment/preflight/list outputs, run metadata, sanitized compressed job log and a SHA-256 manifest. The durable manifest verifies all listed files; its SHA-256 is `66c7b7732e7bc131912ee79927cf1a5eb6e6527d33871778e5f274b34e9dcdef`. JUnit XML readable copy SHA-256: `346a773d82c8a632c3192f00996a7eecb728a896baa1e2c28f61624bd91a7cd5`; original archived XML entry SHA-256: `3cbb54410bcaa7a18c5597f1115ca599712d403a5e8ca0422c985dd5bccd52d4`.
+
+The complete downloaded job log was 558,314 bytes, SHA-256 `529e1e95d45c786e9f39e0fe57df9fc3f176849c5fe813d0ea8a9e0b06a7f730`. One credential-like field was redacted before persistence; the unredacted log was not saved. Sanitized decompressed log: 555,003 bytes, SHA-256 `b71a3d67ed067fcaf2ed700349c2d0c9103a3e9b6857160221d6a576f903cdd0`; compressed file SHA-256 `74b94f7e4c0f0963b026d00f7116c36f1dd1866c7fbb30a62de267029ddff13e`.
+
+**Historical outcome of the first CI attempt:** `BLOCKED_ANDROID_CI_CAUSE_UNPROVEN`. Before the path correction, the API 35 AVD was not discoverable, ADB listed no devices, instrumentation did not run, and no XML was produced. The later evidence in the latest-run section above established the path mismatch and verified the correction; the instrumentation suite then ran but failed.
 
 Repository: `https://github.com/javix142-gif/local-ai-workspace.git`
 
@@ -8,11 +35,11 @@ Branch: `feat/0.5.0-skills-agents`
 
 Workflow source code commit: `bdae87820b73dbcc0decfde3a65c391c6fb63279`
 
-Final run: [37865813921](https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865813921)
+First failed run: [37865813921](https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865813921)
 
-Final evidence artifact: [android-emulator-evidence-37865813921-1.zip](https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865813921/artifacts/11588945524), 23,012 bytes, SHA-256 `007278791dc27fcda430694be6f3b5d7e3620932548145ba5b28e9907bebb9ac` (expires 2026-10-16).
+Evidence artifact for the first failed run: [android-emulator-evidence-37865813921-1.zip](https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865813921/artifacts/11588945524), 23,012 bytes, SHA-256 `007278791dc27fcda430694be6f3b5d7e3620932548145ba5b28e9907bebb9ac` (expires 2026-10-16).
 
-## Earlier follow-up inspection (2026-10-09; retrieval note superseded below)
+## Historical first-run inspection (2026-10-09; superseded by the latest run above)
 
 This executor inspected the retained complete extraction of artifact `11588945524` for run `37865813921` and verified all 11 files against its internal `SHA256SUMS`. At that earlier inspection, the artifact API reported 23,012 bytes and `expired=false`; that attempt to fetch the blob and job log returned no payload. The later assignment reinspection below successfully fetched both through the GitHub connector. The GitHub Jobs API did provide step conclusions: SDK install `SUCCESS`, KVM preflight `SUCCESS`, AVD create/boot `FAILURE`, connected instrumentation `SKIPPED`, evidence collection `FAILURE`, upload `SUCCESS`.
 
@@ -36,11 +63,12 @@ The workflow runs on feature-branch pushes that touch application/build/CI input
 |---|---|---|---|
 | [37865314837](https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865314837) | `b61bb49c1fcf11838885f90c0cb0ab1e6087f150` | Workflow definition was rejected before a job started. The `runner.temp` expression was used at job scope. | No job or artifact. `actionlint` identified the invalid context; the expression was moved to step scope in the next commit. |
 | [37865443624](https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865443624) | `628748536850876eed800c83329835a3f12e5b28` | SDK setup passed; the emulator setup stopped at its `/dev/kvm` access checks. Instrumentation did not run. The collector also could not find `adb` by bare name. | [Artifact 11587932236](https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865443624/artifacts/11587932236), 22,007 bytes, SHA-256 `94d70ae0ddcc5f9b1194bed327b529adea9efc439bdd710c95a540f067b93c08`. Its manifest verified with `sha256sum -c`. |
-| [37865813921](https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865813921) | `bdae87820b73dbcc0decfde3a65c391c6fb63279` | KVM check passed after granting access on the ephemeral runner. AVD creation did not leave the named AVD configuration; emulator logged `Unknown AVD name`, `adb` showed no device, and `timeout 600 adb wait-for-device` exited 124. Instrumentation did not run. | [Artifact 11588945524](https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865813921/artifacts/11588945524); its manifest verified with `sha256sum -c`. |
+| [37865813921](https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865813921) | `bdae87820b73dbcc0decfde3a65c391c6fb63279` | KVM passed; AVD was not discoverable, ADB wait exited 124, instrumentation did not run (historical failure before the path fix). | [Artifact 11588945524](https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865813921/artifacts/11588945524); its manifest verified with `sha256sum -c`. |
+| [38156881656](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38156881656) | `3c5589e7592cb52a88bb2132b1b30fc30d737e03` | AVD/path preflight and API 35 x86_64 boot/ADB passed; connected instrumentation ran 15 cases and failed (7 pass, 4 fail, 4 skipped). | [Artifact 11709571451](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38156881656/artifacts/11709571451), ZIP SHA-256 `b6152538416c30e5b8d2b94521f36b0344b00ae42044ba994f154b4d8bb7ddd7`; full details above. |
 
-The final run used API 35, x86_64, `google_apis` system image. The KVM artifact records `/dev/kvm` present and changes its mode from `crw-rw---- root:kvm` to readable/writable `crw-rw-rw-`. `avdmanager.log` contains only `Auto-selecting single ABI x86_64`; the expected AVD `.ini` was absent. `emulator.log` reports that `localai-api35-x86_64` is unknown and cannot be found under the searched AVD directories. The immediate blocker is AVD creation/location; the underlying reason `avdmanager` returned without a discoverable AVD is not established by this run.
+For historical run 37865813921, the runner used API 35 x86_64 `google_apis`; KVM passed, but the AVD was not discoverable and instrumentation never began. The later run 38156881656 is the current outcome and is described at the top of this report.
 
-Final run summary: `device.connected=false`; Gradle exit code is null because the Gradle task was skipped; XML count 0; total/passed/failed/errors/skipped/executed all 0; status `FAIL`; `physicalDeviceValidation=NOT_RUN`. No `gradle-connected.log` or instrumented XML was fabricated because Gradle and the test runner never started; the GitHub job log records those steps as skipped. Model-dependent `Assume` tests were never reached, so their skip status is unknown, not PASS or SKIPPED.
+Run 37865813921 summary (historical): `device.connected=false`; Gradle exit code null because the task was skipped; XML count 0; all test counts 0; status `FAIL`; `physicalDeviceValidation=NOT_RUN`. No `gradle-connected.log` or instrumented XML was fabricated because Gradle and the test runner never started; the GitHub job log records those steps as skipped. Model-dependent `Assume` tests were never reached, so their skip status is unknown, not PASS or SKIPPED.
 
 Key final artifact file hashes (also listed in its `SHA256SUMS`):
 
@@ -52,7 +80,7 @@ Key final artifact file hashes (also listed in its `SHA256SUMS`):
 
 The previous artifact had `adb-devices.txt` SHA-256 `e4a7bf7973c8b170f9efb327e1e2a23e7b83f858973189be4bf8e15843ab1d03` and summary SHA-256 `da0a009f77cf77311ae52bc840ed2993bcc1929df0212201e3dc8b21cc9d379d`. It recorded the collector's missing-`adb` error. A local synthetic collector smoke test after the fix confirmed the SDK-path `adb` is invoked and an empty device list is reported as failure, not as a passing run.
 
-## Follow-up investigation: AVD path/creation cause unproven (2026-10-09)
+## Historical follow-up investigation: AVD path/creation cause unproven (2026-10-09; later diagnosed and corrected as recorded above)
 
 The complete artifact for run [37865813921](https://github.com/javix142-gif/local-ai-workspace/actions/runs/37865813921) was downloaded and inspected, including `logs/avdmanager.log`, `logs/emulator.log`, `logs/android-toolchain.txt`, `logs/sdkmanager.log`, `logs/kvm-check.txt`, `adb-devices.txt`, `summary.json`, and `SHA256SUMS`. All 11 entries listed by the artifact manifest verified successfully. The ZIP is 23,012 bytes with SHA-256 `007278791dc27fcda430694be6f3b5d7e3620932548145ba5b28e9907bebb9ac`; artifact ID `11588945524`; source code SHA `bdae87820b73dbcc0decfde3a65c391c6fb63279`; job ID `113612155627`.
 
