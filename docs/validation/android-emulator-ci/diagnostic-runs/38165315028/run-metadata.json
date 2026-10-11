@@ -1,0 +1,30 @@
+{
+  "runId": 38165315028,
+  "jobId": 114546554444,
+  "event": "push",
+  "branch": "feat/0.5.0-skills-agents",
+  "sourceCommit": "ee6909d86c9a3477734addc5e933cfc2dfe40fd7",
+  "workflow": ".github/workflows/android-emulator-instrumented.yml",
+  "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38165315028",
+  "jobUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38165315028/job/114546554444",
+  "runStatus": "completed",
+  "conclusion": "failure",
+  "startedAtUtc": "2026-10-11T18:47:56Z",
+  "finishedAtUtc": "2026-10-11T18:58:15Z",
+  "artifact": {
+    "id": 11711863899,
+    "name": "android-emulator-evidence-38165315028-1",
+    "bytes": 40988,
+    "sha256": "ea98cfd8652e092994bab9e9550c64b9b27c790e2abd95c93c8504e47f56a71c",
+    "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38165315028/artifacts/11711863899",
+    "expiresAtUtc": "2026-10-18T18:58:12Z"
+  },
+  "stepConclusions": {
+    "sdkInstall": "success",
+    "kvm": "success",
+    "avdCreateBoot": "success",
+    "connectedInstrumentation": "failure; task ran and exited 1",
+    "collectEvidence": "failure; validation status FAIL",
+    "uploadArtifact": "success"
+  }
+}

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.context.ContextFoundationTest" tests="38" skipped="0" failures="0" errors="0" timestamp="2026-10-11T18:44:05" hostname="05497ac86eb0" time="4.787">
+  <properties/>
+  <testcase name="databaseReopenPreservesCanonicalAndOutbox" classname="com.localai.workspace.context.ContextFoundationTest" time="0.171"/>
+  <testcase name="provenanceAndStructuredLookup" classname="com.localai.workspace.context.ContextFoundationTest" time="0.105"/>
+  <testcase name="protectedQueryCannotBeSilentlyTruncated" classname="com.localai.workspace.context.ContextFoundationTest" time="0.026"/>
+  <testcase name="missingProviderLeavesRecoverableOutbox" classname="com.localai.workspace.context.ContextFoundationTest" time="0.096"/>
+  <testcase name="deterministicPriorityPacking" classname="com.localai.workspace.context.ContextFoundationTest" time="0.025"/>
+  <testcase name="secretsRejectedOnlyForUnapprovedCandidates" classname="com.localai.workspace.context.ContextFoundationTest" time="0.078"/>
+  <testcase name="procedureIndentationIsNotAutomaticallyMerged" classname="com.localai.workspace.context.ContextFoundationTest" time="0.111"/>
+  <testcase name="deletingDuringEmbeddingCannotResurrectVector" classname="com.localai.workspace.context.ContextFoundationTest" time="0.111"/>
+  <testcase name="outputAndSafetyReservationsCountOnce" classname="com.localai.workspace.context.ContextFoundationTest" time="0.068"/>
+  <testcase name="contextProvenanceAndMetadataDoNotExposePrivateContent" classname="com.localai.workspace.context.ContextFoundationTest" time="0.103"/>
+  <testcase name="hostWorkloads100And1000UseBoundedContext" classname="com.localai.workspace.context.ContextFoundationTest" time="2.504"/>
+  <testcase name="changedCanonicalWhitespaceInvalidatesHistoryCache" classname="com.localai.workspace.context.ContextFoundationTest" time="0.171"/>
+  <testcase name="hugeRecentTurnDoesNotAdmitOlderContextInstead" classname="com.localai.workspace.context.ContextFoundationTest" time="0.031"/>
+  <testcase name="semanticVectorsPersistAndCannotCrossSpaces" classname="com.localai.workspace.context.ContextFoundationTest" time="0.082"/>
+  <testcase name="sourceCodeIndentationIsNotDiscardedAsDuplicate" classname="com.localai.workspace.context.ContextFoundationTest" time="0.034"/>
+  <testcase name="projectBriefPersistsAndExportsMarkdown" classname="com.localai.workspace.context.ContextFoundationTest" time="0.104"/>
+  <testcase name="exportIsExplicitCanonicalJsonWithoutVectors" classname="com.localai.workspace.context.ContextFoundationTest" time="0.054"/>
+  <testcase name="historyDeletionCannotResurrectCachedConversation" classname="com.localai.workspace.context.ContextFoundationTest" time="0.082"/>
+  <testcase name="forbiddenScopeAndDuplicatesAreObservable" classname="com.localai.workspace.context.ContextFoundationTest" time="0.02"/>
+  <testcase name="supersedeRetainsVersionAndExcludesOld" classname="com.localai.workspace.context.ContextFoundationTest" time="0.033"/>
+  <testcase name="parallelDuplicateCreatesOneCanonicalRecord" classname="com.localai.workspace.context.ContextFoundationTest" time="0.06"/>
+  <testcase name="recentPairsRemainWholeAndOrdered" classname="com.localai.workspace.context.ContextFoundationTest" time="0.039"/>
+  <testcase name="unicodeEquivalentContentDeduplicates" classname="com.localai.workspace.context.ContextFoundationTest" time="0.047"/>
+  <testcase name="routineDedupScopeAndOldHistoryTrimmingDoNotRaiseUserNotice" classname="com.localai.workspace.context.ContextFoundationTest" time="0.019"/>
+  <testcase name="incompleteSpreadsheetEvidenceHasMaterialInspectorNotice" classname="com.localai.workspace.context.ContextFoundationTest" time="0.03"/>
+  <testcase name="sourceInstructionsNeverEnterSystemPolicy" classname="com.localai.workspace.context.ContextFoundationTest" time="0.019"/>
+  <testcase name="pendingSecretsCannotBeAddedViaEdit" classname="com.localai.workspace.context.ContextFoundationTest" time="0.051"/>
+  <testcase name="explicitIsActiveAndNoSilentCandidateApproval" classname="com.localai.workspace.context.ContextFoundationTest" time="0.092"/>
+  <testcase name="codeCaseDoesNotCauseAutomaticMerge" classname="com.localai.workspace.context.ContextFoundationTest" time="0.04"/>
+  <testcase name="relevantSourceOrMemoryLostToTokenBudgetRaisesPreciseNotice" classname="com.localai.workspace.context.ContextFoundationTest" time="0.058"/>
+  <testcase name="deletionRemovesOnlyOwnVectors" classname="com.localai.workspace.context.ContextFoundationTest" time="0.034"/>
+  <testcase name="anotherProjectConversationIdDoesNotGrantAccess" classname="com.localai.workspace.context.ContextFoundationTest" time="0.075"/>
+  <testcase name="cancelledEmbeddingKeepsPendingCanonical" classname="com.localai.workspace.context.ContextFoundationTest" time="0.03"/>
+  <testcase name="allSixScopeKindsAreExplicit" classname="com.localai.workspace.context.ContextFoundationTest" time="0.048"/>
+  <testcase name="expiredNeverRetrieved" classname="com.localai.workspace.context.ContextFoundationTest" time="0.036"/>
+  <testcase name="scopesFilterBeforeRanking" classname="com.localai.workspace.context.ContextFoundationTest" time="0.032"/>
+  <testcase name="normalizedExactDedupWithinKindAndScope" classname="com.localai.workspace.context.ContextFoundationTest" time="0.04"/>
+  <testcase name="followUpRetainsRelevantCellEvidenceAndReportsWhenRecentPairCannotFit" classname="com.localai.workspace.context.ContextFoundationTest" time="0.02"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

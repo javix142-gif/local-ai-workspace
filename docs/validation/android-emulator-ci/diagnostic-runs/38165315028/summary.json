@@ -1,0 +1,155 @@
+{
+  "label": "EMULATOR",
+  "sourceCommit": "ee6909d86c9a3477734addc5e933cfc2dfe40fd7",
+  "runId": "38165315028",
+  "runAttempt": "1",
+  "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38165315028",
+  "expected": {
+    "api": 35,
+    "abi": "x86_64",
+    "systemImage": "google_apis"
+  },
+  "device": {
+    "connected": true,
+    "api": "35",
+    "release": "15",
+    "abi": "x86_64",
+    "model": "sdk_gphone64_x86_64",
+    "product": "sdk_gphone64_x86_64",
+    "emulator": "1",
+    "screenSize": "Physical size: 1080x1920",
+    "screenDensity": "Physical density: 420"
+  },
+  "adbDevicesExitCode": 0,
+  "avdPrelaunchDiagnostics": {
+    "capturedBeforeLaunch": true,
+    "expectedAvdName": "localai-api35-x86_64",
+    "androidAvdHome": "/home/runner/.android/avd",
+    "xdgConfigHome": "/home/runner/.config",
+    "avdmanagerCreateExitCode": 0,
+    "createPipelineExitCode": 0,
+    "avdmanagerListExitCode": 0,
+    "avdmanagerListedExpected": true,
+    "avdmanagerReportedPaths": [
+      "/home/runner/.android/avd/localai-api35-x86_64.avd"
+    ],
+    "emulatorListExitCode": 0,
+    "emulatorListedExpected": true,
+    "searchPaths": [
+      {
+        "searchDirectory": "/home/runner/.android/avd",
+        "directoryExists": true,
+        "expectedIni": "/home/runner/.android/avd/localai-api35-x86_64.ini",
+        "iniExists": true,
+        "expectedConfig": "/home/runner/.android/avd/localai-api35-x86_64.avd/config.ini",
+        "configExists": true
+      },
+      {
+        "searchDirectory": "/home/runner/.config/.android/avd",
+        "directoryExists": false,
+        "expectedIni": "/home/runner/.config/.android/avd/localai-api35-x86_64.ini",
+        "iniExists": false,
+        "expectedConfig": "/home/runner/.config/.android/avd/localai-api35-x86_64.avd/config.ini",
+        "configExists": false
+      }
+    ],
+    "checks": {
+      "createCommandSucceeded": true,
+      "createPipelineSucceeded": true,
+      "avdmanagerListSucceeded": true,
+      "avdmanagerListedExpected": true,
+      "emulatorListSucceeded": true,
+      "emulatorListedExpected": true,
+      "managerReportedCanonicalPath": true,
+      "canonicalDirectoryExists": true,
+      "canonicalIniExists": true,
+      "canonicalConfigExists": true
+    },
+    "preflightPassed": true,
+    "preflightFailures": []
+  },
+  "avdPreflightExitCode": 0,
+  "apkInstallState": {
+    "checked": true,
+    "listPackagesExitCode": 0,
+    "packages": {
+      "application": {
+        "packageName": "com.localai.workspace.debug",
+        "installed": false
+      },
+      "instrumentationTest": {
+        "packageName": "com.localai.workspace.debug.test",
+        "installed": false
+      }
+    }
+  },
+  "physicalDeviceValidation": "NOT_RUN",
+  "connectedTask": ":app:connectedDebugAndroidTest",
+  "connectedTaskCommand": "./gradlew :app:connectedDebugAndroidTest --no-daemon --no-parallel --max-workers=2 --stacktrace --console=plain",
+  "gradleExitCode": 1,
+  "instrumentationXmlCount": 1,
+  "counts": {
+    "total": 16,
+    "passed": 6,
+    "failed": 4,
+    "errors": 0,
+    "skipped": 6,
+    "executed": 10
+  },
+  "skippedCases": [
+    {
+      "class": "com.localai.workspace.inference.LiteRtLmDeviceSmokeTest",
+      "name": "normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole",
+      "reason": ""
+    },
+    {
+      "class": "com.localai.workspace.inference.LiteRtLmDeviceSmokeTest",
+      "name": "cpuFirstTokenStreamingCompletionCancelRetryAndUnload",
+      "reason": ""
+    },
+    {
+      "class": "com.localai.workspace.ui.NormalChatNativeDeviceTest",
+      "name": "plain_chat_legacy_off_real_native",
+      "reason": ""
+    },
+    {
+      "class": "com.localai.workspace.ui.NormalChatNativeDeviceTest",
+      "name": "plain_chat_context_v1_on_real_native",
+      "reason": ""
+    },
+    {
+      "class": "com.localai.workspace.ui.NormalChatNativeDeviceTest",
+      "name": "cancel_then_retry_real_native",
+      "reason": ""
+    },
+    {
+      "class": "com.localai.workspace.ui.NormalChatNativeDeviceTest",
+      "name": "project_chat_context_v1_on_real_native",
+      "reason": ""
+    }
+  ],
+  "headerUiDiagnostics": {
+    "screenshots": [],
+    "requiredScreenshots": 2
+  },
+  "acceptanceChecks": {
+    "avdPreflightPassed": true,
+    "adbConnected": true,
+    "api35X86_64Emulator": true,
+    "applicationApkInstalled": false,
+    "connectedTaskSucceeded": false,
+    "junitXmlPresent": true,
+    "junitCountsConsistent": true,
+    "testsExecuted": true,
+    "noTestFailuresOrErrors": false,
+    "headerUiDiagnosticsCaptured": false
+  },
+  "status": "FAIL",
+  "failureReasons": [
+    "applicationApkInstalled",
+    "connectedTaskSucceeded",
+    "noTestFailuresOrErrors",
+    "headerUiDiagnosticsCaptured"
+  ],
+  "apkOrModelArtifactsIncluded": false
+}

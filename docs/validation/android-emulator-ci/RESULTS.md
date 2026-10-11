@@ -1,8 +1,19 @@
 # Android emulator CI setup and execution record
 
-**Latest result (2026-10-11): `EMULATOR_EXECUTED_WITH_FAILURES`; overall workflow FAIL.** The AVD path correction was verified, and real API 35 x86_64 connected instrumentation ran. The test suite did not pass: 7 passed, 4 failed, 4 skipped (15 total; 11 executed). Motorola physical validation remains `NOT_RUN`.
 
-## Latest run after AVD path correction — stop for independent audit
+## Current focalized run (2026-10-11) — EMULATOR FAIL
+
+The latest authorized run is [38165315028](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38165315028), source SHA `ee6909d86c9a3477734addc5e933cfc2dfe40fd7`, job `114546554444`. API 35 x86_64 AVD/ADB passed and `:app:connectedDebugAndroidTest` actually ran **16 tests: 6 passed, 4 failed, 0 errors, 6 skipped; 10 executed**. It is not a PASS. The six skips are two real-model LiteRT tests plus four real-Gemma chat tests; no model was downloaded. Failures: authentic Room schema `WorkspaceDatabase/1.json` missing; one additional AgentsSkills navigation lookup; and the standard/large ChatHeader first visibility assertion. The JUnit return-type defect was corrected; its test now reaches the real-model guard and skips.
+
+The header root cause remains undetermined because the collector failed to pull screenshots: its local destination folder was absent; filtered logcat retained no layout bounds/semantics. The Room test/schema was left unchanged because no authentic v1 schema was found; none was fabricated. No further emulator run is authorized by this contract. `PHYSICAL_DEVICE` remains `NOT_RUN`; M01-06 remains `PENDING_REQUIRES_DEVICE`.
+
+Full details, run artifact, raw job log, JUnit XML, host logs/XML and per-file hashes: [run 38165315028 evidence](diagnostic-runs/38165315028/RESULTS.md). Original artifact `11711863899` is 40,988 bytes, SHA-256 `ea98cfd8652e092994bab9e9550c64b9b27c790e2abd95c93c8504e47f56a71c`. Code commits: `8fdc40a65673a04d6d4d68be7b19066b7d629ad2` and `ee6909d86c9a3477734addc5e933cfc2dfe40fd7`. The durable evidence manifest covers 99 files; SHA-256 `3124e2f16d037d87ea39b4b7a8929c213b02cad6b4b3bd37da9c58914bb8d19d`. `main` and peeled `v0.4.2` remain at `de615b772cf37a99e7e08a647c59607b271de606`.
+
+---
+
+**Previous run result (2026-10-11; run 38156881656): `EMULATOR_EXECUTED_WITH_FAILURES`.** That earlier run recorded 7 passed, 4 failed, 4 skipped (15 total; 11 executed); it is superseded by the current focalized run above. Motorola physical validation remains `NOT_RUN`.
+
+## Previous run after AVD path correction — run 38156881656
 
 - **Run:** [38156881656](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38156881656), push-triggered, source/workflow SHA `3c5589e7592cb52a88bb2132b1b30fc30d737e03`.
 - **Job:** `114521577365`; run time `2026-10-11T16:46:54Z`–`2026-10-11T17:01:35Z`; job conclusion `failure`.
@@ -23,7 +34,7 @@ The four skipped cases are `NormalChatNativeDeviceTest` cases guarded by `Assume
 
 ### Run artifact and durable evidence
 
-Artifact [11709571451](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38156881656/artifacts/11709571451), `android-emulator-evidence-38156881656-1`: 40,894 bytes, SHA-256 `b6152538416c30e5b8d2b94521f36b0344b00ae42044ba994f154b4d8bb7ddd7`. The artifact ZIP has 28 entries including its manifest; all **27/27 payload entries** in that manifest verified; the durable directory [diagnostic-runs/38156881656](diagnostic-runs/38156881656/) includes the exact artifact ZIP, original internal manifest, XML, AVD environment/preflight/list outputs, run metadata, sanitized compressed job log and a SHA-256 manifest. The durable manifest verifies all listed files; its SHA-256 is `66c7b7732e7bc131912ee79927cf1a5eb6e6527d33871778e5f274b34e9dcdef`. JUnit XML readable copy SHA-256: `346a773d82c8a632c3192f00996a7eecb728a896baa1e2c28f61624bd91a7cd5`; original archived XML entry SHA-256: `3cbb54410bcaa7a18c5597f1115ca599712d403a5e8ca0422c985dd5bccd52d4`.
+Artifact [11709571451](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38156881656/artifacts/11709571451), `android-emulator-evidence-38156881656-1`: 40,894 bytes, SHA-256 `b6152538416c30e5b8d2b94521f36b0344b00ae42044ba994f154b4d8bb7ddd7`. The artifact ZIP has 28 entries including its manifest; all **27 payload entries** in that manifest verified; the durable directory [diagnostic-runs/38156881656](diagnostic-runs/38156881656/) includes the exact artifact ZIP, original internal manifest, XML, AVD environment/preflight/list outputs, run metadata, sanitized compressed job log and a SHA-256 manifest. The durable manifest verifies all listed files; its SHA-256 is `66c7b7732e7bc131912ee79927cf1a5eb6e6527d33871778e5f274b34e9dcdef`. JUnit XML readable copy SHA-256: `346a773d82c8a632c3192f00996a7eecb728a896baa1e2c28f61624bd91a7cd5`; original archived XML entry SHA-256: `3cbb54410bcaa7a18c5597f1115ca599712d403a5e8ca0422c985dd5bccd52d4`.
 
 The complete downloaded job log was 558,314 bytes, SHA-256 `529e1e95d45c786e9f39e0fe57df9fc3f176849c5fe813d0ea8a9e0b06a7f730`. One credential-like field was redacted before persistence; the unredacted log was not saved. Sanitized decompressed log: 555,003 bytes, SHA-256 `b71a3d67ed067fcaf2ed700349c2d0c9103a3e9b6857160221d6a576f903cdd0`; compressed file SHA-256 `74b94f7e4c0f0963b026d00f7116c36f1dd1866c7fbb30a62de267029ddff13e`.
 
@@ -171,7 +182,7 @@ The workflow change records only the six requested HOME/ANDROID_* variables, res
 
 Static/host checks before that run: extracted workflow shell passes `bash -n`; collector parses with Python `ast`; a temporary stub-tool smoke check verified exit-code capture and artifact collection while correctly producing `FAIL`, zero executed tests. This synthetic check is not Android/emulator execution. `actionlint` is unavailable in this environment. The new GitHub Actions run and its diagnostic outcome are recorded in the next section after its single authorized execution.
 
-## Single diagnostic execution (2026-10-11)
+## Historical AVD diagnostic execution (2026-10-11; run 38154790618)
 
 The diagnostics-only change at source SHA `d0d4d7608c8e8149bdb05d003da2742260c1b8dd` was exercised once by the existing push trigger: [Actions run 38154790618](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38154790618), job `114515427123`. The runner was GitHub-hosted `ubuntu-24.04`; SDK/API 35 setup and KVM preparation succeeded. The AVD setup step failed after `timeout 600 .../adb wait-for-device` returned 124. The connected instrumentation step was **SKIPPED**; the collector and artifact upload ran via `always()`. No second run was started.
 
