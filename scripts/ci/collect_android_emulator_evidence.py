@@ -187,23 +187,54 @@ def collect_xml() -> list[Path]:
 def collect_header_screenshots(serial: str | None) -> list[Path]:
     names = ("standard", "large-font")
     destination = OUT / "ui-diagnostics" / "screenshots"
-    report: list[str] = []
+    destination.mkdir(parents=True, exist_ok=True)
+    records: list[dict[str, object]] = []
     copied: list[Path] = []
     if serial is None:
+        for name in names:
+            records.append({
+                "name": name,
+                "remotePath": f"/sdcard/Download/localai-chat-header-{name}.png",
+                "remoteCheckExitCode": None,
+                "remoteFilePresent": None,
+                "pullExitCode": None,
+                "localPath": (destination / f"chat-header-{name}.png").relative_to(OUT).as_posix(),
+                "localFilePresent": False,
+                "bytes": 0,
+                "sha256": None,
+                "reason": "NO_CONNECTED_EMULATOR",
+            })
+        write_text(OUT / "ui-diagnostics/screenshot-pull.json", json.dumps({"screenshots": records}, indent=2) + "\n")
         write_text(OUT / "ui-diagnostics/screenshot-pull.txt", "NO_CONNECTED_EMULATOR\n")
         return copied
     for name in names:
         remote = f"/sdcard/Download/local-ai-chat-header-{name}.png"
         local = destination / f"chat-header-{name}.png"
+        remote_check = command([ADB, "-s", serial, "shell", "ls", "-l", remote], timeout=20)
         result = command([ADB, "-s", serial, "pull", remote, str(local)], timeout=30)
-        report.append(f"name={name} exitCode={result.returncode}")
-        if result.stdout.strip():
-            report.append(redact_log(result.stdout.strip()))
-        if result.stderr.strip():
-            report.append(redact_log(result.stderr.strip()))
-        if result.returncode == 0 and local.is_file() and local.stat().st_size > 0:
+        exists = local.is_file() and local.stat().st_size > 0
+        records.append({
+            "name": name,
+            "remotePath": remote,
+            "remoteCheckExitCode": remote_check.returncode,
+            "remoteFilePresent": remote_check.returncode == 0,
+            "pullExitCode": result.returncode,
+            "localPath": local.relative_to(OUT).as_posix(),
+            "localFilePresent": exists,
+            "bytes": local.stat().st_size if exists else 0,
+            "sha256": hashlib.sha256(local.read_bytes()).hexdigest() if exists else None,
+            "pullStdout": redact_log(result.stdout.strip())[:500],
+            "pullStderr": redact_log(result.stderr.strip())[:500],
+        })
+        if exists:
             copied.append(local)
-    write_text(OUT / "ui-diagnostics/screenshot-pull.txt", "\n".join(report) + "\n")
+    write_text(OUT / "ui-diagnostics/screenshot-pull.json", json.dumps({"screenshots": records}, indent=2) + "\n")
+    write_text(OUT / "ui-diagnostics/screenshot-pull.txt", "\n".join(
+        f"name={item['name']} remoteCheckExitCode={item['remoteCheckExitCode']} "
+        f"remoteFilePresent={item['remoteFilePresent']} pullExitCode={item['pullExitCode']} "
+        f"localFilePresent={item['localFilePresent']} bytes={item['bytes']} sha256={item['sha256']}"
+        for item in records
+    ) + "\n")
     return copied
 
 
@@ -233,16 +264,28 @@ def main() -> int:
     safe_copy(RUNNER_TEMP / "avd-prelaunch.json", OUT / "avd-prelaunch.json")
     safe_copy(RUNNER_TEMP / "avd-prelaunch-json-exit-code.txt", OUT / "avd-prelaunch-json-exit-code.txt")
 
+    logcat_report: dict[str, object]
     if serial:
-        logcat = command([ADB, "-s", serial, "logcat", "-d", "-t", "2000", "-v", "time",
-                          "-s", "AndroidRuntime:E", "TestRunner:I", "Instrumentation:I", "ChatHeaderLayout:I"], timeout=60)
-        write_text(OUT / "logs/logcat-filtered-sanitized.txt", redact_log(logcat.stdout + logcat.stderr))
+        logcat = command([ADB, "-s", serial, "logcat", "-d", "-v", "time",
+                          "-s", "AndroidRuntime:E", "TestRunner:I", "Instrumentation:I", "ChatHeaderLayout:V"], timeout=60)
+        sanitized_logcat = redact_log(logcat.stdout + logcat.stderr)
+        write_text(OUT / "logs/logcat-filtered-sanitized.txt", sanitized_logcat)
+        logcat_bytes = sanitized_logcat.encode("utf-8")
+        logcat_report = {
+            "exitCode": logcat.returncode,
+            "tags": ["AndroidRuntime:E", "TestRunner:I", "Instrumentation:I", "ChatHeaderLayout:V"],
+            "chatHeaderPrintToLogPriority": "DEBUG; ChatHeaderLayout:V includes DEBUG and INFO",
+            "bytes": len(logcat_bytes),
+            "sha256": hashlib.sha256(logcat_bytes).hexdigest(),
+        }
         write_text(OUT / "adb-after-tests.txt", redact_log(command([ADB, "devices", "-l"]).stdout))
     else:
         write_text(OUT / "logs/logcat-filtered-sanitized.txt", "NOT_AVAILABLE: no booted emulator detected\n")
         write_text(OUT / "adb-after-tests.txt", "NOT_AVAILABLE: no booted emulator detected\n")
+        logcat_report = {"exitCode": None, "tags": [], "reason": "NO_CONNECTED_EMULATOR"}
 
     header_screenshots = collect_header_screenshots(serial)
+    screenshot_report = read_json_if_available(OUT / "ui-diagnostics/screenshot-pull.json")
 
     xml_files = collect_xml()
     counts, skipped_cases = parse_results(xml_files)
@@ -295,6 +338,8 @@ def main() -> int:
         "headerUiDiagnostics": {
             "screenshots": [path.relative_to(OUT).as_posix() for path in header_screenshots],
             "requiredScreenshots": 2,
+            "captureReport": screenshot_report,
+            "logcat": logcat_report,
         },
         "acceptanceChecks": checks,
         "status": "PASS" if all(checks.values()) else "FAIL",

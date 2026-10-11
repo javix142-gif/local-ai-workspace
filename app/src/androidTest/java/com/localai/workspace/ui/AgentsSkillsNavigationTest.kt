@@ -16,7 +16,15 @@ class AgentsSkillsNavigationTest {
         compose.onNodeWithText("Settings").performClick()
         compose.onNodeWithText("Skills").performScrollTo().performClick()
         compose.onNodeWithText("Import SKILL.md").assertExists()
-        compose.onNodeWithText("Spreadsheet Analysis").performScrollTo().performClick()
+        // Built-ins are seeded by SkillRegistry on IO; wait for its Room flow before lookup.
+        compose.waitUntil(timeoutMillis = 10_000) {
+            compose.onAllNodesWithText("Spreadsheet Analysis").fetchSemanticsNodes().isNotEmpty()
+        }
+        compose.onNodeWithText("Spreadsheet Analysis")
+            .assertExists()
+            .performScrollTo()
+            .assertIsDisplayed()
+            .performClick()
         compose.onNodeWithText("Export").assertExists()
         compose.onNodeWithText("Save").assertDoesNotExist()
     }
