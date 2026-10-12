@@ -1,17 +1,41 @@
-# Latest contract: UX-01 shared visual foundation (2026-10-12)
+# Latest contract: UX-02a chat header and composer (2026-10-12)
 
-**Status:** implemented and HOST-verified; delivered for independent audit. No UX-02 work has started.
+**Status:** host validation and personal QA artifact complete; pending independent audit. Stop here; UX-02b/UX-03 have not started.
 
-- UX-00 was independently audited and accepted. UX-01 code commit: `4f6ea6faf3d541d366af8ce7284a32fa58f8c1e8`, based on accepted UX-00 commit `80292816115a6d632d96ee3e8e8996adb4c7bd7a`.
-- UX-01 adds explicit fixed Material 3 light/dark palettes, requested typography/spacing/radii/layout tokens, semantic warning/success tokens and a shared reading frame/minimum target used by Workspace, Models and Settings. Chat and Project scaffolds remain. Existing three top-level entries, workspace start destination, nine routes and arguments, back stack and product behavior are unchanged.
-- Focused theme/capture tests: 5/5 PASS. Full app JVM: 738/738 PASS. `lintDebug`: PASS, 0 errors (82 warnings, 1 informational finding). `assembleDebug -Parm64Only=true`: PASS. `compileDebugAndroidTestKotlin`: PASS as compilation only; no instrumentation ran.
-- Seven host captures are stored under [UX-01 evidence](../validation/ux-01-foundation/RESULTS.md). Workspace, Models and Settings are visually captured in light and dark at 360dp/fontScale 1.0. The 411dp/fontScale 1.6 image is the shared frame fixture, not a full-app screen. Full-app large-font matrix and physical review remain pending UX-05.
-- Personal QA Debug ARM64 bundle: [download from Google Drive](https://drive.google.com/file/d/17WpxDcyBvCokhJaT6UODidxKAKb_FtlI/view?usp=drivesdk), 46,116,609 bytes, SHA-256 `0c5d0277b88d9d3a0720d8e52e4f5c3a9ee783305a8922c11791ef7fd43327eb`. The APK is `PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION`, package `com.localai.workspace.debug`, version `0.5.0-debug`/27, ARM64 only, verified with zipalign/apksigner. It is not a Release build or device validation.
-- On the UX publication push (event SHA `11f5ae4fe6596b63ebac8e56f8762420f6e5eb50`, product source unchanged from `4f6ea6faf3d541d366af8ce7284a32fa58f8c1e8`), the existing Android workflow was automatically triggered as [run 38206516624](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38206516624). It was cancelled during API 35 x86_64 system-image download; AVD/ADB/instrumentation steps were skipped, with 0 XML and 0 tests executed. This is `EMULATOR=NOT_RUN`, not an UX test failure or pass. The 21,744-byte run artifact [11727751535](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38206516624/artifacts/11727751535) has SHA-256 `a44b9ae36b73bd1f099df98ca8ac462a65be67fafb20db90d9cde13ff5d36583`; ZIP CRC and all 9 internal manifest entries were verified. The raw artifact and selected job-log excerpts are retained at [workflow-side-effects evidence](../validation/ux-01-foundation/workflow-side-effects/38206516624/README.md).
-- Paired fail-closed QA gate [run 38206516667](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38206516667) stopped at `ANDROID_INSTRUMENTATION_NOT_SUCCESSFUL` because the matching emulator run was cancelled. APK build and upload were skipped; the run has no artifact. It did not build or invalidate the separate personal QA bundle above.
-- The latest prior connected run `38186081844` remains historical: 9 PASS / 1 Room v1 fixture FAIL / 6 model-dependent SKIPPED (10 executed), on older source `5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1`. It is not same-SHA UX-01 evidence. `PHYSICAL_DEVICE=NOT_RUN`; `M01-06=PENDING_REQUIRES_DEVICE`.
-- The original 97-task plan is not present in the tracked repository and was not reconstructed or edited. No workflow, dependency, Room schema, migration, runtime, inference, tool, memory, retrieval, permission, model, or product-data change was made.
-- Next: stop for independent UX-01 audit; do not begin UX-02. The orchestrator-coordinated pause remains in effect after this audit.
+## Baseline and accepted UX-01
+
+- Before changes, the current checkout was clean on `feat/0.5.0-skills-agents`; local/fetched/remote HEAD was `cd7ea02bba7dbaa0d557259ac73f6ad3427b9ad6`. `main` and peeled `v0.4.2` were both `de615b772cf37a99e7e08a647c59607b271de606`.
+- UX-01 source `4f6ea6faf3d541d366af8ce7284a32fa58f8c1e8` and evidence HEAD `cd7ea02bba7dbaa0d557259ac73f6ad3427b9ad6` were independently accepted. Acceptance details/limits are retained in `EXECUTION_STATE.json`; in particular, the Drive ZIP hash for UX-01 was not recalculated by the auditor.
+- The original plan of 97 task IDs is not tracked; it was not reconstructed/edited. M01-06 remains `PENDING_REQUIRES_DEVICE`.
+
+## UX-02a changes
+
+The real route is `MainActivity` chat `Scaffold` → header and bottom attachments/composer. The previous M3 `TopAppBar` imposed an expanded-height maximum/clipping boundary and `ChatHeaderTitle` limited conversation/model text to one line. The chat now uses `ChatTopBar`, a content-sized M3-styled row with standard minimum height, M3 window insets and colors; all header text may wrap. The model picker callback, back action, overflow actions and Scaffold remain.
+
+Persistent Think/Tools chips are now behind one `Options` action. The selected mode stays visible in a compact summary. Existing dialogs, profile values and callbacks remain; Tools is summarized as `Off`, `Auto` or `Custom`. Tools Off continues to mean tools disabled only and is not an Agent selection. Attachments, selected files, input, send/stop callbacks, keyboard handling and routing remain unchanged. No runtime, models, Room, data, dependencies, workflows or navigation changed.
+
+## Validation
+
+- Commit of product/tests: `d0832e225f51f624c981f6b68da6193b72a78ef2`.
+- Focused Compose/Robolectric host tests on that SHA: 9/9 PASS, 0 fail/error/skip.
+- Full app JVM suite: 741/741 PASS from 89 XML files. `lintDebug`: PASS, 0 errors and 82 warnings. `assembleDebug -Parm64Only=true`: PASS. `compileDebugAndroidTestKotlin`: PASS as compile-only; it was UP-TO-DATE in the final gate and compiled in the prior successful gate after the AndroidTest changes. Gate details, commands, toolchain, XML archive, logs, and checksums are in [UX-02a results](../validation/ux-02a-chat-header-composer/RESULTS.md).
+- Four Robolectric component-fixture captures at 360dp/1.0 and 411dp/1.6 in light/dark were reopened and visually reviewed. All show the three header lines and composer. They are not full-app, keyboard-visible, emulator, or Motorola captures. Host assertions cover fontScale 2.0.
+- The separate Android `ChatHeaderLayoutTest` retains three `assertIsDisplayed` checks, long title/model text, wrapping and bounds assertions, inset diagnostics and model-before-body order. It was compiled only; no instrumented run was performed for UX-02a. The historical instrumented result remains 9 PASS, Room-v1 fixture FAIL, and six model-dependent SKIPPED on its recorded older SHA. No Room test/schema was changed.
+
+## Personal QA APK
+
+The Debug ARM64 APK was built from product commit `d0832e225f51f624c981f6b68da6193b72a78ef2`: package `com.localai.workspace.debug`, `0.5.0-debug`/27, `arm64-v8a` only, 121,801,305 bytes, SHA-256 `c58b90d30228dbf58ce230039e44093cafbe71d6ae644d619618ed17117b6aa0`. ZIP CRC, `zipalign`, `apksigner` v2 and package/version checks passed; Debug certificate SHA-256 is `f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b`. No model weight files are bundled.
+
+Download: [PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION](https://drive.google.com/file/d/1oEFdh3Q7_r8DjBw9Zp5mtXkNWbYXniP8/view?usp=drivesdk). Drive ID `1oEFdh3Q7_r8DjBw9Zp5mtXkNWbYXniP8`; ZIP is 46,262,838 bytes; local ZIP SHA-256 `b5b1225300aa576a5f54c991a5f119844fb41eabdfdb5c7ec7b48880f65d5bc1`. Metadata readback confirmed ID, name, MIME type, byte size, URL and parent folder; the Drive ZIP was not downloaded again to recalculate its remote hash. This is a debug QA package, not Release or production.
+
+## Layered status and next action
+
+- `HOST`: PASS as listed above.
+- `EMULATOR`: the code push automatically started API35 run [38210637867](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38210637867) for exact source SHA `d0832e225f51f624c981f6b68da6193b72a78ef2`; at last read it was installing the SDK, so no instrumentation result/XML is yet available. No manual dispatch was made. The paired fail-closed QA workflow [38210637883](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38210637883) is waiting for that exact-SHA run; no artifact has been produced yet. Both runs will be audited by step outcomes and XML before finalizing evidence. A compiled AndroidTest is not a test PASS.
+- `PHYSICAL_DEVICE`: `NOT_RUN`; no Motorola claim.
+- `M01-06`: `PENDING_REQUIRES_DEVICE`; original 97-task plan/IDs/order/dependencies remain unchanged.
+- Wait for independent audit. Do not begin UX-02b/UX-03 in this delivery.
+
 
 ---
 

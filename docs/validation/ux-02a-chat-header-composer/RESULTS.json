@@ -1,0 +1,172 @@
+{
+  "contract": "UX-02a chat header and composer",
+  "status": "HOST_PASS_PERSONAL_QA_UPLOADED_PENDING_INDEPENDENT_AUDIT",
+  "branch": "feat/0.5.0-skills-agents",
+  "baseCommit": "cd7ea02bba7dbaa0d557259ac73f6ad3427b9ad6",
+  "sourceCodeCommit": "d0832e225f51f624c981f6b68da6193b72a78ef2",
+  "ux01Status": "INDEPENDENTLY_AUDITED_ACCEPTED",
+  "productChanges": [
+    "natural-height M3 chat top bar with wrapping conversation/model status",
+    "Think and Tools dialogs moved under Options with current mode summary",
+    "existing callbacks, profile semantics, route graph and composer capabilities preserved"
+  ],
+  "filesChanged": [
+    "app/src/main/java/com/localai/workspace/MainActivity.kt",
+    "app/src/main/java/com/localai/workspace/ui/ChatContent.kt",
+    "app/src/main/java/com/localai/workspace/ui/AssistantControls.kt",
+    "app/src/androidTest/java/com/localai/workspace/ui/ChatHeaderLayoutTest.kt",
+    "app/src/test/java/com/localai/workspace/ui/ChatContentUiTest.kt",
+    "app/src/test/java/com/localai/workspace/ui/ChatHeaderComposerCaptureTest.kt"
+  ],
+  "host": {
+    "focused": {
+      "status": "PASS",
+      "tests": 9,
+      "passed": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "log": "host/focused-exact-commit.log",
+      "sourceCommit": "d0832e225f51f624c981f6b68da6193b72a78ef2"
+    },
+    "fullJvm": {
+      "status": "PASS",
+      "tests": 741,
+      "passed": 741,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlFiles": 89,
+      "xmlArchive": "host/full-jvm-xml.tar.gz",
+      "exitCode": 0
+    },
+    "lintDebug": {
+      "status": "PASS",
+      "errors": 0,
+      "warnings": 82,
+      "exitCode": 0,
+      "report": "host/lint-results-debug.txt"
+    },
+    "assembleDebugArm64": {
+      "status": "PASS",
+      "exitCode": 0,
+      "sourceCommit": "d0832e225f51f624c981f6b68da6193b72a78ef2",
+      "log": "host/exact-commit-arm64-assemble.log",
+      "gradleTasks": "81 actionable; 2 executed, 79 up-to-date"
+    },
+    "compileDebugAndroidTestKotlin": {
+      "status": "PASS_COMPILE_ONLY",
+      "exitCode": 0,
+      "finalGate": "UP-TO-DATE",
+      "explicitlyCompiledInPriorSuccessfulGate": true
+    },
+    "fullGate": {
+      "status": "PASS",
+      "startedUtc": "2026-10-12T05:47:44Z",
+      "finishedUtc": "2026-10-12T05:54:26Z",
+      "duration": "6m41s",
+      "actionableTasks": 151,
+      "executedTasks": 19,
+      "upToDateTasks": 132,
+      "log": "host/full-gate-final.log"
+    },
+    "gitDiffCheck": "PASS"
+  },
+  "screenshots": [
+    {
+      "file": "screenshots/chat-header-composer-360dp-light-fontScale-1.0.png",
+      "widthPx": 360,
+      "heightPx": 800,
+      "theme": "light",
+      "fontScale": 1.0,
+      "sha256": "60a43b256f1b70dedeae1ab58536e0953b46eb62625277122eaf4feb49dac4fe"
+    },
+    {
+      "file": "screenshots/chat-header-composer-360dp-dark-fontScale-1.0.png",
+      "widthPx": 360,
+      "heightPx": 800,
+      "theme": "dark",
+      "fontScale": 1.0,
+      "sha256": "716ed1b7b69680ce8aa213c3e3073271886be85af5b4e96ca3378e93333f08ba"
+    },
+    {
+      "file": "screenshots/chat-header-composer-411dp-light-fontScale-1.6.png",
+      "widthPx": 411,
+      "heightPx": 891,
+      "theme": "light",
+      "fontScale": 1.6,
+      "sha256": "03c1466ee60518fd61a30110b241f9b9317755e2cb5b85a12fd4231ef6796fde"
+    },
+    {
+      "file": "screenshots/chat-header-composer-411dp-dark-fontScale-1.6.png",
+      "widthPx": 411,
+      "heightPx": 891,
+      "theme": "dark",
+      "fontScale": 1.6,
+      "sha256": "f4af1846b39325b5f7af5b356fb0f1486800fcd7089332f9f5ac6d5a02ba5d34"
+    }
+  ],
+  "screenshotLimit": "Robolectric component fixture captures; not full app, emulator, keyboard-visible device capture, or Motorola validation. Host assertions also cover fontScale 2.0.",
+  "apk": {
+    "artifactType": "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
+    "sourceCommit": "d0832e225f51f624c981f6b68da6193b72a78ef2",
+    "filename": "local-ai-workspace-0.5.0-ux02a-d0832e2-personal-qa-arm64.apk",
+    "bytes": 121801305,
+    "sha256": "c58b90d30228dbf58ce230039e44093cafbe71d6ae644d619618ed17117b6aa0",
+    "applicationId": "com.localai.workspace.debug",
+    "versionName": "0.5.0-debug",
+    "versionCode": 27,
+    "abi": [
+      "arm64-v8a"
+    ],
+    "modelWeightFiles": 0,
+    "zipCrc": "PASS",
+    "zipalign": "PASS",
+    "apksigner": "PASS; v2",
+    "debugCertificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
+    "driveBundle": {
+      "id": "1oEFdh3Q7_r8DjBw9Zp5mtXkNWbYXniP8",
+      "url": "https://drive.google.com/file/d/1oEFdh3Q7_r8DjBw9Zp5mtXkNWbYXniP8/view?usp=drivesdk",
+      "filename": "local-ai-workspace-0.5.0-ux02a-d0832e2-personal-qa-arm64.zip",
+      "bytes": 46262838,
+      "sha256": "b5b1225300aa576a5f54c991a5f119844fb41eabdfdb5c7ec7b48880f65d5bc1",
+      "metadataReadback": {
+        "idNameMimeSizeParentUrl": "MATCH",
+        "remoteBytesRedownloadedForHash": false
+      }
+    }
+  },
+  "android": {
+    "HOST": "PASS",
+    "EMULATOR": "AUTOMATIC_PUSH_RUN_IN_PROGRESS; no manual dispatch; source SHA is d0832e225f51f624c981f6b68da6193b72a78ef2.",
+    "PHYSICAL_DEVICE": "NOT_RUN",
+    "previousInstrumentedRun": "38186081844: 9 PASS, 1 Room v1 fixture FAIL, 6 real-model SKIPPED; historical and not this source SHA",
+    "roomSchemaOrTestChanged": false
+  },
+  "plan": {
+    "original97TaskPlan": "not present in tracked repo; not reconstructed or edited",
+    "M01-06": "PENDING_REQUIRES_DEVICE",
+    "idsOrderDependenciesChanged": false
+  },
+  "nonProductFiles": [],
+  "automaticWorkflowRuns": {
+    "trigger": "push from code commit; no workflow_dispatch",
+    "sourceSha": "d0832e225f51f624c981f6b68da6193b72a78ef2",
+    "emulator": {
+      "runId": 38210637867,
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38210637867",
+      "jobId": 114683767158,
+      "status": "IN_PROGRESS",
+      "lastObservedStep": "Install pinned Android SDK, NDK, CMake and API 35 image"
+    },
+    "qaGate": {
+      "runId": 38210637883,
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38210637883",
+      "jobId": 114683767175,
+      "status": "IN_PROGRESS",
+      "lastObservedStep": "Wait for matching Android instrumentation run to succeed",
+      "artifact": "NOT_YET_PRODUCED"
+    }
+  }
+}

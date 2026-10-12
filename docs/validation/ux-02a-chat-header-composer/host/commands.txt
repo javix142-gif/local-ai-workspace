@@ -1,0 +1,13 @@
+Focused host tests (final successful invocation):
+JAVA_HOME=/workspace/.toolchain/jdk-17 ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew :app:testDebugUnitTest --tests com.localai.workspace.ui.ChatContentUiTest --tests com.localai.workspace.ui.ChatHeaderComposerCompactCaptureTest --tests com.localai.workspace.ui.ChatHeaderComposerLargeFontCaptureTest --no-daemon --console=plain
+Exit: 0; focused XML totals: 9 tests, 9 passed, 0 failures/errors/skipped.
+
+Full host gate (final successful invocation):
+JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew -Dorg.gradle.java.installations.paths=/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest :app:lintDebug :app:assembleDebug :app:compileDebugAndroidTestKotlin -Parm64Only=true --no-daemon --console=plain
+Exit: 0; 151 actionable tasks (19 executed, 132 up-to-date).
+
+Exact-source personal QA ARM64 build:
+JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew :app:assembleDebug -Parm64Only=true --no-daemon --console=plain
+Source: d0832e225f51f624c981f6b68da6193b72a78ef2; exit: 0; 81 actionable tasks (2 executed, 79 up-to-date).
+
+An initial focused invocation failed before test execution because the system Java 21 runtime lacked javac (exit 2). After installing/verifying a Temurin JDK 21 toolchain and selecting JDK 17 for Gradle, the focused run passed. An earlier full-gate attempt compiled an obsolete helper reference in the new AndroidTest and failed; that reference was corrected, then compileDebugAndroidTestKotlin succeeded. A first APK-check shell pipeline ended with SIGPIPE from piping aapt output through head; the complete independent verification was rerun with a non-truncating verifier and passed. These setup/check-wrapper failures are preserved and are not product test failures.

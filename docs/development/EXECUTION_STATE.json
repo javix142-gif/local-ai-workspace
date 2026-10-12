@@ -3747,15 +3747,15 @@
   },
   "postDeliveryPause": {
     "priority": "MEJORAS VISUALES Y EXPERIENCIA DE USUARIO",
-    "state": "UX01_DELIVERED_PENDING_INDEPENDENT_AUDIT",
-    "supersedes": "The prior VISUAL_UX_WAITING_USER_INPUT state was superseded by the user-authorized UX-01 contract.",
-    "waitFor": "Independent audit of UX-01 before UX-02 or further visual work.",
+    "state": "UX02A_DELIVERED_PENDING_INDEPENDENT_AUDIT",
+    "supersedes": "The previous wait state was superseded by explicitly authorized UX-01 and UX-02a work.",
+    "waitFor": "Independent audit of UX-02a before UX-02b or UX-03.",
     "M01-06": "PENDING_REQUIRES_DEVICE",
     "physicalDevice": "NOT_RUN"
   },
   "latestUx01": {
     "name": "UX-01 shared visual foundation",
-    "status": "HOST_PASS_PERSONAL_QA_UPLOADED_PENDING_INDEPENDENT_AUDIT",
+    "status": "INDEPENDENTLY_AUDITED_ACCEPTED",
     "branch": "feat/0.5.0-skills-agents",
     "baseCommit": "80292816115a6d632d96ee3e8e8996adb4c7bd7a",
     "sourceCodeCommit": "4f6ea6faf3d541d366af8ce7284a32fa58f8c1e8",
@@ -3875,7 +3875,7 @@
       "idsOrderDependenciesChanged": false
     },
     "workflowsChanged": false,
-    "next": "Stop for independent UX-01 audit; do not start UX-02.",
+    "next": "UX-01 independently audited and accepted; UX-02a is authorized.",
     "visualNotes": [
       "Compact Models screenshot shows its final filter-chip label partly clipped at the right edge; no filter redesign in UX-01, follow up in UX-02."
     ],
@@ -3957,6 +3957,186 @@
     },
     "instrumentedTestsAutoTriggered": true,
     "instrumentedTestsManuallyDispatched": false,
-    "automaticQaBuildProducedArtifact": false
+    "automaticQaBuildProducedArtifact": false,
+    "independentAudit": {
+      "acceptedBy": "User/orchestrator confirmation in the UX-02a contract",
+      "codeCommit": "4f6ea6faf3d541d366af8ce7284a32fa58f8c1e8",
+      "documentationHead": "cd7ea02bba7dbaa0d557259ac73f6ad3427b9ad6",
+      "fullJvm": "738/738 PASS from 87 XML files; independently reconciled",
+      "focused": "5/5 PASS; independently reconciled",
+      "captures": "Seven UX-01 captures reviewed within their stated scope; Models final filter chip at 360dp remains a later UX follow-up",
+      "drive": "ID 17WpxDcyBvCokhJaT6UODidxKAKb_FtlI, 46,116,609 bytes by metadata readback. Auditor did not download the ZIP, so its digest remains build-reported.",
+      "emulator": "Run 38206516624 cancelled during API 35 image download before AVD/ADB; 0 XML/tests. Paired QA run 38206516667 failed closed; no artifact.",
+      "physicalDevice": "NOT_RUN"
+    }
+  },
+  "latestUx02a": {
+    "name": "UX-02a chat header and composer",
+    "status": "HOST_PASS_PERSONAL_QA_UPLOADED_PENDING_INDEPENDENT_AUDIT",
+    "branch": "feat/0.5.0-skills-agents",
+    "baseCommit": "cd7ea02bba7dbaa0d557259ac73f6ad3427b9ad6",
+    "sourceCodeCommit": "d0832e225f51f624c981f6b68da6193b72a78ef2",
+    "scope": "Content-driven compact chat header and secondary Think/Tools options. Preserve full existing navigation, callbacks, composer and routing semantics; no models/runtime/data/Room/dependency/workflow change.",
+    "implementation": {
+      "header": "Replaced only chat TopAppBar with M3-styled natural-height ChatTopBar, using standard M3 window insets/colors and a 64dp minimum; removed one-line ellipsis for conversation/model text.",
+      "composer": "Preserved attachment, selected-file, input, send/stop behavior and callbacks. Think/Tools settings moved under Options; current values are summarized as Think mode and Tools Off/Auto/Custom.",
+      "toolAgentSemantics": "Tools Off only disables tools. It does not turn off, substitute for, or rename the logical Agent.",
+      "filesChanged": [
+        "app/src/main/java/com/localai/workspace/MainActivity.kt",
+        "app/src/main/java/com/localai/workspace/ui/ChatContent.kt",
+        "app/src/main/java/com/localai/workspace/ui/AssistantControls.kt",
+        "app/src/androidTest/java/com/localai/workspace/ui/ChatHeaderLayoutTest.kt",
+        "app/src/test/java/com/localai/workspace/ui/ChatContentUiTest.kt",
+        "app/src/test/java/com/localai/workspace/ui/ChatHeaderComposerCaptureTest.kt"
+      ]
+    },
+    "host": {
+      "focused": {
+        "status": "PASS",
+        "sourceCommit": "d0832e225f51f624c981f6b68da6193b72a78ef2",
+        "command": "Focused classes ChatContentUiTest, ChatHeaderComposerCompactCaptureTest, ChatHeaderComposerLargeFontCaptureTest",
+        "tests": 9,
+        "passed": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "exitCode": 0,
+        "log": "docs/validation/ux-02a-chat-header-composer/host/focused-exact-commit.log",
+        "xmlDirectory": "docs/validation/ux-02a-chat-header-composer/host/focused-junit/"
+      },
+      "fullJvm": {
+        "status": "PASS",
+        "tests": 741,
+        "passed": 741,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "xmlFiles": 89,
+        "xmlArchive": "docs/validation/ux-02a-chat-header-composer/host/full-jvm-xml.tar.gz",
+        "xmlSha256": "01bd629b856a6d4163633f88d1b509efe664c749699aee47b9fc50c6a2d6512b"
+      },
+      "lintDebug": {
+        "status": "PASS",
+        "errors": 0,
+        "warnings": 82,
+        "report": "docs/validation/ux-02a-chat-header-composer/host/lint-results-debug.txt"
+      },
+      "assembleDebugArm64": {
+        "status": "PASS",
+        "sourceCommit": "d0832e225f51f624c981f6b68da6193b72a78ef2",
+        "exitCode": 0,
+        "log": "docs/validation/ux-02a-chat-header-composer/host/exact-commit-arm64-assemble.log",
+        "actionableTasks": 81,
+        "executedTasks": 2,
+        "upToDateTasks": 79
+      },
+      "compileDebugAndroidTestKotlin": {
+        "status": "PASS_COMPILE_ONLY",
+        "exitCode": 0,
+        "finalGateOutcome": "UP-TO-DATE",
+        "explicitCompileAfterTestChange": "PASS in host/full-gate-before-last-adjustment.log"
+      },
+      "fullGate": {
+        "status": "PASS",
+        "command": "see docs/validation/ux-02a-chat-header-composer/host/commands.txt",
+        "startedUtc": "2026-10-12T05:47:44Z",
+        "finishedUtc": "2026-10-12T05:54:26Z",
+        "duration": "6m41s",
+        "actionableTasks": 151,
+        "executedTasks": 19,
+        "upToDateTasks": 132,
+        "log": "docs/validation/ux-02a-chat-header-composer/host/full-gate-final.log",
+        "exitCode": 0
+      },
+      "gitDiffCheck": "PASS"
+    },
+    "captures": {
+      "renderer": "Compose/Robolectric component fixture, not full MainActivity screenshot",
+      "openedAndVisuallyReviewed": true,
+      "fontScale2Assertions": "PASS in host UI tests; no additional fontScale 2 capture",
+      "files": [
+        {
+          "file": "docs/validation/ux-02a-chat-header-composer/screenshots/chat-header-composer-360dp-light-fontScale-1.0.png",
+          "dimensions": "360x800",
+          "sha256": "60a43b256f1b70dedeae1ab58536e0953b46eb62625277122eaf4feb49dac4fe"
+        },
+        {
+          "file": "docs/validation/ux-02a-chat-header-composer/screenshots/chat-header-composer-360dp-dark-fontScale-1.0.png",
+          "dimensions": "360x800",
+          "sha256": "716ed1b7b69680ce8aa213c3e3073271886be85af5b4e96ca3378e93333f08ba"
+        },
+        {
+          "file": "docs/validation/ux-02a-chat-header-composer/screenshots/chat-header-composer-411dp-light-fontScale-1.6.png",
+          "dimensions": "411x891",
+          "sha256": "03c1466ee60518fd61a30110b241f9b9317755e2cb5b85a12fd4231ef6796fde"
+        },
+        {
+          "file": "docs/validation/ux-02a-chat-header-composer/screenshots/chat-header-composer-411dp-dark-fontScale-1.6.png",
+          "dimensions": "411x891",
+          "sha256": "f4af1846b39325b5f7af5b356fb0f1486800fcd7089332f9f5ac6d5a02ba5d34"
+        }
+      ],
+      "limitations": "Robolectric fixture only; no actual keyboard/IME capture, emulator capture or physical device validation."
+    },
+    "apk": {
+      "artifactType": "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
+      "sourceCommit": "d0832e225f51f624c981f6b68da6193b72a78ef2",
+      "filename": "local-ai-workspace-0.5.0-ux02a-d0832e2-personal-qa-arm64.apk",
+      "bytes": 121801305,
+      "sha256": "c58b90d30228dbf58ce230039e44093cafbe71d6ae644d619618ed17117b6aa0",
+      "applicationId": "com.localai.workspace.debug",
+      "versionName": "0.5.0-debug",
+      "versionCode": 27,
+      "abi": "arm64-v8a only",
+      "modelsBundled": false,
+      "modelWeightFiles": 0,
+      "zipCrc": "PASS",
+      "zipalign": "PASS",
+      "apksigner": "PASS; v2",
+      "certificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
+      "buildLog": "docs/validation/ux-02a-chat-header-composer/host/exact-commit-arm64-assemble.log",
+      "verificationLog": "docs/validation/ux-02a-chat-header-composer/host/apk-validation-verified.log",
+      "driveBundle": {
+        "id": "1oEFdh3Q7_r8DjBw9Zp5mtXkNWbYXniP8",
+        "url": "https://drive.google.com/file/d/1oEFdh3Q7_r8DjBw9Zp5mtXkNWbYXniP8/view?usp=drivesdk",
+        "filename": "local-ai-workspace-0.5.0-ux02a-d0832e2-personal-qa-arm64.zip",
+        "bytes": 46262838,
+        "sha256": "b5b1225300aa576a5f54c991a5f119844fb41eabdfdb5c7ec7b48880f65d5bc1",
+        "metadataReadback": "MATCH id/name/mime/size/url/parent; ZIP was not downloaded for remote SHA recomputation"
+      }
+    },
+    "androidValidation": {
+      "HOST": "PASS for listed JVM/build/lint checks",
+      "EMULATOR": "AUTOMATIC_PUSH_RUN_IN_PROGRESS; run 38210637867 (source d0832e225f51f624c981f6b68da6193b72a78ef2); no manual dispatch; final status/XML pending.",
+      "PHYSICAL_DEVICE": "NOT_RUN",
+      "previousInstrumentedRun": "38186081844: 9 PASS, 1 Room v1 fixture FAIL, 6 model-dependent SKIPPED; historical SHA, not UX-02a validation.",
+      "roomSchemaOrTestChanged": false
+    },
+    "planIntegrity": {
+      "original97TaskPlan": "not present in tracked repository; not reconstructed or edited",
+      "M01-06": "PENDING_REQUIRES_DEVICE",
+      "idsOrderDependenciesProgressChanged": false
+    },
+    "automaticWorkflowRuns": {
+      "trigger": "push",
+      "sourceSha": "d0832e225f51f624c981f6b68da6193b72a78ef2",
+      "emulator": {
+        "runId": 38210637867,
+        "jobId": 114683767158,
+        "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38210637867",
+        "status": "IN_PROGRESS",
+        "observedStep": "Install pinned Android SDK, NDK, CMake and API 35 image"
+      },
+      "qaGate": {
+        "runId": 38210637883,
+        "jobId": 114683767175,
+        "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38210637883",
+        "status": "IN_PROGRESS",
+        "observedStep": "Waiting for exact-SHA instrumentation success",
+        "artifact": "NOT_YET_PRODUCED"
+      },
+      "dispatch": "none"
+    },
+    "ux02bOrUx03Started": false
   }
 }

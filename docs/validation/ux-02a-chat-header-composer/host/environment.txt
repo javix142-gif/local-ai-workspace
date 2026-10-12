@@ -1,0 +1,23 @@
+UX-02a host validation environment
+Source code commit: d0832e225f51f624c981f6b68da6193b72a78ef2
+Branch: feat/0.5.0-skills-agents
+OS/workspace: Linux host in /workspace
+Gradle wrapper: 8.10.2
+Gradle JAVA_HOME: Temurin OpenJDK 17.0.20.1+1 at /workspace/.toolchain/jdk-17
+Gradle test Java toolchain: Temurin OpenJDK 21.0.12.1+1 at /workspace/.toolchain/jdk-21-temurin
+Android SDK: /workspace/.toolchain/android-sdk
+Compile/target API: 35
+Build tools: 35.0.0
+NDK: 27.0.12077973
+CMake: 3.31.6
+Ninja: 1.12.1
+ADB: 37.0.1-15733141
+Build property: -Parm64Only=true
+Full gate: :app:testDebugUnitTest :app:lintDebug :app:assembleDebug :app:compileDebugAndroidTestKotlin
+Full gate started: 2026-10-12T05:47:44Z
+Full gate finished: 2026-10-12T05:54:26Z
+Full gate exit: 0
+Gradle actions: 151 actionable, 19 executed, 132 up-to-date
+JUnit reports: 89 XML files, 741 tests, 741 passed, 0 failures, 0 errors, 0 skipped
+Android instrumentation: not run; compileDebugAndroidTestKotlin only (UP-TO-DATE on final gate, compiled in the prior successful gate after the AndroidTest source change)
+Emulator/device: not used for UX-02a validation; PHYSICAL_DEVICE=NOT_RUN

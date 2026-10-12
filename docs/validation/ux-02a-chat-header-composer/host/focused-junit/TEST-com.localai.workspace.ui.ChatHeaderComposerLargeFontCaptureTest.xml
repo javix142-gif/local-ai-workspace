@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.ChatHeaderComposerLargeFontCaptureTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-12T05:36:53" hostname="05497ac86eb0" time="0.534">
+  <properties/>
+  <testcase name="capturesLightAndDarkAt411DpAndFontScale1_6" classname="com.localai.workspace.ui.ChatHeaderComposerLargeFontCaptureTest" time="0.534"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
