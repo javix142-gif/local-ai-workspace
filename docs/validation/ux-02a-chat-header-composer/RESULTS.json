@@ -1,6 +1,6 @@
 {
   "contract": "UX-02a chat header and composer",
-  "status": "HOST_PASS_PERSONAL_QA_UPLOADED_PENDING_INDEPENDENT_AUDIT",
+  "status": "HOST_PASS_EMULATOR_FAIL_ROOM_PERSONAL_QA_UPLOADED_PENDING_INDEPENDENT_AUDIT",
   "branch": "feat/0.5.0-skills-agents",
   "baseCommit": "cd7ea02bba7dbaa0d557259ac73f6ad3427b9ad6",
   "sourceCodeCommit": "d0832e225f51f624c981f6b68da6193b72a78ef2",
@@ -139,10 +139,96 @@
   },
   "android": {
     "HOST": "PASS",
-    "EMULATOR": "AUTOMATIC_PUSH_RUN_IN_PROGRESS; no manual dispatch; source SHA is d0832e225f51f624c981f6b68da6193b72a78ef2.",
+    "EMULATOR": "FAIL overall: connected instrumentation ran on API 35 x86_64; 9 pass, 1 Room v1 fixture failure, 6 real-model skips; both ChatHeader cases pass.",
     "PHYSICAL_DEVICE": "NOT_RUN",
     "previousInstrumentedRun": "38186081844: 9 PASS, 1 Room v1 fixture FAIL, 6 real-model SKIPPED; historical and not this source SHA",
-    "roomSchemaOrTestChanged": false
+    "roomSchemaOrTestChanged": false,
+    "instrumentedRun": {
+      "status": "FAIL",
+      "sourceCommit": "d0832e225f51f624c981f6b68da6193b72a78ef2",
+      "runId": 38210637867,
+      "jobId": 114683767158,
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38210637867",
+      "startedUtc": "2026-10-12T06:02:34Z",
+      "finishedUtc": "2026-10-12T06:16:28Z",
+      "connectedTask": ":app:connectedDebugAndroidTest",
+      "gradleExitCode": 1,
+      "gradleDuration": "11m 37s",
+      "device": {
+        "label": "EMULATOR",
+        "serial": "emulator-5554",
+        "model": "sdk_gphone64_x86_64",
+        "androidRelease": "15",
+        "api": 35,
+        "abi": "x86_64",
+        "screen": "1080x1920",
+        "densityDpi": 420
+      },
+      "counts": {
+        "total": 16,
+        "passed": 9,
+        "failed": 1,
+        "errors": 0,
+        "skipped": 6,
+        "executed": 10
+      },
+      "headerTests": {
+        "status": "PASS",
+        "passed": 2,
+        "tests": [
+          "ChatHeaderLayoutTest.standardFontScaleKeepsAgentTitleAndModelInsideHeader",
+          "ChatHeaderLayoutTest.largeFontScaleExpandsHeaderAndKeepsAllThreeLinesVisible"
+        ]
+      },
+      "failure": {
+        "class": "WorkspaceDatabaseMigrationTest",
+        "test": "v1ModelsAreExtendedWithoutLosingExistingRecords",
+        "reason": "Missing authentic Room test schema com.localai.workspace.data.WorkspaceDatabase/1.json; no schema or test changed."
+      },
+      "modelDependentSkipped": [
+        "LiteRtLmDeviceSmokeTest.normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole",
+        "LiteRtLmDeviceSmokeTest.cpuFirstTokenStreamingCompletionCancelRetryAndUnload",
+        "NormalChatNativeDeviceTest.plain_chat_legacy_off_real_native",
+        "NormalChatNativeDeviceTest.plain_chat_context_v1_on_real_native",
+        "NormalChatNativeDeviceTest.cancel_then_retry_real_native",
+        "NormalChatNativeDeviceTest.project_chat_context_v1_on_real_native"
+      ],
+      "artifact": {
+        "id": 11729571175,
+        "name": "android-emulator-evidence-38210637867-1",
+        "bytes": 155402,
+        "apiDigestSha256": "dd75931c08f5a6ededdb73482b0c728faefcc1719f92d4d8c7ee96da1baa9911",
+        "downloadedArtifactSha256": "dd75931c08f5a6ededdb73482b0c728faefcc1719f92d4d8c7ee96da1baa9911",
+        "manifestEntriesVerified": 33,
+        "archive": "docs/validation/ux-02a-chat-header-composer/emulator/run-38210637867-artifact.zip",
+        "xml": {
+          "archiveMember": "instrumented-xml/debug/TEST-emulator-5554 - 15-_app-.xml",
+          "sha256": "d1a64440c8e83358861357f216e79b6781804e43ca4f9eaf895a033200e9328f"
+        },
+        "gradleLogSha256": "28d9fd7018e09408dbf56d48ba34e75416268d76cca702cf6d0a5beca293e240",
+        "screenshots": [
+          {
+            "path": "docs/validation/ux-02a-chat-header-composer/emulator/screenshots/chat-header-standard.png",
+            "width": 1080,
+            "height": 1920,
+            "sha256": "b9ad8b86a24df2e96d4377912e0de011316660396331a0c81ab093633759a1b1",
+            "visuallyReviewed": true
+          },
+          {
+            "path": "docs/validation/ux-02a-chat-header-composer/emulator/screenshots/chat-header-large-font.png",
+            "width": 1080,
+            "height": 1920,
+            "sha256": "9879101d7927d9d940af58a97b619350a03a3b019e704b34d762e39ab5d4a36a",
+            "visuallyReviewed": true
+          }
+        ]
+      },
+      "collectorNotes": {
+        "postTestPackagePresence": "Collector package-list snapshot reported application and instrumentation packages absent after the test task; the XML proves the connected instrumented task ran, so this is not interpreted as proof of installation failure during execution.",
+        "overallAcceptance": "FAIL: one Room test failure, task exit 1, and collector post-test package-presence check false."
+      }
+    },
+    "physicalDevice": "NOT_RUN"
   },
   "plan": {
     "original97TaskPlan": "not present in tracked repo; not reconstructed or edited",
@@ -155,24 +241,61 @@
     "sourceSha": "d0832e225f51f624c981f6b68da6193b72a78ef2",
     "emulator": {
       "runId": 38210637867,
-      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38210637867",
       "jobId": 114683767158,
-      "status": "IN_PROGRESS",
-      "lastObservedStep": "Install pinned Android SDK, NDK, CMake and API 35 image"
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38210637867",
+      "sourceSha": "d0832e225f51f624c981f6b68da6193b72a78ef2",
+      "status": "FAIL",
+      "conclusion": "failure",
+      "connectedTask": ":app:connectedDebugAndroidTest",
+      "gradleExitCode": 1,
+      "counts": {
+        "total": 16,
+        "passed": 9,
+        "failed": 1,
+        "errors": 0,
+        "skipped": 6,
+        "executed": 10
+      },
+      "artifactId": 11729571175,
+      "artifactSha256": "dd75931c08f5a6ededdb73482b0c728faefcc1719f92d4d8c7ee96da1baa9911",
+      "retainedArchive": "docs/validation/ux-02a-chat-header-composer/emulator/run-38210637867-artifact.zip"
     },
     "qaGate": {
+      "status": "FAIL_CLOSED_NO_APK_ARTIFACT",
       "runId": 38210637883,
-      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38210637883",
       "jobId": 114683767175,
-      "status": "IN_PROGRESS",
-      "lastObservedStep": "Wait for matching Android instrumentation run to succeed",
-      "artifact": "NOT_YET_PRODUCED"
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38210637883",
+      "sourceCommit": "d0832e225f51f624c981f6b68da6193b72a78ef2",
+      "failedStep": "Wait for matching Android instrumentation run to succeed",
+      "instrumentationConclusion": "failure",
+      "jdkSetup": "SKIPPED",
+      "apkBuildAndValidation": "SKIPPED",
+      "artifactUpload": "SKIPPED",
+      "artifactProduced": false,
+      "trigger": "paired push workflow; no manual dispatch"
     }
   },
   "evidenceIntegrity": {
     "sha256Manifest": "SHA256SUMS",
-    "entries": 33,
+    "entries": 37,
     "rawTextLogs": "stored as deterministic gzip; decompression was byte-identical to original captured stdout/stderr",
-    "artifactFilesTracked": "verified against Git index before publication"
-  }
+    "artifactFilesTracked": "verified against Git index before publication",
+    "emulatorArtifact": "Downloaded from GitHub artifact API; API digest matched local SHA-256; internal 33-entry SHA256SUMS all verified."
+  },
+  "emulatorScreenshots": [
+    {
+      "path": "docs/validation/ux-02a-chat-header-composer/emulator/screenshots/chat-header-standard.png",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "b9ad8b86a24df2e96d4377912e0de011316660396331a0c81ab093633759a1b1",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "docs/validation/ux-02a-chat-header-composer/emulator/screenshots/chat-header-large-font.png",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "9879101d7927d9d940af58a97b619350a03a3b019e704b34d762e39ab5d4a36a",
+      "visuallyReviewed": true
+    }
+  ]
 }

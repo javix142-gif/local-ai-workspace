@@ -1,6 +1,6 @@
 # UX-02a — chat header and composer
 
-**Estado:** implementación host verificada; APK PERSONAL_QA entregado; pendiente de auditoría independiente. No inicia UX-02b ni UX-03.
+**Estado:** HOST PASS; UX-02a header checks PASS dentro del run de emulador; suite Android global FAIL por el fixture histórico de Room v1; APK PERSONAL_QA entregado; pendiente de auditoría independiente. No inicia UX-02b ni UX-03.
 
 ## Identidad y alcance
 
@@ -32,7 +32,7 @@ Ambiente: Linux; Gradle 8.10.2; Temurin JDK 17.0.20.1 para Gradle y Temurin JDK 
 
 El gate final tardó 6m41s: 151 tareas, 19 ejecutadas y 132 UP-TO-DATE. El archivo de salida de lint completo fue preservado. La suite completa se ejecutó sobre el mismo árbol de código posteriormente comprometido como `d0832e2`; después del commit se volvió a ejecutar la suite focalizada con el SHA explícito.
 
-Los logs originales de texto se versionan como `.log.gz`; al descomprimirlos se recuperan byte por byte las salidas originales. El manifiesto SHA-256 cubre 33 archivos de evidencia y se verifica desde el índice y árbol del commit.
+Los logs originales de texto se versionan como `.log.gz`; al descomprimirlos se recuperan byte por byte las salidas originales. El manifiesto SHA-256 cubre 37 archivos versionados después de añadir los resultados del run de emulador y se verificará contra el árbol publicado.
 
 Los intentos previos también están preservados: una invocación inicial no llegó a ejecutar tests porque la instalación Java 21 del host no tenía `javac`; un gate inicial detectó una referencia antigua al helper de altura en el nuevo AndroidTest. La referencia se corrigió y el gate final pasó. La validación inicial del APK se interrumpió por SIGPIPE del comando `aapt | head`; el verificador completo posterior no trunca la salida y pasó. Véanse los logs `focused-first.log.gz`, `full-gate.log.gz`, `apk-validation.log.gz` y `apk-validation-final.log.gz`; no se cuentan como PASS.
 
@@ -65,9 +65,11 @@ Log de build y verificaciones: [`host/exact-commit-arm64-assemble.log.gz`](host/
 ## Android y estado del trabajo
 
 - `HOST`: PASS según las pruebas y builds enumerados.
-- `EMULATOR`: no se ejecutó instrumentación UX-02a. La compilación del test APK/Kotlin no equivale a correr tests en Android. La workflow automática del push se debe revisar por SHA antes de clasificarla; no se hizo dispatch manual.
+- `EMULATOR`: la ejecución automática [38210637867](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38210637867), source SHA `d0832e225f51f624c981f6b68da6193b72a78ef2`, sí arrancó AVD API 35 x86_64/ADB y ejecutó `:app:connectedDebugAndroidTest`. Resultado global **FAIL**: 16 casos, 9 PASS, 1 FAIL, 0 errors, 6 SKIPPED; 10 ejecutados. Las dos pruebas ChatHeader de fontScale normal y grande pasaron y sus capturas del emulador se validaron visualmente. El único caso fallido es la prueba de migración Room que requiere el esquema histórico auténtico `WorkspaceDatabase/1.json`; los seis skips dependen de modelos reales. Evidencia original, XML, logs, screenshots y hashes: [resultados del run](emulator/RESULTS.md) y [ZIP íntegro del artifact](emulator/run-38210637867-artifact.zip). El artifact de GitHub `11729571175` tiene 155,402 bytes y SHA-256 `dd75931c08f5a6ededdb73482b0c728faefcc1719f92d4d8c7ee96da1baa9911`; los 33 archivos de su manifiesto interno verifican. No se cambió la prueba ni el esquema Room.
+- El gate automático de APK [38210637883](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38210637883), mismo SHA, terminó FAIL al esperar el éxito instrumentado; setup de JDK, build/verificación y upload quedaron SKIPPED y el run no produjo artifact. Esto no afecta el APK PERSONAL_QA compilado localmente y ya entregado por Drive, que es un artefacto separado.
+- El resumen del run informa que el sondeo post-test encontró ausentes los packages de aplicación/test. Ese estado posterior no contradice que la tarea conectada produjo XML y ejecutó los tests; se conserva como dato del collector y no como evidencia de que la instalación hubiera fallado durante la ejecución.
 - `PHYSICAL_DEVICE`: `NOT_RUN`; no se afirma validación en Motorola Moto G86 Power.
-- El último resultado instrumentado conocido, anterior a UX-02a, sigue siendo 9 PASS, un FAIL por fixture Room v1 ausente y seis SKIPPED por modelos reales ausentes. No se editó Room ni ese test.
+- La prueba Room v1 sigue bloqueada por ausencia de fixture auténtica (`ENVIRONMENT_UNAVAILABLE`); no se inventó schema ni se debilitó el test. Los seis casos dependientes de modelos siguen SKIPPED; no se descargaron ni simularon modelos.
 - La auditoría de UX-01 permanece aceptada. El plan original de 97 tareas no está versionado, no se reconstruyó ni se modificó; M01-06 continúa `PENDING_REQUIRES_DEVICE`.
 
 UX-02a termina aquí para auditoría independiente. UX-02b y UX-03 no se iniciaron.

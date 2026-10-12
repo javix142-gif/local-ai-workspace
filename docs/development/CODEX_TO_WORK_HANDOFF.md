@@ -1,6 +1,6 @@
 # Latest contract: UX-02a chat header and composer (2026-10-12)
 
-**Status:** host validation and personal QA artifact complete; pending independent audit. Stop here; UX-02b/UX-03 have not started.
+**Status:** HOST PASS; exact-SHA emulator instrumentation executed and is FAIL overall on the unresolved historical Room v1 fixture; both ChatHeader emulator tests pass; personal QA APK is delivered; pending independent audit. Stop here; UX-02b/UX-03 have not started.
 
 ## Baseline and accepted UX-01
 
@@ -20,7 +20,9 @@ Persistent Think/Tools chips are now behind one `Options` action. The selected m
 - Focused Compose/Robolectric host tests on that SHA: 9/9 PASS, 0 fail/error/skip.
 - Full app JVM suite: 741/741 PASS from 89 XML files. `lintDebug`: PASS, 0 errors and 82 warnings. `assembleDebug -Parm64Only=true`: PASS. `compileDebugAndroidTestKotlin`: PASS as compile-only; it was UP-TO-DATE in the final gate and compiled in the prior successful gate after the AndroidTest changes. Gate details, commands, toolchain, XML archive, logs, and checksums are in [UX-02a results](../validation/ux-02a-chat-header-composer/RESULTS.md).
 - Four Robolectric component-fixture captures at 360dp/1.0 and 411dp/1.6 in light/dark were reopened and visually reviewed. All show the three header lines and composer. They are not full-app, keyboard-visible, emulator, or Motorola captures. Host assertions cover fontScale 2.0.
-- The separate Android `ChatHeaderLayoutTest` retains three `assertIsDisplayed` checks, long title/model text, wrapping and bounds assertions, inset diagnostics and model-before-body order. It was compiled only; no instrumented run was performed for UX-02a. The historical instrumented result remains 9 PASS, Room-v1 fixture FAIL, and six model-dependent SKIPPED on its recorded older SHA. No Room test/schema was changed.
+- The Android `ChatHeaderLayoutTest` retains three `assertIsDisplayed` checks, long title/model text, wrapping and bounds assertions, inset diagnostics and model-before-body order. The exact-source API 35 x86_64 instrumented run later executed it: both standard and large-font tests PASS. The complete XML is 16 total: 9 passed, 1 failed, 0 errors, 6 skipped; 10 executed. The single failure is unchanged `WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords` because authentic `WorkspaceDatabase/1.json` is unavailable. Two LiteRT and four Gemma model-dependent tests remain skipped. No Room test/schema was changed.
+- The push-triggered emulator run [38210637867](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38210637867), job `114683767158`, used source SHA `d0832e225f51f624c981f6b68da6193b72a78ef2`; AVD/ADB were API 35, x86_64, `emulator-5554`. `:app:connectedDebugAndroidTest` ran and exited 1 due to the Room fixture failure. Both original 1080×1920 screenshots were captured, opened and visually reviewed; they show the agent, long conversation title and model at normal and large font settings. The exact Actions archive and extracted XML/PNGs are retained in [emulator evidence](../validation/ux-02a-chat-header-composer/emulator/RESULTS.md); artifact ID `11729571175`, 155,402 bytes, SHA-256 `dd75931c08f5a6ededdb73482b0c728faefcc1719f92d4d8c7ee96da1baa9911`; all 33 archive manifest entries verified.
+- The paired same-SHA QA gate [38210637883](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38210637883), job `114683767175`, failed closed at the wait-for-instrumentation-success step. APK build and artifact upload were skipped and this run produced no artifact. The separately assembled and Drive-uploaded personal QA APK above is not a product of this workflow run.
 
 ## Personal QA APK
 
@@ -31,7 +33,8 @@ Download: [PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION](https://drive.google.com/
 ## Layered status and next action
 
 - `HOST`: PASS as listed above.
-- `EMULATOR`: the code push automatically started API35 run [38210637867](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38210637867) for exact source SHA `d0832e225f51f624c981f6b68da6193b72a78ef2`; at last read it was installing the SDK, so no instrumentation result/XML is yet available. No manual dispatch was made. The paired fail-closed QA workflow [38210637883](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38210637883) is waiting for that exact-SHA run; no artifact has been produced yet. Both runs will be audited by step outcomes and XML before finalizing evidence. A compiled AndroidTest is not a test PASS.
+- `EMULATOR`: **FAIL overall** for run [38210637867](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38210637867); connected instrumentation executed 16 cases with 9 PASS, 1 Room v1 fixture FAIL, 0 errors and 6 model-dependent SKIPPED. Both ChatHeader tests and their emulator screenshots pass within this failed overall suite. Exact artifact, XML, logs and screenshots are in [the run evidence](../validation/ux-02a-chat-header-composer/emulator/RESULTS.md).
+- Paired QA gate [38210637883](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38210637883) failed closed; it did not build/upload an APK. The separate PERSONAL_QA APK and Drive link above remain the delivered binary.
 - `PHYSICAL_DEVICE`: `NOT_RUN`; no Motorola claim.
 - `M01-06`: `PENDING_REQUIRES_DEVICE`; original 97-task plan/IDs/order/dependencies remain unchanged.
 - Wait for independent audit. Do not begin UX-02b/UX-03 in this delivery.
