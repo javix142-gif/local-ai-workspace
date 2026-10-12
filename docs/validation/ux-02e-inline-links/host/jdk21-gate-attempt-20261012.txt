@@ -1,0 +1,23 @@
+UX-02e explicit-JDK recovery gate attempt
+Attempt date: 2026-10-12
+Source code SHA: a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+Checkout: detached Git worktree /workspace/ux02e-a182-checkout at exact source SHA
+Checkout preflight before command: git status --porcelain=v1 --ignored was empty; .gradle/, app/build/, llama-runtime/build/, .cxx/, and local.properties absent (fresh worktree).
+JDK preflight: passed; see jdk21-preflight-20261012.txt.
+SDK/NDK preflight: passed; existing SDK and exact NDK 27.0.12077973; no install/download.
+Started UTC: 2026-10-12T13:33:30Z
+Finished UTC: 2026-10-12T13:34:01Z
+Duration: 31 seconds
+Exit code: 1
+Gradle tasks started: 0 (no task execution lines in --info log)
+JUnit XML emitted in detached checkout: 0 files. No current-run XML is included; ignored XML under the main checkout predates this attempt and was not counted.
+Classification: BLOCKED_JAVA_TOOLCHAIN_VERSION_MISMATCH_BEFORE_TASKS. Java 21 and its compiler were available, but Gradle task configuration requires a matching Java 17 toolchain for :litert-compat:compileDebugJavaWithJavac. No locally installed matching toolchain was selected for this invocation and toolchain download repositories are not configured. This is an environment/toolchain blocker, not a product test result.
+No retry, install, cleanup, APK, emulator, or device action was performed.
+
+Gradle command:
+JAVA_HOME=/workspace/.toolchain/jdk-21-temurin PATH=/workspace/.toolchain/jdk-21-temurin/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --info --rerun-tasks :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin
+
+Shell capture wrapper (exit captured from the Gradle side of the pipeline):
+set -o pipefail; JAVA_HOME=/workspace/.toolchain/jdk-21-temurin PATH=/workspace/.toolchain/jdk-21-temurin/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --info --rerun-tasks :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin 2>&1 | tee /tmp/ux02e-a182-gradle-host.log; RESULT=${PIPESTATUS[0]}
+
+Full Gradle output: jdk21-gate-attempt-20261012.log.gz

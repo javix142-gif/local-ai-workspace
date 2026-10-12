@@ -1,0 +1,53 @@
+{
+  "recordedAtUtc": "2026-10-12T13:34:01Z",
+  "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+  "checkout": {
+    "path": "/workspace/ux02e-a182-checkout",
+    "kind": "detached Git worktree",
+    "headExact": true,
+    "preRunStatusIncludingIgnored": "CLEAN",
+    "buildOutputsAndLocalPropertiesAbsentBeforeRun": true
+  },
+  "host": "Linux x86_64",
+  "java": {
+    "javaHome": "/workspace/.toolchain/jdk-21-temurin",
+    "javaVersion": "21.0.12.1 Temurin",
+    "javacVersion": "21.0.12.1",
+    "jdkCompilerModule": "jdk.compiler@21.0.12.1",
+    "toolProviderCompilerAvailable": true
+  },
+  "android": {
+    "sdkRoot": "/workspace/.toolchain/android-sdk",
+    "platform": "android-35",
+    "buildTools": "35.0.0",
+    "ndkPath": "/workspace/.toolchain/android-sdk/ndk/27.0.12077973",
+    "ndkRevision": "27.0.12077973",
+    "ndkSourcePropertiesPresent": true,
+    "cmake": "3.31.6"
+  },
+  "gradleWrapper": "8.10.2",
+  "mode": "offline; existing Gradle user cache; no package downloads requested",
+  "requiredGradleJavaToolchain": 17,
+  "requestedTasks": [
+    ":app:testDebugUnitTest",
+    ":litert-compat:testDebugUnitTest",
+    ":app:lintDebug",
+    ":app:compileDebugAndroidTestKotlin"
+  ],
+  "startUtc": "2026-10-12T13:33:30Z",
+  "endUtc": "2026-10-12T13:34:01Z",
+  "durationSeconds": 31,
+  "exitCode": 1,
+  "tasksStarted": 0,
+  "junitXmlFiles": 0,
+  "classification": "BLOCKED_JAVA_TOOLCHAIN_VERSION_MISMATCH_BEFORE_TASKS",
+  "reason": "The selected complete JDK 21 exposes JavaCompiler, but Gradle requires a Java 17 toolchain for :litert-compat:compileDebugJavaWithJavac and did not find a matching Java 17 installation for this invocation.",
+  "retryPerformed": false,
+  "apkGenerated": false,
+  "emulatorOrDeviceUsed": false,
+  "gradleLog": "jdk21-gate-attempt-20261012.log.gz",
+  "preflightEvidence": "jdk21-preflight-20261012.txt",
+  "xmlInventory": "jdk21-xml-inventory-20261012.txt",
+  "gradleUserHome": "/home/agent/.gradle (default pre-existing user cache; gate was offline)",
+  "workspaceFreeKilobytesAtStart": 2167392
+}

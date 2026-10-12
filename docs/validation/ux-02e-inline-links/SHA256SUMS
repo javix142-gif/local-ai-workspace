@@ -1,8 +1,13 @@
-6d4562815f3cb4989ae5ddbc2a429f64f3e47fd4f71625bbf9345dc98e9af9c0  docs/validation/ux-02e-inline-links/RESULTS.json
-791964e617f1399dc8d9b39d7493da0f3e4a9160c47b67f58d9f4195ff9fa988  docs/validation/ux-02e-inline-links/RESULTS.md
+b3adee3cf5a755b486a33f0331c3e19c01aa8d316eb3bbab22596b4d0c65d10b  docs/validation/ux-02e-inline-links/RESULTS.json
+22dbc8ecefe0130a84e0d824317bb017a346fdd42fbd898ebc74601097cc3482  docs/validation/ux-02e-inline-links/RESULTS.md
 71c2396e7fbc9b11ecc7ed118076b8a2dc93d7c23bf09021448315057ba8c995  docs/validation/ux-02e-inline-links/host/commands.txt
 b48bbb6d0f92726e6ec93923fdc392117ce873c0de006a00d04291d860dcbac0  docs/validation/ux-02e-inline-links/host/environment.txt
 b0bbca85bb659360710a6009c2010319a8fb5fe9ef979dbf7bb5ed79aefd402d  docs/validation/ux-02e-inline-links/host/gradle-proportional-gate.log.gz
+6fe8e6b21a8d9188e62a91117a84419fd172cbe0365cc4e2b40a269780bcd4ef  docs/validation/ux-02e-inline-links/host/jdk21-environment-20261012.json
+7caf158c0292a933e646a20f59a80b4f6449d41f879c830031a8de81ee38c93f  docs/validation/ux-02e-inline-links/host/jdk21-gate-attempt-20261012.log.gz
+b52763be773c07c9ffeadf00e65854ffb58d39c051a966d39b976a3addb9c253  docs/validation/ux-02e-inline-links/host/jdk21-gate-attempt-20261012.txt
+2f56ad16819e72ba08e208bd964611779436c278a0899112649c8ea9c4eb191e  docs/validation/ux-02e-inline-links/host/jdk21-preflight-20261012.txt
+f023b4762c3525eb4284527a7b1e0652ca26ab2e1ae132856cb24547dcb1ef21  docs/validation/ux-02e-inline-links/host/jdk21-xml-inventory-20261012.txt
 b2a3436e87d374aee844e84d800da87ca2c1b154d8e5e0cd27e621f934847250  docs/validation/ux-02e-inline-links/host/parser-standalone.log.gz
 d6f1351541551e1afe668359e9f9cf1589e204c8dc3403d9c939c141f16016e3  docs/validation/ux-02e-inline-links/host/recovery-environment.txt
 7d17837dd862aad525d5219264e3087a595dbeb219fe3cba93e1b7f9d8215c29  docs/validation/ux-02e-inline-links/host/recovery-gradle-gate.log.gz

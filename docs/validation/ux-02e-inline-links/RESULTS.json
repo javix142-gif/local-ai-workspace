@@ -40,37 +40,96 @@
       "xml": "NOT_EMITTED_BY_STANDALONE_RUNNER"
     },
     "androidGradleGate": {
-      "status": "BLOCKED_ENVIRONMENT_JAVA_COMPILER_BEFORE_TASKS",
-      "command": "ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin",
+      "status": "BLOCKED_JAVA_TOOLCHAIN_VERSION_MISMATCH_BEFORE_TASKS",
+      "command": "JAVA_HOME=/workspace/.toolchain/jdk-21-temurin PATH=/workspace/.toolchain/jdk-21-temurin/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --info --rerun-tasks :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin",
       "exitCode": 1,
+      "startedAtUtc": "2026-10-12T13:33:30Z",
+      "finishedAtUtc": "2026-10-12T13:34:01Z",
+      "durationSeconds": 31,
       "tasksStarted": 0,
-      "cause": "The existing exact SDK/NDK was valid, but Gradle selected /usr/lib/jvm/java-21-openjdk-amd64 without JAVA_COMPILER; javac was absent from PATH, so task graph calculation failed before tasks.",
+      "reason": "The explicit complete Temurin JDK 21 exposes JavaCompiler, but Gradle task configuration requires languageVersion=17 for :litert-compat:compileDebugJavaWithJavac. Gradle reported no locally installed Java 17 toolchain matching this invocation; toolchain download repositories are not configured.",
+      "classification": "ENVIRONMENT_TOOLCHAIN_MISMATCH_NOT_PRODUCT_FAILURE",
       "jvmTests": "NOT_RUN",
       "composeUiTests": "NOT_RUN",
       "compatTests": "NOT_RUN",
       "lintDebug": "NOT_RUN",
       "compileDebugAndroidTestKotlin": "NOT_RUN",
       "junitXml": "NOT_GENERATED_TASK_GRAPH_FAILURE",
-      "log": "host/recovery-gradle-gate.log.gz",
+      "xmlFiles": 0,
+      "executedTests": 0,
+      "log": "host/jdk21-gate-attempt-20261012.log.gz",
+      "rawLogBytes": 111204,
+      "rawLogSha256": "b1d0eda3ce23eb027c0be53c2a2115b920e5d8141fb121bf01edf5c0934a630f",
+      "compressedLogSha256": "7caf158c0292a933e646a20f59a80b4f6449d41f879c830031a8de81ee38c93f",
+      "preflight": "host/jdk21-preflight-20261012.txt",
+      "environmentEvidence": "host/jdk21-environment-20261012.json",
+      "xmlInventory": "host/jdk21-xml-inventory-20261012.txt",
+      "verificationCheckout": {
+        "path": "/workspace/ux02e-a182-checkout",
+        "kind": "detached worktree",
+        "head": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+        "cleanBeforeRunIncludingIgnored": true,
+        "buildOutputsAbsentBeforeRun": true
+      },
+      "java": {
+        "javaHome": "/workspace/.toolchain/jdk-21-temurin",
+        "javaVersion": "21.0.12.1",
+        "javacVersion": "21.0.12.1",
+        "javaCompilerAvailable": true,
+        "requiredGradleToolchain": 17,
+        "toolchainMatch": "NOT_FOUND_BY_GRADLE",
+        "toolchainDownloadConfigured": false
+      },
       "sdkRoot": "/workspace/.toolchain/android-sdk",
       "ndkRevision": "27.0.12077973",
       "ndkSourcePropertiesExists": true,
-      "javaSelected": "OpenJDK Runtime Environment 21.0.12.1 at /usr/lib/jvm/java-21-openjdk-amd64; javac absent",
-      "preinstalledJdkExecutablesFoundAfterFailure": [
-        "/workspace/.toolchain/jdk-21-temurin/bin/javac",
-        "/workspace/.toolchain/jdk-17/bin/javac"
-      ],
-      "oneAttemptScope": "No second invocation was made using a different JAVA_HOME.",
-      "executedTests": 0,
-      "environmentEvidence": "host/recovery-environment.txt",
-      "priorAttempt": {
-        "status": "BLOCKED_INCOMPLETE_TEMPORARY_NDK",
-        "sdkRoot": "/workspace/android-sdk-ux02e",
-        "reason": "source.properties was absent after sdkmanager reported no space left on device",
-        "log": "host/gradle-proportional-gate.log.gz"
-      }
+      "retryPerformed": false,
+      "apkGenerated": false,
+      "previousAttempt": {
+        "status": "BLOCKED_ENVIRONMENT_JAVA_COMPILER_BEFORE_TASKS",
+        "exitCode": 1,
+        "tasksStarted": 0,
+        "reason": "The earlier invocation selected the system OpenJDK runtime without JAVA_COMPILER; this is historical and superseded by the explicit-JDK21 attempt.",
+        "log": "host/recovery-gradle-gate.log.gz",
+        "codeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+        "verificationHead": "720099451426e4ecc98d338f74ed52c33f31be24"
+      },
+      "captureWrapper": "set -o pipefail; JAVA_HOME=/workspace/.toolchain/jdk-21-temurin PATH=/workspace/.toolchain/jdk-21-temurin/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --info --rerun-tasks :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin 2>&1 | tee /tmp/ux02e-a182-gradle-host.log; RESULT=${PIPESTATUS[0]}"
     },
-    "composeUriAndCopyTests": "AUTHORED_NOT_RUN_DUE_TO_GRADLE_CONFIGURATION_BLOCK"
+    "composeUriAndCopyTests": "AUTHORED_NOT_RUN_DUE_TO_GRADLE_CONFIGURATION_BLOCK",
+    "androidGradleGateHistory": [
+      {
+        "status": "BLOCKED_ENVIRONMENT_JAVA_COMPILER_BEFORE_TASKS",
+        "command": "ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin",
+        "exitCode": 1,
+        "tasksStarted": 0,
+        "cause": "The existing exact SDK/NDK was valid, but Gradle selected /usr/lib/jvm/java-21-openjdk-amd64 without JAVA_COMPILER; javac was absent from PATH, so task graph calculation failed before tasks.",
+        "jvmTests": "NOT_RUN",
+        "composeUiTests": "NOT_RUN",
+        "compatTests": "NOT_RUN",
+        "lintDebug": "NOT_RUN",
+        "compileDebugAndroidTestKotlin": "NOT_RUN",
+        "junitXml": "NOT_GENERATED_TASK_GRAPH_FAILURE",
+        "log": "host/recovery-gradle-gate.log.gz",
+        "sdkRoot": "/workspace/.toolchain/android-sdk",
+        "ndkRevision": "27.0.12077973",
+        "ndkSourcePropertiesExists": true,
+        "javaSelected": "OpenJDK Runtime Environment 21.0.12.1 at /usr/lib/jvm/java-21-openjdk-amd64; javac absent",
+        "preinstalledJdkExecutablesFoundAfterFailure": [
+          "/workspace/.toolchain/jdk-21-temurin/bin/javac",
+          "/workspace/.toolchain/jdk-17/bin/javac"
+        ],
+        "oneAttemptScope": "No second invocation was made using a different JAVA_HOME.",
+        "executedTests": 0,
+        "environmentEvidence": "host/recovery-environment.txt",
+        "priorAttempt": {
+          "status": "BLOCKED_INCOMPLETE_TEMPORARY_NDK",
+          "sdkRoot": "/workspace/android-sdk-ux02e",
+          "reason": "source.properties was absent after sdkmanager reported no space left on device",
+          "log": "host/gradle-proportional-gate.log.gz"
+        }
+      }
+    ]
   },
   "environment": {
     "os": "Linux x86_64",
@@ -83,16 +142,24 @@
     "cmake": "3.31.6",
     "androidSdkRootRecovery": "/workspace/.toolchain/android-sdk",
     "androidNdkRecovery": "27.0.12077973 complete; source.properties and expected toolchain executables present",
-    "javaSelectedForRecovery": "OpenJDK Runtime Environment 21.0.12.1 at /usr/lib/jvm/java-21-openjdk-amd64; no JAVA_COMPILER",
+    "javaSelectedForRecovery": "Temurin JDK 21.0.12.1 at /workspace/.toolchain/jdk-21-temurin; javac and ToolProvider JavaCompiler available.",
     "fullJdkExecutablesFoundAfterFailure": [
       "/workspace/.toolchain/jdk-21-temurin/bin/javac",
       "/workspace/.toolchain/jdk-17/bin/javac"
     ],
-    "freeDiskBeforeRecovery": "2.2G /workspace; 976M /tmp"
+    "freeDiskBeforeRecovery": "2.2G /workspace; 976M /tmp",
+    "gradleRequiredJavaToolchain": "17; Gradle did not discover/select a matching Java 17 toolchain for this invocation; this is distinct from JavaCompiler availability in the selected JDK 21.",
+    "javaCompilerPreflight": {
+      "java": "21.0.12.1",
+      "javac": "21.0.12.1",
+      "jdkCompilerModule": "jdk.compiler@21.0.12.1",
+      "toolProviderAvailable": true
+    },
+    "priorRecoveryJava": "System OpenJDK runtime at /usr/lib/jvm/java-21-openjdk-amd64; no javac, in the preceding attempt."
   },
   "validationLayers": {
-    "HOST": "PARTIAL: standalone parser JUnit 20/20 PASS; the single recovery Gradle gate blocked before tasks because selected Java runtime lacked JAVA_COMPILER; not a full HOST PASS.",
-    "EMULATOR": "NOT_RUN for UX-02e; no workflow was dispatched. Historical global result remains FAIL on authentic Room v1 fixture with six model-dependent skips.",
+    "HOST": "PARTIAL: parser standalone 20/20 PASS; the latest single Gradle gate attempt failed before task execution because the requested complete JDK 21 does not satisfy the Gradle Java 17 toolchain requirement. Zero Gradle tests/tasks and zero XML; not a full HOST PASS.",
+    "EMULATOR": "NOT_RUN for UX-02e; no workflow was dispatched. The historical global result remains FAIL on the authentic Room v1 fixture with six model-dependent SKIPPED.",
     "PHYSICAL_DEVICE": "NOT_RUN",
     "APK": "NOT_GENERATED",
     "talkBackDeviceCheck": "NOT_RUN"
@@ -110,17 +177,52 @@
   },
   "evidence": {
     "directory": "docs/validation/ux-02e-inline-links",
-    "manifest": "docs/validation/ux-02e-inline-links/SHA256SUMS"
+    "manifest": "docs/validation/ux-02e-inline-links/SHA256SUMS",
+    "latestAttemptLog": "host/jdk21-gate-attempt-20261012.log.gz",
+    "latestAttemptEnvironment": "host/jdk21-environment-20261012.json",
+    "latestAttemptPreflight": "host/jdk21-preflight-20261012.txt",
+    "latestAttemptXmlInventory": "host/jdk21-xml-inventory-20261012.txt",
+    "latestAttemptRawLogSha256": "b1d0eda3ce23eb027c0be53c2a2115b920e5d8141fb121bf01edf5c0934a630f",
+    "latestAttemptCompressedLogSha256": "7caf158c0292a933e646a20f59a80b4f6449d41f879c830031a8de81ee38c93f",
+    "latestAttemptXmlFiles": 0,
+    "manifestPolicy": "SHA256SUMS excludes itself to avoid recursive hashing; current manifest SHA is recorded in EXECUTION_STATE."
   },
   "publication": {
     "codeCommit": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
-    "branch": "feat/0.5.0-skills-agents"
+    "branch": "feat/0.5.0-skills-agents",
+    "localBranchHeadAtAttemptStart": "24439fe1ef0f0fce9103c8beb4797ff4e9daddc8",
+    "remoteHeadObservedAfterAttempt": "69f1dd0d0afdb3b773faced22f496e4bce47722c",
+    "remoteAdvanceSinceAttemptStart": [
+      "60511db docs(ux): record pending UX-02e host gate recovery",
+      "69f1dd0 docs(ux): record blocked executor access for host gate"
+    ],
+    "remoteAdvanceScope": "documentation only; fast-forwarded before this evidence update",
+    "main": "de615b772cf37a99e7e08a647c59607b271de606",
+    "peeledV042": "de615b772cf37a99e7e08a647c59607b271de606",
+    "forcePush": false,
+    "merge": false
   },
-  "status": "IMPLEMENTED_PARSER_CHECK_ONLY_GRADLE_GATE_BLOCKED_ENVIRONMENT_CONFIGURATION",
-  "next": "UX-02e remains pending independent audit; the single recovery gate attempt is exhausted. Do not begin UX-02f or UX-03.",
+  "status": "IMPLEMENTED_PARSER_PASS_GRADLE_GATE_BLOCKED_JAVA17_TOOLCHAIN_MISMATCH",
+  "next": "The one explicit JDK 21 recovery attempt is complete and blocked by the Java 17 toolchain requirement before tasks. Keep UX-02e unaccepted; stop for independent audit/new authorization. Do not retry or start UX-02f/UX-03 within this contract.",
   "recoveryWorkflowCheck": {
     "androidEmulatorWorkflow": ".github/workflows/android-emulator-instrumented.yml reviewed; not dispatched or triggered",
     "qaArm64Workflow": ".github/workflows/qa-debug-arm64-apk.yml reviewed; not dispatched or triggered",
     "reason": "The recovery changed documentation/evidence only; no app or workflow paths changed."
-  }
+  },
+  "pendingRecovery": {
+    "status": "COMPLETED_BLOCKED_JAVA17_TOOLCHAIN_MISMATCH",
+    "codeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+    "verificationCheckoutHead": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+    "attemptedAtUtc": "2026-10-12T13:33:30Z",
+    "javaHome": "/workspace/.toolchain/jdk-21-temurin",
+    "javaCompilerPreflight": "PASS",
+    "gateExitCode": 1,
+    "tasksStarted": 0,
+    "xmlFiles": 0,
+    "cause": "Gradle requires Java 17 for :litert-compat:compileDebugJavaWithJavac; selected JDK 21 does not match and toolchain downloads are not configured.",
+    "evidence": "docs/validation/ux-02e-inline-links/host/jdk21-gate-attempt-20261012.log.gz",
+    "retryPerformed": false,
+    "next": "Stop for independent audit/new user authorization. No additional Gradle attempt is part of this contract; keep UX-02e unaccepted."
+  },
+  "nextRecommendedTask": "UX-02e remains unaccepted: parser-only standalone check is 20/20 PASS; the single authorized explicit-JDK21 Gradle recovery attempt failed before tasks because Gradle requires Java 17. Zero Gradle tests/XML. Stop for independent audit/new authorization; no retry or UX-02f/UX-03 in this contract."
 }

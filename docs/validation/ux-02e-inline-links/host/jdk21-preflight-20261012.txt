@@ -1,0 +1,13 @@
+Read-only JDK preflight for the single UX-02e host-gate attempt
+Recorded: 2026-10-12 UTC, before Gradle invocation
+JDK_HOME=/workspace/.toolchain/jdk-21-temurin
+java=/workspace/.toolchain/jdk-21-temurin/bin/java (executable)
+java -version: openjdk version "21.0.12.1" 2026-08-18 LTS
+javac=/workspace/.toolchain/jdk-21-temurin/bin/javac (executable)
+javac -version: javac 21.0.12.1
+Compiler module: jdk.compiler@21.0.12.1
+ToolProvider.getSystemJavaCompiler() != null: true
+SDK=/workspace/.toolchain/android-sdk
+NDK=/workspace/.toolchain/android-sdk/ndk/27.0.12077973
+NDK source.properties: present; Pkg.Revision=27.0.12077973; Pkg.BaseRevision=27.0.12077973; Pkg.ReleaseName=r27
+No package installation or download was performed.

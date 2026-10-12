@@ -1,0 +1,6 @@
+Source SHA: a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+Checkout: /workspace/ux02e-a182-checkout
+Command: find app/build/test-results litert-compat/build/test-results -type f -name 'TEST-*.xml'
+Result after the gate: no matching JUnit XML files in the detached checkout (0 files).
+Reason: Gradle failed during task dependency/toolchain calculation before any requested task started.
+Existing ignored XML in /workspace/local-ai-workspace is from prior work and is not evidence for this run; none is included here.
