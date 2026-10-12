@@ -1,0 +1,9 @@
+OS: Linux x86_64
+JVM: OpenJDK 21.0.12.1 (2026-08-18)
+Gradle: wrapper 8.10.2
+SDK root used for final Gradle gate: /workspace/android-sdk-ux02e
+Installed SDK packages: platforms;android-35, build-tools;35.0.0
+Required NDK: 27.0.12077973; incomplete, missing source.properties
+CMake: 3.31.6 installed; no native build task was reached
+Gradle dependency mode: --offline, existing Gradle cache
+Emulator/device: not used

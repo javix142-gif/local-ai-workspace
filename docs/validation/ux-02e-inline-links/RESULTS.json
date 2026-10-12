@@ -1,0 +1,94 @@
+{
+  "name": "UX-02e inline Markdown links in chat",
+  "branch": "feat/0.5.0-skills-agents",
+  "baseRemoteHead": "fca3e65b16c5d54ef30747c4c90c13608e520499",
+  "codeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+  "implementation": {
+    "syntax": "[label](URL)",
+    "schemes": [
+      "http",
+      "https"
+    ],
+    "presentation": "Compose LinkAnnotation.Url, theme primary color, underline",
+    "activation": "System UriHandler on explicit activation only",
+    "malformedAndDisallowed": "Literal; malformed outer token is not rescanned for nested active links",
+    "codeHtmlImages": "Code/fences bypass; image syntax and HTML tags remain literal",
+    "tables": "Link parsing disabled for table cells",
+    "responseCopy": "Original response content passed unchanged to the tested copy action",
+    "dependenciesChanged": false
+  },
+  "files": [
+    "app/src/main/java/com/localai/workspace/ui/BasicMarkdown.kt",
+    "app/src/main/java/com/localai/workspace/ui/ChatContent.kt",
+    "app/src/main/java/com/localai/workspace/MainActivity.kt",
+    "app/src/test/java/com/localai/workspace/ui/BasicMarkdownTest.kt",
+    "app/src/test/java/com/localai/workspace/ui/ChatContentUiTest.kt"
+  ],
+  "checks": {
+    "standaloneParser": {
+      "status": "PASS_SUPPLEMENTAL_ONLY",
+      "command": "python3 docs/validation/ux-02e-inline-links/host/standalone-parser-check.py",
+      "compiler": "Kotlin 2.0.21",
+      "junit": "4.13.2",
+      "tests": 20,
+      "passed": 20,
+      "failed": 0,
+      "skipped": 0,
+      "compileExitCode": 0,
+      "testExitCode": 0,
+      "log": "host/parser-standalone.log.gz",
+      "xml": "NOT_EMITTED_BY_STANDALONE_RUNNER"
+    },
+    "androidGradleGate": {
+      "status": "BLOCKED_INFRASTRUCTURE_BEFORE_TASKS",
+      "command": "ANDROID_HOME=/workspace/android-sdk-ux02e ANDROID_SDK_ROOT=/workspace/android-sdk-ux02e ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin",
+      "exitCode": 1,
+      "tasksStarted": 0,
+      "cause": "AGP rejected the incomplete NDK 27.0.12077973 because source.properties is missing; SDK manager had reported no space left on device.",
+      "jvmTests": "NOT_RUN",
+      "composeUiTests": "NOT_RUN",
+      "compatTests": "NOT_RUN",
+      "lintDebug": "NOT_RUN",
+      "compileDebugAndroidTestKotlin": "NOT_RUN",
+      "junitXml": "NOT_GENERATED",
+      "log": "host/gradle-proportional-gate.log.gz"
+    },
+    "composeUriAndCopyTests": "AUTHORED_NOT_RUN_DUE_TO_GRADLE_CONFIGURATION_BLOCK"
+  },
+  "environment": {
+    "os": "Linux x86_64",
+    "java": "OpenJDK 21.0.12.1",
+    "gradleWrapper": "8.10.2",
+    "androidPlatform": "API 35",
+    "androidBuildTools": "35.0.0",
+    "androidNdk": "27.0.12077973 unavailable/incomplete",
+    "gradleMode": "offline with existing Gradle cache",
+    "cmake": "3.31.6"
+  },
+  "validationLayers": {
+    "HOST": "PARTIAL: parser-only standalone JUnit 20/20; Gradle/Compose gate blocked before tasks",
+    "EMULATOR": "NOT_RUN for UX-02e; previous global result remains FAIL on authentic Room v1 fixture with six model-dependent skips",
+    "PHYSICAL_DEVICE": "NOT_RUN",
+    "APK": "NOT_GENERATED",
+    "talkBackDeviceCheck": "NOT_RUN"
+  },
+  "planIntegrity": {
+    "original97TaskPlan": "Not tracked; not reconstructed or edited",
+    "M01-06": "PENDING_REQUIRES_DEVICE",
+    "UX-02f": "PENDING",
+    "UX-03": "PENDING",
+    "functionalBacklog": "PAUSED"
+  },
+  "refsAtStart": {
+    "main": "de615b772cf37a99e7e08a647c59607b271de606",
+    "v0.4.2": "de615b772cf37a99e7e08a647c59607b271de606"
+  },
+  "evidence": {
+    "directory": "docs/validation/ux-02e-inline-links",
+    "manifest": "docs/validation/ux-02e-inline-links/SHA256SUMS"
+  },
+  "publication": {
+    "codeCommit": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+    "branch": "feat/0.5.0-skills-agents"
+  }
+}

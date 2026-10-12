@@ -1,0 +1,7 @@
+Code SHA: a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+
+Parser-only standalone check:
+python3 docs/validation/ux-02e-inline-links/host/standalone-parser-check.py
+
+Proportional Gradle gate:
+ANDROID_HOME=/workspace/android-sdk-ux02e ANDROID_SDK_ROOT=/workspace/android-sdk-ux02e ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin

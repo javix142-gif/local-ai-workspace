@@ -6,9 +6,17 @@ UX-02d is `INDEPENDENTLY_AUDITED_ACCEPTED` for Markdown table presentation and H
 
 The acceptance is host-only. The global emulator result remains FAIL because the authentic historical Room v1 fixture is unavailable; six tests requiring real models remain SKIPPED. `PHYSICAL_DEVICE=NOT_RUN`; no APK was generated. `main` and peeled `v0.4.2` remain at `de615b772cf37a99e7e08a647c59607b271de606`. The original 97-task plan was not present in the tracked repository and was not reconstructed or edited; M01-06 remains `PENDING_REQUIRES_DEVICE`.
 
-## UX-02e active
+## UX-02e delivery — inline Markdown links
 
-UX-02e is the sole active contract: add accessible inline `[label](URL)` rendering for safe `http`/`https` links in assistant chat responses, using the existing system URI handler on explicit activation. Malformed/disallowed syntax, HTML, images, and code remain literal; the original response/copy route, free-text citations and existing tables remain unchanged. No emulator or APK is in scope.
+UX-02e code commit: `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`. The parser recognizes `[label](URL)` only for absolute HTTP/HTTPS URIs with a host. It renders Compose `LinkAnnotation.Url` with theme primary color and underline; the URL opens through `UriHandler` only after explicit activation. Malformed/disallowed destinations remain literal and are not rescanned for nested links. Inline/fenced code, image syntax, HTML tags, table-cell link behavior and free-text citation syntax remain unchanged. The original response copy button was extracted into `AssistantResponseCopyAction` without changing its behavior; its test asserts the exact Markdown source is copied.
+
+- Product/test changes: `BasicMarkdown.kt`, `ChatContent.kt`, `MainActivity.kt`, `BasicMarkdownTest.kt`, and `ChatContentUiTest.kt`; no dependencies or functional routing/storage/runtime changes.
+- Parser-only direct Kotlin/JUnit check: **20/20 PASS**, compile/test exit 0 at the code SHA. This supplementary check is not the app Gradle suite and did not emit Gradle XML. Raw output and runner: [UX-02e host evidence](../validation/ux-02e-inline-links/RESULTS.md).
+- The proportional Gradle gate was attempted at that SHA and exited 1 during configuration with **zero tasks started**. AGP rejected the incomplete NDK `27.0.12077973` because `source.properties` was missing. The SDK manager had reported `No space left on device` while installing the exact project NDK; no substitute or fake NDK metadata was used. Thus app/compat JVM Gradle tests, Compose UI tests, lint, and AndroidTest Kotlin compilation are **NOT_RUN**. This is not a full HOST PASS.
+- `EMULATOR`: NOT_RUN for UX-02e; the prior global run remains FAIL on the authentic Room v1 fixture and six model-dependent tests remain SKIPPED. `PHYSICAL_DEVICE=NOT_RUN`; no APK generated. TalkBack behavior was not exercised on device.
+- The original 97-task plan remains untracked, unreconstructed and unedited. M01-06 is `PENDING_REQUIRES_DEVICE`; UX-02f/UX-03 and functional backlog remain pending/paused.
+
+## UX-02d delivery record (pre-audit; now accepted)
 
 ## Audit finding and correction
 
@@ -35,11 +43,11 @@ The audited base was `ba5b1f084a3e4f29c9bb3c8c6f8b029a6d40e3d4`. `BasicMarkdown.
 - **HOST:** PASS for this parser correction and the proportional host gate.
 - **EMULATOR:** NOT_RUN for this correction. The prior global UX run remains **FAIL**, 16 cases total: 9 PASS, 1 historical Room v1 fixture FAIL, 6 real-model-dependent SKIPPED. This contract did not repeat it.
 - **PHYSICAL_DEVICE:** NOT_RUN. No APK was generated.
-- UX-02c remains `INDEPENDENTLY_AUDITED_ACCEPTED` only for structured citation presentation and its HOST evidence. UX-02d is pending independent audit.
-- The original 97-task plan is not present in the tracked repository and was not reconstructed or edited. M01-06 remains `PENDING_REQUIRES_DEVICE`; UX-02e and UX-03 remain pending; functional backlog remains paused.
+- UX-02c remains `INDEPENDENTLY_AUDITED_ACCEPTED` only for structured citation presentation/HOST. UX-02d is `INDEPENDENTLY_AUDITED_ACCEPTED` only for Markdown tables/HOST, as recorded above. UX-02e is now delivered and pending its independent audit.
+- The original 97-task plan is not present in the tracked repository and was not reconstructed or edited. M01-06 remains `PENDING_REQUIRES_DEVICE`; UX-02f/UX-03 remain pending; functional backlog remains paused.
 - `main` and `v0.4.2` are outside this work and were not changed.
 
-**Next:** stop for independent audit of the UX-02d pipe-boundary correction.
+**Historical next step at UX-02d delivery:** complete UX-02e and stop for independent audit; now superseded by the UX-02e delivery record above.
 
 ---
 
