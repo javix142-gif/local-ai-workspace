@@ -61,6 +61,18 @@ class BasicMarkdownTest {
         )
     }
 
+    @Test fun tableRowsAcceptInitialAndFinalPipesIndependently() {
+        val source = "| Name | Value\n--- | --- |\n| Alpha | 1 |\nBeta | 2"
+        assertEquals(
+            MarkdownBlock.Table(
+                headers = listOf("Name", "Value"),
+                rows = listOf(listOf("Alpha", "1"), listOf("Beta", "2")),
+                source = source,
+            ),
+            BasicMarkdown.blocks(source).single(),
+        )
+    }
+
     @Test fun malformedTableLikeTextIsKeptAsOneLiteralParagraph() {
         val source = "| Name | Value |\n| --- | --- |\n| A | 1 |\n| incomplete |"
         assertEquals(listOf(MarkdownBlock.Paragraph(source)), BasicMarkdown.blocks(source))
