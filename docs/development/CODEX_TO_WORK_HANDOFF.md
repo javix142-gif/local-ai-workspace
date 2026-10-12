@@ -585,3 +585,13 @@ The diagnostics-only workflow source `d0d4d7608c8e8149bdb05d003da2742260c1b8dd` 
 Run result is **FAIL before instrumentation**, not Android PASS: ADB wait timed out with exit 124; connected tests were skipped; Gradle task NOT_RUN, XML=0, executed=0; physical validation NOT_RUN. Full artifact ZIP and the sanitized job log are preserved and checksummed under `docs/validation/android-emulator-ci/diagnostic-runs/38154790618/`. See `EXECUTION_STATE.json` → `latestAndroidCi.diagnosticFollowUp` for run/source/artifact hashes and layer-separated statuses.
 
 Release classification stays separate: empty Gradle-home attempts are `INFRASTRUCTURE_FAILURE` / `RETRY_EXHAUSTED`, lower-level cause `NOT_DETERMINED`; the older `83affa6` Release success used a pre-provisioned shared Gradle cache; Actions artifact `37874837502` is Debug ARM64 only. No build was run here. Main/tag are unchanged, M01-06 remains `PENDING_REQUIRES_DEVICE`, and the original 97-task plan is unchanged. This executor stops after this run for independent audit.
+
+## Independent orchestration audit — UX-02e (2026-10-12)
+
+The coder's final result was relayed before this audit. Remote branch HEAD at audit start was `51adf9458bddd3bac184137a091f097c3a02b7a1`; comparison from the UX-02e code commit `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7` showed six commits ahead, zero behind, and documentation/evidence paths only. No app or workflow source changed after the UX-02e code commit.
+
+The read-back `RESULTS.md`, `RESULTS.json`, `EXECUTION_STATE.json`, and handoff consistently record the one explicit-JDK21 attempt: preflight PASS, Gradle exit 1 before task execution because the required Java 17 toolchain was not discovered, zero tasks/tests/XML. This is an environment/toolchain blocker, not a product test failure. The standalone parser result remains supplemental 20/20 and does not accept UX-02e. No retry, emulator, APK, or physical-device run is authorized by this contract.
+
+Audit found the nested `latestUx02e.pendingRecovery` object still contained obsolete `assigned:false`, `BLOCKED_EXECUTOR_ACCESS`, and a next step to dispatch the now-completed attempt. That stale state was reconciled in `EXECUTION_STATE.json` by commit `e6e8ed9f29fbb38312d645aabbfb8c631a50e0bb`; the final gate outcome and UX-02e NOT_ACCEPTED state are preserved. No further retry or UX-02f/UX-03/function-backlog work should begin without new user authorization or material evidence.
+
+Main and peeled `v0.4.2` were read back at `de615b772cf37a99e7e08a647c59607b271de606`. M01-06 remains `PENDING_REQUIRES_DEVICE`; the original 97-task plan is not tracked in Git and was not reconstructed or edited.
