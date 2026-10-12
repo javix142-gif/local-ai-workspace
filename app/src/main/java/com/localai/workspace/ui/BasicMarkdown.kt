@@ -84,12 +84,11 @@ object BasicMarkdown {
         return trimmed.startsWith('|') || trimmed.endsWith('|')
     }
 
-    /** Splits unescaped pipes outside single-backtick spans; one optional outer pipe is allowed. */
+    /** Splits unescaped pipes outside single-backtick spans; initial and final outer pipes are independently optional. */
     private fun splitTableRow(line: String): List<String>? {
         var value = line.trim()
-        if (value.startsWith('|') && value.endsWith('|') && value.length >= 2) {
-            value = value.substring(1, value.length - 1)
-        }
+        if (value.startsWith('|')) value = value.substring(1)
+        if (value.endsWith('|')) value = value.dropLast(1)
         val cells = mutableListOf<String>()
         val cell = StringBuilder()
         var inCode = false
