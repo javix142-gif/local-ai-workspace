@@ -1,0 +1,7 @@
+Base source SHA: af321e397106c49a3e316feabdc58999cdddb763
+Branch: feat/0.5.0-skills-agents
+Start UTC: 2026-10-12T09:36:30Z
+Command: ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain :app:testDebugUnitTest --tests com.localai.workspace.ui.BasicMarkdownTest.tableRowsAcceptInitialAndFinalPipesIndependently
+Exit code: 1
+End UTC: 2026-10-12T09:36:49Z
+Expected red result: the new test requires independent initial/final edge-pipe removal; current parser still strips only when both edges are present.

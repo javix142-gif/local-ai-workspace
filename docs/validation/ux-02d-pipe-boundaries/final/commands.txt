@@ -1,0 +1,14 @@
+Red reproduction at test-only commit af321e397106c49a3e316feabdc58999cdddb763:
+JAVA_HOME=/workspace/.toolchain/jdk-17 ANDROID_HOME=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain :app:testDebugUnitTest --tests com.localai.workspace.ui.BasicMarkdownTest.tableRowsAcceptInitialAndFinalPipesIndependently
+Result: exit 1, one expected test failure; XML/log/run record in red/.
+
+Final focused verification at M00_SOURCE_COMMIT recorded in focused-run.txt:
+./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain :app:testDebugUnitTest --tests com.localai.workspace.ui.BasicMarkdownTest --tests com.localai.workspace.ui.ChatContentUiTest
+
+Final proportional HOST gate at M00_SOURCE_COMMIT recorded in full-run.txt:
+./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin
+
+Explicit compatibility rerun at M00_SOURCE_COMMIT recorded in litert-compat-rerun.txt:
+./gradlew --no-daemon --no-parallel --max-workers=1 --offline --rerun-tasks --console=plain :litert-compat:testDebugUnitTest
+
+An initial setup-only attempt failed before test execution because ANDROID_HOME was absent; see setup-attempt/. It is not test evidence. No EMULATOR, APK build, or PHYSICAL_DEVICE test was run.

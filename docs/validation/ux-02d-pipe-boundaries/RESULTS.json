@@ -1,0 +1,205 @@
+{
+  "contract": "UX-02d independent optional Markdown table boundary pipes follow-up",
+  "status": "HOST_PASS_PENDING_INDEPENDENT_AUDIT",
+  "branch": "feat/0.5.0-skills-agents",
+  "auditBaseSha": "ba5b1f084a3e4f29c9bb3c8c6f8b029a6d40e3d4",
+  "sourceCodeSha": "f54c1430cab4ea59a302b58dd2aa27deea579c49",
+  "codeCommits": [
+    {
+      "sha": "af321e397106c49a3e316feabdc58999cdddb763",
+      "role": "Red regression added before production fix."
+    },
+    {
+      "sha": "0c3973e5c7c6d5da7d8bb689bff1dd39eeaf4604",
+      "role": "Initial production fix for independently optional boundary pipes."
+    },
+    {
+      "sha": "26e0fd7f901953068d8836239dc0c845c2b7b3ea",
+      "role": "Regression coverage for pipes inside single-backtick spans."
+    },
+    {
+      "sha": "f54c1430cab4ea59a302b58dd2aa27deea579c49",
+      "role": "Final guard/test for escaped trailing pipes; exact final code SHA verified."
+    }
+  ],
+  "rootCause": "splitTableRow removed initial and final outer pipes only when both were present, contrary to GFM boundary-pipe usage and the parser description.",
+  "behavior": "Initial and final outer pipes are independently optional. Consistent row widths remain required. Structurally incompatible rows remain a complete literal paragraph. Escaped pipes, single-backtick spans, fences, and malformed-table behavior remain covered.",
+  "changedFiles": [
+    "app/src/main/java/com/localai/workspace/ui/BasicMarkdown.kt",
+    "app/src/test/java/com/localai/workspace/ui/BasicMarkdownTest.kt"
+  ],
+  "redReproduction": {
+    "sourceSha": "af321e397106c49a3e316feabdc58999cdddb763",
+    "tests": 1,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0,
+    "exitCode": 1,
+    "meaning": "Expected failure: baseline parser did not accept the mixed initial-only, final-only, both, and neither cases as one consistent table.",
+    "evidence": {
+      "redRun": "docs/validation/ux-02d-pipe-boundaries/red/run.txt",
+      "redLog": "docs/validation/ux-02d-pipe-boundaries/red/reproduction.log",
+      "redXml": "docs/validation/ux-02d-pipe-boundaries/red/BasicMarkdownTest.xml"
+    }
+  },
+  "host": {
+    "environment": {
+      "os": "Linux x86_64",
+      "jdk": "Temurin 17.0.20.1+1",
+      "gradle": "8.10.2",
+      "androidSdkApi": 35,
+      "buildTools": [
+        "34.0.0",
+        "35.0.0"
+      ],
+      "gradleMode": "offline with existing Gradle cache; not a clean-cache build"
+    },
+    "focused": {
+      "sourceSha": "f54c1430cab4ea59a302b58dd2aa27deea579c49",
+      "command": "./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain :app:testDebugUnitTest --tests com.localai.workspace.ui.BasicMarkdownTest --tests com.localai.workspace.ui.ChatContentUiTest",
+      "startUtc": "2026-10-12T09:54:31Z",
+      "endUtc": "2026-10-12T09:55:43Z",
+      "exitCode": 0,
+      "tests": 27,
+      "passed": 27,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlFiles": 2,
+      "evidence": {
+        "focusedRun": "docs/validation/ux-02d-pipe-boundaries/final/focused-run.txt",
+        "focusedLog": "docs/validation/ux-02d-pipe-boundaries/final/focused.log",
+        "focusedBasicXml": "docs/validation/ux-02d-pipe-boundaries/final/focused-junit/TEST-com.localai.workspace.ui.BasicMarkdownTest.xml",
+        "focusedComposeXml": "docs/validation/ux-02d-pipe-boundaries/final/focused-junit/TEST-com.localai.workspace.ui.ChatContentUiTest.xml"
+      }
+    },
+    "proportionalGate": {
+      "sourceSha": "f54c1430cab4ea59a302b58dd2aa27deea579c49",
+      "command": "./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin",
+      "startUtc": "2026-10-12T09:55:56Z",
+      "endUtc": "2026-10-12T10:01:38Z",
+      "exitCode": 0,
+      "appJvm": {
+        "tests": 754,
+        "passed": 754,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "compatJvmXml": {
+        "tests": 2,
+        "passed": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "combinedTaskOutcome": "UP-TO-DATE; separately rerun below"
+      },
+      "combinedJUnit": {
+        "xmlFiles": 90,
+        "tests": 756,
+        "passed": 756,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "gradleTasks": {
+        "actionable": 137,
+        "executed": 14,
+        "upToDate": 123,
+        "appUnitTests": "executed",
+        "lintDebug": "executed",
+        "compileDebugAndroidTestKotlin": "executed"
+      },
+      "lint": {
+        "status": "PASS",
+        "errors": 0,
+        "warnings": 82
+      },
+      "androidTest": "Compilation only; instrumented execution NOT_RUN",
+      "evidence": {
+        "fullRun": "docs/validation/ux-02d-pipe-boundaries/final/full-run.txt",
+        "fullLog": "docs/validation/ux-02d-pipe-boundaries/final/full-host.log",
+        "fullJUnitArchive": "docs/validation/ux-02d-pipe-boundaries/final/full-junit-final.tar.gz",
+        "lintReport": "docs/validation/ux-02d-pipe-boundaries/final/lint-results-debug.txt"
+      }
+    },
+    "compatForcedRerun": {
+      "sourceSha": "f54c1430cab4ea59a302b58dd2aa27deea579c49",
+      "command": "./gradlew --no-daemon --no-parallel --max-workers=1 --offline --rerun-tasks --console=plain :litert-compat:testDebugUnitTest",
+      "startUtc": "2026-10-12T10:01:48Z",
+      "endUtc": "2026-10-12T10:02:29Z",
+      "exitCode": 0,
+      "tests": 2,
+      "passed": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "evidence": {
+        "compatRun": "docs/validation/ux-02d-pipe-boundaries/final/litert-compat-rerun.txt",
+        "compatLog": "docs/validation/ux-02d-pipe-boundaries/final/litert-compat-rerun.log",
+        "compatXml": "docs/validation/ux-02d-pipe-boundaries/final/full-junit/litert-compat/TEST-com.google.ai.edge.litertlm.NativeHistoryRoleTest.xml"
+      }
+    }
+  },
+  "setupAttemptNotCounted": {
+    "reason": "An earlier attempt lacked ANDROID_HOME and stopped before useful test execution; retained under setup-attempt/ and excluded from counts."
+  },
+  "validationLayers": {
+    "HOST": "PASS for the focused parser tests and proportional host gate.",
+    "EMULATOR": "NOT_RUN for this correction; previously recorded global run remains FAIL due to the historical Room v1 fixture, with six real-model-dependent cases SKIPPED.",
+    "PHYSICAL_DEVICE": "NOT_RUN"
+  },
+  "apk": "NOT_GENERATED",
+  "planIntegrity": {
+    "original97TaskPlan": "Not tracked in the repository; not reconstructed or edited.",
+    "M01-06": "PENDING_REQUIRES_DEVICE",
+    "UX-03": "PENDING",
+    "functionalBacklog": "PAUSED"
+  },
+  "evidencePaths": {
+    "redRun": "docs/validation/ux-02d-pipe-boundaries/red/run.txt",
+    "redLog": "docs/validation/ux-02d-pipe-boundaries/red/reproduction.log",
+    "redXml": "docs/validation/ux-02d-pipe-boundaries/red/BasicMarkdownTest.xml",
+    "focusedRun": "docs/validation/ux-02d-pipe-boundaries/final/focused-run.txt",
+    "focusedLog": "docs/validation/ux-02d-pipe-boundaries/final/focused.log",
+    "focusedBasicXml": "docs/validation/ux-02d-pipe-boundaries/final/focused-junit/TEST-com.localai.workspace.ui.BasicMarkdownTest.xml",
+    "focusedComposeXml": "docs/validation/ux-02d-pipe-boundaries/final/focused-junit/TEST-com.localai.workspace.ui.ChatContentUiTest.xml",
+    "fullRun": "docs/validation/ux-02d-pipe-boundaries/final/full-run.txt",
+    "fullLog": "docs/validation/ux-02d-pipe-boundaries/final/full-host.log",
+    "fullJUnitArchive": "docs/validation/ux-02d-pipe-boundaries/final/full-junit-final.tar.gz",
+    "compatRun": "docs/validation/ux-02d-pipe-boundaries/final/litert-compat-rerun.txt",
+    "compatLog": "docs/validation/ux-02d-pipe-boundaries/final/litert-compat-rerun.log",
+    "compatXml": "docs/validation/ux-02d-pipe-boundaries/final/full-junit/litert-compat/TEST-com.google.ai.edge.litertlm.NativeHistoryRoleTest.xml",
+    "lintReport": "docs/validation/ux-02d-pipe-boundaries/final/lint-results-debug.txt",
+    "environment": "docs/validation/ux-02d-pipe-boundaries/final/environment.txt",
+    "commands": "docs/validation/ux-02d-pipe-boundaries/final/commands.txt"
+  },
+  "sha256": {
+    "redRun": "2cc1648040c3c9b8a84c971d4bacb902acf1969faede76997c40dc4189e899bd",
+    "redLog": "834be8eaf202b544bf413cb8bab1b752255aed66fb2253dd7f82308b6640d32e",
+    "redXml": "935aef6bd9c9362b956089f4416335925d66e3fcfb385c945b910550ffffe060",
+    "focusedRun": "7a30da533b14e084f672cd0f4cfd65d647b0ae21b27e52aa3b7bbc14925196ba",
+    "focusedLog": "d415115fbd2bac4495ce08edf9cbaa7b7ea8cc62d796ac5ae6138ea13abf7361",
+    "focusedBasicXml": "d3d4c6d43397165168f8b0ddbe9b5fb2d82783eccdf1805aee711ea2a40f95f2",
+    "focusedComposeXml": "a9308edd9ba65aba6a307ff943429332fe7b1cc3ddf5221384323580d589ac50",
+    "fullRun": "9d27a636055980784d5fc64faa33eab667beb86eee43b09463f25638e5248f73",
+    "fullLog": "8a2b8f508ba509370480d51287d05428c18690243c029c1158842c8581bee381",
+    "fullJUnitArchive": "bbc4807dba533ae755be85b08a2254ad053e562464129fb4c31b615f90d18898",
+    "compatRun": "f2955ee03533fff522763d524b0c7dc21d6823ee1428749bdcfd8b771248ab02",
+    "compatLog": "207431f7f9e622ece86212df88e79064b43b8dff2d716c0adde1c14c58b7c263",
+    "compatXml": "eb0cfe88d239a9d2e0681203a4e6ee7d34afab9629536465a150dd27030bd145",
+    "lintReport": "01a232091ed618cf210db633a8b306cba020840866bba9fe45669ccee8040f80",
+    "environment": "499b448fbf6fcda050f905133b3bf95fa88da7542a2186c4fd4c610c599b0981",
+    "commands": "5ff1059a7b36ed51162965567b29654c72fddc33312c1fd8acb4070a9fe16d29"
+  },
+  "evidenceDirectory": "docs/validation/ux-02d-pipe-boundaries/",
+  "manifest": "docs/validation/ux-02d-pipe-boundaries/SHA256SUMS",
+  "manifestCovers": "All files in the evidence directory except SHA256SUMS itself.",
+  "diffCheck": {
+    "scopedCommand": "git diff --cached --check -- . ':!**/*.log'",
+    "scopedExitCode": 0,
+    "unrestrictedCommand": "git diff --cached --check",
+    "unrestrictedExitCode": 2,
+    "findings": "Only trailing whitespace in the standard Gradle daemon shutdown line of eight retained raw logs; raw logs were preserved byte-for-byte."
+  }
+}

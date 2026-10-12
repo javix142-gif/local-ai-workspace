@@ -1,6 +1,6 @@
 # UX-02d — presentación accesible de tablas Markdown
 
-**Estado:** HOST PASS pendiente de auditoría independiente. Sin APK, emulador ni Motorola.
+**Estado:** La presentación inicial y su gate HOST pasaron; la corrección posterior de los pipes exteriores también pasó HOST y queda pendiente de auditoría independiente. No se generó APK ni se ejecutó emulador o Motorola para esa corrección.
 
 ## Base y cambios
 
@@ -11,7 +11,7 @@
 - El commit `e97a5a1` solo amplía la prueba Compose para comprobar desplazamiento vertical y llegada al último valor; no cambia código de producción. El snapshot de entorno fue capturado en `df8aeb2`; los registros de cada comando identifican `e97a5a1` como SHA probado.
 - UX-02c se registra como `INDEPENDENTLY_AUDITED_ACCEPTED` solamente para presentar `CitationEvidenceEntity` ya asociadas a mensajes y su evidencia HOST. La auditoría no cubrió tablas ni citas de texto libre. Aceptó 10/10 pruebas focalizadas y los registros de 748/748 JVM; no recalculó los hashes de archivos comprimidos. El run EMULATOR anterior sigue FAIL por la fixture Room v1 (1 fallo) y seis pruebas que requieren modelos reales omitidas; no hubo nuevo run. `PHYSICAL_DEVICE=NOT_RUN`.
 
-La gramática añadida reconoce filas delimitadas por `|`, una fila separadora con una celda delimitadora por columna (`---`, `:---`, `---:` o `:---:`), al menos dos columnas y el mismo número de celdas en las filas. Permite pipes exteriores opcionales, `\|` como pipe literal y pipes dentro de spans de backticks simples. Las celdas renderizadas admiten el formato inline ya existente de negrita y código. No se ejecuta el parser de tablas dentro de fences de código. No se interpreta HTML, enlaces ni citas libres.
+La gramática reconoce filas delimitadas por `|`, una fila separadora con una celda delimitadora por columna (`---`, `:---`, `---:` o `:---:`), al menos dos columnas y el mismo número de celdas en las filas. En la implementación final, el pipe exterior inicial y el final son opcionales de forma independiente; `\|` representa un pipe literal y los pipes dentro de spans de backticks simples no dividen celdas. Las fences de código no se analizan como tablas. La auditoría detectó que la primera implementación solo quitaba ambos pipes como pareja; la corrección y su evidencia roja/verde están en el [seguimiento de pipes exteriores](../ux-02d-pipe-boundaries/RESULTS.md).
 
 Una tabla candidata irregular se deja como párrafo literal completo, sin descartar filas/celdas. El bloque también conserva su segmento fuente. La respuesta persistida/copiada sigue usando el `content` original: `MainActivity` mantiene el callback de copiar respuesta con `AnnotatedString(content)`; el manejo y copia exacta de fences no cambió.
 

@@ -1,0 +1,1 @@
+Intermediate verification at `26e0fd7f901953068d8836239dc0c845c2b7b3ea`, before the final guard against consuming an escaped pipe at the end of a row was added in `f54c143`. The focused tests and host gate passed at this intermediate SHA, but they are retained for history and are not the final acceptance run. Final evidence is under `final/`.

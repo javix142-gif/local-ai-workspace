@@ -1,0 +1,7 @@
+Code SHA: f54c1430cab4ea59a302b58dd2aa27deea579c49
+Start UTC: 2026-10-12T10:01:48Z
+Command: ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --rerun-tasks --console=plain :litert-compat:testDebugUnitTest
+Exit code: 0
+End UTC: 2026-10-12T10:02:29Z
+JAVA_HOME=/workspace/.toolchain/jdk-17
+ANDROID_HOME=/workspace/.toolchain/android-sdk

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.data.StructuredDocumentsTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-12T09:56:43" hostname="05497ac86eb0" time="0.982">
+  <properties/>
+  <testcase name="normalStructuredRowsStillPreserveHeaderAndFormula" classname="com.localai.workspace.data.StructuredDocumentsTest" time="0.041"/>
+  <testcase name="tooLargeFileRejectedBeforeRead" classname="com.localai.workspace.data.StructuredDocumentsTest" time="0.018"/>
+  <testcase name="xlsxWorksheetOrderMetadataSurvivesIntoStructuredEvidence" classname="com.localai.workspace.data.StructuredDocumentsTest" time="0.053"/>
+  <testcase name="emptySharedStringTypedCellsAreSkippedButExplicitValuesRemainValidated" classname="com.localai.workspace.data.StructuredDocumentsTest" time="0.022"/>
+  <testcase name="csvPreservesQuotedCellsAndRows" classname="com.localai.workspace.data.StructuredDocumentsTest" time="0.027"/>
+  <testcase name="repeatedSharedValuesCannotExpandContextWithoutBound" classname="com.localai.workspace.data.StructuredDocumentsTest" time="0.153"/>
+  <testcase name="invalidEncodingDoesNotBecomeGibberish" classname="com.localai.workspace.data.StructuredDocumentsTest" time="0.03"/>
+  <testcase name="zipSlipAndBombRejected" classname="com.localai.workspace.data.StructuredDocumentsTest" time="0.027"/>
+  <testcase name="formattedEmptyXlsxCellsDoNotConsumeRepresentationBudget" classname="com.localai.workspace.data.StructuredDocumentsTest" time="0.557"/>
+  <testcase name="xlsxPreservesSheetAddressCachedValueFormula" classname="com.localai.workspace.data.StructuredDocumentsTest" time="0.049"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

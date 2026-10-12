@@ -12,7 +12,7 @@
       "app/src/test/java/com/localai/workspace/ui/BasicMarkdownTest.kt",
       "app/src/test/java/com/localai/workspace/ui/ChatContentUiTest.kt"
     ],
-    "grammar": "Pipe header + separator (at least 3 dashes per cell, optional edge colons), at least two columns, consistent row width; optional outer pipes; escaped \\| and single-backtick spans; fenced code bypasses table parser.",
+    "grammar": "Pipe header and separator (at least 3 dashes per cell, optional edge colons), at least two columns and consistent row widths; in the final implementation initial and final outer pipes are independently optional; escaped \\| and single-backtick spans; fenced code is not table-parsed.",
     "malformed": "A candidate with mismatched rows remains literal in full; no cell/row is discarded.",
     "presentation": "176dp cells wrap text; horizontal scrolling; Compose collection info, header semantics, per-cell row/column info and header:value descriptions.",
     "sourceAndCopy": "Table block retains source lines; full response copy still reads the original content string in unchanged MainActivity. Existing fenced-code copy remains unchanged."
@@ -158,5 +158,20 @@
   "unresolvedPriorEmulatorDiagnostics": [
     "Collector applicationApkInstalled=false timing/cause remains undetermined from prior run 38215175075.",
     "Prior Gradle progress 22/16 disagrees with its 16-case XML; cause remains undetermined."
-  ]
+  ],
+  "previouslyAuditedManifestSha256": "50461bafc0ced5f4c7eb42c305d62d07a226c6fbf44ce2a6c667e5ebf14d4976",
+  "pipeBoundaryFollowUp": {
+    "status": "HOST_PASS_PENDING_INDEPENDENT_AUDIT",
+    "auditBaseCommit": "ba5b1f084a3e4f29c9bb3c8c6f8b029a6d40e3d4",
+    "sourceCodeCommit": "f54c1430cab4ea59a302b58dd2aa27deea579c49",
+    "redRegressionCommit": "af321e397106c49a3e316feabdc58999cdddb763",
+    "redResult": "1 executed, 1 expected failure against the prior parser behavior.",
+    "focusedResult": "27/27 PASS at f54c143.",
+    "proportionalHostGate": "756/756 JVM PASS; lint 0 errors/82 warnings; compileDebugAndroidTestKotlin PASS_COMPILE_ONLY at f54c143.",
+    "emulator": "NOT_RUN for this correction; prior global Room v1 failure and six model-dependent skips remain separate.",
+    "physicalDevice": "NOT_RUN",
+    "evidenceReport": "docs/validation/ux-02d-pipe-boundaries/RESULTS.md",
+    "evidenceManifest": "docs/validation/ux-02d-pipe-boundaries/SHA256SUMS",
+    "note": "The initial report described edge pipes as optional but the initial implementation accepted only the paired form. This follow-up corrects that defect and preserves the original implementation record."
+  }
 }

@@ -1,0 +1,1 @@
+This invocation did not reach test execution: Gradle configuration failed because `ANDROID_HOME` was absent from the shell. The XML previously present in the build output was stale from an earlier run and is deliberately not treated as evidence. The actual selector reproduction is recorded separately under `red/` after exporting the project's configured JDK and SDK paths.

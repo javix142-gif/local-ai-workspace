@@ -1,0 +1,9 @@
+Base source SHA: af321e397106c49a3e316feabdc58999cdddb763
+Branch: feat/0.5.0-skills-agents
+JAVA_HOME=/workspace/.toolchain/jdk-17
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+Start UTC: 2026-10-12T09:37:25Z
+Command: JAVA_HOME=/workspace/.toolchain/jdk-17 ANDROID_HOME=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain :app:testDebugUnitTest --tests com.localai.workspace.ui.BasicMarkdownTest.tableRowsAcceptInitialAndFinalPipesIndependently
+Exit code: 1
+End UTC: 2026-10-12T09:38:12Z
+Expected red result: the new independent edge-pipe test fails because the baseline parser only removes both boundary pipes together.

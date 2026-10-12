@@ -1,26 +1,35 @@
-# Latest contract: UX-02d accessible Markdown tables (2026-10-12)
+# Latest contract: UX-02d audit correction — independent table boundary pipes (2026-10-12)
 
-**Status:** UX-02d implementation and proportional HOST gate are complete, pending independent audit. Stop here; do not begin UX-03 or functional roadmap work.
+**Status:** the targeted parser correction and proportional HOST checks passed at code SHA `f54c1430cab4ea59a302b58dd2aa27deea579c49`; independent audit is pending. Stop after this correction. Do not start UX-02e, UX-03, or functional roadmap work.
 
-## UX-02c audit acceptance carried forward
+## Audit finding and correction
 
-UX-02c is `INDEPENDENTLY_AUDITED_ACCEPTED` only for accessible presentation of structured `CitationEvidenceEntity` records already associated with assistant messages and its HOST evidence. The audit accepted focused Compose 10/10, recorded app JVM 746/746 plus LiteRT compatibility 2/2, lint 0 errors/82 warnings, and AndroidTest Kotlin compilation only. It recalculated nine accessible text evidence hashes but did not recalculate compressed archives; test/build counts were accepted from retained records, not rerun. Its prior EMULATOR run `38215175075` remains FAIL (16 total: 9 PASS, 1 authentic Room v1 fixture FAIL, 6 model-dependent SKIPPED; 10 executed). PHYSICAL_DEVICE remains `NOT_RUN`; no UX-02c APK was made.
+The audited base was `ba5b1f084a3e4f29c9bb3c8c6f8b029a6d40e3d4`. `BasicMarkdown.splitTableRow` stripped an outer pipe only when both initial and final pipes were present, although the UX-02d report described each as optional. The new regression was committed first and failed on that base behavior. The parser now treats the initial and final outer pipes independently while preserving consistent row width, full literal fallback for incompatible rows, escaped-pipe handling, single-backtick spans, fences, and malformed-table behavior.
 
-## UX-02d implementation and evidence
+- Red test commit: `af321e397106c49a3e316feabdc58999cdddb763`; 1 test executed, 1 expected failure.
+- Parser/test commits: `0c3973e5c7c6d5da7d8bb689bff1dd39eeaf4604`, `26e0fd7f901953068d8836239dc0c845c2b7b3ea`, and final verified code `f54c1430cab4ea59a302b58dd2aa27deea579c49`.
+- Production/test scope: only `BasicMarkdown.kt` and `BasicMarkdownTest.kt` changed in this correction.
+- Detailed red/green commands, environment, XML, raw logs, task outcomes and checksums: [pipe-boundary evidence](../validation/ux-02d-pipe-boundaries/RESULTS.md). Updated UX-02d report: [Markdown tables](../validation/ux-02d-markdown-tables/RESULTS.md).
 
-- Base: `e8fdc02cb423aa871aa2c3e0f4b52a7c33df3cda`.
-- Product/parser/Compose code commit: `df8aeb26ed2287802c1bd8a412441752c56c0fce`.
-- Final verification/test commit: `e97a5a185dc25372a6a526bdb8b13310857cfca6`; this follow-up changes only `ChatContentUiTest.kt`.
-- Changed product/test files: `BasicMarkdown.kt`, `ChatContent.kt`, `BasicMarkdownTest.kt`, `ChatContentUiTest.kt`. No dependencies, inference, retrieval, storage, navigation, permissions, workflow, or model changes.
-- The existing lightweight parser recognizes well-formed pipe tables with a separator row, at least two columns and consistent row widths. It supports optional outer pipes, escaped `\|`, and pipe characters inside single-backtick spans; fenced code bypasses table parsing. Malformed table-like text stays literal as a whole. No links or free-text citation syntax were added.
-- Table cells wrap at 176dp; wide tables scroll horizontally. Compose semantics identify the collection, headers, row/column positions and cell descriptions. The original answer/copy path and exact fenced-code copy behavior remain unchanged.
-- Focused parser/Compose tests: **24/24 PASS** (12 + 12), compact `w320dp` fixture at fontScale 1.0, 1.6 and 2.0; XML and raw log are under `docs/validation/ux-02d-markdown-tables/host/`.
-- Proportional gate: `:app:testDebugUnitTest`, `:litert-compat:testDebugUnitTest`, `:app:lintDebug`, `:app:compileDebugAndroidTestKotlin` exited 0 on `e97a5a1`. App JVM XML: 751/751; the compatibility task was UP-TO-DATE in this combined gate, then its explicit `--rerun-tasks` invocation on the same SHA passed 2/2. The combined log reports 137 actionable tasks: 8 executed and 129 UP-TO-DATE. `lintDebug`: 0 errors, 82 warnings. AndroidTest Kotlin compile was UP-TO-DATE in the final gate; it had compiled successfully on the same production implementation commit `df8aeb2`. No instrumentation ran.
-- The archived JUnit set contains 90 XML files totaling **753 tests, all passing**. The separate forced compatibility XML is also retained. Logs/XML/metadata and `SHA256SUMS` are in [UX-02d evidence](../validation/ux-02d-markdown-tables/RESULTS.md). The environment descriptor was captured at `df8aeb2`, before the test-only commit; the command records bind all final tests to `e97a5a1`.
-- No APK, emulator, or device run was performed for UX-02d. The prior global EMULATOR status remains FAIL on Room v1 with six model-dependent tests SKIPPED. PHYSICAL_DEVICE remains `NOT_RUN`.
-- The original 97-task plan is not tracked in this repository and was not reconstructed or edited. M01-06 remains `PENDING_REQUIRES_DEVICE`; UX-03 is pending; the functional backlog remains paused.
+## HOST results at the final code SHA
 
-**Next:** stop for independent audit of UX-02d. Do not begin UX-03 or functional roadmap work.
+- Focused parser/Compose tests: **27/27 PASS**, 2 XML files, zero failure/error/skip.
+- Proportional JVM gate XML: app **754/754**, compat **2/2**, total **756/756** across 90 XML files; zero failure/error/skip. Compat was UP-TO-DATE in the combined gate and was also separately forced to rerun on the same SHA: **2/2 PASS**.
+- `:app:lintDebug`: exit 0, **0 errors / 82 warnings**.
+- `:app:compileDebugAndroidTestKotlin`: executed and passed as a compile only; no instrumented test ran.
+- Combined gate: exit 0, 137 actionable tasks (14 executed, 123 up-to-date). Gradle ran offline with the existing cache; this is not a clean-cache claim.
+- Initial SDK setup attempt stopped before tests because `ANDROID_HOME` was missing; it is separately recorded and not counted as a test run.
+
+## Validation boundaries and tracking
+
+- **HOST:** PASS for this parser correction and the proportional host gate.
+- **EMULATOR:** NOT_RUN for this correction. The prior global UX run remains **FAIL**, 16 cases total: 9 PASS, 1 historical Room v1 fixture FAIL, 6 real-model-dependent SKIPPED. This contract did not repeat it.
+- **PHYSICAL_DEVICE:** NOT_RUN. No APK was generated.
+- UX-02c remains `INDEPENDENTLY_AUDITED_ACCEPTED` only for structured citation presentation and its HOST evidence. UX-02d is pending independent audit.
+- The original 97-task plan is not present in the tracked repository and was not reconstructed or edited. M01-06 remains `PENDING_REQUIRES_DEVICE`; UX-02e and UX-03 remain pending; functional backlog remains paused.
+- `main` and `v0.4.2` are outside this work and were not changed.
+
+**Next:** stop for independent audit of the UX-02d pipe-boundary correction.
 
 ---
 

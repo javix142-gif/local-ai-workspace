@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.skills.SkillAgentRegistryTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-10-12T09:56:57" hostname="05497ac86eb0" time="0.563">
+  <properties/>
+  <testcase name="sourceAllowanceIsNotARequirementForInstructionOnlyTasks" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.053"/>
+  <testcase name="installedEnabledEligibleActiveAreIndependent" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.066"/>
+  <testcase name="duplicateNameIsNotInstalledUnderNewId" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.054"/>
+  <testcase name="explicitProjectGeneralPrecedenceAndMissingDisabledFallback" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.062"/>
+  <testcase name="userEditsSurviveInitialization" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.039"/>
+  <testcase name="repeatedAndConcurrentSeedingDoesNotOverwriteDisabledBuiltIn" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.056"/>
+  <testcase name="generalAndBuiltInsCannotBeDeleted" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.028"/>
+  <testcase name="invalidMetadataAndOversizedInputAreRejected" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.022"/>
+  <testcase name="importUpdateAndRoundTripPreserveMetadata" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.041"/>
+  <testcase name="executedRequiresAnActiveSkillAndSuccessfulAssociatedTool" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.025"/>
+  <testcase name="capabilitiesAndSourcesDoNotInventFutureAvailability" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.025"/>
+  <testcase name="sidecarReopenPersistsPreferencesAndOrigin" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.044"/>
+  <testcase name="generalOffersInstalledSkillsWithoutForcingActivationOrExpandingCustomAgents" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.045"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
