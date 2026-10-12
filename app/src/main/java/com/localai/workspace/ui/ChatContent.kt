@@ -2,6 +2,7 @@ package com.localai.workspace.ui
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.rememberScrollState
@@ -13,8 +14,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.CollectionInfo
+import androidx.compose.ui.semantics.CollectionItemInfo
+import androidx.compose.ui.semantics.collectionInfo
+import androidx.compose.ui.semantics.collectionItemInfo
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
@@ -143,6 +150,7 @@ fun ChatRichText(content: String) {
             }
             when (block) {
                 is MarkdownBlock.Code -> CodeBlock(block, Modifier.testTag("chat-rich-text-block-$index"))
+                is MarkdownBlock.Table -> MarkdownTable(block, index)
                 is MarkdownBlock.Paragraph -> InlineText(block.text, Modifier.testTag("chat-rich-text-block-$index"))
                 is MarkdownBlock.Heading -> InlineText(
                     block.text,
@@ -155,6 +163,54 @@ fun ChatRichText(content: String) {
                 ) {
                     Text(block.marker, style = MaterialTheme.typography.bodyLarge)
                     Box(Modifier.weight(1f)) { InlineText(block.text) }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MarkdownTable(block: MarkdownBlock.Table, blockIndex: Int) {
+    val rows = remember(block) { listOf(block.headers) + block.rows }
+    val scrollState = rememberScrollState()
+    SelectionContainer {
+        Column(Modifier.fillMaxWidth().testTag("chat-rich-text-block-$blockIndex")) {
+            Column(
+                Modifier.fillMaxWidth().horizontalScroll(scrollState)
+                    .semantics {
+                        collectionInfo = CollectionInfo(rows.size, block.headers.size)
+                        contentDescription = "Table with ${block.headers.size} columns and ${block.rows.size} data rows. Scroll horizontally to view all columns."
+                    }
+                    .testTag("chat-markdown-table-$blockIndex"),
+            ) {
+                rows.forEachIndexed { rowIndex, cells ->
+                    Row {
+                        cells.forEachIndexed { columnIndex, value ->
+                            val header = block.headers[columnIndex]
+                            val isHeader = rowIndex == 0
+                            val accessibleValue = if (isHeader) "Column header: $value" else "$header: $value"
+                            Surface(
+                                modifier = Modifier.width(176.dp)
+                                    .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RectangleShape),
+                                shape = RectangleShape,
+                                color = if (isHeader) MaterialTheme.colorScheme.surfaceContainerHigh
+                                else MaterialTheme.colorScheme.surface,
+                            ) {
+                                Text(
+                                    text = inlineAnnotated(value, MaterialTheme.colorScheme.surfaceVariant),
+                                    modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 10.dp)
+                                        .testTag("chat-markdown-cell-$rowIndex-$columnIndex")
+                                        .semantics {
+                                            contentDescription = accessibleValue
+                                            collectionItemInfo = CollectionItemInfo(rowIndex, 1, columnIndex, 1)
+                                            if (isHeader) heading()
+                                        },
+                                    style = if (isHeader) MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold)
+                                    else MaterialTheme.typography.bodyMedium,
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -180,11 +236,7 @@ private fun InlineText(text: String, modifier: Modifier = Modifier, headingLevel
         5, 6 -> MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold)
         else -> MaterialTheme.typography.bodyLarge
     }
-    val annotated = remember(runs, codeColor) { buildAnnotatedString {
-        runs.forEach { run -> withStyle(SpanStyle(fontWeight = if (run.bold) FontWeight.SemiBold else null,
-            fontFamily = if (run.code) FontFamily.Monospace else null,
-            background = if (run.code) codeColor else androidx.compose.ui.graphics.Color.Unspecified)) { append(run.text) } }
-    } }
+    val annotated = remember(runs, codeColor) { inlineAnnotated(runs, codeColor) }
     SelectionContainer {
         Text(
             annotated,
@@ -193,6 +245,20 @@ private fun InlineText(text: String, modifier: Modifier = Modifier, headingLevel
         )
     }
 }
+
+private fun inlineAnnotated(text: String, codeColor: androidx.compose.ui.graphics.Color): AnnotatedString =
+    inlineAnnotated(BasicMarkdown.inline(text), codeColor)
+
+private fun inlineAnnotated(runs: List<InlineRun>, codeColor: androidx.compose.ui.graphics.Color): AnnotatedString =
+    buildAnnotatedString {
+        runs.forEach { run ->
+            withStyle(SpanStyle(
+                fontWeight = if (run.bold) FontWeight.SemiBold else null,
+                fontFamily = if (run.code) FontFamily.Monospace else null,
+                background = if (run.code) codeColor else androidx.compose.ui.graphics.Color.Unspecified,
+            )) { append(run.text) }
+        }
+    }
 
 @Composable
 private fun CodeBlock(block: MarkdownBlock.Code, modifier: Modifier = Modifier) {

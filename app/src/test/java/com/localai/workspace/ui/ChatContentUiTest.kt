@@ -276,6 +276,71 @@ class ChatContentUiTest {
         }
     }
 
+    @Test fun markdownTableKeepsHeadersCellsAndHorizontalAccessAtCompactWidthAndScaledText() {
+        val longValue = "This deliberately long table value wraps into readable lines instead of being clipped or dropped."
+        val markdown = """| Item | Description | State |
+            | --- | --- | --- |
+            | Evidence | $longValue | Ready |
+            | Scope | Project-local result | Complete |""".trimIndent()
+        var setFontScale: ((Float) -> Unit)? = null
+
+        compose.setContent { LocalAiTheme {
+            val density = LocalDensity.current
+            var fontScale by remember { mutableStateOf(1f) }
+            SideEffect { setFontScale = { fontScale = it } }
+            CompositionLocalProvider(LocalDensity provides Density(density.density, fontScale)) {
+                Column(Modifier.width(280.dp).height(440.dp).verticalScroll(rememberScrollState())) {
+                    ChatRichText(markdown)
+                }
+            }
+        } }
+
+        listOf(1f, 1.6f, 2f).forEach { scale ->
+            compose.runOnIdle { setFontScale?.invoke(scale) }
+            compose.waitForIdle()
+
+            val table = compose.onNodeWithTag("chat-markdown-table-0", useUnmergedTree = true)
+                .performScrollTo()
+                .assertIsDisplayed()
+                .assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.HorizontalScrollAxisRange))
+                .assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.CollectionInfo))
+            table.performTouchInput { swipeRight() }
+            val scrollRange = table.fetchSemanticsNode().config[SemanticsProperties.HorizontalScrollAxisRange]
+            assertTrue("Three columns should scroll horizontally at fontScale=$scale", scrollRange.maxValue() > 0f)
+            assertTrue(table.fetchSemanticsNode().config[SemanticsProperties.ContentDescription]
+                .single().contains("3 columns and 2 data rows"))
+
+            compose.onNodeWithText("Item", useUnmergedTree = true)
+                .assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.Heading)).assertIsDisplayed()
+            compose.onNodeWithText("Description", useUnmergedTree = true)
+                .assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.Heading)).assertExists()
+
+            val longCell = compose.onNodeWithTag("chat-markdown-cell-1-1", useUnmergedTree = true)
+                .assertTextEquals(longValue).assertExists()
+            assertTrue("Long value should wrap at fontScale=$scale", longCell.fetchSemanticsNode().size.height > 48f)
+            compose.onNodeWithContentDescription("Description: $longValue", useUnmergedTree = true).assertExists()
+
+            table.performTouchInput { swipeLeft(startX = right * 0.88f, endX = right * 0.42f) }
+            longCell.assertIsDisplayed()
+            table.performTouchInput { swipeLeft() }
+            compose.onNodeWithText("State", useUnmergedTree = true).assertIsDisplayed()
+            val finalValue = compose.onNodeWithText("Complete", useUnmergedTree = true)
+                .assertExists()
+            assertTrue("Final-column value remains laid out at fontScale=$scale", finalValue.fetchSemanticsNode().size.height > 0)
+        }
+    }
+
+    @Test fun malformedTableRemainsLiteralAndKeepsEveryRowVisible() {
+        val malformed = "| Name | Value |\n| --- | --- |\n| A | 1 |\n| incomplete |"
+        compose.setContent { LocalAiTheme {
+            Column(Modifier.width(280.dp)) { ChatRichText(malformed) }
+        } }
+
+        compose.onNodeWithTag("chat-markdown-table-0", useUnmergedTree = true).assertDoesNotExist()
+        compose.onNodeWithTag("chat-rich-text-block-0", useUnmergedTree = true)
+            .assertTextEquals(malformed).assertIsDisplayed()
+    }
+
     @Test fun longInputLargeFontAndGenerationKeepComposerActionsVisible() {
         var stopped = false
         var setFontScale: ((Float) -> Unit)? = null

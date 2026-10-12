@@ -38,10 +38,38 @@ class BasicMarkdownTest {
         val source = "<script>alert(1)</script> ![private](https://example.org/a.png)"
         assertEquals(listOf(MarkdownBlock.Paragraph(source)), BasicMarkdown.blocks(source))
     }
-    @Test fun linksAndTableSyntaxRemainLiteralBecauseTheyAreNotRenderedFormats() {
+    @Test fun linksStayLiteralAndPipeTablesAreParsedSeparately() {
         val source = "[Source](https://example.org)\n| A | B |\n|---|---|\n| 1 | 2 |"
+        assertEquals(
+            listOf(
+                MarkdownBlock.Paragraph("[Source](https://example.org)"),
+                MarkdownBlock.Table(listOf("A", "B"), listOf(listOf("1", "2")), "| A | B |\n|---|---|\n| 1 | 2 |"),
+            ),
+            BasicMarkdown.blocks(source),
+        )
+        assertEquals(listOf(InlineRun(source)), BasicMarkdown.inline(source))
+    }
+    @Test fun wellFormedPipeTableKeepsHeadersRowsAndEscapedPipes() {
+        val source = "| Item | Notes |\n| --- | --- |\n| Alpha | left \\| right |\n| Beta | **bold** |"
+        assertEquals(
+            listOf(MarkdownBlock.Table(
+                headers = listOf("Item", "Notes"),
+                rows = listOf(listOf("Alpha", "left | right"), listOf("Beta", "**bold**")),
+                source = source,
+            )),
+            BasicMarkdown.blocks(source),
+        )
+    }
+
+    @Test fun malformedTableLikeTextIsKeptAsOneLiteralParagraph() {
+        val source = "| Name | Value |\n| --- | --- |\n| A | 1 |\n| incomplete |"
         assertEquals(listOf(MarkdownBlock.Paragraph(source)), BasicMarkdown.blocks(source))
         assertEquals(listOf(InlineRun(source)), BasicMarkdown.inline(source))
+    }
+
+    @Test fun tableSyntaxInsideFencedCodeIsNotParsedAsATable() {
+        val source = "```text\n| A | B |\n| --- | --- |\n| 1 | 2 |\n```"
+        assertEquals(listOf(MarkdownBlock.Code("text", "| A | B |\n| --- | --- |\n| 1 | 2 |")), BasicMarkdown.blocks(source))
     }
     @Test fun unknownFenceLanguageAndTildeFenceAreSafe() {
         assertEquals(listOf(MarkdownBlock.Code(null, "code")), BasicMarkdown.blocks("~~~not a language\ncode\n~~~"))
