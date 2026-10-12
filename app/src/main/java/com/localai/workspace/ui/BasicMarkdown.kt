@@ -88,7 +88,7 @@ object BasicMarkdown {
     private fun splitTableRow(line: String): List<String>? {
         var value = line.trim()
         if (value.startsWith('|')) value = value.substring(1)
-        if (value.endsWith('|')) value = value.dropLast(1)
+        if (hasOptionalFinalPipe(value)) value = value.dropLast(1)
         val cells = mutableListOf<String>()
         val cell = StringBuilder()
         var inCode = false
@@ -121,6 +121,18 @@ object BasicMarkdown {
         if (!foundSeparator) return null
         cells += cell.toString().trim()
         return cells
+    }
+
+    private fun hasOptionalFinalPipe(value: String): Boolean {
+        val lastIndex = value.lastIndex
+        if (lastIndex < 0 || value[lastIndex] != '|') return false
+        if (lastIndex > 0 && value[lastIndex - 1] == '\\') return false
+
+        var inCode = false
+        for (index in 0 until lastIndex) {
+            if (value[index] == '`') inCode = !inCode
+        }
+        return !inCode
     }
 
     fun inline(text: String): List<InlineRun> {

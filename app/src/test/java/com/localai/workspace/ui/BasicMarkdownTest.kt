@@ -85,6 +85,18 @@ class BasicMarkdownTest {
         )
     }
 
+    @Test fun escapedPipeAtEndOfRowIsNotConsumedAsAnOuterPipe() {
+        val source = "| Name | Value\n--- | ---\n| Route | value\\|"
+        assertEquals(
+            MarkdownBlock.Table(
+                headers = listOf("Name", "Value"),
+                rows = listOf(listOf("Route", "value|")),
+                source = source,
+            ),
+            BasicMarkdown.blocks(source).single(),
+        )
+    }
+
     @Test fun malformedTableLikeTextIsKeptAsOneLiteralParagraph() {
         val source = "| Name | Value |\n| --- | --- |\n| A | 1 |\n| incomplete |"
         assertEquals(listOf(MarkdownBlock.Paragraph(source)), BasicMarkdown.blocks(source))
