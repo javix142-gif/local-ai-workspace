@@ -4363,9 +4363,9 @@
       "test": "ChatContentUiTest.longMarkdownKeepsHierarchyContentAndScrollableCodeAtCompactWidthAndScaledText",
       "hostConfiguration": "w320dp-h640dp-night",
       "fontScales": [
-        1.0,
+        1,
         1.6,
-        2.0
+        2
       ],
       "checks": [
         "complete long paragraph semantics and wrapping",
@@ -4484,9 +4484,9 @@
         "log": "docs/validation/ux-02c-citation-references/host/focused.log.gz",
         "junit": "docs/validation/ux-02c-citation-references/host/focused-junit/TEST-com.localai.workspace.ui.ChatContentUiTest.xml",
         "fontScales": [
-          1.0,
+          1,
           1.6,
-          2.0
+          2
         ],
         "compactWidth": "w320dp qualifier"
       },
@@ -4635,9 +4635,9 @@
         "skipped": 0,
         "xmlFiles": 2,
         "fontScale": [
-          1.0,
+          1,
           1.6,
-          2.0
+          2
         ],
         "width": "Robolectric w320dp qualifier; 280dp content fixture",
         "commandRecord": "docs/validation/ux-02d-markdown-tables/host/focused-run.txt",
@@ -4900,7 +4900,7 @@
   },
   "latestUx02e": {
     "name": "UX-02e inline Markdown links in assistant chat responses",
-    "status": "IMPLEMENTED_HOST_PARSER_PASS_GRADLE_GATE_BLOCKED_JAVA_RUNTIME_PENDING_INDEPENDENT_AUDIT",
+    "status": "IMPLEMENTED_PARSER_PASS_GRADLE_GATE_BLOCKED_JAVA_RUNTIME_EXECUTOR_ACCESS",
     "branch": "feat/0.5.0-skills-agents",
     "baseCommit": "fca3e65b16c5d54ef30747c4c90c13608e520499",
     "codeCommit": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
@@ -5015,6 +5015,18 @@
       "UX-03": "PENDING",
       "functionalBacklog": "PAUSED"
     },
-    "next": "Stop for independent audit. UX-02e remains unaccepted; no second Gradle invocation in this contract. No UX-02f/UX-03."
+    "next": "Do not dispatch until the same durable executor can be read and confirmed idle. Then send this one bounded explicit-JDK HOST gate attempt. Keep UX-02e unaccepted; do not start UX-02f/UX-03.",
+    "pendingRecovery": {
+      "status": "PENDING_BLOCKED_EXECUTOR_ACCESS",
+      "codeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+      "branchHead": "24439fe1ef0f0fce9103c8beb4797ff4e9daddc8",
+      "hypothesis": "The completed recovery failed before tasks because Gradle selected a JRE without JAVA_COMPILER; evidence identifies preinstalled JDK 21 at /workspace/.toolchain/jdk-21-temurin. A single invocation with explicit JAVA_HOME/PATH is a distinct, testable configuration.",
+      "plannedGate": "HOST :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin using existing complete SDK/NDK and existing full JDK 21; no install, cleanup, code/workflow change, emulator, or APK.",
+      "assigned": false,
+      "blockedAt": "2026-10-12T12:34:55Z",
+      "blockerType": "BLOCKED_EXECUTOR_ACCESS",
+      "accessEvidence": "send_message_to_thread returned invalid rate-limit caller identity; subsequent wait_threads could not determine whether durable thread 01a0ff77-c915-77b3-894a-1cbdd24ce02b exists because host durable was unavailable.",
+      "next": "Do not dispatch until the same durable executor can be read and confirmed idle. Then send this one bounded explicit-JDK HOST gate attempt. Keep UX-02e unaccepted; do not start UX-02f/UX-03."
+    }
   }
 }
