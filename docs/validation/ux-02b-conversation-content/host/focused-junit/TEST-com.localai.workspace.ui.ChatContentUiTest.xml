@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.ChatContentUiTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-12T06:46:18" hostname="05497ac86eb0" time="14.784">
+  <properties/>
+  <testcase name="thinkingAndToolOverridesAreCompactAndFunctional" classname="com.localai.workspace.ui.ChatContentUiTest" time="11.972"/>
+  <testcase name="longMarkdownKeepsHierarchyContentAndScrollableCodeAtCompactWidthAndScaledText" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.826"/>
+  <testcase name="longInputLargeFontAndGenerationKeepComposerActionsVisible" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.546"/>
+  <testcase name="toolsOffDoesNotChangeLogicalAgentAndCustomSelectionStaysDistinct" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.436"/>
+  <testcase name="codeHasLanguageAndCopiesExactContent" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.185"/>
+  <testcase name="libraryAdvertisesOnlyConnectedAudio" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.158"/>
+  <testcase name="audioSourceIsOnlyOfferedWhenConnected" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.39"/>
+  <testcase name="pendingImageIsVisibleAndRemoveClearsIt" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.261"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

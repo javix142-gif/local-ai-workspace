@@ -1,6 +1,44 @@
-# Latest contract: UX-02a chat header and composer (2026-10-12)
+# Latest contract: UX-02b conversational content readability (2026-10-12)
 
-**Status:** HOST PASS; exact-SHA emulator instrumentation executed and is FAIL overall on the unresolved historical Room v1 fixture; both ChatHeader emulator tests pass; personal QA APK is delivered; pending independent audit. Stop here; UX-02b/UX-03 have not started.
+**Status:** HOST PASS for the UX-02b scope; waiting for independent audit. No new emulator or Motorola run was made. Stop after this handoff; do not start UX-02c, UX-03 or functional roadmap work.
+
+## Baseline and prior UX-02a acceptance
+
+- Base/current feature reference: `224756694d174af2ed00db4b8c1b5c9fb3f9cb5d` on `feat/0.5.0-skills-agents`; product code for UX-02b is `3fc4bf6d496702f98f370e6089e98141486b284d`.
+- UX-02a source `d0832e225f51f624c981f6b68da6193b72a78ef2` was independently accepted for its UI scope. The acceptance does not turn its global emulator result into PASS.
+- UX-02a remains HOST PASS; its global EMULATOR run remains FAIL on the unresolved authentic Room v1 fixture, with six real-model cases SKIPPED and 10 cases executed. PHYSICAL_DEVICE remains NOT_RUN.
+
+## UX-02b result
+
+The assistant message route uses `ChatRichText` and the existing lightweight `BasicMarkdown` grammar. UX-02b retains recognized heading levels 1–6 for typography and accessibility semantics, establishes clearer vertical rhythm between sections/paragraphs/list items, and preserves message text, selection, exact code-copy behavior, horizontal code scrolling, attribution and source provenance. Links, citations and tables are not interpreted by the current renderer and remain literal text. No parser behavior was added to invent content.
+
+Product/tests changed only in `BasicMarkdown.kt`, `ChatContent.kt`, `BasicMarkdownTest.kt` and `ChatContentUiTest.kt`. No MainActivity, navigation, storage, model, inference, Room, permission, Agent/Tool or dependency changes.
+
+- Focused Compose/Robolectric tests: 17/17 PASS.
+- Full app JVM suite: 744/744 PASS from 89 XML files.
+- `lintDebug`: PASS, 0 errors and 82 warnings.
+- `assembleDebug -Parm64Only=true`: PASS; CMake configure/build for `arm64-v8a` executed.
+- `compileDebugAndroidTestKotlin`: PASS, compile-only.
+- Full host gate: exit 0, 151 tasks (15 executed, 136 up-to-date), 6m38s.
+- Environment, commands, full gate log, focused/full XML and checksums: [UX-02b evidence](../validation/ux-02b-conversation-content/RESULTS.md).
+
+The new layout test uses a compact 320dp Robolectric host fixture at fontScale 1.0, 1.6 and 2.0. It verifies that the complete paragraph text remains present and wraps, heading levels expose heading semantics and size hierarchy, list entries remain reachable/visible while scrolling, and fenced code remains horizontally scrollable. Code-copy exactness remains covered by the existing test. No screenshots were generated in UX-02b; no visual screenshot review or physical-device validation is claimed.
+
+## Validation layers and plan
+
+- `HOST`: PASS for the listed UX-02b checks.
+- `EMULATOR`: not rerun for UX-02b. The current global result remains FAIL from UX-02a run `38210637867` (16 total, 9 PASS, 1 Room v1 fixture FAIL, 6 model-dependent SKIPPED, 10 executed).
+- `PHYSICAL_DEVICE`: NOT_RUN.
+- The original user-provided 97-task plan is not in the tracked tree; it was not reconstructed or edited. M01-06 remains `PENDING_REQUIRES_DEVICE`, and the functional backlog remains paused.
+- `main` and peeled `v0.4.2` remain unchanged at `de615b772cf37a99e7e08a647c59607b271de606`.
+
+**Next:** wait for independent UX-02b audit. Do not start UX-02c or UX-03.
+
+---
+
+# Previous contract: UX-02a chat header and composer (2026-10-12)
+
+**Status at UX-02a delivery:** HOST PASS; exact-SHA emulator instrumentation executed and was FAIL overall on the unresolved historical Room v1 fixture; both ChatHeader emulator tests passed; personal QA APK was delivered. The user/orchestrator subsequently accepted UX-02a for its UI scope only; global EMULATOR remains FAIL and PHYSICAL_DEVICE remains NOT_RUN.
 
 ## Baseline and accepted UX-01
 
@@ -37,7 +75,7 @@ Download: [PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION](https://drive.google.com/
 - Paired QA gate [38210637883](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38210637883) failed closed; it did not build/upload an APK. The separate PERSONAL_QA APK and Drive link above remain the delivered binary.
 - `PHYSICAL_DEVICE`: `NOT_RUN`; no Motorola claim.
 - `M01-06`: `PENDING_REQUIRES_DEVICE`; original 97-task plan/IDs/order/dependencies remain unchanged.
-- Wait for independent audit. Do not begin UX-02b/UX-03 in this delivery.
+- UX-02a delivery record only; UX-02b is documented above and remains pending independent audit.
 
 
 ---

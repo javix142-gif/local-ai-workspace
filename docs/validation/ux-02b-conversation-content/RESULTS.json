@@ -1,0 +1,87 @@
+{
+  "contract": "UX-02b conversational content readability",
+  "status": "HOST_PASS_PENDING_INDEPENDENT_AUDIT",
+  "branch": "feat/0.5.0-skills-agents",
+  "baseCommit": "224756694d174af2ed00db4b8c1b5c9fb3f9cb5d",
+  "sourceCodeCommit": "3fc4bf6d496702f98f370e6089e98141486b284d",
+  "scope": "Compose presentation of the Markdown grammar already supported by ChatRichText; no message content, callbacks, attribution or source provenance changed.",
+  "changedFiles": [
+    "app/src/main/java/com/localai/workspace/ui/BasicMarkdown.kt",
+    "app/src/main/java/com/localai/workspace/ui/ChatContent.kt",
+    "app/src/test/java/com/localai/workspace/ui/BasicMarkdownTest.kt",
+    "app/src/test/java/com/localai/workspace/ui/ChatContentUiTest.kt"
+  ],
+  "supportedRendering": [
+    "paragraphs",
+    "headings level 1 through 6",
+    "simple list items",
+    "fenced code blocks",
+    "bold and inline code"
+  ],
+  "literalUnsupportedSyntax": ["links", "citations", "tables"],
+  "host": {
+    "focused": {
+      "command": "see host/commands.txt",
+      "tests": 17,
+      "passed": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "log": "host/focused.log.gz",
+      "xml": [
+        "host/focused-junit/TEST-com.localai.workspace.ui.BasicMarkdownTest.xml",
+        "host/focused-junit/TEST-com.localai.workspace.ui.ChatContentUiTest.xml"
+      ]
+    },
+    "fullJvm": {
+      "tests": 744,
+      "passed": 744,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlFiles": 89,
+      "archive": "host/full-junit.tar.gz"
+    },
+    "lintDebug": {"status": "PASS", "errors": 0, "warnings": 82, "report": "host/lint-results-debug.txt"},
+    "assembleDebugArm64": {"status": "PASS", "exitCode": 0, "cmakeConfigureAndBuild": "EXECUTED"},
+    "compileDebugAndroidTestKotlin": {"status": "PASS_COMPILE_ONLY", "instrumentation": "NOT_RUN"},
+    "fullGate": {
+      "status": "PASS",
+      "exitCode": 0,
+      "startedUtc": "2026-10-12T06:46:50Z",
+      "finishedUtc": "2026-10-12T06:53:30Z",
+      "duration": "6m38s reported by Gradle",
+      "actionableTasks": 151,
+      "executedTasks": 15,
+      "upToDateTasks": 136,
+      "log": "host/full-gate.log.gz"
+    },
+    "gitDiffCheck": "PASS"
+  },
+  "composeLayoutTest": {
+    "name": "ChatContentUiTest.longMarkdownKeepsHierarchyContentAndScrollableCodeAtCompactWidthAndScaledText",
+    "hostQualifier": "w320dp-h640dp-night",
+    "fontScales": [1.0, 1.6, 2.0],
+    "checks": [
+      "long paragraph retained and wrapped",
+      "accessible heading semantics and hierarchy",
+      "list items remain visible through vertical scrolling",
+      "fenced code exposes horizontal scrolling",
+      "original text anchors remain reachable"
+    ],
+    "screenshots": "NOT_GENERATED"
+  },
+  "androidValidation": {
+    "HOST": "PASS for the listed UX-02b checks",
+    "EMULATOR": "NOT_RUN for UX-02b; global UX-02a run 38210637867 remains FAIL: 9 PASS, 1 Room v1 fixture FAIL, 6 model-dependent SKIPPED, 10 executed",
+    "PHYSICAL_DEVICE": "NOT_RUN"
+  },
+  "planIntegrity": {
+    "original97TaskPlan": "not present in tracked repository; not reconstructed or edited",
+    "M01-06": "PENDING_REQUIRES_DEVICE",
+    "idsOrderDependenciesProgressChanged": false,
+    "functionalBacklog": "PAUSED"
+  },
+  "next": "Stop for independent audit; do not begin UX-02c or UX-03."
+}

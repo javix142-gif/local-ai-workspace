@@ -1,0 +1,9 @@
+# Focused Compose/Robolectric tests; source commit 3fc4bf6d496702f98f370e6089e98141486b284d
+JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew -Dorg.gradle.java.installations.paths=/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.ui.BasicMarkdownTest --tests com.localai.workspace.ui.ChatContentUiTest --no-daemon --console=plain
+Exit: 0. JUnit: 17 total, 17 passed, 0 failed, 0 errors, 0 skipped.
+
+# Full host gate; source commit 3fc4bf6d496702f98f370e6089e98141486b284d
+JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew -Dorg.gradle.java.installations.paths=/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest :app:lintDebug :app:assembleDebug :app:compileDebugAndroidTestKotlin -Parm64Only=true --no-daemon --console=plain
+Exit: 0; 151 actionable tasks (15 executed, 136 up-to-date); elapsed 6m38s. App JVM: 744/744 pass in 89 XML. Lint: 0 errors, 82 warnings. AndroidTest was compiled, not executed. CMake configure/build ran for arm64-v8a.
+
+No connected/instrumented Android test command, emulator, or physical-device command was run for UX-02b.

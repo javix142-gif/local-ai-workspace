@@ -1,0 +1,14 @@
+source_code_commit=3fc4bf6d496702f98f370e6089e98141486b284d
+branch=feat/0.5.0-skills-agents
+host_os=Linux 6.18.44 x86_64
+gradle_wrapper=8.10.2
+gradle_runtime_java=openjdk version "17.0.20.1" 2026-08-18
+unit_test_toolchain_java=openjdk version "21.0.12.1" 2026-08-18 LTS
+android_home=/workspace/.toolchain/android-sdk
+android_sdk_root=/workspace/.toolchain/android-sdk
+android_compile_sdk=35
+android_build_tools=35.0.0
+ndk=27.0.12077973
+cmake=3.31.6
+ninja=1.12.1
+emulator_or_device=NOT_USED
