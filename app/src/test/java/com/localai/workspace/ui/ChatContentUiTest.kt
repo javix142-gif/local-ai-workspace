@@ -10,11 +10,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.junit4.createComposeRule
+import com.localai.workspace.data.CitationEvidenceEntity
 import com.localai.workspace.ModelCard
 import com.localai.workspace.data.ModelEntity
 import org.junit.Assert.*
@@ -31,6 +33,110 @@ import org.robolectric.annotation.GraphicsMode
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class ChatContentUiTest {
     @get:Rule val compose = createComposeRule()
+
+    @Test fun citationReferenceKeepsEvidenceIdAndShowsStoredSourcePageAndExcerpt() {
+        val excerpt = "The indexed passage preserves the user's selected project preference."
+        val evidence = listOf(citationEvidence(
+            evidenceId = "LCL-AB12",
+            sourceLabel = "Project notes · onboarding.txt",
+            pageStart = 7,
+            excerpt = excerpt,
+        ))
+        var selectedId: String? = null
+        var minimumTouchTargetPx = 0f
+
+        compose.setContent { LocalAiTheme {
+            val density = LocalDensity.current
+            SideEffect { minimumTouchTargetPx = with(density) { 48.dp.toPx() } }
+            var selectedEvidenceId by remember { mutableStateOf<String?>(null) }
+            SideEffect { selectedId = selectedEvidenceId }
+            Column(Modifier.width(280.dp)) {
+                CitationEvidenceReferences(evidence) { selectedEvidenceId = it }
+                selectedEvidenceId?.let { id ->
+                    evidence.firstOrNull { it.evidenceId == id }?.let { item ->
+                        CitationEvidenceDialog(item) { selectedEvidenceId = null }
+                    }
+                }
+            }
+        } }
+
+        compose.onNodeWithText("Evidence references").assertIsDisplayed()
+        compose.onNodeWithText("Evidence references")
+            .assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.Heading))
+        compose.onNodeWithText("LCL-AB12", useUnmergedTree = true).assertIsDisplayed()
+        compose.onNodeWithText("Project notes · onboarding.txt", useUnmergedTree = true).assertIsDisplayed()
+        val reference = compose.onNodeWithContentDescription(
+            "Evidence LCL-AB12, source Project notes · onboarding.txt, page 7",
+        ).assertIsDisplayed()
+        val referenceNode = reference.fetchSemanticsNode()
+        assertEquals(Role.Button, referenceNode.config[SemanticsProperties.Role])
+        assertTrue("Reference target must be at least 48dp", referenceNode.size.height >= minimumTouchTargetPx)
+        reference.performClick()
+
+        compose.runOnIdle { assertEquals("LCL-AB12", selectedId) }
+        compose.onNodeWithTag("citation-detail-title", useUnmergedTree = true).assertTextEquals("LCL-AB12").assertIsDisplayed()
+        compose.onNodeWithTag("citation-source", useUnmergedTree = true).assertTextEquals("Project notes · onboarding.txt")
+        compose.onNodeWithTag("citation-page", useUnmergedTree = true).assertTextEquals("Page 7")
+        compose.onNodeWithTag("citation-excerpt", useUnmergedTree = true).assertTextEquals(excerpt)
+        compose.onNodeWithText("Excerpt only; it does not represent a full-document review.").assertIsDisplayed()
+        compose.onNodeWithText("Metadata comes from the local index, not from model-generated citation text.").assertIsDisplayed()
+        compose.onNodeWithText("Close").performClick()
+        compose.onNodeWithTag("citation-detail-scroll").assertDoesNotExist()
+    }
+
+    @Test fun longCitationExcerptAndSourceRemainScrollableAndUntruncatedOnCompactScaledLayout() {
+        val sourceLabel = "A deliberately long indexed source label that wraps across lines on a compact screen"
+        val excerpt = (1..18).joinToString("\n\n") { paragraph ->
+            "Paragraph $paragraph: this exact stored excerpt remains available in the citation details and can be reached by scrolling."
+        }
+        val evidence = citationEvidence("LCL-LONG", sourceLabel, pageStart = 12, excerpt = excerpt)
+        var fontScale by mutableStateOf(1f)
+        var updateScale: ((Float) -> Unit)? = null
+
+        compose.setContent { LocalAiTheme {
+            val systemDensity = LocalDensity.current
+            SideEffect { updateScale = { fontScale = it } }
+            CompositionLocalProvider(LocalDensity provides Density(systemDensity.density, fontScale)) {
+                CitationEvidenceDialog(evidence) {}
+            }
+        } }
+
+        listOf(1f, 1.6f, 2f).forEach { scale ->
+            compose.runOnIdle { updateScale?.invoke(scale) }
+            compose.waitForIdle()
+
+            compose.onNodeWithTag("citation-detail-scroll")
+                .assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.VerticalScrollAxisRange))
+            compose.onNodeWithTag("citation-source", useUnmergedTree = true)
+                .assertTextEquals(sourceLabel).performScrollTo().assertIsDisplayed()
+            compose.onNodeWithTag("citation-page", useUnmergedTree = true)
+                .assertTextEquals("Page 12").performScrollTo().assertIsDisplayed()
+            compose.onNodeWithTag("citation-excerpt", useUnmergedTree = true).assertTextEquals(excerpt)
+            compose.onNodeWithText("Excerpt only; it does not represent a full-document review.")
+                .performScrollTo().assertIsDisplayed()
+            compose.onNodeWithText("Metadata comes from the local index, not from model-generated citation text.")
+                .performScrollTo().assertIsDisplayed()
+        }
+    }
+
+    private fun citationEvidence(
+        evidenceId: String,
+        sourceLabel: String,
+        pageStart: Int?,
+        excerpt: String,
+    ) = CitationEvidenceEntity(
+        id = "citation-$evidenceId",
+        conversationId = "conversation-1",
+        messageId = "assistant-message-1",
+        evidenceId = evidenceId,
+        segmentId = 42,
+        excerpt = excerpt,
+        documentId = "document-1",
+        sourceLabel = sourceLabel,
+        pageStart = pageStart,
+        retrievalScore = 0.91,
+        createdAt = 1L,
+    )
 
     @Test fun pendingImageIsVisibleAndRemoveClearsIt() {
         compose.setContent { LocalAiTheme {

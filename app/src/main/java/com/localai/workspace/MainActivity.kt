@@ -85,6 +85,8 @@ import androidx.compose.ui.text.AnnotatedString
 import com.localai.workspace.ui.ChatComposer
 import com.localai.workspace.ui.ChatHeaderTitle
 import com.localai.workspace.ui.ChatRichText
+import com.localai.workspace.ui.CitationEvidenceDialog
+import com.localai.workspace.ui.CitationEvidenceReferences
 import com.localai.workspace.ui.ChatTopBar
 import com.localai.workspace.ui.humanModelName
 import com.localai.workspace.ui.runtimeDisplayName
@@ -1088,18 +1090,7 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
         ResponseDetailsDialog(metrics, onDismiss = { selectedMetrics = null })
     }
     citation?.let { item ->
-        AlertDialog(
-            onDismissRequest = { selectedEvidence = null },
-            confirmButton = { TextButton(onClick = { selectedEvidence = null }) { Text("Close") } },
-            title = { Text("${item.evidenceId} · ${item.sourceLabel}") },
-            text = {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(item.pageStart?.let { "Page $it" } ?: "Local source")
-                    Text(item.excerpt)
-                    Text("Metadata comes from the local index, not from model-generated citation text.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                }
-            },
-        )
+        CitationEvidenceDialog(item) { selectedEvidence = null }
     }
 }
 
@@ -1203,9 +1194,7 @@ private fun MessageBubble(message: MessageEntity, content: String,
                 if (user && message.audioPath != null) Text("Audio attachment", style = MaterialTheme.typography.labelSmall)
                 if (user) message.imagePath?.let { com.localai.workspace.ui.ImageAttachment(it) }
                 if (user || content.isBlank()) Text(body, style = MaterialTheme.typography.bodyLarge) else ChatRichText(body)
-                if (!user && evidence.isNotEmpty()) Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    evidence.forEach { item -> AssistChip(onClick = { onCitation(item.evidenceId) }, label = { Text(item.evidenceId) }) }
-                }
+                if (!user && evidence.isNotEmpty()) CitationEvidenceReferences(evidence, onCitation)
                 if (!user && metrics?.outputLimitReached == true) Text("Answer may be incomplete", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 if (!user && message.status != "GENERATING") Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     if (message.status == "FAILED") Text("Could not finish", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.error)
