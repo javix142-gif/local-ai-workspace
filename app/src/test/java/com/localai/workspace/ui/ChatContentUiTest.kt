@@ -49,8 +49,49 @@ class ChatContentUiTest {
             var profile by remember { mutableStateOf(com.localai.workspace.data.AssistantProfile()) }
             AssistantControls(profile, true, true, true) { profile = it }
         } }
-        compose.onNodeWithText("Think: Auto").performClick(); compose.onNodeWithText("OFF").performClick(); compose.onNodeWithText("Think: Off").assertExists()
-        compose.onNodeWithText("Tools: Auto").performClick(); compose.onNodeWithText("Off").performClick(); compose.onNodeWithText("Done").performClick(); compose.onNodeWithText("Tools: Off").assertExists()
+        compose.onNodeWithTag("assistant-options-summary").assertTextContains("Think: Auto · Tools: Auto")
+        compose.onNodeWithTag("assistant-options-button").performClick()
+        compose.onNodeWithTag("assistant-options-thinking").performClick()
+        compose.onNodeWithText("OFF").performClick()
+        compose.onNodeWithTag("assistant-options-summary").assertTextContains("Think: Off · Tools: Auto")
+        compose.onNodeWithTag("assistant-options-button").performClick()
+        compose.onNodeWithTag("assistant-options-tools").performClick()
+        compose.onNodeWithText("Off").performClick()
+        compose.onNodeWithText("Done").performClick()
+        compose.onNodeWithTag("assistant-options-summary").assertTextContains("Think: Off · Tools: Off")
+    }
+
+    @Test fun toolsOffDoesNotChangeLogicalAgentAndCustomSelectionStaysDistinct() {
+        compose.setContent { LocalAiTheme {
+            var profile by remember {
+                mutableStateOf(com.localai.workspace.data.AssistantProfile(
+                    thinking = com.localai.workspace.data.ThinkingMode.ON,
+                    tools = setOf("files.read"),
+                ))
+            }
+            Column {
+                ChatHeaderTitle(
+                    agentTitle = { androidx.compose.material3.Text("General Agent") },
+                    conversationTitle = "Current conversation",
+                    modelStatus = "Local model · Ready",
+                    onModelClick = {},
+                    enabled = true,
+                )
+                AssistantControls(profile, true, true, true) { profile = it }
+            }
+        } }
+
+        compose.onNodeWithText("General Agent").assertIsDisplayed()
+        compose.onNodeWithTag("assistant-options-summary").assertTextContains("Think: On · Tools: Custom")
+        compose.onNodeWithTag("assistant-options-button").performClick()
+        compose.onNodeWithTag("assistant-options-tools").assertTextContains("Tools · Custom").performClick()
+        compose.onNodeWithTag("assistant-tool-checkbox-files.read").assertIsOn()
+        compose.onNodeWithText("Off").performClick()
+        compose.onNodeWithText("Done").performClick()
+
+        compose.onNodeWithText("General Agent").assertIsDisplayed()
+        compose.onNodeWithText("No agent").assertDoesNotExist()
+        compose.onNodeWithTag("assistant-options-summary").assertTextContains("Think: On · Tools: Off")
     }
     @Test fun codeHasLanguageAndCopiesExactContent() {
         compose.setContent { LocalAiTheme { ChatRichText("A **bold** answer with `inline`.\n\n```python\nprint(42)\n```") } }
@@ -65,14 +106,43 @@ class ChatContentUiTest {
 
     @Test fun longInputLargeFontAndGenerationKeepComposerActionsVisible() {
         var stopped = false
+        var setFontScale: ((Float) -> Unit)? = null
         compose.setContent { LocalAiTheme {
             val density = LocalDensity.current
-            CompositionLocalProvider(LocalDensity provides Density(density.density, 1.3f)) {
-                var input by remember { mutableStateOf("Long input\n".repeat(20)) }
-                ChatComposer(input, true, { input = it }, {}, {}, false, onStop = { stopped = true }, onSend = {})
+            var fontScale by remember { mutableStateOf(1f) }
+            SideEffect { setFontScale = { fontScale = it } }
+            CompositionLocalProvider(LocalDensity provides Density(density.density, fontScale)) {
+                Column(Modifier.fillMaxSize()) {
+                    ChatHeaderTitle(
+                        agentTitle = { androidx.compose.material3.Text("General Agent") },
+                        conversationTitle = "A long conversation title that wraps instead of disappearing at large text sizes",
+                        modelStatus = "Gemma local model · Preparing · waiting for this selected model to become ready",
+                        onModelClick = {}, enabled = true,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    var input by remember { mutableStateOf("Long input\n".repeat(20)) }
+                    ChatComposer(
+                        input, true, { input = it }, {}, {}, false,
+                        onStop = { stopped = true }, onSend = {},
+                        contextualControls = {
+                            var profile by remember { mutableStateOf(com.localai.workspace.data.AssistantProfile()) }
+                            AssistantControls(profile, true, true, false) { profile = it }
+                        },
+                    )
+                }
             }
         } }
-        compose.onNodeWithContentDescription("Stop").assertIsDisplayed().performClick()
+        listOf(1f, 1.6f, 2f).forEach { scale ->
+            compose.runOnIdle { setFontScale?.invoke(scale) }
+            compose.waitForIdle()
+            compose.onNodeWithTag("chat-header-agent", useUnmergedTree = true).assertIsDisplayed()
+            compose.onNodeWithTag("chat-header-conversation", useUnmergedTree = true).assertIsDisplayed()
+            compose.onNodeWithTag("chat-header-model", useUnmergedTree = true).assertIsDisplayed()
+            compose.onNodeWithTag("assistant-options-button").assertIsDisplayed()
+            compose.onNodeWithContentDescription("Add attachment").assertIsDisplayed()
+            compose.onNodeWithContentDescription("Stop").assertIsDisplayed()
+        }
+        compose.onNodeWithContentDescription("Stop").performClick()
         assertTrue(stopped)
         compose.onNodeWithContentDescription("Add attachment").assertIsNotEnabled()
         compose.onNodeWithText("Tools").assertDoesNotExist()
