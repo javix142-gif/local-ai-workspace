@@ -1,0 +1,7 @@
+archive=docs/validation/ux-01-foundation/workflow-side-effects/38206516624/android-emulator-evidence-38206516624.zip
+zip_crc=PASS
+archive_sha256=a44b9ae36b73bd1f099df98ca8ac462a65be67fafb20db90d9cde13ff5d36583
+internal_manifest_entries=9
+internal_manifest_result=PASS
+junit_xml=0
+tests_executed=0

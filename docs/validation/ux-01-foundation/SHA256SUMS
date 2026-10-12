@@ -1,5 +1,5 @@
-e7c530a8079f3347b55d06fdcc79c1c7b8f588202c891bb22d10e9652a31e637  docs/validation/ux-01-foundation/RESULTS.json
-3ed9a05c1f2ef01e4c22ec1f25f67083d0165c61860433b176344fdd16956dd1  docs/validation/ux-01-foundation/RESULTS.md
+f318b354dcb0fb5e374c766da4c63bc16039b5db96637d8efaba2338861834fe  docs/validation/ux-01-foundation/RESULTS.json
+582bd89649c4b8a422e5562dd33fe66f4b65e5f2d88a233a8922ab510ad4fcba  docs/validation/ux-01-foundation/RESULTS.md
 7b4721a0e76e1737e3d1eb2a89f2af5cc5db3e0609ca3c29449f359425e1196e  docs/validation/ux-01-foundation/host/aapt-badging.txt
 8108b40d7e38afa81df85cf37cdf437a16dea6315226cfce19cc73b3a136632a  docs/validation/ux-01-foundation/host/android-toolchain.txt
 d03259ab13132d86d37368a4a2829bb0b58519c866fc8b39e239f00c550e13e3  docs/validation/ux-01-foundation/host/apk-zip-test.log.gz
@@ -22,3 +22,8 @@ baf2213602f166b89caf8b9374ca608f9ee21dc11cc400f25b7d88eb97dac8dd  docs/validatio
 38c1d0e9cfa72fda29741ff24824bd24117968c9defcb9b4c74b3e389f9fc02e  docs/validation/ux-01-foundation/screenshots/shared-frame-411dp-fontScale-1.6.png
 edb57fa74fbe6038bc0a312be27c6aad37fa4e853f38eb86852cb2411ae2f146  docs/validation/ux-01-foundation/screenshots/workspace-dark-360dp-fontScale-1.0.png
 f067bb37660697f19e5d852a0c9bf59ad3067c48b208ca84ae38eeca07889479  docs/validation/ux-01-foundation/screenshots/workspace-light-360dp-fontScale-1.0.png
+589eccfe0b3f8aeb888ee560e3497017da03d56bf8864e241c77104088a8d33d  docs/validation/ux-01-foundation/workflow-side-effects/38206516624/README.md
+a44b9ae36b73bd1f099df98ca8ac462a65be67fafb20db90d9cde13ff5d36583  docs/validation/ux-01-foundation/workflow-side-effects/38206516624/android-emulator-evidence-38206516624.zip
+86daf50a2e224857cf1a5e9a25e9a155f07a7758953c6b7a046e24c36ead3775  docs/validation/ux-01-foundation/workflow-side-effects/38206516624/artifact-verification.txt
+6e014d34000c60f9d9a3951b987ebf4ef2fe8f4829d2b2372dab0fca56da6a01  docs/validation/ux-01-foundation/workflow-side-effects/38206516624/emulator-job-log-excerpt.txt
+4ebd8c814458fd13c5a12b34b8d68a4d8c379b3374f25435b26c1c88c4cf7b0a  docs/validation/ux-01-foundation/workflow-side-effects/38206516624/qa-gate-job-log-excerpt.txt

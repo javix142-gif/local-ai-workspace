@@ -162,7 +162,7 @@
   },
   "validationStatus": {
     "HOST": "PASS",
-    "EMULATOR": "NOT_RUN_FOR_THIS_SOURCE_SHA; prior run 38186081844 on 5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1 remains 9 PASS / 1 Room FAIL / 6 model SKIPPED (10 executed)",
+    "EMULATOR": "NOT_RUN_FOR_UX_TESTS; automatic run 38206516624 on event SHA 11f5ae4fe6596b63ebac8e56f8762420f6e5eb50 was cancelled during SDK installation before AVD/ADB/instrumentation; 0 XML, 0 tests. Paired QA gate 38206516667 failed closed and produced no APK artifact.",
     "PHYSICAL_DEVICE": "NOT_RUN",
     "M01-06": "PENDING_REQUIRES_DEVICE"
   },
@@ -201,5 +201,73 @@
       "compressedSha256": "d03259ab13132d86d37368a4a2829bb0b58519c866fc8b39e239f00c550e13e3",
       "rawSha256": "9ce41d630923d43a2436cfaf3b84d7a1004f7470354614ecec956555ce1433a0"
     }
-  }
+  },
+  "automaticWorkflowRuns": {
+    "trigger": {
+      "event": "push",
+      "eventHeadSha": "11f5ae4fe6596b63ebac8e56f8762420f6e5eb50",
+      "productCodeSha": "4f6ea6faf3d541d366af8ce7284a32fa58f8c1e8",
+      "manuallyDispatched": false
+    },
+    "emulator": {
+      "runId": "38206516624",
+      "jobId": "114671083972",
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38206516624",
+      "jobUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38206516624/job/114671083972",
+      "sourceSha": "11f5ae4fe6596b63ebac8e56f8762420f6e5eb50",
+      "conclusion": "cancelled",
+      "classification": "CANCELLED_BEFORE_DEVICE_SETUP_NO_TEST_EXECUTION",
+      "sdkInstall": "cancelled while downloading API 35 x86_64 system image; job log at 2026-10-12T05:07:06Z says The operation was canceled",
+      "steps": {
+        "checkout": "PASS",
+        "jdk17": "PASS",
+        "sdkInstall": "CANCELLED",
+        "kvm": "SKIPPED",
+        "avdBoot": "SKIPPED",
+        "connectedDebugAndroidTest": "SKIPPED",
+        "collector": "FAIL_ZERO_XML_ZERO_EXECUTED",
+        "uploadEvidence": "PASS"
+      },
+      "summary": {
+        "adbConnected": false,
+        "expectedApi": 35,
+        "expectedAbi": "x86_64",
+        "actualDeviceProperties": "NOT_AVAILABLE_NO_DEVICE",
+        "gradleExitCode": null,
+        "xmlFiles": 0,
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "executed": 0
+      },
+      "artifact": {
+        "id": "11727751535",
+        "name": "android-emulator-evidence-38206516624-1",
+        "bytes": 21744,
+        "sha256": "a44b9ae36b73bd1f099df98ca8ac462a65be67fafb20db90d9cde13ff5d36583",
+        "expiresAtUtc": "2026-10-19T05:07:07Z",
+        "localCopy": "docs/validation/ux-01-foundation/workflow-side-effects/38206516624/android-emulator-evidence-38206516624.zip",
+        "zipCrc": "PASS",
+        "internalManifestEntries": 9,
+        "internalManifest": "PASS"
+      },
+      "evidenceDirectory": "docs/validation/ux-01-foundation/workflow-side-effects/38206516624/"
+    },
+    "qaGate": {
+      "runId": "38206516667",
+      "jobId": "114671084004",
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38206516667",
+      "jobUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38206516667/job/114671084004",
+      "sourceSha": "11f5ae4fe6596b63ebac8e56f8762420f6e5eb50",
+      "conclusion": "failure",
+      "failureReason": "ANDROID_INSTRUMENTATION_NOT_SUCCESSFUL because matching emulator run 38206516624 concluded cancelled",
+      "apkBuild": "SKIPPED",
+      "artifactUpload": "SKIPPED",
+      "artifacts": [],
+      "classification": "FAIL_CLOSED_PREREQUISITE_NOT_MET_NOT_AN_APK_BUILD_FAILURE"
+    }
+  },
+  "instrumentedTestsAutoTriggered": true
 }

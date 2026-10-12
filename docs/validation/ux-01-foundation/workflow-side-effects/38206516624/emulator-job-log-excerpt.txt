@@ -1,0 +1,26 @@
+Source SHA: 11f5ae4fe6596b63ebac8e56f8762420f6e5eb50
+Run: 38206516624; job: 114671083972
+Job URL: https://github.com/javix142-gif/local-ai-workspace/actions/runs/38206516624/job/114671083972
+Excerpt from GitHub Actions job log (ANSI removed; excerpt only):
+2026-10-12T05:06:31.6366598Z ##[group]Run set -euo pipefail
+2026-10-12T05:06:39.9580062Z [===                                    ] 10% Downloading emulator-linux_x64-164
+2026-10-12T05:06:40.1806723Z [====                                   ] 10% Downloading emulator-linux_x64-164
+2026-10-12T05:06:40.5841390Z [====                                   ] 11% Downloading emulator-linux_x64-164
+2026-10-12T05:06:40.8363690Z [====                                   ] 12% Downloading emulator-linux_x64-164
+2026-10-12T05:06:41.0889600Z [=====                                  ] 13% Downloading emulator-linux_x64-164
+2026-10-12T05:06:41.3272301Z [=====                                  ] 14% Downloading emulator-linux_x64-164
+2026-10-12T05:06:41.4522603Z [=====                                  ] 15% Downloading emulator-linux_x64-164
+2026-10-12T05:06:41.5341499Z [======                                 ] 15% Downloading emulator-linux_x64-164
+2026-10-12T05:06:41.5490087Z [======                                 ] 16% Downloading emulator-linux_x64-164
+2026-10-12T05:06:47.8739087Z [============                           ] 33% Downloading x86_64-35_r09.zip... e
+2026-10-12T05:06:48.6352166Z [=============                          ] 33% Downloading x86_64-35_r09.zip... e
+2026-10-12T05:06:49.3807053Z [=============                          ] 34% Downloading x86_64-35_r09.zip... e
+2026-10-12T05:06:49.7101716Z [=============                          ] 35% Downloading x86_64-35_r09.zip... e
+2026-10-12T05:06:50.0469118Z [==============                         ] 35% Downloading x86_64-35_r09.zip... e
+2026-10-12T05:06:50.6986263Z [==============                         ] 36% Downloading x86_64-35_r09.zip... e
+2026-10-12T05:06:51.3726495Z [==============                         ] 37% Downloading x86_64-35_r09.zip... e
+2026-10-12T05:06:51.7596184Z [===============                        ] 38% Downloading x86_64-35_r09.zip... e
+2026-10-12T05:07:06.1358013Z ##[error]The operation was canceled.
+2026-10-12T05:07:07.0674292Z {"status": "FAIL", "sourceCommit": "11f5ae4fe6596b63ebac8e56f8762420f6e5eb50", "xmlFiles": 0, "counts": {"total": 0, "passed": 0, "failed": 0, "errors": 0, "skipped": 0, "executed": 0}, "adbDevice": false, "gradleExitCode": null}
+2026-10-12T05:07:07.0738429Z ##[error]Process completed with exit code 1.
+2026-10-12T05:07:08.5506585Z Artifact download URL: https://github.com/javix142-gif/local-ai-workspace/actions/runs/38206516624/artifacts/11727751535

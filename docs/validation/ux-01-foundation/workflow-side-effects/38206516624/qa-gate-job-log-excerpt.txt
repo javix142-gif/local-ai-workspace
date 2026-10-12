@@ -1,0 +1,8 @@
+Source SHA: 11f5ae4fe6596b63ebac8e56f8762420f6e5eb50
+Run: 38206516667; job: 114671084004
+Job URL: https://github.com/javix142-gif/local-ai-workspace/actions/runs/38206516667/job/114671084004
+Excerpt from GitHub Actions job log (ANSI removed; excerpt only):
+2026-10-12T05:06:30.2276342Z ##[group]Run python3 scripts/ci/wait_for_android_emulator_success.py
+2026-10-12T05:07:31.6178963Z {"reason":"ANDROID_INSTRUMENTATION_NOT_SUCCESSFUL","runId":38206516624,"headSha":"11f5ae4fe6596b63ebac8e56f8762420f6e5eb50","conclusion":"cancelled","runUrl":"https://github.com/javix142-gif/local-ai-workspace/actions/runs/38206516624"}
+2026-10-12T05:07:31.6268908Z ##[error]Process completed with exit code 1.
+2026-10-12T05:07:31.6317938Z ##[group]Run python3 - "$QA_ARTIFACT_DIR" "$JOB_STATUS" <<'PY'
