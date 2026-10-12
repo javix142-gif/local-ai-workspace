@@ -1,0 +1,20 @@
+RECOVERY_CHECK_UTC=2026-10-12T11:31Z
+CODE_SHA=a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+VERIFICATION_HEAD=720099451426e4ecc98d338f74ed52c33f31be24
+
+Pre-existing SDK selected:
+/workspace/.toolchain/android-sdk
+SDK manager inventory: platforms;android-35, build-tools;35.0.0, cmake;3.31.6, ndk;27.0.12077973, platform-tools
+SDK size: 2.7G
+NDK path: /workspace/.toolchain/android-sdk/ndk/27.0.12077973
+NDK source.properties exists and reports Pkg.Revision=27.0.12077973, Pkg.BaseRevision=27.0.12077973, Pkg.ReleaseName=r27.
+NDK executables checked present: ndk-build, toolchains/llvm/prebuilt/linux-x86_64/bin/clang, clang++.
+No SDK/NDK install, copy, version change, or source.properties fabrication was performed.
+Free disk before gate: 2.2G on /workspace; 976M on /tmp.
+Existing ignored build outputs were present before the attempt: .gradle 42M, app/build 1.3G, litert-compat/build 643M, llama-runtime/build 1.1G, llama-runtime/.cxx 827M. They were not copied, cleaned, or deleted.
+
+Java selected by the requested command:
+/usr/bin/java -> OpenJDK Runtime Environment 21.0.12.1 at /usr/lib/jvm/java-21-openjdk-amd64; this installation has no JAVA_COMPILER capability and `javac` is absent from PATH.
+Pre-existing full JDK executables were discovered after the failed gate at /workspace/.toolchain/jdk-21-temurin/bin/javac and /workspace/.toolchain/jdk-17/bin/javac. They were not selected and no second Gradle invocation was made under the one-attempt scope.
+
+The build task graph failed before any requested task started. No test task ran and no JUnit XML was emitted for this attempt. Existing ignored XML under app/build predates the attempt (latest listed timestamp 2026-10-12T09:57Z) and is not evidence for this SHA/run.

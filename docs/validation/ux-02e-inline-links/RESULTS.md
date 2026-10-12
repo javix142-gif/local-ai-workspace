@@ -3,7 +3,7 @@
 **Code SHA:** `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`
 **Branch:** `feat/0.5.0-skills-agents`
 **Baseline remote HEAD at start:** `fca3e65b16c5d54ef30747c4c90c13608e520499`
-**Status:** implementation committed; parser-only JVM check passed; Android Gradle/Compose host gate is blocked by the unavailable NDK package. This is **not** a full HOST PASS.
+**Status:** implementation committed; parser-only JVM check passed. A recovery attempt confirmed a usable pre-existing SDK/NDK but the Gradle gate stopped before tasks because the selected Java runtime lacks the compiler. UX-02e is **not accepted** and this is **not** a full HOST PASS.
 
 ## What changed
 
@@ -27,6 +27,23 @@ No dependencies, navigation, retrieval, persistence, Room, model/runtime, permis
 
 ## Checks and outcomes
 
+### Single recovery attempt with the pre-existing SDK
+
+The recovery check found `/workspace/.toolchain/android-sdk` already installed with API 35, Build Tools 35.0.0, CMake 3.31.6, and the exact NDK `27.0.12077973`. Its `source.properties` reports revision 27.0.12077973, and `ndk-build`, `clang`, and `clang++` were present. No SDK/NDK installation, copy, cleanup, or version change was made. The existing Android emulator and QA workflows were inspected; neither was dispatched or triggered by this documentation-only recovery.
+
+The gate was run against code SHA `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`; the checked-out HEAD was `720099451426e4ecc98d338f74ed52c33f31be24`, whose product/build source is identical to the code commit (docs-only commits follow it).
+
+Exact command:
+
+```text
+ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin
+```
+
+It exited **1** during task-graph dependency calculation, before any requested task started. Gradle selected `/usr/lib/jvm/java-21-openjdk-amd64`, an OpenJDK runtime without `JAVA_COMPILER`; `javac` was absent from PATH. Two full JDKs were found afterward under `/workspace/.toolchain`, but the single recovery attempt was not repeated with a different Java selector.
+
+No JUnit XML was emitted. Existing ignored test XML predates this attempt (the inspected results were timestamped around 09:57 UTC; the attempt began at 11:32 UTC) and is not counted. The raw gate log is preserved byte-for-byte in [`host/recovery-gradle-gate.log.gz`](host/recovery-gradle-gate.log.gz); SDK/NDK and Java preflight details are in [`host/recovery-environment.txt`](host/recovery-environment.txt).
+
+
 ### Parser-only JVM check
 
 A supplementary standalone runner compiled `BasicMarkdown.kt` and `BasicMarkdownTest.kt` with the cached Kotlin 2.0.21 compiler, JUnit 4.13.2 and Java target 17, then ran JUnit directly. It is not the app Gradle suite and does not cover Compose rendering.
@@ -40,9 +57,9 @@ A supplementary standalone runner compiled `BasicMarkdown.kt` and `BasicMarkdown
 
 It covers HTTP and HTTPS destinations, surrounding text, rejected schemes, malformed input, nested links inside rejected/image syntax, HTML attributes, inline/fenced code, and literal table-cell mode.
 
-### Android Gradle gate
+### Earlier Android Gradle attempt with the incomplete temporary SDK
 
-The proportional gate was invoked once at the exact code SHA with the project wrapper and existing Gradle cache:
+The initial proportional gate attempt (before the recovery check above) used the temporary SDK and existing Gradle cache:
 
 ```text
 ANDROID_HOME=/workspace/android-sdk-ux02e ANDROID_SDK_ROOT=/workspace/android-sdk-ux02e ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin
@@ -59,7 +76,7 @@ Compose tests were added for HTTP/HTTPS URI activation through a fake `UriHandle
 
 ## Validation layers and limits
 
-- **HOST:** parser-only standalone JUnit 20/20 PASS. The requested Android Gradle/Compose host gate is BLOCKED before task execution by the missing NDK metadata; do not promote this to a full HOST PASS.
+- **HOST:** parser-only standalone JUnit 20/20 PASS. The single recovery Android Gradle/Compose gate is BLOCKED before task execution because the selected system Java runtime lacks `JAVA_COMPILER`; do not promote this to a full HOST PASS. The earlier attempt with the temporary SDK had a separate incomplete-NDK blocker.
 - **EMULATOR:** NOT_RUN for UX-02e. The prior global result remains FAIL: 16 cases, 9 PASS, the historical authentic Room v1 fixture FAIL, six real-model-dependent SKIPPED. This contract did not rerun it.
 - **PHYSICAL_DEVICE:** NOT_RUN.
 - **APK:** NOT_GENERATED.
@@ -69,4 +86,4 @@ Compose tests were added for HTTP/HTTPS URI activation through a fake `UriHandle
 
 ## Evidence
 
-`SHA256SUMS` covers this report, the JSON summary, the standalone runner, captured logs and environment record. No Gradle XML exists for this attempt because the build failed during configuration before test tasks started.
+`SHA256SUMS` covers this report, the JSON summary, the standalone runner, captured logs and environment records. No Gradle XML exists for the recovery attempt because task graph calculation failed before test tasks started. Existing ignored XML predates the attempt and is not counted.

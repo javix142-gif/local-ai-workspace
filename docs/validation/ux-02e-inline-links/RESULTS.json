@@ -40,18 +40,35 @@
       "xml": "NOT_EMITTED_BY_STANDALONE_RUNNER"
     },
     "androidGradleGate": {
-      "status": "BLOCKED_INFRASTRUCTURE_BEFORE_TASKS",
-      "command": "ANDROID_HOME=/workspace/android-sdk-ux02e ANDROID_SDK_ROOT=/workspace/android-sdk-ux02e ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin",
+      "status": "BLOCKED_ENVIRONMENT_JAVA_COMPILER_BEFORE_TASKS",
+      "command": "ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin",
       "exitCode": 1,
       "tasksStarted": 0,
-      "cause": "AGP rejected the incomplete NDK 27.0.12077973 because source.properties is missing; SDK manager had reported no space left on device.",
+      "cause": "The existing exact SDK/NDK was valid, but Gradle selected /usr/lib/jvm/java-21-openjdk-amd64 without JAVA_COMPILER; javac was absent from PATH, so task graph calculation failed before tasks.",
       "jvmTests": "NOT_RUN",
       "composeUiTests": "NOT_RUN",
       "compatTests": "NOT_RUN",
       "lintDebug": "NOT_RUN",
       "compileDebugAndroidTestKotlin": "NOT_RUN",
-      "junitXml": "NOT_GENERATED",
-      "log": "host/gradle-proportional-gate.log.gz"
+      "junitXml": "NOT_GENERATED_TASK_GRAPH_FAILURE",
+      "log": "host/recovery-gradle-gate.log.gz",
+      "sdkRoot": "/workspace/.toolchain/android-sdk",
+      "ndkRevision": "27.0.12077973",
+      "ndkSourcePropertiesExists": true,
+      "javaSelected": "OpenJDK Runtime Environment 21.0.12.1 at /usr/lib/jvm/java-21-openjdk-amd64; javac absent",
+      "preinstalledJdkExecutablesFoundAfterFailure": [
+        "/workspace/.toolchain/jdk-21-temurin/bin/javac",
+        "/workspace/.toolchain/jdk-17/bin/javac"
+      ],
+      "oneAttemptScope": "No second invocation was made using a different JAVA_HOME.",
+      "executedTests": 0,
+      "environmentEvidence": "host/recovery-environment.txt",
+      "priorAttempt": {
+        "status": "BLOCKED_INCOMPLETE_TEMPORARY_NDK",
+        "sdkRoot": "/workspace/android-sdk-ux02e",
+        "reason": "source.properties was absent after sdkmanager reported no space left on device",
+        "log": "host/gradle-proportional-gate.log.gz"
+      }
     },
     "composeUriAndCopyTests": "AUTHORED_NOT_RUN_DUE_TO_GRADLE_CONFIGURATION_BLOCK"
   },
@@ -63,11 +80,19 @@
     "androidBuildTools": "35.0.0",
     "androidNdk": "27.0.12077973 unavailable/incomplete",
     "gradleMode": "offline with existing Gradle cache",
-    "cmake": "3.31.6"
+    "cmake": "3.31.6",
+    "androidSdkRootRecovery": "/workspace/.toolchain/android-sdk",
+    "androidNdkRecovery": "27.0.12077973 complete; source.properties and expected toolchain executables present",
+    "javaSelectedForRecovery": "OpenJDK Runtime Environment 21.0.12.1 at /usr/lib/jvm/java-21-openjdk-amd64; no JAVA_COMPILER",
+    "fullJdkExecutablesFoundAfterFailure": [
+      "/workspace/.toolchain/jdk-21-temurin/bin/javac",
+      "/workspace/.toolchain/jdk-17/bin/javac"
+    ],
+    "freeDiskBeforeRecovery": "2.2G /workspace; 976M /tmp"
   },
   "validationLayers": {
-    "HOST": "PARTIAL: parser-only standalone JUnit 20/20; Gradle/Compose gate blocked before tasks",
-    "EMULATOR": "NOT_RUN for UX-02e; previous global result remains FAIL on authentic Room v1 fixture with six model-dependent skips",
+    "HOST": "PARTIAL: standalone parser JUnit 20/20 PASS; the single recovery Gradle gate blocked before tasks because selected Java runtime lacked JAVA_COMPILER; not a full HOST PASS.",
+    "EMULATOR": "NOT_RUN for UX-02e; no workflow was dispatched. Historical global result remains FAIL on authentic Room v1 fixture with six model-dependent skips.",
     "PHYSICAL_DEVICE": "NOT_RUN",
     "APK": "NOT_GENERATED",
     "talkBackDeviceCheck": "NOT_RUN"
@@ -90,5 +115,12 @@
   "publication": {
     "codeCommit": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
     "branch": "feat/0.5.0-skills-agents"
+  },
+  "status": "IMPLEMENTED_PARSER_CHECK_ONLY_GRADLE_GATE_BLOCKED_ENVIRONMENT_CONFIGURATION",
+  "next": "UX-02e remains pending independent audit; the single recovery gate attempt is exhausted. Do not begin UX-02f or UX-03.",
+  "recoveryWorkflowCheck": {
+    "androidEmulatorWorkflow": ".github/workflows/android-emulator-instrumented.yml reviewed; not dispatched or triggered",
+    "qaArm64Workflow": ".github/workflows/qa-debug-arm64-apk.yml reviewed; not dispatched or triggered",
+    "reason": "The recovery changed documentation/evidence only; no app or workflow paths changed."
   }
 }
