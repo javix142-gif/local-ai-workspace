@@ -1,5 +1,12 @@
 # Latest contract: UX-02e — inline Markdown links (2026-10-12)
 
+## Current orchestration status — pending JDK-selected HOST gate
+
+The UX-02e code remains a1827fa204cda0cdf80a7e5a51670435e8c8d4b7 and is **not accepted**. Independent audit found the prior recovery evidence manifest valid (12/12 files). Its single gate invocation verified the pre-existing API 35 SDK and exact NDK 27.0.12077973, but Gradle selected the system OpenJDK runtime without JAVA_COMPILER and failed before any requested task; zero tests ran and no new JUnit XML was emitted. The raw log confirms this failure. The report preserves parser-only JUnit 20/20 separately from the unrun Compose/Gradle gate.
+
+A distinct one-invocation recovery was prepared from the new evidence: explicitly select the already-present complete JDK 21 at /workspace/.toolchain/jdk-21-temurin with the existing SDK at /workspace/.toolchain/android-sdk, then rerun the same HOST tasks only. No installation, cleanup, version change, workflow dispatch, emulator or APK is allowed. This contract was **not sent**: send_message_to_thread returned invalid rate-limit caller identity, and the next wait_threads call could not determine whether the durable executor thread exists because the durable host was unavailable. Record status as BLOCKED_EXECUTOR_ACCESS; do not claim assignment. When that exact executor can again be read and is idle, send only this bounded recovery; keep UX-02e unaccepted until real HOST task results/XML are audited. UX-02f/UX-03 remain pending.
+
+main and peeled v0.4.2 remain at de615b772cf37a99e7e08a647c59607b271de606. The 97-task plan and functional progress are unchanged; M01-06 remains PENDING_REQUIRES_DEVICE, EMULATOR retains its historical Room v1 failure and six model-dependent skips, and PHYSICAL_DEVICE remains NOT_RUN.
 ## UX-02d independent audit acceptance
 
 UX-02d is `INDEPENDENTLY_AUDITED_ACCEPTED` for Markdown table presentation and HOST evidence only. The accepted code SHA is `f54c1430cab4ea59a302b58dd2aa27deea579c49`; the audited remote branch HEAD was `fca3e65b16c5d54ef30747c4c90c13608e520499`. The audit verified the ahead-only comparison from `ba5b1f0`, with only `BasicMarkdown.kt` and `BasicMarkdownTest.kt` changed in product/tests. It confirmed the expected red reproduction (1/1 failure), focused host tests (27/27), full host XML (90 files, 756/756), host gate exit 0, lint 0 errors/82 warnings, AndroidTest compilation, and 16/16 core plus 120/120 follow-up evidence hashes.
