@@ -4283,7 +4283,7 @@
   },
   "latestUx02b": {
     "name": "UX-02b conversational content readability",
-    "status": "HOST_PASS_PENDING_INDEPENDENT_AUDIT",
+    "status": "HOST_PASS_AUTOMATIC_EMULATOR_FAIL_ROOM_FIXTURE_QA_GATE_FAIL_CLOSED_PENDING_INDEPENDENT_AUDIT",
     "branch": "feat/0.5.0-skills-agents",
     "baseCommit": "224756694d174af2ed00db4b8c1b5c9fb3f9cb5d",
     "sourceCodeCommit": "3fc4bf6d496702f98f370e6089e98141486b284d",
@@ -4378,9 +4378,46 @@
     },
     "androidValidation": {
       "HOST": "PASS for the focused and full gates listed above.",
-      "EMULATOR": "NOT_RUN for UX-02b. The global known result remains FAIL in run 38210637867 on UX-02a source d0832e225f51f624c981f6b68da6193b72a78ef2: 16 total, 9 PASS, 1 historical Room v1 fixture FAIL, 6 model-dependent SKIPPED, 10 executed.",
+      "EMULATOR": "UX-02a is independently accepted for UI scope only; its global gate was FAIL. The push for UX-02b automatically triggered run 38215175075 on event commit 3ed99d8b882668aa31c69db622b689f01dd6212f containing UX-02b application code 3fc4bf6d496702f98f370e6089e98141486b284d. API 35 x86_64 AVD and ADB connected; :app:connectedDebugAndroidTest executed with exit 1. JUnit: 16 total, 9 PASS, 1 FAIL, 0 errors, 6 real-model SKIPPED, 10 executed. Sole failure: historical missing authentic WorkspaceDatabase/1.json in WorkspaceDatabaseMigrationTest. Both ChatHeaderLayoutTest cases passed. QA gate run 38215175184 failed closed; APK build/upload skipped and no artifact exists. The header PNG diagnostics are not visual validation of Markdown content.",
       "PHYSICAL_DEVICE": "NOT_RUN",
       "roomSchemaOrTestChanged": false
+    },
+    "automaticPushRuns": {
+      "emulator": {
+        "runId": 38215175075,
+        "jobId": 114698137054,
+        "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38215175075",
+        "eventCommit": "3ed99d8b882668aa31c69db622b689f01dd6212f",
+        "task": ":app:connectedDebugAndroidTest",
+        "taskExitCode": 1,
+        "counts": {"total": 16, "passed": 9, "failed": 1, "errors": 0, "skipped": 6, "executed": 10},
+        "collectorAcceptanceFailures": ["applicationApkInstalled", "connectedTaskSucceeded", "noTestFailuresOrErrors"],
+        "packageStateCheck": "application and instrumentation packages reported installed=false; timing/cause not determined; connected task did execute and emitted XML",
+        "rawGradleProgressDiscrepancy": "Progress reached 22/16 while XML and collector summary agree on 16; not investigated",
+        "artifactId": 11731948710,
+        "artifactName": "android-emulator-evidence-38215175075-1",
+        "artifactSizeBytes": 155255,
+        "artifactSha256": "1142a6e6e6b1c63730835c231873a2c931cc0aaf499eab6344edfa418bcba794",
+        "artifactArchiveCommittedToGit": false,
+        "artifactEvidencePaths": [
+          "docs/validation/ux-02b-conversation-content/emulator-run-38215175075/summary.json",
+          "docs/validation/ux-02b-conversation-content/emulator-run-38215175075/instrumented-xml/TEST-emulator-5554-15-_app-.xml.gz",
+          "docs/validation/ux-02b-conversation-content/emulator-run-38215175075/gradle-connected.log.gz",
+          "docs/validation/ux-02b-conversation-content/emulator-run-38215175075/source-artifact-SHA256SUMS.txt"
+        ],
+        "artifactExpiresAt": "2026-10-19T07:12:30Z",
+        "artifactManifestEntriesVerified": 32,
+        "failure": "Missing authentic historical Room schema WorkspaceDatabase/1.json"
+      },
+      "qaGate": {
+        "runId": 38215175184,
+        "jobId": 114698137501,
+        "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38215175184",
+        "conclusion": "FAIL_CLOSED: ANDROID_INSTRUMENTATION_NOT_SUCCESSFUL",
+        "apkBuild": "SKIPPED",
+        "apkUpload": "SKIPPED",
+        "artifactCount": 0
+      }
     },
     "planIntegrity": {
       "original97TaskPlan": "Not present in tracked repository; not reconstructed or edited.",

@@ -1,6 +1,6 @@
 {
   "contract": "UX-02b conversational content readability",
-  "status": "HOST_PASS_PENDING_INDEPENDENT_AUDIT",
+  "status": "HOST_PASS_AUTOMATIC_EMULATOR_FAIL_ROOM_FIXTURE_PENDING_INDEPENDENT_AUDIT",
   "branch": "feat/0.5.0-skills-agents",
   "baseCommit": "224756694d174af2ed00db4b8c1b5c9fb3f9cb5d",
   "sourceCodeCommit": "3fc4bf6d496702f98f370e6089e98141486b284d",
@@ -70,12 +70,52 @@
       "fenced code exposes horizontal scrolling",
       "original text anchors remain reachable"
     ],
-    "screenshots": "NOT_GENERATED"
+    "screenshots": "The host content-layout test generated none. The later automatic emulator artifact contains ChatHeader-only PNGs, unrelated to Markdown content rendering and not treated as visual validation of UX-02b."
   },
   "androidValidation": {
-    "HOST": "PASS for the listed UX-02b checks",
-    "EMULATOR": "NOT_RUN for UX-02b; global UX-02a run 38210637867 remains FAIL: 9 PASS, 1 Room v1 fixture FAIL, 6 model-dependent SKIPPED, 10 executed",
-    "PHYSICAL_DEVICE": "NOT_RUN"
+    "HOST": "PASS for the focused and full gates listed above",
+    "EMULATOR": "FAIL in automatically triggered push run 38215175075 (job 114698137054), exact event checkout 3ed99d8b882668aa31c69db622b689f01dd6212f containing code 3fc4bf6d496702f98f370e6089e98141486b284d. API 35 x86_64 AVD and ADB connected; :app:connectedDebugAndroidTest executed, exit 1. JUnit 16 total: 9 passed, 1 failed, 0 errors, 6 skipped, 10 executed. The sole failure is the known missing authentic WorkspaceDatabase/1.json Room v1 fixture; six skips need real models. Both ChatHeader tests passed. This run does not visually validate Markdown content.",
+    "PHYSICAL_DEVICE": "NOT_RUN",
+    "roomSchemaOrTestChanged": false
+  },
+  "automaticPushWorkflows": {
+    "emulator": {
+      "runId": 38215175075,
+      "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38215175075",
+      "jobId": 114698137054,
+      "eventCommit": "3ed99d8b882668aa31c69db622b689f01dd6212f",
+      "applicationCodeCommit": "3fc4bf6d496702f98f370e6089e98141486b284d",
+      "conclusion": "FAIL",
+      "task": ":app:connectedDebugAndroidTest",
+      "taskExitCode": 1,
+      "counts": {"total": 16, "passed": 9, "failed": 1, "errors": 0, "skipped": 6, "executed": 10},
+      "failure": "WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords: missing authentic Room v1 schema asset WorkspaceDatabase/1.json",
+      "collectorAcceptanceFailures": ["applicationApkInstalled", "connectedTaskSucceeded", "noTestFailuresOrErrors"],
+      "packageStateCheck": "The collector summary reports application and instrumentation packages installed=false; timing/cause was not determined. The connected task nevertheless executed and emitted JUnit XML.",
+      "rawGradleProgressDiscrepancy": "The Gradle log progress reached 22/16 while the final JUnit XML and collector summary agree on 16 cases; not investigated.",
+      "artifact": {
+        "id": 11731948710,
+        "name": "android-emulator-evidence-38215175075-1",
+        "sizeBytes": 155255,
+        "sha256": "1142a6e6e6b1c63730835c231873a2c931cc0aaf499eab6344edfa418bcba794",
+        "downloadedFromRunUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38215175075",
+        "archiveCommittedToGit": false,
+        "archiveOmittedReason": ".gitignore excludes ZIP files under docs/validation; the rule was respected",
+        "internalManifestEntriesVerified": 32,
+        "preservedExtracts": [
+          "emulator-run-38215175075/summary.json",
+          "emulator-run-38215175075/instrumented-xml/TEST-emulator-5554-15-_app-.xml.gz",
+          "emulator-run-38215175075/gradle-connected.log.gz",
+          "emulator-run-38215175075/source-artifact-SHA256SUMS.txt"
+        ],
+        "archiveExpiresAt": "2026-10-19T07:12:30Z"
+      },
+      "qaGateRunId": 38215175184,
+      "qaGateConclusion": "FAIL_CLOSED",
+      "qaGateUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38215175184",
+      "qaArtifact": "NONE; APK build and upload steps skipped after exact-SHA instrumentation failure"
+    },
+    "screenshots": "The archived PNGs are ChatHeader diagnostics only, not screenshots validating UX-02b Markdown content."
   },
   "planIntegrity": {
     "original97TaskPlan": "not present in tracked repository; not reconstructed or edited",

@@ -1,10 +1,11 @@
 # Latest contract: UX-02b conversational content readability (2026-10-12)
 
-**Status:** HOST PASS for the UX-02b scope; waiting for independent audit. No new emulator or Motorola run was made. Stop after this handoff; do not start UX-02c, UX-03 or functional roadmap work.
+**Status:** HOST PASS for the UX-02b scope; waiting for independent audit. The code push automatically triggered emulator and QA gate workflows: emulator FAIL on the known Room v1 fixture; QA gate failed closed with no APK artifact. PHYSICAL_DEVICE remains NOT_RUN. Stop after this handoff; do not start UX-02c, UX-03 or functional roadmap work.
 
 ## Baseline and prior UX-02a acceptance
 
 - Base/current feature reference: `224756694d174af2ed00db4b8c1b5c9fb3f9cb5d` on `feat/0.5.0-skills-agents`; product code for UX-02b is `3fc4bf6d496702f98f370e6089e98141486b284d`.
+- The automatic workflow event used checkout commit `3ed99d8b882668aa31c69db622b689f01dd6212f`, whose application code is the same UX-02b code commit above. A documentation-only commit may be made after this record to preserve the automatic run result.
 - UX-02a source `d0832e225f51f624c981f6b68da6193b72a78ef2` was independently accepted for its UI scope. The acceptance does not turn its global emulator result into PASS.
 - UX-02a remains HOST PASS; its global EMULATOR run remains FAIL on the unresolved authentic Room v1 fixture, with six real-model cases SKIPPED and 10 cases executed. PHYSICAL_DEVICE remains NOT_RUN.
 
@@ -27,12 +28,13 @@ The new layout test uses a compact 320dp Robolectric host fixture at fontScale 1
 ## Validation layers and plan
 
 - `HOST`: PASS for the listed UX-02b checks.
-- `EMULATOR`: not rerun for UX-02b. The current global result remains FAIL from UX-02a run `38210637867` (16 total, 9 PASS, 1 Room v1 fixture FAIL, 6 model-dependent SKIPPED, 10 executed).
+- `EMULATOR`: automatic push run [38215175075](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38215175075), job `114698137054`, completed FAIL on event commit `3ed99d8b882668aa31c69db622b689f01dd6212f`. AVD API 35 x86_64/ADB connected; `:app:connectedDebugAndroidTest` ran and exited 1. JUnit: 16 total, 9 PASS, 1 FAIL, 0 errors, 6 model-dependent SKIPPED, 10 executed. The one JUnit failure is `WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords` due to the still-unavailable authentic `WorkspaceDatabase/1.json`; Room/tests were not changed. Both ChatHeader tests passed. Collector acceptance also reports `applicationApkInstalled=false`; its timing/cause is undetermined, so no install-success claim is made. Gradle progress reached `22/16` but final XML and collector summary agree on 16 cases; discrepancy not investigated. Actions artifact `11731948710` was 155,255 bytes with SHA-256 `1142a6e6e6b1c63730835c231873a2c931cc0aaf499eab6344edfa418bcba794`. Respecting `.gitignore` (which excludes validation ZIPs), the original archive is not committed; exact summary, JUnit XML, Gradle log and original artifact manifest are persisted in [UX-02b run evidence](../validation/ux-02b-conversation-content/emulator-run-38215175075/README.md). Its header PNGs are not visual validation of Markdown content.
+- QA gate [38215175184](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38215175184), job `114698137501`, failed closed with `ANDROID_INSTRUMENTATION_NOT_SUCCESSFUL`; APK build and upload steps were skipped and the Actions artifact list is empty. No APK was generated or downloaded for this UX-02b delivery.
 - `PHYSICAL_DEVICE`: NOT_RUN.
 - The original user-provided 97-task plan is not in the tracked tree; it was not reconstructed or edited. M01-06 remains `PENDING_REQUIRES_DEVICE`, and the functional backlog remains paused.
 - `main` and peeled `v0.4.2` remain unchanged at `de615b772cf37a99e7e08a647c59607b271de606`.
 
-**Next:** wait for independent UX-02b audit. Do not start UX-02c or UX-03.
+**Next:** wait for independent UX-02b audit. Do not rerun the same Room-blocked emulator gate or start UX-02c, UX-03, or functional roadmap work.
 
 ---
 
