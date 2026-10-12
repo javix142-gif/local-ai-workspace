@@ -1,0 +1,6 @@
+Manual visual inspection of the original PNG files extracted from Actions artifact 11720321131. Both were opened at original resolution; no image was replaced or edited.
+
+- standard: 1080x1920 RGBA PNG, 39,013 bytes, SHA-256 `9ecef80b3f3f7bf2fa5f7e6981374bfd741efc33863c8ed6e7afca4675a0c4f2`. The capture shows General Agent, the long conversation title (ellipsized), and “Gemma 4 E2B · Local · Ready” as three separate visible header lines.
+- large-font: 1080x1920 RGBA PNG, 46,707 bytes, SHA-256 `47b64cb847d1ba456a733c26b8ecd333b1e959636dd59e87ad0933598214477c`. The capture shows the same three lines at requested Compose font scale 1.6; the long conversation title is ellipsized and the model line remains visible.
+
+Capture source reported by the test for both: `ComposeTestRule.onRoot.captureToImage`, after `waitForIdle`; root bounds `(0,0)-(1080,1920)`. This validates these screenshots as visual evidence of the test header. It does not validate production device rendering or Motorola behavior.

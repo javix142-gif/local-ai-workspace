@@ -1,0 +1,211 @@
+{
+  "label": "EMULATOR",
+  "sourceCommit": "5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1",
+  "runId": "38186081844",
+  "runAttempt": "1",
+  "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38186081844",
+  "expected": {
+    "api": 35,
+    "abi": "x86_64",
+    "systemImage": "google_apis"
+  },
+  "device": {
+    "connected": true,
+    "api": "35",
+    "release": "15",
+    "abi": "x86_64",
+    "model": "sdk_gphone64_x86_64",
+    "product": "sdk_gphone64_x86_64",
+    "emulator": "1",
+    "screenSize": "Physical size: 1080x1920",
+    "screenDensity": "Physical density: 420"
+  },
+  "adbDevicesExitCode": 0,
+  "avdPrelaunchDiagnostics": {
+    "capturedBeforeLaunch": true,
+    "expectedAvdName": "localai-api35-x86_64",
+    "androidAvdHome": "/home/runner/.android/avd",
+    "xdgConfigHome": "/home/runner/.config",
+    "avdmanagerCreateExitCode": 0,
+    "createPipelineExitCode": 0,
+    "avdmanagerListExitCode": 0,
+    "avdmanagerListedExpected": true,
+    "avdmanagerReportedPaths": [
+      "/home/runner/.android/avd/localai-api35-x86_64.avd"
+    ],
+    "emulatorListExitCode": 0,
+    "emulatorListedExpected": true,
+    "searchPaths": [
+      {
+        "searchDirectory": "/home/runner/.android/avd",
+        "directoryExists": true,
+        "expectedIni": "/home/runner/.android/avd/localai-api35-x86_64.ini",
+        "iniExists": true,
+        "expectedConfig": "/home/runner/.android/avd/localai-api35-x86_64.avd/config.ini",
+        "configExists": true
+      },
+      {
+        "searchDirectory": "/home/runner/.config/.android/avd",
+        "directoryExists": false,
+        "expectedIni": "/home/runner/.config/.android/avd/localai-api35-x86_64.ini",
+        "iniExists": false,
+        "expectedConfig": "/home/runner/.config/.android/avd/localai-api35-x86_64.avd/config.ini",
+        "configExists": false
+      }
+    ],
+    "checks": {
+      "createCommandSucceeded": true,
+      "createPipelineSucceeded": true,
+      "avdmanagerListSucceeded": true,
+      "avdmanagerListedExpected": true,
+      "emulatorListSucceeded": true,
+      "emulatorListedExpected": true,
+      "managerReportedCanonicalPath": true,
+      "canonicalDirectoryExists": true,
+      "canonicalIniExists": true,
+      "canonicalConfigExists": true
+    },
+    "preflightPassed": true,
+    "preflightFailures": []
+  },
+  "avdPreflightExitCode": 0,
+  "apkInstallState": {
+    "checked": true,
+    "listPackagesExitCode": 0,
+    "packages": {
+      "application": {
+        "packageName": "com.localai.workspace.debug",
+        "installed": false
+      },
+      "instrumentationTest": {
+        "packageName": "com.localai.workspace.debug.test",
+        "installed": false
+      }
+    }
+  },
+  "physicalDeviceValidation": "NOT_RUN",
+  "connectedTask": ":app:connectedDebugAndroidTest",
+  "connectedTaskCommand": "./gradlew :app:connectedDebugAndroidTest --no-daemon --no-parallel --max-workers=2 --stacktrace --console=plain",
+  "gradleExitCode": 1,
+  "instrumentationXmlCount": 1,
+  "counts": {
+    "total": 16,
+    "passed": 9,
+    "failed": 1,
+    "errors": 0,
+    "skipped": 6,
+    "executed": 10
+  },
+  "skippedCases": [
+    {
+      "class": "com.localai.workspace.inference.LiteRtLmDeviceSmokeTest",
+      "name": "normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole",
+      "reason": ""
+    },
+    {
+      "class": "com.localai.workspace.inference.LiteRtLmDeviceSmokeTest",
+      "name": "cpuFirstTokenStreamingCompletionCancelRetryAndUnload",
+      "reason": ""
+    },
+    {
+      "class": "com.localai.workspace.ui.NormalChatNativeDeviceTest",
+      "name": "plain_chat_legacy_off_real_native",
+      "reason": ""
+    },
+    {
+      "class": "com.localai.workspace.ui.NormalChatNativeDeviceTest",
+      "name": "plain_chat_context_v1_on_real_native",
+      "reason": ""
+    },
+    {
+      "class": "com.localai.workspace.ui.NormalChatNativeDeviceTest",
+      "name": "cancel_then_retry_real_native",
+      "reason": ""
+    },
+    {
+      "class": "com.localai.workspace.ui.NormalChatNativeDeviceTest",
+      "name": "project_chat_context_v1_on_real_native",
+      "reason": ""
+    }
+  ],
+  "headerUiDiagnostics": {
+    "screenshots": [
+      "ui-diagnostics/screenshots/chat-header-standard.png",
+      "ui-diagnostics/screenshots/chat-header-large-font.png"
+    ],
+    "requiredScreenshots": 2,
+    "captureReport": {
+      "screenshots": [
+        {
+          "name": "standard",
+          "transport": "logcat_base64_chunks_v1",
+          "collectorCommand": "adb -s <serial> logcat -d -v raw -s M00HeaderPng:I",
+          "logcatExitCode": 0,
+          "logcatBytes": 120784,
+          "localPath": "ui-diagnostics/screenshots/chat-header-standard.png",
+          "localFilePresent": true,
+          "pngValid": true,
+          "widthPixels": 1080,
+          "heightPixels": 1920,
+          "bytes": 39013,
+          "sha256": "9ecef80b3f3f7bf2fa5f7e6981374bfd741efc33863c8ed6e7afca4675a0c4f2",
+          "captureRecordsFound": 1,
+          "expectedChunkCount": 102,
+          "receivedChunkCount": 102,
+          "endMarkerReceived": true,
+          "errors": []
+        },
+        {
+          "name": "large-font",
+          "transport": "logcat_base64_chunks_v1",
+          "collectorCommand": "adb -s <serial> logcat -d -v raw -s M00HeaderPng:I",
+          "logcatExitCode": 0,
+          "logcatBytes": 120784,
+          "localPath": "ui-diagnostics/screenshots/chat-header-large-font.png",
+          "localFilePresent": true,
+          "pngValid": true,
+          "widthPixels": 1080,
+          "heightPixels": 1920,
+          "bytes": 46707,
+          "sha256": "47b64cb847d1ba456a733c26b8ecd333b1e959636dd59e87ad0933598214477c",
+          "captureRecordsFound": 1,
+          "expectedChunkCount": 122,
+          "receivedChunkCount": 122,
+          "endMarkerReceived": true,
+          "errors": []
+        }
+      ]
+    },
+    "logcat": {
+      "exitCode": 0,
+      "tags": [
+        "AndroidRuntime:E",
+        "TestRunner:I",
+        "Instrumentation:I",
+        "ChatHeaderLayout:V"
+      ],
+      "chatHeaderPrintToLogPriority": "DEBUG; ChatHeaderLayout:V includes DEBUG and INFO",
+      "bytes": 54624,
+      "sha256": "565411fc64881b108d062e1e078bcd1c43da024a2a26e14de559a02d320e4f52"
+    }
+  },
+  "acceptanceChecks": {
+    "avdPreflightPassed": true,
+    "adbConnected": true,
+    "api35X86_64Emulator": true,
+    "applicationApkInstalled": false,
+    "connectedTaskSucceeded": false,
+    "junitXmlPresent": true,
+    "junitCountsConsistent": true,
+    "testsExecuted": true,
+    "noTestFailuresOrErrors": false,
+    "headerUiDiagnosticsCaptured": true
+  },
+  "status": "FAIL",
+  "failureReasons": [
+    "applicationApkInstalled",
+    "connectedTaskSucceeded",
+    "noTestFailuresOrErrors"
+  ],
+  "apkOrModelArtifactsIncluded": false
+}

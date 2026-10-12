@@ -1,0 +1,71 @@
+command=sha256sum -c artifact/payload/SHA256SUMS
+adb-after-tests.txt: OK
+adb-devices.txt: OK
+avd-prelaunch-json-exit-code.txt: OK
+avd-prelaunch.json: OK
+instrumented-xml/debug/TEST-emulator-5554 - 15-_app-.xml: OK
+logs/adb-before-tests.txt: OK
+logs/android-toolchain.txt: OK
+logs/avd-environment.txt: OK
+logs/avd-preflight-exit-code.txt: OK
+logs/avd-resolved-paths.txt: OK
+logs/avd-storage-inventory.txt: OK
+logs/avdmanager-create-exit-code.txt: OK
+logs/avdmanager-create-pipeline-exit-code.txt: OK
+logs/avdmanager-create-pipeline-status.txt: OK
+logs/avdmanager-list-avd.txt: OK
+logs/avdmanager-list-avd.txt.exit-code: OK
+logs/avdmanager.log: OK
+logs/emulator-list-avds.txt: OK
+logs/emulator-list-avds.txt.exit-code: OK
+logs/emulator.log: OK
+logs/gradle-connected.log: OK
+logs/kvm-check.txt: OK
+logs/logcat-buffer-setup.txt: OK
+logs/logcat-filtered-sanitized.txt: OK
+logs/sdk-licenses.log: OK
+logs/sdkmanager.log: OK
+metadata.json: OK
+summary.json: OK
+ui-diagnostics/screenshot-pull.json: OK
+ui-diagnostics/screenshot-transport.txt: OK
+ui-diagnostics/screenshots/chat-header-large-font.png: OK
+ui-diagnostics/screenshots/chat-header-standard.png: OK
+sha256sum_exit=0
+command=unzip -t artifact/actions-artifact.zip
+Archive:  docs/validation/android-emulator-ci/compose-capture-5e93ba6/artifact/actions-artifact.zip
+    testing: SHA256SUMS               OK
+    testing: adb-devices.txt          OK
+    testing: adb-after-tests.txt      OK
+    testing: avd-prelaunch-json-exit-code.txt   OK
+    testing: avd-prelaunch.json       OK
+    testing: instrumented-xml/debug/TEST-emulator-5554 - 15-_app-.xml   OK
+    testing: logs/adb-before-tests.txt   OK
+    testing: logs/android-toolchain.txt   OK
+    testing: logs/avd-environment.txt   OK
+    testing: logs/avd-preflight-exit-code.txt   OK
+    testing: logs/avd-resolved-paths.txt   OK
+    testing: logs/avd-storage-inventory.txt   OK
+    testing: logs/avdmanager-create-exit-code.txt   OK
+    testing: logs/avdmanager-create-pipeline-exit-code.txt   OK
+    testing: logs/avdmanager-create-pipeline-status.txt   OK
+    testing: logs/avdmanager-list-avd.txt   OK
+    testing: logs/avdmanager-list-avd.txt.exit-code   OK
+    testing: logs/avdmanager.log      OK
+    testing: logs/emulator-list-avds.txt   OK
+    testing: logs/emulator-list-avds.txt.exit-code   OK
+    testing: logs/emulator.log        OK
+    testing: logs/gradle-connected.log   OK
+    testing: logs/kvm-check.txt       OK
+    testing: logs/logcat-filtered-sanitized.txt   OK
+    testing: logs/logcat-buffer-setup.txt   OK
+    testing: logs/sdk-licenses.log    OK
+    testing: logs/sdkmanager.log      OK
+    testing: metadata.json            OK
+    testing: summary.json             OK
+    testing: ui-diagnostics/screenshot-pull.json   OK
+    testing: ui-diagnostics/screenshots/chat-header-large-font.png   OK
+    testing: ui-diagnostics/screenshot-transport.txt   OK
+    testing: ui-diagnostics/screenshots/chat-header-standard.png   OK
+No errors detected in compressed data of docs/validation/android-emulator-ci/compose-capture-5e93ba6/artifact/actions-artifact.zip.
+unzip_exit=0

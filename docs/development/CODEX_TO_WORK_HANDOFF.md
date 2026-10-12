@@ -1,3 +1,17 @@
+# Latest task: M00 standard Compose screenshot recovery (2026-10-12)
+
+Code commit: `5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1` on `feat/0.5.0-skills-agents`, parent `93409371bac7e6f80d968f7ef084271d474857ac`. Only `ChatHeaderLayoutTest` capture source changed: the synchronized Compose root now uses `captureToImage()` after `waitForIdle`; the three `assertIsDisplayed()` checks, insets/bounds/font-scale checks, and model-before-body check remain. No production UI or Room schema/test changed.
+
+Host: collector tests **7/7 PASS**; `:app:compileDebugAndroidTestKotlin` **BUILD SUCCESSFUL** (54 tasks, 2 executed/52 up-to-date) with Temurin JDK 17.0.20 and the installed Android SDK. No local APK assemble or full JVM suite.
+
+One authorized run [38186081844](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38186081844) on the exact code SHA started API 35 x86_64 AVD/ADB and ran `:app:connectedDebugAndroidTest`: XML **16 total, 9 pass, 1 fail, 0 errors, 6 skipped, 10 executed**. The only JUnit failure is the authentic Room v1 schema asset being unavailable (`ENVIRONMENT_UNAVAILABLE`); six model-required tests remain skipped. Both new 1080×1920 original screenshots were opened and visually show all three header lines: standard SHA-256 `9ecef80b3f3f7bf2fa5f7e6981374bfd741efc33863c8ed6e7afca4675a0c4f2`; large-font SHA-256 `47b64cb847d1ba456a733c26b8ecd333b1e959636dd59e87ad0933598214477c`. Thus screenshot evidence is representative; **the emulator suite remains FAIL**.
+
+Same-SHA QA gate run [38186082135](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38186082135) failed closed after the instrumentation conclusion; APK build/upload were skipped and no QA artifact was created. `PHYSICAL_DEVICE=NOT_RUN`; M01-06 stays `PENDING_REQUIRES_DEVICE`; no workbook was used. The original 97-task IDs/order/dependencies, `main`, and `v0.4.2` are unchanged.
+
+Detailed run evidence, raw artifact ZIP, XML/logs, screenshot manifest and checksums: [compose-capture-5e93ba6](../validation/android-emulator-ci/compose-capture-5e93ba6/RESULTS.md). Latest device-validation summary: [Android emulator CI results](../validation/android-emulator-ci/RESULTS.md). Stop for independent audit; no further run is authorized under this contract.
+
+---
+
 ## Latest M00 capture-transfer recovery (2026-10-11) — EMULATOR FAIL / stop for independent audit
 
 Source code SHA: `49d7ccf11a682d04ad28c400f07e5fb577e573fb`; evidence bundle commit: `455f579cbf0f172d2cd3b6daf93e98b10ad46d8b` (documentation/evidence only). One push-triggered run [38182644492](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38182644492), job `114598286399`, completed from that exact SHA. API 35 x86_64 AVD/ADB passed and the real `:app:connectedDebugAndroidTest` executed 16 XML cases: **9 PASS, 1 FAIL, 0 errors, 6 SKIPPED; 10 executed**. The only failed test is the unchanged Room migration test, which cannot find the authentic `WorkspaceDatabase/1.json`. Two model-dependent LiteRT cases and four Gemma-native cases remain SKIPPED; no models were downloaded or simulated.

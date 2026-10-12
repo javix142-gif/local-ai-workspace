@@ -1,0 +1,101 @@
+{
+  "workflow": "Android emulator instrumentation",
+  "workflowPath": ".github/workflows/android-emulator-instrumented.yml",
+  "branch": "feat/0.5.0-skills-agents",
+  "sourceCommit": "5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1",
+  "runId": 38186081844,
+  "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38186081844",
+  "event": "push",
+  "attempt": 1,
+  "jobId": 114608571077,
+  "jobName": "API 35 x86_64 emulator tests",
+  "jobStartedAtUtc": "2026-10-11T23:55:33Z",
+  "jobCompletedAtUtc": "2026-10-12T00:09:51Z",
+  "jobConclusion": "failure",
+  "steps": [
+    {
+      "name": "Install pinned Android SDK, NDK, CMake and API 35 image",
+      "conclusion": "success"
+    },
+    {
+      "name": "Verify and enable ephemeral runner KVM access",
+      "conclusion": "success"
+    },
+    {
+      "name": "Create and boot accelerated API 35 emulator",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run all connected Android instrumentation tests",
+      "conclusion": "failure"
+    },
+    {
+      "name": "Collect and validate instrumentation evidence",
+      "conclusion": "failure"
+    },
+    {
+      "name": "Upload sanitized emulator evidence",
+      "conclusion": "success"
+    }
+  ],
+  "device": {
+    "connected": true,
+    "api": "35",
+    "release": "15",
+    "abi": "x86_64",
+    "model": "sdk_gphone64_x86_64",
+    "product": "sdk_gphone64_x86_64",
+    "emulator": "1",
+    "screenSize": "Physical size: 1080x1920",
+    "screenDensity": "Physical density: 420"
+  },
+  "connectedTask": ":app:connectedDebugAndroidTest",
+  "connectedTaskCommand": "./gradlew :app:connectedDebugAndroidTest --no-daemon --no-parallel --max-workers=2 --stacktrace --console=plain",
+  "gradleExitCode": 1,
+  "instrumentationXmlCount": 1,
+  "counts": {
+    "total": 16,
+    "passed": 9,
+    "failed": 1,
+    "errors": 0,
+    "skipped": 6,
+    "executed": 10
+  },
+  "failureReasons": [
+    "applicationApkInstalled",
+    "connectedTaskSucceeded",
+    "noTestFailuresOrErrors"
+  ],
+  "acceptanceChecks": {
+    "avdPreflightPassed": true,
+    "adbConnected": true,
+    "api35X86_64Emulator": true,
+    "applicationApkInstalled": false,
+    "connectedTaskSucceeded": false,
+    "junitXmlPresent": true,
+    "junitCountsConsistent": true,
+    "testsExecuted": true,
+    "noTestFailuresOrErrors": false,
+    "headerUiDiagnosticsCaptured": true
+  },
+  "artifact": {
+    "id": 11720321131,
+    "name": "android-emulator-evidence-38186081844-1",
+    "bytes": 108492,
+    "sha256": "0ef4c876e0e275200000085434f6c8a01d648db7afab4eecada7b6e8dbdf709c",
+    "apiDigest": "sha256:0ef4c876e0e275200000085434f6c8a01d648db7afab4eecada7b6e8dbdf709c",
+    "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38186081844/artifacts/11720321131",
+    "payloadManifestVerified": true,
+    "payloadFilesVerified": 32
+  },
+  "xml": "artifact/extracted/instrumented-xml/TEST-emulator-5554 - 15-_app-.xml.gz",
+  "gradleLog": "artifact/extracted/logs/gradle-connected.log.gz",
+  "sanitizedLogcat": "artifact/extracted/logs/logcat-filtered-sanitized.txt.gz",
+  "physicalDevice": "NOT_RUN",
+  "m01_06": "PENDING_REQUIRES_DEVICE",
+  "xmlSha256": "7308771822916837b384afee469035639eb8f51cd1cfebb1476be9a9dc8eec3f",
+  "xmlBytes": 3653,
+  "gradleLogSha256": "e4b7c8d78f506386dcbb603ea0d1f783f0d39596fc8c91cff9e7a499751227ab",
+  "sanitizedLogcatSha256": "565411fc64881b108d062e1e078bcd1c43da024a2a26e14de559a02d320e4f52",
+  "hostCompileLog": "host/compileDebugAndroidTestKotlin-final.log.gz"
+}

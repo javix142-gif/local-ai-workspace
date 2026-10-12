@@ -1,0 +1,26 @@
+{
+  "workflow": "QA debug APK (ARM64)",
+  "workflowPath": ".github/workflows/qa-debug-arm64-apk.yml",
+  "branch": "feat/0.5.0-skills-agents",
+  "sourceCommit": "5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1",
+  "runId": 38186082135,
+  "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38186082135",
+  "jobId": 114608572934,
+  "jobStartedAtUtc": "2026-10-11T23:55:33Z",
+  "jobCompletedAtUtc": "2026-10-12T00:09:57Z",
+  "conclusion": "failure",
+  "gateStep": {
+    "name": "Wait for matching Android instrumentation run to succeed",
+    "conclusion": "failure",
+    "reason": "ANDROID_INSTRUMENTATION_NOT_SUCCESSFUL",
+    "observedRunId": 38186081844,
+    "observedSourceSha": "5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1",
+    "observedConclusion": "failure"
+  },
+  "jdkSetup": "skipped",
+  "apkBuild": "skipped",
+  "artifactUpload": "skipped",
+  "artifactCount": 0,
+  "qaApkGeneratedByThisRun": false,
+  "previousArtifactsTouched": false
+}

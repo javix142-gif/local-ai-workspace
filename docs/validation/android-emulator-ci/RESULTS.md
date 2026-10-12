@@ -1,3 +1,19 @@
+## Latest M00 Compose-root screenshot recovery (2026-10-12) — EMULATOR FAIL; both screenshots visually representative
+
+Source code SHA: `5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1`; code commit parent `93409371bac7e6f80d968f7ef084271d474857ac`. The test now captures the idle Compose root using `captureToImage()` instead of `UiAutomation.takeScreenshot()`. This changes only `ChatHeaderLayoutTest`; production UI, Room, workflows and dependencies are unchanged.
+
+One push-triggered run [38186081844](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38186081844), job `114608571077`, ran API 35 x86_64 instrumentation. The connected task executed 16 cases: **9 PASS, 1 FAIL, 0 errors, 6 SKIPPED; 10 executed**. The sole JUnit failure is the unchanged Room migration test because authentic `WorkspaceDatabase/1.json` is unavailable (`ENVIRONMENT_UNAVAILABLE`). The six skips are two LiteRT and four Gemma tests guarded by actual model availability.
+
+I opened both original artifact screenshots at full resolution. The standard and large-font captures now visibly show all three header lines; the long conversation title is ellipsized. Standard: 1080×1920, 39,013 bytes, SHA-256 `9ecef80b3f3f7bf2fa5f7e6981374bfd741efc33863c8ed6e7afca4675a0c4f2`. Large font: 1080×1920, 46,707 bytes, SHA-256 `47b64cb847d1ba456a733c26b8ecd333b1e959636dd59e87ad0933598214477c`. Both `ChatHeaderLayoutTest` methods passed their three `assertIsDisplayed()` checks, bounds/insets, font-size and model-before-body assertions. The cause of the earlier blank display-surface capture is not claimed beyond the evidence: a synchronized Compose-root capture is representative.
+
+Run artifact [11720321131](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38186081844/artifacts/11720321131) is 108,492 bytes, SHA-256 `0ef4c876e0e275200000085434f6c8a01d648db7afab4eecada7b6e8dbdf709c`; its 32 payload checksums and ZIP integrity verify. Original archive, XML, Gradle log, sanitized Compose logcat, screenshots, manifest and detailed results are in [the evidence bundle](compose-capture-5e93ba6/RESULTS.md).
+
+The same-SHA QA gate [38186082135](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38186082135) observed `ANDROID_INSTRUMENTATION_NOT_SUCCESSFUL`; JDK setup, APK build and upload were skipped, with zero QA artifacts. The workflow collector also reported no installed package in its post-test snapshot; its Gradle log and XML confirm the connected test task actually started and ran 16 cases. Overall emulator status remains **FAIL**, not PASS.
+
+HOST: collector tests 7/7 and AndroidTest Kotlin compilation PASS; full JVM suite NOT_RUN; no APK assembled locally. EMULATOR: FAIL with one Room migration test failure and six model skips; screenshot visual evidence PASS. PHYSICAL_DEVICE: NOT_RUN; M01-06 remains `PENDING_REQUIRES_DEVICE`. The original 97 task IDs/order/dependencies and main/tag are unchanged. See [full results and evidence](compose-capture-5e93ba6/RESULTS.md).
+
+---
+
 # Android emulator CI setup and execution record
 
 ## Latest M00 capture-transfer recovery (2026-10-11) — EMULATOR FAIL

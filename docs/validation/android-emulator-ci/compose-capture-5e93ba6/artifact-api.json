@@ -1,0 +1,10 @@
+{
+  "artifactId": 11720321131,
+  "runId": 38186081844,
+  "name": "android-emulator-evidence-38186081844-1",
+  "sizeInBytes": 108492,
+  "digest": "sha256:0ef4c876e0e275200000085434f6c8a01d648db7afab4eecada7b6e8dbdf709c",
+  "downloadUrl": "https://api.github.com/repos/javix142-gif/local-ai-workspace/actions/artifacts/11720321131/zip",
+  "createdAtUtc": "2026-10-12T00:09:48Z",
+  "expiresAtUtc": "2026-10-19T00:09:47Z"
+}

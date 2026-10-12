@@ -1,0 +1,74 @@
+{
+  "sourceCommit": "5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1",
+  "branch": "feat/0.5.0-skills-agents",
+  "recordedAtUtc": "2026-10-11T23:57:04.020597Z",
+  "environment": {
+    "os": "Linux-6.18.44-x86_64-with-glibc2.41",
+    "architecture": "x86_64",
+    "javaHome": "/workspace/.toolchain/jdk-17",
+    "javaVersionExitCode": 0,
+    "javaVersion": "openjdk version \"17.0.20.1\" 2026-08-18\nOpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)\nOpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)",
+    "javacExitCode": 0,
+    "javacVersion": "javac 17.0.20.1",
+    "gradleWrapperExitCode": 0,
+    "gradleVersionOutput": "------------------------------------------------------------\nGradle 8.10.2\n------------------------------------------------------------\n\nBuild time:    2024-09-23 21:28:39 UTC\nRevision:      415adb9e06a516c44b391edff552fd42139443f7\n\nKotlin:        1.9.24\nGroovy:        3.0.22\nAnt:           Apache Ant(TM) version 1.10.14 compiled on August 16 2023\nLauncher JVM:  21.0.12.1 (Debian 21.0.12.1+1-1-deb13u1-Debian)\nDaemon JVM:    /usr/lib/jvm/java-21-openjdk-amd64 (no JDK specified, using current Java home)\nOS:            Linux 6.18.44 amd64",
+    "androidHome": "/workspace/.toolchain/android-sdk",
+    "androidPlatform35Present": true,
+    "adbExitCode": 0,
+    "adbVersion": "Android Debug Bridge version 1.0.41\nVersion 37.0.1-15733141\nInstalled as /workspace/.toolchain/android-sdk/platform-tools/adb\nRunning on Linux 6.18.44 (x86_64)",
+    "pythonExitCode": 0,
+    "pythonVersion": "Python 3.12.14"
+  },
+  "checks": [
+    {
+      "name": "collector evidence tests",
+      "command": "python3 scripts/ci/test_collect_android_emulator_evidence.py",
+      "status": "PASS",
+      "passed": 7,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "log": "collector-tests.log"
+    },
+    {
+      "name": "Compose AndroidTest source compilation",
+      "command": "./gradlew :app:compileDebugAndroidTestKotlin -Parm64Only=true --no-daemon --no-parallel --max-workers=1 --console=plain",
+      "environment": "JAVA_HOME=/workspace/.toolchain/jdk-17; ANDROID_HOME=ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk",
+      "status": "PASS",
+      "exitCode": 0,
+      "result": "BUILD SUCCESSFUL; 54 actionable tasks: 2 executed, 52 up-to-date",
+      "log": "compileDebugAndroidTestKotlin-final.log.gz",
+      "apkAssembleTaskExecuted": false,
+      "uncompressedLogSha256": "dc9639e2c9a60db2bedb682bb4327bc5118e0551dc47764a0bcf3144299d436d",
+      "compressedLogSha256": "a8c3ca1976ef239a02e2b320ab6f5cf1fa132675823cadad3ac6b62b7704f587"
+    }
+  ],
+  "setupAttempts": [
+    {
+      "attempt": 1,
+      "status": "BLOCKED_ENVIRONMENT_CONFIGURATION",
+      "exitCode": 1,
+      "cause": "ANDROID_HOME/SDK location unset",
+      "outputExcerpt": "SDK location not found. Define a valid SDK location with an ANDROID_HOME environment variable or by setting sdk.dir in local.properties.",
+      "rawLogPersisted": false
+    },
+    {
+      "attempt": 2,
+      "status": "BLOCKED_ENVIRONMENT_CONFIGURATION",
+      "exitCode": 1,
+      "cause": "Default Java 21 runtime had no javac compiler toolchain capability",
+      "outputExcerpt": "Toolchain installation '/usr/lib/jvm/java-21-openjdk-amd64' does not provide the required capabilities: [JAVA_COMPILER]",
+      "rawLogPersisted": false
+    },
+    {
+      "attempt": 3,
+      "status": "PASS",
+      "exitCode": 0,
+      "log": "compileDebugAndroidTestKotlin-final.log.gz"
+    }
+  ],
+  "fullJvmSuites": "NOT_RUN",
+  "localApkAssembly": "NOT_RUN",
+  "instrumentedExecution": "NOT_RUN_IN_HOST"
+}
