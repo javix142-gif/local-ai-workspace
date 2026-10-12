@@ -11,14 +11,14 @@
 
 ## Instrumentation
 
-The retained JUnit XML reports **16 total: 9 passed, 1 failed, 0 errors, 6 skipped; 10 executed**. The failed case is `WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords`: Room cannot find the authentic `com.localai.workspace.data.WorkspaceDatabase/1.json`. No schema or migration test was changed for UX-02a.
+The retained original JUnit XML at `instrumented-xml/debug/TEST-emulator-5554 - 15-_app-.xml` inside the artifact ZIP reports **16 total: 9 passed, 1 failed, 0 errors, 6 skipped; 10 executed**. The failed case is `WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords`: Room cannot find the authentic `com.localai.workspace.data.WorkspaceDatabase/1.json`. No schema or migration test was changed for UX-02a.
 
 Both real emulator ChatHeader cases passed:
 
 - `standardFontScaleKeepsAgentTitleAndModelInsideHeader`
 - `largeFontScaleExpandsHeaderAndKeepsAllThreeLinesVisible`
 
-The six skips are model-dependent: two LiteRT native-session cases and four Gemma native-chat cases. No models were downloaded or simulated. The XML can be reviewed at [`xml/TEST-emulator-5554-15-app.xml`](xml/TEST-emulator-5554-15-app.xml).
+The six skips are model-dependent: two LiteRT native-session cases and four Gemma native-chat cases. No models were downloaded or simulated. The original XML is preserved byte-for-byte inside the artifact ZIP; its SHA-256 is listed below.
 
 The run artifact reports a post-test package-list check of `com.localai.workspace.debug` and `.test` as absent. That post-task snapshot does not establish that installation failed during execution: the connected instrumentation task produced the JUnit report and ran the Compose/UI cases. The collector also classified the task as unsuccessful because the Room failure occurred. Overall EMULATOR remains FAIL.
 
@@ -45,7 +45,7 @@ The exact Actions artifact ZIP is preserved at [`run-38210637867-artifact.zip`](
 |---|---|
 | Actions artifact ZIP | `dd75931c08f5a6ededdb73482b0c728faefcc1719f92d4d8c7ee96da1baa9911` |
 | `summary.json` inside artifact | `80753d724f9f7b0ee14752f272573ae8d6d929f77bc267be95506488e7d22353` |
-| Instrumented JUnit XML | `d1a64440c8e83358861357f216e79b6781804e43ca4f9eaf895a033200e9328f` |
+| Original instrumented JUnit XML (inside artifact ZIP) | `d1a64440c8e83358861357f216e79b6781804e43ca4f9eaf895a033200e9328f` |
 | `logs/gradle-connected.log` | `28d9fd7018e09408dbf56d48ba34e75416268d76cca702cf6d0a5beca293e240` |
 | Sanitized filtered logcat | `483012b20da38c85d61c99e0dcc1ba10a26b5bde94e92397bcb4ee220a47d2c3` |
 | Standard emulator PNG | `b9ad8b86a24df2e96d4377912e0de011316660396331a0c81ab093633759a1b1` |
