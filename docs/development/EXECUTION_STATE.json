@@ -3747,9 +3747,9 @@
   },
   "postDeliveryPause": {
     "priority": "MEJORAS VISUALES Y EXPERIENCIA DE USUARIO",
-    "state": "UX02D_DELIVERED_PENDING_INDEPENDENT_AUDIT",
-    "supersedes": "UX-02c remains independently accepted for structured citation presentation/HOST only. UX-02d tables and the independent pipe-boundary correction are HOST-verified and await independent audit.",
-    "waitFor": "Independent audit of UX-02d including the pipe-boundary correction; do not start UX-02e, UX-03, or functional roadmap work.",
+    "state": "UX02E_ACTIVE",
+    "supersedes": "UX-02d is INDEPENDENTLY_AUDITED_ACCEPTED only for accessible Markdown tables and HOST evidence. UX-02e is the sole active contract.",
+    "waitFor": "Complete UX-02e and stop for independent audit; do not start UX-02f, UX-03, or functional roadmap work.",
     "M01-06": "PENDING_REQUIRES_DEVICE",
     "physicalDevice": "NOT_RUN"
   },
@@ -4561,7 +4561,7 @@
   },
   "latestUx02d": {
     "name": "UX-02d accessible Markdown table presentation",
-    "status": "HOST_PASS_PENDING_INDEPENDENT_AUDIT",
+    "status": "INDEPENDENTLY_AUDITED_ACCEPTED",
     "branch": "feat/0.5.0-skills-agents",
     "baseCommit": "e8fdc02cb423aa871aa2c3e0f4b52a7c33df3cda",
     "productCodeCommit": "df8aeb26ed2287802c1bd8a412441752c56c0fce",
@@ -4741,7 +4741,7 @@
       },
       "manifestSha256": "50461bafc0ced5f4c7eb42c305d62d07a226c6fbf44ce2a6c667e5ebf14d4976"
     },
-    "next": "Stop for independent audit of UX-02d. Do not begin UX-03 or functional roadmap work.",
+    "next": "UX-02d independently accepted within its HOST/table scope. UX-02e inline Markdown links is now active; no UX-02f, UX-03, or functional roadmap work.",
     "initialVerificationHead": "e97a5a185dc25372a6a526bdb8b13310857cfca6",
     "pipeBoundaryFollowUp": {
       "auditBaseCommit": "ba5b1f084a3e4f29c9bb3c8c6f8b029a6d40e3d4",
@@ -4849,6 +4849,71 @@
         "followUpEvidenceEntries": 120,
         "followUpManifestSha256": "815112e07569f4cad9a337c06272d0e1a2e2ed3403634f23ba463bc5dc0c87b9"
       }
+    },
+    "auditScope": "Markdown table rendering and HOST evidence only; EMULATOR remains globally FAIL for the historical Room v1 fixture and six model-dependent skips; PHYSICAL_DEVICE remains NOT_RUN.",
+    "independentAudit": {
+      "accepted": true,
+      "codeSha": "f54c1430cab4ea59a302b58dd2aa27deea579c49",
+      "auditedRemoteHead": "fca3e65b16c5d54ef30747c4c90c13608e520499",
+      "comparisonBase": "ba5b1f0",
+      "productAndTestFiles": [
+        "app/src/main/java/com/localai/workspace/ui/BasicMarkdown.kt",
+        "app/src/test/java/com/localai/workspace/ui/BasicMarkdownTest.kt"
+      ],
+      "red": {
+        "tests": 1,
+        "expectedFailures": 1
+      },
+      "focusedHost": {
+        "tests": 27,
+        "passed": 27,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "fullHost": {
+        "xmlFiles": 90,
+        "tests": 756,
+        "passed": 756,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "gateExitCode": 0,
+        "lintErrors": 0,
+        "lintWarnings": 82,
+        "androidTest": "compile only"
+      },
+      "evidenceReadback": {
+        "coreManifestEntriesVerified": 16,
+        "followupManifestEntriesVerified": 120
+      },
+      "limits": {
+        "emulator": "FAIL: historical Room v1 fixture; six model-dependent tests skipped",
+        "physicalDevice": "NOT_RUN",
+        "apk": "NOT_GENERATED"
+      },
+      "refsUnchanged": {
+        "main": "de615b772cf37a99e7e08a647c59607b271de606",
+        "v0.4.2": "de615b772cf37a99e7e08a647c59607b271de606"
+      }
     }
+  },
+  "latestUx02e": {
+    "name": "UX-02e inline Markdown links in assistant chat responses",
+    "status": "IN_PROGRESS",
+    "baseCommit": "fca3e65b16c5d54ef30747c4c90c13608e520499",
+    "branch": "feat/0.5.0-skills-agents",
+    "scope": "Inline [label](URL) presentation in ChatRichText, accessible URI links restricted to http/https, focused parser/Compose tests; no persistence, retrieval, engine, navigation, dependency, emulator, or APK changes.",
+    "validationLayers": {
+      "HOST": "PENDING",
+      "EMULATOR": "NOT_RUN; prior global result remains Room v1 FAIL plus six model-dependent SKIPPED",
+      "PHYSICAL_DEVICE": "NOT_RUN"
+    },
+    "planIntegrity": {
+      "original97TaskPlan": "Not present in tracked repository; not reconstructed or edited.",
+      "M01-06": "PENDING_REQUIRES_DEVICE",
+      "functionalBacklog": "PAUSED"
+    },
+    "next": "Finish UX-02e, publish evidence by fast-forward on the existing feature branch, then stop for independent audit."
   }
 }

@@ -1,6 +1,14 @@
-# Latest contract: UX-02d audit correction — independent table boundary pipes (2026-10-12)
+# Latest contract: UX-02e — inline Markdown links (2026-10-12)
 
-**Status:** the targeted parser correction and proportional HOST checks passed at code SHA `f54c1430cab4ea59a302b58dd2aa27deea579c49`; independent audit is pending. Stop after this correction. Do not start UX-02e, UX-03, or functional roadmap work.
+## UX-02d independent audit acceptance
+
+UX-02d is `INDEPENDENTLY_AUDITED_ACCEPTED` for Markdown table presentation and HOST evidence only. The accepted code SHA is `f54c1430cab4ea59a302b58dd2aa27deea579c49`; the audited remote branch HEAD was `fca3e65b16c5d54ef30747c4c90c13608e520499`. The audit verified the ahead-only comparison from `ba5b1f0`, with only `BasicMarkdown.kt` and `BasicMarkdownTest.kt` changed in product/tests. It confirmed the expected red reproduction (1/1 failure), focused host tests (27/27), full host XML (90 files, 756/756), host gate exit 0, lint 0 errors/82 warnings, AndroidTest compilation, and 16/16 core plus 120/120 follow-up evidence hashes.
+
+The acceptance is host-only. The global emulator result remains FAIL because the authentic historical Room v1 fixture is unavailable; six tests requiring real models remain SKIPPED. `PHYSICAL_DEVICE=NOT_RUN`; no APK was generated. `main` and peeled `v0.4.2` remain at `de615b772cf37a99e7e08a647c59607b271de606`. The original 97-task plan was not present in the tracked repository and was not reconstructed or edited; M01-06 remains `PENDING_REQUIRES_DEVICE`.
+
+## UX-02e active
+
+UX-02e is the sole active contract: add accessible inline `[label](URL)` rendering for safe `http`/`https` links in assistant chat responses, using the existing system URI handler on explicit activation. Malformed/disallowed syntax, HTML, images, and code remain literal; the original response/copy route, free-text citations and existing tables remain unchanged. No emulator or APK is in scope.
 
 ## Audit finding and correction
 
