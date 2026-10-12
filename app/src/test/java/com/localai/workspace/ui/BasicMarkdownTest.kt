@@ -73,6 +73,18 @@ class BasicMarkdownTest {
         )
     }
 
+    @Test fun pipeInsideSingleBacktickSpanStaysInItsCell() {
+        val source = "| Name | Pattern |\n| --- | --- |\n| Route | `key|value` |"
+        assertEquals(
+            MarkdownBlock.Table(
+                headers = listOf("Name", "Pattern"),
+                rows = listOf(listOf("Route", "`key|value`")),
+                source = source,
+            ),
+            BasicMarkdown.blocks(source).single(),
+        )
+    }
+
     @Test fun malformedTableLikeTextIsKeptAsOneLiteralParagraph() {
         val source = "| Name | Value |\n| --- | --- |\n| A | 1 |\n| incomplete |"
         assertEquals(listOf(MarkdownBlock.Paragraph(source)), BasicMarkdown.blocks(source))
