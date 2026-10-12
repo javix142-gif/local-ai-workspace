@@ -5087,20 +5087,22 @@
     "pendingRecovery": {
       "status": "COMPLETED_BLOCKED_JAVA17_TOOLCHAIN_MISMATCH",
       "codeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
-      "branchHead": "24439fe1ef0f0fce9103c8beb4797ff4e9daddc8",
-      "hypothesis": "The completed recovery failed before tasks because Gradle selected a JRE without JAVA_COMPILER; evidence identifies preinstalled JDK 21 at /workspace/.toolchain/jdk-21-temurin. A single invocation with explicit JAVA_HOME/PATH is a distinct, testable configuration.",
-      "plannedGate": "HOST :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin using existing complete SDK/NDK and existing full JDK 21; no install, cleanup, code/workflow change, emulator, or APK.",
-      "assigned": false,
-      "blockedAt": "2026-10-12T12:34:55Z",
-      "blockerType": "BLOCKED_EXECUTOR_ACCESS",
-      "accessEvidence": "send_message_to_thread returned invalid rate-limit caller identity; subsequent wait_threads could not determine whether durable thread 01a0ff77-c915-77b3-894a-1cbdd24ce02b exists because host durable was unavailable.",
-      "next": "Do not dispatch until the same durable executor can be read and confirmed idle. Then send this one bounded explicit-JDK HOST gate attempt. Keep UX-02e unaccepted; do not start UX-02f/UX-03.",
-      "javaToolchainDiscovery": "Gradle reported no locally installed Java 17 toolchain matching this invocation; no toolchain download repository is configured. The selected JDK 21 compiler preflight passed.",
-      "startUtc": "2026-10-12T13:33:30Z",
-      "endUtc": "2026-10-12T13:34:01Z",
-      "durationSeconds": 31,
+      "testedCheckoutHead": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+      "attemptedAtUtc": "2026-10-12T13:33:30Z",
+      "javaHome": "/workspace/.toolchain/jdk-21-temurin",
+      "javaCompilerPreflight": "PASS",
+      "gateExitCode": 1,
+      "tasksStarted": 0,
+      "xmlFiles": 0,
+      "cause": "Gradle requires Java 17 for :litert-compat:compileDebugJavaWithJavac; no matching local Java 17 toolchain was discovered for this offline invocation.",
+      "classification": "ENVIRONMENT_TOOLCHAIN_MISMATCH_NOT_PRODUCT_FAILURE",
+      "evidence": "docs/validation/ux-02e-inline-links/host/jdk21-gate-attempt-20261012.log.gz",
       "rawLogSha256": "b1d0eda3ce23eb027c0be53c2a2115b920e5d8141fb121bf01edf5c0934a630f",
-      "compressedLogSha256": "7caf158c0292a933e646a20f59a80b4f6449d41f879c830031a8de81ee38c93f"
+      "compressedLogSha256": "7caf158c0292a933e646a20f59a80b4f6449d41f879c830031a8de81ee38c93f",
+      "retryPerformed": false,
+      "apkGenerated": false,
+      "emulatorOrDeviceUsed": false,
+      "next": "Do not retry this gate or accept UX-02e under the current authorization. Keep UX-02e unaccepted; wait for new user authorization or material evidence. Do not start UX-02f, UX-03, or functional M00-M12."
     },
     "pendingRecoveryHistory": [
       {
@@ -5131,6 +5133,20 @@
       "merge": false,
       "evidenceCommit": "7ffbf2fe99c8dca4b9761c6af9cb444eb712c6f5",
       "evidenceCommitScope": "UX-02e report, JSON, checksums, JDK21 preflight/environment, full Gradle log, and XML inventory; no product files."
+    },
+    "independentAudit": {
+      "status": "AUDITED_BLOCKED_NOT_ACCEPTED",
+      "auditedBranchHead": "51adf9458bddd3bac184137a091f097c3a02b7a1",
+      "comparedFromCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+      "compareAheadBy": 6,
+      "compareBehindBy": 0,
+      "changedPathsAfterCodeCommit": "Documentation and evidence only; no product or workflow files.",
+      "result": "The reported HOST attempt is consistent with its captured command/result: JDK21 compiler preflight PASS; Gradle exit 1 before tasks due required Java 17 toolchain not discovered; zero tests and zero JUnit XML.",
+      "decision": "ENVIRONMENT_TOOLCHAIN_MISMATCH_NOT_PRODUCT_FAILURE; no additional gate attempt; UX-02e remains unaccepted.",
+      "emulator": "Not run for UX-02e; historical global FAIL remains the Room v1 fixture failure plus six model-dependent skips.",
+      "physicalDevice": "NOT_RUN",
+      "main": "de615b772cf37a99e7e08a647c59607b271de606",
+      "peeledV042": "de615b772cf37a99e7e08a647c59607b271de606"
     }
   }
 }
