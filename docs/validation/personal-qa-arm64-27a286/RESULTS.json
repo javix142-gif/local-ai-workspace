@@ -1,0 +1,104 @@
+{
+  "status": "APK_VERIFIED_PERSONAL_QA_NOT_RELEASE_NOT_DEVICE_VALIDATED",
+  "artifactType": "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
+  "sourceCommit": "27a286daa4dd83bfb1b2d36d185459e481d40d1f",
+  "branch": "feat/0.5.0-skills-agents",
+  "applicationId": "com.localai.workspace.debug",
+  "versionName": "0.5.0-debug",
+  "versionCode": 27,
+  "buildType": "debug",
+  "requestedAbi": "arm64-v8a",
+  "build": {
+    "command": "./gradlew :app:assembleDebug -Parm64Only=true --no-daemon --no-parallel --max-workers=2 --stacktrace --console=plain",
+    "exitCode": 0,
+    "startedAtUtc": "2026-10-12T01:35:40Z",
+    "completedAtUtc": "2026-10-12T01:36:12Z",
+    "gradle": "8.10.2",
+    "jdk": "Temurin/OpenJDK 17.0.20.1+1",
+    "androidPlatform": "35",
+    "buildTools": "35.0.0",
+    "ndk": "27.0.12077973",
+    "cmake": "3.31.6",
+    "taskOutcomes": {
+      "actionable": 81,
+      "executed": 7,
+      "upToDate": 74,
+      "configureCMakeRelease_arm64_v8a": "executed",
+      "buildCMakeRelease_arm64_v8a": "executed",
+      "packageDebug": "executed",
+      "assembleDebug": "executed"
+    },
+    "workspaceWasGitCleanBeforeBuild": true,
+    "incrementalBuildState": "Used existing local Gradle/project intermediates; no fresh checkout claim."
+  },
+  "apk": {
+    "filename": "local-ai-workspace-0.5.0-personal-qa-arm64.apk",
+    "bytes": 119297951,
+    "sha256": "3aa74283c68ece12169477f837227b90a329e74e53022c70d855d4ab7871e72b",
+    "zipCrc": "PASS",
+    "zipalign": "PASS",
+    "apksigner": "PASS; APK Signature Scheme v2",
+    "certificateDn": "C=US, O=Android, CN=Android Debug",
+    "certificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
+    "package": "com.localai.workspace.debug",
+    "versionName": "0.5.0-debug",
+    "versionCode": 27,
+    "abis": [
+      "arm64-v8a"
+    ],
+    "nativeLibraries": 9,
+    "otherAbiLibraries": 0,
+    "modelWeightFiles": 0
+  },
+  "androidInstrumentation": {
+    "status": "FAIL_ROOM_SCHEMA; NOT_SAME_BUILD_COMMIT",
+    "runId": 38186081844,
+    "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38186081844",
+    "testedCodeSha": "5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1",
+    "buildCommitMatchesTestedCodeSha": false,
+    "productAndBuildFilesUnchangedSinceTestedCodeSha": true,
+    "counts": {
+      "total": 16,
+      "passed": 9,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 6,
+      "executed": 10
+    },
+    "failure": "WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords: authentic WorkspaceDatabase/1.json unavailable (ENVIRONMENT_UNAVAILABLE)",
+    "skipped": [
+      "2 LiteRtLmDeviceSmokeTest cases require installed real models",
+      "4 NormalChatNativeDeviceTest cases require installed Gemma model"
+    ],
+    "notRerunForThisBuild": true
+  },
+  "roomV1HistoricalSourceReview": {
+    "status": "ENVIRONMENT_UNAVAILABLE",
+    "workspaceDatabaseHistory": [
+      "de615b772cf37a99e7e08a647c59607b271de606: version 8, exportSchema=false",
+      "a21400d0f474d02db09d61b2568a730ee052c95b: version 8, exportSchema changed to true"
+    ],
+    "versionOneDeclarationSearch": "No WorkspaceDatabase version=1 commit found in reachable history.",
+    "workspaceSchemaExports": [
+      "app/schemas/com.localai.workspace.data.WorkspaceDatabase/8.json"
+    ],
+    "otherRoomV1Databases": "MemoryContextDatabase, SemanticDatabase, AgentsSkillsDatabase are separate databases and do not establish WorkspaceDatabase v1 schema.",
+    "testOrSchemaChanged": false
+  },
+  "emulator": "FAIL; based on run 38186081844, not a pass",
+  "physicalDevice": "NOT_RUN",
+  "release": "NOT_BUILT; this is a Debug QA package only",
+  "delivery": {
+    "status": "UPLOADED_AND_METADATA_READBACK",
+    "format": "ZIP bundle containing the exact installable APK plus results, checksum manifest, verification output, and build log",
+    "bundleFilename": "local-ai-workspace-0.5.0-personal-qa-arm64-bundle.zip",
+    "driveFileId": "1M18I1Ls1z6GfAhYMa9dyXqEedfXxIoSI",
+    "driveUrl": "https://drive.google.com/file/d/1M18I1Ls1z6GfAhYMa9dyXqEedfXxIoSI/view?usp=drivesdk",
+    "resultsFileId": "1l61586udhEwkvnjoN5wM1TLZBZPe7wCR",
+    "resultsUrl": "https://drive.google.com/file/d/1l61586udhEwkvnjoN5wM1TLZBZPe7wCR/view?usp=drivesdk",
+    "bundleChecksumFileId": "1E9DI3Kyf293yZ8rJgV1vWJeHxYgrWDNO",
+    "bundleChecksumUrl": "https://drive.google.com/file/d/1E9DI3Kyf293yZ8rJgV1vWJeHxYgrWDNO/view?usp=drivesdk",
+    "apkExtractionRequired": true,
+    "note": "Direct APK upload exceeded the connector 100 MiB file-transfer limit. The ZIP contains the unchanged verified APK; unzip before installing."
+  }
+}

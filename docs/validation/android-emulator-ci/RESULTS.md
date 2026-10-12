@@ -1,3 +1,11 @@
+## Personal QA ARM64 package (2026-10-12) — APK verified; not Release/device validation
+
+The Debug ARM64 APK was built from source HEAD `27a286daa4dd83bfb1b2d36d185459e481d40d1f` with `:app:assembleDebug -Parm64Only=true` (exit 0). Its package/version is `com.localai.workspace.debug`, `0.5.0-debug`, versionCode 27; only `arm64-v8a` native libraries are present. APK SHA-256: `3aa74283c68ece12169477f837227b90a329e74e53022c70d855d4ab7871e72b`; standard Android Debug signer; certificate SHA-256 `f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b`.
+
+Download the [personal QA bundle from Drive](https://drive.google.com/file/d/1M18I1Ls1z6GfAhYMa9dyXqEedfXxIoSI/view?usp=drivesdk), extract the APK and verify the included `SHA256SUMS`. Bundle: 50,032,510 bytes; SHA-256 `4e3e36a231458997658e22c5ed2155fcc57a94d63abc6f90781c143069021309`. The APK itself exceeded the Drive connector's 100 MiB upload limit; the ZIP contains the unchanged APK. This is `PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION`, not a Release or an Actions-gated artifact.
+
+Room v1 source review remains `ENVIRONMENT_UNAVAILABLE`; no schema/test was changed or rerun. Instrumentation status is still run 38186081844: EMULATOR FAIL, 9 pass / 1 Room fail / 6 real-model skips; physical device NOT_RUN. M01-06 remains pending. See [personal QA evidence](personal-qa-arm64-27a286/RESULTS.md) and [bounded Room history review](room-v1-source-audit/RESULTS.md).
+
 ## Latest M00 Compose-root screenshot recovery (2026-10-12) — EMULATOR FAIL; both screenshots visually representative
 
 Source code SHA: `5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1`; code commit parent `93409371bac7e6f80d968f7ef084271d474857ac`. The test now captures the idle Compose root using `captureToImage()` instead of `UiAutomation.takeScreenshot()`. This changes only `ChatHeaderLayoutTest`; production UI, Room, workflows and dependencies are unchanged.

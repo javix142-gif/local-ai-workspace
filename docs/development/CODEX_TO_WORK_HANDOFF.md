@@ -1,3 +1,19 @@
+# Latest contract: personal QA ARM64 delivery and Room v1 source review (2026-10-12)
+
+**Build source:** `27a286daa4dd83bfb1b2d36d185459e481d40d1f` on `feat/0.5.0-skills-agents`; product/build files are unchanged from the instrumented code SHA `5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1`. Room history was checked only for an attributable WorkspaceDatabase v1 declaration: no such commit exists; the reachable database history begins at v8. `ENVIRONMENT_UNAVAILABLE` remains; no schema or test was changed and the Room suite was not rerun.
+
+Local `:app:assembleDebug -Parm64Only=true` completed at the exact source HEAD with exit 0 (Gradle 8.10.2, Temurin JDK 17.0.20.1+1, API 35; 81 tasks, 7 executed/74 up-to-date; CMake/Ninja native tasks executed). The 119,297,951-byte Debug ARM64 APK has SHA-256 `3aa74283c68ece12169477f837227b90a329e74e53022c70d855d4ab7871e72b`, package `com.localai.workspace.debug`, version `0.5.0-debug`/27, Android Debug certificate SHA-256 `f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b`, and only `arm64-v8a` native libraries. Zip alignment, archive CRC and `apksigner` v2 checks passed. This build used existing local Gradle/project intermediates and is **PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION**, not Release.
+
+The installable APK is inside the [Google Drive QA bundle](https://drive.google.com/file/d/1M18I1Ls1z6GfAhYMa9dyXqEedfXxIoSI/view?usp=drivesdk). Extract the ZIP and verify its included `SHA256SUMS` before installing. Bundle size: 50,032,510 bytes; SHA-256 `4e3e36a231458997658e22c5ed2155fcc57a94d63abc6f90781c143069021309`. [Machine-readable report](https://drive.google.com/file/d/1l61586udhEwkvnjoN5wM1TLZBZPe7wCR/view?usp=drivesdk) and [bundle checksum](https://drive.google.com/file/d/1E9DI3Kyf293yZ8rJgV1vWJeHxYgrWDNO/view?usp=drivesdk). The direct APK exceeded the Drive connector's 100 MiB limit, so the ZIP preserves the exact APK bytes. No GitHub workflow was changed or gate bypassed.
+
+Instrumented evidence remains separate: run `38186081844` on source code `5e93ba6` was **EMULATOR FAIL** (16 total: 9 pass, 1 Room failure, 6 model skips; 10 executed). The Room failure is `ENVIRONMENT_UNAVAILABLE`; six real-model tests remain skipped. This artifact is not a same-commit instrumentation pass. `PHYSICAL_DEVICE=NOT_RUN`; M01-06 remains `PENDING_REQUIRES_DEVICE`; the original 97 task IDs/order/dependencies are unchanged. `main` and `v0.4.2` remain at `de615b772cf37a99e7e08a647c59607b271de606`.
+
+**Pause:** priority `MEJORAS VISUALES Y EXPERIENCIA DE USUARIO`; state `VISUAL_UX_WAITING_USER_INPUT`. Do not start new roadmap functions or visual changes until the user provides direction/screenshots. The orchestrator automation `supervisar-correcci-n-nica-m00` is coordinated to complete and audit this contract, then remain silently paused for visual UX input; no automation was modified from this coding environment. This contract stops after delivery and evidence publication.
+
+Detailed evidence: [personal QA build](../validation/personal-qa-arm64-27a286/RESULTS.md) and [Room v1 historical source review](../validation/room-v1-source-audit/RESULTS.md).
+
+---
+
 # Independent orchestration audit (2026-10-12 00:23 UTC)
 
 Audit recorded after code/evidence commits `5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1` and `25b2da35cd503e800c7bdce9584145f0f2e1218b`; the branch was at `25b2da35cd503e800c7bdce9584145f0f2e1218b` when checked. GitHub confirms the code commit changes only `ChatHeaderLayoutTest.kt`, and the evidence commit changes documentation/evidence only.
