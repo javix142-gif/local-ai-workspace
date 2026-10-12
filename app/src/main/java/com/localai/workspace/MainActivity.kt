@@ -138,6 +138,7 @@ import com.localai.workspace.ui.ChatViewModelFactory
 import com.localai.workspace.ui.HomeViewModel
 import com.localai.workspace.ui.HomeViewModelFactory
 import com.localai.workspace.ui.LocalAiTheme
+import com.localai.workspace.ui.components.AppScreenContent
 import com.localai.workspace.ui.MemoryViewModel
 import com.localai.workspace.ui.MemoryViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
@@ -257,7 +258,7 @@ private fun WorkspaceScreen(viewModel: HomeViewModel, navController: NavHostCont
     var query by rememberSaveable { mutableStateOf("") }
     val visibleChats = chats.filter { it.name.contains(query.trim(), ignoreCase = true) }
     val visibleProjects = projects.filter { it.name.contains(query.trim(), ignoreCase = true) }
-    Column(Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
+    AppScreenContent {
         TopAppBar(title = { Text("Local AI Workspace", maxLines = 1, overflow = TextOverflow.Ellipsis) },
             actions = { IconButton(onClick = { searching = !searching; if (!searching) query = "" }) {
                 Icon(androidx.compose.material.icons.Icons.Default.Search, contentDescription = "Search workspace")
@@ -525,7 +526,7 @@ private fun ModelsScreen(viewModel: HomeViewModel, navController: NavHostControl
             else -> list.sortedByDescending { it.importedAt }
         }
     }
-    Column(Modifier.fillMaxSize().padding(horizontal = 20.dp)) {
+    AppScreenContent {
         TopAppBar(
             title = {
                 Column {
@@ -1258,7 +1259,7 @@ private fun ResponseDetailsDialog(metrics: GenerationMetricsPresentation, onDism
 private fun SettingsScreen(openValidation: () -> Unit = {}, openPerformance: () -> Unit) {
     var developer by rememberSaveable { mutableStateOf(false) }
     var boundaries by remember { mutableStateOf(false) }
-    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 16.dp)) {
+    AppScreenContent(columnModifier = Modifier.verticalScroll(rememberScrollState())) {
         TopAppBar(title = { Text("Settings") })
         LocalModeCard()
         com.localai.workspace.ui.SemanticSettings()
