@@ -4,7 +4,7 @@ package com.localai.workspace.ui
 sealed interface MarkdownBlock {
     data class Paragraph(val text: String) : MarkdownBlock
     data class ListItem(val marker: String, val text: String) : MarkdownBlock
-    data class Heading(val text: String) : MarkdownBlock
+    data class Heading(val level: Int, val text: String) : MarkdownBlock
     data class Code(val language: String?, val text: String) : MarkdownBlock
 }
 
@@ -32,11 +32,14 @@ object BasicMarkdown {
                 result += MarkdownBlock.Code(language, code.joinToString("\n"))
             } else {
                 val list = Regex("^\\s*([-*+]|\\d+[.)])\\s+(.+)$").matchEntire(line)
-                val heading = Regex("^#{1,6}\\s+(.+)$").matchEntire(line)
+                val heading = Regex("^(#{1,6})\\s+(.+)$").matchEntire(line)
                 when {
                     line.isBlank() -> flush()
                     list != null -> { flush(); result += MarkdownBlock.ListItem(if (list.groupValues[1].length == 1) "•" else list.groupValues[1], list.groupValues[2]) }
-                    heading != null -> { flush(); result += MarkdownBlock.Heading(heading.groupValues[1]) }
+                    heading != null -> {
+                        flush()
+                        result += MarkdownBlock.Heading(heading.groupValues[1].length, heading.groupValues[2])
+                    }
                     else -> paragraph += line
                 }
             }

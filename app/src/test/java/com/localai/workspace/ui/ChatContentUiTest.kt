@@ -4,12 +4,16 @@ import android.app.Application
 import android.content.ClipboardManager
 import android.content.Context
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.test.*
+import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.junit4.createComposeRule
 import com.localai.workspace.ModelCard
 import com.localai.workspace.data.ModelEntity
@@ -101,6 +105,68 @@ class ChatContentUiTest {
         compose.runOnIdle {
             val clipboard = RuntimeEnvironment.getApplication().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             assertEquals("print(42)", clipboard.primaryClip?.getItemAt(0)?.text.toString())
+        }
+    }
+
+    @Test fun longMarkdownKeepsHierarchyContentAndScrollableCodeAtCompactWidthAndScaledText() {
+        val paragraph = ("The response keeps its complete paragraph readable while the message grows. ").repeat(5).trim()
+        val firstListItem = "The first list item wraps naturally without losing its wording."
+        val secondListItem = "The second item stays distinct from the paragraph and code sample."
+        val code = "val selectedDocument = retrieveEvidence(projectId, selectedDocumentIds)"
+        val markdown = "# Overview\n\n$paragraph\n\n## Details\n\n- $firstListItem\n- $secondListItem" +
+            "\n\n### Implementation\n\n```kotlin\n$code\n```" +
+            "\n\n#### Notes\n\nSecondary detail remains visible." +
+            "\n\n##### More detail\n\nAdditional context remains readable." +
+            "\n\n###### Fine print\n\nThe original message text stays intact."
+        var setFontScale: ((Float) -> Unit)? = null
+
+        compose.setContent { LocalAiTheme {
+            val density = LocalDensity.current
+            var fontScale by remember { mutableStateOf(1f) }
+            SideEffect { setFontScale = { fontScale = it } }
+            CompositionLocalProvider(LocalDensity provides Density(density.density, fontScale)) {
+                Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+                    ChatRichText(markdown)
+                }
+            }
+        } }
+
+        listOf(1f, 1.6f, 2f).forEach { scale ->
+            compose.runOnIdle { setFontScale?.invoke(scale) }
+            compose.waitForIdle()
+
+            val longParagraph = compose.onNodeWithText(paragraph, useUnmergedTree = true)
+                .performScrollTo().assertIsDisplayed()
+            longParagraph.assertTextEquals(paragraph)
+            val paragraphHeight = longParagraph.fetchSemanticsNode().size.height.toFloat()
+            assertTrue("Long paragraph should wrap to multiple lines at fontScale=$scale", paragraphHeight > 48f)
+
+            val h1 = compose.onNodeWithText("Overview", useUnmergedTree = true)
+                .assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.Heading))
+            val h2 = compose.onNodeWithText("Details", useUnmergedTree = true)
+                .assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.Heading))
+            val h4 = compose.onNodeWithText("Notes", useUnmergedTree = true)
+                .assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.Heading))
+            val h6 = compose.onNodeWithText("Fine print", useUnmergedTree = true)
+                .assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.Heading))
+            val h1Height = h1.fetchSemanticsNode().size.height
+            val h2Height = h2.fetchSemanticsNode().size.height
+            val h4Height = h4.fetchSemanticsNode().size.height
+            val h6Height = h6.fetchSemanticsNode().size.height
+            assertTrue("H1 height $h1Height should exceed H2 height $h2Height at fontScale=$scale", h1Height > h2Height)
+            assertTrue("H4 height $h4Height should exceed H6 height $h6Height at fontScale=$scale", h4Height > h6Height)
+
+            listOf(
+                "Overview", "Details", firstListItem, secondListItem,
+                "Implementation", "Notes", "More detail", "Fine print",
+                "The original message text stays intact.",
+            ).forEach { visibleText ->
+                compose.onNodeWithText(visibleText, useUnmergedTree = true)
+                    .performScrollTo().assertIsDisplayed()
+            }
+            compose.onNodeWithTag("chat-rich-text-code")
+                .assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.HorizontalScrollAxisRange))
+            compose.onNodeWithText(code, useUnmergedTree = true).assertExists()
         }
     }
 

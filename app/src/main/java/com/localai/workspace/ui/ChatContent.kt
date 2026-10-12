@@ -15,6 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -134,13 +136,23 @@ fun ChatComposer(input: String, generating: Boolean, onInputChange: (String) -> 
 @Composable
 fun ChatRichText(content: String) {
     val blocks = remember(content) { BasicMarkdown.blocks(content) }
-    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        blocks.forEach { block ->
+    Column(Modifier.fillMaxWidth().testTag("chat-rich-text")) {
+        blocks.forEachIndexed { index, block ->
+            blocks.getOrNull(index - 1)?.let { previous ->
+                Spacer(Modifier.height(markdownBlockSpacing(previous, block)))
+            }
             when (block) {
-                is MarkdownBlock.Code -> CodeBlock(block)
-                is MarkdownBlock.Paragraph -> InlineText(block.text)
-                is MarkdownBlock.Heading -> InlineText(block.text, true)
-                is MarkdownBlock.ListItem -> Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                is MarkdownBlock.Code -> CodeBlock(block, Modifier.testTag("chat-rich-text-block-$index"))
+                is MarkdownBlock.Paragraph -> InlineText(block.text, Modifier.testTag("chat-rich-text-block-$index"))
+                is MarkdownBlock.Heading -> InlineText(
+                    block.text,
+                    Modifier.testTag("chat-rich-text-block-$index"),
+                    headingLevel = block.level,
+                )
+                is MarkdownBlock.ListItem -> Row(
+                    Modifier.fillMaxWidth().testTag("chat-rich-text-block-$index"),
+                    horizontalArrangement = Arrangement.spacedBy(LocalAiSpacing.x2),
+                ) {
                     Text(block.marker, style = MaterialTheme.typography.bodyLarge)
                     Box(Modifier.weight(1f)) { InlineText(block.text) }
                 }
@@ -149,23 +161,44 @@ fun ChatRichText(content: String) {
     }
 }
 
+private fun markdownBlockSpacing(previous: MarkdownBlock, current: MarkdownBlock) = when {
+    current is MarkdownBlock.Heading -> LocalAiSpacing.x4
+    previous is MarkdownBlock.Heading -> LocalAiSpacing.x1
+    previous is MarkdownBlock.ListItem && current is MarkdownBlock.ListItem -> LocalAiSpacing.x1
+    else -> LocalAiSpacing.x3
+}
+
 @Composable
-private fun InlineText(text: String, heading: Boolean = false) {
+private fun InlineText(text: String, modifier: Modifier = Modifier, headingLevel: Int? = null) {
     val runs = remember(text) { BasicMarkdown.inline(text) }
     val codeColor = MaterialTheme.colorScheme.surfaceVariant
+    val textStyle = when (headingLevel) {
+        1 -> MaterialTheme.typography.titleLarge
+        2 -> MaterialTheme.typography.titleMedium
+        3 -> MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold)
+        4 -> MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold)
+        5, 6 -> MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold)
+        else -> MaterialTheme.typography.bodyLarge
+    }
     val annotated = remember(runs, codeColor) { buildAnnotatedString {
         runs.forEach { run -> withStyle(SpanStyle(fontWeight = if (run.bold) FontWeight.SemiBold else null,
             fontFamily = if (run.code) FontFamily.Monospace else null,
             background = if (run.code) codeColor else androidx.compose.ui.graphics.Color.Unspecified)) { append(run.text) } }
     } }
-    SelectionContainer { Text(annotated, style = if (heading) MaterialTheme.typography.titleSmall else MaterialTheme.typography.bodyLarge) }
+    SelectionContainer {
+        Text(
+            annotated,
+            modifier = modifier.semantics { if (headingLevel != null) heading() },
+            style = textStyle,
+        )
+    }
 }
 
 @Composable
-private fun CodeBlock(block: MarkdownBlock.Code) {
+private fun CodeBlock(block: MarkdownBlock.Code, modifier: Modifier = Modifier) {
     val clipboard = LocalClipboardManager.current
     var copied by remember(block.text) { mutableStateOf(false) }
-    Surface(Modifier.fillMaxWidth(), shape = androidx.compose.foundation.shape.RoundedCornerShape(10.dp),
+    Surface(modifier.fillMaxWidth(), shape = androidx.compose.foundation.shape.RoundedCornerShape(10.dp),
         color = MaterialTheme.colorScheme.surfaceContainerLowest) {
         Column {
             Row(Modifier.fillMaxWidth().padding(start = 12.dp, end = 4.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -175,7 +208,8 @@ private fun CodeBlock(block: MarkdownBlock.Code) {
                 }
             }
             SelectionContainer {
-                Text(block.text, Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(12.dp),
+                Text(block.text, Modifier.fillMaxWidth().testTag("chat-rich-text-code")
+                    .horizontalScroll(rememberScrollState()).padding(12.dp),
                     style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily.Monospace))
             }
         }
