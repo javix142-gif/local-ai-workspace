@@ -4834,6 +4834,14 @@
         "nonLogFiles": "PASS",
         "rawGradleLogs": "Preserved byte-for-byte; unrestricted check reports only the standard daemon shutdown trailing space in eight logs."
       }
+    },
+    "publication": {
+      "branch": "feat/0.5.0-skills-agents",
+      "auditBaseCommit": "ba5b1f084a3e4f29c9bb3c8c6f8b029a6d40e3d4",
+      "codeCommit": "f54c1430cab4ea59a302b58dd2aa27deea579c49",
+      "evidenceCommit": "38d095a9a6a16b925aa05eb5f3f9bb1d80aeca86",
+      "fastForwardPush": "PENDING_READBACK",
+      "mainAndV042Modified": false
     }
   }
 }
