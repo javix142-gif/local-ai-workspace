@@ -9,6 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Density
@@ -289,7 +290,8 @@ class ChatContentUiTest {
             var fontScale by remember { mutableStateOf(1f) }
             SideEffect { setFontScale = { fontScale = it } }
             CompositionLocalProvider(LocalDensity provides Density(density.density, fontScale)) {
-                Column(Modifier.width(280.dp).height(440.dp).verticalScroll(rememberScrollState())) {
+                Column(Modifier.width(280.dp).height(440.dp).verticalScroll(rememberScrollState())
+                    .testTag("markdown-table-fixture-scroll")) {
                     ChatRichText(markdown)
                 }
             }
@@ -299,6 +301,8 @@ class ChatContentUiTest {
             compose.runOnIdle { setFontScale?.invoke(scale) }
             compose.waitForIdle()
 
+            compose.onNodeWithTag("markdown-table-fixture-scroll")
+                .performTouchInput { swipeDown() }
             val table = compose.onNodeWithTag("chat-markdown-table-0", useUnmergedTree = true)
                 .performScrollTo()
                 .assertIsDisplayed()
@@ -326,7 +330,9 @@ class ChatContentUiTest {
             compose.onNodeWithText("State", useUnmergedTree = true).assertIsDisplayed()
             val finalValue = compose.onNodeWithText("Complete", useUnmergedTree = true)
                 .assertExists()
-            assertTrue("Final-column value remains laid out at fontScale=$scale", finalValue.fetchSemanticsNode().size.height > 0)
+            compose.onNodeWithTag("markdown-table-fixture-scroll")
+                .performTouchInput { swipeUp() }
+            finalValue.assertIsDisplayed()
         }
     }
 
