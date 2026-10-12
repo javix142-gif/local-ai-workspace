@@ -85,6 +85,7 @@ import androidx.compose.ui.text.AnnotatedString
 import com.localai.workspace.ui.ChatComposer
 import com.localai.workspace.ui.ChatHeaderTitle
 import com.localai.workspace.ui.ChatRichText
+import com.localai.workspace.ui.AssistantResponseCopyAction
 import com.localai.workspace.ui.CitationEvidenceDialog
 import com.localai.workspace.ui.CitationEvidenceReferences
 import com.localai.workspace.ui.ChatTopBar
@@ -1179,7 +1180,6 @@ private fun MessageBubble(message: MessageEntity, content: String,
     val metrics = remember(message.generationMetrics) { GenerationMetricsPresentation.decode(message.generationMetrics) }
     val clipboard = LocalClipboardManager.current
     var menu by remember { mutableStateOf(false) }
-    var copied by remember(content) { mutableStateOf(false) }
     Row(Modifier.fillMaxWidth(), horizontalArrangement = if (user) Arrangement.End else Arrangement.Start) {
         Card(Modifier.fillMaxWidth(if (user) 0.86f else 1f), colors = CardDefaults.cardColors(
             containerColor = if (user) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface)) {
@@ -1199,9 +1199,7 @@ private fun MessageBubble(message: MessageEntity, content: String,
                 if (!user && message.status != "GENERATING") Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     if (message.status == "FAILED") Text("Could not finish", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.error)
                     Spacer(Modifier.weight(1f))
-                    if (content.isNotBlank()) IconButton(onClick = { clipboard.setText(AnnotatedString(content)); copied = true }) {
-                        Icon(if (copied) Icons.Default.CheckCircle else Icons.Default.ContentCopy, "Copy response", Modifier.size(18.dp))
-                    }
+                    if (content.isNotBlank()) AssistantResponseCopyAction(content)
                     Box {
                         IconButton(onClick = { menu = true }) { Icon(Icons.Default.MoreVert, "Response options", Modifier.size(18.dp)) }
                         DropdownMenu(menu, { menu = false }) {

@@ -9,6 +9,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.Role
@@ -17,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.text.LinkAnnotation
 import com.localai.workspace.data.CitationEvidenceEntity
 import com.localai.workspace.ModelCard
 import com.localai.workspace.data.ModelEntity
@@ -212,6 +215,82 @@ class ChatContentUiTest {
         compose.runOnIdle {
             val clipboard = RuntimeEnvironment.getApplication().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             assertEquals("print(42)", clipboard.primaryClip?.getItemAt(0)?.text.toString())
+        }
+    }
+
+    @Test fun markdownHttpAndHttpsLinksExposeLabelAndDestinationAndOpenOnlyOnTap() {
+        val https = "https://example.org/guide_(local)"
+        val http = "http://example.net/help"
+        val markdown = "Read [secure guide]($https).\n\nVisit [plain guide]($http)."
+        val openedUris = mutableListOf<String>()
+        val uriHandler = object : UriHandler {
+            override fun openUri(uri: String) { openedUris += uri }
+        }
+
+        compose.setContent {
+            LocalAiTheme {
+                CompositionLocalProvider(LocalUriHandler provides uriHandler) {
+                    Column(Modifier.width(280.dp)) { ChatRichText(markdown) }
+                }
+            }
+        }
+
+        val secureLink = compose.onNodeWithText("secure guide", substring = true, useUnmergedTree = true).assertIsDisplayed()
+        val sourceText = compose.onNodeWithTag("chat-rich-text-block-0", useUnmergedTree = true)
+            .fetchSemanticsNode().config[SemanticsProperties.Text].single()
+        assertEquals("Read secure guide.", sourceText.text)
+        val links = sourceText.getLinkAnnotations(0, sourceText.length)
+        assertEquals(1, links.size)
+        assertEquals(https, (links[0].item as LinkAnnotation.Url).url)
+        assertEquals("secure guide", sourceText.text.substring(links[0].start, links[0].end))
+        val linkStyle = (links[0].item as LinkAnnotation.Url).styles?.style
+        assertEquals(androidx.compose.ui.text.style.TextDecoration.Underline, linkStyle?.textDecoration)
+        assertNotEquals(androidx.compose.ui.graphics.Color.Unspecified, linkStyle?.color)
+        compose.runOnIdle { assertTrue("No URI should open before explicit activation", openedUris.isEmpty()) }
+
+        secureLink.performClick()
+        val plainLink = compose.onNodeWithText("plain guide", substring = true, useUnmergedTree = true).assertIsDisplayed()
+        val plainText = compose.onNodeWithTag("chat-rich-text-block-1", useUnmergedTree = true)
+            .fetchSemanticsNode().config[SemanticsProperties.Text].single()
+        val plainAnnotation = plainText.getLinkAnnotations(0, plainText.length).single().item as LinkAnnotation.Url
+        assertEquals(http, plainAnnotation.url)
+        plainLink.performClick()
+        compose.runOnIdle { assertEquals(listOf(https, http), openedUris) }
+    }
+
+    @Test fun rejectedProtocolMalformedLinkAndTableLinkStayVisibleWithoutLinkSemantics() {
+        val rejected = "[run](javascript:alert(1))"
+        val malformed = "[broken](https://example.org"
+        val tableLink = "[table source](https://example.org/table)"
+        val markdown = "$rejected\n$malformed\n\n| Item | Link |\n| --- | --- |\n| A | $tableLink |"
+        val openedUris = mutableListOf<String>()
+        val uriHandler = object : UriHandler {
+            override fun openUri(uri: String) { openedUris += uri }
+        }
+        compose.setContent {
+            LocalAiTheme {
+                CompositionLocalProvider(LocalUriHandler provides uriHandler) {
+                    Column(Modifier.width(280.dp)) { ChatRichText(markdown) }
+                }
+            }
+        }
+
+        listOf(rejected, malformed, tableLink).forEach { literal ->
+            val textNode = compose.onNodeWithText(literal, substring = true, useUnmergedTree = true).assertIsDisplayed()
+            val annotated = textNode.fetchSemanticsNode().config[SemanticsProperties.Text].single()
+            assertTrue("$literal should not expose a link", annotated.getLinkAnnotations(0, annotated.length).isEmpty())
+        }
+        assertTrue(openedUris.isEmpty())
+    }
+
+    @Test fun responseCopyActionCopiesExactMarkdownSourceInsteadOfRenderedLinkLabel() {
+        val original = "See [the source](https://example.org/?q=a%2Fb) and keep `code` exactly."
+        compose.setContent { LocalAiTheme { AssistantResponseCopyAction(original) } }
+
+        compose.onNodeWithContentDescription("Copy response").performClick()
+        compose.runOnIdle {
+            val clipboard = RuntimeEnvironment.getApplication().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            assertEquals(original, clipboard.primaryClip?.getItemAt(0)?.text.toString())
         }
     }
 

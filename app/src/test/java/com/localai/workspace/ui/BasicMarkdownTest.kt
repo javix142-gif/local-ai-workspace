@@ -38,7 +38,20 @@ class BasicMarkdownTest {
         val source = "<script>alert(1)</script> ![private](https://example.org/a.png)"
         assertEquals(listOf(MarkdownBlock.Paragraph(source)), BasicMarkdown.blocks(source))
     }
-    @Test fun linksStayLiteralAndPipeTablesAreParsedSeparately() {
+    @Test fun inlineHttpAndHttpsLinksKeepLabelsAndSurroundingText() {
+        assertEquals(
+            listOf(
+                InlineRun("Read "),
+                InlineRun("Source", linkUrl = "https://example.org/a?q=1"),
+                InlineRun(" and "),
+                InlineRun("web", linkUrl = "http://example.net"),
+                InlineRun("."),
+            ),
+            BasicMarkdown.inline("Read [Source](https://example.org/a?q=1) and [web](http://example.net)."),
+        )
+    }
+
+    @Test fun inlineLinksDoNotChangeBlockParsingOfPipeTables() {
         val source = "[Source](https://example.org)\n| A | B |\n|---|---|\n| 1 | 2 |"
         assertEquals(
             listOf(
@@ -47,7 +60,38 @@ class BasicMarkdownTest {
             ),
             BasicMarkdown.blocks(source),
         )
+        assertEquals(
+            listOf(InlineRun("Source", linkUrl = "https://example.org"), InlineRun("\n| A | B |\n|---|---|\n| 1 | 2 |")),
+            BasicMarkdown.inline(source),
+        )
+    }
+
+    @Test fun unsupportedMalformedImageAndHtmlSyntaxRemainLiteral() {
+        val source = "[bad](javascript:alert(1)) [mail](mailto:help@example.org) [ftp](ftp://example.org) [broken](https://example.org ![image](https://example.org/a.png) <a href=\"[attribute](https://example.org)\">"
         assertEquals(listOf(InlineRun(source)), BasicMarkdown.inline(source))
+    }
+
+    @Test fun rejectedLinkAndImageSyntaxCannotExposeNestedHttpLinks() {
+        val source = "[bad](javascript:[nested](https://safe.example)) ![image [alt](https://inner.example)](https://image.example/a.png)"
+        assertEquals(listOf(InlineRun(source)), BasicMarkdown.inline(source))
+    }
+
+    @Test fun markdownInsideInlineAndFencedCodeDoesNotBecomeALink() {
+        assertEquals(
+            listOf(InlineRun("[Source](https://example.org)", code = true)),
+            BasicMarkdown.inline("`[Source](https://example.org)`"),
+        )
+        assertEquals(
+            listOf(MarkdownBlock.Code("text", "[Source](https://example.org)")),
+            BasicMarkdown.blocks("```text\n[Source](https://example.org)\n```"),
+        )
+    }
+
+    @Test fun tableCellsCanRetainLiteralLinkSyntaxForTheExistingTableRenderer() {
+        assertEquals(
+            listOf(InlineRun("[Source](https://example.org)")),
+            BasicMarkdown.inline("[Source](https://example.org)", allowLinks = false),
+        )
     }
     @Test fun wellFormedPipeTableKeepsHeadersRowsAndEscapedPipes() {
         val source = "| Item | Notes |\n| --- | --- |\n| Alpha | left \\| right |\n| Beta | **bold** |"

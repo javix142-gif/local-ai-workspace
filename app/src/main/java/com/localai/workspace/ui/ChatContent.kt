@@ -25,10 +25,14 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.localai.workspace.ui.theme.LocalAiRadii
@@ -197,7 +201,12 @@ private fun MarkdownTable(block: MarkdownBlock.Table, blockIndex: Int) {
                                 else MaterialTheme.colorScheme.surface,
                             ) {
                                 Text(
-                                    text = inlineAnnotated(value, MaterialTheme.colorScheme.surfaceVariant),
+                                    text = inlineAnnotated(
+                                        value,
+                                        MaterialTheme.colorScheme.surfaceVariant,
+                                        MaterialTheme.colorScheme.primary,
+                                        allowLinks = false,
+                                    ),
                                     modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 10.dp)
                                         .testTag("chat-markdown-cell-$rowIndex-$columnIndex")
                                         .semantics {
@@ -236,7 +245,8 @@ private fun InlineText(text: String, modifier: Modifier = Modifier, headingLevel
         5, 6 -> MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold)
         else -> MaterialTheme.typography.bodyLarge
     }
-    val annotated = remember(runs, codeColor) { inlineAnnotated(runs, codeColor) }
+    val linkColor = MaterialTheme.colorScheme.primary
+    val annotated = remember(runs, codeColor, linkColor) { inlineAnnotated(runs, codeColor, linkColor) }
     SelectionContainer {
         Text(
             annotated,
@@ -246,19 +256,50 @@ private fun InlineText(text: String, modifier: Modifier = Modifier, headingLevel
     }
 }
 
-private fun inlineAnnotated(text: String, codeColor: androidx.compose.ui.graphics.Color): AnnotatedString =
-    inlineAnnotated(BasicMarkdown.inline(text), codeColor)
+private fun inlineAnnotated(
+    text: String,
+    codeColor: androidx.compose.ui.graphics.Color,
+    linkColor: androidx.compose.ui.graphics.Color,
+    allowLinks: Boolean = true,
+): AnnotatedString = inlineAnnotated(BasicMarkdown.inline(text, allowLinks), codeColor, linkColor)
 
-private fun inlineAnnotated(runs: List<InlineRun>, codeColor: androidx.compose.ui.graphics.Color): AnnotatedString =
+private fun inlineAnnotated(
+    runs: List<InlineRun>,
+    codeColor: androidx.compose.ui.graphics.Color,
+    linkColor: androidx.compose.ui.graphics.Color,
+): AnnotatedString =
     buildAnnotatedString {
         runs.forEach { run ->
-            withStyle(SpanStyle(
+            val runStyle = SpanStyle(
                 fontWeight = if (run.bold) FontWeight.SemiBold else null,
                 fontFamily = if (run.code) FontFamily.Monospace else null,
                 background = if (run.code) codeColor else androidx.compose.ui.graphics.Color.Unspecified,
-            )) { append(run.text) }
+            )
+            if (run.linkUrl != null) {
+                withLink(
+                    LinkAnnotation.Url(
+                        run.linkUrl,
+                        styles = TextLinkStyles(
+                            style = SpanStyle(color = linkColor, textDecoration = TextDecoration.Underline),
+                        ),
+                    ),
+                ) {
+                    withStyle(runStyle) { append(run.text) }
+                }
+            } else {
+                withStyle(runStyle) { append(run.text) }
+            }
         }
     }
+
+@Composable
+internal fun AssistantResponseCopyAction(content: String) {
+    val clipboard = LocalClipboardManager.current
+    var copied by remember(content) { mutableStateOf(false) }
+    IconButton(onClick = { clipboard.setText(AnnotatedString(content)); copied = true }) {
+        Icon(if (copied) Icons.Default.CheckCircle else Icons.Default.ContentCopy, "Copy response", Modifier.size(18.dp))
+    }
+}
 
 @Composable
 private fun CodeBlock(block: MarkdownBlock.Code, modifier: Modifier = Modifier) {
