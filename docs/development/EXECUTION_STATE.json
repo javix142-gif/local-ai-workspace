@@ -3701,7 +3701,7 @@
   },
   "latestUx00Audit": {
     "name": "UX-00 visual audit and design foundation",
-    "status": "DELIVERED_PENDING_ORCHESTRATOR_AUDIT",
+    "status": "INDEPENDENTLY_AUDITED_ACCEPTED",
     "branch": "feat/0.5.0-skills-agents",
     "featureHeadAtInspection": "ea8b25ea77319a7650dae8f870c788979530feca",
     "uiCodeInspected": "5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1",
@@ -3737,18 +3737,154 @@
       "PHYSICAL_DEVICE": "NOT_RUN",
       "M01-06": "PENDING_REQUIRES_DEVICE"
     },
-    "next": "UX-01 is specified in the audit document but not implemented; wait for independent audit before implementation.",
+    "next": "UX-00 audit accepted; UX-01 implemented and host-verified at source commit 4f6ea6faf3d541d366af8ce7284a32fa58f8c1e8. Wait for independent audit before UX-02.",
     "orchestration": {
       "orchestratorAutomationId": "supervisar-correcci-n-nica-m00",
       "status": "User-coordinated in the orchestrator to complete/audit this contract and then wait silently for visual UX input.",
       "codingEnvironmentAutomationChanges": false
-    }
+    },
+    "auditStatusSource": "User/orchestrator confirmation in the active UX-01 contract."
   },
   "postDeliveryPause": {
     "priority": "MEJORAS VISUALES Y EXPERIENCIA DE USUARIO",
-    "state": "VISUAL_UX_WAITING_USER_INPUT",
-    "waitFor": "User direction or screenshots before starting visual changes or new roadmap functions.",
+    "state": "UX01_DELIVERED_PENDING_INDEPENDENT_AUDIT",
+    "supersedes": "The prior VISUAL_UX_WAITING_USER_INPUT state was superseded by the user-authorized UX-01 contract.",
+    "waitFor": "Independent audit of UX-01 before UX-02 or further visual work.",
     "M01-06": "PENDING_REQUIRES_DEVICE",
     "physicalDevice": "NOT_RUN"
+  },
+  "latestUx01": {
+    "name": "UX-01 shared visual foundation",
+    "status": "HOST_PASS_PERSONAL_QA_UPLOADED_PENDING_INDEPENDENT_AUDIT",
+    "branch": "feat/0.5.0-skills-agents",
+    "baseCommit": "80292816115a6d632d96ee3e8e8996adb4c7bd7a",
+    "sourceCodeCommit": "4f6ea6faf3d541d366af8ce7284a32fa58f8c1e8",
+    "scope": "Explicit light/dark M3 palette, product typography/geometry tokens, semantic status colors, shared content-width frame and touch-target modifier on Workspace/Models/Settings. No navigation graph or product behavior change.",
+    "files": [
+      "app/src/main/java/com/localai/workspace/ui/Theme.kt",
+      "app/src/main/java/com/localai/workspace/ui/theme/LocalAiTokens.kt",
+      "app/src/main/java/com/localai/workspace/ui/components/AppScreenContent.kt",
+      "app/src/main/java/com/localai/workspace/MainActivity.kt",
+      "app/src/test/java/com/localai/workspace/ui/LocalAiThemeTest.kt",
+      "app/src/test/java/com/localai/workspace/ui/MainActivityThemeCaptureTest.kt",
+      "app/src/test/java/com/localai/workspace/ui/MainActivityDarkThemeCaptureTest.kt",
+      "docs/validation/ux-01-foundation/RESULTS.md",
+      "docs/validation/ux-01-foundation/RESULTS.json",
+      "docs/validation/ux-01-foundation/SHA256SUMS",
+      "docs/development/EXECUTION_STATE.json",
+      "docs/development/CODEX_TO_WORK_HANDOFF.md"
+    ],
+    "routingAndData": "Three top-level routes/startDestination and all nine destinations/arguments unchanged; Chat/Project scaffolds, Room, models, inference, tools, files, memory, retrieval, permissions and dependencies unchanged.",
+    "host": {
+      "focused": {
+        "status": "PASS",
+        "tests": 5,
+        "passed": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "log": "docs/validation/ux-01-foundation/host/focused.log.gz",
+        "sha256": "d90a3f69347b747c933c783f889e1ee47f223d229c28dec5b0eb9268432457af",
+        "rawLogSha256": "b9a086dea8b327ac8a5325bd523dc3b9bdaaf85aee220d437e00ec73aa994849"
+      },
+      "fullJvm": {
+        "status": "PASS",
+        "tests": 738,
+        "passed": 738,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "xmlFiles": 87,
+        "xmlArchive": "docs/validation/ux-01-foundation/host/full-jvm-xml.tar.gz",
+        "xmlArchiveSha256": "3297acab20e23f3e4d0adb3f38eebf03759df15b861d7720c4244a22a324f721"
+      },
+      "lintDebug": {
+        "status": "PASS",
+        "errors": 0,
+        "warnings": 82,
+        "information": 1,
+        "newThemeFileFindings": 0
+      },
+      "assembleDebugArm64": {
+        "status": "PASS",
+        "property": "-Parm64Only=true"
+      },
+      "compileDebugAndroidTestKotlin": {
+        "status": "PASS",
+        "instrumentedExecution": false
+      },
+      "fullLog": "docs/validation/ux-01-foundation/host/full-host.log.gz",
+      "fullLogSha256": "57512155621d5b480c999259ebb3bc3b36def4bacc676038260baceb6cf16a86",
+      "environment": {
+        "gradle": "8.10.2",
+        "jdk": "Temurin 17.0.20.1+1",
+        "androidApi": 35,
+        "buildTools": "35.0.0",
+        "ndk": "27.0.12077973",
+        "cmake": "3.31.6",
+        "ninja": "1.12.1"
+      },
+      "note": "First full-gate command used ambiguous :app:compileDebugAndroidTest and stopped before tasks; successful invocation uses :app:compileDebugAndroidTestKotlin.",
+      "fullRawLogSha256": "e99af72bc2a1ecfd2849a5d25a1ce2c885f3f442202fb94a5ae94328f73aa6cc"
+    },
+    "visual": {
+      "renderer": "Robolectric/Compose host capture",
+      "visuallyReviewed": true,
+      "screenshotDirectory": "docs/validation/ux-01-foundation/screenshots/",
+      "captures": 7,
+      "fullAppLightDark": "Workspace/Models/Settings at 360dp, fontScale 1.0",
+      "expanded": "AppScreenContent primitive fixture at 411dp, fontScale 1.6; not a full-app screenshot",
+      "remainingMatrix": "UX-05"
+    },
+    "apk": {
+      "artifactType": "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
+      "sourceCommit": "4f6ea6faf3d541d366af8ce7284a32fa58f8c1e8",
+      "filename": "local-ai-workspace-0.5.0-ux01-4f6ea6f-personal-qa-arm64.apk",
+      "bytes": 121780917,
+      "sha256": "cd0d7b10e4667c996a156e472e015ed6bea1bf96273ebb11764113e985ccd9a9",
+      "applicationId": "com.localai.workspace.debug",
+      "versionName": "0.5.0-debug",
+      "versionCode": 27,
+      "abi": "arm64-v8a only",
+      "modelsBundled": false,
+      "zipCrc": "PASS",
+      "zipalign": "PASS",
+      "apksigner": "PASS; v2",
+      "certificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
+      "bundle": {
+        "driveId": "17WpxDcyBvCokhJaT6UODidxKAKb_FtlI",
+        "url": "https://drive.google.com/file/d/17WpxDcyBvCokhJaT6UODidxKAKb_FtlI/view?usp=drivesdk",
+        "bytes": 46116609,
+        "sha256": "0c5d0277b88d9d3a0720d8e52e4f5c3a9ee783305a8922c11791ef7fd43327eb",
+        "metadataReadback": true
+      }
+    },
+    "androidValidation": {
+      "EMULATOR": "NOT_RUN_FOR_THIS_SOURCE_SHA",
+      "PHYSICAL_DEVICE": "NOT_RUN",
+      "priorEmulatorRunId": "38186081844",
+      "priorEmulatorSourceSha": "5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1",
+      "priorEmulatorCounts": "16 total; 9 PASS, 1 Room v1 fixture FAIL, 6 model SKIPPED, 10 executed; not same-SHA evidence."
+    },
+    "room": "No Room schema or migration/test modified.",
+    "planIntegrity": {
+      "original97TaskPlan": "Not present in tracked repository; user-provided source remains authoritative and was not reconstructed/edited.",
+      "M01-06": "PENDING_REQUIRES_DEVICE",
+      "idsOrderDependenciesChanged": false
+    },
+    "workflowsChanged": false,
+    "next": "Stop for independent UX-01 audit; do not start UX-02.",
+    "visualNotes": [
+      "Compact Models screenshot shows its final filter-chip label partly clipped at the right edge; no filter redesign in UX-01, follow up in UX-02."
+    ],
+    "exactCommitAssemble": {
+      "sourceCommit": "4f6ea6faf3d541d366af8ce7284a32fa58f8c1e8",
+      "exitCode": 0,
+      "tasks": "81 actionable; 2 executed, 79 up-to-date",
+      "apkSha256": "cd0d7b10e4667c996a156e472e015ed6bea1bf96273ebb11764113e985ccd9a9",
+      "log": "docs/validation/ux-01-foundation/host/exact-commit-assemble.log.gz",
+      "logSha256": "6e80e6a4b4036828ab73091f1d5d19d189296639223a306f7a1c4fa571e9eb53",
+      "rawLogSha256": "d0c9fee541a2875d12d07134b34843d5c1443ee4c637226bfb55767ddfdc5472"
+    }
   }
 }

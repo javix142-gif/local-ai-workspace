@@ -1,0 +1,33 @@
+# FOCUSED UX theme tests (JDK 17, Android SDK API 35)
+./gradlew :app:testDebugUnitTest --tests 'com.localai.workspace.ui.LocalAiThemeTest' --tests 'com.localai.workspace.ui.MainActivityThemeCaptureTest' --tests 'com.localai.workspace.ui.MainActivityDarkThemeCaptureTest' --no-daemon --no-parallel --max-workers=1 --console=plain
+exitCode=0
+startedAtUtc=2026-10-12T04:48:26Z
+completedAtUtc=2026-10-12T04:49:19Z
+result=5 tests, 5 passed, 0 failed, 0 errors, 0 skipped
+
+# FULL UX-01 host gate; Gradle abbreviation was corrected to the concrete Kotlin task
+./gradlew :app:testDebugUnitTest :app:lintDebug :app:assembleDebug :app:compileDebugAndroidTestKotlin -Parm64Only=true --no-daemon --no-parallel --max-workers=1 --console=plain
+exitCode=0
+startedAtUtc=2026-10-12T04:49:48Z
+completedAtUtc=2026-10-12T04:56:32Z
+result=738 JVM tests passed; lintDebug passed; ARM64 Debug APK assembled; AndroidTest Kotlin sources compiled only
+
+# APK integrity / identity
+unzip -t app/build/outputs/apk/debug/app-debug.apk
+exitCode=0
+/workspace/.toolchain/android-sdk/build-tools/35.0.0/zipalign -c 4 app/build/outputs/apk/debug/app-debug.apk
+exitCode=0
+/workspace/.toolchain/android-sdk/build-tools/35.0.0/apksigner verify --verbose --print-certs app/build/outputs/apk/debug/app-debug.apk
+exitCode=0; APK Signature Scheme v2 verified
+/workspace/.toolchain/android-sdk/build-tools/35.0.0/aapt dump badging app/build/outputs/apk/debug/app-debug.apk
+exitCode=0; com.localai.workspace.debug, versionName=0.5.0-debug, versionCode=27
+
+# The initial abbreviated task name :app:compileDebugAndroidTest was rejected by Gradle as ambiguous before task execution.
+# The successful full gate uses the unambiguous task :app:compileDebugAndroidTestKotlin.
+
+# Exact source commit build check after code commit 4f6ea6faf3d541d366af8ce7284a32fa58f8c1e8
+./gradlew :app:assembleDebug -Parm64Only=true --no-daemon --no-parallel --max-workers=1 --console=plain
+exitCode=0; 81 tasks (2 executed, 79 up-to-date); app:assembleDebug UP-TO-DATE
+startedAtUtc=2026-10-12T05:02:46Z
+completedAtUtc=2026-10-12T05:03:16Z
+APK_SHA256=cd0d7b10e4667c996a156e472e015ed6bea1bf96273ebb11764113e985ccd9a9 (identical to the uploaded bundle member)

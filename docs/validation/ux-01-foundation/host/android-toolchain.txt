@@ -1,0 +1,9 @@
+Android SDK root: /workspace/.toolchain/android-sdk
+compile/target API from app configuration: 35
+Build Tools: 35.0.0
+NDK: 27.0.12077973
+CMake: /workspace/.toolchain/android-sdk/cmake/3.31.6/bin/cmake
+cmake version 3.31.6
+Ninja: /workspace/.toolchain/android-sdk/cmake/3.31.6/bin/ninja
+1.12.1
+ABI build property: -Parm64Only=true

@@ -1,6 +1,21 @@
-# Latest contract: UX-00 audit and design foundation (2026-10-12)
+# Latest contract: UX-01 shared visual foundation (2026-10-12)
 
-**Status:** delivered for independent orchestrator audit. This contract is documentation-only; no application code, workflow, tests, Gradle configuration, database, model, or APK was changed.
+**Status:** implemented and HOST-verified; delivered for independent audit. No UX-02 work has started.
+
+- UX-00 was independently audited and accepted. UX-01 code commit: `4f6ea6faf3d541d366af8ce7284a32fa58f8c1e8`, based on accepted UX-00 commit `80292816115a6d632d96ee3e8e8996adb4c7bd7a`.
+- UX-01 adds explicit fixed Material 3 light/dark palettes, requested typography/spacing/radii/layout tokens, semantic warning/success tokens and a shared reading frame/minimum target used by Workspace, Models and Settings. Chat and Project scaffolds remain. Existing three top-level entries, workspace start destination, nine routes and arguments, back stack and product behavior are unchanged.
+- Focused theme/capture tests: 5/5 PASS. Full app JVM: 738/738 PASS. `lintDebug`: PASS, 0 errors (82 warnings, 1 informational finding). `assembleDebug -Parm64Only=true`: PASS. `compileDebugAndroidTestKotlin`: PASS as compilation only; no instrumentation ran.
+- Seven host captures are stored under [UX-01 evidence](../validation/ux-01-foundation/RESULTS.md). Workspace, Models and Settings are visually captured in light and dark at 360dp/fontScale 1.0. The 411dp/fontScale 1.6 image is the shared frame fixture, not a full-app screen. Full-app large-font matrix and physical review remain pending UX-05.
+- Personal QA Debug ARM64 bundle: [download from Google Drive](https://drive.google.com/file/d/17WpxDcyBvCokhJaT6UODidxKAKb_FtlI/view?usp=drivesdk), 46,116,609 bytes, SHA-256 `0c5d0277b88d9d3a0720d8e52e4f5c3a9ee783305a8922c11791ef7fd43327eb`. The APK is `PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION`, package `com.localai.workspace.debug`, version `0.5.0-debug`/27, ARM64 only, verified with zipalign/apksigner. It is not a Release build or device validation.
+- Android state is separate: no emulator run was started for this SHA. Previous run `38186081844` remains 9 PASS / 1 Room v1 fixture FAIL / 6 model-dependent SKIPPED (10 executed), on older source `5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1`. `PHYSICAL_DEVICE=NOT_RUN`; `M01-06=PENDING_REQUIRES_DEVICE`.
+- The original 97-task plan is not present in the tracked repository and was not reconstructed or edited. No workflow, dependency, Room schema, migration, runtime, inference, tool, memory, retrieval, permission, model, or product-data change was made.
+- Next: stop for independent UX-01 audit; do not begin UX-02. The orchestrator-coordinated pause remains in effect after this audit.
+
+---
+
+# Previous contract: UX-00 audit and design foundation (2026-10-12)
+
+**Status:** `INDEPENDENTLY_AUDITED_ACCEPTED`. The original UX-00 delivery itself was documentation-only; it made no application code, workflow, tests, Gradle configuration, database, model, or APK changes.
 
 - Inspected feature HEAD: `ea8b25ea77319a7650dae8f870c788979530feca`. UI source SHA: `5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1`; the intervening feature commits up to the inspected HEAD contain documentation/evidence, not UI-source changes.
 - Audit and implementable UX-01 proposal: [ux-00-audit-and-foundation.md](../design/ux-00-audit-and-foundation.md). It inventories the nine current navigation destinations, three top-level entries, project tabs and dialogs; records the current Theme/UI structure; and proposes tokens, navigation flows, wireframes and phased implementation gates.
@@ -8,7 +23,7 @@
 - The repository has no tracked ROADMAP/BACKLOG/LOOP_RULES or original 97-task file. The original user-provided task plan was not reconstructed or edited. M01-06 remains `PENDING_REQUIRES_DEVICE`; other roadmap work remains pending.
 - Android state remains separate from the design audit: run `38186081844` is **EMULATOR FAIL** (16 total: 9 pass, 1 Room v1 fixture failure, 6 model-dependent skips; 10 executed). The two header captures were visually reviewed. `PHYSICAL_DEVICE=NOT_RUN`. This audit did not rerun tests/builds.
 - `main` and peeled `v0.4.2` remain outside scope and were not modified.
-- UX-01 is a proposed small implementation of explicit light/dark tokens, typography/shape/spacing, and minimal shared primitives/shell while retaining existing routes and the three current top-level destinations. Do not implement before independent audit.
+- UX-01 proposal from this audit was implemented in code commit `4f6ea6faf3d541d366af8ce7284a32fa58f8c1e8`; see the latest contract above and its evidence report.
 - The orchestrator automation `supervisar-correcci-n-nica-m00` is already coordinated by the user to complete/audit this contract and then wait silently for visual UX input. No automation was modified from this coding environment.
 
 ---
