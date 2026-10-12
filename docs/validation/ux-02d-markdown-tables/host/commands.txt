@@ -1,0 +1,18 @@
+Code SHA under validation: e97a5a185dc25372a6a526bdb8b13310857cfca6
+Product/UI code commit: df8aeb26ed2287802c1bd8a412441752c56c0fce
+
+Environment:
+JAVA_HOME=/workspace/.toolchain/jdk-17
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+Gradle wrapper 8.10.2; offline mode used with the pre-existing Gradle cache.
+
+Focused Compose/parser tests:
+./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain :app:testDebugUnitTest --tests com.localai.workspace.ui.BasicMarkdownTest --tests com.localai.workspace.ui.ChatContentUiTest
+
+Proportional host gate:
+./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin
+
+Fresh LiteRT compatibility test execution because the combined gate reported that task UP-TO-DATE:
+./gradlew --no-daemon --no-parallel --max-workers=1 --offline --rerun-tasks --console=plain :litert-compat:testDebugUnitTest
+
+No assemble, APK packaging, connected/instrumented test, emulator, or device command was run.

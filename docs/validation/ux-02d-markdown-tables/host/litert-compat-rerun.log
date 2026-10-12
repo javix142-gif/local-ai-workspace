@@ -1,0 +1,35 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.10.2/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Configuration 'nativeAar' was resolved during configuration time.
+This is a build performance and scalability issue.
+See https://github.com/gradle/gradle/issues/2298
+Run with --info for a stacktrace.
+> Task :litert-compat:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :litert-compat:copyNativeBackend
+> Task :litert-compat:preBuild
+> Task :litert-compat:preDebugBuild
+> Task :litert-compat:generateDebugResValues
+> Task :litert-compat:generateDebugResources
+> Task :litert-compat:packageDebugResources
+> Task :litert-compat:parseDebugLocalResources
+> Task :litert-compat:generateDebugRFile
+
+> Task :litert-compat:compileDebugKotlin
+w: file:///workspace/local-ai-workspace/litert-compat/src/main/java/com/google/ai/edge/litertlm/Engine.kt:67:40 'val numOfThreads: Int?' is deprecated. Use threadCount instead.
+w: file:///workspace/local-ai-workspace/litert-compat/src/main/java/com/google/ai/edge/litertlm/Engine.kt:71:40 'val numOfThreads: Int?' is deprecated. Use threadCount instead.
+
+> Task :litert-compat:javaPreCompileDebug
+> Task :litert-compat:compileDebugJavaWithJavac NO-SOURCE
+> Task :litert-compat:bundleLibRuntimeToJarDebug
+> Task :litert-compat:bundleLibCompileToJarDebug
+> Task :litert-compat:preDebugUnitTestBuild
+> Task :litert-compat:generateDebugUnitTestStubRFile
+> Task :litert-compat:compileDebugUnitTestKotlin
+> Task :litert-compat:javaPreCompileDebugUnitTest
+> Task :litert-compat:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :litert-compat:processDebugJavaRes
+> Task :litert-compat:processDebugUnitTestJavaRes
+> Task :litert-compat:testDebugUnitTest
+
+BUILD SUCCESSFUL in 53s
+16 actionable tasks: 16 executed

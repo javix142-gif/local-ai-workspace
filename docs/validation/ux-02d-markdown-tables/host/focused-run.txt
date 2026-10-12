@@ -1,0 +1,5 @@
+code_sha=e97a5a185dc25372a6a526bdb8b13310857cfca6
+start_utc=2026-10-12T09:06:33Z
+Command: ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain :app:testDebugUnitTest --tests com.localai.workspace.ui.BasicMarkdownTest --tests com.localai.workspace.ui.ChatContentUiTest
+exit_code=0
+end_utc=2026-10-12T09:08:27Z

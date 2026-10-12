@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.ChatContentUiTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-12T09:07:57" hostname="05497ac86eb0" time="28.523">
+  <properties/>
+  <testcase name="longCitationExcerptAndSourceRemainScrollableAndUntruncatedOnCompactScaledLayout" classname="com.localai.workspace.ui.ChatContentUiTest" time="15.431"/>
+  <testcase name="citationReferenceKeepsEvidenceIdAndShowsStoredSourcePageAndExcerpt" classname="com.localai.workspace.ui.ChatContentUiTest" time="1.188"/>
+  <testcase name="thinkingAndToolOverridesAreCompactAndFunctional" classname="com.localai.workspace.ui.ChatContentUiTest" time="3.818"/>
+  <testcase name="longMarkdownKeepsHierarchyContentAndScrollableCodeAtCompactWidthAndScaledText" classname="com.localai.workspace.ui.ChatContentUiTest" time="1.603"/>
+  <testcase name="longInputLargeFontAndGenerationKeepComposerActionsVisible" classname="com.localai.workspace.ui.ChatContentUiTest" time="2.697"/>
+  <testcase name="toolsOffDoesNotChangeLogicalAgentAndCustomSelectionStaysDistinct" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.721"/>
+  <testcase name="codeHasLanguageAndCopiesExactContent" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.254"/>
+  <testcase name="libraryAdvertisesOnlyConnectedAudio" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.332"/>
+  <testcase name="audioSourceIsOnlyOfferedWhenConnected" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.673"/>
+  <testcase name="malformedTableRemainsLiteralAndKeepsEveryRowVisible" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.19"/>
+  <testcase name="markdownTableKeepsHeadersCellsAndHorizontalAccessAtCompactWidthAndScaledText" classname="com.localai.workspace.ui.ChatContentUiTest" time="1.431"/>
+  <testcase name="pendingImageIsVisibleAndRemoveClearsIt" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.178"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

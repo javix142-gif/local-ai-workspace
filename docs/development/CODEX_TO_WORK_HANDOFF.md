@@ -1,6 +1,32 @@
-# Latest contract: UX-02c structured evidence references in chat (2026-10-12)
+# Latest contract: UX-02d accessible Markdown tables (2026-10-12)
 
-**Status:** HOST PASS for UX-02c; awaiting independent audit. No emulator suite, QA workflow, APK, or physical-device run was started. Stop here; UX-02d and UX-03 remain pending.
+**Status:** UX-02d implementation and proportional HOST gate are complete, pending independent audit. Stop here; do not begin UX-03 or functional roadmap work.
+
+## UX-02c audit acceptance carried forward
+
+UX-02c is `INDEPENDENTLY_AUDITED_ACCEPTED` only for accessible presentation of structured `CitationEvidenceEntity` records already associated with assistant messages and its HOST evidence. The audit accepted focused Compose 10/10, recorded app JVM 746/746 plus LiteRT compatibility 2/2, lint 0 errors/82 warnings, and AndroidTest Kotlin compilation only. It recalculated nine accessible text evidence hashes but did not recalculate compressed archives; test/build counts were accepted from retained records, not rerun. Its prior EMULATOR run `38215175075` remains FAIL (16 total: 9 PASS, 1 authentic Room v1 fixture FAIL, 6 model-dependent SKIPPED; 10 executed). PHYSICAL_DEVICE remains `NOT_RUN`; no UX-02c APK was made.
+
+## UX-02d implementation and evidence
+
+- Base: `e8fdc02cb423aa871aa2c3e0f4b52a7c33df3cda`.
+- Product/parser/Compose code commit: `df8aeb26ed2287802c1bd8a412441752c56c0fce`.
+- Final verification/test commit: `e97a5a185dc25372a6a526bdb8b13310857cfca6`; this follow-up changes only `ChatContentUiTest.kt`.
+- Changed product/test files: `BasicMarkdown.kt`, `ChatContent.kt`, `BasicMarkdownTest.kt`, `ChatContentUiTest.kt`. No dependencies, inference, retrieval, storage, navigation, permissions, workflow, or model changes.
+- The existing lightweight parser recognizes well-formed pipe tables with a separator row, at least two columns and consistent row widths. It supports optional outer pipes, escaped `\|`, and pipe characters inside single-backtick spans; fenced code bypasses table parsing. Malformed table-like text stays literal as a whole. No links or free-text citation syntax were added.
+- Table cells wrap at 176dp; wide tables scroll horizontally. Compose semantics identify the collection, headers, row/column positions and cell descriptions. The original answer/copy path and exact fenced-code copy behavior remain unchanged.
+- Focused parser/Compose tests: **24/24 PASS** (12 + 12), compact `w320dp` fixture at fontScale 1.0, 1.6 and 2.0; XML and raw log are under `docs/validation/ux-02d-markdown-tables/host/`.
+- Proportional gate: `:app:testDebugUnitTest`, `:litert-compat:testDebugUnitTest`, `:app:lintDebug`, `:app:compileDebugAndroidTestKotlin` exited 0 on `e97a5a1`. App JVM XML: 751/751; the compatibility task was UP-TO-DATE in this combined gate, then its explicit `--rerun-tasks` invocation on the same SHA passed 2/2. The combined log reports 137 actionable tasks: 8 executed and 129 UP-TO-DATE. `lintDebug`: 0 errors, 82 warnings. AndroidTest Kotlin compile was UP-TO-DATE in the final gate; it had compiled successfully on the same production implementation commit `df8aeb2`. No instrumentation ran.
+- The archived JUnit set contains 90 XML files totaling **753 tests, all passing**. The separate forced compatibility XML is also retained. Logs/XML/metadata and `SHA256SUMS` are in [UX-02d evidence](../validation/ux-02d-markdown-tables/RESULTS.md). The environment descriptor was captured at `df8aeb2`, before the test-only commit; the command records bind all final tests to `e97a5a1`.
+- No APK, emulator, or device run was performed for UX-02d. The prior global EMULATOR status remains FAIL on Room v1 with six model-dependent tests SKIPPED. PHYSICAL_DEVICE remains `NOT_RUN`.
+- The original 97-task plan is not tracked in this repository and was not reconstructed or edited. M01-06 remains `PENDING_REQUIRES_DEVICE`; UX-03 is pending; the functional backlog remains paused.
+
+**Next:** stop for independent audit of UX-02d. Do not begin UX-03 or functional roadmap work.
+
+---
+
+# UX-02c delivery record (historical; independently accepted)
+
+**Audit status:** `INDEPENDENTLY_AUDITED_ACCEPTED` for structured `CitationEvidenceEntity` presentation and its HOST evidence only. No UX-02c emulator suite, QA workflow, APK, or physical-device run was started. The later UX-02d delivery is recorded at the top of this handoff.
 
 ## UX-02b audit acceptance
 
@@ -31,7 +57,7 @@ UX-02b is independently accepted for the already-supported Markdown renderer and
 - **PHYSICAL_DEVICE:** NOT_RUN.
 - The original user-supplied 97-task plan is not present in the tracked repository; it was not reconstructed or edited. Functional IDs/order/dependencies/progress were preserved. M01-06 remains `PENDING_REQUIRES_DEVICE`; UX-02d is pending; functional backlog remains paused.
 
-**Next:** stop for independent audit of UX-02c. Do not begin UX-02d, UX-03 or functional roadmap work.
+**At UX-02c delivery:** stop for independent audit. The subsequent acceptance and UX-02d status are recorded above.
 
 ---
 

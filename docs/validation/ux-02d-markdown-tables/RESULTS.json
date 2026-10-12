@@ -1,0 +1,162 @@
+{
+  "contract": "UX-02d accessible Markdown table presentation",
+  "status": "HOST_PASS_PENDING_INDEPENDENT_AUDIT",
+  "branch": "feat/0.5.0-skills-agents",
+  "baseCommit": "e8fdc02cb423aa871aa2c3e0f4b52a7c33df3cda",
+  "productCodeCommit": "df8aeb26ed2287802c1bd8a412441752c56c0fce",
+  "verificationHead": "e97a5a185dc25372a6a526bdb8b13310857cfca6",
+  "implementation": {
+    "files": [
+      "app/src/main/java/com/localai/workspace/ui/BasicMarkdown.kt",
+      "app/src/main/java/com/localai/workspace/ui/ChatContent.kt",
+      "app/src/test/java/com/localai/workspace/ui/BasicMarkdownTest.kt",
+      "app/src/test/java/com/localai/workspace/ui/ChatContentUiTest.kt"
+    ],
+    "grammar": "Pipe header + separator (at least 3 dashes per cell, optional edge colons), at least two columns, consistent row width; optional outer pipes; escaped \\| and single-backtick spans; fenced code bypasses table parser.",
+    "malformed": "A candidate with mismatched rows remains literal in full; no cell/row is discarded.",
+    "presentation": "176dp cells wrap text; horizontal scrolling; Compose collection info, header semantics, per-cell row/column info and header:value descriptions.",
+    "sourceAndCopy": "Table block retains source lines; full response copy still reads the original content string in unchanged MainActivity. Existing fenced-code copy remains unchanged."
+  },
+  "host": {
+    "environment": {
+      "os": "Linux x86_64",
+      "gradle": "8.10.2",
+      "jdk": "Temurin 17.0.20.1+1",
+      "androidSdk": "API 35",
+      "buildTools": "35.0.0",
+      "offline": true,
+      "environmentSnapshotSha": "df8aeb26ed2287802c1bd8a412441752c56c0fce",
+      "verificationSha": "e97a5a185dc25372a6a526bdb8b13310857cfca6"
+    },
+    "focused": {
+      "tests": 24,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS",
+      "xmlFiles": 2,
+      "fontScale": [
+        1.0,
+        1.6,
+        2.0
+      ],
+      "width": "Robolectric w320dp; content fixture 280dp",
+      "log": "host/focused.log",
+      "run": "host/focused-run.txt"
+    },
+    "fullJvm": {
+      "tests": 753,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS",
+      "xmlFiles": 90,
+      "appTests": 751,
+      "compatTests": 2,
+      "junitArchive": "host/full-junit.tar.gz",
+      "log": "host/full-host.log"
+    },
+    "compatForcedRerun": {
+      "status": "PASS",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "commandRecord": "host/litert-compat-rerun.txt",
+      "log": "host/litert-compat-rerun.log",
+      "xmlDirectory": "host/litert-compat-junit"
+    },
+    "lintDebug": {
+      "status": "PASS",
+      "errors": 0,
+      "warnings": 82,
+      "report": "host/lint-results-debug.txt"
+    },
+    "compileDebugAndroidTestKotlin": {
+      "status": "PASS_COMPILE_ONLY",
+      "finalGateOutcome": "UP-TO-DATE",
+      "sameProductCodePreviouslyCompiledAt": "df8aeb26ed2287802c1bd8a412441752c56c0fce",
+      "instrumentation": "NOT_RUN"
+    },
+    "combinedGate": {
+      "status": "PASS",
+      "exitCode": 0,
+      "actionableTasks": 137,
+      "executed": 8,
+      "upToDate": 129,
+      "run": "host/full-run.txt",
+      "taskSummary": "137 actionable tasks: 8 executed, 129 up-to-date; no FROM-CACHE count reported in the raw log.",
+      "verificationSha": "e97a5a185dc25372a6a526bdb8b13310857cfca6"
+    }
+  },
+  "validationLayers": {
+    "HOST": "PASS for this scope",
+    "EMULATOR": "NOT_RUN for UX-02d; prior global run 38215175075 remains FAIL (16 total: 9 PASS, 1 authentic Room v1 fixture FAIL, 6 real-model-dependent SKIPPED; 10 executed). The collector applicationApkInstalled=false timing/cause and Gradle progress 22/16 discrepancy remain undetermined.",
+    "PHYSICAL_DEVICE": "NOT_RUN"
+  },
+  "priorUx02cAudit": {
+    "status": "INDEPENDENTLY_AUDITED_ACCEPTED",
+    "scope": "structured CitationEvidenceEntity records already associated with messages and HOST evidence only",
+    "codeCommit": "0846419ea64259244a9b1c7bce9b40711cc29217",
+    "auditHead": "e8fdc02cb423aa871aa2c3e0f4b52a7c33df3cda",
+    "limits": "9 textual evidence files recalculated; compressed artifacts not recalculated; counts accepted from stored records; no emulator or physical PASS implied."
+  },
+  "apk": "NOT_GENERATED",
+  "planIntegrity": {
+    "original97TaskPlan": "Not present in tracked repository; user source remains authoritative and is not reconstructed or edited.",
+    "M01-06": "PENDING_REQUIRES_DEVICE",
+    "idsOrderDependenciesProgressChanged": false,
+    "UX-03": "PENDING",
+    "functionalBacklog": "PAUSED"
+  },
+  "evidence": {
+    "directory": "docs/validation/ux-02d-markdown-tables",
+    "manifest": "docs/validation/ux-02d-markdown-tables/SHA256SUMS",
+    "focusedLog": "host/focused.log",
+    "focusedXml": [
+      "host/focused-junit/TEST-com.localai.workspace.ui.BasicMarkdownTest.xml",
+      "host/focused-junit/TEST-com.localai.workspace.ui.ChatContentUiTest.xml"
+    ],
+    "fullHostLog": "host/full-host.log",
+    "fullJUnitArchive": "host/full-junit.tar.gz",
+    "lintReport": "host/lint-results-debug.txt",
+    "iterationsArchive": "host/iteration-history.tar.gz"
+  },
+  "next": "Stop for independent audit. Do not begin UX-03 or functional roadmap work.",
+  "evidenceSha256": {
+    "environment": "25da77c7ae12ef2c3938a6bbb803eb7cce771fe45d74c6e68d3e88b3a5c4a26e",
+    "commands": "89d1a002a720549e759210e4995f147d89275953651a2f3bdae27df76ca59e23",
+    "focusedLog": "2d5a1d98d9514ab1b417a0758e7ccaf24e3b6d686f10f7295affa7c52510aaa0",
+    "focusedRun": "19313d2c08e824aebee8959caa5370ba94e20b4cd8a22ac010bb17257bf92765",
+    "focusedBasicMarkdownXml": "3adc12f3e8ff33da3a074ce56f27ee512d6fb0c2fdeaed5a626d22eb39904eb1",
+    "focusedChatContentXml": "6f64251918dee04f173fd379e9d861be94affeb3f9eff861ea3a2fc273e18175",
+    "fullHostLog": "017804083483f50be39ed0e45e2b23f72957d5eb29278c2078ee81ff43bf648e",
+    "fullRun": "b1fa4aab849f75c20b850cb65a1a783e47f40c0f031590f917aaf55c98f23a9f",
+    "fullJUnitArchive": "3f99ee0d270179c810fb82237e349df9addfc674b434d4f684c1ae3096ce237b",
+    "lintReport": "01a232091ed618cf210db633a8b306cba020840866bba9fe45669ccee8040f80",
+    "compatRerunLog": "376e53bfc0f33faf1011b3970e0ddbe92475075048226bd22520cedbf8dd989c",
+    "compatRerunCommand": "fde88376001e53ba1e821b265d211979000bb048b2b33a52ee75293208b1aa51",
+    "compatJUnitXml": "e85aa3e355d7e38695ee23ff54750dbde4b19bce1f3a58b6d4f3b124b55b33da",
+    "iterationsArchive": "ae17131295cd64ea690eaaf1c465613c5bd10d85c9f37148cfae44ed1e83ba99"
+  },
+  "evidencePaths": {
+    "environment": "host/environment.txt",
+    "commands": "host/commands.txt",
+    "focusedLog": "host/focused.log",
+    "focusedRun": "host/focused-run.txt",
+    "focusedBasicMarkdownXml": "host/focused-junit/TEST-com.localai.workspace.ui.BasicMarkdownTest.xml",
+    "focusedChatContentXml": "host/focused-junit/TEST-com.localai.workspace.ui.ChatContentUiTest.xml",
+    "fullHostLog": "host/full-host.log",
+    "fullRun": "host/full-run.txt",
+    "fullJUnitArchive": "host/full-junit.tar.gz",
+    "lintReport": "host/lint-results-debug.txt",
+    "compatRerunLog": "host/litert-compat-rerun.log",
+    "compatRerunCommand": "host/litert-compat-rerun.txt",
+    "compatJUnitXml": "host/litert-compat-junit/TEST-com.google.ai.edge.litertlm.NativeHistoryRoleTest.xml",
+    "iterationsArchive": "host/iteration-history.tar.gz"
+  },
+  "unresolvedPriorEmulatorDiagnostics": [
+    "Collector applicationApkInstalled=false timing/cause remains undetermined from prior run 38215175075.",
+    "Prior Gradle progress 22/16 disagrees with its 16-case XML; cause remains undetermined."
+  ]
+}
