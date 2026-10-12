@@ -3699,6 +3699,51 @@
       "note": "The orchestrator automation is configured to complete/audit this contract and then wait silently for visual UX input."
     }
   },
+  "latestUx00Audit": {
+    "name": "UX-00 visual audit and design foundation",
+    "status": "DELIVERED_PENDING_ORCHESTRATOR_AUDIT",
+    "branch": "feat/0.5.0-skills-agents",
+    "featureHeadAtInspection": "ea8b25ea77319a7650dae8f870c788979530feca",
+    "uiCodeInspected": "5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1",
+    "document": "docs/design/ux-00-audit-and-foundation.md",
+    "scope": "Documentation only; no application, workflow, test, Gradle, data, or APK changes.",
+    "referenceAssets": {
+      "chatgptClaudeImages": "NOT_PROVIDED; no visual comparison with those products was made.",
+      "productCaptures": [
+        "docs/validation/ui-stage15/screenshots/workspace.png",
+        "docs/validation/ui-stage15/screenshots/chat.png",
+        "docs/validation/ui-stage15/screenshots/models.png",
+        "docs/validation/ui-stage15/screenshots/project-settings.png"
+      ],
+      "composeHeaderTestCaptures": [
+        "docs/validation/android-emulator-ci/compose-capture-5e93ba6/screenshots/chat-header-standard.png",
+        "docs/validation/android-emulator-ci/compose-capture-5e93ba6/screenshots/chat-header-large-font.png"
+      ]
+    },
+    "planIntegrity": {
+      "trackedOriginalPlanFile": "NOT_PRESENT",
+      "original97TaskPlan": "Not reconstructed or edited; user-provided source remains authoritative.",
+      "M01-06": "PENDING_REQUIRES_DEVICE",
+      "otherRoadmapTasks": "PENDING"
+    },
+    "validationAtDelivery": {
+      "documentStructure": "10 required deliverables present",
+      "internalMarkdownLinks": "Checked",
+      "jsonSyntax": "Checked after UX record insertion",
+      "productTestsOrBuilds": "NOT_RUN; docs-only contract"
+    },
+    "androidStateAtInspection": {
+      "EMULATOR": "FAIL; run 38186081844: 16 total, 9 PASS, 1 Room v1 fixture FAIL, 6 real-model SKIPPED, 10 executed; ChatHeader captures visually reviewed.",
+      "PHYSICAL_DEVICE": "NOT_RUN",
+      "M01-06": "PENDING_REQUIRES_DEVICE"
+    },
+    "next": "UX-01 is specified in the audit document but not implemented; wait for independent audit before implementation.",
+    "orchestration": {
+      "orchestratorAutomationId": "supervisar-correcci-n-nica-m00",
+      "status": "User-coordinated in the orchestrator to complete/audit this contract and then wait silently for visual UX input.",
+      "codingEnvironmentAutomationChanges": false
+    }
+  },
   "postDeliveryPause": {
     "priority": "MEJORAS VISUALES Y EXPERIENCIA DE USUARIO",
     "state": "VISUAL_UX_WAITING_USER_INPUT",

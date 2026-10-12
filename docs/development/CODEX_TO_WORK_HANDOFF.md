@@ -1,3 +1,18 @@
+# Latest contract: UX-00 audit and design foundation (2026-10-12)
+
+**Status:** delivered for independent orchestrator audit. This contract is documentation-only; no application code, workflow, tests, Gradle configuration, database, model, or APK was changed.
+
+- Inspected feature HEAD: `ea8b25ea77319a7650dae8f870c788979530feca`. UI source SHA: `5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1`; the intervening feature commits up to the inspected HEAD contain documentation/evidence, not UI-source changes.
+- Audit and implementable UX-01 proposal: [ux-00-audit-and-foundation.md](../design/ux-00-audit-and-foundation.md). It inventories the nine current navigation destinations, three top-level entries, project tabs and dialogs; records the current Theme/UI structure; and proposes tokens, navigation flows, wireframes and phased implementation gates.
+- Reference assets: no ChatGPT/Claude screenshots were attached, so no comparison to those products is claimed. The historical app captures and Compose header-test captures are explicitly identified in the audit as product/test evidence.
+- The repository has no tracked ROADMAP/BACKLOG/LOOP_RULES or original 97-task file. The original user-provided task plan was not reconstructed or edited. M01-06 remains `PENDING_REQUIRES_DEVICE`; other roadmap work remains pending.
+- Android state remains separate from the design audit: run `38186081844` is **EMULATOR FAIL** (16 total: 9 pass, 1 Room v1 fixture failure, 6 model-dependent skips; 10 executed). The two header captures were visually reviewed. `PHYSICAL_DEVICE=NOT_RUN`. This audit did not rerun tests/builds.
+- `main` and peeled `v0.4.2` remain outside scope and were not modified.
+- UX-01 is a proposed small implementation of explicit light/dark tokens, typography/shape/spacing, and minimal shared primitives/shell while retaining existing routes and the three current top-level destinations. Do not implement before independent audit.
+- The orchestrator automation `supervisar-correcci-n-nica-m00` is already coordinated by the user to complete/audit this contract and then wait silently for visual UX input. No automation was modified from this coding environment.
+
+---
+
 # Latest contract: personal QA ARM64 delivery and Room v1 source review (2026-10-12)
 
 **Build source:** `27a286daa4dd83bfb1b2d36d185459e481d40d1f` on `feat/0.5.0-skills-agents`; product/build files are unchanged from the instrumented code SHA `5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1`. Room history was checked only for an attributable WorkspaceDatabase v1 declaration: no such commit exists; the reachable database history begins at v8. `ENVIRONMENT_UNAVAILABLE` remains; no schema or test was changed and the Room suite was not rerun.
