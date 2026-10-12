@@ -1,0 +1,1 @@
+The focused invocation log records the exact-code ChatContentUiTest execution. Gradle later rewrote the per-class XML during the combined full HOST gate; the retained class XML in focused-junit is copied from that combined gate and is explicitly the same code SHA. It reports 10/10 pass. The original full app/compat XML files are retained in full-junit.tar.gz.

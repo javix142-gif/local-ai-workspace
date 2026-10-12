@@ -1,0 +1,8 @@
+Code commit tested: 0846419ea64259244a9b1c7bce9b40711cc29217
+Focused ChatContentUiTest: 0 (BUILD SUCCESSFUL; 10 tests in the class; three Gradle tasks executed).
+Combined app + litert-compat + lint + compileDebugAndroidTestKotlin: 0 (BUILD SUCCESSFUL; 137 actionable tasks, 21 executed, 2 from cache, 114 up-to-date).
+App JVM XML: 746 tests, 746 passed, 0 failures, 0 errors, 0 skipped; 89 XML files.
+LiteRT compatibility XML: 2 tests, 2 passed, 0 failures, 0 errors, 0 skipped; 1 XML file.
+git diff --check: 0.
+Instrumented Android tests: NOT_RUN.
+assembleDebug/APK: NOT_RUN.

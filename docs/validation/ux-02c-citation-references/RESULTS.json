@@ -1,0 +1,80 @@
+{
+  "contract": "UX-02c structured evidence references in chat",
+  "status": "HOST_PASS_PENDING_INDEPENDENT_AUDIT",
+  "branch": "feat/0.5.0-skills-agents",
+  "baseCommit": "eb3a6aeee0966cdfe01fb2698a6601ca7af9cdc8",
+  "testedCodeCommit": "0846419ea64259244a9b1c7bce9b40711cc29217",
+  "scope": "Compose presentation and focused tests only. CitationEvidenceEntity, evidence lookup, retrieval, persistence, data formats, message text/copy, inference, navigation, permissions, Agents/Tools and dependencies were not changed.",
+  "implementation": {
+    "referencePresentation": "Full-width stacked references show the existing evidenceId, non-empty sourceLabel and pageStart when present. Each remains clickable and invokes the original onCitation callback with that same evidenceId.",
+    "accessibility": "Button role, source/page-aware content description, heading semantics and 48dp minimum reference touch target.",
+    "detailPresentation": "Scrollable bounded detail body retains stored sourceLabel, pageStart or existing Local source fallback, and full stored excerpt; notices identify local-index metadata and excerpt-only scope.",
+    "textAndProvenance": "No text parsing, citation fabrication, document-completeness claim, response-copy change, or provenance change."
+  },
+  "host": {
+    "environmentFile": "host/environment.txt",
+    "focused": {
+      "status": "PASS",
+      "commandFile": "host/commands.txt",
+      "testClass": "com.localai.workspace.ui.ChatContentUiTest",
+      "tests": 10,
+      "passed": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "log": "host/focused.log.gz",
+      "junit": "host/focused-junit/TEST-com.localai.workspace.ui.ChatContentUiTest.xml",
+      "fontScales": [1.0, 1.6, 2.0],
+      "hostWidth": "320dp qualifier"
+    },
+    "fullJvmGate": {
+      "status": "PASS",
+      "tasks": [
+        ":app:testDebugUnitTest",
+        ":litert-compat:testDebugUnitTest",
+        ":app:lintDebug",
+        ":app:compileDebugAndroidTestKotlin"
+      ],
+      "appTests": 746,
+      "appPassed": 746,
+      "compatTests": 2,
+      "compatPassed": 2,
+      "total": 748,
+      "passed": 748,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlFiles": 90,
+      "exitCode": 0,
+      "log": "host/full-host.log.gz",
+      "junitArchive": "host/full-junit.tar.gz",
+      "junitSummary": "host/full-junit-summary.json"
+    },
+    "lintDebug": {
+      "status": "PASS",
+      "errors": 0,
+      "warnings": 82,
+      "report": "host/lint-results-debug.txt"
+    },
+    "androidTest": "compileDebugAndroidTestKotlin PASS; instrumentation NOT_RUN",
+    "assembleDebug": "NOT_RUN; no APK requested",
+    "diffCheck": "PASS"
+  },
+  "validationLayers": {
+    "HOST": "PASS for UX-02c presentation tests and proportional host gate.",
+    "EMULATOR": "NOT_RUN for UX-02c. Previously audited run 38215175075 remains FAIL: 16 total, 9 PASS, 1 Room v1 fixture FAIL, 6 model-dependent SKIPPED, 10 executed. Paired QA run 38215175184 failed closed with no artifact. Post-run package check and 22/16 progress discrepancy remain unresolved.",
+    "PHYSICAL_DEVICE": "NOT_RUN"
+  },
+  "planIntegrity": {
+    "original97TaskPlan": "Not present in tracked repository; user-provided source remains authoritative and was not reconstructed or edited.",
+    "M01-06": "PENDING_REQUIRES_DEVICE",
+    "UX-02d": "PENDING",
+    "functionalBacklogChanged": false
+  },
+  "limitations": [
+    "No emulator suite rerun, APK, screenshot capture, or physical-device validation was requested or performed.",
+    "Links, free-text citation syntax, and tables remain literal in ChatRichText; UX-02c renders structured evidence entities already associated with an assistant message only."
+  ],
+  "next": "Stop for independent audit of UX-02c; UX-02d remains pending."
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.ChatContentUiTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-12T07:44:35" hostname="05497ac86eb0" time="15.419">
+  <properties/>
+  <testcase name="longCitationExcerptAndSourceRemainScrollableAndUntruncatedOnCompactScaledLayout" classname="com.localai.workspace.ui.ChatContentUiTest" time="10.127"/>
+  <testcase name="citationReferenceKeepsEvidenceIdAndShowsStoredSourcePageAndExcerpt" classname="com.localai.workspace.ui.ChatContentUiTest" time="1.1"/>
+  <testcase name="thinkingAndToolOverridesAreCompactAndFunctional" classname="com.localai.workspace.ui.ChatContentUiTest" time="1.308"/>
+  <testcase name="longMarkdownKeepsHierarchyContentAndScrollableCodeAtCompactWidthAndScaledText" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.82"/>
+  <testcase name="longInputLargeFontAndGenerationKeepComposerActionsVisible" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.776"/>
+  <testcase name="toolsOffDoesNotChangeLogicalAgentAndCustomSelectionStaysDistinct" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.509"/>
+  <testcase name="codeHasLanguageAndCopiesExactContent" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.177"/>
+  <testcase name="libraryAdvertisesOnlyConnectedAudio" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.15"/>
+  <testcase name="audioSourceIsOnlyOfferedWhenConnected" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.265"/>
+  <testcase name="pendingImageIsVisibleAndRemoveClearsIt" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.184"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

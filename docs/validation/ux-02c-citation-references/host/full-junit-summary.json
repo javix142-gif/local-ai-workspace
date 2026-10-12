@@ -1,0 +1,24 @@
+{
+  "app": {
+    "tests": 746,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 746
+  },
+  "litert-compat": {
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 2
+  },
+  "xmlFiles": 90,
+  "totals": {
+    "tests": 748,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 748
+  }
+}

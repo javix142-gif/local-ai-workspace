@@ -1,0 +1,17 @@
+Focused Compose test:
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk
+JAVA_HOME=/workspace/.toolchain/jdk-17
+PATH=/workspace/.toolchain/jdk-17/bin:$PATH
+./gradlew :app:testDebugUnitTest --tests com.localai.workspace.ui.ChatContentUiTest --no-daemon --no-parallel --max-workers=1 --console=plain
+
+Proportional full HOST gate (no assembleDebug/APK and no instrumentation):
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk
+JAVA_HOME=/workspace/.toolchain/jdk-17
+PATH=/workspace/.toolchain/jdk-17/bin:$PATH
+./gradlew :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin --no-daemon --no-parallel --max-workers=1 --console=plain
+
+Evidence collection:
+git diff --check
+JUnit XML totals parsed with Python xml.etree.ElementTree from app/build/test-results/testDebugUnitTest and litert-compat/build/test-results/testDebugUnitTest.

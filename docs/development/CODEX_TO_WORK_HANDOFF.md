@@ -1,6 +1,45 @@
-# Latest contract: UX-02b conversational content readability (2026-10-12)
+# Latest contract: UX-02c structured evidence references in chat (2026-10-12)
 
-**Status:** HOST PASS for the UX-02b scope; waiting for independent audit. The code push automatically triggered emulator and QA gate workflows: emulator FAIL on the known Room v1 fixture; QA gate failed closed with no APK artifact. PHYSICAL_DEVICE remains NOT_RUN. Stop after this handoff; do not start UX-02c, UX-03 or functional roadmap work.
+**Status:** HOST PASS for UX-02c; awaiting independent audit. No emulator suite, QA workflow, APK, or physical-device run was started. Stop here; UX-02d and UX-03 remain pending.
+
+## UX-02b audit acceptance
+
+UX-02b is independently accepted for the already-supported Markdown renderer and its HOST checks only. Its code SHA is `3fc4bf6d496702f98f370e6089e98141486b284d`; focused checks were 17/17 PASS and the prior full app JVM suite was 744/744 according to the accepted records. The automatic global emulator run `38215175075` remains FAIL (16 total, 9 PASS, 1 unavailable authentic Room v1 fixture failure, 6 model-dependent SKIPPED, 10 executed); QA run `38215175184` failed closed with no APK. PHYSICAL_DEVICE remains NOT_RUN. Links, free-text citation syntax, and tables remain literal in ChatRichText. The post-run `applicationApkInstalled=false` observation and 22/16 progress discrepancy remain undiagnosed.
+
+## UX-02c implementation
+
+- Base: `eb3a6aeee0966cdfe01fb2698a6601ca7af9cdc8`.
+- Code commit: `0846419ea64259244a9b1c7bce9b40711cc29217`.
+- The existing flow remains `CitationEvidenceEntity` → assistant message → the same `onCitation(evidenceId)` callback → MainActivity lookup by that ID. No parsing of answer text or new evidence/retrieval path was added.
+- `CitationEvidenceReferences` replaces ID-only horizontal chips with stacked reference cards showing the stored ID, source label when present, and pageStart when present. They retain the same evidenceId callback, expose button semantics and an accessible description, and have a 48dp minimum target.
+- `CitationEvidenceDialog` keeps the source, pageStart/existing fallback and full stored excerpt in a vertically scrollable body. It retains the local-index metadata note and explicitly says the excerpt does not represent a full-document review.
+- Files: `MainActivity.kt`, new `ui/CitationEvidencePresentation.kt`, and `ChatContentUiTest.kt`.
+
+## HOST evidence
+
+- Focused `ChatContentUiTest`: 10/10 PASS, including exact callback ID, stored source/page/excerpt, accessible button/heading semantics, touch target, and compact-width long details at fontScale 1.0/1.6/2.0.
+- Combined JVM suite: app 746/746 and LiteRT compatibility 2/2 PASS (748 total across 90 XML files).
+- `lintDebug`: PASS, 0 errors, 82 warnings.
+- `compileDebugAndroidTestKotlin`: PASS, compile only. Instrumented tests NOT_RUN.
+- `assembleDebug` was NOT_RUN; no APK requested. `git diff --check` PASS.
+- Commands, environment, XML, logs and checksums: [UX-02c evidence](../validation/ux-02c-citation-references/RESULTS.md).
+
+## Validation and remaining risks
+
+- **HOST:** PASS for the focused UX-02c and proportional gate above.
+- **EMULATOR:** no new run. The audited UX-02b global result remains FAIL on Room v1; six tests requiring real models remain SKIPPED. The QA gate remains closed with no artifact. The package post-run check and progress-count discrepancy are still unexplained.
+- **PHYSICAL_DEVICE:** NOT_RUN.
+- The original user-supplied 97-task plan is not present in the tracked repository; it was not reconstructed or edited. Functional IDs/order/dependencies/progress were preserved. M01-06 remains `PENDING_REQUIRES_DEVICE`; UX-02d is pending; functional backlog remains paused.
+
+**Next:** stop for independent audit of UX-02c. Do not begin UX-02d, UX-03 or functional roadmap work.
+
+---
+
+## UX-02b delivery record (full historical report; now accepted within the scope above)
+
+# Previous contract: UX-02b conversational content readability (2026-10-12)
+
+**Audit status:** independently accepted for the existing Markdown renderer and HOST evidence scope. The global emulator result remains FAIL on the authentic Room v1 fixture, with six model-dependent SKIPPED and 10 executed; QA failed closed with no APK; PHYSICAL_DEVICE remains NOT_RUN.
 
 ## Baseline and prior UX-02a acceptance
 
@@ -34,7 +73,10 @@ The new layout test uses a compact 320dp Robolectric host fixture at fontScale 1
 - The original user-provided 97-task plan is not in the tracked tree; it was not reconstructed or edited. M01-06 remains `PENDING_REQUIRES_DEVICE`, and the functional backlog remains paused.
 - `main` and peeled `v0.4.2` remain unchanged at `de615b772cf37a99e7e08a647c59607b271de606`.
 
-**Next:** wait for independent UX-02b audit. Do not rerun the same Room-blocked emulator gate or start UX-02c, UX-03, or functional roadmap work.
+**Next at UX-02b delivery:** await independent audit. That audit has since accepted UX-02b for its stated Markdown/HOST scope; the latest work is UX-02c as documented at the top of this file.
+
+---
+
 
 ---
 

@@ -1,0 +1,12 @@
+6287a5d238daa5af976846466ab71ab6dc068131b4482312becf394e0c22fa17  ./RESULTS.json
+afe791eacff749a561e9f5ee3970fe9e888570ce66148ba312381a5176b9c77a  ./RESULTS.md
+94c108bed982998e1dbb79508f63c1129d4651b9e16c69bdb52e0d37ef9e1ee1  ./host/commands.txt
+1a849a5289418b028797f4dc2320308c75e44158461b6d95b1dfdd8e0c13eeff  ./host/environment.txt
+0716c167c8c6f769dc999e64619a1762caffb09081265e3e70c5b4e7ee9d9bca  ./host/exit-codes.txt
+f948eb8c15e51d4872d44f0b663cf86d7db52aaefb35464ba4c471ab69531121  ./host/focused-junit/TEST-com.localai.workspace.ui.ChatContentUiTest.xml
+965c91d5e0fc25c3e28343060b3b9bf2afbdc535bba71ca3f04445806487e402  ./host/focused-xml-origin.txt
+9e9fde068b6819bcc29efce25b25756209a97df156bca18cc114dfbc0322e205  ./host/focused.log.gz
+fa53442d94afa247144cd262b9b19a7862f845064c780cb13fa121ed020b9f94  ./host/full-host.log.gz
+f30e2365e02d1edcdedd886884ff65700172fe6f56e869662b8a08753a5b131d  ./host/full-junit-summary.json
+cc132e506a0bbacec3475f7dfa87f3fcd4965d944efe42f3c94d9c6c2d13d5a9  ./host/full-junit.tar.gz
+01a232091ed618cf210db633a8b306cba020840866bba9fe45669ccee8040f80  ./host/lint-results-debug.txt
