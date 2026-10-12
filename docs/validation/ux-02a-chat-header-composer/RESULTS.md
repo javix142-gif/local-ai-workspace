@@ -23,16 +23,18 @@ Ambiente: Linux; Gradle 8.10.2; Temurin JDK 17.0.20.1 para Gradle y Temurin JDK 
 
 | Comprobación | Resultado | Evidencia |
 |---|---:|---|
-| Focalizada sobre el commit `d0832e2` | 9/9 PASS, 0 fail/error/skip | [`focused-exact-commit.log`](host/focused-exact-commit.log), exit 0, 3 XML en `host/focused-junit/` |
-| Suite JVM app | 741/741 PASS, 0 fail/error/skip en 89 XML | [`full-jvm-xml.tar.gz`](host/full-jvm-xml.tar.gz), resumen del gate en [`full-gate-final.log`](host/full-gate-final.log) |
+| Focalizada sobre el commit `d0832e2` | 9/9 PASS, 0 fail/error/skip | [`focused-exact-commit.log.gz`](host/focused-exact-commit.log.gz), exit 0, 3 XML en `host/focused-junit/` |
+| Suite JVM app | 741/741 PASS, 0 fail/error/skip en 89 XML | [`full-jvm-xml.tar.gz`](host/full-jvm-xml.tar.gz), resumen del gate en [`full-gate-final.log.gz`](host/full-gate-final.log.gz) |
 | `:app:lintDebug` | PASS; 0 errores, 82 advertencias | [`lint-results-debug.txt`](host/lint-results-debug.txt) |
-| `:app:assembleDebug -Parm64Only=true` | PASS, fuente `d0832e2` | [`exact-commit-arm64-assemble.log`](host/exact-commit-arm64-assemble.log) |
-| `:app:compileDebugAndroidTestKotlin` | PASS; UP-TO-DATE en el gate final. Se compiló explícitamente en el gate exitoso anterior, después del cambio del test Android | [`full-gate-before-last-adjustment.log`](host/full-gate-before-last-adjustment.log), [`full-gate-final.log`](host/full-gate-final.log) |
+| `:app:assembleDebug -Parm64Only=true` | PASS, fuente `d0832e2` | [`exact-commit-arm64-assemble.log.gz`](host/exact-commit-arm64-assemble.log.gz) |
+| `:app:compileDebugAndroidTestKotlin` | PASS; UP-TO-DATE en el gate final. Se compiló explícitamente en el gate exitoso anterior, después del cambio del test Android | [`full-gate-before-last-adjustment.log.gz`](host/full-gate-before-last-adjustment.log.gz), [`full-gate-final.log.gz`](host/full-gate-final.log.gz) |
 | `git diff --check` | PASS | comprobado antes de los commits de código y evidencia |
 
 El gate final tardó 6m41s: 151 tareas, 19 ejecutadas y 132 UP-TO-DATE. El archivo de salida de lint completo fue preservado. La suite completa se ejecutó sobre el mismo árbol de código posteriormente comprometido como `d0832e2`; después del commit se volvió a ejecutar la suite focalizada con el SHA explícito.
 
-Los intentos previos también están preservados: una invocación inicial no llegó a ejecutar tests porque la instalación Java 21 del host no tenía `javac`; un gate inicial detectó una referencia antigua al helper de altura en el nuevo AndroidTest. La referencia se corrigió y el gate final pasó. La validación inicial del APK se interrumpió por SIGPIPE del comando `aapt | head`; el verificador completo posterior no trunca la salida y pasó. Véanse los logs `focused-first.log`, `full-gate.log`, `apk-validation.log` y `apk-validation-final.log`; no se cuentan como PASS.
+Los logs originales de texto se versionan como `.log.gz`; al descomprimirlos se recuperan byte por byte las salidas originales. El manifiesto SHA-256 cubre 33 archivos de evidencia y se verifica desde el índice y árbol del commit.
+
+Los intentos previos también están preservados: una invocación inicial no llegó a ejecutar tests porque la instalación Java 21 del host no tenía `javac`; un gate inicial detectó una referencia antigua al helper de altura en el nuevo AndroidTest. La referencia se corrigió y el gate final pasó. La validación inicial del APK se interrumpió por SIGPIPE del comando `aapt | head`; el verificador completo posterior no trunca la salida y pasó. Véanse los logs `focused-first.log.gz`, `full-gate.log.gz`, `apk-validation.log.gz` y `apk-validation-final.log.gz`; no se cuentan como PASS.
 
 ## Capturas Compose host
 
@@ -58,7 +60,7 @@ Los archivos están en [`screenshots/`](screenshots/). Son fixtures de component
 - Paquete Drive: [descargar APK QA ARM64](https://drive.google.com/file/d/1oEFdh3Q7_r8DjBw9Zp5mtXkNWbYXniP8/view?usp=drivesdk), ID `1oEFdh3Q7_r8DjBw9Zp5mtXkNWbYXniP8`, 46,262,838 bytes, SHA-256 local del ZIP `b5b1225300aa576a5f54c991a5f119844fb41eabdfdb5c7ec7b48880f65d5bc1`.
 - La lectura posterior de Drive confirmó ID, nombre, MIME `application/zip`, tamaño, URL y carpeta destino. El ZIP de 46 MB no se volvió a descargar para recalcular su SHA desde Drive; el hash indicado corresponde al archivo local subido y el tamaño sí coincide con la lectura posterior. El paquete incluye APK, manifiesto, log de verificación y SHA256SUMS.
 
-Log de build y verificaciones: [`host/exact-commit-arm64-assemble.log`](host/exact-commit-arm64-assemble.log), [`host/apk-validation-verified.log`](host/apk-validation-verified.log). El manifiesto consolidado está en [`RESULTS.json`](RESULTS.json).
+Log de build y verificaciones: [`host/exact-commit-arm64-assemble.log.gz`](host/exact-commit-arm64-assemble.log.gz), [`host/apk-validation-verified.log.gz`](host/apk-validation-verified.log.gz). El manifiesto consolidado está en [`RESULTS.json`](RESULTS.json).
 
 ## Android y estado del trabajo
 

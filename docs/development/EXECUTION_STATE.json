@@ -4001,7 +4001,7 @@
         "errors": 0,
         "skipped": 0,
         "exitCode": 0,
-        "log": "docs/validation/ux-02a-chat-header-composer/host/focused-exact-commit.log",
+        "log": "docs/validation/ux-02a-chat-header-composer/host/focused-exact-commit.log.gz",
         "xmlDirectory": "docs/validation/ux-02a-chat-header-composer/host/focused-junit/"
       },
       "fullJvm": {
@@ -4025,7 +4025,7 @@
         "status": "PASS",
         "sourceCommit": "d0832e225f51f624c981f6b68da6193b72a78ef2",
         "exitCode": 0,
-        "log": "docs/validation/ux-02a-chat-header-composer/host/exact-commit-arm64-assemble.log",
+        "log": "docs/validation/ux-02a-chat-header-composer/host/exact-commit-arm64-assemble.log.gz",
         "actionableTasks": 81,
         "executedTasks": 2,
         "upToDateTasks": 79
@@ -4045,7 +4045,7 @@
         "actionableTasks": 151,
         "executedTasks": 19,
         "upToDateTasks": 132,
-        "log": "docs/validation/ux-02a-chat-header-composer/host/full-gate-final.log",
+        "log": "docs/validation/ux-02a-chat-header-composer/host/full-gate-final.log.gz",
         "exitCode": 0
       },
       "gitDiffCheck": "PASS"
@@ -4094,8 +4094,8 @@
       "zipalign": "PASS",
       "apksigner": "PASS; v2",
       "certificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
-      "buildLog": "docs/validation/ux-02a-chat-header-composer/host/exact-commit-arm64-assemble.log",
-      "verificationLog": "docs/validation/ux-02a-chat-header-composer/host/apk-validation-verified.log",
+      "buildLog": "docs/validation/ux-02a-chat-header-composer/host/exact-commit-arm64-assemble.log.gz",
+      "verificationLog": "docs/validation/ux-02a-chat-header-composer/host/apk-validation-verified.log.gz",
       "driveBundle": {
         "id": "1oEFdh3Q7_r8DjBw9Zp5mtXkNWbYXniP8",
         "url": "https://drive.google.com/file/d/1oEFdh3Q7_r8DjBw9Zp5mtXkNWbYXniP8/view?usp=drivesdk",

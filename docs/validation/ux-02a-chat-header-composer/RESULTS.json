@@ -27,7 +27,7 @@
       "errors": 0,
       "skipped": 0,
       "exitCode": 0,
-      "log": "host/focused-exact-commit.log",
+      "log": "host/focused-exact-commit.log.gz",
       "sourceCommit": "d0832e225f51f624c981f6b68da6193b72a78ef2"
     },
     "fullJvm": {
@@ -52,7 +52,7 @@
       "status": "PASS",
       "exitCode": 0,
       "sourceCommit": "d0832e225f51f624c981f6b68da6193b72a78ef2",
-      "log": "host/exact-commit-arm64-assemble.log",
+      "log": "host/exact-commit-arm64-assemble.log.gz",
       "gradleTasks": "81 actionable; 2 executed, 79 up-to-date"
     },
     "compileDebugAndroidTestKotlin": {
@@ -69,7 +69,7 @@
       "actionableTasks": 151,
       "executedTasks": 19,
       "upToDateTasks": 132,
-      "log": "host/full-gate-final.log"
+      "log": "host/full-gate-final.log.gz"
     },
     "gitDiffCheck": "PASS"
   },
@@ -168,5 +168,11 @@
       "lastObservedStep": "Wait for matching Android instrumentation run to succeed",
       "artifact": "NOT_YET_PRODUCED"
     }
+  },
+  "evidenceIntegrity": {
+    "sha256Manifest": "SHA256SUMS",
+    "entries": 33,
+    "rawTextLogs": "stored as deterministic gzip; decompression was byte-identical to original captured stdout/stderr",
+    "artifactFilesTracked": "verified against Git index before publication"
   }
 }
