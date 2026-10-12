@@ -10,6 +10,7 @@ The audited base was `ba5b1f084a3e4f29c9bb3c8c6f8b029a6d40e3d4`. `BasicMarkdown.
 - Parser/test commits: `0c3973e5c7c6d5da7d8bb689bff1dd39eeaf4604`, `26e0fd7f901953068d8836239dc0c845c2b7b3ea`, and final verified code `f54c1430cab4ea59a302b58dd2aa27deea579c49`.
 - Production/test scope: only `BasicMarkdown.kt` and `BasicMarkdownTest.kt` changed in this correction.
 - Evidence bundle commit: `38d095ab294627718a70234b28ecc4c08ca74402`; this handoff/state closure records that bundle.
+- Fast-forward push/readback verified at feature HEAD `e749c45538b4b5b23ee87f157835e65cf428a1d5`; both remote evidence manifests were checked entry-by-entry (16 and 120 entries). This state update is the subsequent documentation closure.
 - Detailed red/green commands, environment, XML, raw logs, task outcomes and checksums: [pipe-boundary evidence](../validation/ux-02d-pipe-boundaries/RESULTS.md). Updated UX-02d report: [Markdown tables](../validation/ux-02d-markdown-tables/RESULTS.md).
 
 ## HOST results at the final code SHA

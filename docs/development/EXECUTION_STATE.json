@@ -4840,8 +4840,15 @@
       "auditBaseCommit": "ba5b1f084a3e4f29c9bb3c8c6f8b029a6d40e3d4",
       "codeCommit": "f54c1430cab4ea59a302b58dd2aa27deea579c49",
       "evidenceCommit": "38d095ab294627718a70234b28ecc4c08ca74402",
-      "fastForwardPush": "PENDING_READBACK",
-      "mainAndV042Modified": false
+      "fastForwardPush": "VERIFIED_FAST_FORWARD",
+      "mainAndV042Modified": false,
+      "verifiedRemoteReadbackHead": "e749c45538b4b5b23ee87f157835e65cf428a1d5",
+      "remoteManifestsVerified": {
+        "coreEvidenceEntries": 16,
+        "coreManifestSha256": "39b8e3d2fcaf96a92d91be9701165222f8c54f49175f5db64f56bf172343074b",
+        "followUpEvidenceEntries": 120,
+        "followUpManifestSha256": "815112e07569f4cad9a337c06272d0e1a2e2ed3403634f23ba463bc5dc0c87b9"
+      }
     }
   }
 }
