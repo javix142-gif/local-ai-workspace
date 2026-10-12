@@ -1,3 +1,19 @@
+# Independent orchestration audit (2026-10-12 00:23 UTC)
+
+Audit recorded after code/evidence commits `5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1` and `25b2da35cd503e800c7bdce9584145f0f2e1218b`; the branch was at `25b2da35cd503e800c7bdce9584145f0f2e1218b` when checked. GitHub confirms the code commit changes only `ChatHeaderLayoutTest.kt`, and the evidence commit changes documentation/evidence only.
+
+The independent audit verified run [38186081844](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38186081844) on the exact code SHA: API 35 x86_64 emulator and ADB connected; `:app:connectedDebugAndroidTest` ran 16 tests. The retained gzip XML was decompressed and parsed: 9 passed, 1 failed, 0 errors, 6 skipped; 10 executed. The failure is the missing authentic `WorkspaceDatabase/1.json`; the six skipped tests require real models. The compressed and decompressed XML hashes match the persisted manifest/state.
+
+I fetched and opened both committed PNG captures. Both visibly show all three header lines at 1080×1920. Their byte-level SHA-256 values match the report and checksum manifest: standard `9ecef80b3f3f7bf2fa5f7e6981374bfd741efc33863c8ed6e7afca4675a0c4f2`, large-font `47b64cb847d1ba456a733c26b8ecd333b1e959636dd59e87ad0933598214477c`. The host collector log confirms 7/7 tests; the decompressed AndroidTest compile log confirms BUILD SUCCESSFUL with 54 actionable tasks (2 executed, 52 up-to-date). Neither a full JVM suite nor local APK assembly ran.
+
+Same-SHA QA gate [38186082135](https://github.com/javix142-gif/local-ai-workspace/actions/runs/38186082135) failed closed; APK build and upload were skipped and GitHub reports zero artifacts. GitHub artifact metadata for emulator evidence reports 108,492 bytes and digest `0ef4c876e0e275200000085434f6c8a01d648db7afab4eecada7b6e8dbdf709c), matching the persisted record. The auditor independently rechecked hashes for the XML, both PNGs, and host logs; the entire ZIP and all 32 payload hashes remain executor-verified rather than recomputed in this audit.
+
+**Disposition:** screenshot recovery is accepted; the instrumented suite remains **EMULATOR FAIL**, solely on the Room schema fixture, while six real-model tests are skipped. No schema was invented and no test was weakened. `PHYSICAL_DEVICE=NOT_RUN`; M01-06 remains `PENDING_REQUIRES_DEVICE`. `main` and peeled `v0.4.2` remain at `de615b772cf37a99e7e08a647c59607b271de606`. No additional run or APK work was started; the one-run contract is closed for audit.
+
+The execution state was reconciled in documentation commit `d389b78a947f2cf92bb8fa412f40f7fb9ad38eb8`. It replaces stale screenshot-pending wording with the current audited result; the original 97-task plan and the next task’s device gate remain unchanged.
+
+---
+
 # Latest task: M00 standard Compose screenshot recovery (2026-10-12)
 
 Code commit: `5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1` on `feat/0.5.0-skills-agents`, parent `93409371bac7e6f80d968f7ef084271d474857ac`. Only `ChatHeaderLayoutTest` capture source changed: the synchronized Compose root now uses `captureToImage()` after `waitForIdle`; the three `assertIsDisplayed()` checks, insets/bounds/font-scale checks, and model-before-body check remain. No production UI or Room schema/test changed.
