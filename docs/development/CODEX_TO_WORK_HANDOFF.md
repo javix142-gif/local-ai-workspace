@@ -1,12 +1,25 @@
-# Latest contract: UX-02e — inline Markdown links (2026-10-12)
+# Latest contract: UX-02e HOST validation recovery (2026-10-12)
 
-## Current orchestration status — pending JDK-selected HOST gate
+## Result of the single authorized attempt
 
-The UX-02e code remains a1827fa204cda0cdf80a7e5a51670435e8c8d4b7 and is **not accepted**. Independent audit found the prior recovery evidence manifest valid (12/12 files). Its single gate invocation verified the pre-existing API 35 SDK and exact NDK 27.0.12077973, but Gradle selected the system OpenJDK runtime without JAVA_COMPILER and failed before any requested task; zero tests ran and no new JUnit XML was emitted. The raw log confirms this failure. The report preserves parser-only JUnit 20/20 separately from the unrun Compose/Gradle gate.
+UX-02e source remains `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7` and is **not accepted**. The preflight for the existing Temurin JDK 21 passed: `java`/`javac` 21.0.12.1 are executable, `jdk.compiler` is present, and `ToolProvider.getSystemJavaCompiler()` is available. The existing API 35 SDK and exact NDK 27.0.12077973 are complete.
 
-A distinct one-invocation recovery was prepared from the new evidence: explicitly select the already-present complete JDK 21 at /workspace/.toolchain/jdk-21-temurin with the existing SDK at /workspace/.toolchain/android-sdk, then rerun the same HOST tasks only. No installation, cleanup, version change, workflow dispatch, emulator or APK is allowed. This contract was **not sent**: send_message_to_thread returned invalid rate-limit caller identity, and the next wait_threads call could not determine whether the durable executor thread exists because the durable host was unavailable. Record status as BLOCKED_EXECUTOR_ACCESS; do not claim assignment. When that exact executor can again be read and is idle, send only this bounded recovery; keep UX-02e unaccepted until real HOST task results/XML are audited. UX-02f/UX-03 remain pending.
+From a clean detached worktree at the exact source SHA, the one authorized Gradle command used explicit `JAVA_HOME=/workspace/.toolchain/jdk-21-temurin` and the existing SDK. It ran from `2026-10-12T13:33:30Z` to `13:34:01Z`, exit 1. Gradle failed before task execution because `:litert-compat:compileDebugJavaWithJavac` requires `languageVersion=17`; this invocation provided JDK 21 and no matching Java 17 toolchain was selected. Zero tasks and zero JUnit XML were produced. This is a toolchain/environment blocker, not a product test failure. The explicit-JDK hypothesis is tested; no retry was made.
 
-main and peeled v0.4.2 remain at de615b772cf37a99e7e08a647c59607b271de606. The 97-task plan and functional progress are unchanged; M01-06 remains PENDING_REQUIRES_DEVICE, EMULATOR retains its historical Room v1 failure and six model-dependent skips, and PHYSICAL_DEVICE remains NOT_RUN.
+- Exact command, environment, failure classification, and XML inventory: [UX-02e results](../validation/ux-02e-inline-links/RESULTS.md).
+- Full raw Gradle output (compressed without altering its decompressed bytes): [`jdk21-gate-attempt-20261012.log.gz`](../validation/ux-02e-inline-links/host/jdk21-gate-attempt-20261012.log.gz); raw SHA-256 `b1d0eda3ce23eb027c0be53c2a2115b920e5d8141fb121bf01edf5c0934a630f`.
+- Parser-only JUnit remains a separate supplemental check: 20/20 PASS; it does not substitute for Compose/Gradle validation.
+- App/LiteRT JVM Gradle tests, Compose, lint and AndroidTest Kotlin compilation: **NOT_RUN**. `EMULATOR` is not run for UX-02e; the historical global result remains FAIL for the authentic Room v1 fixture with six model-dependent skips. `PHYSICAL_DEVICE=NOT_RUN`; no APK generated.
+- The original 97-task plan remains untracked, unreconstructed and unchanged. M01-06 is `PENDING_REQUIRES_DEVICE`; UX-02f/UX-03 remain pending and the functional backlog remains paused.
+
+Do not retry this gate under this contract. Stop for independent audit/new authorization.
+
+Evidence commit: `7ffbf2fe99c8dca4b9761c6af9cb444eb712c6f5` (report/log/checksum bundle). The state/handoff closure follows in this documentation-only commit.
+
+The feature branch was locally at `24439fe1ef0f0fce9103c8beb4797ff4e9daddc8` at attempt start. A fetch after the gate found two remote-only documentation commits (`60511db`, `69f1dd0`); their diff touched only the execution state and handoff, and the local branch was fast-forwarded before this evidence update. `main` and peeled `v0.4.2` remain at `de615b772cf37a99e7e08a647c59607b271de606`.
+
+---
+
 ## UX-02d independent audit acceptance
 
 UX-02d is `INDEPENDENTLY_AUDITED_ACCEPTED` for Markdown table presentation and HOST evidence only. The accepted code SHA is `f54c1430cab4ea59a302b58dd2aa27deea579c49`; the audited remote branch HEAD was `fca3e65b16c5d54ef30747c4c90c13608e520499`. The audit verified the ahead-only comparison from `ba5b1f0`, with only `BasicMarkdown.kt` and `BasicMarkdownTest.kt` changed in product/tests. It confirmed the expected red reproduction (1/1 failure), focused host tests (27/27), full host XML (90 files, 756/756), host gate exit 0, lint 0 errors/82 warnings, AndroidTest compilation, and 16/16 core plus 120/120 follow-up evidence hashes.
