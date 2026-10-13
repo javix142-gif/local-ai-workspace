@@ -1,5 +1,14 @@
 # UX-02e — current state after focused prefix diagnostic (2026-10-13)
 
+## Independent audit closure — focused prefix only
+
+The independent audit is recorded as `INDEPENDENTLY_AUDITED_DIAGNOSTIC_ONLY` for source code `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`, read back at feature HEAD `fdcc9bc0cce05a264207e1475416debf0da67ac4` (parent `db5dd75f7fecc5055b176fa9259c55be1ca1b93e`). It confirmed the bounded prefix evidence: 36/36 `TEST_START`/`TEST_END SUCCESS` events and four reconciled JUnit XML suites totaling 36/36 passed, with no failures, errors, or skips. This is diagnostic evidence only; UX-02e remains **AUDITED_INCOMPLETE_TIMEOUT_NOT_ACCEPTED** because the full HOST gate is incomplete.
+
+The auditor independently recalculated hashes for **22 of 24** payloads in the focused prefix bundle. `gradle.log` and `supervisor.log` could not be read by the audit connector, so their payload hashes were not independently recalculated. The executor's pre-publication local 24/24 checksum report remains attributed to the executor and is not upgraded to an independent 24/24 verification. The outer evidence manifest was not re-audited in this closure. No source result or manifest was changed.
+
+The earlier full-gate stall remains **NOT_DETERMINED**; the bounded prefix did not reproduce it, and **PRODUCT_FAILURE is NOT_ESTABLISHED**. The original task catalog of 97 entries is unavailable in the tracked repository/context, so no further task ID or dependency is selected or inferred. M01-06 remains `PENDING_REQUIRES_DEVICE`; task progress and the original plan remain untouched. No tests, builds, Room checks, emulator/device runs, APK generation, or manifest recalculation were performed for this documentary audit closure.
+
+
 ## Result and classification
 
 Overall UX-02e status remains **AUDITED_INCOMPLETE_TIMEOUT_NOT_ACCEPTED**. The independent acceptance recorded below applies only to the isolated target result; the full HOST gate remains incomplete and the cause of its earlier stall remains **NOT_DETERMINED**. **PRODUCT_FAILURE is NOT_ESTABLISHED**.
@@ -23,9 +32,9 @@ The prior online attempt that logged 18 retries to `dl.google.com` and 36 to Mav
 - **EMULATOR:** NOT_RUN. The separate historical global run remains FAIL for the authentic Room v1 fixture, with six model-dependent cases SKIPPED.
 - **PHYSICAL_DEVICE:** NOT_RUN. **APK:** NOT_GENERATED.
 - Original 97-task catalog is unavailable in this context; no task ID/dependency was selected or inferred. M01-06 remains `PENDING_REQUIRES_DEVICE`; task order, dependencies and progress remain unchanged.
-- Root `nextRecommendedTask` now waits for independent audit of this prefix diagnostic; no other task is selected.
+- Root `nextRecommendedTask`: no functional task selected. The prefix audit is closed, but the full HOST gate remains incomplete and the stall cause is `NOT_DETERMINED`; the authentic 97-task catalog is unavailable, so no ID/dependency is inferred. M01-06 remains `PENDING_REQUIRES_DEVICE`.
 
-Stop for independent audit. Do not run another gate or start UX-02f, UX-03 or functional backlog work under this contract.
+This documentary audit closure is complete. No functional task is selected: wait for the authentic 97-task catalog or explicit user instruction before selecting work. Do not run another gate or start UX-02f, UX-03, or functional backlog work under this contract.
 
 ---
 
