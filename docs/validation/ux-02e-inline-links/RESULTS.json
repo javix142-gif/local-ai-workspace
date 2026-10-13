@@ -429,7 +429,7 @@
     "remoteReadbackVerified": true
   },
   "status": "AUDITED_INCOMPLETE_TIMEOUT_NOT_ACCEPTED",
-  "next": "No further HOST attempts under this authorization; do not begin UX-02f/UX-03 until new evidence or explicit instruction.",
+  "next": "Stop after this single bounded attempt and await independent audit/new instruction. Do not start another UX/backlog task under this contract.",
   "recoveryWorkflowCheck": {
     "androidEmulatorWorkflow": ".github/workflows/android-emulator-instrumented.yml reviewed; not dispatched or triggered",
     "qaArm64Workflow": ".github/workflows/qa-debug-arm64-apk.yml reviewed; not dispatched or triggered",
@@ -461,8 +461,8 @@
     "next": "Stop for independent audit of the bounded focused diagnostics. Full host gate remains incomplete; no additional test or product work under this contract.",
     "followUpDiagnosticResults": "diagnostic-20261013/RUNS.md; ChatContentUiTest 15/15 PASS and AuditHarness.writeSelectorReproductions 1/1 PASS; prior stall not reproduced, root cause remains undetermined."
   },
-  "nextRecommendedTask": "UX-02e is AUDITED_INCOMPLETE_TIMEOUT_NOT_ACCEPTED: the single full HOST gate timed out/incompleted with an active test identified, but causality remains NOT_DETERMINED and PRODUCT_FAILURE_NOT_ESTABLISHED. No further HOST attempts are authorized under this contract. Do not start UX-02f/UX-03 until new evidence or explicit instruction. Preserve M01-06 as PENDING_REQUIRES_DEVICE and the original 97-task plan.",
-  "latestAttemptAuditStatus": "AUDITED_INCOMPLETE_TIMEOUT_NOT_ACCEPTED",
+  "nextRecommendedTask": "No next original task selected. UX-02e remains not accepted: the one isolated reproduction was interrupted before test start amid logged network-unreachable dependency/configuration retries; the earlier Robolectric stall cause remains NOT_DETERMINED and PRODUCT_FAILURE is NOT_ESTABLISHED. The only explicitly recorded next task is M01-06 PENDING_REQUIRES_DEVICE. The full original 97-task catalog is unavailable in this checkout/current attachment set, so no other candidate/dependency can be confirmed. Stop for independent audit/new instruction.",
+  "latestAttemptAuditStatus": "PENDING_INDEPENDENT_AUDIT; overall UX-02e remains AUDITED_INCOMPLETE_TIMEOUT_NOT_ACCEPTED and NOT_ACCEPTED.",
   "previousGateAttemptAuditNote": "Historical: the earlier JDK21 Gradle-runtime attempt contradicted README and failed at KSP JVM-target compatibility. The later JDK17-runtime full gate is the latest attempt and is recorded separately as incomplete; see latestFullHostGate.",
   "previousBaseRemoteHead": "83796439caa5eba5543062ed2d82c8f021ed2e2c",
   "pendingRecoveryHistory": [
@@ -822,5 +822,96 @@
     "peeledV042": "de615b772cf37a99e7e08a647c59607b271de606",
     "plan": "Original 97 task IDs/order/dependencies preserved; M01-06 remains PENDING_REQUIRES_DEVICE.",
     "authorizationBoundary": "No further HOST attempt and no UX-02f/UX-03 until new evidence or explicit instruction."
+  },
+  "latestFocusedRobolectricReproduction": {
+    "status": "TIMEOUT_BEFORE_TEST_START_ENVIRONMENT_BLOCKED",
+    "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+    "featureHeadAtStart": "0368248d4ecc03e5dc119baa85ef14384f46f9ad",
+    "worktree": "/workspace/ux02e-isolated-diagnostic-20261013; detached, clean including ignored before run",
+    "target": "com.localai.workspace.context.ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit",
+    "startedAtUtc": "2026-10-13T15:28:54.003Z",
+    "finishedAtUtc": "2026-10-13T15:32:34.280Z",
+    "durationSeconds": 220.276,
+    "wrapperExitCode": 130,
+    "command": "See docs/validation/ux-02e-inline-links/focused-robolectric-20261013/command.txt; single invocation with JDK 17 Gradle runtime, JDK 21 toolchain discovery, existing SDK/NDK, no --offline.",
+    "listener": {
+      "TEST_START": 0,
+      "TEST_END": 0,
+      "targetStarted": false,
+      "workerPid": "NOT_SPAWNED"
+    },
+    "junit": {
+      "xmlFiles": 0,
+      "tests": 0,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "NOT_GENERATED; test never started"
+    },
+    "taskOutcomes": {
+      "appTestDebugUnitTest": "INCOMPLETE_BEFORE_TEST_START",
+      "litertCompatTestDebugUnitTest": "NOT_REQUESTED",
+      "lintDebug": "NOT_REQUESTED",
+      "compileDebugAndroidTestKotlin": "NOT_REQUESTED"
+    },
+    "observedNetworkRetries": {
+      "https://dl.google.com:443": 18,
+      "https://repo.maven.apache.org:443": 36,
+      "reportedText": "java.net.SocketException: Network is unreachable"
+    },
+    "stop": "After the 120-second no-JUnit-event snapshot, stopped only wrapper PID 136571 and child single-use daemon PID 136605 with SIGINT. Both were absent on post-stop check.",
+    "diagnostics": "No test worker existed; jcmd/jstack/SIGQUIT were NOT_RUN because there was no worker PID. No Gradle task/build summary was emitted.",
+    "classification": "The target test is NOT_RUN; this one Gradle invocation is incomplete and TIMEOUT_BEFORE_TEST_START with observed network unavailability. The cause of the earlier full-gate Robolectric stall remains NOT_DETERMINED; PRODUCT_FAILURE_NOT_ESTABLISHED.",
+    "evidenceDirectory": "focused-robolectric-20261013/",
+    "logRawSha256": "88c2ad6485a6408600aef89d3550106b8df2985dc4d060adf3aeff1a7d1879ef",
+    "logGzipSha256": "5ca852c0ef3bf1ddeb68e16af5fe278c6b13ff671789363272d7455d8683ec2b",
+    "eventsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "xmlInventory": "focused-robolectric-20261013/junit-xml-inventory.txt",
+    "sourceDiffReview": "focused-robolectric-20261013/source-diff-review.txt",
+    "apk": "NOT_GENERATED",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "evidenceManifest": "focused-robolectric-20261013/SHA256SUMS",
+    "focusedEvidenceManifestSha256": "165410ca27d5388fab4f73a693e618e49eab6ec3c04bd97f36caeda190d971eb",
+    "auditStatus": "PENDING_INDEPENDENT_AUDIT",
+    "focusedEvidenceManifestEntries": 21,
+    "outerEvidenceManifestSha256": "RECORDED_EXTERNALLY_IN_EXECUTION_STATE_HANDOFF_TO_AVOID_SELF_REFERENCE"
+  },
+  "taskEligibilityReview": {
+    "status": "NO_TASK_SELECTED_SOURCE_UNAVAILABLE",
+    "reviewedAtUtc": "2026-10-13T15:37:18Z",
+    "authentic97TaskSource": "Not present in current tracked checkout/current attachment set. Search found no ROADMAP.md, BACKLOG.json, LOOP_RULES.md or matching task-plan file.",
+    "persistentStateCandidate": {
+      "taskId": "M01-06",
+      "name": "Ingesta e indexación reanudable",
+      "status": "PENDING_REQUIRES_DEVICE",
+      "requires_device": true,
+      "eligible": false,
+      "evidence": "EXECUTION_STATE.nextOriginalBacklogTask; PHYSICAL_DEVICE remains NOT_RUN."
+    },
+    "historicalDependencyNotes": "Persistent nextTaskSelectionAudit previously records M01-01 -> M00-10 -> device-required M00-07/M00-08/M00-09 and M02-01 -> M00-10. These historic notes were not independently verified against the unavailable original catalog; they do not establish a new candidate.",
+    "selection": "NONE",
+    "sourceReviewCommand": "rg --files -g 'ROADMAP.md' -g 'BACKLOG.json' -g 'LOOP_RULES.md' -g '*97*tasks*' -g '*task*plan*' -g '*backlog*'",
+    "candidates": [
+      {
+        "taskId": "M01-06",
+        "name": "Ingesta e indexación reanudable",
+        "state": "PENDING_REQUIRES_DEVICE",
+        "requires_device": true,
+        "eligibility": "NOT_ELIGIBLE_FOR_THIS_HOST_ONLY_CONTRACT; PHYSICAL_DEVICE remains NOT_RUN."
+      },
+      {
+        "taskId": "M01-01",
+        "name": "NOT_AVAILABLE_FROM_CURRENT_PLAN_SOURCE",
+        "dependencyEvidence": "A historical nextTaskSelectionAudit in persistent state records M01-01 -> M00-10 -> device-required M00-07/M00-08/M00-09. This was not revalidated against the absent original catalog; no eligibility is asserted."
+      },
+      {
+        "taskId": "M02-01",
+        "name": "NOT_AVAILABLE_FROM_CURRENT_PLAN_SOURCE",
+        "dependencyEvidence": "The same historical state note records M02-01 -> M00-10. This was not revalidated against the absent original catalog; no eligibility is asserted."
+      }
+    ],
+    "limitation": "The persistent state names the next task and contains a historical dependency-selection snapshot, but does not serialize the full 97-task source. Without that authentic source, no independent original task candidate can be confirmed.",
+    "planChanged": false
   }
 }

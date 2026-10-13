@@ -1,0 +1,32 @@
+import org.gradle.api.tasks.testing.Test
+import org.gradle.api.tasks.testing.TestListener
+import org.gradle.api.tasks.testing.TestDescriptor
+import org.gradle.api.tasks.testing.TestResult
+import java.time.Instant
+
+String eventPath = System.getenv('UX02E_TEST_EVENTS')
+if (eventPath == null || eventPath.trim().isEmpty()) {
+    throw new GradleException('UX02E_TEST_EVENTS must name the event output file')
+}
+File eventFile = new File(eventPath)
+eventFile.parentFile?.mkdirs()
+def eventLock = new Object()
+def emit = { String phase, TestDescriptor descriptor, String result, long duration ->
+    String safeClass = (descriptor.className ?: '').replace('\t', ' ').replace('\n', ' ')
+    String safeName = (descriptor.name ?: '').replace('\t', ' ').replace('\n', ' ')
+    String line = [Instant.now().toString(), phase, safeClass, safeName, result, duration.toString()].join('\t') + '\n'
+    synchronized (eventLock) {
+        eventFile.withWriterAppend('UTF-8') { writer -> writer << line; writer.flush() }
+    }
+}
+
+gradle.allprojects { project ->
+    project.tasks.withType(Test).configureEach { testTask ->
+        testTask.addTestListener(new TestListener() {
+            void beforeSuite(TestDescriptor d) { emit('SUITE_START', d, '', 0L) }
+            void afterSuite(TestDescriptor d, TestResult r) { emit('SUITE_END', d, r.resultType.toString(), r.endTime - r.startTime) }
+            void beforeTest(TestDescriptor d) { emit('TEST_START', d, '', 0L) }
+            void afterTest(TestDescriptor d, TestResult r) { emit('TEST_END', d, r.resultType.toString(), r.endTime - r.startTime) }
+        })
+    }
+}

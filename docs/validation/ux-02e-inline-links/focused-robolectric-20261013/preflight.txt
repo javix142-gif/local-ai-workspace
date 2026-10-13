@@ -1,0 +1,29 @@
+UX-02e isolated Robolectric preflight
+Captured: 2026-10-13T15:28:27Z
+
+Repository/refs
+- Repository: https://github.com/javix142-gif/local-ai-workspace.git
+- Active branch in evidence checkout: feat/0.5.0-skills-agents
+- Local feature HEAD and origin feature HEAD before run: 0368248d4ecc03e5dc119baa85ef14384f46f9ad
+- git ls-remote also reported main=de615b772cf37a99e7e08a647c59607b271de606, peeled v0.4.2=de615b772cf37a99e7e08a647c59607b271de606
+- Test source commit: a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+- Detached worktree: /workspace/ux02e-isolated-diagnostic-20261013
+- Detached worktree HEAD: a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+- git status --porcelain=v1 --ignored=matching --untracked-files=all: 0 lines before build
+- Before build, absent in detached worktree: .gradle, app/build, llama-runtime/build, llama-runtime/.cxx, app/.cxx, local.properties
+- A read-only /proc precheck found no pre-existing Gradle daemon/test worker; the inline inventory shell itself was the only command-line false-positive. No caches/build outputs were copied into the worktree. Existing GRADLE_USER_HOME is /home/agent/.gradle and is retained.
+
+Runtime/toolchain
+- Wrapper distribution: Gradle 8.10.2 (gradle/wrapper/gradle-wrapper.properties)
+- Gradle runtime: /workspace/.toolchain/jdk-17, Temurin 17.0.20.1; java, javac and jdk.compiler available
+- App test launcher: /workspace/.toolchain/jdk-21-temurin, Temurin 21.0.12.1; java, javac and jdk.compiler available
+- SDK: /workspace/.toolchain/android-sdk; Android API 35, Build Tools 35.0.0
+- NDK: /workspace/.toolchain/android-sdk/ndk/27.0.12077973; source.properties reports revision 27.0.12077973
+- CMake: 3.31.6 (existing installation)
+- Storage observed before build: /workspace filesystem 2.0 GiB available; /tmp 572 MiB available
+- No SDK/JDK installation, cache cleanup or version change performed.
+
+Target
+- Fully qualified target: com.localai.workspace.context.ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit
+- Test uses RobolectricTestRunner, @Config(sdk=[35], application=Application::class), in-memory WorkspaceDatabase/SemanticDatabase and synthetic evidence.
+- The test source blob is identical at f54c1430cab4ea59a302b58dd2aa27deea579c49 and a1827fa204cda0cdf80a7e5a51670435e8c8d4b7 (blob 27dceb34415bd41f75615a005be187750b1c47ef).

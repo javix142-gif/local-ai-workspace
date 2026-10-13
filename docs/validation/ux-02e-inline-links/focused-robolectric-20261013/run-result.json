@@ -1,0 +1,25 @@
+{
+  "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+  "startedAtUtc": "2026-10-13T15:28:54.003Z",
+  "finishedAtUtc": "2026-10-13T15:32:34.280Z",
+  "durationSeconds": 220.276,
+  "wrapperPid": 136571,
+  "returnCode": 130,
+  "absoluteDeadlineHit": false,
+  "testStartEvents": 0,
+  "testEndEvents": 0,
+  "activeTestWithoutEnd": [],
+  "xml": {
+    "files": 0,
+    "tests": 0,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "paths": []
+  },
+  "taskResults": {
+    "appTest": "INCOMPLETE"
+  },
+  "log": "gradle-focused.log.gz (lossless archive of original raw output)",
+  "events": "test-events.tsv"
+}

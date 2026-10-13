@@ -1,3 +1,30 @@
+# UX-02e — focused Robolectric reproduction (2026-10-13)
+
+## Latest attempt
+
+One isolated Gradle invocation was made for the exact test that had remained active in the prior incomplete full gate. Source code SHA: `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`; feature HEAD at start: `0368248d4ecc03e5dc119baa85ef14384f46f9ad`. The detached worktree was clean including ignored files before execution.
+
+Target: `ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit`. The invocation ran from `2026-10-13T15:28:54.003Z` to `15:32:34.280Z` (**220.276 s**, wrapper exit **130**). Gradle logged repeated `java.net.SocketException: Network is unreachable` retries to `dl.google.com:443` (18) and `repo.maven.apache.org:443` (36) while configuring/resolving. After 120 seconds with no JUnit event, the process snapshot showed only this invocation's JDK 17 wrapper (PID 136571) and child single-use daemon (PID 136605); no test worker existed. Those two invocation processes were sent SIGINT. No Gradle task/build summary was emitted.
+
+| Layer | Result |
+| --- | --- |
+| Gradle invocation | **INCOMPLETE / TIMEOUT_BEFORE_TEST_START**; observed network unavailability during configuration/dependency resolution |
+| Target test | **NOT_RUN**; 0 TEST_START / 0 TEST_END |
+| Test worker / thread dump | **NOT_CREATED**; jcmd, jstack and SIGQUIT were not applicable because no worker PID existed |
+| New JUnit XML | **0 files**; 0 tests, failures, errors or skips |
+| Other HOST tasks | **NOT_REQUESTED** |
+| EMULATOR / PHYSICAL_DEVICE / APK | **NOT_RUN / NOT_RUN / NOT_GENERATED** |
+
+This run does **not** reproduce or explain the earlier Robolectric worker stall: it never reached the target test. The earlier full-gate active method and its cause remain `NOT_DETERMINED`; no product failure is established. UX-02e remains `AUDITED_INCOMPLETE_TIMEOUT_NOT_ACCEPTED` and **not accepted**. Earlier parser standalone 20/20 and focused diagnostics 16/16 remain supplemental history only; the prior full HOST gate remains incomplete.
+
+Evidence and exact command: [`focused-robolectric-20261013/`](focused-robolectric-20261013/), especially `run-analysis.json`, `command.txt`, `environment.json`, raw/compressed Gradle logs, test event file, process snapshots, and XML inventory. Raw log SHA-256: `88c2ad6485a6408600aef89d3550106b8df2985dc4d060adf3aeff1a7d1879ef`; gzip SHA-256: `5ca852c0ef3bf1ddeb68e16af5fe278c6b13ff671789363272d7455d8683ec2b`. Parent evidence manifest is regenerated with this report.
+
+## Original-task eligibility review
+
+The current checkout contains no authentic 97-task catalog (`ROADMAP.md`, `BACKLOG.json`, `LOOP_RULES.md` or matching task-plan file); the persistent state records only `M01-06` as the next original task. It remains `PENDING_REQUIRES_DEVICE`, so it is not eligible for this host-only contract. A historical selection note records dependencies for `M01-01` and `M02-01`, but those notes were not revalidated against the unavailable original catalog and no new task is selected. The 97 IDs/order/dependencies were not edited or reconstructed.
+
+---
+
 # UX-02e HOST gate — independent audit result (2026-10-13)
 
 ## Audited status

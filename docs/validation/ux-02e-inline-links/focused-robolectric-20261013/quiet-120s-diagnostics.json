@@ -1,0 +1,6 @@
+{
+  "label": "quiet-120s",
+  "capturedAtUtc": "2026-10-13T15:30:54.492Z",
+  "workers": [],
+  "workerDiscovery": "No Gradle test worker was present in /proc at capture time."
+}

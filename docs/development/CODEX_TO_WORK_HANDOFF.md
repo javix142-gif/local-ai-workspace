@@ -1,4 +1,18 @@
-# Latest contract: UX-02e single instrumented HOST gate (2026-10-13)
+# Latest contract: UX-02e single isolated Robolectric reproduction (2026-10-13)
+
+## Result
+
+One invocation targeted the method left active in the earlier incomplete full gate, at source SHA `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`; feature HEAD at start was `0368248d4ecc03e5dc119baa85ef14384f46f9ad`. The method **did not start**: the JUnit listener recorded 0 starts/0 ends, no test worker was created, and no XML was produced. Gradle configuration/resolution logged network-unreachable socket errors to `dl.google.com` and Maven Central. After the 120-second no-event process snapshot, only wrapper PID 136571 and child single-use daemon PID 136605 were stopped with SIGINT. Invocation duration was 220.276 s and wrapper exit code 130; no Gradle task/build summary was emitted.
+
+This is an environment-blocked attempt (`TIMEOUT_BEFORE_TEST_START`), not a test failure. It does not diagnose the earlier Robolectric stall: that cause remains `NOT_DETERMINED`; `PRODUCT_FAILURE` is not established. UX-02e remains not accepted. No full gate, unrelated tests, emulator/device or APK were run.
+
+Evidence: [focused run bundle](../validation/ux-02e-inline-links/focused-robolectric-20261013/); [analysis](../validation/ux-02e-inline-links/focused-robolectric-20261013/run-analysis.json), [command](../validation/ux-02e-inline-links/focused-robolectric-20261013/command.txt), [JUnit inventory](../validation/ux-02e-inline-links/focused-robolectric-20261013/junit-xml-inventory.txt). Gradle log raw-content/gzip SHA-256: `88c2ad6485a6408600aef89d3550106b8df2985dc4d060adf3aeff1a7d1879ef` / `5ca852c0ef3bf1ddeb68e16af5fe278c6b13ff671789363272d7455d8683ec2b`; original log is preserved losslessly as gzip. Focused manifest: 21/21 entries verified, SHA-256 `165410ca27d5388fab4f73a693e618e49eab6ec3c04bd97f36caeda190d971eb`; UX-02e parent evidence manifest: 115/115 entries verified, SHA-256 `e07e696e8e1940adfe2cdcf648b45f6a19c3002346a46984a41d583327188355` (recorded in `EXECUTION_STATE.json`).
+
+The original 97-task catalog is unavailable in the current checkout/current attachment set; no task was selected. Persistent state identifies only M01-06 as `PENDING_REQUIRES_DEVICE`. The 97-task plan and IDs/dependencies remain unchanged. Stop for independent audit/new instruction.
+
+---
+
+# Previous contract: UX-02e single instrumented HOST gate (2026-10-13; prior evidence)
 
 ## Result
 

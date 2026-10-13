@@ -1,0 +1,18 @@
+sourceCodeSha=a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+invocation=single isolated target invocation
+wrapperExitCode=130 (SIGINT after the no-progress diagnostic; not a Gradle BUILD FAILED result)
+runDurationSeconds=220.276
+JUnit TEST_START=0
+JUnit TEST_END=0
+targetTest=NOT_RUN; no test-start event and no Gradle test-worker process existed
+:app:testDebugUnitTest=INCOMPLETE; test task/test execution did not reach a reported task outcome
+:litert-compat:testDebugUnitTest=NOT_REQUESTED
+:app:lintDebug=NOT_REQUESTED
+:app:compileDebugAndroidTestKotlin=NOT_REQUESTED
+newJUnitXml=0 (no XML files in the clean worktree result tree)
+BUILD_SUCCESSFUL=NOT_PRESENT
+BUILD_FAILED=NOT_PRESENT
+Gradle failure summary=NOT_PRESENT
+networkRetries: dl.google.com={counts['dl.google.com']}; repo.maven.apache.org={counts['repo.maven.apache.org']}; observed error text: java.net.SocketException / Network is unreachable
+classification=TIMEOUT_BEFORE_TEST_START / ENVIRONMENT_BLOCKED_DURING_CONFIGURATION_OR_DEPENDENCY_RESOLUTION; original full-gate Robolectric cause remains NOT_DETERMINED
+productFailure=NOT_ESTABLISHED

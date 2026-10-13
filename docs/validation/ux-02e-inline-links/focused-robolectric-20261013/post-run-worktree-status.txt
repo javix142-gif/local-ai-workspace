@@ -1,0 +1,7 @@
+sourceCodeSha=a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+tracked/untracked status --porcelain=v1 --untracked-files=all:
+(empty)
+
+ignored status lines after this invocation: 1
+Generated APKs: 0
+JUnit XML files: 0

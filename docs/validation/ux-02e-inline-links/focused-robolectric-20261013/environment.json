@@ -1,0 +1,28 @@
+{
+  "os": "Linux x86_64",
+  "gradleWrapper": "8.10.2",
+  "gradleRuntimeJdk": {
+    "home": "/workspace/.toolchain/jdk-17",
+    "version": "17.0.20.1",
+    "javac": "17.0.20.1",
+    "jdkCompilerModule": true
+  },
+  "testWorkerJdk": {
+    "home": "/workspace/.toolchain/jdk-21-temurin",
+    "version": "21.0.12.1",
+    "javac": "21.0.12.1",
+    "jdkCompilerModule": true,
+    "processSpawned": false
+  },
+  "sdk": "/workspace/.toolchain/android-sdk",
+  "androidApi": "35",
+  "buildTools": "35.0.0",
+  "ndk": "27.0.12077973",
+  "ndkSourcePropertiesPresent": true,
+  "cmake": "3.31.6",
+  "gradleUserHome": "/home/agent/.gradle (pre-existing; not cleaned)",
+  "network": "unavailable to dl.google.com and repo.maven.apache.org during this invocation",
+  "apk": "NOT_GENERATED",
+  "emulator": "NOT_RUN",
+  "physicalDevice": "NOT_RUN"
+}

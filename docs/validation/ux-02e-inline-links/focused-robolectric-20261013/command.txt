@@ -1,0 +1,15 @@
+Source code SHA: a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+Worktree: /workspace/ux02e-isolated-diagnostic-20261013 (detached)
+
+Exact Gradle argv (from run-start.json):
+/workspace/ux02e-isolated-diagnostic-20261013/gradlew --no-daemon --no-parallel --max-workers=1 --console=plain --info --rerun-tasks --init-script /tmp/ux02e-focused-robolectric-20261013/test-events.init.gradle -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.context.ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit
+
+Environment assigned to the Gradle wrapper process:
+JAVA_HOME=/workspace/.toolchain/jdk-17
+PATH=/workspace/.toolchain/jdk-17/bin:$PATH (JDK 17 prepended to inherited PATH)
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk
+UX02E_TEST_EVENTS=/workspace/local-ai-workspace/docs/validation/ux-02e-inline-links/focused-robolectric-20261013/test-events.tsv
+GRADLE_USER_HOME inherited as /home/agent/.gradle; pre-existing and not cleaned. No --offline flag was used.
+
+The supervisor invoked Gradle exactly once. Init script was executed from /tmp; its evidentiary copy is test-events.init.gradle.

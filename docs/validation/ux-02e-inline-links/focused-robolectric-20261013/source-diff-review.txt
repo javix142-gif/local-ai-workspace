@@ -1,0 +1,8 @@
+Focused source/config review before the single test
+Compared: f54c1430cab4ea59a302b58dd2aa27deea579c49..a1827fa204cda0cdf80a7e5a51670435e8c8d4b7.
+
+The product/test diff is confined to MainActivity.kt, ui/BasicMarkdown.kt, ui/ChatContent.kt, and their two UI tests BasicMarkdownTest.kt and ChatContentUiTest.kt. The target ContextFoundationDeduplicationTest.kt is byte-identical at both SHAs (Git blob 27dceb34415bd41f75615a005be187750b1c47ef). ContextFoundation production code and app/root Gradle settings, gradle.properties, and settings.gradle.kts are unchanged across the comparison.
+
+The repository README declares JDK 17 for Gradle and JDK 21 for the app JVM test worker. app/build.gradle.kts configures Test tasks to use JavaLanguageVersion 21. The target itself is a Robolectric SDK 35 test with in-memory Room databases and synthetic local evidence. Review found no changed target code or Gradle/Robolectric configuration that explains the earlier hang. This is a comparison only; it does not establish a cause.
+
+Prior attempt evidence reviewed: run-analysis.json, task-outcomes.txt and test-events.tsv identify 36 TEST_START / 35 successful TEST_END events and the active target method with no end event; zero JUnit XML were produced by that run. The full compressed Gradle log was decompressed and searched. It contains test source compilation/task setup and no BUILD SUCCESSFUL/BUILD FAILED terminal summary or target assertion/exception explaining the stall. The earlier thread-dump attempts returned no useful stack. Therefore the earlier cause remains NOT_DETERMINED; no PRODUCT_FAILURE is established.

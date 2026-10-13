@@ -1,0 +1,92 @@
+{
+  "contract": "UX-02e focused Robolectric stall diagnosis",
+  "branch": "feat/0.5.0-skills-agents",
+  "featureHeadAtStart": "0368248d4ecc03e5dc119baa85ef14384f46f9ad",
+  "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+  "worktree": {
+    "path": "/workspace/ux02e-isolated-diagnostic-20261013",
+    "detached": true,
+    "head": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+    "cleanIncludingIgnoredBeforeRun": true,
+    "trackedUntrackedAfterRun": "CLEAN",
+    "buildOutputsCopiedIn": false
+  },
+  "target": "com.localai.workspace.context.ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit",
+  "singleInvocation": {
+    "startedAtUtc": "2026-10-13T15:28:54.003Z",
+    "finishedAtUtc": "2026-10-13T15:32:34.280Z",
+    "durationSeconds": 220.276,
+    "wrapperPid": 136571,
+    "wrapperExitCode": 130,
+    "stopReason": "No JUnit test event for 120 seconds; process snapshot captured, then only this invocation wrapper and its verified child single-use daemon were sent SIGINT.",
+    "hardLimitSeconds": 300,
+    "hardLimitReached": false,
+    "command": "command.txt",
+    "initScript": "test-events.init.gradle (executed from /tmp)",
+    "logRaw": "Original raw output is preserved losslessly as gradle-focused.log.gz; its expanded content SHA-256 is recorded in logRawContentSha256.",
+    "logGzip": "gradle-focused.log.gz",
+    "logRawContentSha256": "88c2ad6485a6408600aef89d3550106b8df2985dc4d060adf3aeff1a7d1879ef",
+    "daemonPid": 136605,
+    "gradleProcessRuntime": "Temurin JDK 17.0.20.1 (/workspace/.toolchain/jdk-17)"
+  },
+  "events": {
+    "testStart": 0,
+    "testEnd": 0,
+    "activeTest": "NONE; target never started"
+  },
+  "worker": {
+    "pid": "NOT_SPAWNED",
+    "runtime": "NOT_OBSERVED",
+    "jcmd": "NOT_RUN; no worker PID existed",
+    "jstack": "NOT_RUN; no worker PID existed",
+    "sigquit": "NOT_RUN; no worker PID existed",
+    "testWorkerPid": "NOT_SPAWNED",
+    "testWorkerRuntime": "NOT_OBSERVED; JDK 21 was available/configured for test launch but no worker started"
+  },
+  "xml": {
+    "files": 0,
+    "tests": 0,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "inventory": "junit-xml-inventory.txt"
+  },
+  "gradle": {
+    "configurationReachedAppAndLiteRT": true,
+    "taskOutputLines": 0,
+    "buildSuccessfulMarker": false,
+    "buildFailedMarker": false,
+    "failureSummary": false,
+    "taskOutcomes": "task-outcomes.txt"
+  },
+  "observedInfrastructure": {
+    "networkUnreachableCounts": {
+      "dl.google.com": 18,
+      "repo.maven.apache.org": 36
+    },
+    "endpoints": [
+      "https://dl.google.com:443",
+      "https://repo.maven.apache.org:443"
+    ],
+    "evidence": "gradle-focused.log.gz; Gradle logged SocketException: Network is unreachable while resolving/configuring."
+  },
+  "classification": {
+    "invocation": "TIMEOUT_BEFORE_TEST_START / INCOMPLETE; manually interrupted after no-progress snapshot",
+    "targetTest": "NOT_RUN",
+    "observableBlocker": "Network unavailable during Gradle configuration/dependency resolution in this invocation",
+    "causeOfEarlierFullGateRobolectricStall": "NOT_DETERMINED",
+    "productFailure": "NOT_ESTABLISHED"
+  },
+  "otherTasks": {
+    "LiteRT compatibility JVM": "NOT_RUN",
+    "lintDebug": "NOT_RUN",
+    "AndroidTest compile": "NOT_RUN"
+  },
+  "androidValidation": {
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  },
+  "mainAndTagAtStart": "de615b772cf37a99e7e08a647c59607b271de606",
+  "priorFullGate": "INCOMPLETE; active Robolectric method identified there, but cause remains NOT_DETERMINED."
+}

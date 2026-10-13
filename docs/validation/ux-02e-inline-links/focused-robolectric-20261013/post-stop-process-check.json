@@ -1,0 +1,8 @@
+{
+  "checkedAtUtc": "2026-10-13T15:33:12.596013+00:00",
+  "wrapperPid": 136571,
+  "daemonPid": 136605,
+  "testWorkerObserved": false,
+  "remainingProcesses": [],
+  "note": "Both invocation PIDs were already absent from /proc when the post-stop check ran; no remaining process was signaled."
+}
