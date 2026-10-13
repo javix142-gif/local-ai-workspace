@@ -1,0 +1,209 @@
+{
+  "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+  "branchHeadAtStart": "9e21a355b56d4eb24880c174b399c276078ce043",
+  "startedAtUtc": "2026-10-13T12:22:09Z",
+  "finishedAtUtc": "2026-10-13T12:39:14Z",
+  "durationSeconds": 1024.871,
+  "commandExitCode": -9,
+  "classification": "INCOMPLETE_STALLED_TEST_NO_RESULT_CAUSE_NOT_DETERMINED",
+  "controllerStop": "No new JUnit test event for 420 seconds; two snapshots 60 seconds apart; controller sent SIGINT then SIGTERM then SIGKILL because invocation did not exit.",
+  "testListenerCounts": {
+    "SUITE_START": 6,
+    "TEST_START": 36,
+    "TEST_END": 35,
+    "SUITE_END": 3
+  },
+  "testEndResults": {
+    "SUCCESS": 35
+  },
+  "activeTestsAtStop": [
+    [
+      [
+        "com.localai.workspace.context.ContextFoundationDeduplicationTest",
+        "productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit"
+      ],
+      "2026-10-13T12:30:28.579499978Z"
+    ]
+  ],
+  "lastTestEvent": {
+    "time": "2026-10-13T12:30:28.579499978Z",
+    "phase": "TEST_START",
+    "class": "com.localai.workspace.context.ContextFoundationDeduplicationTest",
+    "method": "productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit",
+    "result": "",
+    "durationMs": "",
+    "listenerPid": "133767@05497ac86eb0",
+    "listenerJavaHome": "/workspace/.toolchain/jdk-17"
+  },
+  "junitXmlGeneratedByThisRun": [],
+  "junitXmlUnchangedFromPreflight": [
+    {
+      "path": "app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.context.AuditHarness.xml",
+      "bytes": 4523,
+      "sha256": "79844d737305e1f6bff6f8621be0d16f84adf75eda4f851f86b5be8eca3ce97b",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "tasks": {
+    ":app:testDebugUnitTest": "INCOMPLETE_STALLED; task entered, 36 starts/35 ends, no XML or Gradle task completion",
+    ":litert-compat:testDebugUnitTest": "NOT_REACHED",
+    ":app:lintDebug": "NOT_REACHED",
+    ":app:compileDebugAndroidTestKotlin": "NOT_REACHED"
+  },
+  "observedProcesses": {
+    "gradleWrapperPid": 133734,
+    "gradleRuntime": "/workspace/.toolchain/jdk-17 (Temurin 17.0.20.1)",
+    "gradleDaemonPid": 133767,
+    "testWorkerPid": 133962,
+    "testWorkerRuntime": "/workspace/.toolchain/jdk-21-temurin (Temurin 21.0.12.1)",
+    "testWorkerObservedAtUtc": "2026-10-13T12:38:22Z",
+    "testWorkerAfterDiagnosticSignal": "not present in subsequent /proc check; cause of disappearance NOT_DETERMINED"
+  },
+  "threadDump": {
+    "jcmd": "/workspace/.toolchain/jdk-21-temurin/bin/jcmd 133962 Thread.print -l",
+    "exitCode": 124,
+    "stdoutStderrBytes": 0,
+    "followupSignal": "SIGQUIT sent to PID 133962; command exit 0; no new bytes appeared in Gradle log; no thread dump recovered"
+  },
+  "diagnosticLimitations": [
+    "Primary supervisor snapshots filtered by wrapper process group and did not include Gradle daemon/test worker, which used a separate process group.",
+    "A supplemental observer attempted a descendant-tree ps but timed out after 8 seconds; it did not produce a worker dump.",
+    "The second supervisor snapshot recorded no new JUnit events but could not independently enumerate worker PIDs; direct post-signal checks found the worker PID absent.",
+    "The diagnostic signal preceded the later observation that the worker PID was absent; no causal attribution is made."
+  ],
+  "gradleBuildConclusion": "No BUILD SUCCESSFUL or BUILD FAILED marker; no final task summary.",
+  "productFailure": "NOT_ESTABLISHED; no failed assertion/result, no method completion, and no causal stack.",
+  "xmlSummary": {
+    "newFiles": 0,
+    "tests": 0,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "apkGenerated": false,
+  "emulator": "NOT_RUN",
+  "physicalDevice": "NOT_RUN",
+  "environment": {
+    "os": "Linux x86_64",
+    "gradle": "8.10.2",
+    "gradleRuntimeJdk": "Temurin 17.0.20.1 at /workspace/.toolchain/jdk-17",
+    "appJvmTestWorkerJdk": "Temurin 21.0.12.1 at /workspace/.toolchain/jdk-21-temurin",
+    "toolchainDiscovery": "/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin",
+    "androidSdk": "/workspace/.toolchain/android-sdk",
+    "androidPlatform": "API 35",
+    "buildTools": "35.0.0",
+    "ndk": "27.0.12077973 (source.properties present)",
+    "cmake": "3.31.6",
+    "gradleUserHome": "/home/agent/.gradle (pre-existing; not cleaned)",
+    "diskBefore": "workspace 2.1 GiB free; /tmp 573 MiB free",
+    "worktreeIgnoredPaths": "4 existing ignored paths; retained; tracked/untracked clean before gate",
+    "sdkJdkInstallOrCleanup": "none"
+  },
+  "evidenceFiles": {
+    "command": "command.txt",
+    "preflight": "preflight.txt",
+    "listener": "test-events.init.gradle",
+    "events": "test-events.tsv",
+    "runSummary": "run-summary.json",
+    "taskOutcomes": "task-outcomes.txt",
+    "xmlInventory": "junit-xml-inventory.txt",
+    "diagnostics": "diagnostics.md",
+    "fullGradleLog": "gradle-full-gate.log.gz",
+    "diagnosticAttempts": "diagnostic-attempts.json",
+    "command_txt": {
+      "sha256": "2d57d65ad9265b710e914ffc824c033d5950502e1e4ffef3f6d572effcd6d786",
+      "bytes": 1055
+    },
+    "preflight_txt": {
+      "sha256": "d5a785d3b58f77f1a65beff1365441f898d808b20d831d3bb047c2619e9b9a01",
+      "bytes": 4442
+    },
+    "test-events_init_gradle": {
+      "sha256": "3d1db8e4b78ee6f9050b7eafb7117554761927b29f6f578535ffddce9b56630e",
+      "bytes": 1677
+    },
+    "supervisor_py": {
+      "sha256": "b0e021bd1844b706bfec5134ef34cad8fadd47e261a6e57bdf9b1e079595824b",
+      "bytes": 9504
+    },
+    "worker-observer_py": {
+      "sha256": "e063ae2ac9970c99c3b4ca9ab99a74878c96f24eff50b91841a47da3d04963ad",
+      "bytes": 4680
+    },
+    "test-events_tsv": {
+      "sha256": "df59f026784b031fbbf6b20132827960e5b358862298c76226922ce36f8d5cf8",
+      "bytes": 16898
+    },
+    "gradle-full-gate_log_gz": {
+      "sha256": "cbd26c5f8f566359d4478c05c04b47ab4e12788ecc0b7bda5ac87569479640af",
+      "bytes": 44396
+    },
+    "run-summary_json": {
+      "sha256": "db7be9d3ca55abbca4a6ada5f70873792fff622aaf99dda3920f71382a6f2df8",
+      "bytes": 2008
+    },
+    "run-analysis_json": {
+      "sha256": "9f293439786fd2dfb2b2c51d2380e610d693105ac62fef843d85389ce41acbf9",
+      "bytes": 3788
+    },
+    "supervisor.log.gz": {
+      "sha256": "d93c1dc6eab763f074b6f6d6adc56ba6b5bbfcfd244c946a90544f8e189393ce",
+      "bytes": 1101
+    },
+    "supervisor-log-hashes.txt": {
+      "sha256": "098228f4e1ef5309b9d05c281d3f977df07da21a94bb680c7432808df4eae460",
+      "bytes": 165
+    },
+    "diagnostic-attempts.json": {
+      "sha256": "24b664c3cb76c0eb0924365f45663ab4514a868e6ea1e67f273d55e3519390df",
+      "bytes": 1697
+    },
+    "task-outcomes.txt": {
+      "sha256": "9feb75e00af6b9a2c28b3ab2124c804457b8f5f27d12dee16a2f83c18a20acfc",
+      "bytes": 635
+    },
+    "junit-xml-inventory.txt": {
+      "sha256": "79b030532a2188f424b7739c764f1883085ea990e69dd7ccf51c52bcc8b6804f",
+      "bytes": 531
+    },
+    "diagnostics.md": {
+      "sha256": "d78b9a024d628e694ec79f1583e616264d41989e7f724c6b082dc6004ab9b30f",
+      "bytes": 3359
+    },
+    "post-stop-process-check.txt": {
+      "sha256": "6c9af109deca0e29575e64d2ac193fe20f5f2fc90477dfb59961b18198aed752",
+      "bytes": 217
+    },
+    "source-worktree-status-after.txt": {
+      "sha256": "eb01b003a2c290b10d01e8437468f8e314ec9e5edd19b317a8e0467a74e0d9dc",
+      "bytes": 156
+    },
+    "preflight.txt": {
+      "sha256": "c42ef8619f49e215b10e68be5e7f224c28d1b6f34db1e023a63b22bf28d7db4e",
+      "bytes": 4440
+    },
+    "preflight.txt.gz": {
+      "sha256": "e09de1af5a9272715758345e86c2d0c4db1960b6bca1999c493185469532d53f",
+      "bytes": 1868
+    },
+    "preflight-hashes.txt": {
+      "sha256": "daae858940cfe1b1a3f13419f73eed867d997bae3e8707a6020d9ecb296366b1",
+      "bytes": 613
+    }
+  },
+  "supervisorLog": {
+    "path": "supervisor.log.gz",
+    "rawSha256": "c5f4c6d16500934503c3c950b7d986e182f428aef19155a764aa914866b03278",
+    "gzipSha256": "d93c1dc6eab763f074b6f6d6adc56ba6b5bbfcfd244c946a90544f8e189393ce",
+    "rawBytes": 5191
+  },
+  "postRunWorktree": {
+    "trackedUntrackedStatus": "CLEAN",
+    "existingIgnoredPathCount": 4,
+    "apkOutputFiles": 0,
+    "evidencePath": "source-worktree-status-after.txt"
+  }
+}

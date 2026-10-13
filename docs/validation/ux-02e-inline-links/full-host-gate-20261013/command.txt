@@ -1,0 +1,7 @@
+sourceCodeSha=a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+workingDirectory=/workspace/ux02e-a182-jdk17gradle-contract
+environment: JAVA_HOME=/workspace/.toolchain/jdk-17; PATH=/workspace/.toolchain/jdk-17/bin:$PATH; ANDROID_HOME=/workspace/.toolchain/android-sdk; ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk; UX02E_TEST_EVENTS=/workspace/local-ai-workspace/docs/validation/ux-02e-inline-links/full-host-gate-20261013/test-events.tsv
+argv: ./gradlew --no-daemon --no-parallel --max-workers=1 --console=plain --info --rerun-tasks --init-script /tmp/ux02e-full-gate-20261013.init.gradle -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin
+invocationCount=1
+absoluteTimeoutSeconds=2100
+stallRule=420 seconds without a new JUnit TEST_START/TEST_END event -> process and worker PID/JDK21 jcmd Thread.print; second capture after 60 seconds if still no new test event, then stop only if still stalled

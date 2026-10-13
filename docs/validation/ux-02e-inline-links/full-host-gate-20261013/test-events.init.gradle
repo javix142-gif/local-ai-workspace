@@ -1,0 +1,32 @@
+import org.gradle.api.tasks.testing.Test
+import org.gradle.api.tasks.testing.TestDescriptor
+import org.gradle.api.tasks.testing.TestListener
+import org.gradle.api.tasks.testing.TestResult
+import java.lang.management.ManagementFactory
+import java.time.Instant
+
+File eventFile = new File(System.getenv('UX02E_TEST_EVENTS'))
+def emit = { String phase, TestDescriptor descriptor, TestResult result ->
+    eventFile.parentFile.mkdirs()
+    String className = (descriptor.className ?: '').replace('\t',' ').replace('\n',' ')
+    String method = (descriptor.name ?: '').replace('\t',' ').replace('\n',' ')
+    String resultName = result == null ? '' : result.resultType.toString()
+    String elapsed = result == null ? '' : (result.endTime - result.startTime).toString()
+    String runtime = ManagementFactory.runtimeMXBean.name
+    String javaHome = System.getProperty('java.home')
+    String line = [Instant.now().toString(),phase,className,method,resultName,elapsed,runtime,javaHome].join('\t') + '\n'
+    synchronized(eventFile) {
+        eventFile.parentFile.mkdirs()
+        eventFile.withWriterAppend('UTF-8') { writer -> writer.write(line); writer.flush() }
+    }
+}
+gradle.beforeProject { project ->
+    project.tasks.withType(Test).configureEach { testTask ->
+        testTask.addTestListener(new TestListener() {
+            void beforeSuite(TestDescriptor d) { emit.call('SUITE_START',d,null) }
+            void afterSuite(TestDescriptor d,TestResult r) { emit.call('SUITE_END',d,r) }
+            void beforeTest(TestDescriptor d) { emit.call('TEST_START',d,null) }
+            void afterTest(TestDescriptor d,TestResult r) { emit.call('TEST_END',d,r) }
+        })
+    }
+}

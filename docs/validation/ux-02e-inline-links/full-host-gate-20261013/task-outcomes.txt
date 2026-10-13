@@ -1,0 +1,12 @@
+sourceCodeSha=a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+:app:testDebugUnitTest=INCOMPLETE_STALLED_NO_FINAL_GRADLE_TASK_RESULT
+  listener TEST_START=36
+  listener TEST_END=35; 35 reported SUCCESS
+  unclosed active test=com.localai.workspace.context.ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit
+  newJUnitXml=0
+:litert-compat:testDebugUnitTest=NOT_REACHED
+:app:lintDebug=NOT_REACHED
+:app:compileDebugAndroidTestKotlin=NOT_REACHED
+GradleBuildSummary=NOT_EMITTED
+GateClassification=INCOMPLETE_STALLED_TEST_NO_RESULT_CAUSE_NOT_DETERMINED
+ProductFailure=NOT_ESTABLISHED

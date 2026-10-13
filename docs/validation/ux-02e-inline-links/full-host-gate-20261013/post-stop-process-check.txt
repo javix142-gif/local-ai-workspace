@@ -1,0 +1,6 @@
+capturedAtUtc=2026-10-13T12:43:46Z
+sourceCodeSha=a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+wrapperPid=psWrapperExit=1
+daemonPid= 133767       1 Zs         21:35 [java] <defunct>
+psDaemonExit=0
+workerPid=psWorkerExit=1

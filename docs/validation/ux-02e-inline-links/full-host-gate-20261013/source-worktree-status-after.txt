@@ -1,0 +1,6 @@
+capturedAtUtc=2026-10-13T12:58:36Z
+sourceCodeSha=a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+trackedUntrackedStatus:
+CLEAN
+ignoredPathCount=4
+apkOutputFiles=0

@@ -4900,7 +4900,7 @@
   },
   "latestUx02e": {
     "name": "UX-02e inline Markdown links in assistant chat responses",
-    "status": "FOCUSED_DIAGNOSTICS_PASS_PRIOR_ROBOLECTRIC_STALL_UNDIAGNOSED_FULL_HOST_GATE_INCOMPLETE_PENDING_INDEPENDENT_AUDIT",
+    "status": "FULL_HOST_GATE_INCOMPLETE_STALLED_TEST_ACTIVE_METHOD_IDENTIFIED_CAUSE_NOT_DETERMINED_PENDING_INDEPENDENT_AUDIT",
     "branch": "feat/0.5.0-skills-agents",
     "baseCommit": "fca3e65b16c5d54ef30747c4c90c13608e520499",
     "codeCommit": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
@@ -5329,6 +5329,15 @@
         "fullGate": "NOT_RUN under this diagnostic contract; previous full gate remains INCOMPLETE with exit 130 and later tasks NOT_REACHED.",
         "evidenceDirectory": "diagnostic-20261013/",
         "manifest": "diagnostic-20261013/SHA256SUMS"
+      },
+      "latestFullHostGate": {
+        "status": "INCOMPLETE_STALLED_TEST_NO_RESULT_CAUSE_NOT_DETERMINED",
+        "appJvmTask": "INCOMPLETE; 36 TEST_START/35 TEST_END events, no XML",
+        "activeTest": "com.localai.workspace.context.ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit",
+        "litertCompatJvm": "NOT_REACHED",
+        "lintDebug": "NOT_REACHED",
+        "compileDebugAndroidTestKotlin": "NOT_REACHED",
+        "diagnosis": "Test identity for this run is known; cause remains NOT_DETERMINED and PRODUCT_FAILURE_NOT_ESTABLISHED."
       }
     },
     "environment": {
@@ -5373,11 +5382,10 @@
       "runDurationSeconds": 3311
     },
     "validationLayers": {
-      "HOST": "FULL_GATE_INCOMPLETE: prior app JVM task stalled and was interrupted (exit 130); two bounded filtered runs later passed 16/16 combined, neither reproducing the stall. Active method/root cause remain undetermined. LiteRT compatibility tests, lint and AndroidTest Kotlin compilation were not run in this diagnostic contract. UX-02e remains unaccepted pending independent audit.",
-      "EMULATOR": "NOT_RUN for UX-02e; historical global EMULATOR remains FAIL for the authentic Room v1 fixture with six model-dependent SKIPPED.",
+      "HOST": "INCOMPLETE: :app:testDebugUnitTest stalled with one identified active method; 36 TEST_START/35 TEST_END listener events, 0 new JUnit XML, no final Gradle result. LiteRT tests, lint, AndroidTest Kotlin compilation NOT_REACHED. Cause NOT_DETERMINED; PRODUCT_FAILURE NOT_ESTABLISHED.",
+      "EMULATOR": "NOT_RUN for UX-02e; historical global status remains FAIL due authentic Room v1 fixture, with six model-dependent tests SKIPPED.",
       "PHYSICAL_DEVICE": "NOT_RUN",
-      "APK": "NOT_GENERATED",
-      "talkBackDeviceCheck": "NOT_RUN"
+      "APK": "NOT_GENERATED"
     },
     "evidence": {
       "directory": "docs/validation/ux-02e-inline-links",
@@ -5397,7 +5405,7 @@
       "latestAttemptCompressedLogSha256": "aaf91f91b166eef790bdf88d22ec7daa785ca421be35a5d395668b4d040d6efc",
       "latestAttemptXmlFiles": 0,
       "previousManifestSha256BeforeLatestAttempt": "9c80a6f7712085ed723f74d4cd149d0c2e7412e8686b591d42ad45cb1ec0158d",
-      "currentManifestSha256": "0b0a27f934de80e0aa1bf2fcb0db26c0a913aced0c0edf439a38c408a1bdc5f7",
+      "currentManifestSha256": "1e9ca3010aab464844158d5485bd11125d78b923e6b0533d46b030a3facf420c",
       "latestAttemptCommand": "host/jdk17-runtime-20261013/command.txt",
       "latestAttemptTaskOutcomes": "host/jdk17-runtime-20261013/task-outcomes.txt",
       "latestAttemptExitCode": 130,
@@ -5406,12 +5414,21 @@
       "latestAttemptFileHashes": "host/jdk17-runtime-20261013/file-hashes.txt",
       "latestAttemptPostRunTreeCheck": "host/jdk17-runtime-20261013/post-run-working-tree.txt",
       "latestAttemptTests": "NOT_AVAILABLE; :app:testDebugUnitTest did not complete",
-      "manifestEntryCount": 52,
-      "manifestVerification": "PASS: all 52 parent-manifest entries verified with sha256sum -c; manifest excludes itself. Diagnostic sub-manifest SHA-256 32237f5a599673465744dd0301ab7b71d13ffded1d617750fd83abd70cca5aff verifies 19/19 payload entries.",
+      "manifestEntryCount": 93,
+      "manifestVerification": "PASS: sha256sum -c verified all 93 parent-manifest entries, including the 40-entry full-host-gate-20261013 submanifest. Parent SHA256SUMS excludes itself.",
       "diagnosticRuns": "docs/validation/ux-02e-inline-links/diagnostic-20261013/RUNS.md",
       "diagnosticManifest": "docs/validation/ux-02e-inline-links/diagnostic-20261013/SHA256SUMS",
       "diagnosticManifestSha256": "32237f5a599673465744dd0301ab7b71d13ffded1d617750fd83abd70cca5aff",
-      "diagnosticManifestEntryCount": 19
+      "diagnosticManifestEntryCount": 19,
+      "latestFullHostGateDirectory": "docs/validation/ux-02e-inline-links/full-host-gate-20261013/",
+      "latestFullHostGateLog": "full-host-gate-20261013/gradle-full-gate.log.gz",
+      "latestFullHostGateRawLogSha256": "0f07cb7474d54def26295608ce1749bfd14cf4a0375c36689552db6cdd1090b4",
+      "latestFullHostGateGzipSha256": "cbd26c5f8f566359d4478c05c04b47ab4e12788ecc0b7bda5ac87569479640af",
+      "latestFullHostGateEventSha256": "df59f026784b031fbbf6b20132827960e5b358862298c76226922ce36f8d5cf8",
+      "latestFullHostGateNewXmlFiles": 0,
+      "latestFullHostGateManifest": "full-host-gate-20261013/SHA256SUMS",
+      "latestFullHostGateManifestSha256": "24c9cb37ec48bc953aaffde36c3cd7625a472cc55497670190b49d56cf708490",
+      "latestFullHostGateManifestEntries": 40
     },
     "planIntegrity": {
       "original97TaskPlan": "Not present in tracked repository; not reconstructed or edited.",
@@ -5420,7 +5437,7 @@
       "UX-03": "PENDING",
       "functionalBacklog": "PAUSED"
     },
-    "next": "Stop for independent audit of the focused diagnostic evidence; do not run a full gate or additional tests, and do not start UX-02f/UX-03, EMULATOR, PHYSICAL_DEVICE or APK under this contract.",
+    "next": "Stop for independent audit of the single full HOST gate result. Do not retry or change product code under this contract.",
     "pendingRecovery": {
       "status": "COMPLETED_INCOMPLETE_ROBOLECTRIC_STALL_OPERATOR_INTERRUPTED",
       "codeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
@@ -5515,7 +5532,15 @@
       "latestDiagnosticScope": "Evidence/documentation only; no product, build configuration, workflow, data, or dependency changes.",
       "mainAtDiagnosticStart": "de615b772cf37a99e7e08a647c59607b271de606",
       "peeledV042AtDiagnosticStart": "de615b772cf37a99e7e08a647c59607b271de606",
-      "latestDiagnosticRemoteHeadObservedAfterTests": "4946d603af26c6f6b913d1bbafc957613dc620ee"
+      "latestDiagnosticRemoteHeadObservedAfterTests": "4946d603af26c6f6b913d1bbafc957613dc620ee",
+      "latestFullHostGateEvidenceUpdate": {
+        "baseRemoteHead": "9e21a355b56d4eb24880c174b399c276078ce043",
+        "status": "PREPARED_DOCUMENTATION_EVIDENCE_FOR_FAST_FORWARD_PUSH",
+        "scope": "Documentation/state/evidence only; product source, build files, workflows, tests and dependencies untouched.",
+        "manifestSha256": "1e9ca3010aab464844158d5485bd11125d78b923e6b0533d46b030a3facf420c",
+        "manifestEntries": 93,
+        "innerManifestSha256": "24c9cb37ec48bc953aaffde36c3cd7625a472cc55497670190b49d56cf708490"
+      }
     },
     "independentAudit": {
       "status": "AUDITED_BLOCKED_NOT_ACCEPTED",
@@ -5532,8 +5557,8 @@
       "peeledV042": "de615b772cf37a99e7e08a647c59607b271de606",
       "scopeNote": "Historical audit of the preceding JDK21/no-JDK17-path attempt only; the 2026-10-13 attempt is pending independent audit."
     },
-    "latestAttemptAuditStatus": "PENDING_INDEPENDENT_AUDIT",
-    "previousGateAttemptAuditNote": "The prior JDK21 Gradle-runtime invocation contradicted README.md (JDK17 Gradle runtime, JDK21 app test worker) and failed at KSP target compatibility. The corrected single JDK17-runtime attempt is separate and incomplete after a stalled Robolectric worker; no test counts are available.",
+    "latestAttemptAuditStatus": "PENDING_INDEPENDENT_AUDIT_OF_FULL_HOST_GATE",
+    "previousGateAttemptAuditNote": "Historical: the earlier JDK21 Gradle-runtime attempt contradicted README and failed at KSP JVM-target compatibility. The later JDK17-runtime full gate is the latest attempt and is recorded separately as incomplete; see latestFullHostGate.",
     "environmentHistory": [
       {
         "historicalRecord": "Environment recorded for a prior UX-02e attempt; current JDK17 run is represented in environment and host.gradleGate.",
@@ -5594,6 +5619,131 @@
           "remoteHeadObservedAfterAttemptBeforeEvidenceCommit": "51434af64d64c40157ddf61548e9ebaae3ec8217"
         }
       }
-    ]
+    ],
+    "latestIndependentDiagnosisAudit": {
+      "recordedAtUtc": "2026-10-13",
+      "status": "INDEPENDENTLY_AUDITED_ACCEPTED_DIAGNOSIS_ONLY",
+      "auditedRemoteHead": "9e21a355b56d4eb24880c174b399c276078ce043",
+      "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+      "compare": {
+        "aheadBy": 14,
+        "behindBy": 0,
+        "scope": "documentation/evidence only"
+      },
+      "diagnosticManifest": {
+        "entriesVerified": "19/19",
+        "manifestSha256": "32237f5a599673465744dd0301ab7b71d13ffded1d617750fd83abd70cca5aff"
+      },
+      "focusedJUnit": [
+        {
+          "target": "ChatContentUiTest",
+          "tests": 15,
+          "passed": 15,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "target": "AuditHarness.writeSelectorReproductions",
+          "tests": 1,
+          "passed": 1,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "previousFullHostGate": {
+        "status": "INCOMPLETE",
+        "exitCode": 130,
+        "xmlFiles": 0,
+        "cause": "NOT_DETERMINED",
+        "activeTest": "NOT_DETERMINED"
+      },
+      "diagnosticConclusion": "Prior Robolectric stall was not reproduced by the two focused runs. The generic Sandbox.runOnMainThread dump and last STANDARD_OUT marker do not identify the active test or root cause. No product defect is established.",
+      "refs": {
+        "main": "de615b772cf37a99e7e08a647c59607b271de606",
+        "v042Peeled": "de615b772cf37a99e7e08a647c59607b271de606"
+      },
+      "scopeLimit": "Audit accepted only the diagnostic evidence; UX-02e is not accepted until the full HOST gate is completed and independently reviewed."
+    },
+    "activeFullHostGate": {
+      "status": "COMPLETED_INCOMPLETE_STALLED_TEST_NO_RESULT_CAUSE_NOT_DETERMINED",
+      "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+      "branchHeadAtStart": "9e21a355b56d4eb24880c174b399c276078ce043",
+      "checkoutPath": "/workspace/ux02e-a182-jdk17gradle-contract",
+      "trackedUntrackedStatusBeforeRun": "CLEAN; four pre-existing ignored build/cache paths retained and not cleaned",
+      "commandFile": "docs/validation/ux-02e-inline-links/full-host-gate-20261013/command.txt",
+      "startedAtUtc": "2026-10-13T12:22:09Z",
+      "finishedAtUtc": "2026-10-13T12:39:14Z",
+      "durationSeconds": 1024.871,
+      "gradleWrapper": "8.10.2",
+      "gradleRuntime": "/workspace/.toolchain/jdk-17 (Temurin 17.0.20.1)",
+      "testWorker": "/workspace/.toolchain/jdk-21-temurin (Temurin 21.0.12.1; PID 133962 observed)",
+      "sdk": "/workspace/.toolchain/android-sdk (API 35; NDK 27.0.12077973 and source.properties present; CMake 3.31.6)",
+      "gradleUserHome": "/home/agent/.gradle; existing and not cleaned",
+      "commandReturnCode": -9,
+      "termination": "After 420 seconds without a new JUnit test event and a second snapshot 60 seconds later; controller sent SIGINT, SIGTERM, then SIGKILL because the wrapper did not exit. This is not a Gradle test result.",
+      "taskResults": {
+        ":app:testDebugUnitTest": "INCOMPLETE_STALLED; task started; no final Gradle task result or JUnit XML",
+        ":litert-compat:testDebugUnitTest": "NOT_REACHED",
+        ":app:lintDebug": "NOT_REACHED",
+        ":app:compileDebugAndroidTestKotlin": "NOT_REACHED"
+      },
+      "listenerEvents": {
+        "SUITE_START": 6,
+        "SUITE_END": 3,
+        "TEST_START": 36,
+        "TEST_END": 35,
+        "testEndResultCounts": {
+          "SUCCESS": 35
+        },
+        "xmlTests": 0
+      },
+      "activeTest": {
+        "class": "com.localai.workspace.context.ContextFoundationDeduplicationTest",
+        "method": "productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit",
+        "startAtUtc": "2026-10-13T12:30:28.579499978Z",
+        "endEvent": "NOT_OBSERVED"
+      },
+      "xml": {
+        "newJUnitFiles": 0,
+        "tests": 0,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "priorUnchangedXml": "app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.context.AuditHarness.xml",
+        "priorUnchangedXmlSha256": "79844d737305e1f6bff6f8621be0d16f84adf75eda4f851f86b5be8eca3ce97b"
+      },
+      "threadDump": {
+        "jcmdPath": "/workspace/.toolchain/jdk-21-temurin/bin/jcmd",
+        "command": "jcmd 133962 Thread.print -l",
+        "exitCode": 124,
+        "outputBytes": 0,
+        "sigquitExitCode": 0,
+        "threadDumpRecovered": false,
+        "cause": "NOT_DETERMINED"
+      },
+      "diagnosticLimitation": "The process-group snapshot omitted the daemon/test worker; supplemental ps observer timed out after 8 s. Direct scoped process capture established PID/runtime, but no worker thread dump was recovered. No causal attribution is made.",
+      "gradleBuildResult": "No BUILD SUCCESSFUL/BUILD FAILED or final task summary.",
+      "productFailure": "NOT_ESTABLISHED",
+      "retryPerformed": false,
+      "apkGenerated": false,
+      "emulatorOrDeviceUsed": false,
+      "evidenceDirectory": "docs/validation/ux-02e-inline-links/full-host-gate-20261013/",
+      "next": "Stop for independent audit. No more HOST runs, product fixes, emulator/device, APK, UX-02f or UX-03 under this contract.",
+      "runAnalysisSha256": "a680cf8c20dfd9592d6ac51552909ff13121468d200a8cd52ff6fb399760b765",
+      "evidenceManifest": {
+        "path": "docs/validation/ux-02e-inline-links/SHA256SUMS",
+        "entries": 93,
+        "sha256": "1e9ca3010aab464844158d5485bd11125d78b923e6b0533d46b030a3facf420c",
+        "verification": "PASS 93/93",
+        "fullGateSubmanifest": {
+          "path": "docs/validation/ux-02e-inline-links/full-host-gate-20261013/SHA256SUMS",
+          "entries": 40,
+          "sha256": "24c9cb37ec48bc953aaffde36c3cd7625a472cc55497670190b49d56cf708490",
+          "verification": "PASS 40/40"
+        }
+      }
+    }
   }
 }

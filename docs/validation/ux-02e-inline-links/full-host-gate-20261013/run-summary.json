@@ -1,0 +1,56 @@
+{
+  "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+  "workingDirectory": "/workspace/ux02e-a182-jdk17gradle-contract",
+  "argv": [
+    "./gradlew",
+    "--no-daemon",
+    "--no-parallel",
+    "--max-workers=1",
+    "--console=plain",
+    "--info",
+    "--rerun-tasks",
+    "--init-script",
+    "/tmp/ux02e-full-gate-20261013.init.gradle",
+    "-Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin",
+    ":app:testDebugUnitTest",
+    ":litert-compat:testDebugUnitTest",
+    ":app:lintDebug",
+    ":app:compileDebugAndroidTestKotlin"
+  ],
+  "startedAtUtc": "2026-10-13T12:22:09Z",
+  "finishedAtUtc": "2026-10-13T12:39:14Z",
+  "durationSeconds": 1024.871,
+  "wrapperPid": 133734,
+  "exitCode": -9,
+  "controllerStopReason": "NO_TEST_EVENT_7_MINUTES_PLUS_60_SECONDS; two diagnostic snapshots captured",
+  "testEventCount": 71,
+  "maxWallSeconds": 2100.0,
+  "stallThresholdSeconds": 420.0,
+  "secondCaptureDelaySeconds": 60.0,
+  "gradleLog": {
+    "path": "gradle-full-gate.log.gz",
+    "rawBytes": 544495,
+    "rawSha256": "0f07cb7474d54def26295608ce1749bfd14cf4a0375c36689552db6cdd1090b4",
+    "gzipSha256": "cbd26c5f8f566359d4478c05c04b47ab4e12788ecc0b7bda5ac87569479640af",
+    "gzipBytes": 44396,
+    "decompressionRoundTripVerified": true
+  },
+  "testEvents": {
+    "path": "test-events.tsv",
+    "sha256": "df59f026784b031fbbf6b20132827960e5b358862298c76226922ce36f8d5cf8",
+    "bytes": 16898,
+    "TEST_START": 36,
+    "TEST_END": 35,
+    "activeMethod": "com.localai.workspace.context.ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit"
+  },
+  "junitXmlFilesGenerated": 0,
+  "tasks": {
+    ":app:testDebugUnitTest": "INCOMPLETE_STALLED",
+    ":litert-compat:testDebugUnitTest": "NOT_REACHED",
+    ":app:lintDebug": "NOT_REACHED",
+    ":app:compileDebugAndroidTestKotlin": "NOT_REACHED"
+  },
+  "apkGenerated": false,
+  "emulator": "NOT_RUN",
+  "physicalDevice": "NOT_RUN"
+}

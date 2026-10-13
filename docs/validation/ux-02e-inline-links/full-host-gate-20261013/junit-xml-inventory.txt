@@ -1,0 +1,7 @@
+sourceCodeSha=a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+inventory rule=only app/build/test-results/**/*.xml and */build/test-results/**/*.xml whose path/hash/mtime differed from pre-run inventory
+newXmlFiles=0
+tests=0 failures=0 errors=0 skipped=0
+unchanged pre-run XML excluded=app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.context.AuditHarness.xml
+unchanged pre-run XML sha256=79844d737305e1f6bff6f8621be0d16f84adf75eda4f851f86b5be8eca3ce97b
+note=This XML predates the gate; it is not evidence for this run.

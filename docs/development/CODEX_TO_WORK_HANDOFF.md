@@ -1,4 +1,20 @@
-# Latest contract: UX-02e bounded Robolectric stall diagnosis (2026-10-13)
+# Latest contract: UX-02e single instrumented HOST gate (2026-10-13)
+
+## Result
+
+The independently audited prior diagnosis is accepted **as diagnosis only**: 19/19 manifest entries verified; focused `ChatContentUiTest` 15/15 and `AuditHarness.writeSelectorReproductions` 1/1 passed. Those focused runs did not reproduce the earlier full-gate stall; the previous full gate remains incomplete, exit 130, zero XML, with its active test/root cause undetermined. No product defect was established.
+
+Exactly one full HOST gate was run against code SHA `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7` from detached worktree `/workspace/ux02e-a182-jdk17gradle-contract`, while feature HEAD at start was `9e21a355b56d4eb24880c174b399c276078ce043`. It used Gradle 8.10.2/JDK 17.0.20.1, the JDK 21.0.12.1 app test worker, and existing SDK `/workspace/.toolchain/android-sdk` with API 35/NDK 27.0.12077973. Start/end: `2026-10-13T12:22:09Z`–`12:39:14Z`, 1024.871 s. The listener recorded 36 starts/35 ends (all 35 end events SUCCESS); no XML was generated and Gradle emitted no final build summary.
+
+The active JUnit event without an end was `com.localai.workspace.context.ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit` (start `12:30:28.579499978Z`). The requested task statuses are: app JVM tests **INCOMPLETE**; LiteRT compatibility JVM tests **NOT_REACHED**; lint **NOT_REACHED**; AndroidTest Kotlin compilation **NOT_REACHED**. The wrapper was terminated after the 420-second no-event threshold and a second snapshot 60 seconds later; controller return code `-9` after SIGKILL escalation. This is not a Gradle assertion result.
+
+The test worker was observed as PID 133962 under JDK 21. `jcmd Thread.print -l` timed out (124, zero bytes); SIGQUIT returned 0 but no dump entered the Gradle log. The process-group snapshot omitted the daemon/worker, and the supplemental `ps` observer timed out. A subsequent direct process check found the worker absent; the reason remains unknown. The active method is known, but the cause of the stall/worker disappearance is **NOT_DETERMINED** and `PRODUCT_FAILURE` is **NOT_ESTABLISHED**. No retry or fix was made.
+
+Full raw Gradle log (lossless gzip), test events, run summary, preflight, snapshots, PID/JDK evidence and command are under [`docs/validation/ux-02e-inline-links/full-host-gate-20261013/`](../validation/ux-02e-inline-links/full-host-gate-20261013/). The HOST gate is **INCOMPLETE**, so UX-02e remains **pending independent audit**. Parent manifest: 93/93 entries verified, SHA-256 `1d9c6d1902de0009f5aceb835128c9c321f54892aeeff6b7611896267077c3c0`; full-gate submanifest: 40/40, SHA-256 `9568651bd4264ca40cff7a38511308d360ce53b2800a76f8a4f57118c1428cfc`. EMULATOR was not run in this contract; the separate historical global status remains FAIL for Room v1 plus six model-dependent skips. PHYSICAL_DEVICE=NOT_RUN; APK not generated. Main and peeled `v0.4.2` remain `de615b772cf37a99e7e08a647c59607b271de606`. The original 97-task plan is unchanged. Stop for independent audit; do not retry or start another UX phase under this contract.
+
+---
+
+# Prior contract: UX-02e bounded Robolectric stall diagnosis (2026-10-13; superseded above)
 
 ## Outcome
 

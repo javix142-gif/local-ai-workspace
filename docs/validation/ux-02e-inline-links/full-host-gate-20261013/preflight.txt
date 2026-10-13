@@ -1,0 +1,81 @@
+capturedAtUtc=2026-10-13T12:20:07Z
+sourceSha=a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+expectedSourceSha=a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+worktree=/workspace/ux02e-a182-jdk17gradle-contract
+worktreeStatusTrackedUntracked=CLEAN
+worktreeIgnoredPaths=4
+README_JDK_requirement=27:Requirements are pinned in the Gradle files: JDK 17 to run Gradle and JDK 21 for the app JVM test worker, Gradle wrapper 8.10.2, Android Gradle Plugin 8.7.3, Kotlin 2.0.21, Android SDK API 35, NDK 27.0.12077973 and CMake 3.31.6. The app targets API 35 and supports API 29+.
+gradleWrapper=distributionUrl=https\://services.gradle.org/distributions/gradle-8.10.2-bin.zip
+gradleRuntimeHome=/workspace/.toolchain/jdk-17
+testWorkerHome=/workspace/.toolchain/jdk-21-temurin
+toolchainDiscovery=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin
+androidSdk=/workspace/.toolchain/android-sdk
+gradleUserHome=/home/agent/.gradle
+
+[host]
+Linux 05497ac86eb0 6.18.44 #1 SMP Sat Sep 26 20:02:31 UTC 2026 x86_64 GNU/Linux
+
+[disk]
+Filesystem      Size  Used Avail Use% Mounted on
+overlay          32G   28G  2.1G  94% /
+none            4.9G  4.4G  573M  89% /tmp
+
+[jdk17]
+openjdk version "17.0.20.1" 2026-08-18
+OpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)
+OpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)
+javac 17.0.20.1
+jdk.compiler@17.0.20.1
+jdk17_javac_executable=yes
+[jdk17 system compiler probe]
+jshell> true
+jshell>
+[jdk21]
+openjdk version "21.0.12.1" 2026-08-18 LTS
+OpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)
+OpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)
+javac 21.0.12.1
+jdk.compiler@21.0.12.1
+jdk21_javac_executable=yes
+[jdk21 system compiler probe]
+jshell> true
+jshell>
+[android sdk]
+Pkg.Desc=Android SDK Platform 15
+Pkg.UserSrc=false
+Platform.Version=15
+Platform.CodeName=
+Pkg.Revision=2
+AndroidVersion.ApiLevel=35
+AndroidVersion.ExtensionLevel=13
+AndroidVersion.IsBaseSdk=true
+Layoutlib.Api=15
+Layoutlib.Revision=1
+Platform.MinToolsRev=22
+Pkg.Desc = Android NDK
+Pkg.Revision = 27.0.12077973
+Pkg.BaseRevision = 27.0.12077973
+Pkg.ReleaseName = r27
+cmake version 3.31.6
+1.12.1
+
+[android build tools]
+build-tools/35.0.0 present
+platform android-35 present
+
+[wrapper distribution cache]
+/home/agent/.gradle/wrapper/dists/gradle-8.10.2-bin/a04bxjujx95o3nb99gddekhwo/gradle-8.10.2/bin/gradle
+
+[pre-run test xml inventory]
+app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.context.AuditHarness.xml	mtime_ns=1791891988135067964	bytes=4523	sha256=79844d737305e1f6bff6f8621be0d16f84adf75eda4f851f86b5be8eca3ce97b
+\n[pre-existing ignored paths in exact-source worktree; retained, not cleaned]\nEOF
+git -C "/workspace/ux02e-a182-jdk17gradle-contract" status --short --ignored | awk 'substr(/bin/bash,1,2)=="!!"{print}' >> "/workspace/local-ai-workspace/docs/validation/ux-02e-inline-links/full-host-gate-20261013/preflight.txt"
+sha256sum "/workspace/local-ai-workspace/docs/validation/ux-02e-inline-links/full-host-gate-20261013/preflight.txt" "/workspace/local-ai-workspace/docs/validation/ux-02e-inline-links/full-host-gate-20261013/test-events.init.gradle" > "/workspace/local-ai-workspace/docs/validation/ux-02e-inline-links/full-host-gate-20261013/preflight-hashes.txt"
+cat > "/workspace/local-ai-workspace/docs/validation/ux-02e-inline-links/full-host-gate-20261013/command.txt" <<EOF
+sourceCodeSha=a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+workingDirectory=/workspace/ux02e-a182-jdk17gradle-contract
+runtimeEnvironment: JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk UX02E_TEST_EVENTS=/workspace/local-ai-workspace/docs/validation/ux-02e-inline-links/full-host-gate-20261013/test-events.tsv
+argv: ./gradlew --no-daemon --no-parallel --max-workers=1 --console=plain --info --rerun-tasks --init-script /tmp/ux02e-full-gate-20261013.init.gradle -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin
+singleInvocation=yes
+absoluteTimeoutSeconds=2100
+stallRule=420 seconds without a new TEST_START/TEST_END event -> process tree and JDK21 jcmd dump; second capture after 60 seconds if still no new test event, then stop

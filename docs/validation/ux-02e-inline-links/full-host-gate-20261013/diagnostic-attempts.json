@@ -1,0 +1,39 @@
+{
+  "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+  "stallThresholdReachedAtUtc": "2026-10-13T12:37:40Z",
+  "primarySupervisor": {
+    "firstSnapshot": "stall-first/",
+    "secondSnapshot": "stall-second/",
+    "secondSnapshotAtUtc": "2026-10-13T12:38:47Z",
+    "limitation": "Filtered processes by wrapper process group; Gradle daemon and test worker used another process group and were absent from these snapshots."
+  },
+  "directWorkerCapture": {
+    "capturedAtUtc": "2026-10-13T12:38:22Z",
+    "wrapperPid": 133734,
+    "gradleDaemonPid": 133767,
+    "testWorkerPid": 133962,
+    "testWorkerExecutable": "/workspace/.toolchain/jdk-21-temurin/bin/java",
+    "jcmdCommand": "/workspace/.toolchain/jdk-21-temurin/bin/jcmd 133962 Thread.print -l",
+    "jcmdExitCode": 124,
+    "jcmdOutputBytes": 0,
+    "followupSignal": "SIGQUIT to PID 133962",
+    "signalExitCode": 0,
+    "newGradleLogBytesAfterSignal": 0,
+    "laterProcessCheck": "PID 133962 was absent; no causal attribution."
+  },
+  "supplementalObserver": {
+    "script": "worker-observer.py",
+    "result": "FAILED_BEFORE_CAPTURE",
+    "exitCode": 1,
+    "failure": "ps -ww -eo pid,ppid,pgid,stat,etime,args exceeded the observer's 8-second subprocess timeout.",
+    "rawToolOutputArchived": false
+  },
+  "stop": {
+    "atUtc": "2026-10-13T12:38:47Z onward",
+    "signals": ["SIGINT", "SIGTERM", "SIGKILL"],
+    "wrapperReturnCode": -9,
+    "completedAtUtc": "2026-10-13T12:39:14Z",
+    "reason": "No new JUnit test event in the 60 seconds following the first snapshot."
+  },
+  "conclusion": "Active test method identified; no thread dump or causal evidence. Root cause NOT_DETERMINED; PRODUCT_FAILURE NOT_ESTABLISHED."
+}

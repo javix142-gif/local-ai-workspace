@@ -1,0 +1,11 @@
+{
+  "capturedAtUtc": "2026-10-13T12:38:42Z",
+  "reason": "60 seconds after first stalled snapshot; no new JUnit test event",
+  "elapsedSeconds": 993.682,
+  "gradleWrapperPid": 133734,
+  "testEventCount": 71,
+  "lastTestEvent": "2026-10-13T12:30:28.579499978Z\tTEST_START\tcom.localai.workspace.context.ContextFoundationDeduplicationTest\tproductionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit\t\t\t133767@05497ac86eb0\t/workspace/.toolchain/jdk-17",
+  "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+  "processTreeExitCode": 0,
+  "workers": []
+}
