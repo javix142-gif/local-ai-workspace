@@ -36,13 +36,12 @@ class StructuredDocumentsTest {
   } finally { f.delete() }
  }
  @Test fun formattedEmptyXlsxCellsDoNotConsumeRepresentationBudget() {
-  val blankCells=40_000
+  // Keep the synthetic ZIP near the reported ~300 KB input size while staying
+  // below the parser's 100,000-cell safety limit.
+  val blankCells=58_000
   val rows=buildString {
    append("<row r='1'><c r='A1'><v>1</v></c></row><row r='2'><c r='A2'><v>5</v></c></row><row r='3'><c r='A3'><f>A2-A1</f><v>4</v></c></row>")
-   for(row in 4..blankCells+3) {
-    val type=if(row%2==0) " t='s'" else ""
-    append("<row r='$row'><c r='A$row' s='1'$type/></row>")
-   }
+   for(row in 4..blankCells+3) append("<row r='$row'><c r='A$row' s='1'/></row>")
   }
   val f=zip(mapOf(
    "xl/workbook.xml" to "<workbook xmlns:r='http://schemas.openxmlformats.org/officeDocument/2006/relationships'><sheets><sheet name='Sales' r:id='r1'/></sheets></workbook>",
@@ -51,10 +50,23 @@ class StructuredDocumentsTest {
    "xl/worksheets/sheet1.xml" to "<worksheet><dimension ref='A1:A${blankCells+3}'/><sheetData>$rows</sheetData></worksheet>"
   ))
   try {
-   val (compressedBytes,expandedXmlBytes)=ZipFile(f).use { archive ->
-    val xml=archive.getEntry("xl/worksheets/sheet1.xml")
-    f.length() to xml.size
+   val xmlProfile=ZipFile(f).use { archive ->
+    val xmlEntries=mutableListOf<ZipEntry>()
+    val entries=archive.entries()
+    while(entries.hasMoreElements()) entries.nextElement().takeIf { it.name.endsWith(".xml") }?.let(xmlEntries::add)
+    Triple(f.length(),archive.getEntry("xl/worksheets/sheet1.xml").size,xmlEntries.sumOf { it.size }) to xmlEntries.size
    }
+   val (compressedBytes,expandedXmlBytes,totalExpandedXmlBytes)=xmlProfile.first
+   val xmlEntryCount=xmlProfile.second
+   // The previous per-cell admission estimate charged 256 bytes plus 12 times
+   // the field lengths, including each blank cell and its default type "n".
+   // This deterministic estimate isolates why the synthetic blank-cell fixture
+   // crossed the old 8 MiB budget; it is not a measurement of the private XLSX.
+   val legacyFixedCellBudgetEstimateBytes=(4..blankCells+3).sumOf { row ->
+    256L+12L*("Sales".length+"A$row".length+1)
+   }
+   assertTrue("The fixture should approximate the reported ~300 KB XLSX",compressedBytes in 250_000L..350_000L)
+   assertTrue("The legacy fixed per-cell estimate should exceed the 8 MiB budget",legacyFixedCellBudgetEstimateBytes>S.MAX_REPRESENTATION_BYTES)
    var stageStarted=System.nanoTime()
    val table=S.xlsx(f)
    val parserMs=(System.nanoTime()-stageStarted)/1_000_000
@@ -73,9 +85,14 @@ class StructuredDocumentsTest {
    assertTrue(evidence.text.contains("A3=4"))
    assertTrue(evidence.text.contains("formula=A2-A1"))
    val report=org.json.JSONObject().put("environment","HOST_SYNTHETIC_NOT_USER_WORKBOOK")
+    .put("fixtureDescription","Generated XLSX with 58,000 style-only blank cells and three populated cells; no private workbook content.")
     .put("compressedWorkbookBytes",compressedBytes).put("expandedWorksheetXmlBytes",expandedXmlBytes)
+    .put("totalExpandedXmlBytes",totalExpandedXmlBytes).put("xmlEntryCount",xmlEntryCount)
     .put("declaredDimensions","A1:A${blankCells+3}").put("populatedCellCount",table.cells.size)
     .put("emptyFormattedCellCount",blankCells).put("styleDefinitions",1)
+    .put("legacyFixedCellBudgetEstimateBytes",legacyFixedCellBudgetEstimateBytes)
+    .put("legacyBudgetLimitBytes",S.MAX_REPRESENTATION_BYTES)
+    .put("legacyBudgetWouldExceedLimit",legacyFixedCellBudgetEstimateBytes>S.MAX_REPRESENTATION_BYTES)
     .put("serializedRepresentationUtf8Bytes",document.pages.sumOf { it.text.toByteArray(Charsets.UTF_8).size })
     .put("chunkCount",chunks.size).put("hostXlsxParserMs",parserMs).put("hostRepresentationMs",representationMs).put("hostChunkCreationMs",chunkMs)
     .put("embeddingOrIndexingExecuted",false)
