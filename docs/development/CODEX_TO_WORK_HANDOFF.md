@@ -1,22 +1,20 @@
-# Latest contract: UX-02e HOST validation recovery (2026-10-12)
+# Latest contract: UX-02e HOST gate recovery (2026-10-13)
 
 ## Result of the single authorized attempt
 
-UX-02e source remains `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7` and is **not accepted**. The preflight for the existing Temurin JDK 21 passed: `java`/`javac` 21.0.12.1 are executable, `jdk.compiler` is present, and `ToolProvider.getSystemJavaCompiler()` is available. The existing API 35 SDK and exact NDK 27.0.12077973 are complete.
+UX-02e code SHA `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7` remains **not accepted**. The feature branch HEAD at the validation start was `83796439caa5eba5543062ed2d82c8f021ed2e2c`; the code SHA is its ancestor and the intervening changes were docs/evidence only. The exact-code detached worktree started with empty tracked/untracked/ignored status and no build outputs or `local.properties`.
 
-From a clean detached worktree at the exact source SHA, the one authorized Gradle command used explicit `JAVA_HOME=/workspace/.toolchain/jdk-21-temurin` and the existing SDK. It ran from `2026-10-12T13:33:30Z` to `13:34:01Z`, exit 1. Gradle failed before task execution because `:litert-compat:compileDebugJavaWithJavac` requires `languageVersion=17`; this invocation provided JDK 21 and no matching Java 17 toolchain was selected. Zero tasks and zero JUnit XML were produced. This is a toolchain/environment blocker, not a product test failure. The explicit-JDK hypothesis is tested; no retry was made.
+The preflight passed for both existing toolchains: Temurin JDK 21.0.12.1 (`java`, `javac`, `jdk.compiler`, and `JavaCompiler`) was selected for Gradle; Temurin JDK 17.0.20.1 with the same compiler checks was exposed through Gradle 8.10.2 property `org.gradle.java.installations.paths`. The existing API 35 SDK, NDK 27.0.12077973 (`source.properties` present), and CMake 3.31.6 were used. No JDK/SDK component was installed and no caches/data were deleted.
 
-- Exact command, environment, failure classification, and XML inventory: [UX-02e results](../validation/ux-02e-inline-links/RESULTS.md).
-- Full raw Gradle output (compressed without altering its decompressed bytes): [`jdk21-gate-attempt-20261012.log.gz`](../validation/ux-02e-inline-links/host/jdk21-gate-attempt-20261012.log.gz); raw SHA-256 `b1d0eda3ce23eb027c0be53c2a2115b920e5d8141fb121bf01edf5c0934a630f`.
-- Parser-only JUnit remains a separate supplemental check: 20/20 PASS; it does not substitute for Compose/Gradle validation.
-- App/LiteRT JVM Gradle tests, Compose, lint and AndroidTest Kotlin compilation: **NOT_RUN**. `EMULATOR` is not run for UX-02e; the historical global result remains FAIL for the authentic Room v1 fixture with six model-dependent skips. `PHYSICAL_DEVICE=NOT_RUN`; no APK generated.
-- The original 97-task plan remains untracked, unreconstructed and unchanged. M01-06 is `PENDING_REQUIRES_DEVICE`; UX-02f/UX-03 remain pending and the functional backlog remains paused.
+The one gate ran `2026-10-13T01:40:59Z`–`01:46:04Z` (305 seconds), exit 1. Gradle reported 40 actionable tasks executed and failed at `:app:kspDebugKotlin`: app `compileDebugJavaWithJavac` targets JVM 17 while KSP targets JVM 21. This is a build-target mismatch under the requested JDK 21 Gradle runtime, not an assertion failure in UX-02e. Requested JVM tests, lint, and AndroidTest Kotlin compilation did not complete; no JUnit XML exists. No code fix or retry is authorized by this contract.
 
-Do not retry this gate under this contract. Stop for independent audit/new authorization.
+- Exact command, toolchains, task outcome and XML inventory: [UX-02e results](../validation/ux-02e-inline-links/RESULTS.md).
+- Full raw Gradle log, compressed losslessly: [`jdk21-runtime-jdk17-toolchain-gate-20261013.log.gz`](../validation/ux-02e-inline-links/host/jdk21-runtime-jdk17-toolchain-gate-20261013.log.gz). Raw SHA-256 `b5694b57610c2e17e7b1953a7053a659bd7d4683a7699edfdc7861665d36ee1d`; gzip SHA-256 `114adf0edb22639d03643919b3ad7976f63c51bf4d135300ef925a538dda9662`. Evidence manifest SHA-256: `b3591e6a8c1965f3b00475c72b05acd5261a513710eb4e14cbdbf05bfa0b0bc5` (23/23 entries verified locally).
+- The parser-only standalone check remains supplemental at 20/20 PASS; it does not replace the Gradle/Compose gate.
+- **HOST:** Gradle gate FAIL; UX-02e is not accepted. **EMULATOR:** NOT_RUN for UX-02e; historical global result remains FAIL for the authentic Room v1 fixture and six model-dependent skips. **PHYSICAL_DEVICE:** NOT_RUN. No APK generated.
+- The original 97-task plan remains untracked, unreconstructed and unchanged. M01-06 remains `PENDING_REQUIRES_DEVICE`; UX-02f/UX-03 and functional backlog remain paused. `main` and peeled `v0.4.2` remain at `de615b772cf37a99e7e08a647c59607b271de606`.
 
-Evidence commit: `7ffbf2fe99c8dca4b9761c6af9cb444eb712c6f5` (report/log/checksum bundle). The state/handoff closure follows in this documentation-only commit.
-
-The feature branch was locally at `24439fe1ef0f0fce9103c8beb4797ff4e9daddc8` at attempt start. A fetch after the gate found two remote-only documentation commits (`60511db`, `69f1dd0`); their diff touched only the execution state and handoff, and the local branch was fast-forwarded before this evidence update. `main` and peeled `v0.4.2` remain at `de615b772cf37a99e7e08a647c59607b271de606`.
+Stop for independent audit. Do not rerun Gradle or begin UX-02f/UX-03 under this contract.
 
 ---
 
@@ -26,7 +24,7 @@ UX-02d is `INDEPENDENTLY_AUDITED_ACCEPTED` for Markdown table presentation and H
 
 The acceptance is host-only. The global emulator result remains FAIL because the authentic historical Room v1 fixture is unavailable; six tests requiring real models remain SKIPPED. `PHYSICAL_DEVICE=NOT_RUN`; no APK was generated. `main` and peeled `v0.4.2` remain at `de615b772cf37a99e7e08a647c59607b271de606`. The original 97-task plan was not present in the tracked repository and was not reconstructed or edited; M01-06 remains `PENDING_REQUIRES_DEVICE`.
 
-## UX-02e delivery — inline Markdown links
+## UX-02e implementation and prior attempts (historical; latest gate is recorded at top)
 
 UX-02e code commit: `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`. The parser recognizes `[label](URL)` only for absolute HTTP/HTTPS URIs with a host. It renders Compose `LinkAnnotation.Url` with theme primary color and underline; the URL opens through `UriHandler` only after explicit activation. Malformed/disallowed destinations remain literal and are not rescanned for nested links. Inline/fenced code, image syntax, HTML tags, table-cell link behavior and free-text citation syntax remain unchanged. The original response copy button was extracted into `AssistantResponseCopyAction` without changing its behavior; its test asserts the exact Markdown source is copied.
 

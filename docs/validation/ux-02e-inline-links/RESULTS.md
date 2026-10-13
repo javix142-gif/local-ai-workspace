@@ -2,10 +2,28 @@
 
 **Code SHA:** `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`
 **Branch:** `feat/0.5.0-skills-agents`
-**Baseline remote HEAD at start:** `fca3e65b16c5d54ef30747c4c90c13608e520499`
-**Status:** implementation committed; parser-only JVM check passed. The latest authorized Gradle attempt used the pre-existing complete SDK/NDK and an explicit Temurin JDK 21, but task configuration requires a matching Java 17 toolchain and failed before any tasks. UX-02e is **not accepted**; the Gradle/Compose HOST gate remains blocked.
+**Remote feature HEAD at this validation:** `83796439caa5eba5543062ed2d82c8f021ed2e2c`
+**Status:** implementation committed; parser-only JVM check passed. The latest authorized Gradle gate started with Temurin JDK 21 and explicit discovery of Temurin JDK 17, then failed at `:app:kspDebugKotlin` because its JVM target (21) conflicts with `:app:compileDebugJavaWithJavac` (17). No tests, lint, or AndroidTest Kotlin compilation completed. UX-02e is **not accepted**; this is not a full HOST PASS.
 
-## Latest authorized HOST recovery attempt — explicit JDK 21
+## Latest HOST validation attempt — JDK 21 runtime with explicit JDK 17 discovery (2026-10-13)
+
+- Exact source code SHA: `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`, in a newly created detached worktree `/workspace/ux02e-a182-jdk17toolchain`. Before the run, `git status --porcelain=v1 --ignored=matching --untracked-files=all` was empty; `.gradle/`, `app/build/`, `litert-compat/build/`, `llama-runtime/build/`, `.cxx/`, and `local.properties` were absent. The source SHA is an ancestor of the feature HEAD; later changes are documentation/evidence only.
+- JDK 21 runtime preflight passed at `/workspace/.toolchain/jdk-21-temurin` (Temurin 21.0.12.1, `java`, `javac`, `jdk.compiler`, and `ToolProvider.getSystemJavaCompiler()` available). JDK 17 toolchain preflight passed at `/workspace/.toolchain/jdk-17` (Temurin 17.0.20.1, same compiler checks available). The existing SDK `/workspace/.toolchain/android-sdk` has API 35, Build Tools 35.0.0, NDK 27.0.12077973 with `source.properties`, and CMake 3.31.6. No toolchain or Android component was installed or downloaded, and no cache/data was deleted.
+- Gradle 8.10.2 documents `org.gradle.java.installations.paths` as its custom toolchain-location property ([toolchain documentation](https://docs.gradle.org/8.10.2/userguide/toolchains.html#sec:custom_loc)). It was supplied as a command-line project property to expose JDK 17 without changing versioned files. Gradle's `--info` output confirms it probed `/workspace/.toolchain/jdk-17/bin/java`.
+- Exact command, once:
+
+  ```text
+  JAVA_HOME=/workspace/.toolchain/jdk-21-temurin PATH=/workspace/.toolchain/jdk-21-temurin/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --console=plain --info --rerun-tasks -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17 :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin
+  ```
+
+- Start/end: `2026-10-13T01:40:59Z`–`2026-10-13T01:46:04Z`; duration **305 s**; exit code **1**. Gradle started and executed 40 actionable tasks. It failed at `:app:kspDebugKotlin` with: `Inconsistent JVM-target compatibility detected for tasks 'compileDebugJavaWithJavac' (17) and 'kspDebugKotlin' (21).` This is a build/JVM-target incompatibility under the requested JDK 21 Gradle runtime, not a UX-02e assertion failure. The contract does not authorize changing unrelated app build configuration, so no code was changed and no second invocation was made.
+- The repository `README.md` documents JDK 17 to run Gradle and JDK 21 for app JVM test workers. This contract explicitly requested JDK 21 as Gradle runtime; the observed mismatch is scoped to that requested runtime and does not determine whether the documented JDK 17 setup passes.
+- Gradle emitted retries reporting `Network is unreachable` for `dl.google.com` and Maven Central while resolving/configuring. It nevertheless proceeded through project configuration and the 40-task summary; the recorded terminal failure is the JVM-target mismatch. This evidence does not establish network as the terminal cause.
+- Requested app/LiteRT JVM tests, Compose UI tests, `lintDebug`, and `compileDebugAndroidTestKotlin` did not complete. JUnit result inventory in the clean worktree: **0 files**; test counts are **NOT_RUN**, not PASS. Android resource/intermediate XML is not counted as test XML.
+- Full Gradle log: [`jdk21-runtime-jdk17-toolchain-gate-20261013.log.gz`](host/jdk21-runtime-jdk17-toolchain-gate-20261013.log.gz), raw SHA-256 `b5694b57610c2e17e7b1953a7053a659bd7d4683a7699edfdc7861665d36ee1d`, gzip SHA-256 `114adf0edb22639d03643919b3ad7976f63c51bf4d135300ef925a538dda9662`. Exact command, preflight, runtime environment, task summary, XML inventory, and exit/timing metadata are in the adjacent `jdk21-runtime-jdk17-toolchain-*-20261013.*` files; `SHA256SUMS` records their hashes.
+- No emulator, physical device, APK, installation, or artifact workflow was used. The failure does not test or disprove link behavior; UX-02e remains unaccepted pending a successful host gate and independent audit.
+
+## Previous HOST attempt — explicit JDK 21 without JDK 17 discovery path (2026-10-12)
 
 - Exact source code SHA: `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`, built from a clean detached worktree. The worktree had no ignored/untracked files before the invocation and no `.gradle/`, `app/build/`, `llama-runtime/build/`, `.cxx/`, or `local.properties`.
 - Read-only preflight passed for `/workspace/.toolchain/jdk-21-temurin`: `java` and `javac` are executable, both report 21.0.12.1, `jdk.compiler` is present, and `ToolProvider.getSystemJavaCompiler()` is non-null. The existing SDK `/workspace/.toolchain/android-sdk` has API 35/Build Tools 35.0.0 and NDK `27.0.12077973` with `source.properties`. No installation, download, cleanup, or version change occurred.
@@ -19,7 +37,7 @@
 - JUnit XML: **0 files** from this run. The clean detached checkout had no previous result XML; existing ignored XML in the main checkout is not included or counted. App JVM, LiteRT compatibility JVM, Compose, lint and AndroidTest Kotlin compilation are all **NOT_RUN** by Gradle.
 - Complete Gradle output (111,204 raw bytes, SHA-256 `b1d0eda3ce23eb027c0be53c2a2115b920e5d8141fb121bf01edf5c0934a630f`; gzip SHA-256 `7caf158c0292a933e646a20f59a80b4f6449d41f879c830031a8de81ee38c93f`): [`host/jdk21-gate-attempt-20261012.log.gz`](host/jdk21-gate-attempt-20261012.log.gz). Preflight, command/timing and XML inventory are in the adjacent `jdk21-*.txt`/`.json` files.
 
-This result supersedes the earlier single invocation with the system JRE, which failed because `JAVA_COMPILER` was absent. The prior attempt remains documented below as history. The explicit JDK 21 hypothesis was tested once; its blocker is the project's Java 17 toolchain requirement.
+This result was the latest attempt at that time and superseded the earlier system-JRE invocation; it is now historical. It failed before tasks because no JDK 17 installation path was exposed to Gradle. The 2026-10-13 attempt above tested that path explicitly and reached project tasks, where it failed for the distinct JVM-target mismatch.
 
 The feature branch was at local HEAD `24439fe1ef0f0fce9103c8beb4797ff4e9daddc8` when this attempt began. A post-run fetch found remote-only commits `60511db` and `69f1dd0`; the inspected diff contained only `docs/development/EXECUTION_STATE.json` and `docs/development/CODEX_TO_WORK_HANDOFF.md`, so the branch was fast-forwarded before this evidence update. `main` and peeled `v0.4.2` still resolve to `de615b772cf37a99e7e08a647c59607b271de606`.
 
@@ -94,7 +112,7 @@ Compose tests were added for HTTP/HTTPS URI activation through a fake `UriHandle
 
 ## Validation layers and limits
 
-- **HOST:** parser-only standalone JUnit 20/20 PASS. The latest explicit-JDK21 Gradle gate is BLOCKED before task execution because Gradle requires a Java 17 toolchain and did not discover one; 0 tasks and 0 XML. This is not a full HOST PASS. Earlier blockers (system JRE without compiler; temporary SDK with incomplete NDK) remain historical.
+- **HOST:** parser-only standalone JUnit 20/20 PASS (supplemental). The latest Gradle gate is **FAIL**, exit 1, at `:app:kspDebugKotlin` due JVM target 21 versus Java compile target 17. 40 actionable tasks ran; requested test suites/lint/AndroidTest compile did not complete; 0 JUnit XML. This is not a full HOST PASS, and the task failure is not a UX-02e test result. Earlier JDK/toolchain and incomplete-SDK blockers remain historical.
 - **EMULATOR:** NOT_RUN for UX-02e. The prior global result remains FAIL: 16 cases, 9 PASS, the historical authentic Room v1 fixture FAIL, six real-model-dependent SKIPPED. This contract did not rerun it.
 - **PHYSICAL_DEVICE:** NOT_RUN.
 - **APK:** NOT_GENERATED.
@@ -104,4 +122,4 @@ Compose tests were added for HTTP/HTTPS URI activation through a fake `UriHandle
 
 ## Evidence
 
-`SHA256SUMS` covers this report, the JSON summary, standalone runner, earlier evidence and the latest JDK21 attempt log/preflight/environment/XML inventory. No Gradle XML exists for the latest attempt because task graph calculation failed before any task started. Existing ignored XML in the main checkout predates this attempt and is not counted.
+`SHA256SUMS` covers this report, the JSON summary, standalone runner, prior attempts, and the 2026-10-13 JDK21-runtime/JDK17-toolchain gate log, command, preflight, environment, task outcome and XML inventory. No JUnit XML exists for the latest attempt: Gradle reached tasks but failed before any test task. Existing ignored XML outside the fresh detached worktree is not counted.

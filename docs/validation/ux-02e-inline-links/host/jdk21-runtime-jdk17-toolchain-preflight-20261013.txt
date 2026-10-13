@@ -1,0 +1,37 @@
+UX-02e HOST gate preflight (read-only except creation of the detached worktree)
+Recorded: 2026-10-13 UTC
+Source code SHA: a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+Branch at evidence update: feat/0.5.0-skills-agents
+Observed feature remote HEAD before gate: 83796439caa5eba5543062ed2d82c8f021ed2e2c
+The source SHA is an ancestor of that HEAD; its intervening diff is documentation/evidence only.
+Detached worktree: /workspace/ux02e-a182-jdk17toolchain
+Initial git status --porcelain=v1 --ignored=matching --untracked-files=all: empty.
+Initial generated/local paths absent: .gradle/, app/build/, litert-compat/build/, llama-runtime/build/, .cxx/, local.properties.
+
+JDK used to run Gradle:
+JAVA_HOME=/workspace/.toolchain/jdk-21-temurin
+java: Temurin 21.0.12.1 (executable)
+javac: 21.0.12.1 (executable)
+module jdk.compiler@21.0.12.1 present; ToolProvider.getSystemJavaCompiler() != null.
+
+JDK exposed for Gradle toolchain discovery:
+/workspace/.toolchain/jdk-17
+java: Temurin 17.0.20.1 (executable)
+javac: 17.0.20.1 (executable)
+module jdk.compiler@17.0.20.1 present; ToolProvider.getSystemJavaCompiler() != null.
+Gradle property: org.gradle.java.installations.paths=/workspace/.toolchain/jdk-17.
+The Gradle --info log shows the Java 17 installation is used for the JDK probe.
+
+Build/toolchain declarations inspected:
+Gradle Wrapper 8.10.2; Android Gradle Plugin 8.7.3; Kotlin 2.0.21; LiteRT-LM Android 0.17.1.
+app Java source/target compatibility: 17; app JVM Test tasks select Java 21.
+litert-compat Java compile/JVM toolchain: 17.
+llama-runtime Java compile/Kotlin JVM toolchain: 17; NDK 27.0.12077973; CMake 3.31.6.
+LiteRT-LM AAR does not declare an independent Gradle runtime JDK; its compatibility module is configured to compile for 17.
+
+Android SDK: /workspace/.toolchain/android-sdk; android-35 and Build Tools 35.0.0 present.
+NDK: /workspace/.toolchain/android-sdk/ndk/27.0.12077973; source.properties present and Pkg.Revision=27.0.12077973.
+CMake: /workspace/.toolchain/android-sdk/cmake/3.31.6 present.
+No JDK or Android SDK components were installed or downloaded; no caches, files, or data were removed.
+Disk before: /workspace filesystem 2.0 GiB available; /tmp 976 MiB available.
+Effective Gradle user home: /home/agent/.gradle.

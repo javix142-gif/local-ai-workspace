@@ -1,0 +1,8 @@
+JUnit XML inventory for the single Gradle invocation on source SHA a1827fa204cda0cdf80a7e5a51670435e8c8d4b7.
+The detached worktree had no build outputs or test XML before the run.
+Search command after the run:
+find /workspace/ux02e-a182-jdk17toolchain -type f -path '*/build/test-results/*/*.xml' -print | sort
+Matches: 0.
+JUnit XML produced by this invocation: 0 files.
+Gradle stopped at :app:kspDebugKotlin before JVM test tasks, lint, or AndroidTest Kotlin compilation ran. Android resource/intermediate XML is not JUnit test evidence and was not counted.
+Test counts: NOT_RUN; no JUnit suite ran and no XML counts exist.

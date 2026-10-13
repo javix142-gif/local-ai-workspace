@@ -1,0 +1,26 @@
+UX-02e HOST gate run
+Source SHA: a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+Branch: detached
+Started UTC: 2026-10-13T01:40:59Z
+OS: Linux 6.18.44 x86_64
+JAVA_HOME: /workspace/.toolchain/jdk-21-temurin
+Gradle runtime java: openjdk version "21.0.12.1" 2026-08-18 LTS
+Gradle runtime javac: javac 21.0.12.1
+Toolchain discovery path: /workspace/.toolchain/jdk-17 (Gradle property org.gradle.java.installations.paths)
+Toolchain java: openjdk version "17.0.20.1" 2026-08-18
+Toolchain javac: javac 17.0.20.1
+ANDROID_HOME: /workspace/.toolchain/android-sdk
+ANDROID_SDK_ROOT: /workspace/.toolchain/android-sdk
+Android platform: android-35
+NDK: /workspace/.toolchain/android-sdk/ndk/27.0.12077973 (source.properties present)
+CMake: /workspace/.toolchain/android-sdk/cmake/3.31.6
+GRADLE_USER_HOME effective: /home/agent/.gradle
+Disk before: overlay          32G   28G  2.0G  94% /
+Worktree status including ignored: 0 lines (expected 0)
+Command:
+JAVA_HOME=/workspace/.toolchain/jdk-21-temurin PATH=/workspace/.toolchain/jdk-21-temurin/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --console=plain --info --rerun-tasks -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17 :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin
+
+Finished UTC: 2026-10-13T01:46:04Z
+Duration seconds: 305
+Exit code: 1
+Disk after: overlay          32G   28G  2.2G  93% /

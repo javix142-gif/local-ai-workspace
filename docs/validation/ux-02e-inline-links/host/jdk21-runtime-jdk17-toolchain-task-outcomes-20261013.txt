@@ -1,0 +1,7 @@
+Source SHA: a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+Gradle: 8.10.2; invocation exit code 1; duration 305 seconds.
+Gradle summary: 40 actionable tasks, 40 executed.
+Terminal failing task: :app:kspDebugKotlin FAILED.
+Exact failure: Inconsistent JVM-target compatibility between :app:compileDebugJavaWithJavac (17) and :app:kspDebugKotlin (21).
+Tasks after the failure were not run; requested JVM test tasks, :app:lintDebug and :app:compileDebugAndroidTestKotlin did not complete. No JUnit XML was produced.
+The log contains transient network-unreachable retries to dl.google.com and repo.maven.apache.org during configuration/dependency resolution. Gradle proceeded through configuration and 40 tasks; the reported terminal failure is the JVM target mismatch above. No claim is made that network was the terminal cause.

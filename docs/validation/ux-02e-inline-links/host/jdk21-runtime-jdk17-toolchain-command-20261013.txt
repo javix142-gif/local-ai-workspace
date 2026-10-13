@@ -1,0 +1,6 @@
+Code SHA: a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+Checkout: detached worktree /workspace/ux02e-a182-jdk17toolchain
+Command executed once:
+JAVA_HOME=/workspace/.toolchain/jdk-21-temurin PATH=/workspace/.toolchain/jdk-21-temurin/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --console=plain --info --rerun-tasks -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17 :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin
+
+The -P property exposes the existing Java 17 installation to Gradle toolchain discovery; it does not alter versioned project files. Gradle 8.10.2 documents org.gradle.java.installations.paths at https://docs.gradle.org/8.10.2/userguide/toolchains.html#sec:custom_loc.

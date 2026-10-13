@@ -1,5 +1,5 @@
-b3adee3cf5a755b486a33f0331c3e19c01aa8d316eb3bbab22596b4d0c65d10b  docs/validation/ux-02e-inline-links/RESULTS.json
-22dbc8ecefe0130a84e0d824317bb017a346fdd42fbd898ebc74601097cc3482  docs/validation/ux-02e-inline-links/RESULTS.md
+b09bfaf75259006a80998ee59faeb8799ae8791df2749cead511b27e63a8e60c  docs/validation/ux-02e-inline-links/RESULTS.json
+54bc3ffe942fa4d6c6b905d726803bb857ea0502cdfa1d4b5acd2dbab94f1030  docs/validation/ux-02e-inline-links/RESULTS.md
 71c2396e7fbc9b11ecc7ed118076b8a2dc93d7c23bf09021448315057ba8c995  docs/validation/ux-02e-inline-links/host/commands.txt
 b48bbb6d0f92726e6ec93923fdc392117ce873c0de006a00d04291d860dcbac0  docs/validation/ux-02e-inline-links/host/environment.txt
 b0bbca85bb659360710a6009c2010319a8fb5fe9ef979dbf7bb5ed79aefd402d  docs/validation/ux-02e-inline-links/host/gradle-proportional-gate.log.gz
@@ -7,6 +7,12 @@ b0bbca85bb659360710a6009c2010319a8fb5fe9ef979dbf7bb5ed79aefd402d  docs/validatio
 7caf158c0292a933e646a20f59a80b4f6449d41f879c830031a8de81ee38c93f  docs/validation/ux-02e-inline-links/host/jdk21-gate-attempt-20261012.log.gz
 b52763be773c07c9ffeadf00e65854ffb58d39c051a966d39b976a3addb9c253  docs/validation/ux-02e-inline-links/host/jdk21-gate-attempt-20261012.txt
 2f56ad16819e72ba08e208bd964611779436c278a0899112649c8ea9c4eb191e  docs/validation/ux-02e-inline-links/host/jdk21-preflight-20261012.txt
+497da178c859fc493025879a968e1ad7c286d7dd67f8b9c6726d8952305ad8c9  docs/validation/ux-02e-inline-links/host/jdk21-runtime-jdk17-toolchain-command-20261013.txt
+114adf0edb22639d03643919b3ad7976f63c51bf4d135300ef925a538dda9662  docs/validation/ux-02e-inline-links/host/jdk21-runtime-jdk17-toolchain-gate-20261013.log.gz
+69c0ce6ea8644a31f307c0415af9414fbfc16db27ce1739dce1f2ec223f3af96  docs/validation/ux-02e-inline-links/host/jdk21-runtime-jdk17-toolchain-preflight-20261013.txt
+47b8f495e6fa398b76f59def6f69a3694975246c725317fb441807c045e50a9f  docs/validation/ux-02e-inline-links/host/jdk21-runtime-jdk17-toolchain-run-meta-20261013.txt
+48157c6c69d290a3ecee77b7916cd4949a57bcc01c3c379d6b71c2e4528f37bf  docs/validation/ux-02e-inline-links/host/jdk21-runtime-jdk17-toolchain-task-outcomes-20261013.txt
+444a373a85ddc718bd6b5362743975d4860b193256738f3d7d9af4ece8cf4ecb  docs/validation/ux-02e-inline-links/host/jdk21-runtime-jdk17-toolchain-xml-inventory-20261013.txt
 f023b4762c3525eb4284527a7b1e0652ca26ab2e1ae132856cb24547dcb1ef21  docs/validation/ux-02e-inline-links/host/jdk21-xml-inventory-20261012.txt
 b2a3436e87d374aee844e84d800da87ca2c1b154d8e5e0cd27e621f934847250  docs/validation/ux-02e-inline-links/host/parser-standalone.log.gz
 d6f1351541551e1afe668359e9f9cf1589e204c8dc3403d9c939c141f16016e3  docs/validation/ux-02e-inline-links/host/recovery-environment.txt
