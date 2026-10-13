@@ -1,4 +1,18 @@
-# UX-02e — independent audit closure (2026-10-13)
+# UX-02e — validation record
+
+## Latest offline focused test (2026-10-13)
+
+**Result: target PASS, 1/1; UX-02e remains NOT ACCEPTED because the full HOST gate is incomplete.** The single offline invocation tested source SHA `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7` in a clean detached checkout. The exact method left active by the earlier incomplete full gate, `ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit`, started and completed successfully. Gradle 8.10.2 used Temurin JDK 17.0.20.1; the test worker was launched with Temurin JDK 21.0.12.1. Existing caches resolved the selected test in `--offline` mode; no download/install, cache cleanup, or online fallback was used.
+
+The run took 74.968 s (16:37:19.330–16:38:34.298 UTC), wrapper PID 138242, exit 0. The listener recorded one start and one successful end; the new JUnit XML records 1 test, 0 failures/errors/skips; Gradle reports `BUILD SUCCESSFUL`. The isolated run did not reproduce the earlier full-suite stall. That stall's cause remains **NOT_DETERMINED** and **PRODUCT_FAILURE is NOT_ESTABLISHED**. This focused PASS does not complete the full HOST gate or accept UX-02e.
+
+Evidence: [`offline-focused-20261013/RESULTS.md`](offline-focused-20261013/RESULTS.md) and its per-run [`SHA256SUMS`](offline-focused-20261013/SHA256SUMS). The initial CLI argument-order check exited 1 before any task/test/dependency resolution; its full output is preserved losslessly as `offline-focused-20261013/cli-syntax-check.log.gz` and it is classified as command preparation only and is not counted as a test run. Only the corrected target invocation executed. No other tests, lint, AndroidTest, emulator, device, or APK were run. EMULATOR remains a separate historical FAIL (Room v1 fixture, six model-dependent skips); PHYSICAL_DEVICE remains NOT_RUN. M01-06 is still `PENDING_REQUIRES_DEVICE`; the original 97-task plan was not reconstructed or changed.
+
+**Latest-attempt audit:** `PENDING_INDEPENDENT_AUDIT`. Stop here; no further HOST attempt or UX-02f/UX-03 is included.
+
+---
+
+## Prior independent audit closure before the offline focused run
 
 Status remains **AUDITED_INCOMPLETE_TIMEOUT_NOT_ACCEPTED**; UX-02e is not accepted. The remote feature HEAD audited was `a3cfd6d6787fe7970d7ed818e4d371ccf46e49e8`, a direct child of `0368248d4ecc03e5dc119baa85ef14384f46f9ad`; `main` and peeled `v0.4.2` remain `de615b772cf37a99e7e08a647c59607b271de606`. The compared product change is limited to `MainActivity.kt`, `BasicMarkdown.kt`, `ChatContent.kt`, and their two UI tests; the target deduplication test and Gradle/Robolectric configuration are unchanged. The reproduction used a clean detached worktree at code SHA `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`.
 

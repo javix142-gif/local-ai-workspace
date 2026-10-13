@@ -1,0 +1,25 @@
+{
+  "startedAtUtc": "2026-10-13T16:37:19.330Z",
+  "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+  "worktree": "/workspace/ux02e-offline-a182",
+  "gradleWrapperPid": 138242,
+  "timeoutSeconds": 300,
+  "command": [
+    "/workspace/ux02e-offline-a182/gradlew",
+    "--offline",
+    "--no-daemon",
+    "--no-parallel",
+    "--max-workers=1",
+    "--console=plain",
+    "--info",
+    "--init-script",
+    "/workspace/local-ai-workspace/docs/validation/ux-02e-inline-links/offline-focused-20261013/test-events.init.gradle",
+    "-Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "com.localai.workspace.context.ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit"
+  ],
+  "gradleOffline": true,
+  "onlyRequestedTestTask": ":app:testDebugUnitTest",
+  "testFilter": "com.localai.workspace.context.ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit"
+}

@@ -1,6 +1,22 @@
-# Latest contract: UX-02e single isolated Robolectric reproduction (2026-10-13)
+# UX-02e latest result: offline focused Robolectric reproduction (2026-10-13)
 
-## UX-02e focused reproduction — independent audit closure (2026-10-13)
+## Result
+
+Code tested: `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`; feature branch HEAD at contract start: `f6e1b642da5f77010203157b52eadd9d5bad0bc1`. A clean detached checkout ran exactly one actual target invocation in Gradle offline mode: `ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit`. It passed **1/1**, with one `TEST_START`, one successful `TEST_END`, JUnit XML 1/1 and Gradle exit 0 (`BUILD SUCCESSFUL`). Duration was 74.968 s, `2026-10-13T16:37:19.330Z`–`16:38:34.298Z`; wrapper PID 138242. Gradle runtime was Temurin JDK 17.0.20.1; the `--info` log shows `Gradle Test Executor 1` launched with Temurin JDK 21.0.12.1.
+
+The existing Gradle and Maven-local artifacts were sufficient for this focused test in `--offline` mode. No installs, downloads, cleanup, or online fallback occurred. A prior CLI argument-order check printed usage and exited before any Gradle task or test; it is preserved separately and is not counted as a test. The corrected target test was executed once. Detailed command, preflight, raw log, events, XML, task outcomes and hashes: [`offline-focused-20261013/RESULTS.md`](../validation/ux-02e-inline-links/offline-focused-20261013/RESULTS.md).
+
+## Status and limits
+
+UX-02e remains **NOT ACCEPTED**. This single target PASS does not close the full HOST gate; that gate remains incomplete, and `:litert-compat:testDebugUnitTest`, lint and AndroidTest Kotlin compilation were not run in this contract. The earlier full-suite Robolectric stall did not reproduce in this isolated run; its cause remains **NOT_DETERMINED**, with no product failure established. The latest focused evidence awaits independent audit.
+
+EMULATOR was not run here; the separate historical global result remains FAIL due to the unavailable authentic Room v1 fixture and six model-dependent skips. PHYSICAL_DEVICE is NOT_RUN; no APK was generated. M01-06 remains `PENDING_REQUIRES_DEVICE`. The authentic 97-task catalog was not present, reconstructed, or changed. Do not begin another test, UX-02f, UX-03, or functional backlog work under this handoff.
+
+The branch was clean/tracked at `f6e1b642da5f77010203157b52eadd9d5bad0bc1` before this documentation/evidence update; `main` and peeled `v0.4.2` were `de615b772cf37a99e7e08a647c59607b271de606`. The 26-entry per-run manifest SHA-256 is `f26e0f76dd04fd7ad06156d722ca16cf25d82eb720ed362174aae5d9b028f7d1`; the current 142-entry parent manifest SHA-256 is `99f85f1610bf90bee2b8620c6ee8614c3746026f8826578f0eda287b3ba1c054` (all entries verify locally). The latest attempt awaits independent audit.
+
+---
+
+## Prior contract: independent audit closure before the offline focused run
 
 `AUDITED_INCOMPLETE_TIMEOUT_NOT_ACCEPTED`; UX-02e is not accepted. Audit checked remote feature HEAD `a3cfd6d6787fe7970d7ed818e4d371ccf46e49e8` (direct child of `0368248d4ecc03e5dc119baa85ef14384f46f9ad`) and confirmed `main`/peeled `v0.4.2` remain `de615b772cf37a99e7e08a647c59607b271de606`. Code SHA tested: `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`; the code/test diff since UX-02d is limited to `MainActivity.kt`, `BasicMarkdown.kt`, `ChatContent.kt`, and two UI tests. The target dedup test and Gradle/Robolectric configuration were unchanged.
 

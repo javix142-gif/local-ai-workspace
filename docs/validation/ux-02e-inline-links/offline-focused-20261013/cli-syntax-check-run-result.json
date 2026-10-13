@@ -1,0 +1,16 @@
+{
+  "startedAtUtc": "2026-10-13T16:35:51.169Z",
+  "finishedAtUtc": "2026-10-13T16:35:53.298Z",
+  "durationSeconds": 2.13,
+  "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+  "wrapperExitCode": 1,
+  "timedOutAt300Seconds": false,
+  "testWorkerObserved": false,
+  "testEventFile": "test-events.tsv",
+  "testEvents": 0,
+  "xml": [],
+  "diagnosticCaptures": [],
+  "target": "com.localai.workspace.context.ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit",
+  "classification": "CLI_SYNTAX_CHECK_ONLY_NO_GRADLE_TASKS",
+  "note": "--tests was positioned before the task. Wrapper printed CLI usage; no Gradle task, test worker, test event, XML, or dependency resolution occurred. Not counted as a test/build attempt."
+}

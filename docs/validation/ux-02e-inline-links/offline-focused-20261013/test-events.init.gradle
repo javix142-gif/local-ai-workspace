@@ -1,0 +1,16 @@
+import org.gradle.api.tasks.testing.Test
+
+allprojects {
+    tasks.withType(Test).configureEach {
+        beforeTest { descriptor ->
+            def target = new File(System.getenv('UX02E_TEST_EVENTS'))
+            target.parentFile.mkdirs()
+            target << "${System.currentTimeMillis()}\tTEST_START\t${descriptor.className}\t${descriptor.name}\n"
+        }
+        afterTest { descriptor, result ->
+            def target = new File(System.getenv('UX02E_TEST_EVENTS'))
+            target.parentFile.mkdirs()
+            target << "${System.currentTimeMillis()}\tTEST_END\t${descriptor.className}\t${descriptor.name}\t${result.resultType}\n"
+        }
+    }
+}

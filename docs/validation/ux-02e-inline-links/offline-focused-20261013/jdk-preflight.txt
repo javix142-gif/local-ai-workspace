@@ -1,0 +1,14 @@
+Read-only JDK preflight for the isolated offline reproduction.
+Gradle runtime: /workspace/.toolchain/jdk-17 (Temurin 17.0.20.1)
+Worker toolchain: /workspace/.toolchain/jdk-21-temurin (Temurin 21.0.12.1)
+Both java and javac are present and version-matched. Both JDKs contain jdk.compiler.
+
+[/workspace/.toolchain/jdk-17]
+javac 17.0.20.1
+jdk.compiler@17.0.20.1
+ToolProvider.getSystemJavaCompiler()=jshell> true
+
+[/workspace/.toolchain/jdk-21-temurin]
+javac 21.0.12.1
+jdk.compiler@21.0.12.1
+ToolProvider.getSystemJavaCompiler()=jshell> System.out.println(javax.tools.ToolProvider.getSystemJavaCompiler() != null); true

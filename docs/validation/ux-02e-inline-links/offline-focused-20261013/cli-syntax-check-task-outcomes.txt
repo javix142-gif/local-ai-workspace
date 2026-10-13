@@ -1,0 +1,6 @@
+wrapperExitCode=1
+runTimedOut=false
+testWorkerObserved=false
+testEventLines=0
+junitXmlFiles=0
+gradleTaskOutputLines=0

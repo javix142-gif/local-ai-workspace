@@ -1,0 +1,8 @@
+JAVA_HOME=/workspace/.toolchain/jdk-17
+PATH begins with /workspace/.toolchain/jdk-17/bin
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk
+GRADLE_USER_HOME=/home/agent/.gradle (existing, not cleaned)
+UX02E_TEST_EVENTS=/workspace/local-ai-workspace/docs/validation/ux-02e-inline-links/offline-focused-20261013/test-events.tsv (temporary init-script listener output)
+Gradle runtime JDK=17.0.20.1; app JVM worker toolchain exposed at JDK=21.0.12.1
+Gradle offline mode enabled; no downloads or installations requested.

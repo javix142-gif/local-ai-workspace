@@ -1,0 +1,52 @@
+{
+  "startedAtUtc": "2026-10-13T16:37:19.330Z",
+  "finishedAtUtc": "2026-10-13T16:38:34.298Z",
+  "durationSeconds": 74.968,
+  "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+  "wrapperExitCode": 0,
+  "timedOutAt300Seconds": false,
+  "testWorkerObserved": true,
+  "testEventFile": "test-events.tsv",
+  "testEvents": 2,
+  "xml": [
+    {
+      "file": "app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.context.ContextFoundationDeduplicationTest.xml",
+      "copiedTo": "xml/TEST-com.localai.workspace.context.ContextFoundationDeduplicationTest.xml",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "diagnosticCaptures": [],
+  "target": "com.localai.workspace.context.ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit",
+  "classification": "TARGET_TEST_PASS",
+  "testStartedAtUtc": "2026-10-13T16:38:22.149Z",
+  "testFinishedAtUtc": "2026-10-13T16:38:33.088Z",
+  "testWorkerJava": "/workspace/.toolchain/jdk-21-temurin/bin/java (Temurin 21.0.12.1; observed in Gradle --info log)",
+  "testWorkerStartedAndFinished": true,
+  "testWorkerPid": "NOT_CAPTURED; completed normally, no stall snapshot required",
+  "testCounts": {
+    "tests": 1,
+    "passed": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "gradleBuildConclusion": "BUILD SUCCESSFUL in 1m 14s",
+  "offlineDependencyResolution": "SUCCEEDED for the selected test with --offline. No missing artifact was reported. The project uses google() and mavenCentral(), not mavenLocal(); the API35 android-all artifact present in ~/.m2 was not asserted as the source Gradle consumed.",
+  "rawGradleLogBytes": 383464,
+  "rawGradleLogSha256": "a9906c4b5c00655cd40db25a87a5a8ec6859258e6005a0e7c42d8cdde6ca9362",
+  "testEventsSha256": "9531bd9f71247b9097adedc948b5801296aff9fa5b775551527397cfacc52e0e",
+  "xmlSha256": "89c65755735543de3c63e6e1ac37f43ebe4c4e33fa0ab4b962980cffd0777fdc",
+  "fullHostGate": "NOT_RUN by this focused contract; prior full gate remains incomplete",
+  "apk": "NOT_GENERATED",
+  "emulator": "NOT_RUN",
+  "physicalDevice": "NOT_RUN",
+  "rawGradleLogPath": "gradle-offline-focused.log.gz (lossless gzip; decompressed payload SHA-256 is rawGradleLogSha256)",
+  "compressedGradleLogBytes": 30043,
+  "compressedGradleLogSha256": "d199a195aa1356179f9b42d8936f624d8c5f306080283dee0708762d34d96b71",
+  "cliSyntaxCheckLog": "cli-syntax-check.log.gz (lossless gzip)",
+  "cliSyntaxCheckCompressedSha256": "177824c7f250a9475626aeea37c6068bc3ff1793ca2f9ed4385e30c383df29fa",
+  "configurationInspection": "source-and-dependency-inspection.txt; target test and listed test/Gradle configuration unchanged from code baseline f54c1430cab4ea59a302b58dd2aa27deea579c49."
+}

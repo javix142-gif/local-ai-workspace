@@ -1,0 +1,9 @@
+capturedAtUtc=2026-10-13T16:40:31Z
+worktree=/workspace/ux02e-offline-a182
+a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+git status --porcelain=v1 --ignored:
+!! .gradle/
+!! app/build/
+!! litert-compat/build/
+!! llama-runtime/build/
+relevant remaining processes:

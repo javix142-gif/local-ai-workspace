@@ -1,0 +1,4 @@
+worktree=/workspace/ux02e-offline-a182
+sourceCodeSha=a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+xmlFileCount=0
+No JUnit XML was emitted.

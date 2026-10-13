@@ -1,0 +1,19 @@
+Read-only source/configuration review for the focused offline reproduction.
+
+source_sha=a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+comparison_base=f54c1430cab4ea59a302b58dd2aa27deea579c49
+comparison_command=git diff --quiet f54c1430cab4ea59a302b58dd2aa27deea579c49 a1827fa204cda0cdf80a7e5a51670435e8c8d4b7 -- app/src/test/java/com/localai/workspace/context/ContextFoundationDeduplicationTest.kt app/build.gradle.kts settings.gradle.kts build.gradle.kts gradle/libs.versions.toml gradle/wrapper/gradle-wrapper.properties
+comparison_exit=0 (the target test and listed Gradle/Robolectric configuration files are unchanged between these SHAs)
+target_test=ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit
+robolectric_test_runner=RobolectricTestRunner
+robolectric_sdk=35
+README_build_requirements=JDK 17 for Gradle; JDK 21 for app JVM test worker; Gradle 8.10.2; Android Gradle Plugin 8.7.3; Kotlin 2.0.21; SDK API 35
+app_build_test_options=unitTests.isIncludeAndroidResources=true
+app_build_test_worker=javaLauncher toolchain languageVersion 21
+robolectric_dependency=org.robolectric:robolectric 4.14.1
+wrapper_distribution=Gradle 8.10.2
+settings_dependency_repositories=google(), mavenCentral(); mavenLocal() is not declared in the tracked Gradle repository configuration
+preflight_cache=/home/agent/.gradle/caches/modules-2/files-2.1; 753 MiB; no cleanup
+preflight_local_android_artifact=android-all-instrumented-15-robolectric-12650502-i7.jar exists in /home/agent/.m2/repository, 199527464 bytes, sha256 33c2d7cc4186d4605269d5d411fa1818972c5b30a9f70bfbbd3d430b076af52f
+artifact_origin_note=The presence of the Maven-local artifact was observed, but the project does not declare mavenLocal(); its use by Gradle is not asserted. The successful --offline target run proves the required dependency graph for this execution resolved from Gradle's available local state.
+prior_network_log=The preceding online attempt had 18 dl.google.com and 36 repo.maven.apache.org network errors, zero test events and zero XML; that attempt is documented separately and was not repeated online.
