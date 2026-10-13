@@ -5405,7 +5405,7 @@
       "latestAttemptCompressedLogSha256": "aaf91f91b166eef790bdf88d22ec7daa785ca421be35a5d395668b4d040d6efc",
       "latestAttemptXmlFiles": 0,
       "previousManifestSha256BeforeLatestAttempt": "9c80a6f7712085ed723f74d4cd149d0c2e7412e8686b591d42ad45cb1ec0158d",
-      "currentManifestSha256": "1e9ca3010aab464844158d5485bd11125d78b923e6b0533d46b030a3facf420c",
+      "currentManifestSha256": "8f6c0b4c282d4131ef937116e4d30077093d3d6ba1294aea872819eb69f89fb8",
       "latestAttemptCommand": "host/jdk17-runtime-20261013/command.txt",
       "latestAttemptTaskOutcomes": "host/jdk17-runtime-20261013/task-outcomes.txt",
       "latestAttemptExitCode": 130,
@@ -5415,7 +5415,7 @@
       "latestAttemptPostRunTreeCheck": "host/jdk17-runtime-20261013/post-run-working-tree.txt",
       "latestAttemptTests": "NOT_AVAILABLE; :app:testDebugUnitTest did not complete",
       "manifestEntryCount": 93,
-      "manifestVerification": "PASS: sha256sum -c verified all 93 parent-manifest entries, including the 40-entry full-host-gate-20261013 submanifest. Parent SHA256SUMS excludes itself.",
+      "manifestVerification": "PASS: 93/93 parent-manifest entries verified from the published tree; the manifest excludes itself and includes the 40-entry full-host-gate submanifest.",
       "diagnosticRuns": "docs/validation/ux-02e-inline-links/diagnostic-20261013/RUNS.md",
       "diagnosticManifest": "docs/validation/ux-02e-inline-links/diagnostic-20261013/SHA256SUMS",
       "diagnosticManifestSha256": "32237f5a599673465744dd0301ab7b71d13ffded1d617750fd83abd70cca5aff",
@@ -5513,7 +5513,7 @@
       "evidenceCommit": "dacb9cc415f9442413f56695024b8607380f3615",
       "evidenceCommitScope": "Corrected JDK17-runtime attempt evidence, RESULTS, manifest and status updates; docs/evidence only.",
       "evidenceCommitPublishedHead": "dacb9cc415f9442413f56695024b8607380f3615",
-      "remoteHeadAfterReadback": "PENDING",
+      "remoteHeadAfterReadback": "6fe1389b36bdece375f888adb42a7f4023155756",
       "main": "de615b772cf37a99e7e08a647c59607b271de606",
       "peeledV042": "de615b772cf37a99e7e08a647c59607b271de606",
       "forcePush": false,
@@ -5521,11 +5521,11 @@
       "tagOrRelease": false,
       "remoteHeadObservedAfterEvidenceBundlePush": "dacb9cc415f9442413f56695024b8607380f3615",
       "remoteReadbackVerified": true,
-      "latestEvidenceBaseHead": "51434af64d64c40157ddf61548e9ebaae3ec8217",
+      "latestEvidenceBaseHead": "9e21a355b56d4eb24880c174b399c276078ce043",
       "latestEvidenceUpdateScope": "Documentation and host evidence only; no app/build/workflow/dependency/data/APK/emulator/device changes.",
-      "latestEvidenceCommit": "dacb9cc415f9442413f56695024b8607380f3615",
-      "latestEvidenceCommitScope": "Corrected JDK17 runtime host attempt, complete compressed Gradle log, preflight, run metadata, task progress, zero-XML inventory, report, checksums and state update; documentation/evidence only.",
-      "latestEvidenceCommitPublishedHead": "dacb9cc415f9442413f56695024b8607380f3615",
+      "latestEvidenceCommit": "6fe1389b36bdece375f888adb42a7f4023155756",
+      "latestEvidenceCommitScope": "Single instrumented full HOST gate evidence and independent publication readback; docs/evidence only.",
+      "latestEvidenceCommitPublishedHead": "6fe1389b36bdece375f888adb42a7f4023155756",
       "closureUpdateBaseHead": "dacb9cc415f9442413f56695024b8607380f3615",
       "latestDiagnosticBaseHead": "4946d603af26c6f6b913d1bbafc957613dc620ee",
       "latestDiagnosticCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
@@ -5535,11 +5535,16 @@
       "latestDiagnosticRemoteHeadObservedAfterTests": "4946d603af26c6f6b913d1bbafc957613dc620ee",
       "latestFullHostGateEvidenceUpdate": {
         "baseRemoteHead": "9e21a355b56d4eb24880c174b399c276078ce043",
-        "status": "PREPARED_DOCUMENTATION_EVIDENCE_FOR_FAST_FORWARD_PUSH",
+        "status": "FAST_FORWARD_PUBLISHED_READBACK_VERIFIED",
         "scope": "Documentation/state/evidence only; product source, build files, workflows, tests and dependencies untouched.",
-        "manifestSha256": "1e9ca3010aab464844158d5485bd11125d78b923e6b0533d46b030a3facf420c",
+        "manifestSha256": "8f6c0b4c282d4131ef937116e4d30077093d3d6ba1294aea872819eb69f89fb8",
         "manifestEntries": 93,
-        "innerManifestSha256": "24c9cb37ec48bc953aaffde36c3cd7625a472cc55497670190b49d56cf708490"
+        "innerManifestSha256": "24c9cb37ec48bc953aaffde36c3cd7625a472cc55497670190b49d56cf708490",
+        "evidenceCommit": "6fe1389b36bdece375f888adb42a7f4023155756",
+        "remoteHeadAfterEvidencePush": "6fe1389b36bdece375f888adb42a7f4023155756",
+        "fastForwardFrom": "9e21a355b56d4eb24880c174b399c276078ce043",
+        "readbackVerified": true,
+        "readbackCheckedAtUtc": "2026-10-13T13:06:09Z"
       }
     },
     "independentAudit": {
@@ -5735,7 +5740,7 @@
       "evidenceManifest": {
         "path": "docs/validation/ux-02e-inline-links/SHA256SUMS",
         "entries": 93,
-        "sha256": "1e9ca3010aab464844158d5485bd11125d78b923e6b0533d46b030a3facf420c",
+        "sha256": "8f6c0b4c282d4131ef937116e4d30077093d3d6ba1294aea872819eb69f89fb8",
         "verification": "PASS 93/93",
         "fullGateSubmanifest": {
           "path": "docs/validation/ux-02e-inline-links/full-host-gate-20261013/SHA256SUMS",
@@ -5743,6 +5748,15 @@
           "sha256": "24c9cb37ec48bc953aaffde36c3cd7625a472cc55497670190b49d56cf708490",
           "verification": "PASS 40/40"
         }
+      },
+      "publicationReadback": {
+        "branch": "feat/0.5.0-skills-agents",
+        "firstEvidenceCommit": "6fe1389b36bdece375f888adb42a7f4023155756",
+        "fastForwardFrom": "9e21a355b56d4eb24880c174b399c276078ce043",
+        "remoteHeadAfterPush": "6fe1389b36bdece375f888adb42a7f4023155756",
+        "readbackVerified": true,
+        "checkedAtUtc": "2026-10-13T13:06:09Z",
+        "forcePush": false
       }
     }
   }

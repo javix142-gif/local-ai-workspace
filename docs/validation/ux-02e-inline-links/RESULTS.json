@@ -380,7 +380,7 @@
     "latestAttemptPostRunTreeCheck": "host/jdk17-runtime-20261013/post-run-working-tree.txt",
     "latestAttemptFileHashes": "host/jdk17-runtime-20261013/file-hashes.txt",
     "manifestEntryCount": 93,
-    "manifestVerification": "The 93-entry parent manifest is verified with sha256sum -c; it includes the 40-entry full-gate submanifest. Parent digest is stored in EXECUTION_STATE.json and the handoff.",
+    "manifestVerification": "93/93 parent-manifest entries verified; the parent manifest excludes itself and its digest is recorded in EXECUTION_STATE.json and the handoff.",
     "diagnosticRuns": "diagnostic-20261013/RUNS.md",
     "diagnosticManifest": "diagnostic-20261013/SHA256SUMS",
     "latestFullHostGateDirectory": "full-host-gate-20261013/",
@@ -390,7 +390,8 @@
     "latestFullHostGateNewXmlFiles": 0,
     "latestFullHostGateManifest": "full-host-gate-20261013/SHA256SUMS",
     "latestFullHostGateManifestEntries": 40,
-    "latestFullHostGateManifestSha256": "24c9cb37ec48bc953aaffde36c3cd7625a472cc55497670190b49d56cf708490"
+    "latestFullHostGateManifestSha256": "24c9cb37ec48bc953aaffde36c3cd7625a472cc55497670190b49d56cf708490",
+    "manifestEntries": 93
   },
   "publication": {
     "codeCommit": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
@@ -398,8 +399,8 @@
     "branchHeadAtAttemptStart": "51434af64d64c40157ddf61548e9ebaae3ec8217",
     "remoteHeadAtAttemptStart": "51434af64d64c40157ddf61548e9ebaae3ec8217",
     "remoteHeadObservedAfterAttemptBeforeEvidenceCommit": "51434af64d64c40157ddf61548e9ebaae3ec8217",
-    "evidenceCommit": "Recorded in docs/development/EXECUTION_STATE.json after the evidence bundle commit; kept out of this self-hashed report to avoid a self-referential commit identifier.",
-    "evidenceCommitPublishedHead": "The evidence bundle commit is verified by post-push readback and recorded in EXECUTION_STATE.json.",
+    "evidenceCommit": "6fe1389b36bdece375f888adb42a7f4023155756",
+    "evidenceCommitPublishedHead": "6fe1389b36bdece375f888adb42a7f4023155756",
     "main": "de615b772cf37a99e7e08a647c59607b271de606",
     "peeledV042": "de615b772cf37a99e7e08a647c59607b271de606",
     "forcePush": false,
@@ -412,8 +413,20 @@
       "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
       "scope": "Documentation/evidence/state only; no product/build/test/workflow/dependency changes.",
       "mode": "fast-forward only",
-      "status": "PREPARED_FOR_PUSH_READBACK"
-    }
+      "status": "FAST_FORWARD_PUBLISHED_READBACK_VERIFIED",
+      "evidenceCommit": "6fe1389b36bdece375f888adb42a7f4023155756",
+      "remoteHeadAfterEvidencePush": "6fe1389b36bdece375f888adb42a7f4023155756",
+      "fastForwardFrom": "9e21a355b56d4eb24880c174b399c276078ce043",
+      "readbackVerified": true,
+      "readbackCheckedAtUtc": "2026-10-13T13:06:09Z",
+      "manifestEntries": 93,
+      "innerManifestSha256": "24c9cb37ec48bc953aaffde36c3cd7625a472cc55497670190b49d56cf708490"
+    },
+    "latestEvidenceCommit": "6fe1389b36bdece375f888adb42a7f4023155756",
+    "latestEvidenceCommitScope": "Single instrumented full HOST gate evidence; docs/evidence only.",
+    "latestEvidenceCommitPublishedHead": "6fe1389b36bdece375f888adb42a7f4023155756",
+    "remoteHeadAfterReadback": "6fe1389b36bdece375f888adb42a7f4023155756",
+    "remoteReadbackVerified": true
   },
   "status": "FULL_HOST_GATE_INCOMPLETE_STALLED_TEST_ACTIVE_METHOD_IDENTIFIED_CAUSE_NOT_DETERMINED",
   "next": "Stop for independent audit of this single full HOST gate; no retry, product change, emulator/device, APK or next UX phase.",
