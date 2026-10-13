@@ -1,6 +1,22 @@
 # UX-02e — validation record
 
-## Latest result: independently audited offline focused test (2026-10-13)
+## Latest result: one offline prefix replay (2026-10-13)
+
+Source code SHA `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`; branch HEAD at start `db5dd75f7fecc5055b176fa9259c55be1ca1b93e`. One bounded offline invocation replayed the 35 successful tests immediately preceding the previously unclosed target, then the target itself. The sequence matched the earlier event-log prefix exactly. The invocation completed in **45.049 s**, exit **0**, `BUILD SUCCESSFUL`; **36 TEST_START / 36 TEST_END**, all successful; four changed JUnit XML files total **36/36 PASS**, no failures/errors/skips. The target completed in **0.850 s**.
+
+This prefix run **did not reproduce** the stall. It does not establish why the prior full gate stalled; cause remains **NOT_DETERMINED**, and **PRODUCT_FAILURE_NOT_ESTABLISHED**. The overall audit classification remains `AUDITED_INCOMPLETE_TIMEOUT_NOT_ACCEPTED`; UX-02e is not accepted because the full HOST gate remains incomplete.
+
+An older preserved thread dump identifies a different test, `ApplicationModelPreparationTest.close`, with a Robolectric worker waiting at `Sandbox.runOnMainThread` while the SDK 29 main thread was in JDK 21 image/classloader work. That dump is not attributable to the later target stall. The current run completed naturally, so no new thread dump was required; its worker PID was not captured, though the log shows the JDK 21 worker executable.
+
+Exact command, preflight, full log, events, XML and source/config comparison are in [`prefix-diagnostic-20261013/RESULTS.md`](prefix-diagnostic-20261013/RESULTS.md). The new bundle manifest has 24 entries, SHA-256 `82b626b27e08c4fd7ed9a1030d2e014ab728be8efae33974cbd1441090d9961e`; the parent manifest digest is recorded outside the validation tree in persistent state/handoff. HOST result is limited to the filtered prefix. EMULATOR, PHYSICAL_DEVICE and APK are **NOT_RUN / NOT_RUN / NOT_GENERATED**. Original 97-task plan unavailable; no task ID/dependency selected; M01-06 remains `PENDING_REQUIRES_DEVICE`.
+
+### Diagnostic interpretation
+
+The immediate 35-test prefix did not reproduce an ordering-induced failure once, and the target passed both alone earlier and after that prefix. This reduces evidence for a deterministic interaction within that immediate block but cannot rule out earlier full-suite tests, external state, timing, resource pressure or nondeterminism. The target test and selected Gradle/Robolectric configuration files are unchanged between `f54c1430cab4ea59a302b58dd2aa27deea579c49` and `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`. The previous full-gate outcome remains 36 starts/35 successful ends, target start with no end, zero XML, and later tasks not reached.
+
+---
+
+## Previous result: independently audited offline focused test (2026-10-13)
 
 **Audit status: `INDEPENDENTLY_AUDITED_ACCEPTED_FOCUSED_RESULT_ONLY`.** This accepts only the focused target result. UX-02e remains **NOT ACCEPTED overall** because the full HOST gate is incomplete. The tested source is `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`. The audited remote feature HEAD was `d160d26372c6576d75fe39a6e8ae2b65ff1d51bf`, a direct child of `f6e1b642da5f77010203157b52eadd9d5bad0bc1`; the 32-path comparison contained documentation paths only. `main` and peeled `v0.4.2` remain `de615b772cf37a99e7e08a647c59607b271de606`.
 

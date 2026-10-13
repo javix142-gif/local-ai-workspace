@@ -1,0 +1,44 @@
+{
+  "name": "UX-02e focused Robolectric prefix reproduction",
+  "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+  "classification": "PREFIX_RUN_PASS_TARGET_STALL_NOT_REPRODUCED",
+  "run": {
+    "startedAtUtc": "2026-10-13T20:10:10.967Z",
+    "finishedAtUtc": "2026-10-13T20:10:56.016Z",
+    "durationSeconds": 45.049,
+    "exitCode": 0,
+    "gradleConclusion": "BUILD SUCCESSFUL",
+    "testStarts": 36,
+    "testEnds": 36,
+    "testEndSuccess": 36,
+    "unclosedTestStarts": []
+  },
+  "target": {
+    "method": "com.localai.workspace.context.ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit",
+    "startEvent": "2026-10-13T20:10:53.465729440Z\tTEST_START\tcom.localai.workspace.context.ContextFoundationDeduplicationTest\tproductionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit",
+    "endEvent": "2026-10-13T20:10:54.315304692Z\tTEST_END\tcom.localai.workspace.context.ContextFoundationDeduplicationTest\tproductionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit\tSUCCESS",
+    "durationSeconds": 0.85,
+    "result": "SUCCESS"
+  },
+  "junit": {
+    "files": 4,
+    "tests": 36,
+    "passed": 36,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "prefixOrderMatchedPriorFullGate": true,
+  "fullHostGate": "INCOMPLETE / NOT_ACCEPTED",
+  "stallCause": "NOT_DETERMINED",
+  "productFailure": "NOT_ESTABLISHED",
+  "workerPid": "NOT_CAPTURED; run completed naturally",
+  "threadDump": "NOT_REQUIRED; no stall occurred in this reproduction",
+  "emulator": "NOT_RUN",
+  "physicalDevice": "NOT_RUN",
+  "apk": "NOT_GENERATED",
+  "plan": "Original 97-task catalog unavailable; no task selected or inferred; M01-06=PENDING_REQUIRES_DEVICE.",
+  "manifestPolicy": "SHA256SUMS excludes itself; manifest digest is stored outside this directory to avoid self-reference.",
+  "manifestEntryCount": 24,
+  "manifest": "SHA256SUMS"
+}

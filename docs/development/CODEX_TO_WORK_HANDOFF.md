@@ -1,4 +1,35 @@
-# UX-02e latest result: independent audit of offline focused test (2026-10-13)
+# UX-02e — current state after focused prefix diagnostic (2026-10-13)
+
+## Result and classification
+
+Overall UX-02e status remains **AUDITED_INCOMPLETE_TIMEOUT_NOT_ACCEPTED**. The independent acceptance recorded below applies only to the isolated target result; the full HOST gate remains incomplete and the cause of its earlier stall remains **NOT_DETERMINED**. **PRODUCT_FAILURE is NOT_ESTABLISHED**.
+
+One additional, bounded offline diagnostic was run against code SHA `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7` on the existing detached worktree `/workspace/ux02e-offline-a182`. It replayed the exact 35 successful test events immediately preceding the target in the stalled full-gate event log, followed by the target. It finished naturally: Gradle 8.10.2 `BUILD SUCCESSFUL`, 45.049 seconds, wrapper exit 0, **36 TEST_START / 36 TEST_END**, all successful; four new JUnit XML files total **36/36 PASS, 0 failures, 0 errors, 0 skipped**. Event order exactly matched that prior prefix. The target itself passed in **0.850 s**.
+
+This run did not reproduce the stall in the immediate prefix. The target had also passed alone in the previously audited offline focal run. This reduces evidence for a deterministic interaction among those immediate preceding tests, but does not rule out interference from earlier classes in the complete suite, external state, resource/timing conditions, or nondeterminism. No causal fix is justified. The last complete approved HOST JVM suite remains historical UX-02d code `f54c1430cab4ea59a302b58dd2aa27deea579c49`, 756/756; it was not rerun here. Measured timing varied substantially: the old `ContextEvidenceExcerptTest` suite interval was 106.922 s versus 1.783 s in this run (about 60×). Variable host/resource conditions are plausible but unproven because no load telemetry or causal trace was captured.
+
+The last `TEST_END SUCCESS` before the target in the stalled full-gate run was `ContextEvidenceExcerptTest.log10FunctionCallKeepsArgumentWithoutSelectingSameNamedCell` at `2026-10-13T12:30:26.210366900Z`; the target started at `12:30:28.579499978Z` and had no end event. The target test and selected Gradle/Robolectric config files are unchanged between code `f54c1430cab4ea59a302b58dd2aa27deea579c49` and UX-02e code `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`. The test uses Robolectric SDK 35, `runBlocking`, in-memory Workspace/Semantic Room databases, an `AppGraph` with `Dispatchers.Unconfined`, and cleanup in `finally`.
+
+An older archived dump from a different attempt names `ApplicationModelPreparationTest.close`, not the target. It shows the Robolectric worker waiting in `Sandbox.runOnMainThread`, with the SDK 29 main thread in JDK 21 image/module/classloader work before `ApplicationModelPreparationTest.kt:54`. This is not causal evidence for the later target stall. No new thread dump was required for the current run because it completed naturally. Its test worker PID was not captured; the Gradle `--info` log identifies `/workspace/.toolchain/jdk-21-temurin/bin/java`.
+
+The prior online attempt that logged 18 retries to `dl.google.com` and 36 to Maven Central did not start tasks/tests; it remains a separate infrastructure interruption and does not explain the in-test stall. The current diagnostic used `--offline`, made no downloads/installations, and did not clean or copy caches/outputs. The test task alone was forced out of date by a temporary init script; compile tasks retained normal up-to-date behavior.
+
+## Evidence and boundaries
+
+- Command, environment, raw log, event stream, XML, source comparison and checksums: [prefix diagnostic evidence](../validation/ux-02e-inline-links/prefix-diagnostic-20261013/RESULTS.md).
+- Prefix bundle manifest: 24 entries, SHA-256 `82b626b27e08c4fd7ed9a1030d2e014ab728be8efae33974cbd1441090d9961e`; outer UX-02e evidence manifest: 162 entries, SHA-256 `7fe6a8b6d571ef5701ac96f48509b58d3e73e033390835ca5e40bafcf4c8a2c4`. Both manifests were verified locally after generation.
+- Prior full gate: 36 test starts / 35 successful ends, target active without end, zero XML; LiteRT compatibility, lint and AndroidTest Kotlin compilation were not reached. Its result remains **INCOMPLETE / NOT ACCEPTED**.
+- Current filtered task: **PASS for this 36-test prefix only**; it does not complete the overall HOST gate.
+- **EMULATOR:** NOT_RUN. The separate historical global run remains FAIL for the authentic Room v1 fixture, with six model-dependent cases SKIPPED.
+- **PHYSICAL_DEVICE:** NOT_RUN. **APK:** NOT_GENERATED.
+- Original 97-task catalog is unavailable in this context; no task ID/dependency was selected or inferred. M01-06 remains `PENDING_REQUIRES_DEVICE`; task order, dependencies and progress remain unchanged.
+- Root `nextRecommendedTask` now waits for independent audit of this prefix diagnostic; no other task is selected.
+
+Stop for independent audit. Do not run another gate or start UX-02f, UX-03 or functional backlog work under this contract.
+
+---
+
+## Previous audit closure: independently accepted offline focused target only (2026-10-13)
 
 ## Audit outcome
 

@@ -1,0 +1,9 @@
+{
+  "eventStarts": 36,
+  "eventEnds": 36,
+  "eventAllEndsSuccess": true,
+  "uniqueEventNames": 36,
+  "junitCases": 36,
+  "eventJunitNameSetsEqual": true,
+  "eventStartOrderMatchesHistoricalPrefix": true
+}

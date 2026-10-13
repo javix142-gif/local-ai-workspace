@@ -1,0 +1,35 @@
+{
+  "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+  "startedAtUtc": "2026-10-13T20:10:10.967Z",
+  "workingDirectory": "/workspace/ux02e-offline-a182",
+  "argv": [
+    "./gradlew",
+    "--offline",
+    "--no-daemon",
+    "--no-parallel",
+    "--max-workers=1",
+    "--console=plain",
+    "--info",
+    "--init-script",
+    "/workspace/local-ai-workspace/docs/validation/ux-02e-inline-links/prefix-diagnostic-20261013/test-events.init.gradle",
+    "-Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "com.localai.workspace.context.AuditHarness",
+    "--tests",
+    "com.localai.workspace.context.ContextDeduplicationAblationTest",
+    "--tests",
+    "com.localai.workspace.context.ContextEvidenceExcerptTest",
+    "--tests",
+    "com.localai.workspace.context.ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit"
+  ],
+  "filters": [
+    "com.localai.workspace.context.AuditHarness",
+    "com.localai.workspace.context.ContextDeduplicationAblationTest",
+    "com.localai.workspace.context.ContextEvidenceExcerptTest",
+    "com.localai.workspace.context.ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit"
+  ],
+  "maxWallSeconds": 300.0,
+  "stallQuietSeconds": 120.0,
+  "confirmationSeconds": 60.0
+}

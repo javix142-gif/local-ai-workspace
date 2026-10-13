@@ -1,0 +1,6 @@
+sourceCodeSha=a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+:app:testDebugUnitTest[filtered prefix: AuditHarness, ContextDeduplicationAblationTest, ContextEvidenceExcerptTest, exact ContextFoundationDeduplicationTest method]=PASS; 36 tests, 36 passed, 0 failures, 0 errors, 0 skipped
+full HOST gate=NOT_RUN in this contract; prior full HOST gate remains INCOMPLETE / NOT_ACCEPTED
+EMULATOR=NOT_RUN
+PHYSICAL_DEVICE=NOT_RUN
+APK=NOT_GENERATED

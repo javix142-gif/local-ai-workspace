@@ -1,0 +1,24 @@
+import org.gradle.api.tasks.testing.Test
+import java.time.Instant
+
+allprojects {
+    tasks.withType(Test).configureEach {
+        if (path == ':app:testDebugUnitTest') {
+            outputs.upToDateWhen { false }
+        }
+        beforeTest { descriptor ->
+            def target = new File(System.getenv('UX02E_TEST_EVENTS'))
+            target.parentFile.mkdirs()
+            target.withWriterAppend('UTF-8') { writer ->
+                writer.write("${Instant.now()}\tTEST_START\t${descriptor.className}\t${descriptor.name}\n")
+            }
+        }
+        afterTest { descriptor, result ->
+            def target = new File(System.getenv('UX02E_TEST_EVENTS'))
+            target.parentFile.mkdirs()
+            target.withWriterAppend('UTF-8') { writer ->
+                writer.write("${Instant.now()}\tTEST_END\t${descriptor.className}\t${descriptor.name}\t${result.resultType}\n")
+            }
+        }
+    }
+}

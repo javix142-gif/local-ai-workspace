@@ -1,0 +1,12 @@
+JAVA_HOME=/workspace/.toolchain/jdk-17
+PATH_prefix=/workspace/.toolchain/jdk-17/bin
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk
+GRADLE_USER_HOME=<default /home/agent/.gradle>
+UX02E_TEST_EVENTS=/workspace/local-ai-workspace/docs/validation/ux-02e-inline-links/prefix-diagnostic-20261013/test-events.tsv
+Gradle runtime JDK=Temurin 17.0.20.1
+App test-worker JDK=Temurin 21.0.12.1 (configured by app/build.gradle.kts)
+Android emulator/device=NOT_USED
+APK=NOT_GENERATED
+network=disabled at Gradle dependency resolution via --offline
+No install/download/cache cleanup/source copy requested.

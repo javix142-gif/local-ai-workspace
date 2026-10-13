@@ -396,8 +396,8 @@
     "latestAttemptTests": "NOT_AVAILABLE; app unit test task did not complete",
     "latestAttemptPostRunTreeCheck": "host/jdk17-runtime-20261013/post-run-working-tree.txt",
     "latestAttemptFileHashes": "host/jdk17-runtime-20261013/file-hashes.txt",
-    "manifestEntryCount": 142,
-    "manifestVerification": "The outer manifest excludes itself. After this documentation update, local verification is recorded for all listed entries; its digest is stored in EXECUTION_STATE.json and CODEX_TO_WORK_HANDOFF.md to avoid recursive inclusion.",
+    "manifestEntryCount": 162,
+    "manifestVerification": "The outer manifest excludes itself; local sha256sum -c verified all 162 entries for this publication. Digest is recorded outside the validation tree in EXECUTION_STATE.json and CODEX_TO_WORK_HANDOFF.md.",
     "diagnosticRuns": "diagnostic-20261013/RUNS.md",
     "diagnosticManifest": "diagnostic-20261013/SHA256SUMS",
     "latestFullHostGateDirectory": "full-host-gate-20261013/",
@@ -413,7 +413,14 @@
     "latestOfflineFocusedTestManifest": "offline-focused-20261013/SHA256SUMS",
     "latestOfflineFocusedTestRawLogSha256": "a9906c4b5c00655cd40db25a87a5a8ec6859258e6005a0e7c42d8cdde6ca9362",
     "latestOfflineFocusedTestJunitXml": "offline-focused-20261013/xml/TEST-com.localai.workspace.context.ContextFoundationDeduplicationTest.xml",
-    "latestOfflineFocusedSourceDependencyInspection": "offline-focused-20261013/source-and-dependency-inspection.txt"
+    "latestOfflineFocusedSourceDependencyInspection": "offline-focused-20261013/source-and-dependency-inspection.txt",
+    "latestPrefixDiagnostic": "prefix-diagnostic-20261013/RESULTS.md",
+    "latestPrefixDiagnosticManifest": "prefix-diagnostic-20261013/SHA256SUMS",
+    "latestPrefixDiagnosticLog": "prefix-diagnostic-20261013/gradle.log",
+    "latestPrefixDiagnosticXmlInventory": "prefix-diagnostic-20261013/junit-xml-inventory.txt",
+    "latestPrefixDiagnosticManifestPolicy": "Diagnostic SHA256SUMS excludes itself; its digest is recorded in EXECUTION_STATE and handoff. Outer SHA256SUMS is regenerated from repository evidence files and its digest is recorded outside the validation subtree.",
+    "latestPrefixDiagnosticManifestEntries": 24,
+    "latestPrefixDiagnosticManifestSha256": "82b626b27e08c4fd7ed9a1030d2e014ab728be8efae33974cbd1441090d9961e"
   },
   "publication": {
     "codeCommit": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
@@ -450,8 +457,8 @@
     "remoteHeadAfterReadback": "6fe1389b36bdece375f888adb42a7f4023155756",
     "remoteReadbackVerified": true
   },
-  "status": "FOCUSED_TARGET_PASS_FULL_HOST_GATE_INCOMPLETE_NOT_ACCEPTED",
-  "next": "Stop after recording the independent audit. Only the focused target result is accepted; UX-02e remains NOT ACCEPTED because the full HOST gate is incomplete. No additional test/build, UX-02f, UX-03, or other task is started under this contract.",
+  "status": "AUDITED_INCOMPLETE_TIMEOUT_NOT_ACCEPTED",
+  "next": "Stop after publishing this single prefix diagnostic for independent audit. Do not start another full gate or select a functional task.",
   "recoveryWorkflowCheck": {
     "androidEmulatorWorkflow": ".github/workflows/android-emulator-instrumented.yml reviewed; not dispatched or triggered",
     "qaArm64Workflow": ".github/workflows/qa-debug-arm64-apk.yml reviewed; not dispatched or triggered",
@@ -483,7 +490,7 @@
     "next": "Stop for independent audit of the bounded focused diagnostics. Full host gate remains incomplete; no additional test or product work under this contract.",
     "followUpDiagnosticResults": "diagnostic-20261013/RUNS.md; ChatContentUiTest 15/15 PASS and AuditHarness.writeSelectorReproductions 1/1 PASS; prior stall not reproduced, root cause remains undetermined."
   },
-  "nextRecommendedTask": "No task selected. The authentic 97-task catalog is unavailable, so no other task/dependency is inferred. UX-02e remains NOT ACCEPTED overall; the earlier full-suite stall cause is NOT_DETERMINED and PRODUCT_FAILURE is NOT_ESTABLISHED. M01-06 remains PENDING_REQUIRES_DEVICE.",
+  "nextRecommendedTask": "No functional task selected. Await independent audit of the prefix diagnostic. The 36-test prefix passed but does not explain the previous full-gate stall; cause remains NOT_DETERMINED and PRODUCT_FAILURE_NOT_ESTABLISHED. UX-02e remains AUDITED_INCOMPLETE_TIMEOUT_NOT_ACCEPTED overall. The authentic 97-task catalog is unavailable; no ID/dependency is inferred; M01-06 remains PENDING_REQUIRES_DEVICE.",
   "latestAttemptAuditStatus": "INDEPENDENTLY_AUDITED_ACCEPTED_FOCUSED_RESULT_ONLY",
   "previousGateAttemptAuditNote": "Historical: the earlier JDK21 Gradle-runtime attempt contradicted README and failed at KSP JVM-target compatibility. The later JDK17-runtime full gate is the latest attempt and is recorded separately as incomplete; see latestFullHostGate.",
   "previousBaseRemoteHead": "83796439caa5eba5543062ed2d82c8f021ed2e2c",
@@ -1194,5 +1201,68 @@
     "main": "de615b772cf37a99e7e08a647c59607b271de606",
     "peeledV042": "de615b772cf37a99e7e08a647c59607b271de606",
     "backlog": "Original 97-task catalog unavailable in this context; no task was selected or inferred. M01-06 remains PENDING_REQUIRES_DEVICE; plan/progress unchanged."
+  },
+  "latestPrefixDiagnosticAuditStatus": "PENDING_INDEPENDENT_AUDIT",
+  "latestPrefixDiagnostic": {
+    "status": "PREFIX_RUN_PASS_TARGET_STALL_NOT_REPRODUCED",
+    "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+    "branchHeadAtStart": "db5dd75f7fecc5055b176fa9259c55be1ca1b93e",
+    "worktree": "/workspace/ux02e-offline-a182; detached exact SHA; tracked clean; pre-existing ignored build outputs retained",
+    "command": "prefix-diagnostic-20261013/command.txt",
+    "startedAtUtc": "2026-10-13T20:10:10.967Z",
+    "finishedAtUtc": "2026-10-13T20:10:56.016Z",
+    "durationSeconds": 45.049,
+    "wrapperPid": 140408,
+    "exitCode": 0,
+    "gradleConclusion": "BUILD SUCCESSFUL",
+    "gradleRuntime": "Temurin JDK 17.0.20.1; worker JDK 21.0.12.1 observed in Gradle log",
+    "offline": true,
+    "testPrefix": {
+      "classes": [
+        "AuditHarness",
+        "ContextDeduplicationAblationTest",
+        "ContextEvidenceExcerptTest"
+      ],
+      "target": "com.localai.workspace.context.ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit",
+      "matchesPriorEventOrder": true
+    },
+    "events": {
+      "TEST_START": 36,
+      "TEST_END": 36,
+      "allEndSuccess": true
+    },
+    "junit": {
+      "files": 4,
+      "tests": 36,
+      "passed": 36,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "inventory": "prefix-diagnostic-20261013/junit-xml-inventory.txt"
+    },
+    "targetDurationSeconds": 0.85,
+    "log": "prefix-diagnostic-20261013/gradle.log",
+    "cause": "NOT_DETERMINED; immediate preceding 35-test context prefix did not reproduce the stall; broader suite interaction/nondeterministic state remains untested.",
+    "productFailure": "NOT_ESTABLISHED",
+    "workerPid": "NOT_CAPTURED; completed naturally; thread dump not required",
+    "fullHostGate": "Still INCOMPLETE / NOT_ACCEPTED",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED",
+    "observedTimingVariance": {
+      "priorContextEvidenceSuiteSeconds": 106.922,
+      "currentContextEvidenceXmlSeconds": 1.783,
+      "ratioPriorToCurrent": 59.97,
+      "interpretation": "Marked runtime variation is measurable across the two invocations; it is compatible with variable host/resource or execution conditions but no load telemetry or causal trace proves why."
+    }
+  },
+  "lastCompleteApprovedHostJvmSuite": {
+    "sourceCodeSha": "f54c1430cab4ea59a302b58dd2aa27deea579c49",
+    "tests": 756,
+    "passed": 756,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "evidence": "docs/validation/ux-02d-markdown-tables/RESULTS.md; historical audited HOST result, not rerun in this contract"
   }
 }

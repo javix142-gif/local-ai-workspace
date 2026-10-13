@@ -1,0 +1,13 @@
+sourceBaseline=f54c1430cab4ea59a302b58dd2aa27deea579c49
+sourceCodeSha=a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+checkedPaths=app/src/test/java/com/localai/workspace/context/ContextFoundationDeduplicationTest.kt, app/build.gradle.kts, settings.gradle.kts, gradle.properties, gradle/libs.versions.toml
+gitDiffNameStatusExitCode=0
+gitDiffNameStatus=<no differences>
+Conclusion: target test and selected Gradle/Robolectric configuration paths are unchanged between UX-02d code and UX-02e code.
+app/src/test/java/com/localai/workspace/context/ContextFoundationDeduplicationTest.kt: unchanged=True; sha256-at-code-sha=b6769d8f089982bf8490aa3add2e9d482750b5c624fedc5463e6743cf1ad37bb
+app/build.gradle.kts: unchanged=True; sha256-at-code-sha=736c5d5409999d98d0e6483e27c82b19105a1834ce3c84e6007b5fa30489ca10
+settings.gradle.kts: unchanged=True; sha256-at-code-sha=987266f3ca364a6554b24fb9dd78cbf53b72815ab1fb300d04191a29c62b4931
+gradle.properties: unchanged=True; sha256-at-code-sha=6349cdf9304ace0be73dc224cd0e6710d8e099423098e14c24750de7b0a3d9c9
+gradle/libs.versions.toml: unchanged=True; sha256-at-code-sha=9a55c07a1af90e6694ad786d912cba21fb9d07cbc7c4c1ebe734ee7b43508fa0
+targetTestInCurrentRunWorktreeSha256=b6769d8f089982bf8490aa3add2e9d482750b5c624fedc5463e6743cf1ad37bb
+targetTestAttributes: @RunWith(RobolectricTestRunner::class); @Config(sdk=[35], application=Application::class); test uses runBlocking, two Room in-memory DBs, AppGraph with CoroutineScope(SupervisorJob()+Dispatchers.Unconfined), SemanticLayer; cleanup in finally.

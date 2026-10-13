@@ -1,0 +1,63 @@
+createdAtUtc=2026-10-13T20:08:50Z
+sourceCodeSha=a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+worktree=/workspace/ux02e-offline-a182
+worktreeHead=a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+worktreeTrackedStatus=<clean>
+worktreeTrackedAndIgnoredStatus:
+!! .gradle/
+!! app/build/
+!! litert-compat/build/
+!! llama-runtime/build/
+Tracked tree is clean; ignored Gradle/build outputs already exist from earlier work in this same worktree and are not removed or copied.
+--- gradle_wrapper_version; exit=0 ---
+
+------------------------------------------------------------
+Gradle 8.10.2
+------------------------------------------------------------
+
+Build time:    2024-09-23 21:28:39 UTC
+Revision:      415adb9e06a516c44b391edff552fd42139443f7
+
+Kotlin:        1.9.24
+Groovy:        3.0.22
+Ant:           Apache Ant(TM) version 1.10.14 compiled on August 16 2023
+Launcher JVM:  21.0.12.1 (Debian 21.0.12.1+1-1-deb13u1-Debian)
+Daemon JVM:    /usr/lib/jvm/java-21-openjdk-amd64 (no JDK specified, using current Java home)
+OS:            Linux 6.18.44 amd64
+--- gradle_cache; exit=0 ---
+/home/agent/.gradle/caches/modules-2/files-2.1/org.robolectric/robolectric/4.14.1/1e1c6c170ac76b5a6a60a6248e6ee0d144f5d0f4/robolectric-4.14.1.jar 170182 bytes
+/home/agent/.gradle/caches/modules-2/files-2.1/org.robolectric/robolectric/4.14.1/88be55e4217900d2279133d5bdef5681f0403874/robolectric-4.14.1.pom 5505 bytes
+/home/agent/.gradle/caches/modules-2/files-2.1/org.robolectric/robolectric/4.14.1/5df6b4e4668b339e771e5313aa1372383c071c01/robolectric-4.14.1.module 8187 bytes
+--- disk_space; exit=0 ---
+Filesystem      Size  Used Avail Use% Mounted on
+overlay          32G   29G  1.8G  95% /
+none            4.9G  4.4G  572M  89% /tmp
+overlay          32G   29G  1.8G  95% /
+--- JDK /workspace/.toolchain/jdk-17 ---
+java exit=0: openjdk version "17.0.20.1" 2026-08-18
+OpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)
+OpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)
+javac exit=0: javac 17.0.20.1
+jdk.compiler=present
+--- JDK /workspace/.toolchain/jdk-21-temurin ---
+java exit=0: openjdk version "21.0.12.1" 2026-08-18 LTS
+OpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)
+OpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)
+javac exit=0: javac 21.0.12.1
+jdk.compiler=present
+path=/workspace/ux02e-offline-a182/.gradle exists=True
+path=/workspace/ux02e-offline-a182/app/build exists=True
+path=/workspace/ux02e-offline-a182/app/build/test-results/testDebugUnitTest exists=True
+worktree-local-gradle-state=present; preserved
+prior-test-output-directory=present; new run XML will be identified by timestamps/run events and copied to the evidence directory after the invocation
+previousSequenceEvents=71 starts=36 ends=35
+previousSequenceSha256=df59f026784b031fbbf6b20132827960e5b358862298c76226922ce36f8d5cf8
+previousSequenceFirstEvent=2026-10-13T12:28:21.453198756Z	TEST_START	com.localai.workspace.context.AuditHarness	writeSelectorReproductions			133767@05497ac86eb0	/workspace/.toolchain/jdk-17
+previousSequenceLastSuccessfulEvent=2026-10-13T12:30:26.210366900Z	TEST_END	com.localai.workspace.context.ContextEvidenceExcerptTest	log10FunctionCallKeepsArgumentWithoutSelectingSameNamedCell	SUCCESS	1527	133767@05497ac86eb0	/workspace/.toolchain/jdk-17
+previousSequenceUnclosedTarget=2026-10-13T12:30:28.579499978Z	TEST_START	com.localai.workspace.context.ContextFoundationDeduplicationTest	productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit			133767@05497ac86eb0	/workspace/.toolchain/jdk-17
+priorTargetOfflineResult=TARGET_TEST_PASS
+priorTargetOfflineSeconds=74.968
+priorTargetOfflineXmlTests=1; failures=0; errors=0; skipped=0
+no downloads/installations/cache cleanup requested for this run
+
+Note: the first read-only `gradlew --version` inventory inherited system JDK 21. The actual invocation and the separate explicit `gradle-runtime-preflight.txt` used JAVA_HOME=/workspace/.toolchain/jdk-17; the full log shows the Gradle daemon started with /workspace/.toolchain/jdk-17/bin/java.

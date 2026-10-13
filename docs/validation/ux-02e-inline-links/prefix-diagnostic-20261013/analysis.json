@@ -1,0 +1,295 @@
+{
+  "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+  "featureBranchAtContractStart": "db5dd75f7fecc5055b176fa9259c55be1ca1b93e",
+  "reproduction": {
+    "classification": "PREFIX_RUN_PASS_TARGET_STALL_NOT_REPRODUCED",
+    "priorStalledFullRun": {
+      "startedAtUtc": "2026-10-13T12:22:09Z",
+      "finishedAtUtc": "2026-10-13T12:39:14Z",
+      "durationSeconds": 1024.871,
+      "exitCode": -9,
+      "testStarts": 36,
+      "testEnds": 35,
+      "activeMethod": "com.localai.workspace.context.ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit",
+      "targetEndEvent": "ABSENT",
+      "xmlFiles": 0
+    },
+    "previousTestEndImmediatelyBeforeTarget": "2026-10-13T12:30:26.210366900Z\tTEST_END\tcom.localai.workspace.context.ContextEvidenceExcerptTest\tlog10FunctionCallKeepsArgumentWithoutSelectingSameNamedCell\tSUCCESS\t1527\t133767@05497ac86eb0\t/workspace/.toolchain/jdk-17",
+    "currentRun": {
+      "startedAtUtc": "2026-10-13T20:10:10.967Z",
+      "finishedAtUtc": "2026-10-13T20:10:56.016Z",
+      "durationSeconds": 45.049,
+      "exitCode": 0,
+      "gradleConclusion": "BUILD SUCCESSFUL",
+      "testStarts": 36,
+      "testEnds": 36,
+      "testEndSuccess": 36,
+      "unclosedTestStarts": []
+    },
+    "filteredSequence": [
+      {
+        "class": "com.localai.workspace.context.AuditHarness",
+        "method": "writeSelectorReproductions"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextDeduplicationAblationTest",
+        "method": "duplicateAblationAt4096IsStableAcrossRepeatedBuildsAndInputOrder"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextDeduplicationAblationTest",
+        "method": "sameTextFromDifferentSourcesAndScopesKeepsSeparateProvenanceAndProjectIsolation"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "missingInteriorRangeCellIsReportedWithoutSelectingNeighboringCells"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "multibyteQueryAnchorStaysInsideUtf8BudgetAndOffsets"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "conflictingThreeDimensionalSheetOrderNeverUsesAnArbitraryMapping"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "unrelatedSheetOrderConflictDoesNotWarnForSimpleCellLookup"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "missingQualifiedSheetAndMissingCellNeverFallBackToHomonymousAddress"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "cellQuestionKeepsTargetFormulaDependenciesAndHeaderProvenance"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "unqualifiedMissingLog10FormulaDependencyIsCompositeAndIncomplete"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "absoluteAndMixedFormulaReferencesKeepDependencies"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "cellReferenceAndByteBudgetsAreExplicitAndBounded"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "unqualifiedFormulaReferenceResolvesOnOwningSheetEvenWithHomonymousCell"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "functionLiteralExternalAndDynamicReferencesNeverBecomeLocalDependencies"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "unicodeWindowDoesNotExceedUtf8BudgetOrSplitSurrogatePairs"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "quotedSheetNamesMatchIgnoringCaseAndPreserveOriginalDisplayName"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "relevantSentenceIsSelectedWithExactOffsets"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "unqualifiedQueryWithAddressOnMultipleSheetsIsReportedAmbiguousWithoutValues"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "log10CellUsedAsFormulaReferenceIsNotDiscardedAsFunctionName"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "quotedThreeDimensionalRectangleExpandsAcrossEverySheetAndCell"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "routineTextWindowingDoesNotCreateMaterialCellNotice"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "hostileJsonTextIsCompactedToCellSummaryRatherThanExpandedIntoPrompt"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "omittedThreeDimensionalInteriorOrderIsExplicitlyIncomplete"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "giantNoMatchParagraphIsAlwaysBounded"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "qualifiedFormulaDependencyNeverAliasesSameAddressOnCurrentSheet"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "noMatchingStructuredCellsReturnsEmptyEvidenceInsteadOfAnotherCell"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "escapedApostropheSheetAndMixedRangeQualifiersResolveExactly"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "rectangularFormulaRangeIncludesAvailableRowAndColumnCells"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "log10IsAValidDirectAndUnqualifiedFormulaCellReference"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "missingFormulaDependencyIsReportedWithoutInventingEvidence"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "localAndQualifiedRectangularRangesAreInclusive"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "qualifiedLog10NeverAliasesHomonymousAddressAndMissingTargetIsReported"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "rectangularCellRangeKeepsInteriorCells"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "threeDimensionalRangeIncludesEveryOrderedSheetAndInteriorSheet"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextEvidenceExcerptTest",
+        "method": "log10FunctionCallKeepsArgumentWithoutSelectingSameNamedCell"
+      },
+      {
+        "class": "com.localai.workspace.context.ContextFoundationDeduplicationTest",
+        "method": "productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit"
+      }
+    ],
+    "matchesEarlierPrefixOrder": true,
+    "target": {
+      "method": "com.localai.workspace.context.ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit",
+      "startEvent": "2026-10-13T20:10:53.465729440Z\tTEST_START\tcom.localai.workspace.context.ContextFoundationDeduplicationTest\tproductionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit",
+      "endEvent": "2026-10-13T20:10:54.315304692Z\tTEST_END\tcom.localai.workspace.context.ContextFoundationDeduplicationTest\tproductionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit\tSUCCESS",
+      "durationSeconds": 0.85,
+      "result": "SUCCESS"
+    },
+    "junit": {
+      "files": 4,
+      "tests": 36,
+      "passed": 36,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "filesDetail": [
+        {
+          "sourcePath": "/workspace/ux02e-offline-a182/app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.context.AuditHarness.xml",
+          "path": "junit/TEST-com.localai.workspace.context.AuditHarness.xml",
+          "bytes": 4493,
+          "sha256": "cefab7f3278ac00b09e48bf71f1776c28d2cce130fe946924faf6d4f63ff8c50",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "timeSeconds": 7.83,
+          "mtimeUtc": "2026-10-13T20:10:54.713Z"
+        },
+        {
+          "sourcePath": "/workspace/ux02e-offline-a182/app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.context.ContextDeduplicationAblationTest.xml",
+          "path": "junit/TEST-com.localai.workspace.context.ContextDeduplicationAblationTest.xml",
+          "bytes": 708,
+          "sha256": "9be911b3cec1b3fb6d8b9c22efd05740c242e6415726aff7881077efb5561b64",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "timeSeconds": 0.046,
+          "mtimeUtc": "2026-10-13T20:10:54.718Z"
+        },
+        {
+          "sourcePath": "/workspace/ux02e-offline-a182/app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.context.ContextEvidenceExcerptTest.xml",
+          "path": "junit/TEST-com.localai.workspace.context.ContextEvidenceExcerptTest.xml",
+          "bytes": 5532,
+          "sha256": "7e6e0920df40604e4b1eb9bc0b10e645da4909a6ce38aab56f41f05621043573",
+          "tests": 32,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "timeSeconds": 1.783,
+          "mtimeUtc": "2026-10-13T20:10:54.717Z"
+        },
+        {
+          "sourcePath": "/workspace/ux02e-offline-a182/app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.context.ContextFoundationDeduplicationTest.xml",
+          "path": "junit/TEST-com.localai.workspace.context.ContextFoundationDeduplicationTest.xml",
+          "bytes": 540,
+          "sha256": "f99d98fa2f4a1357d962fc25fadcfff84bcf742126e5d388ff0a9c92d33da60a",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "timeSeconds": 0.848,
+          "mtimeUtc": "2026-10-13T20:10:54.718Z"
+        }
+      ]
+    },
+    "xmlBeforeAndAfter": {
+      "beforeInventory": "xml-before.json",
+      "changedXmlCopied": 4,
+      "copyPolicy": "Only XML whose bytes or mtime changed during this forced test-task invocation were copied."
+    },
+    "observedTimingVariance": {
+      "priorContextEvidenceSuiteSeconds": 106.922,
+      "currentContextEvidenceXmlSeconds": 1.783,
+      "ratioPriorToCurrent": 59.97,
+      "interpretation": "Marked runtime variation is measurable across the two invocations; it is compatible with variable host/resource or execution conditions but no load telemetry or causal trace proves why."
+    }
+  },
+  "environment": {
+    "gradle": "8.10.2",
+    "gradleRuntimeJdk": "Temurin 17.0.20.1",
+    "appTestWorkerJdk": "Temurin 21.0.12.1 observed in Gradle --info command",
+    "workerPid": "NOT_CAPTURED; run completed before any stall snapshot",
+    "androidSdk": "/workspace/.toolchain/android-sdk (pre-existing)",
+    "gradleUserHome": "/home/agent/.gradle (pre-existing)",
+    "resolution": "--offline; no network fallback/download/install/cache cleanup"
+  },
+  "diagnostics": {
+    "threadDump": "NOT_REQUIRED; invocation ended naturally with target and prefix complete, exit 0",
+    "testWorkerPid": "NOT_CAPTURED for this naturally completed run",
+    "priorUnrelatedDump": {
+      "test": "com.localai.workspace.data.ApplicationModelPreparationTest.close",
+      "evidencePath": "../host/jdk17-runtime-20261013/gradle-gate.log.gz",
+      "stack": "older dump shows Test worker waiting in Robolectric Sandbox.runOnMainThread; SDK 29 Main Thread in JDK 21 BasicImageReader/SystemModuleReader/SandboxClassLoader work, reaching ApplicationModelPreparationTest.kt:54. This is a different method/run and cannot explain the later ContextFoundationDeduplicationTest stall."
+    }
+  },
+  "hypotheses": {
+    "immediatePriorContextPrefixInterference": "NOT_REPRODUCED in one 36-test prefix run matching the prior immediate event order; this does not rule out interference from tests earlier in the full suite or nondeterministic state.",
+    "targetTestDeadlock": "NOT_DEMONSTRATED; target passed alone previously and after the reproduced 35-test prefix; no failure or stall stack for this target.",
+    "workerOrJdk": "NOT_DEMONSTRATED; this invocation used the documented JDK17 Gradle runtime/JDK21 test worker and passed; the separate old stack is insufficient for attribution.",
+    "robolectric": "NOT_DEMONSTRATED as root cause; target runs with Robolectric SDK35 and completed in this run.",
+    "networkInfrastructure": "Earlier online attempt failed before task start (18 dl.google.com and 36 Maven Central retries); current offline prefix succeeded, so that separate infrastructure failure does not explain the prior in-test stall."
+  },
+  "productFailure": "NOT_ESTABLISHED",
+  "ux02eOverall": "AUDITED_INCOMPLETE_TIMEOUT_NOT_ACCEPTED; full HOST gate remains incomplete",
+  "otherLayers": {
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  },
+  "plan": "Original 97-task catalog unavailable in this context; no task ID/dependency selected or inferred. M01-06 remains PENDING_REQUIRES_DEVICE; plan/progress unchanged.",
+  "lastCompleteApprovedSuite": {
+    "sourceCodeSha": "f54c1430cab4ea59a302b58dd2aa27deea579c49",
+    "tests": 756,
+    "passed": 756,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "evidence": "docs/validation/ux-02d-markdown-tables/RESULTS.md; historical audited HOST result, not rerun in this contract"
+  }
+}
