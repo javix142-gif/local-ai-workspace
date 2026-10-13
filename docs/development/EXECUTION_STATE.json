@@ -5250,7 +5250,10 @@
       "evidenceCommit": "7ffbf2fe99c8dca4b9761c6af9cb444eb712c6f5",
       "evidenceCommitScope": "UX-02e report, JSON, checksums, JDK21 preflight/environment, full Gradle log, and XML inventory; no product files.",
       "latestEvidenceBaseHead": "83796439caa5eba5543062ed2d82c8f021ed2e2c",
-      "latestEvidenceUpdateScope": "Documentation and test/build evidence only; no app source, build configuration, workflow, dependency, data, APK, emulator, or device changes."
+      "latestEvidenceUpdateScope": "Documentation and test/build evidence only; no app source, build configuration, workflow, dependency, data, APK, emulator, or device changes.",
+      "latestEvidenceCommit": "e569017a64e43037f377fc185d8c888b4c883e9e",
+      "latestEvidenceCommitScope": "UX-02e results, toolchain preflight, full Gradle log, task outcome, XML inventory, and checksums; documentation/evidence only.",
+      "latestEvidenceCommitPublishedHead": "e569017a64e43037f377fc185d8c888b4c883e9e"
     },
     "independentAudit": {
       "status": "AUDITED_BLOCKED_NOT_ACCEPTED",
