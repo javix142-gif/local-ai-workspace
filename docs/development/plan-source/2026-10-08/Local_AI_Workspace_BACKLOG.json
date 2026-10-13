@@ -1,0 +1,1677 @@
+Attempting to perform the InitializeDefaultDrives operation on the 'FileSystem' provider failed.
+{
+  "schema": "local-ai-workspace/backlog-v1",
+  "updated_at": "2026-10-08",
+  "project": "Local AI Workspace",
+  "roadmap_document": "ROADMAP.md",
+  "rules_document": "LOOP_RULES.md",
+  "active_milestone": "M00",
+  "allowed_milestones_for_autonomous_implementation": [
+    "M00"
+  ],
+  "release_branch_expected": "feat/0.5.0-skills-agents",
+  "release_gate": "physical device smoke and explicit approval before merge/tag",
+  "state_machine": [
+    "TODO",
+    "READY",
+    "IN_PROGRESS",
+    "HOST_VERIFIED",
+    "DEVICE_PENDING",
+    "DONE",
+    "BLOCKED",
+    "DEFERRED"
+  ],
+  "milestones": [
+    {
+      "id": "M00",
+      "title": "Estabilizacion 0.5.0",
+      "state": "ACTIVE",
+      "task_count": 10
+    },
+    {
+      "id": "M01",
+      "title": "Rendimiento y fiabilidad",
+      "state": "PLANNED",
+      "task_count": 8
+    },
+    {
+      "id": "M02",
+      "title": "Documentos y recuperacion",
+      "state": "PLANNED",
+      "task_count": 8
+    },
+    {
+      "id": "M03",
+      "title": "Edicion y creacion de artefactos",
+      "state": "PLANNED",
+      "task_count": 7
+    },
+    {
+      "id": "M04",
+      "title": "Skills Agents V2",
+      "state": "PLANNED",
+      "task_count": 8
+    },
+    {
+      "id": "M05",
+      "title": "Imagenes y galeria",
+      "state": "PLANNED",
+      "task_count": 8
+    },
+    {
+      "id": "M06",
+      "title": "Audio voz reuniones",
+      "state": "PLANNED",
+      "task_count": 7
+    },
+    {
+      "id": "M07",
+      "title": "Video temporal",
+      "state": "PLANNED",
+      "task_count": 6
+    },
+    {
+      "id": "M08",
+      "title": "Acciones Android",
+      "state": "PLANNED",
+      "task_count": 7
+    },
+    {
+      "id": "M09",
+      "title": "Workflows y automations",
+      "state": "PLANNED",
+      "task_count": 7
+    },
+    {
+      "id": "M10",
+      "title": "Plugins MCP conectores",
+      "state": "PLANNED",
+      "task_count": 7
+    },
+    {
+      "id": "M11",
+      "title": "Backup sync portabilidad",
+      "state": "PLANNED",
+      "task_count": 6
+    },
+    {
+      "id": "M12",
+      "title": "Calidad y release 1.0",
+      "state": "PLANNED",
+      "task_count": 8
+    }
+  ],
+  "task_count": 97,
+  "tasks": [
+    {
+      "id": "M00-01",
+      "milestone": "M00",
+      "title": "Reproducir expansión XLSX de 300 KB",
+      "priority": "P0",
+      "status": "TODO",
+      "depends_on": [],
+      "definition_of_done": "Fixture representativa y perfil de bytes ZIP XML celdas y representación; causa identificada sin suponer contenido del archivo privado",
+      "requires_device": false,
+      "effort": "S",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M00-02",
+      "milestone": "M00",
+      "title": "Compactar parseo XLSX conservando límites",
+      "priority": "P0",
+      "status": "TODO",
+      "depends_on": [
+        "M00-01"
+      ],
+      "definition_of_done": "Caso representativo importado o error explícito medido; sin materialización innecesaria ni pérdida de celdas relevantes; test de regresión",
+      "requires_device": false,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M00-03",
+      "milestone": "M00",
+      "title": "Compactar evidencia para Context Builder",
+      "priority": "P0",
+      "status": "TODO",
+      "depends_on": [
+        "M00-01"
+      ],
+      "definition_of_done": "Retrieval conserva índice completo pero inyecta pasajes localizados acotados con procedencia; tests de celdas rangos y no relevancia",
+      "requires_device": false,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M00-04",
+      "milestone": "M00",
+      "title": "Ajustar aviso de contexto omitido",
+      "priority": "P0",
+      "status": "TODO",
+      "depends_on": [
+        "M00-03"
+      ],
+      "definition_of_done": "Banner solo ante omisión material; Inspector registra dropped con motivo; idioma y tests UI actualizados",
+      "requires_device": false,
+      "effort": "S",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M00-05",
+      "milestone": "M00",
+      "title": "Corregir header de chat Compose",
+      "priority": "P0",
+      "status": "TODO",
+      "depends_on": [],
+      "definition_of_done": "Agente título y modelo visibles o truncados correctamente con teclado activo títulos largos y font scale; screenshot test o verificación UI",
+      "requires_device": false,
+      "effort": "S",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M00-06",
+      "milestone": "M00",
+      "title": "Instrumentar latencias XLSX y chat",
+      "priority": "P0",
+      "status": "TODO",
+      "depends_on": [],
+      "definition_of_done": "Timeline real con import parse index memory retrieval context gate model TTFT decode y e2e; metadata sin contenido privado",
+      "requires_device": false,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M00-07",
+      "milestone": "M00",
+      "title": "Medir cold versus warm en Motorola",
+      "priority": "P0",
+      "status": "TODO",
+      "depends_on": [
+        "M00-06"
+      ],
+      "definition_of_done": "Registro físico comparativo mismo XLSX y pregunta con etapas separadas; cuello real identificado o condición de bloqueo documentada",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M00-08",
+      "milestone": "M00",
+      "title": "Comprobar F1 EG2 en chat real",
+      "priority": "P0",
+      "status": "TODO",
+      "depends_on": [],
+      "definition_of_done": "Context Builder ON y EG2 seleccionado producen cita de fuente V2 adecuada; resultado observable en Inspector",
+      "requires_device": true,
+      "effort": "S",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M00-09",
+      "milestone": "M00",
+      "title": "Comprobar F2 NEEDS_REINDEX en dispositivo",
+      "priority": "P0",
+      "status": "TODO",
+      "depends_on": [],
+      "definition_of_done": "Documento alterado deja índice stale rechazado con fallback; reindex READY restaura búsqueda sin leer stale como vigente",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M00-10",
+      "milestone": "M00",
+      "title": "Cerrar gate 0.5.0 y artefacto ARM64",
+      "priority": "P0",
+      "status": "TODO",
+      "depends_on": [
+        "M00-02",
+        "M00-04",
+        "M00-05",
+        "M00-07",
+        "M00-08",
+        "M00-09"
+      ],
+      "definition_of_done": "Host gate completo PASS; APK y firma verificados; upgrade sin borrar datos; smokes y diff revisados; merge/tag pendiente de aprobación",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M01-01",
+      "milestone": "M01",
+      "title": "Definir bench repetible en Moto",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M00-10"
+      ],
+      "definition_of_done": "Protocolo con configuración modelo corpora muestra cold warm TTFT PSS termal y almacenamiento publicado",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M01-02",
+      "milestone": "M01",
+      "title": "Medir coste EG1 y EG2 por corpus",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M01-01"
+      ],
+      "definition_of_done": "Latencias RAM y escalado 100 1000 5000 10000 chunks cuando factible; sin confundir benchmark con búsqueda válida",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M01-03",
+      "milestone": "M01",
+      "title": "Optimizar carga y descarga de modelos",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M01-01"
+      ],
+      "definition_of_done": "Reducción de tiempo/PS S demostrada con igual funcionalidad; evitar multiples runtimes grandes residentes",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M01-04",
+      "milestone": "M01",
+      "title": "Medir y optimizar reutilización de sesión",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M01-01"
+      ],
+      "definition_of_done": "Hit/miss y razones registradas; mejora medida sin romper Agent Skill context ni Stop",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M01-05",
+      "milestone": "M01",
+      "title": "Context budget y deduplicación por relevancia",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M00-03"
+      ],
+      "definition_of_done": "Evidencia deduplicada y priorizada; queries repetidas no desbordan 4096 por duplicación; ablation tests",
+      "requires_device": false,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M01-06",
+      "milestone": "M01",
+      "title": "Ingesta e indexación reanudable",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M00-02"
+      ],
+      "definition_of_done": "Jobs cancelables con checkpoint y recuperación post-reinicio; no bloqueo de UI ni duplicación",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M01-07",
+      "milestone": "M01",
+      "title": "Comparar CPU GPU y thermal sostenido",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M01-01"
+      ],
+      "definition_of_done": "Resultados reproducibles para el Moto; no activar GPU predeterminada sin mejora neta",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M01-08",
+      "milestone": "M01",
+      "title": "Medir modelo pequeño especializado on-demand",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M01-01"
+      ],
+      "definition_of_done": "Benchmark memoria latencia exactitud y unloading; decisión documentada sin segundo LLM persistente",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M02-01",
+      "milestone": "M02",
+      "title": "Crear corpus de fixtures de documentos",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M00-10"
+      ],
+      "definition_of_done": "Corpus digital PDF DOCX XLSX CSV codigo con respuestas y rangos/celdas esperados versionado",
+      "requires_device": false,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M02-02",
+      "milestone": "M02",
+      "title": "Mejorar fidelidad XLSX y formulas cacheadas",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M02-01"
+      ],
+      "definition_of_done": "Lectura de tipos hoja celdas formulas y valor cacheado comprobada; no afirmar recalculo inexistente",
+      "requires_device": false,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M02-03",
+      "milestone": "M02",
+      "title": "Mejorar estructura DOCX y tablas",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M02-01"
+      ],
+      "definition_of_done": "Tablas encabezados saltos y texto conservados con fixtures y ubicacion rastreable",
+      "requires_device": false,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M02-04",
+      "milestone": "M02",
+      "title": "OCR local opcional para PDF escaneado",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M02-01",
+        "M01-01"
+      ],
+      "definition_of_done": "PDF escaneado admite OCR solo con motor instalado; errores calidad y memory cap probados",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M02-05",
+      "milestone": "M02",
+      "title": "Recuperación exacta por celda pagina y codigo",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M02-01",
+        "M01-05"
+      ],
+      "definition_of_done": "Consultas a celda/rango/pagina/ruta devuelven evidencia correcta o abstención, citas navegables",
+      "requires_device": false,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M02-06",
+      "milestone": "M02",
+      "title": "Reindex incremental sin evidencia stale",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M02-05"
+      ],
+      "definition_of_done": "Edit delete reimport mantiene generaciones y scope; invalida índice; no resultados obsoletos silenciosos",
+      "requires_device": false,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M02-07",
+      "milestone": "M02",
+      "title": "Navegación de citas a archivo y segmento",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M02-05"
+      ],
+      "definition_of_done": "Desde respuesta abre documento en pagina celda o fragmento verificable y fallback cuando formato lo impide",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M02-08",
+      "milestone": "M02",
+      "title": "Indexación de codebase con rutas y símbolos",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M02-05"
+      ],
+      "definition_of_done": "Busqueda en codigo devuelve ruta y linea; excluye carpetas ignoradas; no fuga entre proyectos",
+      "requires_device": false,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M03-01",
+      "milestone": "M03",
+      "title": "Diseñar Artifact API y persistencia",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M02-05"
+      ],
+      "definition_of_done": "Tipos versiones hash bytes previews export SAF y recovery documentados y testeados",
+      "requires_device": false,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M03-02",
+      "milestone": "M03",
+      "title": "Exportador XLSX editable",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M03-01",
+        "M02-02"
+      ],
+      "definition_of_done": "Crear editar guardar reabrir hojas celdas y formulas sin perdida silenciosa; engine de formulas declarado",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M03-03",
+      "milestone": "M03",
+      "title": "Generador y editor basico DOCX",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M03-01",
+        "M02-03"
+      ],
+      "definition_of_done": "DOCX con estilos tablas y plantillas abre en lectores comunes; conserva original/versiones",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M03-04",
+      "milestone": "M03",
+      "title": "Generador local PDF",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M03-01"
+      ],
+      "definition_of_done": "PDF exportado abre y preserva layout/texto; tests de fuentes/tamaño/paginas",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M03-05",
+      "milestone": "M03",
+      "title": "Generación/edición básica PPTX",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M03-01"
+      ],
+      "definition_of_done": "PPTX con diapositivas e imagenes abre en lectores compatibles; preview y test de roundtrip",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M03-06",
+      "milestone": "M03",
+      "title": "Edición de código por diff y rollback",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M03-01",
+        "M02-08"
+      ],
+      "definition_of_done": "Patch dentro de workspace visible antes de aplicar; pruebas y recuperación ante fallo",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M03-07",
+      "milestone": "M03",
+      "title": "UI de vista previa y comparación",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M03-01"
+      ],
+      "definition_of_done": "Usuario ve cambios, diff y export; puede cancelar sin modificar original",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M04-01",
+      "milestone": "M04",
+      "title": "Timeline real de actividad del agente",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M00-10"
+      ],
+      "definition_of_done": "UI muestra eventos reales agente skill tool resultado error timing; no representa razonamiento oculto",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M04-02",
+      "milestone": "M04",
+      "title": "Routing metadata y recursos Skills L3",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M00-10"
+      ],
+      "definition_of_done": "RoutingProfile y referencias lazy cargadas solo cuando activas; tests presupuesto",
+      "requires_device": false,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M04-03",
+      "milestone": "M04",
+      "title": "Banco real de consultas Skill ES EN",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M04-02"
+      ],
+      "definition_of_done": "Dataset fuera de fixtures sintéticas con precision recall abstencion y falsos positivos documentados",
+      "requires_device": false,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M04-04",
+      "milestone": "M04",
+      "title": "Experimento EG2 semantic Skill router",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M04-03",
+        "M01-02"
+      ],
+      "definition_of_done": "Ablation contra determinista; umbral de abstencion medido; feature flag OFF hasta superar baseline",
+      "requires_device": false,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M04-05",
+      "milestone": "M04",
+      "title": "Selección selectiva de Tools por contexto",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M04-01"
+      ],
+      "definition_of_done": "No anuncia todas las tools; argumentos/elegibilidad/scope medidos en fixtures sin nuevas confirmaciones en local read",
+      "requires_device": false,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M04-06",
+      "milestone": "M04",
+      "title": "Importación Skill packages con assets",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M04-02"
+      ],
+      "definition_of_done": "Paquete SKILL.md references assets importado/exportado versionado sin ejecutar scripts",
+      "requires_device": false,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M04-07",
+      "milestone": "M04",
+      "title": "Agent scopes y cambio de configuración UX",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M04-01"
+      ],
+      "definition_of_done": "Cambio Agent explicito y por proyecto mantiene aislamiento; UI de roles y memoria claro",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M04-08",
+      "milestone": "M04",
+      "title": "Templates de Skills para trabajo frecuente",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M04-02"
+      ],
+      "definition_of_done": "Plantillas escritura documentos codigo medios tareas se activan solo con triggers medibles",
+      "requires_device": false,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M05-01",
+      "milestone": "M05",
+      "title": "Indexador galería permission-aware",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M01-06"
+      ],
+      "definition_of_done": "Photo Picker permisos y escaneo incremental con cancel resume; sin lectura no autorizada",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M05-02",
+      "milestone": "M05",
+      "title": "Metadatos y miniaturas escalables",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M05-01"
+      ],
+      "definition_of_done": "Metadata EXIF permitida y thumbnails cacheadas sin cargar originales completos",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M05-03",
+      "milestone": "M05",
+      "title": "Búsqueda imagen texto EG2 con citas",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M05-02"
+      ],
+      "definition_of_done": "Query texto encuentra foto y muestra URI autorizada, procedencia y thumbnails; calidad medida",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M05-04",
+      "milestone": "M05",
+      "title": "Hash exacto/perceptual y duplicados",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M05-02"
+      ],
+      "definition_of_done": "Agrupa duplicados y similares; preview antes de cualquier limpieza; no borrado automatizado",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M05-05",
+      "milestone": "M05",
+      "title": "Benchmark de 30 mil fotos",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M05-02",
+        "M05-03"
+      ],
+      "definition_of_done": "Lotes checkpoints PSS energia espacio tiempo y cancel medidos o simulados sin OOM",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M05-06",
+      "milestone": "M05",
+      "title": "OCR de galería y fotos documento",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M05-02",
+        "M02-04"
+      ],
+      "definition_of_done": "Texto en imagen indexable y fuente visible; registra confidence y fallos",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M05-07",
+      "milestone": "M05",
+      "title": "Clustering opcional de rostros",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M05-05"
+      ],
+      "definition_of_done": "Opt-in, corrección manual de grupos y limites de similitud comunicados; sin identificación automática concluyente",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M05-08",
+      "milestone": "M05",
+      "title": "Señales de foto de pantalla o impresión",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M05-07"
+      ],
+      "definition_of_done": "Evaluación probabilística con dataset de prueba y falsos positivos; no acusación concluyente",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M06-01",
+      "milestone": "M06",
+      "title": "Seleccionar y medir ASR offline",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M01-01"
+      ],
+      "definition_of_done": "WER aproximado idioma tamaño RAM latencia en archivos de prueba; modelo elegido por medida",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M06-02",
+      "milestone": "M06",
+      "title": "Transcribir con tiempos y stop",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M06-01"
+      ],
+      "definition_of_done": "Transcripción segmentada reproducible y cancelable, sin pérdida al pausar/reiniciar",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M06-03",
+      "milestone": "M06",
+      "title": "VAD y marcas temporales",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M06-02"
+      ],
+      "definition_of_done": "Silencios y intervalos localizables; reproducción desde segmento asociado",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M06-04",
+      "milestone": "M06",
+      "title": "Reuniones resúmenes tareas y citas",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M06-03"
+      ],
+      "definition_of_done": "Resumen referencia audio/transcripcion y propone acciones para confirmacion, no inventa decisiones",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M06-05",
+      "milestone": "M06",
+      "title": "Exportación TXT SRT VTT DOCX",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M06-02",
+        "M03-03"
+      ],
+      "definition_of_done": "Todos los formatos anunciados abren con timestamps e identidad de proyecto",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M06-06",
+      "milestone": "M06",
+      "title": "Diarización opcional y calidad",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M06-03"
+      ],
+      "definition_of_done": "Separa locutores con uncertainty; benchmark corpus multihablante; no atribuye nombres sin dato",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M06-07",
+      "milestone": "M06",
+      "title": "Voz conversación STT TTS",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M06-02"
+      ],
+      "definition_of_done": "Captura con indicador micrófono y cancel; latencias/consumo measured; fallbacks claros",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M07-01",
+      "milestone": "M07",
+      "title": "Separación keyframes/audio con timeline",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M05-03",
+        "M06-02"
+      ],
+      "definition_of_done": "Segmentos audiovisuales indexados con tiempos sincronizados, sin afirmación de encoder nativo video",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M07-02",
+      "milestone": "M07",
+      "title": "Selección adaptativa de escenas",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M07-01"
+      ],
+      "definition_of_done": "Menor coste que muestreo indiscriminado medido en corpus de videos",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M07-03",
+      "milestone": "M07",
+      "title": "Consultas por evento con timestamp",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M07-01"
+      ],
+      "definition_of_done": "Respuesta con evidencia de frame/audio y timestamp correcto o abstención",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M07-04",
+      "milestone": "M07",
+      "title": "Reproductor y navegación por evidencia",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M07-03"
+      ],
+      "definition_of_done": "Clic en cita reproduce instante correcto; estado en video largo recuperable",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M07-05",
+      "milestone": "M07",
+      "title": "Exportación clip acotado",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M07-04"
+      ],
+      "definition_of_done": "Clip local generado y probado sin edición destructiva de original",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M07-06",
+      "milestone": "M07",
+      "title": "Benchmark video memoria y storage",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M07-02"
+      ],
+      "definition_of_done": "Tamaños tiempos y PSS de 0 10 60 s y videos largos; reporta limites reales",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M08-01",
+      "milestone": "M08",
+      "title": "Formalizar contrato typed Android Tool",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M04-05"
+      ],
+      "definition_of_done": "Schema args resultados reasons permisos y cancel/resume con tests por acción",
+      "requires_device": false,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M08-02",
+      "milestone": "M08",
+      "title": "Acciones Intents linterna ajustes apps",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M08-01"
+      ],
+      "definition_of_done": "Acción Android permitida se ejecuta y se confirma estado; errores reales declarados",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M08-03",
+      "milestone": "M08",
+      "title": "Calendario contactos y mapas",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M08-01"
+      ],
+      "definition_of_done": "Flujos de lectura/escritura permitidos por permisos, sin fingir envíos completados",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M08-04",
+      "milestone": "M08",
+      "title": "Compartir archivos y email via Intents",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M08-01",
+        "M03-01"
+      ],
+      "definition_of_done": "Distingue abrir composer de envio confirmado y exporta archivo correcto",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M08-05",
+      "milestone": "M08",
+      "title": "Suite física de Tool actions",
+      "priority": "P2",
+      "status": "TODO",
+      "depends_on": [
+        "M08-02",
+        "M08-03",
+        "M08-04"
+      ],
+      "definition_of_done": "Casos español/ingles con señales estado y timeout, abort y revocación de permisos",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M08-06",
+      "milestone": "M08",
+      "title": "Benchmark FunctionGemma pequeño opcional",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M08-05",
+        "M01-08"
+      ],
+      "definition_of_done": "Exactitud tool-calls y latencia full-path comparadas con Gemma deterministic; no modelo residente adicional por defecto",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M08-07",
+      "milestone": "M08",
+      "title": "Plan de Accessibility opcional",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M08-05"
+      ],
+      "definition_of_done": "Matriz apps/acciones/limites políticas Android, sin promesa control universal",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M09-01",
+      "milestone": "M09",
+      "title": "Modelar state machine de workflow",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M04-01"
+      ],
+      "definition_of_done": "Run/step estados y transiciones con tests idempotencia cancel y errores",
+      "requires_device": false,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M09-02",
+      "milestone": "M09",
+      "title": "Ejecución multi-step bounded",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M09-01",
+        "M08-01"
+      ],
+      "definition_of_done": "Limites pasos tiempo tokens y herramientas; detener al fallar sin loop indefinido",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M09-03",
+      "milestone": "M09",
+      "title": "Persistir checkpoints y reanudar",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M09-01"
+      ],
+      "definition_of_done": "Proceso reiniciado no repite paso externo exitoso ni pierde estados",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M09-04",
+      "milestone": "M09",
+      "title": "WorkManager y programaciones explícitas",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M09-03"
+      ],
+      "definition_of_done": "Tarea programada respeta background Android y muestra ejecución real/pérdidas por restricciones",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M09-05",
+      "milestone": "M09",
+      "title": "Pauses de usuario y acciones externas",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M09-02"
+      ],
+      "definition_of_done": "WAITING_USER y aprobacion en pasos de envío/eliminación; local read sin confirmaciones redundantes",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M09-06",
+      "milestone": "M09",
+      "title": "Workflow templates personales",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M09-03"
+      ],
+      "definition_of_done": "Flujos archivo a resumen a artefacto y calendario reproducibles con tracking",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M09-07",
+      "milestone": "M09",
+      "title": "Inspector y replay de workflow",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M09-03",
+        "M04-01"
+      ],
+      "definition_of_done": "Timeline distingue éxito fallo reintento y evidencia sin exponer datos privados por defecto",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M10-01",
+      "milestone": "M10",
+      "title": "Contrato versionado Tool Source provider",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M04-05"
+      ],
+      "definition_of_done": "Una interfaz estable distingue Tools Sources Plugins y sus capabilities, con test de provider fake",
+      "requires_device": false,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M10-02",
+      "milestone": "M10",
+      "title": "Plugin ejecutable separado de Skill",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M10-01"
+      ],
+      "definition_of_done": "Plugin JS Python o motor viable con lifecycle y permisos; SKILL.md continúa declarativa",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M10-03",
+      "milestone": "M10",
+      "title": "MCP client experimental",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M10-01"
+      ],
+      "definition_of_done": "Un servidor local/remoto explícito conectado, tools/resources disponibles solo tras conexión y tests",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M10-04",
+      "milestone": "M10",
+      "title": "Conector OAuth a una fuente priorizada",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M10-01"
+      ],
+      "definition_of_done": "Un conector real elegido por usuario funciona, revoca acceso y no requiere nube para chats locales",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M10-05",
+      "milestone": "M10",
+      "title": "Caché offline y control de sync",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M10-04"
+      ],
+      "definition_of_done": "Consulta offline degrada con estado de cache y fecha; no envios silenciosos",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M10-06",
+      "milestone": "M10",
+      "title": "Gestión de plugins y capacidades UI",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M10-02"
+      ],
+      "definition_of_done": "Listar instalar deshabilitar revocar plugin sin fingir capacidad de app",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M10-07",
+      "milestone": "M10",
+      "title": "Pruebas degradación sin red",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M10-03",
+        "M10-04"
+      ],
+      "definition_of_done": "Chat y datos locales siguen funcionando con conectores desconectados y tokens ausentes",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M11-01",
+      "milestone": "M11",
+      "title": "Esquema de backup canónico",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M03-01"
+      ],
+      "definition_of_done": "Manifest de proyectos mensajes memoria Skills/Agents datos canónicos e indices regenerables versionado",
+      "requires_device": false,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M11-02",
+      "milestone": "M11",
+      "title": "Export local con checksum y restore",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M11-01"
+      ],
+      "definition_of_done": "Restore en instalacion limpia conserva identidad y enlaces lógicos; verifica hashes",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M11-03",
+      "milestone": "M11",
+      "title": "Recovery tras errores e interrupción",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M11-02"
+      ],
+      "definition_of_done": "Falla a mitad de import mantiene datos recuperables y no borra la instalación anterior",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M11-04",
+      "milestone": "M11",
+      "title": "Portabilidad Skills Agents configuraciones",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M11-01"
+      ],
+      "definition_of_done": "Export/import cross-install preserva definiciones habilitaciones scopes y versionado",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M11-05",
+      "milestone": "M11",
+      "title": "Diseño opcional sync multi-dispositivo",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M11-02",
+        "M10-04"
+      ],
+      "definition_of_done": "POC sync sin pérdida ni duplicación de versiones; conflictos visibles y opt-in",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M11-06",
+      "milestone": "M11",
+      "title": "Companion desktop opcional",
+      "priority": "P3",
+      "status": "TODO",
+      "depends_on": [
+        "M11-05"
+      ],
+      "definition_of_done": "Prototipo local o documento de no adopción respaldado por utilidad y coste",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M12-01",
+      "milestone": "M12",
+      "title": "Cerrar matriz capacidades reales",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M00-10"
+      ],
+      "definition_of_done": "Matriz visible IMPLEMENTED HOST DEVICE_REAL por cada función anunciada sin promesas falsas",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M12-02",
+      "milestone": "M12",
+      "title": "Automatizar release gate y reproducibilidad",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M12-01"
+      ],
+      "definition_of_done": "CI host build lint firma version artefactos y reportes reproducibles, sin filtrar secrets",
+      "requires_device": false,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M12-03",
+      "milestone": "M12",
+      "title": "QA upgrade rollback backup",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M11-02"
+      ],
+      "definition_of_done": "Upgrade con datos existentes validado, backup/restauracion en segunda instalacion, sin destructive migration",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M12-04",
+      "milestone": "M12",
+      "title": "Accesibilidad y ES EN coherentes",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M12-01"
+      ],
+      "definition_of_done": "Font scaling keyboard screen reader basico y textos ES EN probados en escenarios clave",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M12-05",
+      "milestone": "M12",
+      "title": "Performance release report Moto",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M01-01",
+        "M12-01"
+      ],
+      "definition_of_done": "P50 P95 TTFT RAM tps cuando medible y metodologia publicada por workload",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M12-06",
+      "milestone": "M12",
+      "title": "Validación multimodal y tools anunciadas",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M12-01"
+      ],
+      "definition_of_done": "Suite real cada modalidad/Tool ofrecida con fallbacks y errores sin falsos PASS",
+      "requires_device": true,
+      "effort": "L",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M12-07",
+      "milestone": "M12",
+      "title": "Firma distribución y versionado release",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M12-02"
+      ],
+      "definition_of_done": "Firma de release diferenciada de debug, cadena versionCode y rollout documentados",
+      "requires_device": true,
+      "effort": "M",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    },
+    {
+      "id": "M12-08",
+      "milestone": "M12",
+      "title": "Go no-go 1.0 explícito",
+      "priority": "P1",
+      "status": "TODO",
+      "depends_on": [
+        "M12-03",
+        "M12-04",
+        "M12-05",
+        "M12-06",
+        "M12-07"
+      ],
+      "definition_of_done": "Todos los P0/P1 del alcance comercializado cerrados, limitaciones reconocidas, aprobacion usuario antes de tag/publicacion",
+      "requires_device": true,
+      "effort": "S",
+      "notes": "",
+      "evidence": [],
+      "commits": []
+    }
+  ]
+}
