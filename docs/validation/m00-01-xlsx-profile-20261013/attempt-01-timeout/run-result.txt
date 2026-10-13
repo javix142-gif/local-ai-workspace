@@ -1,0 +1,4 @@
+startedAtUtc=2026-10-13T21:33:52Z
+exitCode=137
+durationSeconds=315
+finishedAtUtc=2026-10-13T21:39:07Z

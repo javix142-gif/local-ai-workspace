@@ -1,0 +1,18 @@
+{
+  "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+  "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+  "backlogBytes": 46100,
+  "roadmapPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+  "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+  "roadmapBytes": 47285,
+  "schema": "local-ai-workspace/backlog-v1",
+  "taskCount": 97,
+  "uniqueIds": 97,
+  "dependencyEdges": 120,
+  "missingDependencies": [],
+  "acyclic": true,
+  "sourceStatuses": [
+    "TODO"
+  ],
+  "filesChanged": false
+}

@@ -1,0 +1,12 @@
+sourceCommit=988e666910f093344e32e96c46646f555dfb128a
+worktree=/tmp/local-ai-m00-01-988e666
+gradleDistributionUrl=https\://services.gradle.org/distributions/gradle-8.10.2-bin.zip
+gradleUserHome=/home/agent/.gradle
+gradleRuntimeJdk=/workspace/.toolchain/jdk-17; openjdk version "17.0.20.1" 2026-08-18
+testWorkerToolchain=/workspace/.toolchain/jdk-21-temurin; openjdk version "21.0.12.1" 2026-08-18 LTS
+androidSdk=/workspace/.toolchain/android-sdk
+androidNdk=/workspace/.toolchain/android-sdk/ndk/27.0.12077973; Pkg.Desc = Android NDK
+Pkg.Revision = 27.0.12077973
+Pkg.BaseRevision = 27.0.12077973
+networkPolicy=unrestricted/enforced; Gradle invocation uses --offline
+priorBuildOutputs=Only compiled outputs from the immediately preceding timed-out invocation in the same detached source worktree; no files copied from the main checkout

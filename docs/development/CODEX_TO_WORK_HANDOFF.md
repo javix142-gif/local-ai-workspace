@@ -1,3 +1,25 @@
+# Recuperación del plan original y perfil sintético M00-01 (2026-10-13)
+
+## Fuente preservada y reconciliación
+
+Los originales permanecen sin modificar en [`Local_AI_Workspace_BACKLOG.json`](plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json) y [`Local_AI_Workspace_ROADMAP.md`](plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md). Sus SHA-256 son `bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235` (46,100 bytes) y `260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5` (47,285 bytes). La validación confirmó schema `local-ai-workspace/backlog-v1`, 97 tareas/IDs únicos, 120 dependencias, ninguna referencia faltante, grafo acíclico y estados fuente `TODO` para las 97. El roadmap permite implementación autónoma solo en M00. Se conserva el baseline TODO:97 y no se modificaron IDs, orden, dependencias ni estados fuente. Las etiquetas históricas libres de `completedTasks` no se usaron por sí solas como evidencia.
+
+El crosswalk separado registra **M00-01** (“Reproducir expansión XLSX de 300 KB”) como `HOST_DOD_DEMONSTRATED_FOR_SYNTHETIC_FIXTURE_ONLY`, asociado al SHA de código/prueba `988e666910f093344e32e96c46646f555dfb128a`. La fixture generada, de aproximadamente 300 KB, contiene 58,000 celdas vacías con estilo y tres celdas pobladas. La medición y la estimación histórica identifican el mecanismo de expansión para esta fixture sintética. El XLSX privado original no estaba disponible: su contenido, dimensiones y causa exacta siguen `NOT_DETERMINED`. La fixture no se usó como sustituto del archivo original ni de validación Motorola.
+
+El siguiente candidato en el orden auténtico es **M00-02** (“Compactar parseo XLSX conservando límites”), depende de M00-01 y `requires_device=false`; queda pendiente y no se inició en este contrato. **M01-06** (“Ingesta e indexación reanudable”) sigue `PENDING_REQUIRES_DEVICE` y depende de M00-02.
+
+## Evidencia HOST de M00-01
+
+El commit de código/prueba `988e666910f093344e32e96c46646f555dfb128a` cambia únicamente `app/src/test/java/com/localai/workspace/data/StructuredDocumentsTest.kt`; la implementación del parser ya existía en `2df24f25a1156bfda054d5cafb1d02e9f85d67d1`. Para la fixture sintética: ZIP comprimido 291,429 bytes; worksheet XML 2,414,015 bytes; XML expandido total 2,414,269 bytes en 3 entradas; estimación fija histórica 23,066,872 bytes frente al límite de 8,388,608; representación UTF-8 actual 392 bytes y 1 chunk. La estimación deriva de la fórmula del código anterior y no se midió ejecutando el parser antiguo. Las etapas host midieron parseo 410 ms, representación 9 ms y chunk 3 ms; embedding/indexación no se ejecutó.
+
+- Intento 1: timeout tras 315 s, exit 137, sin XML ni perfil; no cuenta como PASS/FAIL del método.
+- Intento 2: el método filtrado exacto pasó 1/1, sin fallos/errores/omisiones, en 34 s; Gradle exit 0. Reutilizó outputs compilados por el intento inmediatamente anterior en el mismo worktree detached; no se copiaron archivos del checkout principal.
+- Suite JVM completa y AndroidTest: `NOT_RUN`; emulador y PHYSICAL_DEVICE: `NOT_RUN`; APK: `NOT_GENERATED`. Comandos, entornos, logs comprimidos, XML, perfil y hashes están en [RESULTS de M00-01](../validation/m00-01-xlsx-profile-20261013/RESULTS.md). El manifiesto de 16 archivos pasa `sha256sum -c`; su SHA-256 es `e9bb01fbee2eb9a4d70e5f18e59d5dfa3a2be8d3add7a9df0385624420052cbe`; el XML focal tiene SHA-256 `91013ac484fa4a6bb8559ee36418227f62de9161ab8b1babc8455d15d00a7e96`.
+
+UX-02e se mantiene `AUDITED_INCOMPLETE_TIMEOUT_NOT_ACCEPTED`: este test de M00 no completa su gate HOST ni cambia la causa del stall, que sigue `NOT_DETERMINED`.
+
+---
+
 # UX-02e — current state after focused prefix diagnostic (2026-10-13)
 
 ## Independent audit closure — focused prefix only

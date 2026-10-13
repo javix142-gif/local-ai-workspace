@@ -1,0 +1,21 @@
+{
+  "environment": "HOST_SYNTHETIC_NOT_USER_WORKBOOK",
+  "fixtureDescription": "Generated XLSX with 58,000 style-only blank cells and three populated cells; no private workbook content.",
+  "compressedWorkbookBytes": 291429,
+  "expandedWorksheetXmlBytes": 2414015,
+  "totalExpandedXmlBytes": 2414269,
+  "xmlEntryCount": 3,
+  "declaredDimensions": "A1:A58003",
+  "populatedCellCount": 3,
+  "emptyFormattedCellCount": 58000,
+  "styleDefinitions": 1,
+  "legacyFixedCellBudgetEstimateBytes": 23066872,
+  "legacyBudgetLimitBytes": 8388608,
+  "legacyBudgetWouldExceedLimit": true,
+  "serializedRepresentationUtf8Bytes": 392,
+  "chunkCount": 1,
+  "hostXlsxParserMs": 410,
+  "hostRepresentationMs": 9,
+  "hostChunkCreationMs": 3,
+  "embeddingOrIndexingExecuted": false
+}

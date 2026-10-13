@@ -1,0 +1,4 @@
+Gradle: BUILD SUCCESSFUL in 33s; 63 actionable tasks: 1 executed, 62 up-to-date.
+Executed task: :app:testDebugUnitTest (forced by temporary init script); --tests filter selected only com.localai.workspace.data.StructuredDocumentsTest.formattedEmptyXlsxCellsDoNotConsumeRepresentationBudget.
+JUnit: tests=1, passed=1, failures=0, errors=0, skipped=0; method duration=4.274s.
+Other suites/tasks: NOT_RUN.

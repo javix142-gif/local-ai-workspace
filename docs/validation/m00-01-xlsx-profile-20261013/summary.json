@@ -1,0 +1,103 @@
+{
+  "record": "M00-01 synthetic XLSX expansion profile",
+  "testedCodeSha": "988e666910f093344e32e96c46646f555dfb128a",
+  "implementationCommit": "2df24f25a1156bfda054d5cafb1d02e9f85d67d1",
+  "testRefinementCommit": "988e666910f093344e32e96c46646f555dfb128a",
+  "originalPlan": {
+    "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "backlogBytes": 46100,
+    "roadmapPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "roadmapBytes": 47285,
+    "schema": "local-ai-workspace/backlog-v1",
+    "taskCount": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "missingDependencies": [],
+    "acyclic": true,
+    "sourceStatuses": [
+      "TODO"
+    ],
+    "filesChanged": false
+  },
+  "task": {
+    "id": "M00-01",
+    "milestone": "M00",
+    "title": "Reproducir expansión XLSX de 300 KB",
+    "priority": "P0",
+    "status": "TODO",
+    "depends_on": [],
+    "definition_of_done": "Fixture representativa y perfil de bytes ZIP XML celdas y representación; causa identificada sin suponer contenido del archivo privado",
+    "requires_device": false,
+    "effort": "S",
+    "notes": "",
+    "evidence": [],
+    "commits": [],
+    "crosswalkStatus": "HOST_DOD_DEMONSTRATED_FOR_SYNTHETIC_FIXTURE"
+  },
+  "profile": {
+    "environment": "HOST_SYNTHETIC_NOT_USER_WORKBOOK",
+    "fixtureDescription": "Generated XLSX with 58,000 style-only blank cells and three populated cells; no private workbook content.",
+    "compressedWorkbookBytes": 291429,
+    "expandedWorksheetXmlBytes": 2414015,
+    "totalExpandedXmlBytes": 2414269,
+    "xmlEntryCount": 3,
+    "declaredDimensions": "A1:A58003",
+    "populatedCellCount": 3,
+    "emptyFormattedCellCount": 58000,
+    "styleDefinitions": 1,
+    "legacyFixedCellBudgetEstimateBytes": 23066872,
+    "legacyBudgetLimitBytes": 8388608,
+    "legacyBudgetWouldExceedLimit": true,
+    "serializedRepresentationUtf8Bytes": 392,
+    "chunkCount": 1,
+    "hostXlsxParserMs": 410,
+    "hostRepresentationMs": 9,
+    "hostChunkCreationMs": 3,
+    "embeddingOrIndexingExecuted": false
+  },
+  "finalAttempt": {
+    "gradleExitCode": 0,
+    "gradleDurationSeconds": 34,
+    "testXml": {
+      "tests": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    "testMethod": {
+      "name": "formattedEmptyXlsxCellsDoNotConsumeRepresentationBudget",
+      "classname": "com.localai.workspace.data.StructuredDocumentsTest",
+      "time": "4.274"
+    },
+    "gradleTaskSummary": "63 actionable tasks: 1 executed, 62 up-to-date; :app:testDebugUnitTest executed with one method filter."
+  },
+  "attemptHistory": [
+    {
+      "attempt": 1,
+      "status": "TIMEOUT_NO_TEST_RESULT",
+      "sourceSha": "988e666910f093344e32e96c46646f555dfb128a",
+      "exitCode": 137,
+      "durationSeconds": 315,
+      "xmlFiles": 0,
+      "description": "Cold detached-worktree compile with --rerun-tasks reached the filtered test worker; supervisor timeout ended the invocation before JUnit/profile output."
+    },
+    {
+      "attempt": 2,
+      "status": "PASS_FOCUSED_TEST_ONLY",
+      "sourceSha": "988e666910f093344e32e96c46646f555dfb128a",
+      "exitCode": 0,
+      "durationSeconds": 34,
+      "test": "com.localai.workspace.data.StructuredDocumentsTest.formattedEmptyXlsxCellsDoNotConsumeRepresentationBudget"
+    }
+  ],
+  "conclusion": {
+    "syntheticMechanism": "The test fixture isolates 58,000 style-only blank cells. The prior estimator from the pre-fix code would charge 23,066,872 bytes against the 8,388,608-byte budget; the current parser retains the three populated cells and emits a 392-byte representation. This demonstrates the synthetic expansion mechanism.",
+    "privateWorkbook": "NOT_AVAILABLE; its exact ZIP/XML dimensions and exact trigger remain NOT_DETERMINED.",
+    "device": "NOT_RUN",
+    "emulator": "NOT_RUN",
+    "apk": "NOT_GENERATED",
+    "sourceBacklogStatus": "Original TODO baseline is preserved unchanged; this crosswalk is separate from the source JSON."
+  }
+}
