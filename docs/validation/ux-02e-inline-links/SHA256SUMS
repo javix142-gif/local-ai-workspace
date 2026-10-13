@@ -1,5 +1,5 @@
-11b5fd2b9593e0e7c938fb35f9222639d8de34e129e0d067e453de2410aa698c  RESULTS.json
-f16e5513717bafb6f12911ddf401f2e1eaf1fe4ce698f10cee02b66fa8437c55  RESULTS.md
+c479657ba110869ea13f1d15b24bfc6c725806f00c8bc6f46e97c3d1ca1c9a9a  RESULTS.json
+4b846de30dc95ea4704a01531b125938e75cb671366fd7a9b133ef23d4d4519b  RESULTS.md
 2574d66ec40c88429a55227a37701101391ad59d8f6c381ddffdb1d1b60e800e  diagnostic-20261013/RUNS.md
 32237f5a599673465744dd0301ab7b71d13ffded1d617750fd83abd70cca5aff  diagnostic-20261013/SHA256SUMS
 79844d737305e1f6bff6f8621be0d16f84adf75eda4f851f86b5be8eca3ce97b  diagnostic-20261013/audit-harness/TEST-com.localai.workspace.context.AuditHarness.xml
@@ -58,11 +58,6 @@ d837feed8b61d80ca903f4b4a4064beebc3f455db2ad96a8641107c0c72769ef  full-host-gate
 db7be9d3ca55abbca4a6ada5f70873792fff622aaf99dda3920f71382a6f2df8  full-host-gate-20261013/run-summary.json
 eb01b003a2c290b10d01e8437468f8e314ec9e5edd19b317a8e0467a74e0d9dc  full-host-gate-20261013/source-worktree-status-after.txt
 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  full-host-gate-20261013/source-worktree-status-before.txt
-3dd61c71e3ff13b37902453d70fb926f3711aa53d873b8a1accb89aabc668c83  full-host-gate-20261013/stall-first/gradle-log-tail.txt.gz
-a43f7e5c0248a9a600f034dc72f81151361e4268ce8b4aec2856c363b5bcef01  full-host-gate-20261013/stall-first/jcmd-path.txt
-cf34d8ef6c8dffb037178b9a0e7af5ad1236e585c142ebda0c2eefd1c710d30f  full-host-gate-20261013/stall-first/process-tree.txt.gz
-4c86d98bde69b2b45e813cae3d8e1456cdc104c5996683af091f659f1175bc85  full-host-gate-20261013/stall-first/snapshot.json
-45887df4939f1fee3a96e2d20bd8b7f210d4b545529978147763afe652f38a8f  full-host-gate-20261013/stall-first/test-events-tail.tsv
 f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec  full-host-gate-20261013/stall-first-manual/gradle-log-after-sigquit.txt.gz
 f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec  full-host-gate-20261013/stall-first-manual/jcmd-thread-print.txt.gz
 d2ef30f9c84034a4bfe7e9e84d998060fca04f7d1738fb5f597ea400dba3ecdd  full-host-gate-20261013/stall-first-manual/meta-and-events.txt.gz
@@ -70,6 +65,11 @@ d2ef30f9c84034a4bfe7e9e84d998060fca04f7d1738fb5f597ea400dba3ecdd  full-host-gate
 96de005994c454158d684317e317983399fd661f2ac26e68f1ec340315a599ad  full-host-gate-20261013/stall-first-manual/sigquit-command.txt.gz
 a09eaaaeb86a4235f5c0ebab9988df880643d483b16fa4c21a4610e888ab23ba  full-host-gate-20261013/stall-first-manual/worker-command.txt.gz
 7af8e3853a072da6feb59c4b61f48d1b2cb6082f6c803ee310b24fbb714ebea9  full-host-gate-20261013/stall-first-manual/worker-executable.txt.gz
+3dd61c71e3ff13b37902453d70fb926f3711aa53d873b8a1accb89aabc668c83  full-host-gate-20261013/stall-first/gradle-log-tail.txt.gz
+a43f7e5c0248a9a600f034dc72f81151361e4268ce8b4aec2856c363b5bcef01  full-host-gate-20261013/stall-first/jcmd-path.txt
+cf34d8ef6c8dffb037178b9a0e7af5ad1236e585c142ebda0c2eefd1c710d30f  full-host-gate-20261013/stall-first/process-tree.txt.gz
+4c86d98bde69b2b45e813cae3d8e1456cdc104c5996683af091f659f1175bc85  full-host-gate-20261013/stall-first/snapshot.json
+45887df4939f1fee3a96e2d20bd8b7f210d4b545529978147763afe652f38a8f  full-host-gate-20261013/stall-first/test-events-tail.tsv
 3dd61c71e3ff13b37902453d70fb926f3711aa53d873b8a1accb89aabc668c83  full-host-gate-20261013/stall-second/gradle-log-tail.txt.gz
 a43f7e5c0248a9a600f034dc72f81151361e4268ce8b4aec2856c363b5bcef01  full-host-gate-20261013/stall-second/jcmd-path.txt
 edf973f0ed060a7335c0019e2ba85f3da182de1b996abcacbe5c75a9bde464a5  full-host-gate-20261013/stall-second/process-tree.txt.gz
@@ -110,8 +110,8 @@ b2a3436e87d374aee844e84d800da87ca2c1b154d8e5e0cd27e621f934847250  host/parser-st
 d6f1351541551e1afe668359e9f9cf1589e204c8dc3403d9c939c141f16016e3  host/recovery-environment.txt
 7d17837dd862aad525d5219264e3087a595dbeb219fe3cba93e1b7f9d8215c29  host/recovery-gradle-gate.log.gz
 a09e7f0a91787c06f976b4fc4542badc48991f0bda7213964ade8d24bea0077e  host/standalone-parser-check.py
-f4a5e52585d8feb2f0f687462e950596b1bb9ea420ad38b0c7ff4e46b4676553  offline-focused-20261013/RESULTS.md
-f26e0f76dd04fd7ad06156d722ca16cf25d82eb720ed362174aae5d9b028f7d1  offline-focused-20261013/SHA256SUMS
+4224465b28f8fee1c25f9b4231d86964e7fb6c0d40f009bacee3c8920adc6473  offline-focused-20261013/RESULTS.md
+77c8b436071ca9d7ef6ffbb63cc56e8d57cea30d1a18dd9723d7cc5cbb90f896  offline-focused-20261013/SHA256SUMS
 8ce3752c4b4af06c65c0f62b6415cf58d397bb204285b106fc9ba6f198346928  offline-focused-20261013/cli-syntax-check-command.txt
 1a25ad4138b1b4f23b9a3439042e6bd73c73012497ecab07c885716e9f18050b  offline-focused-20261013/cli-syntax-check-junit-xml-inventory.txt
 eb33e02a06587f9baade3f1b08ba0f69917e074e55345e57577fdbc552b9d137  offline-focused-20261013/cli-syntax-check-run-result.json

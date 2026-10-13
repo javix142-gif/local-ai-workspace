@@ -5415,7 +5415,7 @@
       "latestAttemptCompressedLogSha256": "aaf91f91b166eef790bdf88d22ec7daa785ca421be35a5d395668b4d040d6efc",
       "latestAttemptXmlFiles": 0,
       "previousManifestSha256BeforeLatestAttempt": "9c80a6f7712085ed723f74d4cd149d0c2e7412e8686b591d42ad45cb1ec0158d",
-      "currentManifestSha256": "2d89d35544eec35618b9c6f83b37d09d7f10e68defff1c3f872fa516078ef19e",
+      "currentManifestSha256": "9da2d11af8a0836eeac12931ed43348c56a08069e61dcfd2f930fd9f5278a207",
       "latestAttemptCommand": "host/jdk17-runtime-20261013/command.txt",
       "latestAttemptTaskOutcomes": "host/jdk17-runtime-20261013/task-outcomes.txt",
       "latestAttemptExitCode": 130,
@@ -5424,8 +5424,8 @@
       "latestAttemptFileHashes": "host/jdk17-runtime-20261013/file-hashes.txt",
       "latestAttemptPostRunTreeCheck": "host/jdk17-runtime-20261013/post-run-working-tree.txt",
       "latestAttemptTests": "NOT_AVAILABLE; :app:testDebugUnitTest did not complete",
-      "manifestEntryCount": 115,
-      "manifestVerification": "PASS: local checkout verification matched 115/115 entries in the current outer manifest. Independent audit rehashed 21/21 focused payloads; it checked the prior outer manifest digest and 115 entry lines but did not independently rehash all prior outer payloads.",
+      "manifestEntryCount": 142,
+      "manifestVerification": "Local sha256sum verification passed for 142/142 entries after this documentation update. Independent audit rehashed only five bundle text payloads and checked manifest digest/counts; gzip payloads and all outer payloads were not independently rehashed.",
       "diagnosticRuns": "docs/validation/ux-02e-inline-links/diagnostic-20261013/RUNS.md",
       "diagnosticManifest": "docs/validation/ux-02e-inline-links/diagnostic-20261013/SHA256SUMS",
       "diagnosticManifestSha256": "32237f5a599673465744dd0301ab7b71d13ffded1d617750fd83abd70cca5aff",
@@ -5449,7 +5449,7 @@
       "UX-03": "PENDING",
       "functionalBacklog": "PAUSED"
     },
-    "next": "Stop after this one offline focused reproduction and independent audit. The target passed, but the full HOST gate remains incomplete and UX-02e is not accepted. No further test, UX-02f, UX-03, or functional backlog task is started under this contract.",
+    "next": "Stop after recording the independent audit. Only the focused target result is accepted; UX-02e remains NOT ACCEPTED because the full HOST gate is incomplete. No additional test/build, UX-02f, UX-03, or other task is started under this contract.",
     "pendingRecovery": {
       "status": "COMPLETED_INCOMPLETE_ROBOLECTRIC_STALL_OPERATOR_INTERRUPTED",
       "codeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
@@ -5617,7 +5617,7 @@
       "plan": "Original 97 task IDs/order/dependencies preserved; M01-06 remains PENDING_REQUIRES_DEVICE.",
       "authorizationBoundary": "No further HOST attempt and no UX-02f/UX-03 until new evidence or explicit instruction."
     },
-    "latestAttemptAuditStatus": "PENDING_INDEPENDENT_AUDIT",
+    "latestAttemptAuditStatus": "INDEPENDENTLY_AUDITED_ACCEPTED_FOCUSED_RESULT_ONLY",
     "previousGateAttemptAuditNote": "Historical: the earlier JDK21 Gradle-runtime attempt contradicted README and failed at KSP JVM-target compatibility. The later JDK17-runtime full gate is the latest attempt and is recorded separately as incomplete; see latestFullHostGate.",
     "environmentHistory": [
       {
@@ -5816,7 +5816,7 @@
       "independentAuditHead": "ab349096d3a74fcd10eb83819ddb3d8bd8484a96",
       "independentAuditStatus": "AUDITED_INCOMPLETE_TIMEOUT_NOT_ACCEPTED"
     },
-    "nextRecommendedTask": "No next original task selected. The offline focused target passed 1/1, but the full HOST gate remains incomplete and UX-02e is not accepted. The earlier full-suite Robolectric stall cause remains NOT_DETERMINED; PRODUCT_FAILURE_NOT_ESTABLISHED. Latest focused evidence awaits independent audit. M01-06 remains PENDING_REQUIRES_DEVICE; the authentic 97-task catalog is unavailable and no task/dependency was inferred.",
+    "nextRecommendedTask": "No task selected. The authentic 97-task catalog is unavailable, so no other task/dependency is inferred. UX-02e remains NOT ACCEPTED overall; the earlier full-suite stall cause is NOT_DETERMINED and PRODUCT_FAILURE is NOT_ESTABLISHED. M01-06 remains PENDING_REQUIRES_DEVICE.",
     "historicalIndependentAuditBeforeCurrent": {
       "status": "AUDITED_BLOCKED_NOT_ACCEPTED",
       "auditedBranchHead": "51adf9458bddd3bac184137a091f097c3a02b7a1",
@@ -5940,7 +5940,7 @@
     },
     "latestOfflineFocusedAttempt": {
       "status": "TARGET_TEST_PASS_FULL_HOST_GATE_INCOMPLETE_NOT_ACCEPTED",
-      "auditStatus": "PENDING_INDEPENDENT_AUDIT",
+      "auditStatus": "INDEPENDENTLY_AUDITED_ACCEPTED_FOCUSED_RESULT_ONLY",
       "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
       "featureHeadAtContractStart": "f6e1b642da5f77010203157b52eadd9d5bad0bc1",
       "worktree": {
@@ -6041,14 +6041,14 @@
         "bundle": {
           "path": "docs/validation/ux-02e-inline-links/offline-focused-20261013/SHA256SUMS",
           "entries": 26,
-          "sha256": "f26e0f76dd04fd7ad06156d722ca16cf25d82eb720ed362174aae5d9b028f7d1",
-          "verified": true
+          "sha256": "77c8b436071ca9d7ef6ffbb63cc56e8d57cea30d1a18dd9723d7cc5cbb90f896",
+          "locallyVerifiedAfterUpdate": true
         },
         "parent": {
           "path": "docs/validation/ux-02e-inline-links/SHA256SUMS",
           "entries": 142,
-          "sha256": "99f85f1610bf90bee2b8620c6ee8614c3746026f8826578f0eda287b3ba1c054",
-          "verified": true
+          "sha256": "9da2d11af8a0836eeac12931ed43348c56a08069e61dcfd2f930fd9f5278a207",
+          "locallyVerifiedAfterUpdate": true
         }
       },
       "compressedLog": {
@@ -6056,6 +6056,85 @@
         "bytes": 30043,
         "sha256": "d199a195aa1356179f9b42d8936f624d8c5f306080283dee0708762d34d96b71"
       }
+    },
+    "latestOfflineFocusedAudit": {
+      "status": "INDEPENDENTLY_AUDITED_ACCEPTED_FOCUSED_RESULT_ONLY",
+      "auditedAtUtc": "2026-10-13",
+      "auditedBranchHead": "d160d26372c6576d75fe39a6e8ae2b65ff1d51bf",
+      "auditedBranchParent": "f6e1b642da5f77010203157b52eadd9d5bad0bc1",
+      "compare": {
+        "paths": 32,
+        "allPathsUnderDocs": true,
+        "productOrWorkflowChanges": false,
+        "testedCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7"
+      },
+      "sourceAndTest": {
+        "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+        "gradle": "8.10.2",
+        "gradleRuntime": "Temurin JDK 17",
+        "testWorker": "Temurin JDK 21",
+        "offline": true,
+        "durationSeconds": 74.968,
+        "wrapperExitCode": 0,
+        "test": "com.localai.workspace.context.ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit",
+        "testStartEvents": 1,
+        "successfulTestEndEvents": 1,
+        "junit": {
+          "tests": 1,
+          "passed": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      "scopeAndLimitations": {
+        "focusedResult": "ACCEPTED_FOR_THIS_TEST_ONLY",
+        "fullHostGate": "INCOMPLETE_NOT_ACCEPTED",
+        "notRun": [
+          ":litert-compat:testDebugUnitTest",
+          ":app:lintDebug",
+          ":app:compileDebugAndroidTestKotlin"
+        ],
+        "ux02eOverall": "NOT_ACCEPTED",
+        "earlierFullSuiteStallCause": "NOT_DETERMINED",
+        "productFailure": "NOT_ESTABLISHED",
+        "emulator": "NOT_RUN_FOR_THIS_ATTEMPT",
+        "physicalDevice": "NOT_RUN",
+        "apk": "NOT_GENERATED"
+      },
+      "independentHashAudit": {
+        "rehashedTextPayloads": [
+          "offline-focused-20261013/RESULTS.md",
+          "offline-focused-20261013/command.txt",
+          "offline-focused-20261013/jdk-preflight.txt",
+          "offline-focused-20261013/test-events.tsv",
+          "offline-focused-20261013/xml/TEST-com.localai.workspace.context.ContextFoundationDeduplicationTest.xml"
+        ],
+        "rehashedPayloadCount": 5,
+        "allRehashedPayloadsMatchedManifest": true,
+        "bundleManifestAtAudit": {
+          "entries": 26,
+          "sha256": "f26e0f76dd04fd7ad06156d722ca16cf25d82eb720ed362174aae5d9b028f7d1"
+        },
+        "outerManifestAtAudit": {
+          "entries": 142,
+          "sha256": "99f85f1610bf90bee2b8620c6ee8614c3746026f8826578f0eda287b3ba1c054"
+        },
+        "gzipPayloadsIndependentlyRehashed": false,
+        "allOuterManifestPayloadsIndependentlyRehashed": false,
+        "limitation": "The connector did not allow downloading the gzip payloads; the independent audit checked manifest digest/count but did not independently rehash those binaries or all outer payloads."
+      },
+      "documentaryUpdate": {
+        "bundleManifestAfterUpdate": {
+          "entries": 26,
+          "sha256": "77c8b436071ca9d7ef6ffbb63cc56e8d57cea30d1a18dd9723d7cc5cbb90f896"
+        },
+        "outerManifestEntryCountAfterUpdate": 142,
+        "outerManifestDigestStoredOutsideValidationTree": true
+      },
+      "main": "de615b772cf37a99e7e08a647c59607b271de606",
+      "peeledV042": "de615b772cf37a99e7e08a647c59607b271de606",
+      "backlog": "Original 97-task catalog unavailable in this context; no task was selected or inferred. M01-06 remains PENDING_REQUIRES_DEVICE; plan/progress unchanged."
     }
   },
   "latestIndependentTaskEligibilityReview": {

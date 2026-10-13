@@ -1,18 +1,26 @@
-# UX-02e latest result: offline focused Robolectric reproduction (2026-10-13)
+# UX-02e latest result: independent audit of offline focused test (2026-10-13)
 
-## Result
+## Audit outcome
 
-Code tested: `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`; feature branch HEAD at contract start: `f6e1b642da5f77010203157b52eadd9d5bad0bc1`. A clean detached checkout ran exactly one actual target invocation in Gradle offline mode: `ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit`. It passed **1/1**, with one `TEST_START`, one successful `TEST_END`, JUnit XML 1/1 and Gradle exit 0 (`BUILD SUCCESSFUL`). Duration was 74.968 s, `2026-10-13T16:37:19.330Z`–`16:38:34.298Z`; wrapper PID 138242. Gradle runtime was Temurin JDK 17.0.20.1; the `--info` log shows `Gradle Test Executor 1` launched with Temurin JDK 21.0.12.1.
+`INDEPENDENTLY_AUDITED_ACCEPTED_FOCUSED_RESULT_ONLY` applies **only** to the single focused offline test result. UX-02e remains **NOT ACCEPTED overall** because the required full HOST gate is incomplete. Tested code SHA: `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`. Independent audit checked remote feature HEAD `d160d26372c6576d75fe39a6e8ae2b65ff1d51bf` (direct child of `f6e1b642da5f77010203157b52eadd9d5bad0bc1`); all 32 compared paths were under `docs/`, with no product or workflow change after the tested code. `main` and peeled `v0.4.2` remain `de615b772cf37a99e7e08a647c59607b271de606`.
 
-The existing Gradle and Maven-local artifacts were sufficient for this focused test in `--offline` mode. No installs, downloads, cleanup, or online fallback occurred. A prior CLI argument-order check printed usage and exited before any Gradle task or test; it is preserved separately and is not counted as a test. The corrected target test was executed once. Detailed command, preflight, raw log, events, XML, task outcomes and hashes: [`offline-focused-20261013/RESULTS.md`](../validation/ux-02e-inline-links/offline-focused-20261013/RESULTS.md).
+The audited invocation used Gradle 8.10.2/JDK 17 for Gradle and JDK 21 for its test worker. The exact target `ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit` passed 1/1: 74.968 s, exit 0, one start/end event, no skips/failures/errors. The prior full-suite stall was not reproduced; its cause remains **NOT_DETERMINED**, and **PRODUCT_FAILURE is NOT_ESTABLISHED**. `:litert-compat:testDebugUnitTest`, `:app:lintDebug`, and `:app:compileDebugAndroidTestKotlin` were not run, so the full HOST gate is still incomplete. No new test/build was run for this documentary closure.
 
-## Status and limits
+## Independent hash review and regenerated manifests
 
-UX-02e remains **NOT ACCEPTED**. This single target PASS does not close the full HOST gate; that gate remains incomplete, and `:litert-compat:testDebugUnitTest`, lint and AndroidTest Kotlin compilation were not run in this contract. The earlier full-suite Robolectric stall did not reproduce in this isolated run; its cause remains **NOT_DETERMINED**, with no product failure established. The latest focused evidence awaits independent audit.
+The auditor rehashed exactly five text payloads under `docs/validation/ux-02e-inline-links/offline-focused-20261013/`: `RESULTS.md`, `command.txt`, `jdk-preflight.txt`, `test-events.tsv`, and the target JUnit XML. All five matched the bundle manifest. At audit time, the bundle manifest had 26 entries and SHA-256 `f26e0f76dd04fd7ad06156d722ca16cf25d82eb720ed362174aae5d9b028f7d1`; the outer manifest had 142 entries and SHA-256 `99f85f1610bf90bee2b8620c6ee8614c3746026f8826578f0eda287b3ba1c054`. The auditor checked those manifest digests/counts but did **not** independently rehash the `.gz` log payloads or all 142 outer payloads; the connector prevented gzip download.
 
-EMULATOR was not run here; the separate historical global result remains FAIL due to the unavailable authentic Room v1 fixture and six model-dependent skips. PHYSICAL_DEVICE is NOT_RUN; no APK was generated. M01-06 remains `PENDING_REQUIRES_DEVICE`. The authentic 97-task catalog was not present, reconstructed, or changed. Do not begin another test, UX-02f, UX-03, or functional backlog work under this handoff.
+This closure updated the current audit records and regenerated both manifests. The bundle remains 26 entries, current SHA-256 `77c8b436071ca9d7ef6ffbb63cc56e8d57cea30d1a18dd9723d7cc5cbb90f896`; local checksum verification passed 26/26. The outer manifest remains 142 entries, current SHA-256 `9da2d11af8a0836eeac12931ed43348c56a08069e61dcfd2f930fd9f5278a207`; local checksum verification passed 142/142. These local post-update checks are not represented as part of the independent auditor's narrower byte rehash.
 
-The branch was clean/tracked at `f6e1b642da5f77010203157b52eadd9d5bad0bc1` before this documentation/evidence update; `main` and peeled `v0.4.2` were `de615b772cf37a99e7e08a647c59607b271de606`. The 26-entry per-run manifest SHA-256 is `f26e0f76dd04fd7ad06156d722ca16cf25d82eb720ed362174aae5d9b028f7d1`; the current 142-entry parent manifest SHA-256 is `99f85f1610bf90bee2b8620c6ee8614c3746026f8826578f0eda287b3ba1c054` (all entries verify locally). The latest attempt awaits independent audit.
+## Status boundaries
+
+- **HOST:** focused target independently accepted 1/1; full gate **INCOMPLETE / NOT ACCEPTED**.
+- **EMULATOR:** NOT_RUN for this audit. The separate historical global run remains FAIL on the authentic Room v1 fixture, with six model-dependent cases SKIPPED.
+- **PHYSICAL_DEVICE:** NOT_RUN.
+- **APK:** NOT_GENERATED.
+- Earlier full-suite stall cause: **NOT_DETERMINED**; no product failure established.
+- Original 97-task catalog: unavailable; not reconstructed or changed. No other task selected. M01-06 remains `PENDING_REQUIRES_DEVICE`; task IDs/order/dependencies/progress unchanged.
+- Stop after this documentary closure. No further HOST attempt, UX-02f/UX-03, M00-M12, or other work under this contract.
 
 ---
 

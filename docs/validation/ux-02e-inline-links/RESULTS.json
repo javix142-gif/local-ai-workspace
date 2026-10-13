@@ -396,8 +396,8 @@
     "latestAttemptTests": "NOT_AVAILABLE; app unit test task did not complete",
     "latestAttemptPostRunTreeCheck": "host/jdk17-runtime-20261013/post-run-working-tree.txt",
     "latestAttemptFileHashes": "host/jdk17-runtime-20261013/file-hashes.txt",
-    "manifestEntryCount": 93,
-    "manifestVerification": "93/93 parent-manifest entries verified; the parent manifest excludes itself and its digest is recorded in EXECUTION_STATE.json and the handoff.",
+    "manifestEntryCount": 142,
+    "manifestVerification": "The outer manifest excludes itself. After this documentation update, local verification is recorded for all listed entries; its digest is stored in EXECUTION_STATE.json and CODEX_TO_WORK_HANDOFF.md to avoid recursive inclusion.",
     "diagnosticRuns": "diagnostic-20261013/RUNS.md",
     "diagnosticManifest": "diagnostic-20261013/SHA256SUMS",
     "latestFullHostGateDirectory": "full-host-gate-20261013/",
@@ -451,7 +451,7 @@
     "remoteReadbackVerified": true
   },
   "status": "FOCUSED_TARGET_PASS_FULL_HOST_GATE_INCOMPLETE_NOT_ACCEPTED",
-  "next": "Stop after the one offline focused target test and independent audit. The full HOST gate remains incomplete; UX-02e is not accepted. Do not run additional tests or start UX-02f/UX-03 under this contract.",
+  "next": "Stop after recording the independent audit. Only the focused target result is accepted; UX-02e remains NOT ACCEPTED because the full HOST gate is incomplete. No additional test/build, UX-02f, UX-03, or other task is started under this contract.",
   "recoveryWorkflowCheck": {
     "androidEmulatorWorkflow": ".github/workflows/android-emulator-instrumented.yml reviewed; not dispatched or triggered",
     "qaArm64Workflow": ".github/workflows/qa-debug-arm64-apk.yml reviewed; not dispatched or triggered",
@@ -483,8 +483,8 @@
     "next": "Stop for independent audit of the bounded focused diagnostics. Full host gate remains incomplete; no additional test or product work under this contract.",
     "followUpDiagnosticResults": "diagnostic-20261013/RUNS.md; ChatContentUiTest 15/15 PASS and AuditHarness.writeSelectorReproductions 1/1 PASS; prior stall not reproduced, root cause remains undetermined."
   },
-  "nextRecommendedTask": "No original task selected. The offline focused target passed 1/1, but the full HOST gate remains incomplete and UX-02e is not accepted. The previous full-suite stall cause remains NOT_DETERMINED; PRODUCT_FAILURE_NOT_ESTABLISHED. Await independent audit/new instruction. M01-06 remains PENDING_REQUIRES_DEVICE; the authentic 97-task catalog is unavailable.",
-  "latestAttemptAuditStatus": "PENDING_INDEPENDENT_AUDIT",
+  "nextRecommendedTask": "No task selected. The authentic 97-task catalog is unavailable, so no other task/dependency is inferred. UX-02e remains NOT ACCEPTED overall; the earlier full-suite stall cause is NOT_DETERMINED and PRODUCT_FAILURE is NOT_ESTABLISHED. M01-06 remains PENDING_REQUIRES_DEVICE.",
+  "latestAttemptAuditStatus": "INDEPENDENTLY_AUDITED_ACCEPTED_FOCUSED_RESULT_ONLY",
   "previousGateAttemptAuditNote": "Historical: the earlier JDK21 Gradle-runtime attempt contradicted README and failed at KSP JVM-target compatibility. The later JDK17-runtime full gate is the latest attempt and is recorded separately as incomplete; see latestFullHostGate.",
   "previousBaseRemoteHead": "83796439caa5eba5543062ed2d82c8f021ed2e2c",
   "pendingRecoveryHistory": [
@@ -1007,7 +1007,7 @@
   },
   "latestOfflineFocusedTest": {
     "status": "TARGET_TEST_PASS_FULL_HOST_GATE_INCOMPLETE_NOT_ACCEPTED",
-    "auditStatus": "PENDING_INDEPENDENT_AUDIT",
+    "auditStatus": "INDEPENDENTLY_AUDITED_ACCEPTED_FOCUSED_RESULT_ONLY",
     "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
     "featureHeadAtContractStart": "f6e1b642da5f77010203157b52eadd9d5bad0bc1",
     "worktree": {
@@ -1109,10 +1109,90 @@
     "physicalDevice": "NOT_RUN",
     "evidenceManifest": {
       "path": "offline-focused-20261013/SHA256SUMS",
-      "entries": 25,
-      "sha256": "e1464d0deee6f2f50b98075057a6b797b5c5e1eda342897265ad2c1ff9511bf0",
-      "verification": "sha256sum -c passed for all entries from the bundle directory"
+      "entries": 26,
+      "sha256": "77c8b436071ca9d7ef6ffbb63cc56e8d57cea30d1a18dd9723d7cc5cbb90f896",
+      "localVerificationAfterDocumentaryUpdate": "26/26 payload entries match the regenerated bundle manifest",
+      "independentAuditScope": "Auditor independently rehashed five text payloads only; it checked manifest digests/counts but did not independently rehash gzip payloads or all outer-manifest payloads."
     },
     "sourceAndDependencyInspection": "offline-focused-20261013/source-and-dependency-inspection.txt"
+  },
+  "latestOfflineFocusedAudit": {
+    "status": "INDEPENDENTLY_AUDITED_ACCEPTED_FOCUSED_RESULT_ONLY",
+    "auditedAtUtc": "2026-10-13",
+    "auditedBranchHead": "d160d26372c6576d75fe39a6e8ae2b65ff1d51bf",
+    "auditedBranchParent": "f6e1b642da5f77010203157b52eadd9d5bad0bc1",
+    "compare": {
+      "paths": 32,
+      "allPathsUnderDocs": true,
+      "productOrWorkflowChanges": false,
+      "testedCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7"
+    },
+    "sourceAndTest": {
+      "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+      "gradle": "8.10.2",
+      "gradleRuntime": "Temurin JDK 17",
+      "testWorker": "Temurin JDK 21",
+      "offline": true,
+      "durationSeconds": 74.968,
+      "wrapperExitCode": 0,
+      "test": "com.localai.workspace.context.ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit",
+      "testStartEvents": 1,
+      "successfulTestEndEvents": 1,
+      "junit": {
+        "tests": 1,
+        "passed": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    "scopeAndLimitations": {
+      "focusedResult": "ACCEPTED_FOR_THIS_TEST_ONLY",
+      "fullHostGate": "INCOMPLETE_NOT_ACCEPTED",
+      "notRun": [
+        ":litert-compat:testDebugUnitTest",
+        ":app:lintDebug",
+        ":app:compileDebugAndroidTestKotlin"
+      ],
+      "ux02eOverall": "NOT_ACCEPTED",
+      "earlierFullSuiteStallCause": "NOT_DETERMINED",
+      "productFailure": "NOT_ESTABLISHED",
+      "emulator": "NOT_RUN_FOR_THIS_ATTEMPT",
+      "physicalDevice": "NOT_RUN",
+      "apk": "NOT_GENERATED"
+    },
+    "independentHashAudit": {
+      "rehashedTextPayloads": [
+        "offline-focused-20261013/RESULTS.md",
+        "offline-focused-20261013/command.txt",
+        "offline-focused-20261013/jdk-preflight.txt",
+        "offline-focused-20261013/test-events.tsv",
+        "offline-focused-20261013/xml/TEST-com.localai.workspace.context.ContextFoundationDeduplicationTest.xml"
+      ],
+      "rehashedPayloadCount": 5,
+      "allRehashedPayloadsMatchedManifest": true,
+      "bundleManifestAtAudit": {
+        "entries": 26,
+        "sha256": "f26e0f76dd04fd7ad06156d722ca16cf25d82eb720ed362174aae5d9b028f7d1"
+      },
+      "outerManifestAtAudit": {
+        "entries": 142,
+        "sha256": "99f85f1610bf90bee2b8620c6ee8614c3746026f8826578f0eda287b3ba1c054"
+      },
+      "gzipPayloadsIndependentlyRehashed": false,
+      "allOuterManifestPayloadsIndependentlyRehashed": false,
+      "limitation": "The connector did not allow downloading the gzip payloads; the independent audit checked manifest digest/count but did not independently rehash those binaries or all outer payloads."
+    },
+    "documentaryUpdate": {
+      "bundleManifestAfterUpdate": {
+        "entries": 26,
+        "sha256": "77c8b436071ca9d7ef6ffbb63cc56e8d57cea30d1a18dd9723d7cc5cbb90f896"
+      },
+      "outerManifestEntryCountAfterUpdate": 142,
+      "outerManifestDigestStoredOutsideValidationTree": true
+    },
+    "main": "de615b772cf37a99e7e08a647c59607b271de606",
+    "peeledV042": "de615b772cf37a99e7e08a647c59607b271de606",
+    "backlog": "Original 97-task catalog unavailable in this context; no task was selected or inferred. M01-06 remains PENDING_REQUIRES_DEVICE; plan/progress unchanged."
   }
 }

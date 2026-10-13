@@ -2,9 +2,16 @@
 
 ## Outcome
 
-**Focused target PASS (1/1); full HOST gate remains incomplete; UX-02e is not accepted.** Tested source SHA: `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`, in a detached worktree at `/workspace/ux02e-offline-a182`. Feature branch HEAD at contract start was `f6e1b642da5f77010203157b52eadd9d5bad0bc1`. `main` and peeled `v0.4.2` were `de615b772cf37a99e7e08a647c59607b271de606`.
+**Focused target PASS (1/1), independently audited for this target only; the full HOST gate remains incomplete and UX-02e is not accepted overall.** Tested source SHA: `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`, in a detached worktree at `/workspace/ux02e-offline-a182`. Feature branch HEAD at contract start was `f6e1b642da5f77010203157b52eadd9d5bad0bc1`. `main` and peeled `v0.4.2` were `de615b772cf37a99e7e08a647c59607b271de606`.
 
 The target was `ContextFoundationDeduplicationTest.productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit`. Gradle ran in offline mode with the existing `/home/agent/.gradle` cache. Preflight also found the API 35 Android artifact in Maven local, but the tracked repository does not declare `mavenLocal()` and this report does not attribute that artifact as Gradle's source. The successful offline execution proves that all dependencies required by this target resolved from Gradle's available local state. No online fallback, component installation, cache cleanup, or data cleanup was performed. The isolated test did not reproduce the previous full-suite stall. That earlier stall's cause remains **NOT_DETERMINED**; no product failure is established.
+
+
+## Independent audit scope (2026-10-13)
+
+The orchestrator independently accepted this **focused target result only** as `INDEPENDENTLY_AUDITED_ACCEPTED_FOCUSED_RESULT_ONLY`. At audited feature HEAD `d160d26372c6576d75fe39a6e8ae2b65ff1d51bf`, the 32-path comparison from `f6e1b642da5f77010203157b52eadd9d5bad0bc1` contained documentation paths only; tested code remained `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`. The JUnit result remains one test passed, with no failures, errors, or skips. The full HOST gate was not completed: LiteRT compatibility tests, lint, and AndroidTest Kotlin compilation were not run. Therefore UX-02e remains **NOT ACCEPTED overall**. The earlier full-suite stall cause remains `NOT_DETERMINED`; no `PRODUCT_FAILURE` is established.
+
+For the independent hash audit, the auditor recalculated five text payloads under this bundle—`RESULTS.md`, `command.txt`, `jdk-preflight.txt`, `test-events.tsv`, and the JUnit XML—and matched them to the 26-entry bundle manifest. The auditor also checked the bundle-manifest SHA-256/count and the outer-manifest SHA-256/count (142 entries). The `.gz` log payloads and all other outer-manifest payloads were **not** independently rehashed by the auditor. The documentation closure regenerated both manifests; their post-update hashes and local manifest-check results are recorded in the root RESULTS/state/handoff.
 
 ## Execution record
 
@@ -32,7 +39,7 @@ An initial command-order check put `--tests` before the task. Gradle printed CLI
 | Earlier full-suite Robolectric stall | Not reproduced by this isolated run; cause remains **NOT_DETERMINED** |
 | Product failure | **NOT_ESTABLISHED** |
 | Full HOST gate | **INCOMPLETE**; this one test does not replace the full gate |
-| UX-02e acceptance | **NOT ACCEPTED**; awaiting independent audit and full-gate evidence |
+| UX-02e acceptance | **NOT ACCEPTED overall**; the independent audit accepts only this focused target, while the full HOST gate remains incomplete |
 | EMULATOR / PHYSICAL_DEVICE / APK | **NOT_RUN / NOT_RUN / NOT_GENERATED** |
 | Other tests, lint, AndroidTest | **NOT_RUN** in this contract |
 
