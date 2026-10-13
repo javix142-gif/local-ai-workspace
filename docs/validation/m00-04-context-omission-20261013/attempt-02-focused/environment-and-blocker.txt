@@ -1,0 +1,32 @@
+observed_at_utc=2026-10-13T22:07:37Z
+overlay          32G   29G  1.8G  95% /
+none            4.9G  4.6G  345M  94% /tmp
+
+Gradle worker launch:
+Command: /workspace/.toolchain/jdk-21-temurin/bin/java -Djava.awt.headless=true -Djava.library.path=/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib:/workspace/local-ai-workspace/app/src/testDebug/jniLibs:/workspace/local-ai-workspace/app/src/test/jniLibs -Dorg.gradle.internal.worker.tmpdir=<workspace test temp> --add-opens=java.base/java.io=ALL-UNNAMED @/home/agent/.gradle/.tmp/gradle-worker-classpath17675307320158505171txt -Xmx512m -Dfile.encoding=UTF-8 -Duser.country -Duser.language=en -Duser.variant -ea worker.org.gradle.process.internal.worker.GradleWorkerMain 'Gradle Test Executor 1'
+
+Robolectric failure excerpt:
+ContextOmissionInspectorUiTest > materialDropReasonIsVisibleInInspectorWithoutShowingDroppedMemoryText FAILED
+    java.lang.AssertionError: Unable to load Robolectric native runtime library
+        at org.robolectric.nativeruntime.DefaultNativeRuntimeLoader.ensureLoaded(DefaultNativeRuntimeLoader.java:187)
+        at org.robolectric.nativeruntime.DefaultNativeRuntimeLoader.injectAndLoad(DefaultNativeRuntimeLoader.java:145)
+        at org.robolectric.android.internal.AndroidTestEnvironment.setUpApplicationState(AndroidTestEnvironment.java:142)
+        at org.robolectric.RobolectricTestRunner.beforeTest(RobolectricTestRunner.java:284)
+        at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:279)
+        at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+        at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+        at java.base/java.lang.Thread.run(Thread.java:1583)
+
+        Caused by:
+        java.io.IOException: No space left on device
+            at java.base/java.io.FileOutputStream.writeBytes(Native Method)
+            at java.base/java.io.FileOutputStream.write(FileOutputStream.java:367)
+            at com.google.common.io.ByteStreams.copy(ByteStreams.java:122)
+            at com.google.common.io.ByteSource.copyTo(ByteSource.java:280)
+            at org.robolectric.nativeruntime.DefaultNativeRuntimeLoader.maybeCopyFonts(DefaultNativeRuntimeLoader.java:239)
+            at org.robolectric.nativeruntime.DefaultNativeRuntimeLoader.lambda$ensureLoaded$0(DefaultNativeRuntimeLoader.java:171)
+            at org.robolectric.util.PerfStatsCollector.measure(PerfStatsCollector.java:82)
+            at org.robolectric.nativeruntime.DefaultNativeRuntimeLoader.ensureLoaded(DefaultNativeRuntimeLoader.java:165)
+            ... 9 more

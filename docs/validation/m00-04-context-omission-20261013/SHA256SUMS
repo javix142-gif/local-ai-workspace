@@ -1,0 +1,14 @@
+ca04c549201b4e3b99633a8e026d1330a6e60c4b057420fa80a3c77ab476769d  ./RESULTS.md
+795f2580c730318076dc0fa438175b47938c5410ed386fb95285c48d9dd68291  ./attempt-01-compile-failure/command.txt
+fff3a98a4d0408b1b328c144784211d98cecaca35a9f31ba42a8058f8ccba7ed  ./attempt-01-compile-failure/gradle.log
+d3ea1af0f93ad144affa0830a97653ac9e06008544a88ceee434950f2c37e88d  ./attempt-01-compile-failure/run-result.txt
+5cabe3da798bf98640b007ac724ba05fa7d025992510cbdab3092020b8c6fe34  ./attempt-01-compile-failure/xml-inventory.txt
+ecd8b13153e2dbdb40e3473fd44d227a90ea3dfb82ffa20365e21dd4fb684f14  ./attempt-02-focused/command.txt
+3f8cba15ecc59991642f5484201874f185d3a27f7ef80f95475d6408845d4279  ./attempt-02-focused/environment-and-blocker.txt
+92b68d7e2b2e0943324f6cd705a854518db2149e60114e7054edbc6f945e5020  ./attempt-02-focused/gradle.log
+7d6dc44ed6dbe7ffabdf41cb1c97a4cca4ae1e58c8fd889807d94bdaf02f5913  ./attempt-02-focused/junit-xml/TEST-com.localai.workspace.ui.ChatSessionPipelineTest.xml
+585468023f0a6473690103df044d9cb1df769e95e3b33564b68cad6afafee4a0  ./attempt-02-focused/junit-xml/TEST-com.localai.workspace.ui.ContextOmissionInspectorUiTest.xml
+3038ff30fae74aad3641b014f80d9d256e8beb22d8a575009c8303a3c8edabaf  ./attempt-02-focused/run-result.txt
+0bdc70b7ec8850ebc9d62a1cec4ccf52c6c352042cbfe8a396df221bd954322f  ./attempt-02-focused/task-outcomes-and-xml.txt
+a41ab13211dcc21327231493d8ff563f39da8f28f0903ffc2887e8f383cbae3c  ./preflight.txt
+bcb29900e5a6511326aeb018663d0fe17b35ba21996c2c2ed9473864893f5aea  ./summary.json

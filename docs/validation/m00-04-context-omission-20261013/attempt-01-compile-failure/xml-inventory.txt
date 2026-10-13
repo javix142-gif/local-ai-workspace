@@ -1,0 +1,1 @@
+No JUnit XML was emitted by attempt 01: :app:compileDebugUnitTestKotlin failed before :app:testDebugUnitTest started. The XML from attempt 02 is not attributed to attempt 01.

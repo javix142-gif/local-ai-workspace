@@ -1,14 +1,29 @@
-# Recuperación del plan original y perfil sintético M00-01 (2026-10-13)
+# Estado M00 y contrato M00-04 — avisos de omisión de contexto (2026-10-13)
 
-## Fuente preservada y reconciliación
+## Fuente original y crosswalk acotado
 
-Los originales permanecen sin modificar en [`Local_AI_Workspace_BACKLOG.json`](plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json) y [`Local_AI_Workspace_ROADMAP.md`](plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md). Sus SHA-256 son `bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235` (46,100 bytes) y `260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5` (47,285 bytes). La validación confirmó schema `local-ai-workspace/backlog-v1`, 97 tareas/IDs únicos, 120 dependencias, ninguna referencia faltante, grafo acíclico y estados fuente `TODO` para las 97. El roadmap permite implementación autónoma solo en M00. Se conserva el baseline TODO:97 y no se modificaron IDs, orden, dependencias ni estados fuente. Las etiquetas históricas libres de `completedTasks` no se usaron por sí solas como evidencia.
+Los archivos auténticos siguen preservados, sin cambios, en [`Local_AI_Workspace_BACKLOG.json`](plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json) y [`Local_AI_Workspace_ROADMAP.md`](plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md). Los hashes registrados son `bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235` y `260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5`. El backlog original sigue con 97/97 tareas `TODO`, 97 IDs únicos, 120 dependencias y grafo acíclico; no se cambiaron archivos fuente, estados, IDs, orden ni dependencias.
 
-El crosswalk separado registra **M00-01** (“Reproducir expansión XLSX de 300 KB”) como `HOST_DOD_DEMONSTRATED_FOR_SYNTHETIC_FIXTURE_ONLY`, asociado al SHA de código/prueba `988e666910f093344e32e96c46646f555dfb128a`. La fixture generada, de aproximadamente 300 KB, contiene 58,000 celdas vacías con estilo y tres celdas pobladas. La medición y la estimación histórica identifican el mecanismo de expansión para esta fixture sintética. El XLSX privado original no estaba disponible: su contenido, dimensiones y causa exacta siguen `NOT_DETERMINED`. La fixture no se usó como sustituto del archivo original ni de validación Motorola.
+| ID | Estado de evidencia | Delimitación |
+|---|---|---|
+| M00-01 | `HOST_DOD_DEMONSTRATED_FOR_SYNTHETIC_FIXTURE_ONLY` | Fixture representativa de 291,429 bytes. Causa/contenido del XLSX privado: `NOT_DETERMINED`. No sustituye el archivo ni la validación física. |
+| M00-02 | `HOST_SYNTHETIC_DOD_DEMONSTRATED` | El test filtrado `formattedEmptyXlsxCellsDoNotConsumeRepresentationBudget` pasó 1/1 para 58,000 celdas vacías con estilo y tres celdas pobladas. El ZIP sintético mide 291,429 bytes y expande ~2.41 MB XML; parser/representación conserva A1/A2/A3, fórmula/cache y referencias en 392 bytes y un chunk. Es host/sintético, no el XLSX privado ni validación de dispositivo. |
+| M00-03 | `VALIDADA_HOST` | Aceptación independiente ya registrada en el estado persistente. Este contrato no reabrió el gate ni reaudita manifiestos. Referencias: `docs/validation/m00-03/`, `m00-03-sheet-scope/RESULTS.md` y `m00-03-log10/RESULTS.md`. |
+| M00-04 | `FOCUSED_PARTIAL_HOST_VALIDATION_ENVIRONMENT_BLOCKED_NOT_ACCEPTED` | El test de chat pasó 1/1. El test UI del Inspector falló antes del cuerpo por `ENOSPC` al copiar fuentes del runtime nativo de Robolectric; la aserción del Inspector quedó `NOT_RUN`. No se demostró discrepancia de producto. |
 
-El siguiente candidato en el orden auténtico es **M00-02** (“Compactar parseo XLSX conservando límites”), depende de M00-01 y `requires_device=false`; queda pendiente y no se inició en este contrato. **M01-06** (“Ingesta e indexación reanudable”) sigue `PENDING_REQUIRES_DEVICE` y depende de M00-02.
+## Resultado M00-04
 
-## Evidencia HOST de M00-01
+Código de prueba validado: `2f5f3613fddca6e19f510d68b2529d48f5ccfa48`; commits de test: `a2f85e57a4363bf5752678c3368fb5ef270668df` y `2f5f3613fddca6e19f510d68b2529d48f5ccfa48`. No cambió código productivo. El primer intento (`a2f85e5`, 51 s, exit 1) se detuvo al compilar por imports inexistentes de Compose test; no generó XML ni inició pruebas. Corregidos esos imports, el segundo intento offline y filtrado (`2f5f361`, 106 s, exit 1) compiló tests y produjo XML: el test de `ChatSessionPipelineTest` pasó, mientras que `ContextOmissionInspectorUiTest` no alcanzó el cuerpo porque `RobolectricTestRunner.beforeTest` propagó `IOException: No space left on device` desde `DefaultNativeRuntimeLoader.maybeCopyFonts`. El XML registra 2 casos, 1 PASS, 1 setup failure, 0 errores/omisiones. En el preflight/post-run quedaban 1.8 GiB en overlay y 345 MiB en `/tmp`; la cuota o causa de almacenamiento más específica no se determinó. No se limpió nada y no hubo otro intento.
+
+Ambos intentos suman aproximadamente 157 s dentro del presupuesto de 300 s. Se usaron Gradle 8.10.2, JDK 17 para Gradle, JDK 21 para workers, SDK API 35/NDK existente y caché Gradle existente offline. Gate JVM completo, compatibilidad, lint y compilación AndroidTest: `NOT_RUN`. Emulador: `NOT_RUN` en este contrato; el resultado global histórico sigue separado (Room v1 FAIL y seis casos dependientes de modelos omitidos). Motorola/PHYSICAL_DEVICE: `NOT_RUN`; APK: `NOT_GENERATED`.
+
+**M00-04 no está aceptado**: la parte de aviso de chat tiene regresión PASS, pero falta un resultado válido de la prueba UI que demuestra el motivo `dropped` visible en Inspector. El siguiente trabajo original continúa siendo M00-04; no avanzar a M00-05 ni seleccionar otra tarea aquí. M01-06 permanece `PENDING_REQUIRES_DEVICE` y depende de M00-02. UX-02e permanece `AUDITED_INCOMPLETE_TIMEOUT_NOT_ACCEPTED`.
+
+La evidencia reproducible de los comandos, logs crudos, XML, resumen y hashes está en [`M00-04 RESULTS`](../validation/m00-04-context-omission-20261013/RESULTS.md) y `docs/validation/m00-04-context-omission-20261013/SHA256SUMS`.
+
+---
+
+## Evidencia histórica HOST de M00-01
 
 El commit de código/prueba `988e666910f093344e32e96c46646f555dfb128a` cambia únicamente `app/src/test/java/com/localai/workspace/data/StructuredDocumentsTest.kt`; la implementación del parser ya existía en `2df24f25a1156bfda054d5cafb1d02e9f85d67d1`. Para la fixture sintética: ZIP comprimido 291,429 bytes; worksheet XML 2,414,015 bytes; XML expandido total 2,414,269 bytes en 3 entradas; estimación fija histórica 23,066,872 bytes frente al límite de 8,388,608; representación UTF-8 actual 392 bytes y 1 chunk. La estimación deriva de la fórmula del código anterior y no se midió ejecutando el parser antiguo. Las etapas host midieron parseo 410 ms, representación 9 ms y chunk 3 ms; embedding/indexación no se ejecutó.
 

@@ -1,0 +1,10 @@
+code_sha=a2f85e57a4363bf5752678c3368fb5ef270668df
+status=RUNNING
+started_at_utc=2026-10-13T22:03:25Z
+exit_code=1
+finished_at_utc=2026-10-13T22:04:16Z
+status=TEST_COMPILE_FAILED;FOCUSED_TESTS_NOT_STARTED
+sourceCodeSha=a2f85e57a4363bf5752678c3368fb5ef270668df
+failure=Compose test API imports assertDoesNotExist and waitUntil unresolved; failure in compileDebugUnitTestKotlin before test task execution.
+xml=NOT_GENERATED_FOR_THIS_RUN
+classification=TEST_HARNESS_COMPILATION_ERROR;NOT_PRODUCT_FAILURE

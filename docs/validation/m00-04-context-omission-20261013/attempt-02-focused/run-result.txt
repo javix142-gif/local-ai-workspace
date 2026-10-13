@@ -1,0 +1,16 @@
+sourceCodeSha=2f5f3613fddca6e19f510d68b2529d48f5ccfa48
+status=FOCUSED_PARTIAL_ENVIRONMENT_BLOCKED_NOT_ACCEPTED
+started_at_utc=2026-10-13T22:04:51Z
+finished_at_utc=2026-10-13T22:06:37Z
+duration_seconds=106
+exit_code=1
+task=:app:testDebugUnitTest (two explicit test filters)
+tests_reported=2
+passed_testcases=1
+failed_testcases=1
+errors=0
+skipped=0
+failing_test_body=NOT_STARTED; failure occurred in RobolectricTestRunner.beforeTest
+cause_observed=java.io.IOException: No space left on device while Robolectric DefaultNativeRuntimeLoader.maybeCopyFonts copied native runtime fonts
+classification=ENVIRONMENT_BLOCKED_BEFORE_INSPECTOR_TEST_BODY; NOT_PRODUCT_FAILURE
+xml=attempt-02-focused/junit-xml/ (two original JUnit XML files; see task-outcomes-and-xml.txt)

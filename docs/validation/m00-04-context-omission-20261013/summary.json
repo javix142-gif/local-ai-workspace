@@ -1,0 +1,68 @@
+{
+  "taskId": "M00-04",
+  "taskTitle": "Ajustar aviso de contexto omitido",
+  "sourceStatus": "TODO_UNCHANGED",
+  "branch": "feat/0.5.0-skills-agents",
+  "baseRemoteSha": "c394c16f719d190f76f7ccfcb2a169c880c9ab66",
+  "testedCodeSha": "2f5f3613fddca6e19f510d68b2529d48f5ccfa48",
+  "codeCommits": [
+    "a2f85e57a4363bf5752678c3368fb5ef270668df",
+    "2f5f3613fddca6e19f510d68b2529d48f5ccfa48"
+  ],
+  "productionFilesChanged": false,
+  "status": "FOCUSED_PARTIAL_HOST_VALIDATION_ENVIRONMENT_BLOCKED_NOT_ACCEPTED",
+  "attempts": [
+    {
+      "codeSha": "a2f85e57a4363bf5752678c3368fb5ef270668df",
+      "startedAtUtc": "2026-10-13T22:03:25Z",
+      "finishedAtUtc": "2026-10-13T22:04:16Z",
+      "durationSeconds": 51,
+      "exitCode": 1,
+      "classification": "TEST_HARNESS_COMPILE_FAILURE_BEFORE_TESTS",
+      "xmlFiles": 0,
+      "evidence": "attempt-01-compile-failure/"
+    },
+    {
+      "codeSha": "2f5f3613fddca6e19f510d68b2529d48f5ccfa48",
+      "startedAtUtc": "2026-10-13T22:04:51Z",
+      "finishedAtUtc": "2026-10-13T22:06:37Z",
+      "durationSeconds": 106,
+      "exitCode": 1,
+      "gradleTask": ":app:testDebugUnitTest",
+      "tests": 2,
+      "passed": 1,
+      "xmlFailures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cases": {
+        "com.localai.workspace.ui.ChatSessionPipelineTest.materialContextOmissionWarnsWhileRoutineOmissionStaysDiagnosticOnly": "PASS",
+        "com.localai.workspace.ui.ContextOmissionInspectorUiTest.materialDropReasonIsVisibleInInspectorWithoutShowingDroppedMemoryText": "ENVIRONMENT_BLOCKED_BEFORE_TEST_BODY; Robolectric font-copy IOException ENOSPC"
+      },
+      "classification": "ENVIRONMENT_SETUP_FAILURE_NOT_PRODUCT_FAILURE",
+      "evidence": "attempt-02-focused/"
+    }
+  ],
+  "hostEnvironment": {
+    "os": "Linux x86_64",
+    "gradle": "8.10.2",
+    "gradleRuntimeJdk": "/workspace/.toolchain/jdk-17 (Temurin 17.0.20.1)",
+    "testWorkerJdk": "/workspace/.toolchain/jdk-21-temurin (Temurin 21.0.12.1)",
+    "androidSdk": "/workspace/.toolchain/android-sdk",
+    "androidPlatform": "android-35",
+    "androidNdk": "27.0.12077973; source.properties present",
+    "gradleUserHome": "/home/agent/.gradle (pre-existing; offline)",
+    "noInstallCleanupOrCacheCopy": true
+  },
+  "otherValidation": {
+    "fullJvmGate": "NOT_RUN",
+    "lint": "NOT_RUN",
+    "androidTestCompilation": "NOT_RUN",
+    "emulator": "NOT_RUN_IN_THIS_CONTRACT",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  },
+  "productFailureDemonstrated": false,
+  "m00_04Accepted": false,
+  "planSourceStatusesMutated": false,
+  "evidenceDirectory": "docs/validation/m00-04-context-omission-20261013/"
+}
