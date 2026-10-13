@@ -1,0 +1,7 @@
+source_sha=a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+tracked_diff_exit=0
+tracked_untracked_status_begin
+tracked_untracked_status_end
+Tracked and untracked worktree status is empty after the gate.
+Gradle-generated outputs are ignored and were created by this one run: .gradle/, app/build/, litert-compat/build/, llama-runtime/build/.
+No versioned source, build configuration, or NDK source.properties was modified.

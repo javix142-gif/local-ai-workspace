@@ -1,0 +1,13 @@
+Task progress from the one JDK17-runtime gate log. Gradle did not emit a final task summary.
+
+82 unique task/status announcements were observed before the run stopped. Explicit statuses in the announcement stream: NO-SOURCE=6, NO_STATUS_REPORTED=65, SKIPPED=3, UP-TO-DATE=8. These are observed announcement statuses, not a total of confirmed completed tasks; no completion total can be recovered after operator interruption.
+
+Requested tasks:
+- :app:testDebugUnitTest — entered; no Gradle task completion event, result summary, or JUnit XML before the worker was stopped.
+- :litert-compat:testDebugUnitTest — NOT_REACHED.
+- :app:lintDebug — NOT_REACHED.
+- :app:compileDebugAndroidTestKotlin — NOT_REACHED.
+
+A SIGQUIT thread dump was captured in the raw Gradle log at 2026-10-13 03:35:15 (the dump does not encode a timezone). It shows the Gradle Test worker waiting in FutureTask.get through org.robolectric.internal.bytecode.Sandbox.runOnMainThread; it does not identify the current test class or method. No assertion failure or test-specific failure was reported.
+
+After about 45 minutes inside the app JVM test task, with no new log output or XML, the operator interrupted the run. The child test worker was forcibly stopped; the wrapper shell recorded exit code 130 and tee exit code 0. Gradle produced no natural BUILD SUCCESSFUL or BUILD FAILED summary. Classification: INCOMPLETE_STALLED_ROBOLECTRIC_WORKER_OPERATOR_INTERRUPTED; root cause undetermined. Not a test failure and not a pass.

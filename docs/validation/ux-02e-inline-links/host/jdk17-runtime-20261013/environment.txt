@@ -1,0 +1,12 @@
+OS: Linux x86_64
+Source checkout: detached worktree /workspace/ux02e-a182-jdk17gradle-contract at a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+Gradle Wrapper: 8.10.2
+Gradle runtime: Temurin JDK 17.0.20.1 at /workspace/.toolchain/jdk-17
+App JVM test worker: Temurin JDK 21.0.12.1 at /workspace/.toolchain/jdk-21-temurin; Gradle log shows the test executor launched with this JDK.
+Toolchain discovery paths: /workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin
+Android SDK: /workspace/.toolchain/android-sdk; API 35; Build Tools 35.0.0
+NDK: 27.0.12077973; source.properties present
+CMake: 3.31.6
+Gradle user home: /home/agent/.gradle (pre-existing; not cleaned)
+No JDK/SDK/NDK/CMake install was performed. No cache or user data was deleted.
+Gradle log records failed network retries to dl.google.com and repo.maven.apache.org. The task reached JVM tests from locally available dependencies; no network event is asserted as the terminal cause.

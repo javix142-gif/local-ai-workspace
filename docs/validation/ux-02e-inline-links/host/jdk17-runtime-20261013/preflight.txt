@@ -1,0 +1,26 @@
+PREFLIGHT UX-02e JDK17 Gradle runtime (verified)
+observed_at_utc=2026-10-13T02:57:36Z
+HEAD=a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+git_status_tracked_untracked_ignored=EMPTY
+path_absent=.gradle
+path_absent=app/build
+path_absent=litert-compat/build
+path_absent=llama-runtime/build
+path_absent=.cxx
+path_absent=local.properties
+jdk_17_home=/workspace/.toolchain/jdk-17
+openjdk version "17.0.20.1" 2026-08-18
+javac 17.0.20.1
+jdk.compiler@17.0.20.1
+JAVA_COMPILER=true
+jdk_21_home=/workspace/.toolchain/jdk-21-temurin
+openjdk version "21.0.12.1" 2026-08-18 LTS
+javac 21.0.12.1
+jdk.compiler@21.0.12.1
+JAVA_COMPILER=true
+android_sdk=/workspace/.toolchain/android-sdk
+ndk_source_properties=Pkg.Desc = Android NDK;Pkg.Revision = 27.0.12077973;Pkg.BaseRevision = 27.0.12077973;Pkg.ReleaseName = r27;
+cmake=cmake version 3.31.6
+adb=Android Debug Bridge version 1.0.41
+overlay          32G   28G  2.2G  93% /
+none            4.9G  4.0G  975M  81% /tmp

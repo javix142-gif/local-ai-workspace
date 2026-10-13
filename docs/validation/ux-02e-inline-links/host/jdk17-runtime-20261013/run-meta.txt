@@ -1,0 +1,14 @@
+source_sha=a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+started_at_utc=2026-10-13T02:58:09Z
+runtime_jdk=/workspace/.toolchain/jdk-17
+worker_launcher=/workspace/.toolchain/jdk-21-temurin (app/build.gradle.kts tasks.withType<Test> JavaLanguageVersion.of(21))
+sdk=/workspace/.toolchain/android-sdk
+ndk=/workspace/.toolchain/android-sdk/ndk/27.0.12077973
+command=JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --console=plain --info --rerun-tasks -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin
+finished_at_utc=2026-10-13T03:53:20Z
+duration_seconds=3311
+gradle_exit_code=130
+tee_exit_code=0
+termination=operator interrupted after approximately 45 minutes in :app:testDebugUnitTest; no natural Gradle summary
+workerDiagnostic=thread dump present in gradle-gate.log.gz; worker blocked in Robolectric Sandbox.runOnMainThread; no test name identified
+network=Gradle log has repeated Network is unreachable retries to dl.google.com and repo.maven.apache.org; not established as terminal cause

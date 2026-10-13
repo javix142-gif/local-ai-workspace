@@ -1,0 +1,5 @@
+JUnit XML inventory for the new detached worktree and this single run only.
+Search: */build/test-results/**/*.xml under /workspace/ux02e-a182-jdk17gradle-contract
+JUnit XML files found: 0
+Tests/passed/failed/errors/skipped: NOT_AVAILABLE; :app:testDebugUnitTest did not complete and no JUnit XML was emitted.
+Resource, manifest, and other Android XML files are excluded.

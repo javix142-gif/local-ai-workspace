@@ -3747,9 +3747,9 @@
   },
   "postDeliveryPause": {
     "priority": "MEJORAS VISUALES Y EXPERIENCIA DE USUARIO",
-    "state": "UX02E_HOST_GATE_FAIL_REQUESTED_JDK21_RUNTIME_TARGET_MISMATCH_PENDING_INDEPENDENT_AUDIT",
-    "supersedes": "The parser standalone 20/20 remains supplemental. The 2026-10-13 HOST gate used the contract-requested JDK21 Gradle runtime and failed at :app:kspDebugKotlin because Java target 17 conflicts with KSP target 21. README documents JDK17 for Gradle and JDK21 for test workers. Requested tests/lint/AndroidTest compilation NOT_RUN; JUnit XML=0. UX-02e remains unaccepted.",
-    "waitFor": "Independent audit of the 2026-10-13 exact-SHA evidence; do not retry or start UX-02f/UX-03 or functional backlog.",
+    "state": "UX02E_HOST_GATE_INCOMPLETE_ROBOLECTRIC_WORKER_STALL_PENDING_INDEPENDENT_AUDIT",
+    "supersedes": "Parser standalone remains supplemental 20/20. The earlier JDK21 Gradle-runtime attempt was contrary to README. The corrected JDK17-runtime gate entered :app:testDebugUnitTest, stalled in Robolectric Sandbox.runOnMainThread, and was operator-interrupted after 3311 seconds (exit 130); no JUnit XML, test counts unavailable, and later requested tasks NOT_REACHED. UX-02e remains unaccepted.",
+    "waitFor": "Independent audit of the exact-SHA attempt and evidence; no rerun, UX-02f/UX-03, functional backlog, emulator, device, or APK under this contract.",
     "M01-06": "PENDING_REQUIRES_DEVICE",
     "physicalDevice": "NOT_RUN"
   },
@@ -4900,7 +4900,7 @@
   },
   "latestUx02e": {
     "name": "UX-02e inline Markdown links in assistant chat responses",
-    "status": "IMPLEMENTED_PARSER_PASS_GRADLE_GATE_FAIL_REQUESTED_JDK21_RUNTIME_TARGET_MISMATCH",
+    "status": "PARSER_STANDALONE_PASS_HOST_GATE_INCOMPLETE_ROBOLECTRIC_WORKER_STALL",
     "branch": "feat/0.5.0-skills-agents",
     "baseCommit": "fca3e65b16c5d54ef30747c4c90c13608e520499",
     "codeCommit": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
@@ -4933,50 +4933,55 @@
         "gradleXml": "NOT_EMITTED"
       },
       "gradleGate": {
-        "status": "FAIL_JVM_TARGET_MISMATCH_AFTER_TASK_START",
-        "command": "JAVA_HOME=/workspace/.toolchain/jdk-21-temurin PATH=/workspace/.toolchain/jdk-21-temurin/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --console=plain --info --rerun-tasks -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17 :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin",
-        "exitCode": 1,
-        "startedAtUtc": "2026-10-13T01:40:59Z",
-        "finishedAtUtc": "2026-10-13T01:46:04Z",
-        "durationSeconds": 305,
+        "status": "INCOMPLETE_STALLED_ROBOLECTRIC_WORKER_OPERATOR_INTERRUPTED",
+        "command": "JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --console=plain --info --rerun-tasks -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin",
+        "exitCode": 130,
+        "startedAtUtc": "2026-10-13T02:58:09Z",
+        "finishedAtUtc": "2026-10-13T03:53:20Z",
+        "durationSeconds": 3311,
         "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
-        "verifiedBranchHeadAtRun": "83796439caa5eba5543062ed2d82c8f021ed2e2c",
+        "verifiedBranchHeadAtRun": "51434af64d64c40157ddf61548e9ebaae3ec8217",
         "checkout": {
-          "path": "/workspace/ux02e-a182-jdk17toolchain",
+          "path": "/workspace/ux02e-a182-jdk17gradle-contract",
           "kind": "new detached worktree",
           "head": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
           "cleanIncludingIgnoredBeforeRun": true,
           "buildOutputsAbsentBeforeRun": true,
-          "trackedWorkingTreeCleanAfterRun": true
+          "trackedWorkingTreeCleanAfterRun": true,
+          "ignoredBuildOutputsGeneratedByRun": true
         },
         "gradle": {
           "wrapper": "8.10.2",
-          "gradleRuntimeJdk": "/workspace/.toolchain/jdk-21-temurin (Temurin 21.0.12.1)",
-          "toolchainPathProperty": "org.gradle.java.installations.paths=/workspace/.toolchain/jdk-17",
-          "toolchainDiscoveryEvidence": "Gradle --info log launches JavaProbe using /workspace/.toolchain/jdk-17/bin/java",
-          "actionableTaskSummary": "40 actionable tasks: 40 executed",
-          "failedTask": ":app:kspDebugKotlin",
-          "failure": "Inconsistent JVM-target compatibility detected for tasks 'compileDebugJavaWithJavac' (17) and 'kspDebugKotlin' (21).",
-          "classification": "BUILD_CONFIGURATION_MISMATCH_UNDER_CONTRACT_REQUESTED_JDK21_RUNTIME; REPOSITORY_README_DOCUMENTS_JDK17_GRADLE_RUNTIME",
-          "networkWarnings": "The log records retries with Network is unreachable for dl.google.com and repo.maven.apache.org; Gradle proceeded to task execution. This is not asserted as the terminal cause.",
-          "readmeRequirement": "README.md specifies JDK 17 to run Gradle and JDK 21 for app JVM Test workers; this contract explicitly requested JDK21 as Gradle runtime."
+          "gradleRuntimeJdk": "/workspace/.toolchain/jdk-17 (Temurin 17.0.20.1)",
+          "appJvmTestWorker": "/workspace/.toolchain/jdk-21-temurin (Temurin 21.0.12.1); launch observed in --info log",
+          "toolchainPathProperty": "org.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin",
+          "readmeCompliance": true,
+          "taskSummary": "No final Gradle summary. 82 unique task/status announcements were observed; these are progress records, not a completed-task count.",
+          "lastRequestedTask": ":app:testDebugUnitTest",
+          "failure": "No natural Gradle failure reported. The app JVM test worker remained waiting in Robolectric Sandbox.runOnMainThread; operator terminated the run after approximately 45 minutes without log progress.",
+          "classification": "INCOMPLETE_STALLED_ROBOLECTRIC_WORKER_OPERATOR_INTERRUPTED; test identity and root cause undetermined.",
+          "networkWarnings": "Gradle logged Network is unreachable retries to dl.google.com and repo.maven.apache.org during resolution/configuration; not established as terminal cause."
         },
         "environment": {
           "os": "Linux x86_64",
           "javaRuntime": {
-            "home": "/workspace/.toolchain/jdk-21-temurin",
-            "java": "21.0.12.1",
-            "javac": "21.0.12.1",
-            "jdk.compiler": true,
-            "systemJavaCompiler": true
-          },
-          "javaToolchain": {
             "home": "/workspace/.toolchain/jdk-17",
-            "java": "17.0.20.1",
+            "version": "17.0.20.1",
             "javac": "17.0.20.1",
             "jdk.compiler": true,
             "systemJavaCompiler": true
           },
+          "appJvmTestWorker": {
+            "home": "/workspace/.toolchain/jdk-21-temurin",
+            "version": "21.0.12.1",
+            "javac": "21.0.12.1",
+            "jdk.compiler": true,
+            "systemJavaCompiler": true
+          },
+          "toolchainDiscoveryPaths": [
+            "/workspace/.toolchain/jdk-17",
+            "/workspace/.toolchain/jdk-21-temurin"
+          ],
           "androidSdk": "/workspace/.toolchain/android-sdk",
           "androidPlatform": "android-35",
           "androidBuildTools": "35.0.0",
@@ -4985,46 +4990,52 @@
             "sourcePropertiesPresent": true
           },
           "cmake": "3.31.6",
-          "gradleUserHome": "/home/agent/.gradle",
+          "gradleUserHome": "/home/agent/.gradle (pre-existing; not cleaned)",
           "freeSpaceBefore": {
-            "workspace": "2.0 GiB",
-            "tmp": "976 MiB"
+            "workspace": "2.2 GiB",
+            "tmp": "975 MiB"
           },
-          "noSdkOrJdkInstallOrCleanup": true
+          "noToolchainInstallOrCacheCleanup": true
         },
         "tasks": {
-          "totalActionableReported": 40,
-          "completedBeforeFailure": 40,
-          "testDebugUnitTest": "NOT_RUN",
-          "litertCompatTestDebugUnitTest": "NOT_RUN",
-          "lintDebug": "NOT_RUN",
-          "compileDebugAndroidTestKotlin": "NOT_RUN"
+          "taskAnnouncementsObserved": 82,
+          "completedTaskCount": "NOT_AVAILABLE; no final Gradle summary",
+          "testDebugUnitTest": "INCOMPLETE_OPERATOR_INTERRUPTED; no XML/report",
+          "litertCompatTestDebugUnitTest": "NOT_REACHED",
+          "lintDebug": "NOT_REACHED",
+          "compileDebugAndroidTestKotlin": "NOT_REACHED"
         },
         "junitXml": {
           "files": 0,
-          "tests": "NOT_RUN",
-          "inventory": "host/jdk21-runtime-jdk17-toolchain-xml-inventory-20261013.txt"
+          "tests": "NOT_AVAILABLE; :app:testDebugUnitTest did not complete",
+          "inventory": "host/jdk17-runtime-20261013/junit-xml-inventory.txt"
         },
-        "log": "host/jdk21-runtime-jdk17-toolchain-gate-20261013.log.gz",
-        "rawLogBytes": 374417,
-        "rawLogSha256": "b5694b57610c2e17e7b1953a7053a659bd7d4683a7699edfdc7861665d36ee1d",
-        "compressedLogBytes": 32699,
-        "compressedLogSha256": "114adf0edb22639d03643919b3ad7976f63c51bf4d135300ef925a538dda9662",
-        "commandEvidence": "host/jdk21-runtime-jdk17-toolchain-command-20261013.txt",
-        "preflightEvidence": "host/jdk21-runtime-jdk17-toolchain-preflight-20261013.txt",
-        "environmentEvidence": "host/jdk21-runtime-jdk17-toolchain-run-meta-20261013.txt",
-        "taskOutcomeEvidence": "host/jdk21-runtime-jdk17-toolchain-task-outcomes-20261013.txt",
+        "log": "host/jdk17-runtime-20261013/gradle-gate.log.gz",
+        "rawLogBytes": 608148,
+        "rawLogSha256": "9e6ad449bff8a0d7039096b4f93cb7b6e297d224de8197aa4bec29b9faba7fc6",
+        "compressedLogBytes": 51920,
+        "compressedLogSha256": "aaf91f91b166eef790bdf88d22ec7daa785ca421be35a5d395668b4d040d6efc",
+        "commandEvidence": "host/jdk17-runtime-20261013/command.txt",
+        "preflightEvidence": "host/jdk17-runtime-20261013/preflight.txt",
+        "environmentEvidence": "host/jdk17-runtime-20261013/environment.txt",
+        "taskOutcomeEvidence": "host/jdk17-runtime-20261013/task-outcomes.txt",
+        "runMetadataEvidence": "host/jdk17-runtime-20261013/run-meta.txt",
         "retryPerformed": false,
         "productionFilesChanged": false,
         "apkGenerated": false,
         "emulatorOrDeviceUsed": false,
-        "classification": "BUILD_CONFIGURATION_MISMATCH_UNDER_CONTRACT_REQUESTED_JDK21_RUNTIME; REPOSITORY_README_DOCUMENTS_JDK17_GRADLE_RUNTIME"
+        "operatorTermination": {
+          "reason": "No new Gradle log output or JUnit XML for approximately 45 minutes; Robolectric worker waited in Sandbox.runOnMainThread.",
+          "signals": "Diagnostic SIGQUIT captured; graceful interruption attempts; test worker stopped to end the stalled invocation.",
+          "gradleShellExitCode": 130
+        },
+        "classification": "INCOMPLETE_STALLED_ROBOLECTRIC_WORKER_OPERATOR_INTERRUPTED"
       },
-      "appJvm": "NOT_RUN; Gradle failed at :app:kspDebugKotlin before the requested validation tasks completed.",
-      "litertCompatJvm": "NOT_RUN; Gradle failed at :app:kspDebugKotlin before the requested validation tasks completed.",
-      "composeUiTests": "NOT_RUN; Gradle failed at :app:kspDebugKotlin before the requested validation tasks completed.",
-      "lintDebug": "NOT_RUN; Gradle failed at :app:kspDebugKotlin before the requested validation tasks completed.",
-      "compileDebugAndroidTestKotlin": "NOT_RUN; Gradle failed at :app:kspDebugKotlin before the requested validation tasks completed.",
+      "appJvm": "INCOMPLETE: :app:testDebugUnitTest entered but did not complete; operator interrupted after the Robolectric worker stall. No JUnit XML or test counts.",
+      "litertCompatJvm": "NOT_RUN: :litert-compat:testDebugUnitTest was not reached.",
+      "composeUiTests": "NOT_AVAILABLE: app JVM unit-test task did not complete; no Compose test result can be extracted.",
+      "lintDebug": "NOT_RUN: :app:lintDebug was not reached.",
+      "compileDebugAndroidTestKotlin": "NOT_RUN: :app:compileDebugAndroidTestKotlin was not reached.",
       "initialGradleAttempt": {
         "status": "BLOCKED_INCOMPLETE_TEMPORARY_NDK",
         "sdkRoot": "/workspace/android-sdk-ux02e",
@@ -5108,59 +5119,179 @@
           "retryPerformed": false,
           "apkGenerated": false,
           "captureWrapper": "set -o pipefail; JAVA_HOME=/workspace/.toolchain/jdk-21-temurin PATH=/workspace/.toolchain/jdk-21-temurin/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --info --rerun-tasks :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin 2>&1 | tee /tmp/ux02e-a182-gradle-host.log; RESULT=${PIPESTATUS[0]}"
+        },
+        {
+          "status": "FAIL_JVM_TARGET_MISMATCH_AFTER_TASK_START",
+          "command": "JAVA_HOME=/workspace/.toolchain/jdk-21-temurin PATH=/workspace/.toolchain/jdk-21-temurin/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --console=plain --info --rerun-tasks -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17 :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:compileDebugAndroidTestKotlin",
+          "exitCode": 1,
+          "startedAtUtc": "2026-10-13T01:40:59Z",
+          "finishedAtUtc": "2026-10-13T01:46:04Z",
+          "durationSeconds": 305,
+          "sourceCodeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+          "verifiedBranchHeadAtRun": "83796439caa5eba5543062ed2d82c8f021ed2e2c",
+          "checkout": {
+            "path": "/workspace/ux02e-a182-jdk17toolchain",
+            "kind": "new detached worktree",
+            "head": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+            "cleanIncludingIgnoredBeforeRun": true,
+            "buildOutputsAbsentBeforeRun": true,
+            "trackedWorkingTreeCleanAfterRun": true
+          },
+          "gradle": {
+            "wrapper": "8.10.2",
+            "gradleRuntimeJdk": "/workspace/.toolchain/jdk-21-temurin (Temurin 21.0.12.1)",
+            "toolchainPathProperty": "org.gradle.java.installations.paths=/workspace/.toolchain/jdk-17",
+            "toolchainDiscoveryEvidence": "Gradle --info log launches JavaProbe using /workspace/.toolchain/jdk-17/bin/java",
+            "actionableTaskSummary": "40 actionable tasks: 40 executed",
+            "failedTask": ":app:kspDebugKotlin",
+            "failure": "Inconsistent JVM-target compatibility detected for tasks 'compileDebugJavaWithJavac' (17) and 'kspDebugKotlin' (21).",
+            "classification": "BUILD_CONFIGURATION_MISMATCH_UNDER_CONTRACT_REQUESTED_JDK21_RUNTIME; REPOSITORY_README_DOCUMENTS_JDK17_GRADLE_RUNTIME",
+            "networkWarnings": "The log records retries with Network is unreachable for dl.google.com and repo.maven.apache.org; Gradle proceeded to task execution. This is not asserted as the terminal cause.",
+            "readmeRequirement": "README.md specifies JDK 17 to run Gradle and JDK 21 for app JVM Test workers; this contract explicitly requested JDK21 as Gradle runtime."
+          },
+          "environment": {
+            "os": "Linux x86_64",
+            "javaRuntime": {
+              "home": "/workspace/.toolchain/jdk-21-temurin",
+              "java": "21.0.12.1",
+              "javac": "21.0.12.1",
+              "jdk.compiler": true,
+              "systemJavaCompiler": true
+            },
+            "javaToolchain": {
+              "home": "/workspace/.toolchain/jdk-17",
+              "java": "17.0.20.1",
+              "javac": "17.0.20.1",
+              "jdk.compiler": true,
+              "systemJavaCompiler": true
+            },
+            "androidSdk": "/workspace/.toolchain/android-sdk",
+            "androidPlatform": "android-35",
+            "androidBuildTools": "35.0.0",
+            "androidNdk": {
+              "revision": "27.0.12077973",
+              "sourcePropertiesPresent": true
+            },
+            "cmake": "3.31.6",
+            "gradleUserHome": "/home/agent/.gradle",
+            "freeSpaceBefore": {
+              "workspace": "2.0 GiB",
+              "tmp": "976 MiB"
+            },
+            "noSdkOrJdkInstallOrCleanup": true
+          },
+          "tasks": {
+            "totalActionableReported": 40,
+            "completedBeforeFailure": 40,
+            "testDebugUnitTest": "NOT_RUN",
+            "litertCompatTestDebugUnitTest": "NOT_RUN",
+            "lintDebug": "NOT_RUN",
+            "compileDebugAndroidTestKotlin": "NOT_RUN"
+          },
+          "junitXml": {
+            "files": 0,
+            "tests": "NOT_RUN",
+            "inventory": "host/jdk21-runtime-jdk17-toolchain-xml-inventory-20261013.txt"
+          },
+          "log": "host/jdk21-runtime-jdk17-toolchain-gate-20261013.log.gz",
+          "rawLogBytes": 374417,
+          "rawLogSha256": "b5694b57610c2e17e7b1953a7053a659bd7d4683a7699edfdc7861665d36ee1d",
+          "compressedLogBytes": 32699,
+          "compressedLogSha256": "114adf0edb22639d03643919b3ad7976f63c51bf4d135300ef925a538dda9662",
+          "commandEvidence": "host/jdk21-runtime-jdk17-toolchain-command-20261013.txt",
+          "preflightEvidence": "host/jdk21-runtime-jdk17-toolchain-preflight-20261013.txt",
+          "environmentEvidence": "host/jdk21-runtime-jdk17-toolchain-run-meta-20261013.txt",
+          "taskOutcomeEvidence": "host/jdk21-runtime-jdk17-toolchain-task-outcomes-20261013.txt",
+          "retryPerformed": false,
+          "productionFilesChanged": false,
+          "apkGenerated": false,
+          "emulatorOrDeviceUsed": false,
+          "classification": "BUILD_CONFIGURATION_MISMATCH_UNDER_CONTRACT_REQUESTED_JDK21_RUNTIME; REPOSITORY_README_DOCUMENTS_JDK17_GRADLE_RUNTIME",
+          "historicalClassification": "CONFIGURATION_CONTRARY_TO_README: JDK 21 selected as Gradle runtime although README requires JDK 17; not evidence of a UX-02e functional failure.",
+          "readmeRequirement": "README.md requires JDK 17 to run Gradle and JDK 21 for app JVM Test workers.",
+          "historicalRecordOnly": true
         }
       ],
       "environment": {
         "os": "Linux x86_64",
-        "gradleWrapper": "8.10.2",
-        "androidGradlePlugin": "8.7.3",
-        "kotlin": "2.0.21",
-        "liteRtLmAndroid": "0.17.1",
-        "gradleRuntimeJdk": "Temurin 21.0.12.1 at /workspace/.toolchain/jdk-21-temurin",
-        "toolchainJdk17": "Temurin 17.0.20.1 at /workspace/.toolchain/jdk-17; exposed via org.gradle.java.installations.paths",
-        "androidSdk": "/workspace/.toolchain/android-sdk; API 35; Build Tools 35.0.0",
-        "ndk": "27.0.12077973 complete; source.properties present",
+        "javaRuntime": {
+          "home": "/workspace/.toolchain/jdk-17",
+          "version": "17.0.20.1",
+          "javac": "17.0.20.1",
+          "jdk.compiler": true,
+          "systemJavaCompiler": true
+        },
+        "appJvmTestWorker": {
+          "home": "/workspace/.toolchain/jdk-21-temurin",
+          "version": "21.0.12.1",
+          "javac": "21.0.12.1",
+          "jdk.compiler": true,
+          "systemJavaCompiler": true
+        },
+        "toolchainDiscoveryPaths": [
+          "/workspace/.toolchain/jdk-17",
+          "/workspace/.toolchain/jdk-21-temurin"
+        ],
+        "androidSdk": "/workspace/.toolchain/android-sdk",
+        "androidPlatform": "android-35",
+        "androidBuildTools": "35.0.0",
+        "androidNdk": {
+          "revision": "27.0.12077973",
+          "sourcePropertiesPresent": true
+        },
         "cmake": "3.31.6",
-        "gradleUserHome": "/home/agent/.gradle",
-        "freeSpaceBefore": "/workspace 2.0 GiB; /tmp 976 MiB",
-        "network": "Build log recorded Network is unreachable retries for dl.google.com and repo.maven.apache.org; the build progressed and terminal failure was JVM target mismatch.",
-        "sdkOrJdkInstalled": false,
-        "cacheOrDataDeleted": false,
-        "latestAttemptStartedAtUtc": "2026-10-13T01:40:59Z",
-        "latestAttemptFinishedAtUtc": "2026-10-13T01:46:04Z",
-        "latestAttemptDurationSeconds": 305
+        "gradleUserHome": "/home/agent/.gradle (pre-existing; not cleaned)",
+        "freeSpaceBefore": {
+          "workspace": "2.2 GiB",
+          "tmp": "975 MiB"
+        },
+        "noToolchainInstallOrCacheCleanup": true
       }
     },
     "environment": {
       "os": "Linux x86_64",
-      "java": "OpenJDK 21.0.12.1",
+      "gradleRuntimeJdk": {
+        "home": "/workspace/.toolchain/jdk-17",
+        "distribution": "Eclipse Temurin",
+        "version": "17.0.20.1",
+        "java": "available",
+        "javac": "17.0.20.1",
+        "jdk.compiler": true,
+        "systemJavaCompiler": true
+      },
+      "appJvmTestWorkerJdk": {
+        "home": "/workspace/.toolchain/jdk-21-temurin",
+        "distribution": "Eclipse Temurin",
+        "version": "21.0.12.1",
+        "java": "available",
+        "javac": "21.0.12.1",
+        "jdk.compiler": true,
+        "systemJavaCompiler": true,
+        "observedInGradleLog": true
+      },
       "gradleWrapper": "8.10.2",
-      "androidPlatform": "API 35",
-      "buildTools": "35.0.0",
-      "cmake": "3.31.6",
-      "ndk": "27.0.12077973 complete in the recovery SDK; the earlier temporary SDK attempt was incomplete.",
-      "gradleMode": "offline with existing Gradle cache",
-      "androidSdkRootRecovery": "/workspace/.toolchain/android-sdk",
-      "androidNdkRecovery": "27.0.12077973 complete; source.properties and expected toolchain executables present",
-      "javaSelectedForRecovery": "Temurin JDK 21.0.12.1 at /workspace/.toolchain/jdk-21-temurin; java, javac, and ToolProvider JavaCompiler preflight passed.",
-      "fullJdkExecutablesFoundAfterFailure": [
-        "/workspace/.toolchain/jdk-21-temurin/bin/javac",
-        "/workspace/.toolchain/jdk-17/bin/javac"
+      "toolchainDiscoveryPaths": [
+        "/workspace/.toolchain/jdk-17",
+        "/workspace/.toolchain/jdk-21-temurin"
       ],
-      "freeDiskBeforeRecovery": "2.2G /workspace; 976M /tmp",
-      "initialTemporarySdk": "/workspace/android-sdk-ux02e (incomplete NDK; historical first attempt only)",
-      "javaToolchainDiscovery": "Gradle requested languageVersion 17 and reported no matching local toolchain for this invocation; the selected JDK 21 is not a substitute.",
-      "javaCompilerAvailable": true,
-      "gradleRequiredJavaToolchain": 17,
-      "gradleToolchainDiscovery": "Gradle reported no locally installed Java 17 toolchain matching this invocation; downloads are not configured.",
-      "priorRecoveryJava": "System OpenJDK runtime at /usr/lib/jvm/java-21-openjdk-amd64 without javac; prior attempt only.",
-      "latestAttemptStartedAtUtc": "2026-10-12T13:33:30Z",
-      "latestAttemptFinishedAtUtc": "2026-10-12T13:34:01Z",
-      "latestAttemptDurationSeconds": 31
+      "androidSdk": "/workspace/.toolchain/android-sdk",
+      "androidPlatform": "android-35",
+      "androidBuildTools": "35.0.0",
+      "androidNdk": {
+        "revision": "27.0.12077973",
+        "sourcePropertiesPresent": true
+      },
+      "cmake": "3.31.6",
+      "gradleUserHome": "/home/agent/.gradle (pre-existing; not cleaned)",
+      "networkWarnings": "Network is unreachable retries were logged during dependency resolution/configuration; not established as terminal cause.",
+      "noToolchainInstallOrCacheCleanup": true,
+      "runStartedAtUtc": "2026-10-13T02:58:09Z",
+      "runFinishedAtUtc": "2026-10-13T03:53:20Z",
+      "runDurationSeconds": 3311
     },
     "validationLayers": {
-      "HOST": "FAIL: parser standalone 20/20 PASS supplementary only; Gradle gate failed at :app:kspDebugKotlin after 40 actionable tasks due compile target 17 vs KSP target 21; requested tests/lint/AndroidTest compilation NOT_RUN; JUnit XML=0.",
-      "EMULATOR": "NOT_RUN for UX-02e; historical global result remains FAIL on authentic Room v1 fixture with six model-dependent SKIPPED.",
+      "HOST": "INCOMPLETE: corrected JDK17 Gradle runtime entered :app:testDebugUnitTest, whose worker stalled in Robolectric Sandbox.runOnMainThread and was operator-interrupted (exit 130). JUnit XML=0; counts unavailable; LiteRT JVM tests, lint and AndroidTest Kotlin compilation NOT_REACHED. UX-02e not accepted.",
+      "EMULATOR": "NOT_RUN for UX-02e; historical global EMULATOR remains FAIL for the authentic Room v1 fixture with six model-dependent SKIPPED.",
       "PHYSICAL_DEVICE": "NOT_RUN",
       "APK": "NOT_GENERATED",
       "talkBackDeviceCheck": "NOT_RUN"
@@ -5175,19 +5306,25 @@
       "setup": "setup/README.md",
       "recoveryGradleLog": "host/recovery-gradle-gate.log.gz",
       "recoveryEnvironment": "host/recovery-environment.txt",
-      "latestAttemptLog": "docs/validation/ux-02e-inline-links/host/jdk21-runtime-jdk17-toolchain-gate-20261013.log.gz",
-      "latestAttemptPreflight": "docs/validation/ux-02e-inline-links/host/jdk21-runtime-jdk17-toolchain-preflight-20261013.txt",
-      "latestAttemptEnvironment": "docs/validation/ux-02e-inline-links/host/jdk21-runtime-jdk17-toolchain-run-meta-20261013.txt",
-      "latestAttemptXmlInventory": "docs/validation/ux-02e-inline-links/host/jdk21-runtime-jdk17-toolchain-xml-inventory-20261013.txt",
-      "latestAttemptRawLogSha256": "b5694b57610c2e17e7b1953a7053a659bd7d4683a7699edfdc7861665d36ee1d",
-      "latestAttemptCompressedLogSha256": "114adf0edb22639d03643919b3ad7976f63c51bf4d135300ef925a538dda9662",
+      "latestAttemptLog": "host/jdk17-runtime-20261013/gradle-gate.log.gz",
+      "latestAttemptPreflight": "host/jdk17-runtime-20261013/preflight.txt",
+      "latestAttemptEnvironment": "host/jdk17-runtime-20261013/environment.txt",
+      "latestAttemptXmlInventory": "host/jdk17-runtime-20261013/junit-xml-inventory.txt",
+      "latestAttemptRawLogSha256": "9e6ad449bff8a0d7039096b4f93cb7b6e297d224de8197aa4bec29b9faba7fc6",
+      "latestAttemptCompressedLogSha256": "aaf91f91b166eef790bdf88d22ec7daa785ca421be35a5d395668b4d040d6efc",
       "latestAttemptXmlFiles": 0,
       "previousManifestSha256BeforeLatestAttempt": "9c80a6f7712085ed723f74d4cd149d0c2e7412e8686b591d42ad45cb1ec0158d",
-      "currentManifestSha256": "b3591e6a8c1965f3b00475c72b05acd5261a513710eb4e14cbdbf05bfa0b0bc5",
-      "latestAttemptCommand": "docs/validation/ux-02e-inline-links/host/jdk21-runtime-jdk17-toolchain-command-20261013.txt",
-      "latestAttemptTaskOutcomes": "docs/validation/ux-02e-inline-links/host/jdk21-runtime-jdk17-toolchain-task-outcomes-20261013.txt",
-      "latestAttemptExitCode": 1,
-      "latestAttemptDurationSeconds": 305
+      "currentManifestSha256": "6735f5a77febb27a6b2ce2e50a1d59c7df9374b075d87c2ea94c3802c384d46d",
+      "latestAttemptCommand": "host/jdk17-runtime-20261013/command.txt",
+      "latestAttemptTaskOutcomes": "host/jdk17-runtime-20261013/task-outcomes.txt",
+      "latestAttemptExitCode": 130,
+      "latestAttemptDurationSeconds": 3311,
+      "latestAttemptRunMetadata": "host/jdk17-runtime-20261013/run-meta.txt",
+      "latestAttemptFileHashes": "host/jdk17-runtime-20261013/file-hashes.txt",
+      "latestAttemptPostRunTreeCheck": "host/jdk17-runtime-20261013/post-run-working-tree.txt",
+      "latestAttemptTests": "NOT_AVAILABLE; :app:testDebugUnitTest did not complete",
+      "manifestEntryCount": 32,
+      "manifestVerification": "ALL_ENTRIES_VERIFIED_WITH_SHA256SUMS_CHECK"
     },
     "planIntegrity": {
       "original97TaskPlan": "Not present in tracked repository; not reconstructed or edited.",
@@ -5196,29 +5333,31 @@
       "UX-03": "PENDING",
       "functionalBacklog": "PAUSED"
     },
-    "next": "The one authorized gate under the requested JDK21 Gradle runtime failed at :app:kspDebugKotlin (Java target 17 vs KSP target 21). README documents JDK17 for Gradle and JDK21 for test workers. No UX-02e tests ran; do not retry or alter unrelated config. Stop for independent audit; do not start UX-02f/UX-03.",
+    "next": "Stop for independent audit of this incomplete HOST attempt. Do not repeat Gradle, start UX-02f/UX-03, run EMULATOR/PHYSICAL_DEVICE, or generate APK without a new authorization.",
     "pendingRecovery": {
-      "status": "COMPLETED_BUILD_CONFIGURATION_FAIL_JVM_TARGET_MISMATCH",
+      "status": "COMPLETED_INCOMPLETE_ROBOLECTRIC_STALL_OPERATOR_INTERRUPTED",
       "codeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
       "testedCheckoutHead": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
-      "attemptedAtUtc": "2026-10-13T01:40:59Z",
-      "finishedAtUtc": "2026-10-13T01:46:04Z",
-      "javaRuntime": "/workspace/.toolchain/jdk-21-temurin (Temurin 21.0.12.1; compiler preflight PASS)",
-      "java17ToolchainDiscovery": "/workspace/.toolchain/jdk-17 explicitly provided via org.gradle.java.installations.paths; discovery observed in Gradle log",
-      "gateExitCode": 1,
-      "actionableTasksReported": 40,
-      "failedTask": ":app:kspDebugKotlin",
-      "cause": "Inconsistent JVM-target compatibility detected for tasks 'compileDebugJavaWithJavac' (17) and 'kspDebugKotlin' (21).",
-      "classification": "BUILD_CONFIGURATION_MISMATCH_UNDER_CONTRACT_REQUESTED_JDK21_RUNTIME; REPOSITORY_README_DOCUMENTS_JDK17_GRADLE_RUNTIME",
+      "branchHeadAtRunStart": "51434af64d64c40157ddf61548e9ebaae3ec8217",
+      "attemptedAtUtc": "2026-10-13T02:58:09Z",
+      "finishedAtUtc": "2026-10-13T03:53:20Z",
+      "durationSeconds": 3311,
+      "gradleRuntime": "/workspace/.toolchain/jdk-17 (Temurin 17.0.20.1; preflight PASS)",
+      "appJvmTestLauncher": "/workspace/.toolchain/jdk-21-temurin (Temurin 21.0.12.1; observed in Gradle worker command)",
+      "toolchainDiscovery": "Both JDK17 and JDK21 via org.gradle.java.installations.paths; readme-compliant.",
+      "gateExitCode": 130,
+      "lastTask": ":app:testDebugUnitTest",
+      "cause": "Test worker remained waiting in Robolectric Sandbox.runOnMainThread; thread dump did not identify test class/method. Operator interrupted after approximately 45 minutes with no log progress or XML. Root cause NOT_DETERMINED.",
+      "classification": "INCOMPLETE_STALLED_ROBOLECTRIC_WORKER_OPERATOR_INTERRUPTED",
       "xmlFiles": 0,
-      "tests": "NOT_RUN",
-      "evidence": "host/jdk21-runtime-jdk17-toolchain-gate-20261013.log.gz",
-      "rawLogSha256": "b5694b57610c2e17e7b1953a7053a659bd7d4683a7699edfdc7861665d36ee1d",
-      "compressedLogSha256": "114adf0edb22639d03643919b3ad7976f63c51bf4d135300ef925a538dda9662",
+      "tests": "NOT_AVAILABLE; task did not complete",
+      "evidence": "host/jdk17-runtime-20261013/gradle-gate.log.gz",
+      "rawLogSha256": "9e6ad449bff8a0d7039096b4f93cb7b6e297d224de8197aa4bec29b9faba7fc6",
+      "compressedLogSha256": "aaf91f91b166eef790bdf88d22ec7daa785ca421be35a5d395668b4d040d6efc",
       "retryPerformed": false,
       "apkGenerated": false,
       "emulatorOrDeviceUsed": false,
-      "next": "Stop for independent audit. No more Gradle runs, code/config changes, UX-02f/UX-03, emulator/device, or APK in this contract."
+      "next": "Stop for independent audit; no further gate attempt or UX-02f/UX-03 under this contract."
     },
     "pendingRecoveryHistory": [
       {
@@ -5232,28 +5371,49 @@
         "blockerType": "BLOCKED_EXECUTOR_ACCESS",
         "accessEvidence": "send_message_to_thread returned invalid rate-limit caller identity; subsequent wait_threads could not determine whether durable thread 01a0ff77-c915-77b3-894a-1cbdd24ce02b exists because host durable was unavailable.",
         "next": "Do not dispatch until the same durable executor can be read and confirmed idle. Then send this one bounded explicit-JDK HOST gate attempt. Keep UX-02e unaccepted; do not start UX-02f/UX-03."
+      },
+      {
+        "status": "COMPLETED_BUILD_CONFIGURATION_FAIL_JVM_TARGET_MISMATCH",
+        "codeSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+        "testedCheckoutHead": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+        "attemptedAtUtc": "2026-10-13T01:40:59Z",
+        "finishedAtUtc": "2026-10-13T01:46:04Z",
+        "javaRuntime": "/workspace/.toolchain/jdk-21-temurin (Temurin 21.0.12.1; compiler preflight PASS)",
+        "java17ToolchainDiscovery": "/workspace/.toolchain/jdk-17 explicitly provided via org.gradle.java.installations.paths; discovery observed in Gradle log",
+        "gateExitCode": 1,
+        "actionableTasksReported": 40,
+        "failedTask": ":app:kspDebugKotlin",
+        "cause": "Inconsistent JVM-target compatibility detected for tasks 'compileDebugJavaWithJavac' (17) and 'kspDebugKotlin' (21).",
+        "classification": "BUILD_CONFIGURATION_MISMATCH_UNDER_CONTRACT_REQUESTED_JDK21_RUNTIME; REPOSITORY_README_DOCUMENTS_JDK17_GRADLE_RUNTIME",
+        "xmlFiles": 0,
+        "tests": "NOT_RUN",
+        "evidence": "host/jdk21-runtime-jdk17-toolchain-gate-20261013.log.gz",
+        "rawLogSha256": "b5694b57610c2e17e7b1953a7053a659bd7d4683a7699edfdc7861665d36ee1d",
+        "compressedLogSha256": "114adf0edb22639d03643919b3ad7976f63c51bf4d135300ef925a538dda9662",
+        "retryPerformed": false,
+        "apkGenerated": false,
+        "emulatorOrDeviceUsed": false,
+        "next": "Stop for independent audit. No more Gradle runs, code/config changes, UX-02f/UX-03, emulator/device, or APK in this contract.",
+        "historicalClassification": "Previous JDK21 Gradle runtime was contrary to README; preserve as historical, not product failure.",
+        "historicalRecordOnly": true
       }
     ],
     "publication": {
       "branch": "feat/0.5.0-skills-agents",
-      "localBranchHeadAtAttemptStart": "24439fe1ef0f0fce9103c8beb4797ff4e9daddc8",
-      "remoteHeadObservedAfterAttempt": "69f1dd0d0afdb3b773faced22f496e4bce47722c",
-      "remoteAdvanceCommits": [
-        "60511db docs(ux): record pending UX-02e host gate recovery",
-        "69f1dd0 docs(ux): record blocked executor access for host gate"
-      ],
-      "remoteAdvanceScope": "Documentation only; fast-forwarded before this evidence update.",
+      "codeCommit": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+      "branchHeadAtAttemptStart": "51434af64d64c40157ddf61548e9ebaae3ec8217",
+      "remoteHeadAtAttemptStart": "51434af64d64c40157ddf61548e9ebaae3ec8217",
+      "remoteHeadObservedAfterAttemptBeforeEvidenceCommit": "51434af64d64c40157ddf61548e9ebaae3ec8217",
+      "evidenceBaseHead": "51434af64d64c40157ddf61548e9ebaae3ec8217",
+      "evidenceCommit": "PENDING_COMMIT_CREATION",
+      "evidenceCommitScope": "Documentation and host evidence only; no product/build/workflow/dependency/data/APK changes.",
+      "evidenceCommitPublishedHead": "PENDING_FAST_FORWARD_PUSH",
+      "remoteHeadAfterReadback": "PENDING",
       "main": "de615b772cf37a99e7e08a647c59607b271de606",
       "peeledV042": "de615b772cf37a99e7e08a647c59607b271de606",
       "forcePush": false,
       "merge": false,
-      "evidenceCommit": "7ffbf2fe99c8dca4b9761c6af9cb444eb712c6f5",
-      "evidenceCommitScope": "UX-02e report, JSON, checksums, JDK21 preflight/environment, full Gradle log, and XML inventory; no product files.",
-      "latestEvidenceBaseHead": "83796439caa5eba5543062ed2d82c8f021ed2e2c",
-      "latestEvidenceUpdateScope": "Documentation and test/build evidence only; no app source, build configuration, workflow, dependency, data, APK, emulator, or device changes.",
-      "latestEvidenceCommit": "e569017a64e43037f377fc185d8c888b4c883e9e",
-      "latestEvidenceCommitScope": "UX-02e results, toolchain preflight, full Gradle log, task outcome, XML inventory, and checksums; documentation/evidence only.",
-      "latestEvidenceCommitPublishedHead": "e569017a64e43037f377fc185d8c888b4c883e9e"
+      "tagOrRelease": false
     },
     "independentAudit": {
       "status": "AUDITED_BLOCKED_NOT_ACCEPTED",
@@ -5271,6 +5431,67 @@
       "scopeNote": "Historical audit of the preceding JDK21/no-JDK17-path attempt only; the 2026-10-13 attempt is pending independent audit."
     },
     "latestAttemptAuditStatus": "PENDING_INDEPENDENT_AUDIT",
-    "previousGateAttemptAuditNote": "The prior independent audit concerns the earlier JDK21 invocation that did not expose JDK17; it does not audit this later attempt."
+    "previousGateAttemptAuditNote": "The prior JDK21 Gradle-runtime invocation contradicted README.md (JDK17 Gradle runtime, JDK21 app test worker) and failed at KSP target compatibility. The corrected single JDK17-runtime attempt is separate and incomplete after a stalled Robolectric worker; no test counts are available.",
+    "environmentHistory": [
+      {
+        "historicalRecord": "Environment recorded for a prior UX-02e attempt; current JDK17 run is represented in environment and host.gradleGate.",
+        "data": {
+          "os": "Linux x86_64",
+          "java": "OpenJDK 21.0.12.1",
+          "gradleWrapper": "8.10.2",
+          "androidPlatform": "API 35",
+          "buildTools": "35.0.0",
+          "cmake": "3.31.6",
+          "ndk": "27.0.12077973 complete in the recovery SDK; the earlier temporary SDK attempt was incomplete.",
+          "gradleMode": "offline with existing Gradle cache",
+          "androidSdkRootRecovery": "/workspace/.toolchain/android-sdk",
+          "androidNdkRecovery": "27.0.12077973 complete; source.properties and expected toolchain executables present",
+          "javaSelectedForRecovery": "Temurin JDK 21.0.12.1 at /workspace/.toolchain/jdk-21-temurin; java, javac, and ToolProvider JavaCompiler preflight passed.",
+          "fullJdkExecutablesFoundAfterFailure": [
+            "/workspace/.toolchain/jdk-21-temurin/bin/javac",
+            "/workspace/.toolchain/jdk-17/bin/javac"
+          ],
+          "freeDiskBeforeRecovery": "2.2G /workspace; 976M /tmp",
+          "initialTemporarySdk": "/workspace/android-sdk-ux02e (incomplete NDK; historical first attempt only)",
+          "javaToolchainDiscovery": "Gradle requested languageVersion 17 and reported no matching local toolchain for this invocation; the selected JDK 21 is not a substitute.",
+          "javaCompilerAvailable": true,
+          "gradleRequiredJavaToolchain": 17,
+          "gradleToolchainDiscovery": "Gradle reported no locally installed Java 17 toolchain matching this invocation; downloads are not configured.",
+          "priorRecoveryJava": "System OpenJDK runtime at /usr/lib/jvm/java-21-openjdk-amd64 without javac; prior attempt only.",
+          "latestAttemptStartedAtUtc": "2026-10-12T13:33:30Z",
+          "latestAttemptFinishedAtUtc": "2026-10-12T13:34:01Z",
+          "latestAttemptDurationSeconds": 31
+        }
+      }
+    ],
+    "publicationHistory": [
+      {
+        "historicalRecord": "Publication metadata preceding the corrected JDK17 gate evidence update; retained for history.",
+        "data": {
+          "branch": "feat/0.5.0-skills-agents",
+          "localBranchHeadAtAttemptStart": "24439fe1ef0f0fce9103c8beb4797ff4e9daddc8",
+          "remoteHeadObservedAfterAttempt": "69f1dd0d0afdb3b773faced22f496e4bce47722c",
+          "remoteAdvanceCommits": [
+            "60511db docs(ux): record pending UX-02e host gate recovery",
+            "69f1dd0 docs(ux): record blocked executor access for host gate"
+          ],
+          "remoteAdvanceScope": "Documentation only; fast-forwarded before this evidence update.",
+          "main": "de615b772cf37a99e7e08a647c59607b271de606",
+          "peeledV042": "de615b772cf37a99e7e08a647c59607b271de606",
+          "forcePush": false,
+          "merge": false,
+          "evidenceCommit": "7ffbf2fe99c8dca4b9761c6af9cb444eb712c6f5",
+          "evidenceCommitScope": "UX-02e report, JSON, checksums, JDK21 preflight/environment, full Gradle log, and XML inventory; no product files.",
+          "latestEvidenceBaseHead": "51434af64d64c40157ddf61548e9ebaae3ec8217",
+          "latestEvidenceUpdateScope": "Documentation and host evidence only; no app/build/workflow/dependency/data/APK/emulator/device changes.",
+          "latestEvidenceCommit": "e569017a64e43037f377fc185d8c888b4c883e9e",
+          "latestEvidenceCommitScope": "Corrected JDK17 runtime host attempt, complete compressed Gradle log, preflight, run metadata, task progress, zero-XML inventory, report and state updates; documentation/evidence only.",
+          "latestEvidenceCommitPublishedHead": "e569017a64e43037f377fc185d8c888b4c883e9e",
+          "branchHeadAtAttemptStart": "51434af64d64c40157ddf61548e9ebaae3ec8217",
+          "remoteHeadObservedAtAttemptStart": "51434af64d64c40157ddf61548e9ebaae3ec8217",
+          "remoteHeadObservedAfterAttemptBeforeEvidenceCommit": "51434af64d64c40157ddf61548e9ebaae3ec8217"
+        }
+      }
+    ]
   }
 }
