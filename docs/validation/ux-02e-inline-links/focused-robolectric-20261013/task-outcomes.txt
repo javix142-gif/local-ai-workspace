@@ -13,6 +13,6 @@ newJUnitXml=0 (no XML files in the clean worktree result tree)
 BUILD_SUCCESSFUL=NOT_PRESENT
 BUILD_FAILED=NOT_PRESENT
 Gradle failure summary=NOT_PRESENT
-networkRetries: dl.google.com={counts['dl.google.com']}; repo.maven.apache.org={counts['repo.maven.apache.org']}; observed error text: java.net.SocketException / Network is unreachable
+networkRetries: dl.google.com=18; repo.maven.apache.org=36; observed error text: java.net.SocketException / Network is unreachable
 classification=TIMEOUT_BEFORE_TEST_START / ENVIRONMENT_BLOCKED_DURING_CONFIGURATION_OR_DEPENDENCY_RESOLUTION; original full-gate Robolectric cause remains NOT_DETERMINED
 productFailure=NOT_ESTABLISHED

@@ -1,3 +1,13 @@
+# UX-02e — independent audit closure (2026-10-13)
+
+Status remains **AUDITED_INCOMPLETE_TIMEOUT_NOT_ACCEPTED**; UX-02e is not accepted. The remote feature HEAD audited was `a3cfd6d6787fe7970d7ed818e4d371ccf46e49e8`, a direct child of `0368248d4ecc03e5dc119baa85ef14384f46f9ad`; `main` and peeled `v0.4.2` remain `de615b772cf37a99e7e08a647c59607b271de606`. The compared product change is limited to `MainActivity.kt`, `BasicMarkdown.kt`, `ChatContent.kt`, and their two UI tests; the target deduplication test and Gradle/Robolectric configuration are unchanged. The reproduction used a clean detached worktree at code SHA `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`.
+
+The independent audit rehashed **21/21 payloads** in `focused-robolectric-20261013/`; the audited focused manifest SHA-256 was `165410ca27d5388fab4f73a693e618e49eab6ec3c04bd97f36caeda190d971eb`. It verified the outer manifest digest and its **115 entry lines**, but did **not** independently rehash all 115 outer payloads. The audit found that `task-outcomes.txt` had a literal template expression instead of the observed network retry counts. It is corrected to `dl.google.com=18` and `repo.maven.apache.org=36`; the corrected focused manifest now has SHA-256 `49b22596939ea63d4468a73e56fdd7bac9ff83be4e67c560ef60086554f18915`; the current outer manifest digest is recorded in `EXECUTION_STATE.json` and this handoff.
+
+The run remains `TIMEOUT_BEFORE_TEST_START / INFRASTRUCTURE_FAILURE`: 18 network errors to `dl.google.com`, 36 to `repo.maven.apache.org`, zero test start/end markers, zero Gradle task starts, and zero JUnit XML. The target test is **NOT_RUN**. This does not explain the earlier Robolectric stall: its cause remains `NOT_DETERMINED`; `PRODUCT_FAILURE` is **NOT_ESTABLISHED**. No tests/builds were run for this documentary correction.
+
+The authentic 97-task catalog is unavailable in this checkout/context. The audit found only `EXECUTION_STATE.json` and `CODEX_TO_WORK_HANDOFF.md` under `docs/development`; `BACKLOG.json` lookup returned 404. No task was selected or inferred. M01-06 remains `PENDING_REQUIRES_DEVICE`; task IDs, order, dependencies and progress remain unchanged.
+
 # UX-02e — focused Robolectric reproduction (2026-10-13)
 
 ## Latest attempt
