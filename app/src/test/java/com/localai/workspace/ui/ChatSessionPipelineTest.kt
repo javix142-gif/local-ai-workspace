@@ -119,6 +119,67 @@ class ChatSessionPipelineTest {
         vm.attachImage(Uri.fromFile(file))
         return vm.attachedImagePath.first { it != null }!!
     }
+
+    @Test fun materialContextOmissionWarnsWhileRoutineOmissionStaysDiagnosticOnly() = check {
+        context.getSharedPreferences("context_foundation_v1", 0).edit().putBoolean("enabled", true).commit()
+        val (_, vm) = chat()
+        val foundation = graph.contextFoundation
+        val materialQuery = "Summarize M00NOTICE retention marker guidance"
+        val materialText = "M00NOTICE retention marker synthetic guidance ".repeat(340)
+        assertTrue("Synthetic memory must fit the canonical storage limit", materialText.length <= 16_000)
+        val material = foundation.memory.create(
+            materialText,
+            com.localai.workspace.semantic.v2.SemanticScope(com.localai.workspace.semantic.v2.ScopeType.USER, "local"),
+        )
+        val observedNotices = CopyOnWriteArrayList<String>()
+        val collector = CoroutineScope(currentCoroutineContext()).launch(start = CoroutineStart.UNDISPATCHED) {
+            vm.notices.collect { observedNotices += it }
+        }
+        var routineId: String? = null
+        try {
+            vm.send(materialQuery)
+            val materialTurn = backend.turns.receive()
+            val materialBundle = requireNotNull(foundation.last.value)
+            val materialDrop = materialBundle.dropped.single { it.item.provenance.sourceId == material.id }
+            assertEquals(com.localai.workspace.context.ContextKind.MEMORY, materialDrop.item.kind)
+            assertEquals("TOKEN_BUDGET", materialDrop.reason)
+            assertTrue(materialBundle.requiresUserNotice)
+
+            val report = materialBundle.safeReport()
+            val reportedDrop = (report["dropped"] as List<*>).filterIsInstance<Map<*, *>>()
+                .single { it["id"] == materialDrop.item.id }
+            assertEquals("TOKEN_BUDGET", reportedDrop["reason"])
+            assertFalse("Inspector metadata must not expose memory text", report.toString().contains("M00NOTICE"))
+            assertTrue(
+                "Expected a clear notice explaining that relevant memory was omitted: $observedNotices",
+                observedNotices.any {
+                    it.contains("Relevant memory did not fit this turn") &&
+                        it.contains("answer may omit those details") &&
+                        it.contains("Saved data remains available")
+                },
+            )
+            finish(vm, materialTurn)
+
+            val omissionNoticeCount = observedNotices.count { it.contains("did not fit this turn") }
+            val routine = foundation.memory.create(
+                "Orbital mechanics describes trajectories around a distant star.",
+                com.localai.workspace.semantic.v2.SemanticScope(com.localai.workspace.semantic.v2.ScopeType.USER, "local"),
+            )
+            routineId = routine.id
+            vm.send("Which database engine stores the project records?")
+            val routineTurn = backend.turns.receive()
+            val routineBundle = requireNotNull(foundation.last.value)
+            assertTrue(routineBundle.dropped.any { it.item.provenance.sourceId == routine.id && it.reason == "BELOW_RELEVANCE_THRESHOLD" })
+            assertFalse(routineBundle.requiresUserNotice)
+            finish(vm, routineTurn)
+            assertEquals(omissionNoticeCount, observedNotices.count { it.contains("did not fit this turn") })
+        } finally {
+            collector.cancelAndJoin()
+            foundation.memory.delete(material.id)
+            routineId?.let { foundation.memory.delete(it) }
+        }
+    }
+
     @Test fun audioMovesToStoredTurnAndNextRequestNeverReattachesIt() = check {
         backend.audio = true; db.modelDao().insert(model("model").copy(capabilities = "text-generation,audio"))
         val (_, vm) = chat(); vm.models.first { it.isNotEmpty() }
