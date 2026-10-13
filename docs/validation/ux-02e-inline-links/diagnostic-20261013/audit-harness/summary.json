@@ -1,0 +1,29 @@
+{
+  "sourceSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+  "testClass": "com.localai.workspace.context.AuditHarness",
+  "startedAtUtc": "2026-10-13T11:43:57Z",
+  "finishedAtUtc": "2026-10-13T11:46:30Z",
+  "durationSeconds": 153.034,
+  "processExitCode": 0,
+  "classification": "PASS",
+  "wallLimitSeconds": 450,
+  "timedOut": false,
+  "workerObserved": true,
+  "junit": {
+    "files": 1,
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "xml": [
+    {
+      "path": "/workspace/ux02e-a182-jdk17gradle-contract/app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.context.AuditHarness.xml",
+      "bytes": 4523
+    }
+  ],
+  "initScriptPath": "/tmp/ux02e-test-events-20261013.init.gradle",
+  "initScriptSha256": "ee80bdbe033952bddd681ff6bba1f6e89b72a1d45ad3fbbd98709e7689bfca3d",
+  "testEventsPath": "/tmp/ux02e-auditharness-20261013/test-events.tsv",
+  "gradleLogPath": "/tmp/ux02e-auditharness-20261013/gradle.log"
+}

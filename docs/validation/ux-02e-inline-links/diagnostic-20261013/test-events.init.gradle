@@ -1,0 +1,34 @@
+import org.gradle.api.tasks.testing.Test
+import org.gradle.api.tasks.testing.TestDescriptor
+import org.gradle.api.tasks.testing.TestListener
+import org.gradle.api.tasks.testing.TestResult
+import java.lang.management.ManagementFactory
+import java.time.Instant
+
+File eventFile = new File(System.getenv('UX02E_TEST_EVENTS') ?: '/tmp/ux02e-test-events-20261013.tsv')
+def emitEvent = { String phase, TestDescriptor descriptor, TestResult result ->
+    eventFile.parentFile.mkdirs()
+    String className = (descriptor.className ?: '').replace('\t', ' ').replace('\n', ' ')
+    String name = (descriptor.name ?: '').replace('\t', ' ').replace('\n', ' ')
+    String resultName = result == null ? '' : result.resultType.toString()
+    String duration = result == null ? '' : result.endTime - result.startTime
+    String line = [Instant.now().toString(), phase, className, name, resultName, duration,
+        System.getProperty('java.version'), ManagementFactory.runtimeMXBean.name].join('\t') + '\n'
+    synchronized (eventFile) {
+        eventFile.withWriterAppend('UTF-8') { writer -> writer.write(line) }
+    }
+}
+
+gradle.beforeProject { project ->
+    project.tasks.withType(Test).configureEach { testTask ->
+        testTask.reports.junitXml.outputLocation.set(
+            project.layout.buildDirectory.dir('test-results/ux02e-diagnostic-chatcontent-20261013')
+        )
+        testTask.addTestListener(new TestListener() {
+            void beforeSuite(TestDescriptor descriptor) { emitEvent.call('SUITE_START', descriptor, null) }
+            void afterSuite(TestDescriptor descriptor, TestResult result) { emitEvent.call('SUITE_END', descriptor, result) }
+            void beforeTest(TestDescriptor descriptor) { emitEvent.call('TEST_START', descriptor, null) }
+            void afterTest(TestDescriptor descriptor, TestResult result) { emitEvent.call('TEST_END', descriptor, result) }
+        })
+    }
+}

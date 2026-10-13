@@ -1,0 +1,31 @@
+UX-02e focused diagnosis environment and command record
+Date: 2026-10-13 UTC
+Source under test: a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+Detached worktree: /workspace/ux02e-a182-jdk17gradle-contract
+Worktree HEAD verified as exact source SHA; tracked tree remained clean after runs. This worktree already contained ignored build outputs from an earlier host attempt; those outputs and shared caches were not copied or cleaned for these focused runs.
+
+Runtime:
+- Linux x86_64.
+- Gradle Wrapper 8.10.2.
+- Gradle runtime executable observed in `--info`: /workspace/.toolchain/jdk-17/bin/java; Temurin 17.0.20.1.
+- Test executor executable observed in process record and `--info`: /workspace/.toolchain/jdk-21-temurin/bin/java; Temurin 21.0.12.1.
+- `-Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin`.
+- ANDROID_HOME and ANDROID_SDK_ROOT set to /workspace/.toolchain/android-sdk. The preflight recorded API 35, Build Tools 35.0.0, NDK 27.0.12077973 with source.properties, and CMake 3.31.6. No SDK/JDK install was performed for these runs.
+- GRADLE_USER_HOME was inherited and not cleaned; the Gradle log resolved it under /home/agent/.gradle. Network-unreachable retry messages occurred during dependency/configuration resolution, but both focused tasks completed.
+- Temporary TestListener init script was executed from /tmp/ux02e-test-events-20261013.init.gradle; archived copy is `test-events.init.gradle`, SHA-256 ee80bdbe033952bddd681ff6bba1f6e89b72a1d45ad3fbbd98709e7689bfca3d. It records suite/test start/end timestamps and Gradle daemon runtime/PID. Separate observer process recorded test worker PID and executable. It also attempted a custom XML output directory; Android Gradle Plugin overrode that setting, as explained in run 1 evidence.
+
+Execution wrapper environment overrides for each run:
+JAVA_HOME=/workspace/.toolchain/jdk-17
+PATH=/workspace/.toolchain/jdk-17/bin:$PATH
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk
+M00_SOURCE_COMMIT=a1827fa204cda0cdf80a7e5a51670435e8c8d4b7
+UX02E_TEST_EVENTS=/tmp/ux02e-chatcontent-20261013/test-events.tsv (run 1); /tmp/ux02e-auditharness-20261013/test-events.tsv (run 2)
+
+Run 1 exact command:
+./gradlew --no-daemon --no-parallel --max-workers=1 --console=plain --info --init-script /tmp/ux02e-test-events-20261013.init.gradle -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.ui.ChatContentUiTest
+
+Run 2 exact command:
+./gradlew --no-daemon --no-parallel --max-workers=1 --console=plain --info --init-script /tmp/ux02e-test-events-20261013.init.gradle -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.context.AuditHarness
+
+Neither command used --offline or --rerun-tasks. Each was a distinct test filter, once, with a 450-second hard wall limit. Both completed before 3 minutes; no timeout thread dump was due. See each preserved original Gradle log, observer, event stream, worker-runtime record, summary and JUnit XML.

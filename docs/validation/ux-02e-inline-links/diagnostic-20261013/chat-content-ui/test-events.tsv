@@ -1,0 +1,36 @@
+2026-10-13T11:42:50.424191159Z	SUITE_START		Gradle Test Run :app:testDebugUnitTest			17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:42:51.611864465Z	SUITE_START		Gradle Test Executor 1			17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:42:51.664224989Z	SUITE_START	com.localai.workspace.ui.ChatContentUiTest	com.localai.workspace.ui.ChatContentUiTest			17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:42:52.180177209Z	TEST_START	com.localai.workspace.ui.ChatContentUiTest	longCitationExcerptAndSourceRemainScrollableAndUntruncatedOnCompactScaledLayout			17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:01.167176697Z	TEST_END	com.localai.workspace.ui.ChatContentUiTest	longCitationExcerptAndSourceRemainScrollableAndUntruncatedOnCompactScaledLayout	SUCCESS	8942	17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:01.170314832Z	TEST_START	com.localai.workspace.ui.ChatContentUiTest	citationReferenceKeepsEvidenceIdAndShowsStoredSourcePageAndExcerpt			17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:01.764261021Z	TEST_END	com.localai.workspace.ui.ChatContentUiTest	citationReferenceKeepsEvidenceIdAndShowsStoredSourcePageAndExcerpt	SUCCESS	613	17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:01.765732232Z	TEST_START	com.localai.workspace.ui.ChatContentUiTest	thinkingAndToolOverridesAreCompactAndFunctional			17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:02.725516197Z	TEST_END	com.localai.workspace.ui.ChatContentUiTest	thinkingAndToolOverridesAreCompactAndFunctional	SUCCESS	992	17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:02.726677644Z	TEST_START	com.localai.workspace.ui.ChatContentUiTest	longMarkdownKeepsHierarchyContentAndScrollableCodeAtCompactWidthAndScaledText			17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:03.464591608Z	TEST_END	com.localai.workspace.ui.ChatContentUiTest	longMarkdownKeepsHierarchyContentAndScrollableCodeAtCompactWidthAndScaledText	SUCCESS	697	17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:03.465323698Z	TEST_START	com.localai.workspace.ui.ChatContentUiTest	markdownHttpAndHttpsLinksExposeLabelAndDestinationAndOpenOnlyOnTap			17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:03.767567646Z	TEST_END	com.localai.workspace.ui.ChatContentUiTest	markdownHttpAndHttpsLinksExposeLabelAndDestinationAndOpenOnlyOnTap	SUCCESS	345	17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:03.768674088Z	TEST_START	com.localai.workspace.ui.ChatContentUiTest	rejectedProtocolMalformedLinkAndTableLinkStayVisibleWithoutLinkSemantics			17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:03.907961698Z	TEST_END	com.localai.workspace.ui.ChatContentUiTest	rejectedProtocolMalformedLinkAndTableLinkStayVisibleWithoutLinkSemantics	SUCCESS	137	17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:03.909233946Z	TEST_START	com.localai.workspace.ui.ChatContentUiTest	responseCopyActionCopiesExactMarkdownSourceInsteadOfRenderedLinkLabel			17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:04.079220323Z	TEST_END	com.localai.workspace.ui.ChatContentUiTest	responseCopyActionCopiesExactMarkdownSourceInsteadOfRenderedLinkLabel	SUCCESS	171	17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:04.080273765Z	TEST_START	com.localai.workspace.ui.ChatContentUiTest	longInputLargeFontAndGenerationKeepComposerActionsVisible			17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:04.494829390Z	TEST_END	com.localai.workspace.ui.ChatContentUiTest	longInputLargeFontAndGenerationKeepComposerActionsVisible	SUCCESS	419	17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:04.499179469Z	TEST_START	com.localai.workspace.ui.ChatContentUiTest	toolsOffDoesNotChangeLogicalAgentAndCustomSelectionStaysDistinct			17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:04.826635890Z	TEST_END	com.localai.workspace.ui.ChatContentUiTest	toolsOffDoesNotChangeLogicalAgentAndCustomSelectionStaysDistinct	SUCCESS	327	17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:04.827578761Z	TEST_START	com.localai.workspace.ui.ChatContentUiTest	codeHasLanguageAndCopiesExactContent			17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:04.971105510Z	TEST_END	com.localai.workspace.ui.ChatContentUiTest	codeHasLanguageAndCopiesExactContent	SUCCESS	147	17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:04.973750862Z	TEST_START	com.localai.workspace.ui.ChatContentUiTest	libraryAdvertisesOnlyConnectedAudio			17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:05.104181968Z	TEST_END	com.localai.workspace.ui.ChatContentUiTest	libraryAdvertisesOnlyConnectedAudio	SUCCESS	132	17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:05.106043012Z	TEST_START	com.localai.workspace.ui.ChatContentUiTest	audioSourceIsOnlyOfferedWhenConnected			17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:05.411263158Z	TEST_END	com.localai.workspace.ui.ChatContentUiTest	audioSourceIsOnlyOfferedWhenConnected	SUCCESS	304	17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:05.412084540Z	TEST_START	com.localai.workspace.ui.ChatContentUiTest	malformedTableRemainsLiteralAndKeepsEveryRowVisible			17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:05.612240621Z	TEST_END	com.localai.workspace.ui.ChatContentUiTest	malformedTableRemainsLiteralAndKeepsEveryRowVisible	SUCCESS	198	17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:05.618652557Z	TEST_START	com.localai.workspace.ui.ChatContentUiTest	markdownTableKeepsHeadersCellsAndHorizontalAccessAtCompactWidthAndScaledText			17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:06.187855551Z	TEST_END	com.localai.workspace.ui.ChatContentUiTest	markdownTableKeepsHeadersCellsAndHorizontalAccessAtCompactWidthAndScaledText	SUCCESS	576	17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:06.189841347Z	TEST_START	com.localai.workspace.ui.ChatContentUiTest	pendingImageIsVisibleAndRemoveClearsIt			17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:06.321777101Z	TEST_END	com.localai.workspace.ui.ChatContentUiTest	pendingImageIsVisibleAndRemoveClearsIt	SUCCESS	132	17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:06.325232666Z	SUITE_END	com.localai.workspace.ui.ChatContentUiTest	com.localai.workspace.ui.ChatContentUiTest	SUCCESS	14707	17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:06.330230769Z	SUITE_END		Gradle Test Executor 1	SUCCESS	14717	17.0.20.1	131741@05497ac86eb0
+2026-10-13T11:43:06.425174023Z	SUITE_END		Gradle Test Run :app:testDebugUnitTest	SUCCESS	16018	17.0.20.1	131741@05497ac86eb0

@@ -342,7 +342,7 @@
     "networkWarnings": "Network is unreachable retries to dl.google.com and repo.maven.apache.org were logged; not established as terminal cause."
   },
   "validationLayers": {
-    "HOST": "INCOMPLETE: corrected JDK17 Gradle runtime entered :app:testDebugUnitTest, whose worker stalled in Robolectric Sandbox.runOnMainThread and was operator-interrupted (exit 130). JUnit XML=0; counts unavailable; LiteRT JVM tests, lint and AndroidTest Kotlin compilation NOT_REACHED. UX-02e not accepted.",
+    "HOST": "FULL_GATE_INCOMPLETE (prior run exit 130; later requested tasks not reached). Bounded diagnostics PASS: ChatContentUiTest 15/15 and AuditHarness.writeSelectorReproductions 1/1, combined 16/16; the previous stall did not reproduce and root cause remains NOT_DETERMINED. These filters do not substitute for the full gate. UX-02e remains unaccepted pending independent audit.",
     "EMULATOR": "NOT_RUN for UX-02e; historical global EMULATOR remains FAIL for the authentic Room v1 fixture with six model-dependent SKIPPED.",
     "PHYSICAL_DEVICE": "NOT_RUN",
     "APK": "NOT_GENERATED",
@@ -380,8 +380,10 @@
     "latestAttemptTests": "NOT_AVAILABLE; app unit test task did not complete",
     "latestAttemptPostRunTreeCheck": "host/jdk17-runtime-20261013/post-run-working-tree.txt",
     "latestAttemptFileHashes": "host/jdk17-runtime-20261013/file-hashes.txt",
-    "manifestEntryCount": 32,
-    "manifestVerification": "ALL_ENTRIES_VERIFIED_WITH_SHA256SUMS_CHECK"
+    "manifestEntryCount": 52,
+    "manifestVerification": "PASS: every one of 52 entries was read back and verified with sha256sum -c from this checkout; the manifest excludes itself. The diagnostic sub-manifest independently verifies all 19 diagnostic payload files.",
+    "diagnosticRuns": "diagnostic-20261013/RUNS.md",
+    "diagnosticManifest": "diagnostic-20261013/SHA256SUMS"
   },
   "publication": {
     "codeCommit": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
@@ -398,8 +400,8 @@
     "tagOrRelease": false,
     "scope": "Documentation and evidence only."
   },
-  "status": "IMPLEMENTED_PARSER_PASS_HOST_GATE_INCOMPLETE_ROBOLECTRIC_WORKER_STALL",
-  "next": "Stop for independent audit of the single corrected JDK17-runtime host attempt. UX-02e remains unaccepted; do not start UX-02f/UX-03 or another gate attempt under this contract.",
+  "status": "FOCUSED_DIAGNOSTIC_RUNS_PASS_ORIGINAL_ROBOLECTRIC_STALL_UNDIAGNOSED_FULL_HOST_GATE_INCOMPLETE",
+  "next": "Stop for independent audit of the bounded diagnostic evidence. Do not run a full gate or more tests, and do not start UX-02f/UX-03, EMULATOR, PHYSICAL_DEVICE or APK work under this contract.",
   "recoveryWorkflowCheck": {
     "androidEmulatorWorkflow": ".github/workflows/android-emulator-instrumented.yml reviewed; not dispatched or triggered",
     "qaArm64Workflow": ".github/workflows/qa-debug-arm64-apk.yml reviewed; not dispatched or triggered",
@@ -428,11 +430,12 @@
     "retryPerformed": false,
     "apkGenerated": false,
     "emulatorOrDeviceUsed": false,
-    "next": "Stop for independent audit; no further gate attempt or UX-02f/UX-03 under this contract."
+    "next": "Stop for independent audit of the bounded focused diagnostics. Full host gate remains incomplete; no additional test or product work under this contract.",
+    "followUpDiagnosticResults": "diagnostic-20261013/RUNS.md; ChatContentUiTest 15/15 PASS and AuditHarness.writeSelectorReproductions 1/1 PASS; prior stall not reproduced, root cause remains undetermined."
   },
-  "nextRecommendedTask": "Stop for independent audit of the single corrected JDK17-runtime host attempt. UX-02e remains unaccepted; do not start UX-02f/UX-03 or another gate attempt under this contract.",
+  "nextRecommendedTask": "Stop for independent audit of the bounded diagnostic evidence. Do not run a full gate or more tests, and do not start UX-02f/UX-03, EMULATOR, PHYSICAL_DEVICE or APK work under this contract.",
   "latestAttemptAuditStatus": "PENDING_INDEPENDENT_AUDIT",
-  "previousGateAttemptAuditNote": "The preceding JDK21 Gradle runtime conflicted with README.md, which requires JDK17 for Gradle and JDK21 for app JVM test workers. The corrected JDK17 runtime invocation is the current attempt and remains incomplete; no test result is inferred.",
+  "previousGateAttemptAuditNote": "Historical JDK21 Gradle runtime contradicted README and failed at KSP target compatibility. The corrected JDK17 full-gate attempt later stalled and was operator-interrupted, with active method/root cause undetermined. Two separate bounded filter runs now pass (15/15 UI class and 1/1 AuditHarness method), without reproducing the stall; the full host gate remains incomplete and UX-02e unaccepted.",
   "previousBaseRemoteHead": "83796439caa5eba5543062ed2d82c8f021ed2e2c",
   "pendingRecoveryHistory": [
     {
@@ -520,5 +523,112 @@
         "evidenceUpdateScope": "Documentation/evidence only; no production or build changes."
       }
     }
-  ]
+  ],
+  "diagnosticRuns": {
+    "status": "COMPLETED_WITHOUT_REPRODUCING_PRIOR_STALL",
+    "sourceSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+    "branchHeadAtDiagnosticStart": "4946d603af26c6f6b913d1bbafc957613dc620ee",
+    "worktree": "/workspace/ux02e-a182-jdk17gradle-contract (detached at source SHA; pre-existing ignored build outputs/cache retained)",
+    "hardWallLimitSecondsPerExecution": 450,
+    "commonEnvironment": {
+      "gradleWrapper": "8.10.2",
+      "gradleRuntimeJdk": "Temurin 17.0.20.1 at /workspace/.toolchain/jdk-17",
+      "testWorkerJdk": "Temurin 21.0.12.1 at /workspace/.toolchain/jdk-21-temurin (process executable observed)",
+      "toolchainPaths": "/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin",
+      "androidSdk": "/workspace/.toolchain/android-sdk",
+      "gradleUserHome": "Inherited/pre-existing at /home/agent/.gradle; not cleaned",
+      "networkRetries": "Network is unreachable messages observed during resolution; neither focused run failed and no causal link to prior stall is established."
+    },
+    "initScript": {
+      "executedFrom": "/tmp/ux02e-test-events-20261013.init.gradle",
+      "archivedAs": "diagnostic-20261013/test-events.init.gradle",
+      "sha256": "ee80bdbe033952bddd681ff6bba1f6e89b72a1d45ad3fbbd98709e7689bfca3d",
+      "purpose": "Temporary Gradle TestListener recording suite/test start/end, timestamps and Gradle daemon runtime/PID."
+    },
+    "run1": {
+      "target": "com.localai.workspace.ui.ChatContentUiTest",
+      "startUtc": "2026-10-13T11:40:20Z",
+      "endUtc": "2026-10-13T11:43:07Z",
+      "durationSeconds": 167.004,
+      "gradleClientPid": 131709,
+      "gradleDaemonPid": 131741,
+      "testWorkerPid": 131884,
+      "command": "./gradlew --no-daemon --no-parallel --max-workers=1 --console=plain --info --init-script /tmp/ux02e-test-events-20261013.init.gradle -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.ui.ChatContentUiTest",
+      "exitCode": 0,
+      "classification": "PASS",
+      "gradle": "BUILD SUCCESSFUL; 63 actionable tasks: 1 executed, 62 up-to-date",
+      "junit": {
+        "files": 1,
+        "tests": 15,
+        "passed": 15,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml": "diagnostic-20261013/chat-content-ui/TEST-com.localai.workspace.ui.ChatContentUiTest.xml",
+      "observerDiscrepancy": "Raw observer RUN_END counted zero XML because AGP overrode the init-script output path. The default-path XML is preserved, timestamped inside the run, and records all 15 passing cases; see observer.log.gz and summary.json."
+    },
+    "run2": {
+      "target": "com.localai.workspace.context.AuditHarness#writeSelectorReproductions",
+      "startUtc": "2026-10-13T11:43:57Z",
+      "endUtc": "2026-10-13T11:46:30Z",
+      "durationSeconds": 153.034,
+      "gradleClientPid": 131961,
+      "gradleDaemonPid": 131994,
+      "testWorkerPid": 132126,
+      "command": "./gradlew --no-daemon --no-parallel --max-workers=1 --console=plain --info --init-script /tmp/ux02e-test-events-20261013.init.gradle -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.context.AuditHarness",
+      "exitCode": 0,
+      "classification": "PASS",
+      "gradle": "BUILD SUCCESSFUL; 63 actionable tasks: 1 executed, 62 up-to-date",
+      "junit": {
+        "files": 1,
+        "tests": 1,
+        "passed": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml": "diagnostic-20261013/audit-harness/TEST-com.localai.workspace.context.AuditHarness.xml",
+      "methodEvent": "TEST_START and TEST_END SUCCESS recorded for writeSelectorReproductions."
+    },
+    "combinedJunit": {
+      "files": 2,
+      "tests": 16,
+      "passed": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "stallReproduced": false,
+    "previousActiveMethod": "NOT_IDENTIFIED: prior dump was generic Robolectric/JUnit Sandbox.runOnMainThread stack; last stdout label was AuditHarness#writeSelectorReproductions, not a JUnit test-start event.",
+    "rootCause": "NOT_DETERMINED; no product defect attribution.",
+    "jcmdSnapshots": "NOT_TRIGGERED: both focused executions completed before the no-progress snapshot threshold.",
+    "fullGate": "NOT_RUN under this diagnostic contract; previous full gate remains INCOMPLETE with exit 130 and later tasks NOT_REACHED.",
+    "evidenceDirectory": "diagnostic-20261013/",
+    "manifest": "diagnostic-20261013/SHA256SUMS",
+    "manifestEntries": 19,
+    "manifestSha256": "32237f5a599673465744dd0301ab7b71d13ffded1d617750fd83abd70cca5aff",
+    "outerManifestEntries": 52,
+    "evidenceSha256": {
+      "chatContentJUnitXml": "cfb455381339744525747245d957854671ab05cf05ce2208535d76ce9ae9a4c2",
+      "chatContentTestEvents": "a08817d96bacb5b83e0280c083b9be0686717189768ed528dd174a2f13926aeb",
+      "auditHarnessJUnitXml": "79844d737305e1f6bff6f8621be0d16f84adf75eda4f851f86b5be8eca3ce97b",
+      "auditHarnessTestEvents": "373c7786ffe8794881b20f43908c29c21b106b4b25099fea055d49331144e6ff",
+      "initScript": "ee80bdbe033952bddd681ff6bba1f6e89b72a1d45ad3fbbd98709e7689bfca3d",
+      "chatContentGradleLogRaw": "b05ebf296ac87be5fc14040ed9f6ec04f05ed4ad85544eadce249304c6d4d37c",
+      "chatContentGradleLogGzip": "904b22c680b2eff519d38fc003c8b884c455b4d8b63a9ff5953699de978705a4",
+      "chatContentObserverLogRaw": "4bdd4577fc2c405bcdec0039675cf18d8612eaea0c8372935b31e67c7736df63",
+      "chatContentObserverLogGzip": "0a58e97a9e75e49ee1c7ebf4a2fca464dc100902cf9d9ce1abe3662ead69944e",
+      "auditHarnessGradleLogRaw": "168b5f7f53a71e301e3c596ca33acabdd2e0be6c31e146787a012ce715e91f72",
+      "auditHarnessGradleLogGzip": "35de01f9a98e469db36b990ad348ec75cf51cf2be69e48a60f12f4fbbf8d86f9",
+      "auditHarnessObserverLogRaw": "5e90292c4fa293ab1d7d498fc45c382a1a75bc6769ea907861e2f7f544991b84",
+      "auditHarnessObserverLogGzip": "990f1e209ed4374fd9a2455880e50aec8a3bfc3d602a39cde9e3ac66de935216",
+      "chatContentWorkerRuntimeRaw": "528d4dae1ff6ffc599ef671f57e7cf0d00559276306c065b3a0c7514cddefc3f",
+      "chatContentWorkerRuntimeGzip": "afdd263c2aeb0db573a403fc5eaaa0b399a553d9ba73df7215f06539a06b7adf",
+      "auditHarnessWorkerRuntimeRaw": "f6a86526b047030019830d251a2548ac0fe83c2b9c9727026c6c781ac85b4e0d",
+      "auditHarnessWorkerRuntimeGzip": "f033b5047832a1e4a6a4a7bb258f918c031e864d04f41dd2adbaedfa69bf56cf"
+    },
+    "workerRuntimeEncoding": "Exact observer text records are gzip-preserved as worker-runtime.txt.gz; decompress with gzip -dc.",
+    "storedLogs": "Raw Gradle and observer logs are losslessly gzip-compressed; hashes for raw content and stored gzip files are both recorded."
+  }
 }

@@ -1,0 +1,23 @@
+Product/test paths
+command: git diff --stat f54c1430cab4ea59a302b58dd2aa27deea579c49 a1827fa204cda0cdf80a7e5a51670435e8c8d4b7 -- app/src/main app/src/test
+exit: 0
+ .../java/com/localai/workspace/MainActivity.kt     |   6 +-
+ .../java/com/localai/workspace/ui/BasicMarkdown.kt | 119 ++++++++++++++++++++-
+ .../java/com/localai/workspace/ui/ChatContent.kt   |  55 ++++++++--
+ .../com/localai/workspace/ui/BasicMarkdownTest.kt  |  46 +++++++-
+ .../com/localai/workspace/ui/ChatContentUiTest.kt  |  79 ++++++++++++++
+ 5 files changed, 288 insertions(+), 17 deletions(-)
+
+Product/test names
+command: git diff --name-status f54c1430cab4ea59a302b58dd2aa27deea579c49 a1827fa204cda0cdf80a7e5a51670435e8c8d4b7 -- app/src/main app/src/test
+exit: 0
+M	app/src/main/java/com/localai/workspace/MainActivity.kt
+M	app/src/main/java/com/localai/workspace/ui/BasicMarkdown.kt
+M	app/src/main/java/com/localai/workspace/ui/ChatContent.kt
+M	app/src/test/java/com/localai/workspace/ui/BasicMarkdownTest.kt
+M	app/src/test/java/com/localai/workspace/ui/ChatContentUiTest.kt
+
+Build/README configuration paths
+command: git diff --name-status f54c1430cab4ea59a302b58dd2aa27deea579c49 a1827fa204cda0cdf80a7e5a51670435e8c8d4b7 -- README.md **/*.gradle.kts **/*.gradle gradle/** gradle.properties
+exit: 0
+(no matching changes)

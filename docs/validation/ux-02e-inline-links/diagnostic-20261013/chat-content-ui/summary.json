@@ -1,0 +1,35 @@
+{
+  "sourceSha": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+  "testClass": "com.localai.workspace.ui.ChatContentUiTest",
+  "startedAtUtc": "2026-10-13T11:40:20Z",
+  "finishedAtUtc": "2026-10-13T11:43:07Z",
+  "durationSeconds": 167.004,
+  "processExitCode": 0,
+  "classification": "PASS",
+  "wallLimitSeconds": 450,
+  "timedOut": false,
+  "workerObserved": true,
+  "junit": {
+    "files": 1,
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "xml": [
+    {
+      "path": "app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.ui.ChatContentUiTest.xml",
+      "bytes": 2547
+    }
+  ],
+  "initScriptPath": "/tmp/ux02e-test-events-20261013.init.gradle",
+  "initScriptSha256": "ee80bdbe033952bddd681ff6bba1f6e89b72a1d45ad3fbbd98709e7689bfca3d",
+  "testEventsPath": "/tmp/ux02e-chatcontent-20261013/test-events.tsv",
+  "gradleLogPath": "/tmp/ux02e-chatcontent-20261013/gradle.log",
+  "xmlOutputNote": "Init-script custom output location was overridden by Android Gradle Plugin task configuration; the default task output path was absent before this run and generated at completion.",
+  "testListenerCounts": {
+    "starts": 15,
+    "ends": 15
+  },
+  "summarySourceNote": "Counts were reconciled from the preserved default-path JUnit XML after AGP overrode the listener init-script output path. The raw observer.log still records its original zero-XML count."
+}

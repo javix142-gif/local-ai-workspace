@@ -3,9 +3,22 @@
 **Code SHA:** `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`
 **Branch:** `feat/0.5.0-skills-agents`
 **Remote feature HEAD at this validation:** `51434af64d64c40157ddf61548e9ebaae3ec8217`
-**Status:** implementation committed; parser-only JVM check remains supplemental at 20/20. The corrected HOST gate used the README-required JDK 17 Gradle runtime and JDK 21 app test worker, but stalled in `:app:testDebugUnitTest` under Robolectric and was operator-interrupted after 55m11s (exit 130). It emitted no JUnit XML and did not reach the remaining requested tasks. UX-02e is **not accepted**; this is an incomplete HOST validation, not a test PASS or an identified UX defect.
+**Status:** UX-02e remains **not accepted**. The prior full HOST gate is incomplete (operator-interrupted, exit 130); the bounded diagnostic subsequently passed two isolated targets (ChatContentUiTest 15/15 and AuditHarness 1/1), but neither reproduced the stall. The previous active test and root cause remain undetermined; these focused passes do not constitute the full HOST gate.
 
-## Corrected HOST attempt — JDK 17 Gradle runtime (2026-10-13)
+## Bounded Robolectric stall diagnosis (2026-10-13)
+
+The full-gate log's last named output marker was `AuditHarness > writeSelectorReproductions STANDARD_OUT`, followed by a generic JDK 21 worker stack waiting through Robolectric `Sandbox.runOnMainThread`. That output marker did not identify the active test, and the stack did not contain a class/method identity. Two distinct filtered executions were then made once each against exact source SHA `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`, each with a 450-second hard limit and the README JDK configuration:
+
+| Target | Start–end UTC | Duration | Exit | JUnit | Outcome |
+| --- | --- | ---: | ---: | --- | --- |
+| `com.localai.workspace.ui.ChatContentUiTest` | 11:40:20–11:43:07 | 167.004 s | 0 | 15 tests, 0 fail/error/skip | PASS; stall not reproduced in this class |
+| `com.localai.workspace.context.AuditHarness#writeSelectorReproductions` | 11:43:57–11:46:30 | 153.034 s | 0 | 1 test, 0 fail/error/skip | PASS; candidate method not stalled in isolation |
+
+Both Gradle logs say `BUILD SUCCESSFUL`; each reports 63 actionable tasks (1 executed, 62 up-to-date). The test worker was observed under Temurin JDK 21.0.12.1 and Gradle under Temurin JDK 17.0.20.1. No run reached the 3–4 minute no-progress threshold, so the timeout process-tree/jcmd snapshot path was not triggered. The first run's raw observer summary says XML=0 because its monitor expected a custom path; AGP wrote the JUnit file at its default path. The preserved XML (15 tests, timestamp within the run), Gradle log, and `--info` report corroborate the corrected summary; the discrepancy is retained in `chat-content-ui/observer.log.gz`. The second observer and XML agree at 1/1.
+
+**Conclusion:** the earlier 3311-second stall was not reproduced by either focused execution. The old dump does not identify a test method. Do not infer a Robolectric defect, JDK/worker defect, product deadlock, or environmental root cause. The cause remains **NOT DETERMINED**; no product defect is established. The focused run evidence and SHA256 manifest are in [`diagnostic-20261013/`](diagnostic-20261013/RUNS.md). Its 19 payload files verify against the diagnostic manifest SHA-256 `32237f5a599673465744dd0301ab7b71d13ffded1d617750fd83abd70cca5aff`. The refreshed parent manifest includes 52 entries; its current checksum is recorded in `EXECUTION_STATE.json` and the handoff. UX-02e remains pending independent audit; no full host gate was run.
+
+## Historical full HOST attempt — JDK 17 Gradle runtime (2026-10-13; stall diagnosis below)
 
 - Source SHA: `a1827fa204cda0cdf80a7e5a51670435e8c8d4b7`, freshly checked out detached at that exact commit in `/workspace/ux02e-a182-jdk17gradle-contract`. Feature branch HEAD at the start was `51434af64d64c40157ddf61548e9ebaae3ec8217`; the source commit was an ancestor and changes after it were documentation only.
 - Read-only preflight passed for Temurin JDK 17.0.20.1 and JDK 21.0.12.1: both `java`, `javac`, `jdk.compiler`, and `ToolProvider.getSystemJavaCompiler()` were available. Gradle ran with JDK 17, and `--info` confirms the app test worker launched from JDK 21 as configured in `app/build.gradle.kts`. Toolchain discovery exposed both homes. Existing API 35 SDK, Build Tools 35.0.0, NDK 27.0.12077973 with `source.properties`, and CMake 3.31.6 passed preflight. No JDK/SDK components or dependencies were installed by the operator, and no caches/data were deleted.
@@ -18,8 +31,8 @@
 - Start/end: `2026-10-13T02:58:09Z`–`2026-10-13T03:53:20Z`; duration **3311 seconds**; wrapper shell exit **130** (`tee` exit 0). Gradle compiled the app and entered `:app:testDebugUnitTest`; the task did not emit a completion summary. After about 45 minutes without new log output or XML, a SIGQUIT dump showed the test worker waiting in `FutureTask.get` through `org.robolectric.internal.bytecode.Sandbox.runOnMainThread`. The dump does not identify the test class or method. The worker was stopped by the operator; Gradle emitted neither `BUILD SUCCESSFUL` nor `BUILD FAILED`. Cause remains undetermined. This is **INCOMPLETE_STALLED_ROBOLECTRIC_WORKER_OPERATOR_INTERRUPTED**, not an assertion failure or product diagnosis.
 - `:litert-compat:testDebugUnitTest`, `:app:lintDebug`, and `:app:compileDebugAndroidTestKotlin` were **NOT_REACHED**. The app test task did not finish; its tests/passed/failed/errors/skipped counts are **NOT_AVAILABLE**. A fresh-worktree search found **0 JUnit XML**. No XML was counted from the main checkout or from non-test Android resource outputs.
 - Gradle logged failed network retries to `dl.google.com` and Maven Central while resolving/configuring, but it reached test execution using available local dependencies. Network is not established as the terminal cause. No emulator, physical device, APK, or Android installation was used.
-- Full log: [`gradle-gate.log.gz`](host/jdk17-runtime-20261013/gradle-gate.log.gz), raw SHA-256 `9e6ad449bff8a0d7039096b4f93cb7b6e297d224de8197aa4bec29b9faba7fc6`, gzip SHA-256 `aaf91f91b166eef790bdf88d22ec7daa785ca421be35a5d395668b4d040d6efc`. Run metadata, task progress, the zero-XML inventory, file hashes and the [post-run clean tracked/untracked status check](host/jdk17-runtime-20261013/post-run-working-tree.txt) are alongside it. The evidence manifest contains 32 entries; every listed entry is verified from the repository checkout.
-- UX-02e remains unaccepted pending independent audit of this incomplete run. No additional retry is included in this contract.
+- Full log: [`gradle-gate.log.gz`](host/jdk17-runtime-20261013/gradle-gate.log.gz), raw SHA-256 `9e6ad449bff8a0d7039096b4f93cb7b6e297d224de8197aa4bec29b9faba7fc6`, gzip SHA-256 `aaf91f91b166eef790bdf88d22ec7daa785ca421be35a5d395668b4d040d6efc`. Run metadata, task progress, the zero-XML inventory, file hashes and the [post-run clean tracked/untracked status check](host/jdk17-runtime-20261013/post-run-working-tree.txt) are alongside it. The evidence manifest at that historical publication contained 32 entries; this contract refreshes it to include the focused diagnostic evidence.
+- At the time of this full-gate report, no additional retry was included. The later bounded diagnosis is recorded above; it did not reproduce the stall and does not complete the full host gate.
 
 ## Historical attempt — JDK 21 runtime contrary to repository README (2026-10-13)
 
@@ -128,7 +141,7 @@ Compose tests were added for HTTP/HTTPS URI activation through a fake `UriHandle
 
 ## Validation layers and limits
 
-- **HOST:** parser-only standalone JUnit 20/20 PASS (supplemental only). The corrected Gradle gate is **INCOMPLETE**, wrapper exit 130 after operator interruption in `:app:testDebugUnitTest`; the Robolectric worker remained waiting through `Sandbox.runOnMainThread`, with no test name identified. JUnit XML=0; test counts unavailable; LiteRT JVM tests, lint and AndroidTest Kotlin compilation NOT_REACHED. The preceding JDK21-runtime/JDK17-toolchain attempt is historical and contrary to the README's JDK17 Gradle-runtime requirement. UX-02e remains unaccepted.
+- **HOST:** the full requested Gradle gate remains **INCOMPLETE** (prior wrapper exit 130; later requested tasks were not reached). The bounded diagnostics PASS: `ChatContentUiTest` 15/15 and `AuditHarness.writeSelectorReproductions` 1/1, both with zero failures/errors/skips. The previous stall did not reproduce and its cause remains undetermined. These two filtered executions do not complete/replace the full gate; LiteRT compatibility tests, lint and AndroidTest Kotlin compilation remain NOT_RUN in this contract. UX-02e remains unaccepted pending independent audit.
 - **EMULATOR:** NOT_RUN for UX-02e. The prior global result remains FAIL: 16 cases, 9 PASS, the historical authentic Room v1 fixture FAIL, six real-model-dependent SKIPPED. This contract did not rerun it.
 - **PHYSICAL_DEVICE:** NOT_RUN.
 - **APK:** NOT_GENERATED.
@@ -138,4 +151,4 @@ Compose tests were added for HTTP/HTTPS URI activation through a fake `UriHandle
 
 ## Evidence
 
-`SHA256SUMS` covers this report, the JSON summary, standalone runner, prior attempts, and the corrected JDK17-runtime gate's command, preflight, environment, run metadata, full compressed log, task outcome and XML inventory. The latest run emitted no JUnit XML because `:app:testDebugUnitTest` did not complete. Existing ignored XML outside the fresh detached worktree is not counted.
+`SHA256SUMS` covers this report, JSON summary, prior attempts, and the diagnostic bundle. The diagnostic bundle includes both original focused Gradle logs, observer/event files, worker runtime records, JUnit XML, exact commands, the temporary listener script, and prior-run inspection. The earlier full gate emitted no JUnit XML; the two focused runs each emitted and preserved their own JUnit XML. Existing XML from outside the exact-source worktree is not counted.
