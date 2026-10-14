@@ -32,7 +32,7 @@ class ProjectFileReadTool(private val db: WorkspaceDatabase, private val private
                 val rows=minOf(first.first,last.first)..maxOf(first.first,last.first);val columns=minOf(first.second,last.second)..maxOf(first.second,last.second)
                 require((rows.last.toLong()-rows.first+1)*(columns.last.toLong()-columns.first+1)<=64){"EXACT_RANGE_LIMIT_64"}
                 val name=arguments.getString("sheet")
-                val cells=table.cells.filter{it.sheet.equals(name,ignoreCase=true)&&it.row in rows&&it.column in columns}.sortedWith(compareBy<com.localai.workspace.documents.StructuredDocuments.Cell>{it.row}.thenBy{it.column})
+                val cells=table.cells.filter{it.sheet.lowercase(java.util.Locale.ROOT)==name.lowercase(java.util.Locale.ROOT)&&it.row in rows&&it.column in columns}.sortedWith(compareBy<com.localai.workspace.documents.StructuredDocuments.Cell>{it.row}.thenBy{it.column})
                 val requested=rows.flatMap{r->columns.map{c->var n=c;var a="";while(n>0){n--;a=('A'.code+n%26).toChar()+a;n/=26};a+r}}
                 val missing=requested.filter{address->cells.none{it.address==address}}
                 val response=JSONObject().put("documentId",doc.id).put("sheet",name).put("range",arguments.getString("range"))

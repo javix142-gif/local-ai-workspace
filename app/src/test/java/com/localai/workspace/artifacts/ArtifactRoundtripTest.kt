@@ -61,7 +61,7 @@ class ArtifactRoundtripTest {
                     if(format=="PDF")assertEquals(2,parsed.pages.size)
                     if(format=="DOCX")ZipFile(store.verifiedFile("p",first)).use{z->assertTrue(z.getInputStream(z.getEntry("word/document.xml")).bufferedReader().use{it.readText()}.contains("<w:tblGrid>"))}
                 }
-                if(format=="PPTX")ZipFile(store.verifiedFile("p",first)).use{z->assertNotNull(z.getEntry("ppt/slides/slide2.xml"));z.entries().asSequence().filter{it.name.endsWith(".xml")}.forEach{e->z.getInputStream(e).use{DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(it)}}}
+                if(format=="PPTX")ZipFile(store.verifiedFile("p",first)).use{z->assertNotNull(z.getEntry("ppt/slides/slide2.xml"));assertNotNull(z.getEntry("ppt/slides/_rels/slide1.xml.rels"));assertNotNull(z.getEntry("ppt/slideLayouts/slideLayout1.xml"));assertNotNull(z.getEntry("ppt/slideMasters/slideMaster1.xml"));assertNotNull(z.getEntry("ppt/theme/theme1.xml"));z.entries().asSequence().filter{it.name.endsWith(".xml")}.forEach{e->z.getInputStream(e).use{DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(it)}}}
                 if(format=="CODE")assertEquals(JSONObject(source).getString("body"),store.verifiedFile("p",first).readText())
                 val changed=store.spec("p",first).json()
                 when(format){"DOCX","PDF"->changed.getJSONArray("paragraphs").getJSONObject(0).put("text","Informe revisado");"PPTX"->changed.getJSONArray("slides").getJSONObject(0).put("title","Informe revisado");else->changed.put("body","fun answer() = 43\n")}
