@@ -227,7 +227,10 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
         queryEmbeddingReused.value=false
         require(limit in 1..100); if(scope.type==ScopeType.PROJECT && workspace.projectDao().get(scope.id)==null)throw SemanticFailure(SemanticError.REINDEX_REQUIRED); restore();val model=manager.selected ?: throw SemanticFailure(SemanticError.MODEL_FILE_INVALID)
         val dao=database.dao();val active=dao.active(scope.key) ?: throw SemanticFailure(SemanticError.REINDEX_REQUIRED)
-        val space=EmbeddingEngineManager.space(model,dimension)
+        val searchRevision=configurationRevision.value
+        val searchDimension=dimension
+        val searchProfile=manager.profile
+        val space=EmbeddingEngineManager.space(model,searchDimension)
         if(active.spaceKey!=space.id) throw SemanticFailure(SemanticError.SPACE_MISMATCH)
         val generation=requireReadyGeneration(scope,active)
         if(generation.embeddings>10_000)throw SemanticFailure(SemanticError.REINDEX_REQUIRED)
@@ -252,12 +255,12 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
             else->null
         }
         val cacheKey=descriptor?.let { fingerprint(Gson().toJson(listOf(space.id,scope.key,
-            active.indexId,generation.updatedAt.toString(),configurationRevision.value.toString(),
-            manager.profile.toString(),task.name,it))) }
+            active.indexId,generation.updatedAt.toString(),searchRevision.toString(),
+            searchProfile.toString(),task.name,it))) }
         val cached=cacheKey?.let(searchVectors::get)
-        val queryVector=cached ?: manager.embed(query,task,dimension).also { result->
+        val queryVector=cached ?: manager.embed(query,task,searchDimension).also { result->
             // Configuration may have changed while this request waited for the native gate.
-            if(result.space==space && cacheKey!=null) searchVectors.put(cacheKey,result)
+            if(result.space==space && cacheKey!=null && configurationRevision.value==searchRevision && manager.profile==searchProfile) searchVectors.put(cacheKey,result)
         }
         queryEmbeddingReused.value=cached!=null
         if(queryVector.space!=space)throw SemanticFailure(SemanticError.SPACE_MISMATCH)
@@ -276,6 +279,8 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
             RetrievalHit(s.sourceId,s.id,c.sourceName,SemanticModality.valueOf(s.modality),s.textContent,s.page,s.lineStart,s.lineEnd,s.startMs,s.endMs,ranked.firstOrNull { it.first.segment.id==s.id }?.second,if(lexicalRank>=0)1.0/(lexicalRank+1)else null,fused,space.id,sourceDocumentIds[s.sourceId],s.legacySegmentId)
         }.sortedByDescending { it.fusedScore }.take(limit)
         val currentActive=dao.active(scope.key);val currentJob=dao.job(active.indexId)
+        if(configurationRevision.value!=searchRevision || manager.profile!=searchProfile || manager.selected?.id!=model.id)
+            throw SemanticFailure(SemanticError.SPACE_MISMATCH)
         if(currentActive!=active || currentJob?.state!="READY" || currentJob.updatedAt!=generation.updatedAt || currentJob.embeddings!=generation.embeddings)
             throw SemanticFailure(SemanticError.REINDEX_REQUIRED)
         hits
