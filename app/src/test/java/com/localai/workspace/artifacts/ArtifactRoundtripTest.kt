@@ -100,6 +100,14 @@ class ArtifactRoundtripTest {
             assertEquals("reunión-界.kt",revision.name);assertEquals("// ñ 界\n",store.verifiedFile("p",revision).readText())
         }finally{dir.deleteRecursively()}
     }
+    @Test fun emptyCodeDraftIsAnActualVersionedFile() {
+        val dir=root();val store=ArtifactStore(context,dir)
+        try {
+            val revision=store.create("p",spec("CODE","""{"body":""}"""))
+            assertEquals(0L,revision.bytes);assertTrue(store.verifiedFile("p",revision).isFile)
+            assertEquals("",ArtifactStore(context,dir).spec("p",revision).json().getString("body"))
+        }finally{dir.deleteRecursively()}
+    }
     @Test fun toolCreatesVerifiedBytesOnlyWhenExplicitlyEnabledAndCapable()=runBlocking {
         val tool=ArtifactTool(context,"artifacts.create");val registry=ToolRegistry(listOf(tool));val tc=ToolContext("isolated-tool-${UUID.randomUUID()}","chat",root())
         val args=JSONObject().put("spec",spec("CODE","""{"body":"fun result() = 42"}""").json()).toString()

@@ -25,7 +25,7 @@ class ArtifactRenderer(private val context:Context) {
                 parts.forEach{(name,body)->checkInterrupted();zip.putNextEntry(ZipEntry(name).apply{time=0});zip.write(body.toByteArray(Charsets.UTF_8));zip.closeEntry()}
             }
         }
-        require(target.length() in 1..20L*1024*1024){"ARTIFACT_BYTES_LIMIT"}
+        require(target.length() in (if(spec.format==ArtifactFormat.CODE)0L else 1L)..20L*1024*1024){"ARTIFACT_BYTES_LIMIT"}
     }
     private fun checkInterrupted(){if(Thread.currentThread().isInterrupted)throw InterruptedException()}
     private fun xml(s:String)=s.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;").replace("\"","&quot;").replace("'","&apos;")

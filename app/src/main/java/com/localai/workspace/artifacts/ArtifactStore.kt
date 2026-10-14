@@ -35,7 +35,7 @@ class ArtifactStore(context:Context,private val root:File=File(context.filesDir,
     fun history(projectId:String,id:String):List<ArtifactRevision> = item(projectId,id).listFiles().orEmpty().filter{it.isDirectory&&Regex("v[1-9][0-9]*").matches(it.name)}.map{folder->
         val meta=File(folder,"revision.json");require(meta.length() in 1..4096){"ARTIFACT_METADATA_INVALID"};val j=JSONObject(meta.readText())
         ArtifactRevision(j.getString("id"),j.getInt("version"),j.getString("name"),ArtifactFormat.valueOf(j.getString("format")),j.getLong("bytes"),j.getString("sha256"),j.getLong("createdAt"),j.getString("specSha256")).also{
-            require(it.id==id&&folder.name=="v${it.version}"&&it.bytes in 1..20L*1024*1024&&Regex("[0-9a-f]{64}").matches(it.sha256)&&Regex("[0-9a-f]{64}").matches(it.specSha256)){"ARTIFACT_METADATA_INVALID"}
+            require(it.id==id&&folder.name=="v${it.version}"&&it.bytes in (if(it.format==ArtifactFormat.CODE)0L else 1L)..20L*1024*1024&&Regex("[0-9a-f]{64}").matches(it.sha256)&&Regex("[0-9a-f]{64}").matches(it.specSha256)){"ARTIFACT_METADATA_INVALID"}
         }
     }.sortedByDescending{it.version}
     fun spec(projectId:String,revision:ArtifactRevision):ArtifactSpec {
