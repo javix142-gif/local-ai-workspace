@@ -23,7 +23,7 @@ import java.io.File
 @Config(sdk=[29],application=Application::class)
 class NativeArtifactToolTest {
     @Test fun sdkAdapterCreatesActualDraftRecordsWritePermissionAndRejectsScopeMismatch()=runBlocking {
-        val context=RuntimeEnvironment.getApplication<Application>();val db=WorkspaceDatabase.createValidation(context)
+        val context=RuntimeEnvironment.getApplication();val db=WorkspaceDatabase.createValidation(context)
         val project="self-test-native-artifact-${UUID.randomUUID()}";val chat=UUID.randomUUID().toString()
         db.projectDao().upsert(ProjectEntity(project,"Synthetic tool validation",1,1))
         db.conversationDao().upsert(ConversationEntity(chat,project,"Synthetic",1,1))
@@ -41,7 +41,7 @@ class NativeArtifactToolTest {
             val read=JSONObject(tools.execute("artifacts.read",JsonParser.parseString(JSONObject().put("id",revision.id).toString()).asJsonObject).asString)
             assertEquals("fun answer() = 42\n",read.getJSONObject("result").getJSONObject("spec").getString("body"))
             adapter.begin(Bundle(data).apply{putString("conversationId",UUID.randomUUID().toString())})
-            try{tools.execute("artifacts.create",JsonParser.parseString(args).asJsonObject);fail("owner required")}catch(e:Exception){assertTrue(e.toString().contains("scope")||e.cause!=null)}
+            try{tools.execute("artifacts.create",JsonParser.parseString(args).asJsonObject);fail("owner required")}catch(e:Exception){var cause:Throwable=e;while(cause.cause!=null)cause=cause.cause!!;assertEquals("Tool scope mismatch",cause.message)}
             assertEquals(1,store.list(project).size)
         }finally {
             adapter.close();db.toolCallDao().deleteForConversation(chat);db.conversationDao().delete(chat);db.projectDao().delete(project);db.close()
