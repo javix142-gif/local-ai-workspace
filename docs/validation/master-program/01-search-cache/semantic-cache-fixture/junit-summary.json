@@ -1,0 +1,11 @@
+{
+  "files": [
+    "junit/app/TEST-com.localai.workspace.semantic.v2.SearchEmbeddingCacheTest.xml"
+  ],
+  "counts": {
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}
