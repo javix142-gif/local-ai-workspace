@@ -10,8 +10,8 @@ import java.util.UUID
 import java.util.zip.ZipFile
 import com.localai.workspace.documents.StructuredDocuments
 
-data class ArtifactRevision(val id:String,val version:Int,val name:String,val format:ArtifactFormat,val bytes:Long,val sha256:String,val createdAt:Long) {
-    fun json()=JSONObject().put("id",id).put("version",version).put("name",name).put("format",format.name).put("bytes",bytes).put("sha256",sha256).put("createdAt",createdAt)
+data class ArtifactRevision(val id:String,val version:Int,val name:String,val format:ArtifactFormat,val bytes:Long,val sha256:String,val createdAt:Long,val specSha256:String) {
+    fun json()=JSONObject().put("id",id).put("version",version).put("name",name).put("format",format.name).put("bytes",bytes).put("sha256",sha256).put("createdAt",createdAt).put("specSha256",specSha256)
 }
 
 /** App-private, immutable revisions. Commit is a same-filesystem directory rename after
@@ -34,13 +34,14 @@ class ArtifactStore(context:Context,private val root:File=File(context.filesDir,
     }.sortedByDescending{it.createdAt}
     fun history(projectId:String,id:String):List<ArtifactRevision> = item(projectId,id).listFiles().orEmpty().filter{it.isDirectory&&Regex("v[1-9][0-9]*").matches(it.name)}.map{folder->
         val meta=File(folder,"revision.json");require(meta.length() in 1..4096){"ARTIFACT_METADATA_INVALID"};val j=JSONObject(meta.readText())
-        ArtifactRevision(j.getString("id"),j.getInt("version"),j.getString("name"),ArtifactFormat.valueOf(j.getString("format")),j.getLong("bytes"),j.getString("sha256"),j.getLong("createdAt")).also{
-            require(it.id==id&&folder.name=="v${it.version}"&&it.bytes in 1..20L*1024*1024&&Regex("[0-9a-f]{64}").matches(it.sha256)){"ARTIFACT_METADATA_INVALID"}
+        ArtifactRevision(j.getString("id"),j.getInt("version"),j.getString("name"),ArtifactFormat.valueOf(j.getString("format")),j.getLong("bytes"),j.getString("sha256"),j.getLong("createdAt"),j.getString("specSha256")).also{
+            require(it.id==id&&folder.name=="v${it.version}"&&it.bytes in 1..20L*1024*1024&&Regex("[0-9a-f]{64}").matches(it.sha256)&&Regex("[0-9a-f]{64}").matches(it.specSha256)){"ARTIFACT_METADATA_INVALID"}
         }
     }.sortedByDescending{it.version}
     fun spec(projectId:String,revision:ArtifactRevision):ArtifactSpec {
         val folder=File(item(projectId,revision.id),"v${revision.version}");val f=File(folder,"spec.json")
         require(f.length() in 1..ArtifactSpec.MAX_SPEC_BYTES.toLong()){"ARTIFACT_SPEC_INVALID"}
+        require(fileHash(f)==revision.specSha256){"ARTIFACT_SPEC_CHANGED"}
         return ArtifactSpec.parse(JSONObject(f.readText())).also{require(it.name==revision.name&&it.format==revision.format){"ARTIFACT_SPEC_MISMATCH"}}
     }
     /** Used for previews, export and tools. Verify bytes against the immutable committed hash. */
@@ -67,9 +68,10 @@ class ArtifactStore(context:Context,private val root:File=File(context.filesDir,
                     val bytes=File(pending,spec.name);renderer.render(spec,bytes)
                     // Fully read ZIP entries for CRC and bounded safe package validation.
                     if(spec.format in setOf(ArtifactFormat.DOCX,ArtifactFormat.XLSX,ArtifactFormat.PPTX))ZipFile(bytes).use{zip->StructuredDocuments.inspect(zip);zip.entries().asSequence().forEach{e->zip.getInputStream(e).use{StructuredDocuments.bounded(it,8*1024*1024)}}}
-                    val revision=ArtifactRevision(id,version,spec.name,spec.format,bytes.length(),fileHash(bytes),System.currentTimeMillis())
+                    val specPayload=spec.json().toString()
+                    val revision=ArtifactRevision(id,version,spec.name,spec.format,bytes.length(),fileHash(bytes),System.currentTimeMillis(),hash(specPayload.toByteArray(Charsets.UTF_8)))
                     FileOutputStream(bytes,true).use{it.fd.sync()}
-                    syncText(File(pending,"spec.json"),spec.json().toString())
+                    syncText(File(pending,"spec.json"),specPayload)
                     syncText(File(pending,"revision.json"),revision.json().toString())
                     check(!File(folder,"v$version").exists()&&pending.renameTo(File(folder,"v$version"))){"ARTIFACT_ATOMIC_COMMIT_FAILED"}
                     verifiedFile(projectId,revision);return revision

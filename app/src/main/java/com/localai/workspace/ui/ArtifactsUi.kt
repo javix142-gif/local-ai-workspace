@@ -7,6 +7,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -27,34 +28,38 @@ import org.json.JSONObject
     var versions by remember{mutableStateOf<List<ArtifactRevision>>(emptyList())}
     var selected by remember{mutableStateOf<ArtifactRevision?>(null)}
     var descriptor by remember{mutableStateOf("")}
+    var savedPreview by remember{mutableStateOf("")}
     var preview by remember{mutableStateOf<ArtifactSpec?>(null)}
     var notice by remember{mutableStateOf("")};var busy by remember{mutableStateOf(false)}
-    var exportRevision by remember{mutableStateOf<ArtifactRevision?>(null)}
+    var exportIdentity by rememberSaveable{mutableStateOf<String?>(null)}
+    var lastExport by remember{mutableStateOf<Pair<android.net.Uri,String>?>(null)}
     suspend fun refresh(){items=withContext(Dispatchers.IO){store.list(projectId)}}
     fun work(block:suspend()->Unit){busy=true;scope.launch{try{block()}catch(cancel:kotlinx.coroutines.CancellationException){throw cancel}catch(e:Exception){notice=e.message ?: e.javaClass.simpleName}finally{busy=false}}}
     LaunchedEffect(projectId){try{refresh()}catch(e:Exception){notice=e.message.orEmpty()}}
     val export=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")){uri->
-        val revision=exportRevision;exportRevision=null
-        if(uri!=null&&revision!=null)work {
+        val identity=exportIdentity;exportIdentity=null
+        if(uri!=null&&identity!=null)work {
+            val revision=withContext(Dispatchers.IO){val parts=identity.split(':');store.history(projectId,parts[0]).single{it.version==parts[1].toInt()}}
             withContext(Dispatchers.IO){
                 val file=store.verifiedFile(projectId,revision)
                 requireNotNull(context.contentResolver.openOutputStream(uri,"w")){"EXPORT_DESTINATION_UNAVAILABLE"}.use{out->file.inputStream().use{it.copyTo(out)}}
                 val exportedHash=requireNotNull(context.contentResolver.openInputStream(uri)).use{input->val md=java.security.MessageDigest.getInstance("SHA-256");val buffer=ByteArray(65536);while(true){val n=input.read(buffer);if(n<0)break;md.update(buffer,0,n)};md.digest().joinToString(""){"%02x".format(it)}}
                 check(exportedHash==revision.sha256){"EXPORT_READBACK_HASH_MISMATCH"}
-            };notice="Exported and read back: ${revision.name} · v${revision.version}"
+            };lastExport=uri to revision.format.mime;notice="Exported and read back: ${revision.name} · v${revision.version}"
         }
     }
     fun load(revision:ArtifactRevision)=work {
         selected=revision;val spec=withContext(Dispatchers.IO){store.verifiedFile(projectId,revision);store.spec(projectId,revision)}
-        descriptor=spec.json().toString(2);preview=spec;versions=withContext(Dispatchers.IO){store.history(projectId,revision.id)}
+        descriptor=spec.json().toString(2);savedPreview=spec.preview();preview=spec;versions=withContext(Dispatchers.IO){store.history(projectId,revision.id)}
     }
     AlertDialog(onDismissRequest=onDismiss,title={Text("Artifacts · local drafts")},confirmButton={TextButton(onClick=onDismiss){Text("Close")}},text={
         Column(Modifier.heightIn(max=520.dp).verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(8.dp)) {
             Text("Actual local files. Originals are preserved. Enable artifact tools in Options to ask the model to create/edit a draft.",style=MaterialTheme.typography.bodySmall)
             if(notice.isNotBlank())Text(notice,Modifier.testTag("artifact-status"),style=MaterialTheme.typography.bodySmall)
+            lastExport?.let{(uri,mime)->TextButton(onClick={try{context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW).setDataAndType(uri,mime).addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION))}catch(e:android.content.ActivityNotFoundException){notice="No compatible local reader installed"}}){Text("Open exported file")}}
             if(busy)LinearProgressIndicator(Modifier.fillMaxWidth())
             FlowRow {ArtifactFormat.entries.forEach{format->TextButton(enabled=!busy,onClick={
-                selected=null;versions=emptyList();preview=null
+                selected=null;versions=emptyList();preview=null;savedPreview=""
                 val obj=JSONObject().put("format",format.name).put("name","draft.${format.extension}")
                 when(format){ArtifactFormat.CODE->obj.put("body","");ArtifactFormat.XLSX->obj.put("sheets",org.json.JSONArray().put(JSONObject().put("name","Sheet1").put("cells",org.json.JSONArray())));ArtifactFormat.PPTX->obj.put("slides",org.json.JSONArray().put(JSONObject().put("title","").put("body","")));else->obj.put("paragraphs",org.json.JSONArray().put(JSONObject().put("text","").put("style","body")))}
                 descriptor=obj.toString(2)
@@ -64,14 +69,19 @@ import org.json.JSONObject
                 OutlinedTextField(descriptor,{descriptor=it;preview=null},enabled=!busy,modifier=Modifier.fillMaxWidth().heightIn(min=120.dp,max=240.dp).testTag("artifact-spec-editor"),label={Text("Structured draft JSON")})
                 TextButton(enabled=!busy,onClick={try{preview=ArtifactSpec.parse(JSONObject(descriptor));notice="Text/structure preview (not page/slide rendering)"}catch(e:Exception){preview=null;notice=e.message.orEmpty()}}){Text("Preview changes")}
                 preview?.let { spec->
+                    if(selected!=null && savedPreview!=spec.preview()) {
+                        Text("Saved v${selected!!.version} · before")
+                        SelectionContainer{Text(savedPreview,style=MaterialTheme.typography.bodySmall)}
+                        Text("Proposed version · after")
+                    }
                     SelectionContainer{Text(spec.preview(),Modifier.testTag("artifact-preview"),style=MaterialTheme.typography.bodySmall)}
                     TextButton(enabled=!busy,onClick={work {
                         val current=selected
                         val result=withContext(Dispatchers.IO){if(current==null)store.create(projectId,spec)else store.revise(projectId,current.id,versions.maxOf{it.version},spec)}
-                        selected=result;refresh();versions=withContext(Dispatchers.IO){store.history(projectId,result.id)};notice="Saved and verified v${result.version}; earlier versions unchanged"
+                        selected=result;savedPreview=spec.preview();refresh();versions=withContext(Dispatchers.IO){store.history(projectId,result.id)};notice="Saved and verified v${result.version}; earlier versions unchanged"
                     }}){Text(if(selected==null)"Save new draft"else "Save new version")}
                 }
-                selected?.let{revision->TextButton(enabled=!busy&&preview!=null,onClick={exportRevision=revision;export.launch(revision.name)}){Text("Export saved v${revision.version}")}}
+                selected?.let{revision->TextButton(enabled=!busy&&preview!=null,onClick={exportIdentity="${revision.id}:${revision.version}";export.launch(revision.name)}){Text("Export saved v${revision.version}")}}
                 versions.forEach{revision->TextButton(enabled=!busy,onClick={load(revision)}){Text("Inspect/restore v${revision.version} (save creates a new version)")}}
             }
         }

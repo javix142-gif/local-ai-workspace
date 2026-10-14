@@ -11,7 +11,7 @@ object OfficeText {
     private fun xml(zip:ZipFile,name:String):String {
         require(StructuredDocuments.safePath(name)){"OFFICE_PART_PATH_UNSAFE"}
         val entry=zip.getEntry(name) ?: error("OFFICE_PART_MISSING:$name")
-        val text=zip.getInputStream(entry).use{StructuredDocuments.bounded(it,8*1024*1024)}.toString(Charsets.UTF_8)
+        val text=StructuredDocuments.text(zip.getInputStream(entry).use{StructuredDocuments.bounded(it,8*1024*1024)}).first
         require(!text.contains("<!DOCTYPE",true)&&!text.contains("<!ENTITY",true)){"XML_ENTITIES_FORBIDDEN"};return text
     }
     private fun parser(text:String)=Xml.newPullParser().apply{setInput(text.reader())}

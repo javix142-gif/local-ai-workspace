@@ -59,6 +59,7 @@ class ArtifactRoundtripTest {
                     assertTrue(parsed.pages.joinToString{it.text}.contains("Informe español"))
                     assertTrue(parsed.pages.joinToString{it.text}.contains("Álvaro"))
                     if(format=="PDF")assertEquals(2,parsed.pages.size)
+                    if(format=="DOCX")ZipFile(store.verifiedFile("p",first)).use{z->assertTrue(z.getInputStream(z.getEntry("word/document.xml")).bufferedReader().use{it.readText()}.contains("<w:tblGrid>"))}
                 }
                 if(format=="PPTX")ZipFile(store.verifiedFile("p",first)).use{z->assertNotNull(z.getEntry("ppt/slides/slide2.xml"));z.entries().asSequence().filter{it.name.endsWith(".xml")}.forEach{e->z.getInputStream(e).use{DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(it)}}}
                 if(format=="CODE")assertEquals(JSONObject(source).getString("body"),store.verifiedFile("p",first).readText())
@@ -76,6 +77,9 @@ class ArtifactRoundtripTest {
         val root=root();val store=ArtifactStore(context,root)
         try {
             val first=store.create("p",spec("CODE","""{"body":"hello"}"""))
+            val specFile=File(store.verifiedFile("p",first).parentFile,"spec.json");val savedSpec=specFile.readBytes();specFile.writeText("{}")
+            try{store.spec("p",first);fail("blueprint integrity")}catch(e:IllegalArgumentException){assertEquals("ARTIFACT_SPEC_CHANGED",e.message)}
+            specFile.writeBytes(savedSpec)
             assertTrue(store.list("other").isEmpty())
             try{store.revise("p",first.id,0,store.spec("p",first));fail("conflict must reject")}catch(e:IllegalArgumentException){assertEquals("ARTIFACT_VERSION_CONFLICT",e.message)}
             try{store.verifiedFile("other",first);fail("must stay in project")}catch(e:IllegalArgumentException){}
@@ -96,6 +100,10 @@ class ArtifactRoundtripTest {
         val result=registry.execute(ToolRequest("artifacts.create",args,TrustOrigin.MODEL),ArtifactTool.IDS,tc,ToolRegistry.ToolLoopState()) as ToolExecutionResult.Success
         val data=JSONObject(result.output);assertEquals("PRIVATE_DRAFT_VERIFIED",data.getString("state"))
         val store=ArtifactStore(context);val revision=store.list(tc.projectId).single();assertEquals("fun result() = 42",store.verifiedFile(tc.projectId,revision).readText())
+        val reader=ArtifactTool(context,"artifacts.read")
+        val read=ToolRegistry(listOf(reader)).execute(ToolRequest("artifacts.read",JSONObject().put("id",revision.id).toString(),TrustOrigin.MODEL),ArtifactTool.IDS,tc.copy(grantedCapabilities=setOf(com.localai.workspace.capabilities.Capability.LOCAL_READ)),ToolRegistry.ToolLoopState()) as ToolExecutionResult.Success
+        assertEquals("fun result() = 42",JSONObject(read.output).getJSONObject("spec").getString("body"))
+        assertEquals(1,ArtifactStore(context).history(tc.projectId,revision.id).size)
         val schema=JSONObject(ChatToolSchemas.schema("artifacts.create"));assertEquals("spec",schema.getJSONObject("parameters").getJSONArray("required").getString(0));Unit
     }
 }

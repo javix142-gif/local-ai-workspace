@@ -181,11 +181,16 @@ fun PerformanceScreen(graph: AppGraph, back: () -> Unit) {
                 "$backend/spec=$spec: ${BenchmarkComparison.status(matching, backend, spec, state)}"
             }, style = MaterialTheme.typography.bodySmall)
         }
-        matching.groupBy { "${it.configuration.backendRequested}/spec=${it.configuration.speculativeEnabled}/${it.mode}/${it.testId}" }.forEach { (key, values) ->
-            val successful = values.filter { it.result == BenchmarkResult.SUCCESS && it.metrics.backendFallbackReason == null }
-            Text("$key · n=${successful.size} · median native TTFT=${BenchmarkComparison.median(successful.map { it.metrics.timeToFirstTokenMs }) ?: "unavailable"} ms · " +
-                "median host TTFT=${BenchmarkComparison.median(successful.map { it.metrics.requestTimeToFirstTokenMs }) ?: "unavailable"} ms", style = MaterialTheme.typography.bodySmall)
+        BenchmarkSummaries.groups(matching).forEach { summary ->
+            val key=summary.cohort
+            Text("${key.device} · ${key.mode}/${key.testId} · ${key.effectiveBackend ?: "backend unverified"} · n=${summary.successful}/${summary.records}\n" +
+                "Native TTFT p50/p95: ${summary.nativeTtftMs.p50 ?: "unavailable"} / ${summary.nativeTtftMs.p95 ?: "unavailable"} ms (${summary.nativeTtftMs.measuredSamples} measured)\n" +
+                "Request TTFT p50/p95: ${summary.requestTtftMs.p50 ?: "unavailable"} / ${summary.requestTtftMs.p95 ?: "unavailable"} ms\n" +
+                "Decode p50/p95: ${summary.decodeTokensPerSecond.p50 ?: "unavailable"} / ${summary.decodeTokensPerSecond.p95 ?: "unavailable"} tokens/s\n" +
+                "Quality checked/pass: ${summary.qualityChecked}/${summary.qualityPassed}; rejected ${summary.rejectedQuality}",style=MaterialTheme.typography.bodySmall)
         }
+        Text("p95 uses nearest rank; fewer than 20 measured samples is exploratory. Unknown metrics remain unavailable. Quality-rejected runs are excluded from speed summaries.",style=MaterialTheme.typography.bodySmall)
+        TextButton(onClick={val json=com.google.gson.GsonBuilder().serializeNulls().setPrettyPrinting().create().toJson(BenchmarkSummaries.groups(matching.takeLast(50)));context.getSystemService(ClipboardManager::class.java).setPrimaryClip(ClipData.newPlainText("Comparable benchmark cohorts",json))}){Text("Copy cohort summary")}
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             OutlinedButton(onClick = {
                 scope.launch {
