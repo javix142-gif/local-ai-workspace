@@ -20,7 +20,12 @@ import com.localai.workspace.ui.theme.LocalAiSpacing
 
 @Composable
 fun AssistantControls(profile: AssistantProfile, toolsAvailable: Boolean, thinkingAvailable: Boolean,
-    enabled: Boolean, onChange: (AssistantProfile) -> Unit, compact: Boolean = false) {
+    enabled: Boolean, onChange: (AssistantProfile) -> Unit) =
+    AssistantControls(profile, toolsAvailable, thinkingAvailable, enabled, compact = false, onChange = onChange)
+
+@Composable
+fun AssistantControls(profile: AssistantProfile, toolsAvailable: Boolean, thinkingAvailable: Boolean,
+    enabled: Boolean, compact: Boolean, onChange: (AssistantProfile) -> Unit) {
     var tools by remember { mutableStateOf(false) }
     var thinking by remember { mutableStateOf(false) }
     var options by remember { mutableStateOf(false) }

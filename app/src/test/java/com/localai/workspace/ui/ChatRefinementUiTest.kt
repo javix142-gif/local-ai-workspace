@@ -64,7 +64,7 @@ class ChatRefinementUiTest {
                                         onStop = { stop++ }, onSend = { send++ },
                                         contextualControlsInline = true,
                                         contextualControls = { AssistantControls(profile, true, true, !generating,
-                                            { profile = it; observedProfile = it }, compact = true) })
+                                            compact = true, onChange = { profile = it; observedProfile = it }) })
                                 }) { inner ->
                                 LazyColumn(Modifier.fillMaxSize().padding(inner).consumeWindowInsets(inner),
                                     contentPadding = PaddingValues(16.dp)) {
@@ -136,7 +136,14 @@ class ChatRefinementUiTest {
 class WorkspaceRefinementUiTest {
     @get:Rule val compose = createAndroidComposeRule<MainActivity>()
 
-    @Test fun compactWorkspaceKeepsBothCreationActionsAndProjectDialog() {
+    @Test fun compactWorkspaceKeepsBothCreationActionsAndProjectDialog() =
+        inspectWorkspace("workspace-light-360dp.png")
+
+    @Test @Config(qualifiers = "w411dp-h900dp-night")
+    fun darkWorkspaceKeepsBothCreationActionsAndProjectDialog() =
+        inspectWorkspace("workspace-dark-411dp.png")
+
+    private fun inspectWorkspace(captureName: String) {
         val chat = compose.onNodeWithText("Start chat").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
         val project = compose.onNodeWithText("Start project").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
         assertTrue("Creation actions share one row", kotlin.math.abs(chat.top - project.top) < 2f)
@@ -147,7 +154,7 @@ class WorkspaceRefinementUiTest {
             val view = compose.activity.window.decorView
             val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
             view.draw(Canvas(bitmap))
-            File("build/chat-refinement-captures").apply { mkdirs() }.resolve("workspace-light-360dp.png")
+            File("build/chat-refinement-captures").apply { mkdirs() }.resolve(captureName)
                 .outputStream().use { assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)) }
             bitmap.recycle()
         }

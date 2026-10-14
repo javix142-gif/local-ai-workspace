@@ -957,7 +957,7 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                     contextualControlsInline = true,
                     contextualControls = { com.localai.workspace.ui.AssistantControls(assistantProfile,
                         selectedModel?.toDescriptor()?.let { it.runtime == RuntimeType.LITERT_LM && ModelCapability.TOOL_CALLING in it.capabilities } == true,
-                        selectedModel?.toDescriptor()?.let { it.runtime == RuntimeType.LITERT_LM && ModelCapability.THINKING in it.capabilities } == true, !generating, viewModel::setAssistantProfile, compact = true) })
+                        selectedModel?.toDescriptor()?.let { it.runtime == RuntimeType.LITERT_LM && ModelCapability.THINKING in it.capabilities } == true, !generating, compact = true, onChange = viewModel::setAssistantProfile) })
             }
         },
     ) { padding ->
@@ -1285,7 +1285,7 @@ private fun EmptyState(title: String, description: String) {
     Box(Modifier.fillMaxSize().padding(30.dp), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Icon(Icons.Default.ChatBubbleOutline, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(40.dp))
-            Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+            Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Medium)
             if (description.isNotBlank()) Text(description, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
