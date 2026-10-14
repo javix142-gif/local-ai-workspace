@@ -4,7 +4,7 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class SearchEmbeddingCacheTest {
-    private val space=EmbeddingSpaceKey("test","EG2","hash","v1",768)
+    private val space=EmbeddingSpaceKey("test","EG2","a".repeat(64),"v1",768)
     @Test fun cacheCopiesVectorsAndEvictsLeastRecentlyUsed() {
         val cache=SearchEmbeddingCache(2)
         val vector=FloatArray(768){1f}
