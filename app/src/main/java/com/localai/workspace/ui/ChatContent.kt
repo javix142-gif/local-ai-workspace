@@ -3,6 +3,7 @@ package com.localai.workspace.ui
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.border
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.rememberScrollState
@@ -114,11 +115,18 @@ fun ChatComposer(input: String, generating: Boolean, onInputChange: (String) -> 
     contextualControls: (@Composable () -> Unit)? = null,
     onAttachAudio: (() -> Unit)? = null, audioEnabled: Boolean = false) {
     var menu by remember { mutableStateOf(false) }
-    Surface(tonalElevation = 2.dp) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(topStart = LocalAiRadii.large, topEnd = LocalAiRadii.large),
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        tonalElevation = 2.dp,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.55f)),
+    ) {
         Column(Modifier.fillMaxWidth().imePadding().navigationBarsPadding()) {
             contextualControls?.invoke() // Empty today; future functional chips can occupy this slot.
             Row(
-                Modifier.fillMaxWidth().padding(horizontal = LocalAiSpacing.x2, vertical = LocalAiSpacing.x1),
+                Modifier.fillMaxWidth().padding(horizontal = LocalAiSpacing.x3, vertical = LocalAiSpacing.x2),
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.spacedBy(LocalAiSpacing.x1),
             ) {
@@ -140,6 +148,77 @@ fun ChatComposer(input: String, generating: Boolean, onInputChange: (String) -> 
                     Icon(if (generating) Icons.Default.Stop else Icons.AutoMirrored.Filled.Send, if (generating) "Stop" else "Send")
                 }
             }
+        }
+    }
+}
+
+/** Shared visual frame for chat messages; content and actions remain owned by the caller. */
+@Composable
+internal fun ChatMessageSurface(
+    isUser: Boolean,
+    stateLabel: String? = null,
+    modifier: Modifier = Modifier,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    val shape = RoundedCornerShape(
+        topStart = LocalAiRadii.large,
+        topEnd = LocalAiRadii.large,
+        bottomStart = if (isUser) LocalAiRadii.large else LocalAiRadii.small,
+        bottomEnd = if (isUser) LocalAiRadii.small else LocalAiRadii.large,
+    )
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = if (isUser) Arrangement.End else Arrangement.Start,
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth(if (isUser) 0.88f else 1f)
+                .testTag(if (isUser) "chat-message-user-surface" else "chat-message-assistant-surface"),
+            shape = shape,
+            colors = CardDefaults.cardColors(
+                containerColor = if (isUser) MaterialTheme.colorScheme.primaryContainer
+                else MaterialTheme.colorScheme.surfaceContainerLow,
+            ),
+            border = if (isUser) null else BorderStroke(
+                1.dp,
+                MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.65f),
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = if (isUser) 0.dp else 1.dp),
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(
+                    horizontal = LocalAiSpacing.x4,
+                    vertical = LocalAiSpacing.x3,
+                ),
+                verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x2),
+                content = {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x1),
+                    ) {
+                        Text(
+                            text = if (isUser) "You" else "Assistant response",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = if (isUser) MaterialTheme.colorScheme.onPrimaryContainer
+                            else MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        if (stateLabel != null) {
+                            Surface(
+                                modifier = Modifier.widthIn(max = 280.dp),
+                                shape = MaterialTheme.shapes.small,
+                                color = MaterialTheme.colorScheme.secondaryContainer,
+                                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                            ) {
+                                Text(
+                                    text = stateLabel,
+                                    modifier = Modifier.padding(horizontal = LocalAiSpacing.x2, vertical = LocalAiSpacing.x1),
+                                    style = MaterialTheme.typography.labelSmall,
+                                )
+                            }
+                        }
+                    }
+                    content()
+                },
+            )
         }
     }
 }

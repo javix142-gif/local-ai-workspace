@@ -1,5 +1,6 @@
 package com.localai.workspace.ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -7,11 +8,15 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.localai.workspace.LocalAiApplication
 import com.localai.workspace.context.*
 import com.localai.workspace.context.ContextBundle
 import com.localai.workspace.semantic.v2.*
+import com.localai.workspace.ui.theme.LocalAiSpacing
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import com.google.gson.GsonBuilder
@@ -71,6 +76,107 @@ import com.google.gson.GsonBuilder
     TextButton(onClick={open=true}){Text("Context Inspector / Memory Validation")}
     if(open)ContextInspector{open=false}
 }
+
+@Composable
+internal fun ContextBundleSummary(
+    includedCount: Int,
+    omittedCount: Int,
+    estimatedInputTokens: Int,
+    inputBudget: Int,
+    modifier: Modifier = Modifier,
+) {
+    val progress = if (inputBudget > 0) (estimatedInputTokens.toFloat() / inputBudget).coerceIn(0f, 1f) else 0f
+    Card(
+        modifier = modifier.fillMaxWidth().testTag("context-inspector-summary"),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
+    ) {
+        Column(
+            Modifier.fillMaxWidth().padding(LocalAiSpacing.x4),
+            verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x2),
+        ) {
+            Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+                Text("Context budget", Modifier.weight(1f), style = MaterialTheme.typography.titleSmall)
+                Text(
+                    "${(progress * 100).toInt()}%",
+                    Modifier.testTag("context-budget-percent"),
+                    style = MaterialTheme.typography.labelLarge,
+                )
+            }
+            Text(
+                "$estimatedInputTokens / $inputBudget estimated input tokens",
+                Modifier.testTag("context-budget-estimate"),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            LinearProgressIndicator(progress = { progress }, modifier = Modifier.fillMaxWidth())
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(LocalAiSpacing.x2),
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+            ) {
+                ContextCountPill("$includedCount included", warning = false)
+                if (omittedCount > 0) ContextCountPill("$omittedCount omitted", warning = true)
+            }
+        }
+    }
+}
+
+@Composable
+private fun ContextCountPill(label: String, warning: Boolean) {
+    val status = LocalAiStatusColors.current
+    Surface(
+        shape = MaterialTheme.shapes.small,
+        color = if (warning) status.warningContainer else MaterialTheme.colorScheme.primaryContainer,
+        contentColor = if (warning) status.onWarningContainer else MaterialTheme.colorScheme.onPrimaryContainer,
+    ) {
+        Text(label, Modifier.padding(horizontal = LocalAiSpacing.x2, vertical = LocalAiSpacing.x1),
+            style = MaterialTheme.typography.labelSmall)
+    }
+}
+
+@Composable
+internal fun ContextInspectorSection(title: String, count: Int, omitted: Boolean = false) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(top = LocalAiSpacing.x2),
+        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(LocalAiSpacing.x2),
+    ) {
+        Text(title, Modifier.weight(1f).semantics { heading() }, style = MaterialTheme.typography.titleSmall)
+        ContextCountPill(count.toString(), warning = omitted)
+    }
+}
+
+@Composable
+internal fun ContextInspectorEntry(
+    title: String,
+    detail: String,
+    omitted: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val status = LocalAiStatusColors.current
+    Card(
+        modifier = modifier.fillMaxWidth().testTag(if (omitted) "context-inspector-omitted-entry" else "context-inspector-included-entry"),
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(
+            containerColor = if (omitted) status.warningContainer else MaterialTheme.colorScheme.surfaceContainerLow,
+            contentColor = if (omitted) status.onWarningContainer else MaterialTheme.colorScheme.onSurface,
+        ),
+        border = BorderStroke(
+            1.dp,
+            if (omitted) status.warning.copy(alpha = 0.5f) else MaterialTheme.colorScheme.outlineVariant,
+        ),
+    ) {
+        Column(
+            Modifier.fillMaxWidth().padding(horizontal = LocalAiSpacing.x3, vertical = LocalAiSpacing.x2),
+            verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x1),
+        ) {
+            Text(title, style = MaterialTheme.typography.labelLarge)
+            Text(detail, style = MaterialTheme.typography.bodySmall)
+        }
+    }
+}
+
 @Composable private fun ContextInspector(close:()->Unit) {
     val context=LocalContext.current;val graph=(context.applicationContext as LocalAiApplication).graph;val f=graph.contextFoundation;val scope=rememberCoroutineScope()
     val projects by graph.workspace.activeProjects.collectAsState(initial=emptyList())
@@ -82,7 +188,28 @@ import com.google.gson.GsonBuilder
         OutlinedTextField(conversationId,{conversationId=it},label={Text("Conversation ID (optional)")},singleLine=true,modifier=Modifier.fillMaxWidth())
         Button(enabled=!busy&&query.isNotBlank(),onClick={run{bundle=f.build(ContextRequest(query,ScopeAccess(projectId=projectId,sessionId=conversationId.takeIf{it.isNotBlank()}),conversationId=conversationId.takeIf{it.isNotBlank()}))}}){Text("Build context · no generation")}
         if(conversationId.isNotBlank())TextButton(enabled=!busy,onClick={run{val owner=graph.database.conversationDao().get(conversationId);check(owner!=null&&(owner.projectId==projectId||(projectId==null&&owner.projectId?.let{graph.database.projectDao().get(it)?.workspaceKind}=="CHAT"))){"Select the conversation's project first"};report="Indexed ${f.indexConversation(conversationId)} conversation source messages"}}){Text("Index this conversation")}
-        bundle?.let{b->Text("${b.estimatedInputTokens} / ${b.inputBudget} input · ${ContextTokenEstimator.METHOD}\nOutput ${b.request.reservedOutput} · Safety ${b.safetyMargin}\nIncluded ${b.included.size} · Omitted ${b.dropped.size}\n${b.timings.totalMs} ms");b.blockCosts.forEach{(section,tokens)->Text("$section · $tokens estimated tokens")};b.included.forEach{Text("${it.id} · ${it.kind} · ${it.scope.type} · ${it.estimatedTokens} estimated tokens")};b.dropped.forEach{Text("${it.item.id} · ${it.reason}")};Row{Checkbox(full,{full=it});Text("Expand private context text")};if(full)b.included.forEach{Text(it.text)};TextButton(enabled=!busy,onClick={run{report=ContextInterop(graph).answer(b).answer}}){Text("Run with Gemma · explicit")};TextButton(onClick={report=GsonBuilder().setPrettyPrinting().create().toJson(b.safeReport())}){Text("Metadata report")}}
+        bundle?.let{b->
+            Column(verticalArrangement=Arrangement.spacedBy(LocalAiSpacing.x2)) {
+                ContextBundleSummary(b.included.size,b.dropped.size,b.estimatedInputTokens,b.inputBudget)
+                Text("${ContextTokenEstimator.METHOD} · ${b.timings.totalMs} ms · Output ${b.request.reservedOutput} · Safety ${b.safetyMargin}", style=MaterialTheme.typography.bodySmall, color=MaterialTheme.colorScheme.onSurfaceVariant)
+                if(b.blockCosts.isNotEmpty()) {
+                    Text("Budget by section", style=MaterialTheme.typography.titleSmall, modifier=Modifier.semantics { heading() })
+                    b.blockCosts.forEach{(section,tokens)->Text("$section · $tokens estimated tokens",style=MaterialTheme.typography.bodySmall)}
+                }
+                if(b.included.isNotEmpty()) {
+                    ContextInspectorSection("Included context",b.included.size)
+                    b.included.forEach{ContextInspectorEntry("${it.id} · ${it.kind}","${it.scope.type} · ${it.estimatedTokens} estimated tokens",omitted=false)}
+                }
+                if(b.dropped.isNotEmpty()) {
+                    ContextInspectorSection("Omitted context",b.dropped.size,omitted=true)
+                    b.dropped.forEach{ContextInspectorEntry(it.item.id,it.reason,omitted=true)}
+                }
+                Row(verticalAlignment=androidx.compose.ui.Alignment.CenterVertically){Checkbox(full,{full=it});Text("Expand private context text")}
+                if(full)b.included.forEach{Text(it.text)}
+                TextButton(enabled=!busy,onClick={run{report=ContextInterop(graph).answer(b).answer}}){Text("Run with Gemma · explicit")}
+                TextButton(onClick={report=GsonBuilder().setPrettyPrinting().create().toJson(b.safeReport())}){Text("Metadata report")}
+            }
+        }
         TextButton(enabled=!busy,onClick={run{report=ContextMemoryValidation(graph).run()}}){Text("Run Context / Memory V1 suite")}
         TextButton(enabled=!busy,onClick={run{report=ContextCapacityDiagnostics(graph).run()}}){Text("Probe context capacity · 4096 / 8192 candidate")}
         if(busy){LinearProgressIndicator(Modifier.fillMaxWidth());TextButton(onClick={job?.cancel()}){Text("Cancel")}}

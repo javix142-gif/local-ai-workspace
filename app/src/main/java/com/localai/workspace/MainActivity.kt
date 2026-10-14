@@ -89,6 +89,7 @@ import com.localai.workspace.ui.AssistantResponseCopyAction
 import com.localai.workspace.ui.CitationEvidenceDialog
 import com.localai.workspace.ui.CitationEvidenceReferences
 import com.localai.workspace.ui.ChatTopBar
+import com.localai.workspace.ui.ChatMessageSurface
 import com.localai.workspace.ui.humanModelName
 import com.localai.workspace.ui.runtimeDisplayName
 import com.localai.workspace.ui.compactGenerationLabel
@@ -983,8 +984,8 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 20.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     items(messages, key = { it.id }) { message ->
                         val content = if (message.status == "GENERATING" && message.id == messages.lastOrNull()?.id) streaming else message.content
@@ -1180,38 +1181,36 @@ private fun MessageBubble(message: MessageEntity, content: String,
     val metrics = remember(message.generationMetrics) { GenerationMetricsPresentation.decode(message.generationMetrics) }
     val clipboard = LocalClipboardManager.current
     var menu by remember { mutableStateOf(false) }
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = if (user) Arrangement.End else Arrangement.Start) {
-        Card(Modifier.fillMaxWidth(if (user) 0.86f else 1f), colors = CardDefaults.cardColors(
-            containerColor = if (user) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface)) {
-            Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                val displayed = if (diagnostic != null && content == diagnostic.displayText()) diagnostic.message else content
-                val body = displayed.ifBlank { activeLabel ?: when (message.status) {
-                    "GENERATING" -> "Response interrupted"
-                    "CANCELED" -> "Stopped"
-                    "FAILED" -> "Could not finish"
-                    else -> "No text returned"
-                } }
-                if (user && message.audioPath != null) Text("Audio attachment", style = MaterialTheme.typography.labelSmall)
-                if (user) message.imagePath?.let { com.localai.workspace.ui.ImageAttachment(it) }
-                if (user || content.isBlank()) Text(body, style = MaterialTheme.typography.bodyLarge) else ChatRichText(body)
-                if (!user && evidence.isNotEmpty()) CitationEvidenceReferences(evidence, onCitation)
-                if (!user && metrics?.outputLimitReached == true) Text("Answer may be incomplete", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                if (!user && message.status != "GENERATING") Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    if (message.status == "FAILED") Text("Could not finish", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.error)
-                    Spacer(Modifier.weight(1f))
-                    if (content.isNotBlank()) AssistantResponseCopyAction(content)
-                    Box {
-                        IconButton(onClick = { menu = true }) { Icon(Icons.Default.MoreVert, "Response options", Modifier.size(18.dp)) }
-                        DropdownMenu(menu, { menu = false }) {
-                            if (metrics?.outputLimitReached == true && canContinue) DropdownMenuItem(text = { Text("Continue") }, onClick = { menu = false; onContinue() })
-                            onRetry?.let { action -> DropdownMenuItem(text = { Text("Retry") }, onClick = { menu = false; action() }) }
-                            if (diagnostic != null) DropdownMenuItem(text = { Text("Details") }, onClick = { menu = false; onDiagnostic(diagnostic) })
-                            else if (metrics != null) DropdownMenuItem(text = { Text("Details") }, onClick = { menu = false; onMetrics(metrics.raw) })
-                            if (diagnostic == null && metrics == null && onRetry == null && !(metrics?.outputLimitReached == true && canContinue))
-                                DropdownMenuItem(text = { Text("Copy") }, onClick = { menu = false; clipboard.setText(AnnotatedString(content)) })
-                        }
+    ChatMessageSurface(
+        isUser = user,
+        stateLabel = activeLabel?.takeIf { !user && content.isNotBlank() },
+    ) {
+        val displayed = if (diagnostic != null && content == diagnostic.displayText()) diagnostic.message else content
+        val body = displayed.ifBlank { activeLabel ?: when (message.status) {
+            "GENERATING" -> "Response interrupted"
+            "CANCELED" -> "Stopped"
+            "FAILED" -> "Could not finish"
+            else -> "No text returned"
+        } }
+        if (user && message.audioPath != null) Text("Audio attachment", style = MaterialTheme.typography.labelSmall)
+        if (user) message.imagePath?.let { com.localai.workspace.ui.ImageAttachment(it) }
+        if (user || content.isBlank()) Text(body, style = MaterialTheme.typography.bodyLarge) else ChatRichText(body)
+        if (!user && evidence.isNotEmpty()) CitationEvidenceReferences(evidence, onCitation)
+        if (!user && metrics?.outputLimitReached == true) Text("Answer may be incomplete", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        if (!user && message.status != "GENERATING") Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            if (message.status == "FAILED") Text("Could not finish", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.error)
+            Spacer(Modifier.weight(1f))
+            if (content.isNotBlank()) AssistantResponseCopyAction(content)
+            Box {
+                IconButton(onClick = { menu = true }) { Icon(Icons.Default.MoreVert, "Response options", Modifier.size(18.dp)) }
+                DropdownMenu(menu, { menu = false }) {
+                    if (metrics?.outputLimitReached == true && canContinue) DropdownMenuItem(text = { Text("Continue") }, onClick = { menu = false; onContinue() })
+                    onRetry?.let { action -> DropdownMenuItem(text = { Text("Retry") }, onClick = { menu = false; action() }) }
+                    if (diagnostic != null) DropdownMenuItem(text = { Text("Details") }, onClick = { menu = false; onDiagnostic(diagnostic) })
+                    else if (metrics != null) DropdownMenuItem(text = { Text("Details") }, onClick = { menu = false; onMetrics(metrics.raw) })
+                    if (diagnostic == null && metrics == null && onRetry == null && !(metrics?.outputLimitReached == true && canContinue))
+                        DropdownMenuItem(text = { Text("Copy") }, onClick = { menu = false; clipboard.setText(AnnotatedString(content)) })
                     }
-                }
             }
         }
     }
