@@ -1,5 +1,12 @@
 0ec94dd4bcb8ef52592471f074357a59bd9d932a08b090bbe5e693bf445641ef  ./RESULTS.json
 bdfd028cc8ab8df9a38a4198fc794a9b0270244cfa3cc122df0c4cc3d3d52989  ./RESULTS.md
+782e235b03fbacad6daa47404636b3e97ee63e1a8206f7bc7b76c91ce3dea17f  ./failed-run-38491402535/ARTIFACT_AUDIT.txt
+1c149e1d65add9b0fe56fc242adfa4e8322cbc7efe74944dd82fa912d9963192  ./failed-run-38491402535/adversarial-check-exit-codes.txt
+e365360770733497966fb18e72e9aa7a62e0d68e3bd62de26777abeffc2150ea  ./failed-run-38491402535/apk-integrity-check.txt
+6ba078cd0d4c2702b7d38151fe1a7547f3a06c8ada58632562677467502063dc  ./failed-run-38491402535/rejects-duplicate-path.txt
+ad495a1bc95d3433f7a32cd1489037c53bdf76cd8b2a90d1e97c366805c003f1  ./failed-run-38491402535/rejects-model-suffix.txt
+33c142ac2a5c9e393a1d5021e85948cbd186b0b3731c3918303e96d07a42184e  ./failed-run-38491402535/rejects-modified-bin.txt
+c3c6dbc705c465b54b90ae4ba74eaaa928480696858fad59319389e3cc63f522  ./failed-run-38491402535/zipalign-output.txt
 847522f2f2ea5dfff1bdc93cb9e3211c4996f1dc5cc91334391864865e7ed05e  ./focused-test-budget-reflow.log
 a477a12903dbc68c85d9b1439e2f58b31939b5ea1f32eadc639b9fb5cea77641  ./focused-test-capture-final.log
 fe9af5184b7e7e3ce22530314386c18a04dfeccac96f363d628239884a18692e  ./focused-test-captures.log

@@ -72,25 +72,23 @@ jobs:
         id: apk-integrity
         env:
           QA_ARTIFACT_DIR: ${{ runner.temp }}/local-ai-workspace-personal-qa-arm64
-          ANDROID_HOME: ${{ env.ANDROID_HOME }}
         run: |
           set -euo pipefail
           apk="$QA_ARTIFACT_DIR/local-ai-workspace-0.5.0-debug-arm64.apk"
           log="$QA_ARTIFACT_DIR/logs/apk-integrity.log"
-          python3 - "$apk" <<'PY' | tee "$log"
-          import sys, zipfile
-          model_suffixes = {".bin", ".gguf", ".litertlm", ".onnx", ".tflite", ".safetensors", ".pt", ".pth", ".ckpt", ".ggml"}
-          with zipfile.ZipFile(sys.argv[1]) as archive:
-              damaged = archive.testzip()
-              model_payloads = [name for name in archive.namelist() if name.lower().endswith(tuple(model_suffixes))]
-          if damaged is not None:
-              raise SystemExit(f"ZIP_CRC_FAIL: {damaged}")
-          if model_payloads:
-              raise SystemExit("MODEL_PAYLOAD_PRESENT")
-          print("ZIP_CRC=PASS")
-          print("MODEL_PAYLOADS=NONE")
-          PY
-          "$ANDROID_HOME/build-tools/35.0.0/zipalign" -c -v 4 "$apk" 2>&1 | tee -a "$log"
+          sdk_root="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
+          if [[ -z "$sdk_root" ]]; then
+            echo "ANDROID_SDK_ROOT_UNAVAILABLE" | tee "$log"
+            exit 1
+          fi
+          zipalign="$sdk_root/build-tools/35.0.0/zipalign"
+          if [[ ! -x "$zipalign" ]]; then
+            echo "ZIPALIGN_NOT_FOUND=$zipalign" | tee "$log"
+            exit 1
+          fi
+          echo "ANDROID_SDK_ROOT_RESOLVED=$sdk_root" | tee "$log"
+          python3 scripts/ci/verify_qa_debug_apk_integrity.py "$apk" 2>&1 | tee -a "$log"
+          "$zipalign" -c -v 4 "$apk" 2>&1 | tee -a "$log"
           echo 'zip_integrity=PASS' >> "$GITHUB_OUTPUT"
           echo 'zipalign=PASS' >> "$GITHUB_OUTPUT"
 

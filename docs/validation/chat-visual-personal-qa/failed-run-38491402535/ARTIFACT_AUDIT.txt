@@ -1,0 +1,29 @@
+Artifact audit: personal QA workflow run 38491402535
+
+Source
+- Workflow run: https://github.com/javix142-gif/local-ai-workspace/actions/runs/38491402535
+- Job: 115617193626; source/event SHA: 3b552d0ad96dcda591d39ee3a9f66383fbd3376c
+- Result: FAIL. Build/signature/metadata/ABI step passed; ZIP/model-suffix step failed before zipalign; final report and artifact upload ran. This artifact is not approved for delivery.
+- Artifact 11861604731: 47,849,164 bytes; SHA-256 d9df0546a8409f24853f4ade352f1a95d1cedc9edc861f6f4469ba3f371aee95.
+- Downloaded outer archive ZIP CRC passed; all five entries in its internal SHA256SUMS matched downloaded bytes.
+
+APK
+- local-ai-workspace-0.5.0-debug-arm64.apk: 119,445,466 bytes; SHA-256 8754222e182759763f222f0c6774c7f9024b53b323f9870d852dbe28447c505a.
+- Package com.localai.workspace.debug; version 0.5.0-debug (27); arm64-v8a only.
+- apksigner v2 verification passed; Debug certificate SHA-256 32619c721ffff363afa678606afb0fbff6b10537cd6999e057a2ebacecba3f44.
+- The only archive entry ending in a configured model suffix was the root entry DebugProbesKt.bin: 1,728 bytes, ZIP CRC 3370351647, entry SHA-256 4d13bd92f86a0b1415062b8ed57655c0738ccfbdf0786c1d730d988b27fd4400.
+- `file` identified Java class data (CAFEBABE, class version 52). `javap -v -p` identified `kotlin.coroutines.jvm.internal.DebugProbesKt`, compiled from `DebugProbes.kt`, with `this_class` `kotlin/coroutines/jvm/internal/DebugProbesKt`. This is compiled coroutine debug-probe bytecode, not a model payload. No other configured model-suffix entries were present.
+- Independent ZIP CRC verification passed. `/workspace/.toolchain/android-sdk/build-tools/35.0.0/zipalign -c -v 4 /tmp/law-run384914.apk` exited 0 and reported all entries aligned.
+
+Corrective checker validation
+- `scripts/ci/verify_qa_debug_apk_integrity.py` accepts only this exact root path when its class-file marker, expected internal class name and full SHA-256 all match. Other model suffixes remain rejected; a modified payload at the same path is rejected.
+- Checker on the downloaded APK: exit 0, `ZIP_CRC=PASS`, one `KNOWN_NON_MODEL_SUFFIX_ENTRY`, `MODEL_PAYLOADS=NONE`.
+- Synthetic `assets/fake.gguf`: rejected, exit 1.
+- Modified `DebugProbesKt.bin` at the same path: rejected, exit 1.
+- Duplicate root entry with one verified class and one altered payload: rejected, exit 1.
+- Local YAML parse and workflow static checks passed. The manual `workflow_dispatch:` trigger is present. No assertion depends on the YAML library's representation of an empty mapping.
+
+Runner SDK finding
+- Run 38491402535 job log shows `ANDROID_HOME:` empty in the ZIP/zipalign step because the workflow assigned `ANDROID_HOME: ${{ env.ANDROID_HOME }}` from an empty expression. The corrected step no longer overrides that variable; it resolves and logs `${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}`, checks the build-tools `zipalign` path, then runs the checker and alignment validation.
+
+Evidence files in this directory preserve the checker output, adversarial results, and complete zipalign output. The corrected workflow requires a new Actions run; no APK is approved until that same-source run completes all validations and uploads its artifact.
