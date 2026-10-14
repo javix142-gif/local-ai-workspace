@@ -16,6 +16,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -199,7 +200,7 @@ private fun LocalAiWorkspaceRoot() {
         NavHost(
             navController = navController,
             startDestination = "workspace",
-            modifier = Modifier.padding(padding),
+            modifier = Modifier.padding(padding).consumeWindowInsets(padding),
         ) {
             composable("workspace") {
                 WorkspaceScreen(homeViewModel, navController)
@@ -262,19 +263,18 @@ private fun WorkspaceScreen(viewModel: HomeViewModel, navController: NavHostCont
     val visibleChats = chats.filter { it.name.contains(query.trim(), ignoreCase = true) }
     val visibleProjects = projects.filter { it.name.contains(query.trim(), ignoreCase = true) }
     AppScreenContent {
-        TopAppBar(title = { Text("Local AI Workspace", maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        TopAppBar(title = { Text("Local AI Workspace", style = MaterialTheme.typography.titleMedium) },
             actions = { IconButton(onClick = { searching = !searching; if (!searching) query = "" }) {
                 Icon(androidx.compose.material.icons.Icons.Default.Search, contentDescription = "Search workspace")
             } })
         LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 16.dp)) {
             item {
                 LocalModeCard()
-                Button(onClick = { viewModel.startChat { id, conversation -> navController.navigate(chatRoute(id, conversation)) } },
-                    enabled = !creating, modifier = Modifier.fillMaxWidth()) {
-                    Icon(Icons.Default.ChatBubbleOutline, null); Spacer(Modifier.width(8.dp)); Text("Start chat")
-                }
-                OutlinedButton(onClick = { showCreate = true }, enabled = !creating, modifier = Modifier.fillMaxWidth()) {
-                    Icon(Icons.Default.FolderOpen, null); Spacer(Modifier.width(8.dp)); Text("Start project")
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = { viewModel.startChat { id, conversation -> navController.navigate(chatRoute(id, conversation)) } },
+                        enabled = !creating, modifier = Modifier.weight(1f)) { Text("Start chat") }
+                    OutlinedButton(onClick = { showCreate = true }, enabled = !creating,
+                        modifier = Modifier.weight(1f)) { Text("Start project") }
                 }
                 WorkspaceModelCard(models, preparation, viewModel::prepareModel,
                     viewModel::retryModelPreparation, viewModel::cancelModelPreparation)
@@ -299,13 +299,13 @@ private fun WorkspaceScreen(viewModel: HomeViewModel, navController: NavHostCont
                     if (activity.generating) IconButton(onClick = { viewModel.stopChatActivity(activity.projectId, activity.conversationId) }) { Icon(Icons.Default.Stop, "Stop generation") }
                 } }
             }
-            item { Text("Chats", style = MaterialTheme.typography.titleLarge) }
+            item { Text("Chats", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 12.dp, bottom = 4.dp)) }
             if (visibleChats.isEmpty()) item { Text(if (query.isBlank()) "No chats yet" else "No matching chats", style = MaterialTheme.typography.bodyMedium) }
             items(visibleChats, key = { "chat-${it.id}" }) { chat ->
                 WorkspaceEntryCard(chat.name, "", false, chat.id in deleting,
                     onOpen = { navController.navigate(chatRoute(chat.id)) }, onDelete = { deleteId = chat.id })
             }
-            item { Text("Projects", style = MaterialTheme.typography.titleLarge) }
+            item { Text("Projects", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 12.dp, bottom = 4.dp)) }
             if (visibleProjects.isEmpty()) item { Text(if (query.isBlank()) "No projects yet" else "No matching projects", style = MaterialTheme.typography.bodyMedium) }
             items(visibleProjects, key = { "project-${it.id}" }) { project ->
                 WorkspaceEntryCard(project.name, "", true, project.id in deleting,
@@ -360,16 +360,17 @@ private fun WorkspaceModelCard(models: List<ModelEntity>, state: RuntimePreparat
 }
 
 @Composable
-private fun WorkspaceEntryCard(title: String, subtitle: String, isProject: Boolean, busy: Boolean,
+internal fun WorkspaceEntryCard(title: String, subtitle: String, isProject: Boolean, busy: Boolean,
     onOpen: () -> Unit, onDelete: () -> Unit) {
     var menu by rememberSaveable { mutableStateOf(false) }
     Card(Modifier.fillMaxWidth().clickable(enabled = !busy, onClick = onOpen),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
-        Row(Modifier.fillMaxWidth().padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)) {
+        Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
             Icon(if (isProject) Icons.Default.FolderOpen else Icons.Default.ChatBubbleOutline, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
             Spacer(Modifier.width(12.dp))
             Column(Modifier.weight(1f)) {
-                Text(title, style = MaterialTheme.typography.titleMedium, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                Text(title, style = MaterialTheme.typography.titleSmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
                 if (busy || subtitle.isNotBlank()) Text(if (busy) "Deleting…" else subtitle, style = MaterialTheme.typography.bodySmall)
             }
             Box {
@@ -953,13 +954,14 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                     onAttachAudio = { audioPicker.launch(arrayOf("audio/*")) }, audioEnabled = selectedModel?.let { capabilityAvailability(it.toDescriptor(), ModelCapability.AUDIO) == CapabilityAvailability.AVAILABLE } == true,
                     onFiles = if (documents.isNotEmpty()) ({ showFiles = true }) else null,
                     onStop = viewModel::stop, onSend = { if (viewModel.send(input)) input = "" },
+                    contextualControlsInline = true,
                     contextualControls = { com.localai.workspace.ui.AssistantControls(assistantProfile,
                         selectedModel?.toDescriptor()?.let { it.runtime == RuntimeType.LITERT_LM && ModelCapability.TOOL_CALLING in it.capabilities } == true,
-                        selectedModel?.toDescriptor()?.let { it.runtime == RuntimeType.LITERT_LM && ModelCapability.THINKING in it.capabilities } == true, !generating, viewModel::setAssistantProfile) })
+                        selectedModel?.toDescriptor()?.let { it.runtime == RuntimeType.LITERT_LM && ModelCapability.THINKING in it.capabilities } == true, !generating, viewModel::setAssistantProfile, compact = true) })
             }
         },
     ) { padding ->
-        Column(Modifier.fillMaxSize().padding(padding)) {
+        Column(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding)) {
             if (deletingChat) {
                 Text("Deleting chat…", modifier = Modifier.padding(16.dp), style = MaterialTheme.typography.labelMedium)
                 LinearProgressIndicator(Modifier.fillMaxWidth())

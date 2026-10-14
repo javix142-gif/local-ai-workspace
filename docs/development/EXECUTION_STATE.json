@@ -6902,5 +6902,19 @@
       "standaloneApk": true,
       "driveBytesIndependentlyRehashed": false
     }
+  },
+  "latestChatHomeVisualRefinement": {
+    "status": "IMPLEMENTED_VALIDATION_PENDING",
+    "baseHead": "55471af8202a888778f2537f79b43b53be4ace17",
+    "scope": [
+      "explicit sans-serif family across all M3 type roles",
+      "nested scaffold padding consumption",
+      "wrapping header and compact inline composer options",
+      "lighter transcript and compact Workspace cards/actions"
+    ],
+    "userScreenshots": "Five new UX screenshots not present in this executor; only older installer-conflict screenshot is available. Implementation based on supplied observations.",
+    "backlogProgressChanged": false,
+    "physicalDevice": "NOT_RUN",
+    "next": "Focal HOST layout/callback tests and captures, Debug ARM64 build with retained UX01/UX02a signing key; no full UX02e suite."
   }
 }

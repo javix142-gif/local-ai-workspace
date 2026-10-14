@@ -1,3 +1,9 @@
+# Chat and Workspace visual refinement — active
+
+Base `55471af8202a888778f2537f79b43b53be4ace17`. Explicit sans-serif tokens, consumed nested Scaffold insets, wrapping header, inline Options composer and lighter Workspace/transcript presentation are implemented. Validation and current APK are pending. The five new user screenshots are unavailable here; this iteration uses supplied observations. Functional backlog/progress, global Room/model-dependent instrumented result and UX02e incomplete state remain unchanged. No phone/emulator claim.
+
+---
+
 # Environment cleanup and APK install recovery — 2026-10-14
 
 User requested environment cleanup before fixing the package conflict reported by

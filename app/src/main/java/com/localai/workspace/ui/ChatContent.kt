@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.*
@@ -16,6 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.CollectionInfo
@@ -57,7 +59,7 @@ fun ChatTopBar(
         Row(
             Modifier.fillMaxWidth()
                 .windowInsetsPadding(TopAppBarDefaults.windowInsets)
-                .defaultMinSize(minHeight = TopAppBarDefaults.TopAppBarExpandedHeight),
+                .defaultMinSize(minHeight = 56.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(Modifier.padding(start = LocalAiSpacing.x1), contentAlignment = Alignment.Center) {
@@ -66,7 +68,7 @@ fun ChatTopBar(
                 }
             }
             Box(
-                Modifier.weight(1f).padding(horizontal = LocalAiSpacing.x1, vertical = LocalAiSpacing.x2),
+                Modifier.weight(1f).padding(horizontal = LocalAiSpacing.x1, vertical = LocalAiSpacing.x1),
             ) {
                 CompositionLocalProvider(LocalContentColor provides colors.titleContentColor) {
                     title()
@@ -85,6 +87,7 @@ fun ChatTopBar(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ChatHeaderTitle(
     agentTitle: @Composable () -> Unit,
@@ -100,11 +103,16 @@ fun ChatHeaderTitle(
             .testTag("chat-header-title"),
         verticalArrangement = Arrangement.Center,
     ) {
-        Box(Modifier.fillMaxWidth().testTag("chat-header-agent")) { agentTitle() }
         Text(conversationTitle, Modifier.fillMaxWidth().testTag("chat-header-conversation"),
             style = MaterialTheme.typography.titleSmall)
-        Text(modelStatus, Modifier.fillMaxWidth().testTag("chat-header-model"),
-            style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(LocalAiSpacing.x2),
+            verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x1)) {
+            Box(Modifier.testTag("chat-header-agent")) {
+                ProvideTextStyle(MaterialTheme.typography.labelSmall) { agentTitle() }
+            }
+            Text(modelStatus, Modifier.testTag("chat-header-model"),
+                style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
     }
 }
 
@@ -113,20 +121,23 @@ fun ChatComposer(input: String, generating: Boolean, onInputChange: (String) -> 
     onAttach: () -> Unit, onAttachImage: () -> Unit, imageEnabled: Boolean,
     onFiles: (() -> Unit)? = null, onStop: () -> Unit, onSend: () -> Unit,
     contextualControls: (@Composable () -> Unit)? = null,
-    onAttachAudio: (() -> Unit)? = null, audioEnabled: Boolean = false) {
+    onAttachAudio: (() -> Unit)? = null, audioEnabled: Boolean = false,
+    contextualControlsInline: Boolean = false) {
     var menu by remember { mutableStateOf(false) }
+    Column(Modifier.fillMaxWidth().imePadding().navigationBarsPadding()) {
     Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(topStart = LocalAiRadii.large, topEnd = LocalAiRadii.large),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = LocalAiSpacing.x3, vertical = LocalAiSpacing.x1)
+            .testTag("chat-composer-surface"),
+        shape = RoundedCornerShape(LocalAiRadii.large),
         color = MaterialTheme.colorScheme.surfaceContainerLow,
         contentColor = MaterialTheme.colorScheme.onSurface,
-        tonalElevation = 2.dp,
+        tonalElevation = 0.dp,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.55f)),
     ) {
-        Column(Modifier.fillMaxWidth().imePadding().navigationBarsPadding()) {
-            contextualControls?.invoke() // Empty today; future functional chips can occupy this slot.
+        Column(Modifier.fillMaxWidth()) {
+            if (!contextualControlsInline) contextualControls?.invoke()
             Row(
-                Modifier.fillMaxWidth().padding(horizontal = LocalAiSpacing.x3, vertical = LocalAiSpacing.x2),
+                Modifier.fillMaxWidth().padding(horizontal = LocalAiSpacing.x1, vertical = LocalAiSpacing.x1),
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.spacedBy(LocalAiSpacing.x1),
             ) {
@@ -142,13 +153,25 @@ fun ChatComposer(input: String, generating: Boolean, onInputChange: (String) -> 
                             leadingIcon = { Icon(Icons.Default.FolderOpen, null) }, onClick = { menu = false; action() }) }
                     }
                 }
-                OutlinedTextField(input, onInputChange, Modifier.weight(1f), placeholder = { Text("Ask anything…") },
-                    maxLines = 5, enabled = !generating, shape = RoundedCornerShape(LocalAiRadii.large))
+                BasicTextField(value = input, onValueChange = onInputChange,
+                    modifier = Modifier.weight(1f).heightIn(min = 48.dp).testTag("chat-composer-input"),
+                    textStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface),
+                    cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+                    maxLines = 5, enabled = !generating,
+                    decorationBox = { field ->
+                        Box(Modifier.padding(vertical = LocalAiSpacing.x2), contentAlignment = Alignment.CenterStart) {
+                            if (input.isEmpty()) Text("Ask anything…", style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            field()
+                        }
+                    })
+                if (contextualControlsInline) contextualControls?.invoke()
                 IconButton(onClick = if (generating) onStop else onSend, enabled = generating || input.isNotBlank()) {
                     Icon(if (generating) Icons.Default.Stop else Icons.AutoMirrored.Filled.Send, if (generating) "Stop" else "Send")
                 }
             }
         }
+    }
     }
 }
 
@@ -176,18 +199,14 @@ internal fun ChatMessageSurface(
             shape = shape,
             colors = CardDefaults.cardColors(
                 containerColor = if (isUser) MaterialTheme.colorScheme.primaryContainer
-                else MaterialTheme.colorScheme.surfaceContainerLow,
+                else MaterialTheme.colorScheme.background,
             ),
-            border = if (isUser) null else BorderStroke(
-                1.dp,
-                MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.65f),
-            ),
-            elevation = CardDefaults.cardElevation(defaultElevation = if (isUser) 0.dp else 1.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth().padding(
-                    horizontal = LocalAiSpacing.x4,
-                    vertical = LocalAiSpacing.x3,
+                    horizontal = if (isUser) LocalAiSpacing.x4 else LocalAiSpacing.x1,
+                    vertical = if (isUser) LocalAiSpacing.x3 else LocalAiSpacing.x2,
                 ),
                 verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x2),
                 content = {

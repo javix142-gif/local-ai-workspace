@@ -104,6 +104,13 @@ class LocalAiThemeTest {
         assertEquals(20.sp, LocalAiTypography.bodySmall.lineHeight)
         assertEquals(12.sp, LocalAiTypography.labelSmall.fontSize)
         assertEquals(16.sp, LocalAiTypography.labelSmall.lineHeight)
+        listOf(LocalAiTypography.displayLarge, LocalAiTypography.displayMedium,
+            LocalAiTypography.displaySmall, LocalAiTypography.headlineLarge,
+            LocalAiTypography.headlineMedium, LocalAiTypography.headlineSmall,
+            LocalAiTypography.titleLarge, LocalAiTypography.titleMedium, LocalAiTypography.titleSmall,
+            LocalAiTypography.bodyLarge, LocalAiTypography.bodyMedium, LocalAiTypography.bodySmall,
+            LocalAiTypography.labelLarge, LocalAiTypography.labelMedium, LocalAiTypography.labelSmall
+        ).forEach { assertEquals(androidx.compose.ui.text.font.FontFamily.SansSerif, it.fontFamily) }
         assertEquals(listOf(4, 8, 12, 16, 20, 24, 32), listOf(
             LocalAiSpacing.x1, LocalAiSpacing.x2, LocalAiSpacing.x3, LocalAiSpacing.x4,
             LocalAiSpacing.x5, LocalAiSpacing.x6, LocalAiSpacing.x8,

@@ -10,6 +10,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.localai.workspace.data.*
 import com.localai.workspace.domain.tools.ChatToolSchemas
@@ -18,7 +20,7 @@ import com.localai.workspace.ui.theme.LocalAiSpacing
 
 @Composable
 fun AssistantControls(profile: AssistantProfile, toolsAvailable: Boolean, thinkingAvailable: Boolean,
-    enabled: Boolean, onChange: (AssistantProfile) -> Unit) {
+    enabled: Boolean, onChange: (AssistantProfile) -> Unit, compact: Boolean = false) {
     var tools by remember { mutableStateOf(false) }
     var thinking by remember { mutableStateOf(false) }
     var options by remember { mutableStateOf(false) }
@@ -35,11 +37,16 @@ fun AssistantControls(profile: AssistantProfile, toolsAvailable: Boolean, thinki
 
     if (thinkingAvailable || toolsAvailable) {
         Row(
-            Modifier.fillMaxWidth().padding(horizontal = LocalAiSpacing.x3, vertical = LocalAiSpacing.x1),
+            if (compact) Modifier else Modifier.fillMaxWidth().padding(horizontal = LocalAiSpacing.x3, vertical = LocalAiSpacing.x1),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box {
-                TextButton(
+                if (compact) IconButton(
+                    onClick = { options = true }, enabled = enabled,
+                    modifier = Modifier.minimumAppTouchTarget().testTag("assistant-options-button")
+                        .semantics { contentDescription = "Options · $summary" },
+                ) { Icon(Icons.Default.Tune, contentDescription = null) }
+                else TextButton(
                     onClick = { options = true },
                     enabled = enabled,
                     modifier = Modifier.minimumAppTouchTarget().testTag("assistant-options-button"),
@@ -49,6 +56,10 @@ fun AssistantControls(profile: AssistantProfile, toolsAvailable: Boolean, thinki
                     Text("Options")
                 }
                 DropdownMenu(expanded = options, onDismissRequest = { options = false }) {
+                    if (compact && summary.isNotEmpty()) Text(summary,
+                        Modifier.padding(horizontal = LocalAiSpacing.x4, vertical = LocalAiSpacing.x2)
+                            .testTag("assistant-options-summary"),
+                        style = MaterialTheme.typography.labelSmall)
                     if (thinkingAvailable) {
                         DropdownMenuItem(
                             modifier = Modifier.testTag("assistant-options-thinking"),
@@ -65,7 +76,7 @@ fun AssistantControls(profile: AssistantProfile, toolsAvailable: Boolean, thinki
                     }
                 }
             }
-            if (summary.isNotEmpty()) {
+            if (!compact && summary.isNotEmpty()) {
                 Text(
                     summary,
                     Modifier.weight(1f).padding(start = LocalAiSpacing.x2).testTag("assistant-options-summary"),
