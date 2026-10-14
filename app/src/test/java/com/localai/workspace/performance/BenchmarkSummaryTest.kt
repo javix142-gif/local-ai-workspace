@@ -20,6 +20,7 @@ class BenchmarkSummaryTest {
     @Test fun wrongAnswersAndCancelledRunsDoNotMakeSpeedLookBetter() {
         val r=row("a");val bad=r.copy(id="b",validationPassed=false,metrics=r.metrics.copy(timeToFirstTokenMs=1));val cancel=r.copy(id="c",result=BenchmarkResult.CANCELLED)
         val group=BenchmarkSummaries.groups(listOf(r,bad,cancel)).single();assertEquals(1,group.successful);assertEquals(1,group.rejectedQuality);assertEquals(100.0,group.nativeTtftMs.p50!!,0.0)
+        assertEquals(2,group.qualityChecked);assertEquals(1,group.qualityPassed)
         assertNull(group.observedWorkerPssBytes.p50)
     }
 }

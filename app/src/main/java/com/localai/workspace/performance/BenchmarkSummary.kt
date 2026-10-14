@@ -28,7 +28,7 @@ object BenchmarkSummaries {
         val valid=rows.filter{it.result==BenchmarkResult.SUCCESS&&it.validationPassed!=false}
         fun longs(value:(BenchmarkRecord)->Long?)=distribution(valid.map{value(it)?.toDouble()})
         BenchmarkSummary(key,rows.size,valid.size,rows.count{it.result==BenchmarkResult.SUCCESS&&it.validationPassed==false},
-            rows.count{it.validationPassed!=null},rows.count{it.validationPassed==true},
+            rows.count{it.result==BenchmarkResult.SUCCESS&&it.validationPassed!=null},rows.count{it.result==BenchmarkResult.SUCCESS&&it.validationPassed==true},
             longs{it.metrics.timeToFirstTokenMs},longs{it.metrics.requestTimeToFirstTokenMs},distribution(valid.map{it.metrics.decodeTokensPerSecond}),
             longs{it.metrics.endToEndTotalMs},longs{listOfNotNull(it.metrics.workerPssBeforeBytes,it.metrics.workerPssAfterBytes).maxOrNull()})
     }
