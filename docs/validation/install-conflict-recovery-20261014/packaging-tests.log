@@ -1,0 +1,7 @@
+test_dex_compression_preserves_every_payload_and_native_storage (test_prepare_personal_qa_update.PersonalQaUpdateTest.test_dex_compression_preserves_every_payload_and_native_storage) ... ok
+test_duplicate_archive_cannot_hide_changed_payload (test_prepare_personal_qa_update.PersonalQaUpdateTest.test_duplicate_archive_cannot_hide_changed_payload) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.004s
+
+OK

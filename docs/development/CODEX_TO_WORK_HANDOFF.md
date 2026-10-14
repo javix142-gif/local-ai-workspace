@@ -1,3 +1,41 @@
+# Environment cleanup and APK install recovery — 2026-10-14
+
+User requested environment cleanup before fixing the package conflict reported by
+the Android installer. Cleanup reclaimed 14,422,118,400 disk bytes while preserving
+the current checkout/history, authentic 97-task plan/evidence, unique model files,
+required toolchains/dependency cache and the existing debug signing key. Removed
+worktrees were clean ancestral checkouts; no user documents in Drive or phone data
+were removed. Inventory: `../validation/install-conflict-recovery-20261014/cleanup.json`.
+
+The delivered Actions APK's certificate (`39e1d90...`) differs from the historical
+local-signed UX01/UX02a certificate (`f9085e76...`). This mismatch is proven between
+deliveries and can explain an Android update conflict. No device is connected;
+the installed certificate/failure code and actual installation remain unverified.
+
+Tooling `065ae36930d6f3dc7e72f039067c3065c9b057fd` prepared the same app payloads from
+source `0844159b1c8653c15da6a2f47c098e46d38478ba`: 22 DEX entries compressed, all 284
+payload hashes unchanged, stored native libraries retained/aligned, APK signed
+with the existing local Debug key. Result: 65,566,569 bytes; SHA-256
+`566915521ead68c01925f88081d2df994e29685e87fe9a02a68d69c7223f23f1`;
+`com.localai.workspace.debug`, 0.5.0-debug/27, arm64-v8a, signature v2/v3 PASS.
+HOST packaging tests 2/2 and integrity/alignment/payload checks PASS. No Gradle
+build, Android suite, emulator or physical validation was run in this recovery.
+Source and workflows are unchanged; the helper is a delivery-packaging tool.
+
+Standalone APK uploaded and read back in Drive:
+https://drive.google.com/file/d/1V2evRNicMs66afgN0Lb3MhDCXP08v_Ro/view?usp=drivesdk
+The observed metadata confirms MIME, folder and byte count. Local APK SHA verified;
+Drive payload not independently re-downloaded/hashed. Detailed results/logs:
+`../validation/install-conflict-recovery-20261014/RESULTS.md`.
+
+Do not uninstall or clear user data. Update compatibility is established for the
+historical local signer, not an unidentified other signer. Await user installation
+feedback. All original functional/UX states, Room historical fixture blocker,
+M00-04 not-accepted state and M01-06 pending-device state below remain historical
+and unchanged; cleanup alone does not promote any test or task to PASS.
+
+---
+
 # Estado M00 y contrato M00-04 — avisos de omisión de contexto (2026-10-13)
 
 ## Fuente original y crosswalk acotado

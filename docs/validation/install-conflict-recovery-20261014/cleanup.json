@@ -1,0 +1,357 @@
+{
+  "startedAtUtc": "2026-10-14T01:27:42Z",
+  "beforeDiskFreeBytes": 1818144768,
+  "removed": [
+    {
+      "path": "/tmp/local-ai-m00-01-988e666",
+      "kind": "clean ancestral checkout with generated outputs",
+      "sourceHead": "988e666910f093344e32e96c46646f555dfb128a",
+      "approximateBytes": 216724002,
+      "ignoredInventory": [
+        "!! .gradle/",
+        "!! app/build/",
+        "!! litert-compat/build/",
+        "!! llama-runtime/build/"
+      ]
+    },
+    {
+      "path": "/tmp/local-ai-workspace-39aea8f",
+      "kind": "clean ancestral checkout with generated outputs",
+      "sourceHead": "39aea8f55aac051edd3a43bc1b09c05d319d2783",
+      "approximateBytes": 3115697468,
+      "ignoredInventory": [
+        "!! .gradle/",
+        "!! app/build/",
+        "!! litert-compat/build/",
+        "!! llama-runtime/.cxx/",
+        "!! llama-runtime/build/",
+        "!! third_party/llama.cpp/src/models/"
+      ]
+    },
+    {
+      "path": "/tmp/local-ai-workspace-avd-diagnosis-ba3117b",
+      "kind": "clean ancestral checkout with generated outputs",
+      "sourceHead": "a18f1fc99be211fe2346799218233548a15adf16",
+      "approximateBytes": 61631079,
+      "ignoredInventory": []
+    },
+    {
+      "path": "/workspace/law-final-clean-ignorefix",
+      "kind": "clean ancestral checkout with generated outputs",
+      "sourceHead": "b6c460763b19de41e689c493859bc1ee649faf2c",
+      "approximateBytes": 59566153,
+      "ignoredInventory": []
+    },
+    {
+      "path": "/workspace/law-final-worktree-e367dc7",
+      "kind": "clean ancestral checkout with generated outputs",
+      "sourceHead": "e367dc75d0f952ef6a9b4e96d51e1263b70d3309",
+      "approximateBytes": 3073259676,
+      "ignoredInventory": [
+        "!! .gradle/",
+        "!! app/build/",
+        "!! litert-compat/build/",
+        "!! llama-runtime/.cxx/",
+        "!! llama-runtime/build/"
+      ]
+    },
+    {
+      "path": "/workspace/law-release-evidence-docs.tbxd1B",
+      "kind": "clean ancestral checkout with generated outputs",
+      "sourceHead": "c60ac50f0af627ac24550e2deb835a226536f48c",
+      "approximateBytes": 61617113,
+      "ignoredInventory": []
+    },
+    {
+      "path": "/workspace/local-ai-workspace-avd-diag-fcad2ec",
+      "kind": "clean ancestral checkout with generated outputs",
+      "sourceHead": "32877a5d706a9ec0f213bb91ed19234c26cbe965",
+      "approximateBytes": 2735549882,
+      "ignoredInventory": [
+        "!! .gradle/",
+        "!! app/build/",
+        "!! docs/validation/android-emulator-ci/diagnostic-runs/38165315028/actions-artifact.zip",
+        "!! docs/validation/android-emulator-ci/diagnostic-runs/38165315028/host/logs/",
+        "!! docs/validation/android-emulator-ci/diagnostic-runs/38165315028/job.log",
+        "!! litert-compat/build/",
+        "!! llama-runtime/.cxx/",
+        "!! llama-runtime/build/",
+        "!! scripts/ci/__pycache__/"
+      ]
+    },
+    {
+      "path": "/workspace/ux02e-a182-checkout",
+      "kind": "clean ancestral checkout with generated outputs",
+      "sourceHead": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+      "approximateBytes": 68280762,
+      "ignoredInventory": [
+        "!! .gradle/"
+      ]
+    },
+    {
+      "path": "/workspace/ux02e-a182-jdk17gradle-contract",
+      "kind": "clean ancestral checkout with generated outputs",
+      "sourceHead": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+      "approximateBytes": 216612867,
+      "ignoredInventory": [
+        "!! .gradle/",
+        "!! app/build/",
+        "!! litert-compat/build/",
+        "!! llama-runtime/build/"
+      ]
+    },
+    {
+      "path": "/workspace/ux02e-a182-jdk17toolchain",
+      "kind": "clean ancestral checkout with generated outputs",
+      "sourceHead": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+      "approximateBytes": 128090741,
+      "ignoredInventory": [
+        "!! .gradle/",
+        "!! app/build/",
+        "!! litert-compat/build/",
+        "!! llama-runtime/build/"
+      ]
+    },
+    {
+      "path": "/workspace/ux02e-isolated-diagnostic-20261013",
+      "kind": "clean ancestral checkout with generated outputs",
+      "sourceHead": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+      "approximateBytes": 68280845,
+      "ignoredInventory": [
+        "!! .gradle/"
+      ]
+    },
+    {
+      "path": "/workspace/ux02e-offline-a182",
+      "kind": "clean ancestral checkout with generated outputs",
+      "sourceHead": "a1827fa204cda0cdf80a7e5a51670435e8c8d4b7",
+      "approximateBytes": 216362234,
+      "ignoredInventory": [
+        "!! .gradle/",
+        "!! app/build/",
+        "!! litert-compat/build/",
+        "!! llama-runtime/build/"
+      ]
+    },
+    {
+      "path": "/workspace/local-ai-workspace/app/build",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 1355919519
+    },
+    {
+      "path": "/workspace/local-ai-workspace/llama-runtime/build",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 1086449999
+    },
+    {
+      "path": "/workspace/local-ai-workspace/llama-runtime/.cxx",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 862709548
+    },
+    {
+      "path": "/workspace/local-ai-workspace/litert-compat/build",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 669926840
+    },
+    {
+      "path": "/workspace/local-ai-workspace/.gradle",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 43758885
+    },
+    {
+      "path": "/workspace/android-sdk-ux02e",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 485235220
+    },
+    {
+      "path": "/workspace/.toolchain/jdk17.tar.gz",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 193252603
+    },
+    {
+      "path": "/workspace/.toolchain/temurin21-21.0.12.1.tar.gz",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 207473347
+    },
+    {
+      "path": "/workspace/model-validation/gemma-4-E2B-it.litertlm_1791311297_2588147712.xnnpack_cache",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 788412736
+    },
+    {
+      "path": "/tmp/robolectric-nativeruntime10386714717488738237",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 208367888
+    },
+    {
+      "path": "/tmp/robolectric-nativeruntime6360314913240081409",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 209973456
+    },
+    {
+      "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.1.14-ui-stage15-arm64.apk",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 91977657
+    },
+    {
+      "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.3.0-semantic-v2-arm64.apk",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 99016291
+    },
+    {
+      "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.1.9-warm-model-arm64.apk",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 91420601
+    },
+    {
+      "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.1.12-chat-files-arm64.apk",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 91666361
+    },
+    {
+      "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.1.15-vision-hotfix151-arm64.apk",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 92010425
+    },
+    {
+      "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.3.1-semantic-stability-arm64.apk",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 99180131
+    },
+    {
+      "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.1.11-app-preload-arm64.apk",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 91584441
+    },
+    {
+      "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.2.1-device-validation-arm64.apk",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 98425956
+    },
+    {
+      "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.1.13-performance-stage1-arm64.apk",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 91879353
+    },
+    {
+      "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.1.8-chat-delete-arm64.apk",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 91387833
+    },
+    {
+      "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.5.0-preloop-stabilization-arm64.apk",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 100130461
+    },
+    {
+      "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.5.0-skills-agents-arm64.apk",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 100032157
+    },
+    {
+      "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.2.4-qa-arm64.apk",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 98536548
+    },
+    {
+      "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.4.1-normal-chat-hotfix-arm64.apk",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 99622557
+    },
+    {
+      "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.2.0-part2-arm64.apk",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 98065334
+    },
+    {
+      "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.2.3-thinking-arm64.apk",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 98520164
+    },
+    {
+      "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.1.10-workspace-arm64.apk",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 91535289
+    },
+    {
+      "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.4.0-context-memory-arm64.apk",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 99557021
+    },
+    {
+      "path": "/workspace/local-ai-workspace/dist/apk/local-ai-workspace-0.2.2-capabilities-embedding-arm64.apk",
+      "kind": "regenerable build/cache/archive/older APK",
+      "approximateBytes": 98487396
+    },
+    {
+      "path": "/tmp/law-run384914.apk",
+      "kind": "obsolete QA artifact/validation runtime; published history retained",
+      "approximateBytes": 119445466
+    },
+    {
+      "path": "/tmp/law-qa-artifact-37874837502",
+      "kind": "obsolete QA artifact/validation runtime; published history retained",
+      "approximateBytes": 119457651
+    },
+    {
+      "path": "/tmp/local-ai-workspace-ux02a-personal-qa",
+      "kind": "obsolete QA artifact/validation runtime; published history retained",
+      "approximateBytes": 121809324
+    },
+    {
+      "path": "/tmp/localai-workspace-personal-qa-27a286",
+      "kind": "obsolete QA artifact/validation runtime; published history retained",
+      "approximateBytes": 219472252
+    },
+    {
+      "path": "/workspace/local-ai-workspace/dist/ux01-personal-qa",
+      "kind": "obsolete QA artifact/validation runtime; published history retained",
+      "approximateBytes": 167910073
+    },
+    {
+      "path": "/workspace/.toolchain/litert-0161-validation",
+      "kind": "obsolete QA artifact/validation runtime; published history retained",
+      "approximateBytes": 141596415
+    },
+    {
+      "path": "/tmp/local-ai-workspace-0.5.0-preloop-aligned.apk",
+      "kind": "obsolete QA artifact/validation runtime; published history retained",
+      "approximateBytes": 100101938
+    },
+    {
+      "path": "/tmp/local-ai-workspace-0.5.0-postfix-aligned.apk",
+      "kind": "obsolete QA artifact/validation runtime; published history retained",
+      "approximateBytes": 100003634
+    },
+    {
+      "path": "/tmp/memory042-aligned.apk",
+      "kind": "obsolete QA artifact/validation runtime; published history retained",
+      "approximateBytes": 99610418
+    },
+    {
+      "path": "/tmp/chat041-aligned.apk",
+      "kind": "obsolete QA artifact/validation runtime; published history retained",
+      "approximateBytes": 99594034
+    }
+  ],
+  "preserved": [
+    "main checkout and all Git history",
+    "versioned evidence and original 97-task plan",
+    "unique model files",
+    "JDK 17/21, complete Android SDK/NDK/CMake, dependency cache",
+    "local Android debug keystore",
+    "current verified APK and baseline APK"
+  ],
+  "sourceHead": "02e882cb5a1a74adca073a3569aa09d580ce1920",
+  "planHashesBefore": {
+    "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5"
+  },
+  "afterDiskFreeBytes": 16240263168,
+  "recoveredDiskBytes": 14422118400,
+  "planHashesAfter": {
+    "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5"
+  },
+  "endedAtUtc": "2026-10-14T01:32:59Z"
+}

@@ -1,0 +1,60 @@
+{
+  "artifactType": "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
+  "status": "PACKAGING_VERIFIED_DEVICE_NOT_RUN",
+  "sourceCommit": "0844159b1c8653c15da6a2f47c098e46d38478ba",
+  "sourceApkSha256": "f3e87a33662784ac9ace0bd4a5779f59589b7bc891f058b0ccf755076fd35765",
+  "apk": {
+    "filename": "local-ai-workspace-0.5.0-update-arm64.apk",
+    "bytes": 65566569,
+    "sha256": "566915521ead68c01925f88081d2df994e29685e87fe9a02a68d69c7223f23f1",
+    "applicationId": "com.localai.workspace.debug",
+    "versionCode": 27,
+    "versionName": "0.5.0-debug",
+    "abis": [
+      "arm64-v8a"
+    ],
+    "certificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b"
+  },
+  "compressedDexEntries": 22,
+  "identicalPayloadEntries": 284,
+  "checks": {
+    "zipCrc": "PASS",
+    "payloadPreservation": "PASS",
+    "signature": "PASS v2/v3",
+    "zipalign4AndNative16KiB": "PASS"
+  },
+  "upgradeCompatibility": "Same package/version and certificate as local-signed UX01/UX02a. Installed-device certificate not accessible; compatibility with other signers is not established.",
+  "EMULATOR": "NOT_RUN",
+  "PHYSICAL_DEVICE": "NOT_RUN",
+  "recordedAtUtc": "2026-10-14T01:33:50Z",
+  "toolingCommit": "065ae36930d6f3dc7e72f039067c3065c9b057fd",
+  "baseFeatureHead": "02e882cb5a1a74adca073a3569aa09d580ce1920",
+  "sourceWorkflowRun": 38492777065,
+  "sourceArtifact": 11862891302,
+  "sourceOfReportedError": "User supplied Android installer screenshot: generic package conflict. No ADB-connected device; exact installed package/certificate/installer error code unavailable.",
+  "certificateFinding": {
+    "artifactRunSigner": "39e1d90e77864dfb824bfe716cffe3e9574441e7044db108762e8ed85923f455",
+    "previousLocalDeliveriesSigner": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
+    "comparison": "Mismatch proven between deliveries, consistent with INSTALL_FAILED_UPDATE_INCOMPATIBLE; device-specific cause unconfirmed. Existing local debug keystore matches UX01/UX02a/baseline certificates.",
+    "privateKeyExported": false
+  },
+  "HOST": {
+    "packagingTests": "2/2 PASS",
+    "artifactChecks": "PASS: identical payloads, APK signature, alignment, CRC, package/version/ABI, no model payloads",
+    "gradleBuild": "NOT_RUN: no application source changed; derived APK has identical uncompressed app payloads",
+    "jvmAndroidSuites": "NOT_RUN"
+  },
+  "cleanup": {
+    "recoveredDiskBytes": 14422118400,
+    "modelsAndProjectAndHistoryPreserved": true,
+    "externalDriveFilesCleaned": false
+  },
+  "delivery": {
+    "id": "1V2evRNicMs66afgN0Lb3MhDCXP08v_Ro",
+    "url": "https://drive.google.com/file/d/1V2evRNicMs66afgN0Lb3MhDCXP08v_Ro/view?usp=drivesdk",
+    "mimeType": "application/vnd.android.package-archive",
+    "readbackBytes": 65566569,
+    "standaloneApk": true,
+    "driveBytesIndependentlyRehashed": false
+  }
+}

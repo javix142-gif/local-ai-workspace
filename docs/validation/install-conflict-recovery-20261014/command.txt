@@ -1,0 +1,4 @@
+JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH python3 scripts/ci/prepare_personal_qa_update.py --input /tmp/law-384927-local-ai-workspace-0.5.0-debug-arm64.apk --output /workspace/local-ai-workspace/dist/personal-qa-update/local-ai-workspace-0.5.0-update-arm64.apk --source-sha256 f3e87a33662784ac9ace0bd4a5779f59589b7bc891f058b0ccf755076fd35765 --source-commit 0844159b1c8653c15da6a2f47c098e46d38478ba --sdk-root /workspace/.toolchain/android-sdk --jdk-root /workspace/.toolchain/jdk-17 --keystore [RETAINED_LOCAL_DEBUG_KEYSTORE] --expected-certificate-sha256 f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b
+packaging_exit_code=0
+python3 -m unittest discover -s scripts/ci -p test_prepare_personal_qa_update.py -v
+tests_exit_code=0

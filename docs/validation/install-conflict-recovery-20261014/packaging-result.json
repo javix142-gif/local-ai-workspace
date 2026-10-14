@@ -1,0 +1,29 @@
+{
+  "artifactType": "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
+  "status": "PACKAGING_VERIFIED_DEVICE_NOT_RUN",
+  "sourceCommit": "0844159b1c8653c15da6a2f47c098e46d38478ba",
+  "sourceApkSha256": "f3e87a33662784ac9ace0bd4a5779f59589b7bc891f058b0ccf755076fd35765",
+  "apk": {
+    "filename": "local-ai-workspace-0.5.0-update-arm64.apk",
+    "bytes": 65566569,
+    "sha256": "566915521ead68c01925f88081d2df994e29685e87fe9a02a68d69c7223f23f1",
+    "applicationId": "com.localai.workspace.debug",
+    "versionCode": 27,
+    "versionName": "0.5.0-debug",
+    "abis": [
+      "arm64-v8a"
+    ],
+    "certificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b"
+  },
+  "compressedDexEntries": 22,
+  "identicalPayloadEntries": 284,
+  "checks": {
+    "zipCrc": "PASS",
+    "payloadPreservation": "PASS",
+    "signature": "PASS v2/v3",
+    "zipalign4AndNative16KiB": "PASS"
+  },
+  "upgradeCompatibility": "Same package/version and certificate as local-signed UX01/UX02a. Installed-device certificate not accessible; compatibility with other signers is not established.",
+  "EMULATOR": "NOT_RUN",
+  "PHYSICAL_DEVICE": "NOT_RUN"
+}
