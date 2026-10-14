@@ -134,6 +134,20 @@ class SemanticContextPostfixTest {
         assertEquals(indexed+1,driver.calls)
     }
 
+    @Test fun configurationChangeDuringQueryMustNotPublishOrCacheOldDescriptor()=runBlocking {
+        addProject("config-race");addDocument("config-race","config-doc","notes.txt","ORCHID configuration race fixture")
+        index("config-race")
+        driver.onCompute={layer.configurationRevision.value=layer.configurationRevision.value+1}
+        try {
+            layer.search(SemanticInput.Text("ORCHID"),SemanticScope(ScopeType.PROJECT,"config-race"))
+            fail("configuration changed while the query was embedding")
+        }catch(e:SemanticFailure){assertEquals(SemanticError.SPACE_MISMATCH,e.code)}
+        val before=driver.calls
+        layer.search(SemanticInput.Text("ORCHID"),SemanticScope(ScopeType.PROJECT,"config-race"))
+        assertEquals(before+1,driver.calls)
+        assertFalse(layer.queryEmbeddingReused.value)
+    }
+
     @Test fun eg2ContextBuildRunsDespiteEmptyPrecomputedEvidenceAndReachesPrompt()=runBlocking {
         addProject("project-a")
         addDocument("project-a","doc-a","notes.txt","ORCHID is the semantic evidence passage for this project.")
