@@ -34,7 +34,7 @@ class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String
             require(input.toString().toByteArray(Charsets.UTF_8).size<=MAX_SPEC_BYTES){"ARTIFACT_SPEC_TOO_LARGE"}
             val format=ArtifactFormat.valueOf(input.getString("format"))
             val name=input.getString("name")
-            require(name.length in 1..100 && Regex("[A-Za-z0-9][A-Za-z0-9._ -]*").matches(name) && !name.contains("..")){"ARTIFACT_NAME_INVALID"}
+            require(name.length in 1..100 && Regex("[\\p{L}\\p{N}][\\p{L}\\p{N}\\p{M}._ -]*").matches(name) && !name.contains("..")){"ARTIFACT_NAME_INVALID"}
             val extension=name.substringAfterLast('.',"").lowercase(Locale.ROOT)
             require(if(format==ArtifactFormat.CODE)extension in setOf("txt","md","kt","java","py","js","ts","json","xml","html","css","c","cpp","h","rs","go","sh","sql")else extension==format.extension){"ARTIFACT_EXTENSION_MISMATCH"}
             val keys=setOf("format","name")+when(format){ArtifactFormat.CODE->setOf("body");ArtifactFormat.XLSX->setOf("sheets");ArtifactFormat.PPTX->setOf("slides");else->setOf("paragraphs","tables")}

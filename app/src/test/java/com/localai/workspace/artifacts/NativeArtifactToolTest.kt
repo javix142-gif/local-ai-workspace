@@ -41,8 +41,11 @@ class NativeArtifactToolTest {
             val read=JSONObject(tools.execute("artifacts.read",JsonParser.parseString(JSONObject().put("id",revision.id).toString()).asJsonObject).asString)
             assertEquals("fun answer() = 42\n",read.getJSONObject("result").getJSONObject("spec").getString("body"))
             adapter.begin(Bundle(data).apply{putString("conversationId",UUID.randomUUID().toString())})
-            try{tools.execute("artifacts.create",JsonParser.parseString(args).asJsonObject);fail("owner required")}catch(e:Exception){var cause:Throwable=e;while(cause.cause!=null)cause=cause.cause!!;assertEquals("Tool scope mismatch",cause.message)}
+            // The pinned SDK catches adapter exceptions and returns an error string.
+            val rejected=tools.execute("artifacts.create",JsonParser.parseString(args).asJsonObject).asString
+            assertEquals("Error occured. java.lang.IllegalArgumentException: Tool scope mismatch",rejected)
             assertEquals(1,store.list(project).size)
+            assertEquals(2,db.toolCallDao().observeForConversation(chat).first().size)
         }finally {
             adapter.close();db.toolCallDao().deleteForConversation(chat);db.conversationDao().delete(chat);db.projectDao().delete(project);db.close()
             File(context.filesDir,"tool-workspaces/artifacts-${ArtifactStore.hash(project.toByteArray())}").deleteRecursively()
