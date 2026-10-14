@@ -1,0 +1,43 @@
+{
+  "upload": {
+    "accepted_input": "file_uri",
+    "success": true,
+    "id": "1K5tcG-igT6gcGq77mhDLLmJ9FMi7odV8",
+    "title": "local-ai-workspace-0.5.0-artifacts-c400dae-arm64.apk",
+    "file_name": "local-ai-workspace-0.5.0-artifacts-c400dae-arm64.apk",
+    "mime_type": "application/vnd.android.package-archive",
+    "url": "https://drive.google.com/file/d/1K5tcG-igT6gcGq77mhDLLmJ9FMi7odV8/view?usp=drivesdk",
+    "parent_id": "1rvoZO3ovX33qgaHBMnY8xtE-T8rdDLaB",
+    "structuredContent": {
+      "accepted_input": "file_uri",
+      "success": true,
+      "id": "1K5tcG-igT6gcGq77mhDLLmJ9FMi7odV8",
+      "title": "local-ai-workspace-0.5.0-artifacts-c400dae-arm64.apk",
+      "file_name": "local-ai-workspace-0.5.0-artifacts-c400dae-arm64.apk",
+      "mime_type": "application/vnd.android.package-archive",
+      "url": "https://drive.google.com/file/d/1K5tcG-igT6gcGq77mhDLLmJ9FMi7odV8/view?usp=drivesdk",
+      "parent_id": "1rvoZO3ovX33qgaHBMnY8xtE-T8rdDLaB"
+    }
+  },
+  "readback": {
+    "id": "1K5tcG-igT6gcGq77mhDLLmJ9FMi7odV8",
+    "title": "local-ai-workspace-0.5.0-artifacts-c400dae-arm64.apk",
+    "mime_type": "application/vnd.android.package-archive",
+    "size": "65660777",
+    "url": "https://drive.google.com/file/d/1K5tcG-igT6gcGq77mhDLLmJ9FMi7odV8/view?usp=drivesdk",
+    "display_url": "https://drive.google.com/file/d/1K5tcG-igT6gcGq77mhDLLmJ9FMi7odV8/view?usp=drivesdk",
+    "file_or_folder": "file",
+    "created_time": null,
+    "modified_time": null,
+    "parent_ids": [
+      "1rvoZO3ovX33qgaHBMnY8xtE-T8rdDLaB"
+    ],
+    "drive_id": null,
+    "current_user_can_share": null,
+    "has_augmented_permissions": null,
+    "shared": null,
+    "permissions": null,
+    "source_visibility_status": "access_not_verified"
+  },
+  "independentPayloadRehash": false
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.artifacts.ArtifactRoundtripTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-14T04:16:07" hostname="05497ac86eb0" time="5.452">
+  <properties/>
+  <testcase name="xlsxRoundtripPreservesSheetsCellsFormulasCachedValuesAndOriginalVersion" classname="com.localai.workspace.artifacts.ArtifactRoundtripTest" time="4.63"/>
+  <testcase name="immutableVersionsDetectConflictCorruptionAndProjectIsolation" classname="com.localai.workspace.artifacts.ArtifactRoundtripTest" time="0.072"/>
+  <testcase name="docxPdfPptxAndCodeCreateReopenEditAndKeepOlderBytes" classname="com.localai.workspace.artifacts.ArtifactRoundtripTest" time="0.626"/>
+  <testcase name="toolCreatesVerifiedBytesOnlyWhenExplicitlyEnabledAndCapable" classname="com.localai.workspace.artifacts.ArtifactRoundtripTest" time="0.086"/>
+  <testcase name="rejectsTraversalUnknownFieldsDuplicateCellsAndActiveExternalFormula" classname="com.localai.workspace.artifacts.ArtifactRoundtripTest" time="0.036"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

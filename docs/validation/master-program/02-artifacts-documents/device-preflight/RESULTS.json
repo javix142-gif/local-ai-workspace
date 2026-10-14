@@ -1,0 +1,10 @@
+{
+  "command": [
+    "adb",
+    "devices",
+    "-l"
+  ],
+  "exitCode": 0,
+  "deviceRows": 0,
+  "physicalBenchmark": "PENDING_DEVICE_VALIDATION"
+}

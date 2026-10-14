@@ -1,0 +1,27 @@
+{
+  "sha": "357366d20e2737399690a5ecaccdcfcf29b94610",
+  "command": [
+    "./gradlew",
+    "--no-daemon",
+    "--no-parallel",
+    "--max-workers=1",
+    "--offline",
+    "--console=plain",
+    "--info",
+    "-Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin",
+    "-Parm64Only=true",
+    "--init-script",
+    "/workspace/master-program-run/test-events.init.gradle",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "com.localai.workspace.performance.BenchmarkSummaryTest",
+    "--tests",
+    "com.localai.workspace.ui.ChatSessionPipelineTest",
+    "--tests",
+    "com.localai.workspace.skills.SkillAgentRegistryTest"
+  ],
+  "startEpoch": 1791952497.9629738,
+  "JAVA_HOME": "/workspace/.toolchain/jdk-17",
+  "SDK": "/workspace/.toolchain/android-sdk",
+  "workerJdk": "/workspace/.toolchain/jdk-21-temurin"
+}

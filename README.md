@@ -19,6 +19,7 @@ Agent loops, MCP or cloud connectors are implemented.
 - Structured, user-approved memory; Context Builder V1; Semantic Layer V2 with EmbeddingGemma 300M and selectable EmbeddingGemma 2 740M providers.
 - Local hybrid retrieval, calculator and bounded file-reading tools, Thinking modes, image input for compatible LiteRT models, audio-file input, and an opt-in constrained Python runtime.
 - Developer validation suites and performance/context diagnostics.
+- Preparatory document/artifact increment: exact bounded sheet/range reading, ordered PPTX text import, verified private XLSX/DOCX/PDF/PPTX/code drafts, immutable versions and explicit SAF export. Chat → Artifacts provides text/structure preview and editing; Tools → Auto enables model artifact tools (existing saved selections are preserved). This is basic generated-file support, not lossless imported-file editing or full Office/PDF rendering. See [master program status](docs/development/MASTER_OPTIMIZATION_PROGRAM.md).
 
 Availability depends on the selected model, runtime and app path. Experimental or device-specific performance is not implied by a model card or a host test. See [the architecture overview](docs/ARCHITECTURE_OVERVIEW.md), [current status](STATUS.md), [0.4.2 report](docs/MEMORY042_REPORT.md), and [external artifacts](docs/EXTERNAL_ARTIFACTS.md).
 

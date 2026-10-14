@@ -1,0 +1,165 @@
+{
+  "status": "HOST_TESTED_PREPARATORY_SUBSETS_MASTER_PROGRAM_INCOMPLETE",
+  "codeCommit": "c400dae169c6b511ba90266f9e570912470982a7",
+  "baseCommit": "b44470bdda2bf1b99810b637144cd12f3e750970",
+  "branch": "feat/0.5.0-skills-agents",
+  "sourcePlan": {
+    "tasks": 97,
+    "dependencies": 120,
+    "baselineTodo": 97,
+    "modified": false
+  },
+  "capabilities": {
+    "EG2QueryVectorReuse": "IMPLEMENTED_HOST_TESTED; 2->1 native compute count in controlled repeated query; no neural latency gain claimed",
+    "ComparableBenchmarkQuantiles": "IMPLEMENTED_HOST_TESTED; device measurements PENDING_DEVICE_VALIDATION",
+    "ExactSheetRangeRead": "IMPLEMENTED_HOST_TESTED; max64 recorded cells, missing explicit, project/document scope",
+    "PPTXTextImport": "IMPLEMENTED_HOST_TESTED; actual presentation-order slide numbers",
+    "DOCXBodyExtraction": "IMPLEMENTED_HOST_TESTED; paragraphs/table separators; no header/footer/style-position claims",
+    "GeneratedXLSX_DOCX_PDF_PPTX_CODE": "IMPLEMENTED_HOST_TESTED_BASIC_SCOPE; independent libraries reopen original+edited versions",
+    "ArtifactVersionsAndHashes": "IMPLEMENTED_HOST_TESTED; file+descriptor hashes, original revisions immutable, conflict guard, restart readback",
+    "ArtifactSDKAdapter": "IMPLEMENTED_HOST_TESTED_REAL_ADAPTER_FILE_BYTES; native Gemma tool selection NOT_TESTED",
+    "ArtifactUiAndSafExport": "IMPLEMENTED_KOTLIN_COMPILED; text/structure preview, version restore, explicit export/readback; physical interaction NOT_TESTED"
+  },
+  "knownLimitations": [
+    "No target device connected: ADB exit0, deviceRows0",
+    "No physical inference/TTFT/tokens-s/RAM-peak/thermal/energy comparison; no percent speed gain",
+    "No runtime upgrade, E4B promotion, quantization conversion or training",
+    "No lossless editing of imported office/PDF originals, OCR engine, PPTX images/charts, code project patch/syntax validation, resumable ingest/index jobs",
+    "PDF regeneration uses standard fonts; unsupported glyphs fail; text preview is not WYSIWYG",
+    "Full JVM app suite NOT_RUN; historical UX02e full gate incomplete and Room-v1 fixture failure unchanged",
+    "No formal M00/M01/M02/M03 closure; original task IDs/dependencies/progress retained"
+  ],
+  "verificationScopes": {
+    "latestArtifactFocal": {
+      "sha": "c400dae169c6b511ba90266f9e570912470982a7",
+      "tests": 8,
+      "pass": 8,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "latestOfficePackageFocal": {
+      "sha": "4bed0b6a03ec6eef703d5e8f4fa1e0311f74ef9a",
+      "tests": 9,
+      "pass": 9
+    },
+    "latestCacheIntegration": {
+      "sha": "2a08977ab4781d9bd45eea8d633127c079fa3717",
+      "tests": 27,
+      "pass": 27,
+      "sameProductionSemanticSourceAsDelivery": true
+    },
+    "chatRegistryQuantiles": {
+      "sha": "357366d20e2737399690a5ecaccdcfcf29b94610",
+      "tests": 37,
+      "pass": 37
+    },
+    "appPlusCompatSelected": {
+      "sha": "6495856be4665f3f8cd4b9d4b4231d9b3c587a22",
+      "tests": 36,
+      "pass": 36,
+      "scope": "selected app classes plus full 2 compat tests; nonexistent ChatAssistantPipelineTest filter not counted, real ChatSessionPipelineTest subsequently tested"
+    },
+    "independentReaders": {
+      "sha": "c400dae169c6b511ba90266f9e570912470982a7",
+      "files": 10,
+      "pass": 10,
+      "scope": "Installed independent library checks incl layout/master, not independent human/GUI/device audit"
+    },
+    "EMULATOR": "NOT_RUN",
+    "PHYSICAL_DEVICE": "NOT_RUN",
+    "fullAppJvm": "NOT_RUN",
+    "independentHumanAudit": "PENDING"
+  },
+  "nextOperationalDependency": "Motorola baseline with exact installed E2B/config/corpus. Program remains authorized; no unmeasured CPU/GPU/MTP/model change. Host prep does not satisfy physical DoD.",
+  "build": {
+    "sha": "c400dae169c6b511ba90266f9e570912470982a7",
+    "exitCode": 0,
+    "durationSeconds": 402.4470593929291,
+    "endEpoch": 1791956730.1706634,
+    "timeout": false,
+    "tasks": [
+      ":app:assembleDebug",
+      ":app:lintDebug",
+      ":app:compileDebugAndroidTestKotlin"
+    ]
+  },
+  "lint": {
+    "Warning": 41,
+    "Information": 1
+  },
+  "buildPolicy": "ARM64, existing toolchains/dependencies, offline/incremental/cache outputs. Not a fresh empty-home reproducibility claim. AndroidTest Kotlin compile only.",
+  "apk": {
+    "artifactType": "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
+    "status": "PACKAGING_VERIFIED_DEVICE_NOT_RUN",
+    "sourceCommit": "c400dae169c6b511ba90266f9e570912470982a7",
+    "sourceApkSha256": "c97b5b890705fb47d27d384e4b82be385010f1b91e6bf0c78c37cfe6f792a0ce",
+    "apk": {
+      "filename": "local-ai-workspace-0.5.0-artifacts-c400dae-arm64.apk",
+      "bytes": 65660777,
+      "sha256": "8203e58cdbd4dbbca064d373ea58b4f14a5b6b4fc0b7e5ea7e48c128f46c4ff8",
+      "applicationId": "com.localai.workspace.debug",
+      "versionCode": 27,
+      "versionName": "0.5.0-debug",
+      "abis": [
+        "arm64-v8a"
+      ],
+      "certificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b"
+    },
+    "compressedDexEntries": 22,
+    "identicalPayloadEntries": 284,
+    "checks": {
+      "zipCrc": "PASS",
+      "payloadPreservation": "PASS",
+      "signature": "PASS v2/v3",
+      "zipalign4AndNative16KiB": "PASS"
+    },
+    "upgradeCompatibility": "Same package/version and certificate as local-signed UX01/UX02a. Installed-device certificate not accessible; compatibility with other signers is not established.",
+    "EMULATOR": "NOT_RUN",
+    "PHYSICAL_DEVICE": "NOT_RUN"
+  },
+  "delivery": {
+    "upload": {
+      "accepted_input": "file_uri",
+      "success": true,
+      "id": "1K5tcG-igT6gcGq77mhDLLmJ9FMi7odV8",
+      "title": "local-ai-workspace-0.5.0-artifacts-c400dae-arm64.apk",
+      "file_name": "local-ai-workspace-0.5.0-artifacts-c400dae-arm64.apk",
+      "mime_type": "application/vnd.android.package-archive",
+      "url": "https://drive.google.com/file/d/1K5tcG-igT6gcGq77mhDLLmJ9FMi7odV8/view?usp=drivesdk",
+      "parent_id": "1rvoZO3ovX33qgaHBMnY8xtE-T8rdDLaB",
+      "structuredContent": {
+        "accepted_input": "file_uri",
+        "success": true,
+        "id": "1K5tcG-igT6gcGq77mhDLLmJ9FMi7odV8",
+        "title": "local-ai-workspace-0.5.0-artifacts-c400dae-arm64.apk",
+        "file_name": "local-ai-workspace-0.5.0-artifacts-c400dae-arm64.apk",
+        "mime_type": "application/vnd.android.package-archive",
+        "url": "https://drive.google.com/file/d/1K5tcG-igT6gcGq77mhDLLmJ9FMi7odV8/view?usp=drivesdk",
+        "parent_id": "1rvoZO3ovX33qgaHBMnY8xtE-T8rdDLaB"
+      }
+    },
+    "readback": {
+      "id": "1K5tcG-igT6gcGq77mhDLLmJ9FMi7odV8",
+      "title": "local-ai-workspace-0.5.0-artifacts-c400dae-arm64.apk",
+      "mime_type": "application/vnd.android.package-archive",
+      "size": "65660777",
+      "url": "https://drive.google.com/file/d/1K5tcG-igT6gcGq77mhDLLmJ9FMi7odV8/view?usp=drivesdk",
+      "display_url": "https://drive.google.com/file/d/1K5tcG-igT6gcGq77mhDLLmJ9FMi7odV8/view?usp=drivesdk",
+      "file_or_folder": "file",
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": [
+        "1rvoZO3ovX33qgaHBMnY8xtE-T8rdDLaB"
+      ],
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    },
+    "independentPayloadRehash": false
+  },
+  "programStatus": "WAITING_TARGET_DEVICE_BASELINE_NOT_COMPLETE"
+}

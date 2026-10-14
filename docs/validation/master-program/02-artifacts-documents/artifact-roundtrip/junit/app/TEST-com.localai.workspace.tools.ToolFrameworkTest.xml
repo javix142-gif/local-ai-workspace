@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.tools.ToolFrameworkTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-14T04:08:09" hostname="05497ac86eb0" time="0.085">
+  <properties/>
+  <testcase name="arithmeticParserIsBoundedAndDeterministic" classname="com.localai.workspace.tools.ToolFrameworkTest" time="0.001"/>
+  <testcase name="malformedCalculatorInputIsRejectedBeforeExecution" classname="com.localai.workspace.tools.ToolFrameworkTest" time="0.07"/>
+  <testcase name="calculatorUsesAParserAndNeverEvaluatesArbitraryCode" classname="com.localai.workspace.tools.ToolFrameworkTest" time="0.014"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

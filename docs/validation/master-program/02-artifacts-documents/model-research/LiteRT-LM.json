@@ -1,0 +1,8 @@
+{
+  "tag_name": "v0.18.0",
+  "published_at": "2026-10-06T18:18:59Z",
+  "html_url": "https://github.com/google-ai-edge/LiteRT-LM/releases/tag/v0.18.0",
+  "body": "## \ud83d\udd25 What's New: v0.18.0\r\n* **New Model Release (EmbeddingGemma 2):** Shipped multimodal EmbeddingGemma 2 supporting text, vision, and audio embeddings with Matryoshka dimension truncation across Python, Kotlin, Swift, Web (JavaScript), and C++. Check out our [DevSite documentation](https://developers.google.com/edge/litert-lm/embedding_models) for more details!\r\n* **CLI & Developer Experience:** Added fast model imports (`litert-lm import`) and an OpenAI-compatible `/v1/embeddings` endpoint (`litert-lm serve`) for multimodal embedding models.\r\n* **Model Info API:** Added `ModelInfo` and `litert-lm describe` for full model introspection\u2014covering metadata, capabilities, and runtime requirements before loading.\r\n* **NPU & GPU Acceleration:** Enabled dynamic on-demand KV cache growth on NPU and attention mask pruning optimizations on GPU.\r\n",
+  "url": "https://api.github.com/repos/google-ai-edge/LiteRT-LM/releases/latest",
+  "httpStatus": 200
+}

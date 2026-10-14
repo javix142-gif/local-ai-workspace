@@ -1,0 +1,31 @@
+{
+  "sha": "eb98664d7f7e132543d064e47e06a3abccef70fd",
+  "command": [
+    "./gradlew",
+    "--no-daemon",
+    "--no-parallel",
+    "--max-workers=1",
+    "--offline",
+    "--console=plain",
+    "--info",
+    "-Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin",
+    "-Parm64Only=true",
+    "--init-script",
+    "/workspace/master-program-run/test-events.init.gradle",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "com.localai.workspace.artifacts.OfficeRetrievalTest",
+    "--tests",
+    "com.localai.workspace.artifacts.ArtifactRoundtripTest",
+    "--tests",
+    "com.localai.workspace.data.StructuredDocumentsTest",
+    "--tests",
+    "com.localai.workspace.data.SemanticRetrievalIntegrationTest",
+    "--tests",
+    "com.localai.workspace.semantic.v2.SemanticContextPostfixTest"
+  ],
+  "startEpoch": 1791951282.929784,
+  "JAVA_HOME": "/workspace/.toolchain/jdk-17",
+  "SDK": "/workspace/.toolchain/android-sdk",
+  "workerJdk": "/workspace/.toolchain/jdk-21-temurin"
+}

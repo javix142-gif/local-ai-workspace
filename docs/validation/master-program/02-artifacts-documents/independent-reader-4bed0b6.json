@@ -1,0 +1,72 @@
+{
+  "sourceSha": "4bed0b6a03ec6eef703d5e8f4fa1e0311f74ef9a",
+  "checks": [
+    {
+      "file": "v1-fixture.docx",
+      "sha256": "5ba8e751079b8097a9af53b2760226883cfa4a43f09a14fa8e9cb765e29c925b",
+      "bytes": 2568,
+      "status": "PASS"
+    },
+    {
+      "file": "v1-fixture.kt",
+      "sha256": "9ba8c659cf52b11df777f12f338cf842c03bb2e10446c2c21ab160587321a037",
+      "bytes": 33,
+      "status": "PASS"
+    },
+    {
+      "file": "v1-fixture.pdf",
+      "sha256": "27a350f526fca335281109301183a3926d74033c00b21a75d2fef354227ea9a6",
+      "bytes": 1546,
+      "status": "PASS"
+    },
+    {
+      "file": "v1-fixture.pptx",
+      "sha256": "fe455cff90f19e7799b67d7a755581f0fc3e285fe835852acdf786ce8ad3f392",
+      "bytes": 6137,
+      "status": "PASS"
+    },
+    {
+      "file": "v1-fixture.xlsx",
+      "sha256": "ced53e7e340b21fa24cc62c054e1341655f16cfd1584d12824d69e93671d526e",
+      "bytes": 2708,
+      "status": "PASS"
+    },
+    {
+      "file": "v2-fixture.docx",
+      "sha256": "5e71622519037591977c9afc91a429444c37bde8d86f3221ad60d7d296891597",
+      "bytes": 2569,
+      "status": "PASS"
+    },
+    {
+      "file": "v2-fixture.kt",
+      "sha256": "7db4868b356616b451e06c3bb7d40c1df8541ac4c169540fabd457b65762d20b",
+      "bytes": 18,
+      "status": "PASS"
+    },
+    {
+      "file": "v2-fixture.pdf",
+      "sha256": "407d74c33708a690375b314f96768341279469246f08074cfbe09315a379c704",
+      "bytes": 1545,
+      "status": "PASS"
+    },
+    {
+      "file": "v2-fixture.pptx",
+      "sha256": "ae1e7909dffded1feeaa43ee6f778638cce30071995c91e565fbe9f0f7aab16b",
+      "bytes": 6134,
+      "status": "PASS"
+    },
+    {
+      "file": "v2-fixture.xlsx",
+      "sha256": "3ff81175be63345278f4c7bb9d7ccb4f42c8a4e15dc6181624eb77413652299f",
+      "bytes": 2708,
+      "status": "PASS"
+    }
+  ],
+  "readers": {
+    "openpyxl": "3.1.5",
+    "python-docx": "1.2.0",
+    "python-pptx": "1.0.2",
+    "pypdf": "6.10.0"
+  },
+  "scope": "Installed independent libraries; no physical Android or desktop GUI reader rendering claim"
+}

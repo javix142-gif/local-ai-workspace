@@ -1,0 +1,12 @@
+{
+  "files": [
+    "junit/app/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml",
+    "junit/app/TEST-com.localai.workspace.artifacts.NativeArtifactToolTest.xml"
+  ],
+  "counts": {
+    "tests": 28,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0
+  }
+}

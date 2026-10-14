@@ -1,0 +1,13 @@
+{
+  "files": [
+    "junit/app/TEST-com.localai.workspace.ui.ChatSessionPipelineTest.xml",
+    "junit/app/TEST-com.localai.workspace.performance.BenchmarkSummaryTest.xml",
+    "junit/app/TEST-com.localai.workspace.skills.SkillAgentRegistryTest.xml"
+  ],
+  "counts": {
+    "tests": 37,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "synthetic": true,
+  "notPrivateMotorolaWorkbook": true,
+  "cases": [
+    {
+      "file": "v1-fixture.xlsx",
+      "query": "Hoja2!B14",
+      "expected": "Exacto 界"
+    },
+    {
+      "file": "v1-fixture.xlsx",
+      "query": "Hoja1!A3 formula/cache",
+      "formula": "$A$2-$A$1",
+      "cache": "4",
+      "recalculated": false
+    },
+    {
+      "file": "v2-fixture.xlsx",
+      "query": "Hoja1!A2",
+      "expected": "7",
+      "note": "A3 cache stays supplied 4; no evaluation"
+    },
+    {
+      "file": "v1-fixture.docx",
+      "query": "table row 2 column 1",
+      "expected": "Álvaro"
+    },
+    {
+      "file": "v1-fixture.pdf",
+      "query": "page 2",
+      "contains": "Álvaro"
+    },
+    {
+      "file": "v1-fixture.pptx",
+      "query": "slide 2 title",
+      "expected": "Resumen"
+    },
+    {
+      "file": "v1-fixture.kt",
+      "query": "line 2",
+      "expected": "fun answer() = 42"
+    },
+    {
+      "file": "quoted.csv",
+      "query": "row 2 column 1",
+      "expected": "Álvaro; equipo",
+      "scope": "Python CSV checked; existing app quoted CSV regression passed, this additional fixture not separately run through Android parser"
+    }
+  ]
+}

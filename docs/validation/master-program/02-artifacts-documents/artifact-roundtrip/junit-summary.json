@@ -1,0 +1,14 @@
+{
+  "files": [
+    "junit/app/TEST-com.localai.workspace.tools.ChatToolSchemasTest.xml",
+    "junit/app/TEST-com.localai.workspace.artifacts.ArtifactRoundtripTest.xml",
+    "junit/app/TEST-com.localai.workspace.tools.ToolFrameworkTest.xml",
+    "junit/app/TEST-com.localai.workspace.skills.AgentSkillContextTest.xml"
+  ],
+  "counts": {
+    "tests": 19,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

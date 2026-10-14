@@ -1,0 +1,11 @@
+{
+  "files": [
+    "junit/app/TEST-com.localai.workspace.artifacts.ArtifactRoundtripTest.xml"
+  ],
+  "counts": {
+    "tests": 5,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

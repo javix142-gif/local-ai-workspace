@@ -1,0 +1,6 @@
+gradle.projectsEvaluated {
+ allprojects { tasks.withType(Test).configureEach {
+  beforeTest { t -> println("TEST_START\t${java.time.Instant.now()}\t${t.className}\t${t.name}") }
+  afterTest { t,r -> println("TEST_END\t${java.time.Instant.now()}\t${t.className}\t${t.name}\t${r.resultType}") }
+ } }
+}

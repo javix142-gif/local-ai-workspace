@@ -1,0 +1,29 @@
+{
+  "artifactType": "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
+  "status": "PACKAGING_VERIFIED_DEVICE_NOT_RUN",
+  "sourceCommit": "c400dae169c6b511ba90266f9e570912470982a7",
+  "sourceApkSha256": "c97b5b890705fb47d27d384e4b82be385010f1b91e6bf0c78c37cfe6f792a0ce",
+  "apk": {
+    "filename": "local-ai-workspace-0.5.0-artifacts-c400dae-arm64.apk",
+    "bytes": 65660777,
+    "sha256": "8203e58cdbd4dbbca064d373ea58b4f14a5b6b4fc0b7e5ea7e48c128f46c4ff8",
+    "applicationId": "com.localai.workspace.debug",
+    "versionCode": 27,
+    "versionName": "0.5.0-debug",
+    "abis": [
+      "arm64-v8a"
+    ],
+    "certificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b"
+  },
+  "compressedDexEntries": 22,
+  "identicalPayloadEntries": 284,
+  "checks": {
+    "zipCrc": "PASS",
+    "payloadPreservation": "PASS",
+    "signature": "PASS v2/v3",
+    "zipalign4AndNative16KiB": "PASS"
+  },
+  "upgradeCompatibility": "Same package/version and certificate as local-signed UX01/UX02a. Installed-device certificate not accessible; compatibility with other signers is not established.",
+  "EMULATOR": "NOT_RUN",
+  "PHYSICAL_DEVICE": "NOT_RUN"
+}

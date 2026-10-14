@@ -7009,7 +7009,7 @@
     "independentAuditStatus": "PENDING_INDEPENDENT_AUDIT"
   },
   "masterOptimizationProgram": {
-    "status": "ACTIVE",
+    "status": "WAITING_TARGET_DEVICE_BASELINE_NOT_COMPLETE",
     "authorization": "User master program: sequential M01/M02/M03 preparatory implementation permitted while M00 physical gates remain pending; FF feature push authorized. Source historical policy unchanged.",
     "baseHead": "b44470bdda2bf1b99810b637144cd12f3e750970",
     "originalCatalogUnchanged": true,
@@ -7045,22 +7045,103 @@
       "evidencePath": "docs/validation/master-program/01-search-cache",
       "independentAudit": "PENDING_ORCHESTRATOR_REVIEW"
     },
-    "artifactFoundation": {
-      "status": "IMPLEMENTED_PENDING_HOST_VALIDATION",
-      "formats": [
-        "XLSX",
-        "DOCX",
-        "PDF",
-        "PPTX",
-        "CODE"
-      ],
-      "scope": "New app-private files and immutable revisions; bounded data contract; text/structure preview and SAF export with readback; generated-document editing only",
-      "importedOriginalEditing": "NOT_IMPLEMENTED_OR_MUTATED",
-      "PPTX": "TEXT_ONLY",
-      "PDF": "CONTROLLED_REGENERATION_STANDARD_FONTS; unsupported glyphs fail explicitly",
-      "formulaEvaluation": "NOT_IMPLEMENTED; supplied caches retained, never evaluated",
-      "CODE_EXECUTION": "NOT_PERFORMED",
-      "formalTaskClosure": false
-    }
+    "artifactFoundation": "IMPLEMENTED_HOST_TESTED_BASIC_SCOPE; independent libraries reopen original+edited versions",
+    "codeCommit": "c400dae169c6b511ba90266f9e570912470982a7",
+    "evidencePath": "docs/validation/master-program/02-artifacts-documents",
+    "capabilities": {
+      "EG2QueryVectorReuse": "IMPLEMENTED_HOST_TESTED; 2->1 native compute count in controlled repeated query; no neural latency gain claimed",
+      "ComparableBenchmarkQuantiles": "IMPLEMENTED_HOST_TESTED; device measurements PENDING_DEVICE_VALIDATION",
+      "ExactSheetRangeRead": "IMPLEMENTED_HOST_TESTED; max64 recorded cells, missing explicit, project/document scope",
+      "PPTXTextImport": "IMPLEMENTED_HOST_TESTED; actual presentation-order slide numbers",
+      "DOCXBodyExtraction": "IMPLEMENTED_HOST_TESTED; paragraphs/table separators; no header/footer/style-position claims",
+      "GeneratedXLSX_DOCX_PDF_PPTX_CODE": "IMPLEMENTED_HOST_TESTED_BASIC_SCOPE; independent libraries reopen original+edited versions",
+      "ArtifactVersionsAndHashes": "IMPLEMENTED_HOST_TESTED; file+descriptor hashes, original revisions immutable, conflict guard, restart readback",
+      "ArtifactSDKAdapter": "IMPLEMENTED_HOST_TESTED_REAL_ADAPTER_FILE_BYTES; native Gemma tool selection NOT_TESTED",
+      "ArtifactUiAndSafExport": "IMPLEMENTED_KOTLIN_COMPILED; text/structure preview, version restore, explicit export/readback; physical interaction NOT_TESTED"
+    },
+    "latestDelivery": {
+      "artifactType": "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
+      "status": "PACKAGING_VERIFIED_DEVICE_NOT_RUN",
+      "sourceCommit": "c400dae169c6b511ba90266f9e570912470982a7",
+      "sourceApkSha256": "c97b5b890705fb47d27d384e4b82be385010f1b91e6bf0c78c37cfe6f792a0ce",
+      "apk": {
+        "filename": "local-ai-workspace-0.5.0-artifacts-c400dae-arm64.apk",
+        "bytes": 65660777,
+        "sha256": "8203e58cdbd4dbbca064d373ea58b4f14a5b6b4fc0b7e5ea7e48c128f46c4ff8",
+        "applicationId": "com.localai.workspace.debug",
+        "versionCode": 27,
+        "versionName": "0.5.0-debug",
+        "abis": [
+          "arm64-v8a"
+        ],
+        "certificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b"
+      },
+      "compressedDexEntries": 22,
+      "identicalPayloadEntries": 284,
+      "checks": {
+        "zipCrc": "PASS",
+        "payloadPreservation": "PASS",
+        "signature": "PASS v2/v3",
+        "zipalign4AndNative16KiB": "PASS"
+      },
+      "upgradeCompatibility": "Same package/version and certificate as local-signed UX01/UX02a. Installed-device certificate not accessible; compatibility with other signers is not established.",
+      "EMULATOR": "NOT_RUN",
+      "PHYSICAL_DEVICE": "NOT_RUN"
+    },
+    "driveDelivery": {
+      "upload": {
+        "accepted_input": "file_uri",
+        "success": true,
+        "id": "1K5tcG-igT6gcGq77mhDLLmJ9FMi7odV8",
+        "title": "local-ai-workspace-0.5.0-artifacts-c400dae-arm64.apk",
+        "file_name": "local-ai-workspace-0.5.0-artifacts-c400dae-arm64.apk",
+        "mime_type": "application/vnd.android.package-archive",
+        "url": "https://drive.google.com/file/d/1K5tcG-igT6gcGq77mhDLLmJ9FMi7odV8/view?usp=drivesdk",
+        "parent_id": "1rvoZO3ovX33qgaHBMnY8xtE-T8rdDLaB",
+        "structuredContent": {
+          "accepted_input": "file_uri",
+          "success": true,
+          "id": "1K5tcG-igT6gcGq77mhDLLmJ9FMi7odV8",
+          "title": "local-ai-workspace-0.5.0-artifacts-c400dae-arm64.apk",
+          "file_name": "local-ai-workspace-0.5.0-artifacts-c400dae-arm64.apk",
+          "mime_type": "application/vnd.android.package-archive",
+          "url": "https://drive.google.com/file/d/1K5tcG-igT6gcGq77mhDLLmJ9FMi7odV8/view?usp=drivesdk",
+          "parent_id": "1rvoZO3ovX33qgaHBMnY8xtE-T8rdDLaB"
+        }
+      },
+      "readback": {
+        "id": "1K5tcG-igT6gcGq77mhDLLmJ9FMi7odV8",
+        "title": "local-ai-workspace-0.5.0-artifacts-c400dae-arm64.apk",
+        "mime_type": "application/vnd.android.package-archive",
+        "size": "65660777",
+        "url": "https://drive.google.com/file/d/1K5tcG-igT6gcGq77mhDLLmJ9FMi7odV8/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1K5tcG-igT6gcGq77mhDLLmJ9FMi7odV8/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": null,
+        "parent_ids": [
+          "1rvoZO3ovX33qgaHBMnY8xtE-T8rdDLaB"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "independentPayloadRehash": false
+    },
+    "nextOperationalDependency": "Motorola baseline with exact installed E2B/config/corpus. Program remains authorized; no unmeasured CPU/GPU/MTP/model change. Host prep does not satisfy physical DoD.",
+    "pendingImplementation": [
+      "No target device connected: ADB exit0, deviceRows0",
+      "No physical inference/TTFT/tokens-s/RAM-peak/thermal/energy comparison; no percent speed gain",
+      "No runtime upgrade, E4B promotion, quantization conversion or training",
+      "No lossless editing of imported office/PDF originals, OCR engine, PPTX images/charts, code project patch/syntax validation, resumable ingest/index jobs",
+      "PDF regeneration uses standard fonts; unsupported glyphs fail; text preview is not WYSIWYG",
+      "Full JVM app suite NOT_RUN; historical UX02e full gate incomplete and Room-v1 fixture failure unchanged",
+      "No formal M00/M01/M02/M03 closure; original task IDs/dependencies/progress retained"
+    ],
+    "independentHumanAudit": "PENDING",
+    "physicalDevice": "NOT_RUN"
   }
 }

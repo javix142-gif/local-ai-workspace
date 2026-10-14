@@ -1,0 +1,15 @@
+{
+  "files": [
+    "junit/app/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml",
+    "junit/app/TEST-com.localai.workspace.artifacts.ArtifactRoundtripTest.xml",
+    "junit/app/TEST-com.localai.workspace.data.SemanticRetrievalIntegrationTest.xml",
+    "junit/app/TEST-com.localai.workspace.data.StructuredDocumentsTest.xml",
+    "junit/app/TEST-com.localai.workspace.artifacts.OfficeRetrievalTest.xml"
+  ],
+  "counts": {
+    "tests": 44,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

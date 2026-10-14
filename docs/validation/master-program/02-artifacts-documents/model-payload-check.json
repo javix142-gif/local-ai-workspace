@@ -1,0 +1,7 @@
+{
+  "matches": [
+    "DebugProbesKt.bin"
+  ],
+  "exception": "Exact Kotlin coroutines debug-probe resource, not model weights; existing verified baseline exception",
+  "status": "PASS"
+}

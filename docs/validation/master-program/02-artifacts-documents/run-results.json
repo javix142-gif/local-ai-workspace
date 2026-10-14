@@ -1,0 +1,212 @@
+[
+  {
+    "run": "artifact-docx-grid",
+    "sha": "a6c2c2a6831550f0769f6173fdc527deae50b7a7",
+    "exitCode": 0,
+    "durationSeconds": 58.631380796432495,
+    "endEpoch": 1791951026.6236014,
+    "timeout": false,
+    "junit": {
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "run": "artifact-roundtrip",
+    "sha": "182408c969ac88546109cd3261ac198df8cef9b6",
+    "exitCode": 0,
+    "durationSeconds": 121.34339952468872,
+    "endEpoch": 1791950890.4768836,
+    "timeout": false,
+    "junit": {
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "run": "artifact-sdk-final",
+    "sha": "c386af991f6cc6e913180c2aea52ccc40c514882",
+    "exitCode": 0,
+    "durationSeconds": 145.33118510246277,
+    "endEpoch": 1791953821.2838376,
+    "timeout": false,
+    "junit": {
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "run": "build-arm64",
+    "sha": "69b14f28e6c337df32c689b59de1a7e24ad00bce",
+    "exitCode": 124,
+    "durationSeconds": 300.8719894886017,
+    "endEpoch": 1791954789.4177332,
+    "timeout": true,
+    "junit": {
+      "tests": 0,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "run": "build-arm64-final",
+    "sha": "4bed0b6a03ec6eef703d5e8f4fa1e0311f74ef9a",
+    "exitCode": 0,
+    "durationSeconds": 325.437903881073,
+    "endEpoch": 1791955709.3522303,
+    "timeout": false,
+    "junit": {
+      "tests": 0,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "run": "chat-registry",
+    "sha": "357366d20e2737399690a5ecaccdcfcf29b94610",
+    "exitCode": 0,
+    "durationSeconds": 69.75725865364075,
+    "endEpoch": 1791952567.7202325,
+    "timeout": false,
+    "junit": {
+      "tests": 37,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "run": "delivery-build",
+    "sha": "c400dae169c6b511ba90266f9e570912470982a7",
+    "exitCode": 0,
+    "durationSeconds": 402.4470593929291,
+    "endEpoch": 1791956730.1706634,
+    "timeout": false,
+    "junit": {
+      "tests": 0,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "run": "final-artifact",
+    "sha": "69b14f28e6c337df32c689b59de1a7e24ad00bce",
+    "exitCode": 0,
+    "durationSeconds": 65.82735800743103,
+    "endEpoch": 1791953970.9442704,
+    "timeout": false,
+    "junit": {
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "run": "final-focused",
+    "sha": "6495856be4665f3f8cd4b9d4b4231d9b3c587a22",
+    "exitCode": 0,
+    "durationSeconds": 92.9349250793457,
+    "endEpoch": 1791952362.7282493,
+    "timeout": false,
+    "junit": {
+      "tests": 36,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "run": "listing-final",
+    "sha": "c400dae169c6b511ba90266f9e570912470982a7",
+    "exitCode": 0,
+    "durationSeconds": 87.61726117134094,
+    "endEpoch": 1791956182.6405354,
+    "timeout": false,
+    "junit": {
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "run": "office-exact",
+    "sha": "eb98664d7f7e132543d064e47e06a3abccef70fd",
+    "exitCode": 0,
+    "durationSeconds": 106.60957455635071,
+    "endEpoch": 1791951389.5393586,
+    "timeout": false,
+    "junit": {
+      "tests": 44,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "run": "office-package-final",
+    "sha": "4bed0b6a03ec6eef703d5e8f4fa1e0311f74ef9a",
+    "exitCode": 0,
+    "durationSeconds": 69.14063930511475,
+    "endEpoch": 1791955180.3449447,
+    "timeout": false,
+    "junit": {
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "run": "query-revision-red",
+    "sha": "3b067992023ee67531d2c5d533d558f2271cd825",
+    "exitCode": 1,
+    "durationSeconds": 58.84570932388306,
+    "endEpoch": 1791953015.7294815,
+    "timeout": false,
+    "junit": {
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "run": "revision-and-sdk",
+    "sha": "41d0e5e354e35f377cfe6432a4367c21a5fa033b",
+    "exitCode": 1,
+    "durationSeconds": 66.75723385810852,
+    "endEpoch": 1791953188.2266333,
+    "timeout": false,
+    "junit": {
+      "tests": 0,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  {
+    "run": "revision-and-sdk-fixed",
+    "sha": "2a08977ab4781d9bd45eea8d633127c079fa3717",
+    "exitCode": 1,
+    "durationSeconds": 110.15895199775696,
+    "endEpoch": 1791953476.5716686,
+    "timeout": false,
+    "junit": {
+      "tests": 28,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    }
+  }
+]

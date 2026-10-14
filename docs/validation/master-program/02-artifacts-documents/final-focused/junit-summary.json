@@ -1,0 +1,18 @@
+{
+  "files": [
+    "junit/app/TEST-com.localai.workspace.tools.ChatToolSchemasTest.xml",
+    "junit/app/TEST-com.localai.workspace.performance.PerformancePolicyTest.xml",
+    "junit/app/TEST-com.localai.workspace.artifacts.ArtifactRoundtripTest.xml",
+    "junit/app/TEST-com.localai.workspace.artifacts.OfficeRetrievalTest.xml",
+    "junit/app/TEST-com.localai.workspace.tools.ToolFrameworkTest.xml",
+    "junit/app/TEST-com.localai.workspace.performance.BenchmarkSummaryTest.xml",
+    "junit/app/TEST-com.localai.workspace.skills.AgentSkillContextTest.xml",
+    "junit/litert-compat/TEST-com.google.ai.edge.litertlm.NativeHistoryRoleTest.xml"
+  ],
+  "counts": {
+    "tests": 36,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

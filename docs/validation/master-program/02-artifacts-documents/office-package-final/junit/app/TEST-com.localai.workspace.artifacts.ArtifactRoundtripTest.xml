@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.artifacts.ArtifactRoundtripTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-14T05:19:31" hostname="05497ac86eb0" time="4.862">
+  <properties/>
+  <testcase name="xlsxRoundtripPreservesSheetsCellsFormulasCachedValuesAndOriginalVersion" classname="com.localai.workspace.artifacts.ArtifactRoundtripTest" time="3.997"/>
+  <testcase name="immutableVersionsDetectConflictCorruptionAndProjectIsolation" classname="com.localai.workspace.artifacts.ArtifactRoundtripTest" time="0.06"/>
+  <testcase name="docxPdfPptxAndCodeCreateReopenEditAndKeepOlderBytes" classname="com.localai.workspace.artifacts.ArtifactRoundtripTest" time="0.569"/>
+  <testcase name="emptyCodeDraftIsAnActualVersionedFile" classname="com.localai.workspace.artifacts.ArtifactRoundtripTest" time="0.037"/>
+  <testcase name="toolCreatesVerifiedBytesOnlyWhenExplicitlyEnabledAndCapable" classname="com.localai.workspace.artifacts.ArtifactRoundtripTest" time="0.095"/>
+  <testcase name="rejectsTraversalUnknownFieldsDuplicateCellsAndActiveExternalFormula" classname="com.localai.workspace.artifacts.ArtifactRoundtripTest" time="0.064"/>
+  <testcase name="unicodeFileNamesAndBodyRemainExact" classname="com.localai.workspace.artifacts.ArtifactRoundtripTest" time="0.037"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,14 @@
+{
+  "files": [
+    "junit/app/TEST-com.localai.workspace.artifacts.ArtifactRoundtripTest.xml",
+    "junit/app/TEST-com.localai.workspace.artifacts.OfficeRetrievalTest.xml",
+    "junit/app/TEST-com.localai.workspace.performance.BenchmarkSummaryTest.xml",
+    "junit/app/TEST-com.localai.workspace.artifacts.NativeArtifactToolTest.xml"
+  ],
+  "counts": {
+    "tests": 13,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}
