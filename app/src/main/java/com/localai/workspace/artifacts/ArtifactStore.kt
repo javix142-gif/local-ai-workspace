@@ -31,7 +31,7 @@ class ArtifactStore(context:Context,private val root:File=File(context.filesDir,
     }
     fun list(projectId:String):List<ArtifactRevision> = project(projectId).listFiles().orEmpty().filter{it.isDirectory&&!it.name.startsWith('.')}.mapNotNull { folder->
         history(projectId,folder.name).maxByOrNull{it.version}
-    }.sortedByDescending{it.createdAt}
+    }.sortedWith(compareByDescending<ArtifactRevision>{it.createdAt}.thenBy{it.id})
     fun history(projectId:String,id:String):List<ArtifactRevision> = item(projectId,id).listFiles().orEmpty().filter{it.isDirectory&&Regex("v[1-9][0-9]*").matches(it.name)}.map{folder->
         val meta=File(folder,"revision.json");require(meta.length() in 1..4096){"ARTIFACT_METADATA_INVALID"};val j=JSONObject(meta.readText())
         ArtifactRevision(j.getString("id"),j.getInt("version"),j.getString("name"),ArtifactFormat.valueOf(j.getString("format")),j.getLong("bytes"),j.getString("sha256"),j.getLong("createdAt"),j.getString("specSha256")).also{

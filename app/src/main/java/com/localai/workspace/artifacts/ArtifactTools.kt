@@ -22,7 +22,10 @@ class ArtifactTool(context:Context,private val operation:String):LocalTool {
         null
     }catch(e:Exception){e.message ?: "ARTIFACT_ARGUMENTS_INVALID"}
     override suspend fun execute(arguments:JSONObject,context:ToolContext):String=runInterruptible(Dispatchers.IO) {
-        if(operation=="artifacts.list")JSONObject().put("artifacts",JSONArray(store.list(context.projectId).take(50).map{it.json()})).put("listingLimit",50).toString()
+        if(operation=="artifacts.list") {
+            val items=store.list(context.projectId)
+            JSONObject().put("artifacts",JSONArray(items.take(10).map{it.json()})).put("listingLimit",10).put("moreAvailable",items.size>10).toString()
+        }
         else if(operation=="artifacts.read") {
             val history=store.history(context.projectId,arguments.getString("id"))
             val revision=if(arguments.has("version"))history.singleOrNull{it.version==arguments.getInt("version")}else history.firstOrNull()
