@@ -1,0 +1,24 @@
+{
+  "sourceCommit": "6bf0cb651905c3d5fb616081c152f8ac9aec2d3d",
+  "rawApkSha256": "7b08299ef4af63474c976de1c6d685a9bce6f453c64ab3c4211dc5de590431c6",
+  "command": [
+    "python3",
+    "scripts/ci/prepare_personal_qa_update.py",
+    "--input",
+    "/workspace/local-ai-workspace/app/build/outputs/apk/debug/app-debug.apk",
+    "--output",
+    "/workspace/local-ai-workspace/dist/chat-home-refinement/local-ai-workspace-0.5.0-chat-home-6bf0cb6-arm64.apk",
+    "--source-sha256",
+    "7b08299ef4af63474c976de1c6d685a9bce6f453c64ab3c4211dc5de590431c6",
+    "--source-commit",
+    "6bf0cb651905c3d5fb616081c152f8ac9aec2d3d",
+    "--sdk-root",
+    "/workspace/.toolchain/android-sdk",
+    "--jdk-root",
+    "/workspace/.toolchain/jdk-17",
+    "--keystore",
+    "[RETAINED_LOCAL_DEBUG_KEYSTORE]",
+    "--expected-certificate-sha256",
+    "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b"
+  ]
+}

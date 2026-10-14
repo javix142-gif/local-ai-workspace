@@ -1,0 +1,6 @@
+{
+  "baseCommit": "89ef8fe5128a86cbd573d2d563291e39cb011ec6",
+  "dirtyDiagnosticPatch": true,
+  "patchSha256": "5ac01fdc819ea8907d99c8d538e13bfc8785a3e7cc0e586fcfb5fb57e25d6e7a",
+  "hypothesis": "NavHost consumeWindowInsets may trigger host editable-dialog measure/idling loop; remove only that line to discriminate."
+}

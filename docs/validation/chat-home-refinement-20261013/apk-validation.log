@@ -1,0 +1,463 @@
+$ /workspace/.toolchain/jdk-17/bin/keytool -list -v -keystore [RETAINED_LOCAL_DEBUG_KEYSTORE] -storepass android -alias androiddebugkey
+Alias name: androiddebugkey
+Creation date: Oct 3, 2026
+Entry type: PrivateKeyEntry
+Certificate chain length: 1
+Certificate[1]:
+Owner: C=US, O=Android, CN=Android Debug
+Issuer: C=US, O=Android, CN=Android Debug
+Serial number: 1
+Valid from: Sat Oct 03 02:49:15 UTC 2026 until: Mon Sep 25 02:49:15 UTC 2056
+Certificate fingerprints:
+	 SHA1: 28:61:06:6A:A2:92:40:E5:35:92:3C:5C:6C:95:92:38:CF:DE:F5:32
+	 SHA256: F9:08:5E:76:BE:AA:BC:92:3E:5F:81:BE:E6:6D:35:AC:A8:BB:C1:AA:C5:9B:9A:3E:29:E0:7A:6B:F7:AF:CA:1B
+Signature algorithm name: SHA256withRSA
+Subject Public Key Algorithm: 2048-bit RSA key
+Version: 1
+
+exit_code=0
+$ /workspace/.toolchain/android-sdk/build-tools/35.0.0/apksigner verify --verbose --print-certs /workspace/local-ai-workspace/app/build/outputs/apk/debug/app-debug.apk
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): false
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+Signer #1 certificate DN: C=US, O=Android, CN=Android Debug
+Signer #1 certificate SHA-256 digest: f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b
+Signer #1 certificate SHA-1 digest: 2861066aa29240e535923c5c6c959238cfdef532
+Signer #1 certificate MD5 digest: a6a97d68580eea2e4880acddb27585cf
+Signer #1 key algorithm: RSA
+Signer #1 key size (bits): 2048
+Signer #1 public key SHA-256 digest: 6050d9b086186839a26da2ad0ee6fcb9b38cd863eb6d1910ace2545a97e08d19
+Signer #1 public key SHA-1 digest: 8e6689f72366f325d94e72ea83d86f0f91ecc38b
+Signer #1 public key MD5 digest: eb94ce11d57cf8b309d534154463014c
+
+exit_code=0
+$ /workspace/.toolchain/android-sdk/build-tools/35.0.0/zipalign -P 16 -f 4 /workspace/local-ai-workspace/dist/chat-home-refinement/qa-update-kbrf8px8/dex-compressed.apk /workspace/local-ai-workspace/dist/chat-home-refinement/qa-update-kbrf8px8/aligned.apk
+
+exit_code=0
+$ /workspace/.toolchain/android-sdk/build-tools/35.0.0/apksigner sign --ks [RETAINED_LOCAL_DEBUG_KEYSTORE] --ks-key-alias androiddebugkey --ks-pass pass:android --key-pass pass:android --v1-signing-enabled false --v2-signing-enabled true --v3-signing-enabled true --out /workspace/local-ai-workspace/dist/chat-home-refinement/local-ai-workspace-0.5.0-chat-home-6bf0cb6-arm64.apk /workspace/local-ai-workspace/dist/chat-home-refinement/qa-update-kbrf8px8/aligned.apk
+
+exit_code=0
+$ /workspace/.toolchain/android-sdk/build-tools/35.0.0/apksigner verify --verbose --print-certs /workspace/local-ai-workspace/dist/chat-home-refinement/local-ai-workspace-0.5.0-chat-home-6bf0cb6-arm64.apk
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): false
+Verified using v3 scheme (APK Signature Scheme v3): true
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+Signer #1 certificate DN: C=US, O=Android, CN=Android Debug
+Signer #1 certificate SHA-256 digest: f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b
+Signer #1 certificate SHA-1 digest: 2861066aa29240e535923c5c6c959238cfdef532
+Signer #1 certificate MD5 digest: a6a97d68580eea2e4880acddb27585cf
+Signer #1 key algorithm: RSA
+Signer #1 key size (bits): 2048
+Signer #1 public key SHA-256 digest: 6050d9b086186839a26da2ad0ee6fcb9b38cd863eb6d1910ace2545a97e08d19
+Signer #1 public key SHA-1 digest: 8e6689f72366f325d94e72ea83d86f0f91ecc38b
+Signer #1 public key MD5 digest: eb94ce11d57cf8b309d534154463014c
+
+exit_code=0
+$ /workspace/.toolchain/android-sdk/build-tools/35.0.0/zipalign -P 16 -c -v 4 /workspace/local-ai-workspace/dist/chat-home-refinement/local-ai-workspace-0.5.0-chat-home-6bf0cb6-arm64.apk
+Verifying alignment of /workspace/local-ai-workspace/dist/chat-home-refinement/local-ai-workspace-0.5.0-chat-home-6bf0cb6-arm64.apk (4)...
+      87 META-INF/com/android/build/gradle/app-metadata.properties (OK - compressed)
+     180 classes.dex (OK - compressed)
+ 9817761 classes10.dex (OK - compressed)
+ 9991860 classes11.dex (OK - compressed)
+ 9997937 classes12.dex (OK - compressed)
+10046990 classes13.dex (OK - compressed)
+10366628 classes14.dex (OK - compressed)
+10379424 classes15.dex (OK - compressed)
+10386930 classes17.dex (OK - compressed)
+10424262 classes18.dex (OK - compressed)
+10436613 classes19.dex (OK - compressed)
+10668641 classes2.dex (OK - compressed)
+10674866 classes20.dex (OK - compressed)
+10795779 classes21.dex (OK - compressed)
+15005003 classes22.dex (OK - compressed)
+18731423 classes3.dex (OK - compressed)
+18751770 classes4.dex (OK - compressed)
+18761988 classes5.dex (OK - compressed)
+18824851 classes6.dex (OK - compressed)
+18843716 classes7.dex (OK - compressed)
+18855785 classes8.dex (OK - compressed)
+18869172 classes9.dex (OK - compressed)
+19087360 lib/arm64-v8a/libai-chat.so (OK)
+19169280 lib/arm64-v8a/libandroidx.graphics.path.so (OK)
+19185664 lib/arm64-v8a/libggml-base.so (OK)
+20381696 lib/arm64-v8a/libggml-cpu.so (OK)
+22003712 lib/arm64-v8a/libggml.so (OK)
+22134784 lib/arm64-v8a/liblitertlm_jni.so (OK)
+43941888 lib/arm64-v8a/libllama-common.so (OK)
+48365568 lib/arm64-v8a/libllama.so (OK)
+52494336 lib/arm64-v8a/liblocal-embedding.so (OK)
+52539973 assets/com/tom_roush/fontbox/resources/cmap/83pv-RKSJ-H (OK - compressed)
+52543001 assets/com/tom_roush/fontbox/resources/cmap/90ms-RKSJ-H (OK - compressed)
+52545673 assets/com/tom_roush/fontbox/resources/cmap/90ms-RKSJ-V (OK - compressed)
+52547510 assets/com/tom_roush/fontbox/resources/cmap/90msp-RKSJ-H (OK - compressed)
+52550154 assets/com/tom_roush/fontbox/resources/cmap/90msp-RKSJ-V (OK - compressed)
+52551979 assets/com/tom_roush/fontbox/resources/cmap/90pv-RKSJ-H (OK - compressed)
+52555279 assets/com/tom_roush/fontbox/resources/cmap/90pv-RKSJ-V (OK - compressed)
+52556926 assets/com/tom_roush/fontbox/resources/cmap/Add-RKSJ-H (OK - compressed)
+52563001 assets/com/tom_roush/fontbox/resources/cmap/Add-RKSJ-V (OK - compressed)
+52564692 assets/com/tom_roush/fontbox/resources/cmap/Adobe-CNS1-0 (OK - compressed)
+52566447 assets/com/tom_roush/fontbox/resources/cmap/Adobe-CNS1-1 (OK - compressed)
+52568289 assets/com/tom_roush/fontbox/resources/cmap/Adobe-CNS1-2 (OK - compressed)
+52570138 assets/com/tom_roush/fontbox/resources/cmap/Adobe-CNS1-3 (OK - compressed)
+52572028 assets/com/tom_roush/fontbox/resources/cmap/Adobe-CNS1-4 (OK - compressed)
+52573925 assets/com/tom_roush/fontbox/resources/cmap/Adobe-CNS1-5 (OK - compressed)
+52575822 assets/com/tom_roush/fontbox/resources/cmap/Adobe-CNS1-6 (OK - compressed)
+52577723 assets/com/tom_roush/fontbox/resources/cmap/Adobe-CNS1-UCS2 (OK - compressed)
+52671117 assets/com/tom_roush/fontbox/resources/cmap/Adobe-GB1-0 (OK - compressed)
+52672664 assets/com/tom_roush/fontbox/resources/cmap/Adobe-GB1-1 (OK - compressed)
+52674285 assets/com/tom_roush/fontbox/resources/cmap/Adobe-GB1-2 (OK - compressed)
+52676288 assets/com/tom_roush/fontbox/resources/cmap/Adobe-GB1-3 (OK - compressed)
+52678289 assets/com/tom_roush/fontbox/resources/cmap/Adobe-GB1-4 (OK - compressed)
+52680501 assets/com/tom_roush/fontbox/resources/cmap/Adobe-GB1-5 (OK - compressed)
+52682757 assets/com/tom_roush/fontbox/resources/cmap/Adobe-GB1-UCS2 (OK - compressed)
+52762698 assets/com/tom_roush/fontbox/resources/cmap/Adobe-Japan1-0 (OK - compressed)
+52764271 assets/com/tom_roush/fontbox/resources/cmap/Adobe-Japan1-1 (OK - compressed)
+52765846 assets/com/tom_roush/fontbox/resources/cmap/Adobe-Japan1-2 (OK - compressed)
+52767435 assets/com/tom_roush/fontbox/resources/cmap/Adobe-Japan1-3 (OK - compressed)
+52769029 assets/com/tom_roush/fontbox/resources/cmap/Adobe-Japan1-4 (OK - compressed)
+52770818 assets/com/tom_roush/fontbox/resources/cmap/Adobe-Japan1-5 (OK - compressed)
+52772759 assets/com/tom_roush/fontbox/resources/cmap/Adobe-Japan1-6 (OK - compressed)
+52774788 assets/com/tom_roush/fontbox/resources/cmap/Adobe-Japan1-7 (OK - compressed)
+52776788 assets/com/tom_roush/fontbox/resources/cmap/Adobe-Japan1-UCS2 (OK - compressed)
+52875201 assets/com/tom_roush/fontbox/resources/cmap/Adobe-Japan2-0 (OK - compressed)
+52876695 assets/com/tom_roush/fontbox/resources/cmap/Adobe-Korea1-0 (OK - compressed)
+52878293 assets/com/tom_roush/fontbox/resources/cmap/Adobe-Korea1-1 (OK - compressed)
+52880175 assets/com/tom_roush/fontbox/resources/cmap/Adobe-Korea1-2 (OK - compressed)
+52882055 assets/com/tom_roush/fontbox/resources/cmap/Adobe-Korea1-UCS2 (OK - compressed)
+52934187 assets/com/tom_roush/fontbox/resources/cmap/B5pc-H (OK - compressed)
+52937524 assets/com/tom_roush/fontbox/resources/cmap/B5pc-V (OK - compressed)
+52938873 assets/com/tom_roush/fontbox/resources/cmap/CNS-EUC-H (OK - compressed)
+52943029 assets/com/tom_roush/fontbox/resources/cmap/CNS-EUC-V (OK - compressed)
+52947441 assets/com/tom_roush/fontbox/resources/cmap/ETen-B5-H (OK - compressed)
+52950846 assets/com/tom_roush/fontbox/resources/cmap/ETen-B5-V (OK - compressed)
+52952214 assets/com/tom_roush/fontbox/resources/cmap/ETenms-B5-H (OK - compressed)
+52953464 assets/com/tom_roush/fontbox/resources/cmap/ETenms-B5-V (OK - compressed)
+52954848 assets/com/tom_roush/fontbox/resources/cmap/EUC-H (OK - compressed)
+52957123 assets/com/tom_roush/fontbox/resources/cmap/EUC-V (OK - compressed)
+52958583 assets/com/tom_roush/fontbox/resources/cmap/Ext-RKSJ-H (OK - compressed)
+52964890 assets/com/tom_roush/fontbox/resources/cmap/Ext-RKSJ-V (OK - compressed)
+52966451 assets/com/tom_roush/fontbox/resources/cmap/GB-EUC-H (OK - compressed)
+52968507 assets/com/tom_roush/fontbox/resources/cmap/GB-EUC-V (OK - compressed)
+52969917 assets/com/tom_roush/fontbox/resources/cmap/GBK-EUC-H (OK - compressed)
+53000118 assets/com/tom_roush/fontbox/resources/cmap/GBK-EUC-V (OK - compressed)
+53001520 assets/com/tom_roush/fontbox/resources/cmap/GBK2K-H (OK - compressed)
+53035214 assets/com/tom_roush/fontbox/resources/cmap/GBK2K-V (OK - compressed)
+53036773 assets/com/tom_roush/fontbox/resources/cmap/GBKp-EUC-H (OK - compressed)
+53066963 assets/com/tom_roush/fontbox/resources/cmap/GBKp-EUC-V (OK - compressed)
+53068369 assets/com/tom_roush/fontbox/resources/cmap/GBpc-EUC-H (OK - compressed)
+53070440 assets/com/tom_roush/fontbox/resources/cmap/GBpc-EUC-V (OK - compressed)
+53071846 assets/com/tom_roush/fontbox/resources/cmap/H (OK - compressed)
+53074054 assets/com/tom_roush/fontbox/resources/cmap/HKscs-B5-H (OK - compressed)
+53083597 assets/com/tom_roush/fontbox/resources/cmap/HKscs-B5-V (OK - compressed)
+53084955 assets/com/tom_roush/fontbox/resources/cmap/Identity-H (OK - compressed)
+53088227 assets/com/tom_roush/fontbox/resources/cmap/Identity-V (OK - compressed)
+53089441 assets/com/tom_roush/fontbox/resources/cmap/KSC-EUC-H (OK - compressed)
+53094223 assets/com/tom_roush/fontbox/resources/cmap/KSC-EUC-V (OK - compressed)
+53095611 assets/com/tom_roush/fontbox/resources/cmap/KSCms-UHC-H (OK - compressed)
+53102052 assets/com/tom_roush/fontbox/resources/cmap/KSCms-UHC-HW-H (OK - compressed)
+53108490 assets/com/tom_roush/fontbox/resources/cmap/KSCms-UHC-HW-V (OK - compressed)
+53109874 assets/com/tom_roush/fontbox/resources/cmap/KSCms-UHC-V (OK - compressed)
+53111267 assets/com/tom_roush/fontbox/resources/cmap/KSCpc-EUC-H (OK - compressed)
+53116380 assets/com/tom_roush/fontbox/resources/cmap/KSCpc-EUC-V (OK - compressed)
+53117773 assets/com/tom_roush/fontbox/resources/cmap/UniCNS-UCS2-H (OK - compressed)
+53229642 assets/com/tom_roush/fontbox/resources/cmap/UniCNS-UCS2-V (OK - compressed)
+53231005 assets/com/tom_roush/fontbox/resources/cmap/UniCNS-UTF16-H (OK - compressed)
+53325799 assets/com/tom_roush/fontbox/resources/cmap/UniCNS-UTF16-V (OK - compressed)
+53327161 assets/com/tom_roush/fontbox/resources/cmap/UniGB-UCS2-H (OK - compressed)
+53422838 assets/com/tom_roush/fontbox/resources/cmap/UniGB-UCS2-V (OK - compressed)
+53424280 assets/com/tom_roush/fontbox/resources/cmap/UniGB-UTF16-H (OK - compressed)
+53502265 assets/com/tom_roush/fontbox/resources/cmap/UniGB-UTF16-V (OK - compressed)
+53503672 assets/com/tom_roush/fontbox/resources/cmap/UniJIS-UCS2-H (OK - compressed)
+53562325 assets/com/tom_roush/fontbox/resources/cmap/UniJIS-UCS2-HW-H (OK - compressed)
+53563619 assets/com/tom_roush/fontbox/resources/cmap/UniJIS-UCS2-HW-V (OK - compressed)
+53566283 assets/com/tom_roush/fontbox/resources/cmap/UniJIS-UCS2-V (OK - compressed)
+53568916 assets/com/tom_roush/fontbox/resources/cmap/UniJIS-UTF16-H (OK - compressed)
+53640193 assets/com/tom_roush/fontbox/resources/cmap/UniJIS-UTF16-V (OK - compressed)
+53642598 assets/com/tom_roush/fontbox/resources/cmap/UniKS-UCS2-H (OK - compressed)
+53702136 assets/com/tom_roush/fontbox/resources/cmap/UniKS-UCS2-V (OK - compressed)
+53703540 assets/com/tom_roush/fontbox/resources/cmap/UniKS-UTF16-H (OK - compressed)
+53752744 assets/com/tom_roush/fontbox/resources/cmap/UniKS-UTF16-V (OK - compressed)
+53754123 assets/com/tom_roush/fontbox/resources/cmap/V (OK - compressed)
+53755583 assets/com/tom_roush/fontbox/resources/unicode/Scripts.txt (OK - compressed)
+53794163 assets/com/tom_roush/pdfbox/resources/afm/Courier-Bold.afm (OK - compressed)
+53798219 assets/com/tom_roush/pdfbox/resources/afm/Courier-BoldOblique.afm (OK - compressed)
+53802392 assets/com/tom_roush/pdfbox/resources/afm/Courier-Oblique.afm (OK - compressed)
+53806554 assets/com/tom_roush/pdfbox/resources/afm/Courier.afm (OK - compressed)
+53810599 assets/com/tom_roush/pdfbox/resources/afm/Helvetica-Bold.afm (OK - compressed)
+53823744 assets/com/tom_roush/pdfbox/resources/afm/Helvetica-BoldOblique.afm (OK - compressed)
+53837090 assets/com/tom_roush/pdfbox/resources/afm/Helvetica-Oblique.afm (OK - compressed)
+53851038 assets/com/tom_roush/pdfbox/resources/afm/Helvetica.afm (OK - compressed)
+53864798 assets/com/tom_roush/pdfbox/resources/afm/Symbol.afm (OK - compressed)
+53868313 assets/com/tom_roush/pdfbox/resources/afm/Times-Bold.afm (OK - compressed)
+53880799 assets/com/tom_roush/pdfbox/resources/afm/Times-BoldItalic.afm (OK - compressed)
+53892636 assets/com/tom_roush/pdfbox/resources/afm/Times-Italic.afm (OK - compressed)
+53905444 assets/com/tom_roush/pdfbox/resources/afm/Times-Roman.afm (OK - compressed)
+53917410 assets/com/tom_roush/pdfbox/resources/afm/ZapfDingbats.afm (OK - compressed)
+53920029 assets/com/tom_roush/pdfbox/resources/glyphlist/additional.txt (OK - compressed)
+53921354 assets/com/tom_roush/pdfbox/resources/glyphlist/glyphlist.txt (OK - compressed)
+53945740 assets/com/tom_roush/pdfbox/resources/glyphlist/zapfdingbats.txt (OK - compressed)
+53947721 assets/com/tom_roush/pdfbox/resources/text/BidiMirroring.txt (OK - compressed)
+53954596 assets/com/tom_roush/pdfbox/resources/ttf/LiberationSans-Regular.ttf (OK - compressed)
+54165369 assets/device_validation/PROVENANCE.json (OK - compressed)
+54165816 assets/device_validation/audio_fixture.wav (OK)
+54282441 assets/python/LICENSE-PYODIDE (OK - compressed)
+54287792 assets/python/LICENSE-PYTHON (OK - compressed)
+54292191 assets/python/UPSTREAM.json (OK - compressed)
+54292821 assets/python/index.html (OK - compressed)
+54293049 assets/python/limits.js (OK - compressed)
+54293522 assets/python/main.js (OK - compressed)
+54294002 assets/python/policy.py (OK - compressed)
+54295127 assets/python/pyodide-lock.json (OK - compressed)
+54320990 assets/python/pyodide.asm.js (OK - compressed)
+54556612 assets/python/pyodide.asm.wasm (OK - compressed)
+57694248 assets/python/pyodide.js (OK - compressed)
+57700272 assets/python/python_stdlib.zip (OK - compressed)
+60022969 assets/python/worker.js (OK - compressed)
+60023814 assets/semantic-v2/eg2-artifact.json (OK - compressed)
+60024124 assets/semantic-v2/fixtures/bicycle-car.mp4 (OK)
+60041420 assets/semantic-v2/fixtures/blue-car.png (OK)
+60043668 assets/semantic-v2/fixtures/noise.wav (OK)
+60075792 assets/semantic-v2/fixtures/red-bicycle.png (OK)
+60080324 assets/semantic-v2/fixtures/tone.wav (OK)
+60112417 AndroidManifest.xml (OK - compressed)
+60114436 res/color/vector_tint_color.xml (OK - compressed)
+60114683 res/color/vector_tint_theme_color.xml (OK - compressed)
+60114956 res/drawable-hdpi-v4/notification_bg_low_normal.9.png (OK)
+60115260 res/drawable-hdpi-v4/notification_bg_low_pressed.9.png (OK)
+60115572 res/drawable-hdpi-v4/notification_bg_normal.9.png (OK)
+60115880 res/drawable-hdpi-v4/notification_bg_normal_pressed.9.png (OK)
+60116204 res/drawable-hdpi-v4/notification_oversize_large_icon_bg.png (OK)
+60117208 res/drawable-hdpi-v4/notify_panel_notification_icon_bg.png (OK)
+60117404 res/drawable-mdpi-v4/notification_bg_low_normal.9.png (OK)
+60117712 res/drawable-mdpi-v4/notification_bg_low_pressed.9.png (OK)
+60118020 res/drawable-mdpi-v4/notification_bg_normal.9.png (OK)
+60118328 res/drawable-mdpi-v4/notification_bg_normal_pressed.9.png (OK)
+60118648 res/drawable-mdpi-v4/notify_panel_notification_icon_bg.png (OK)
+60118827 res/drawable-v21/notification_action_background.xml (OK - compressed)
+60119384 res/drawable-xhdpi-v4/notification_bg_low_normal.9.png (OK)
+60119696 res/drawable-xhdpi-v4/notification_bg_low_pressed.9.png (OK)
+60120036 res/drawable-xhdpi-v4/notification_bg_normal.9.png (OK)
+60120352 res/drawable-xhdpi-v4/notification_bg_normal_pressed.9.png (OK)
+60120696 res/drawable-xhdpi-v4/notify_panel_notification_icon_bg.png (OK)
+60120895 res/drawable/ic_call_answer.xml (OK - compressed)
+60121623 res/drawable/ic_call_answer_low.xml (OK - compressed)
+60122334 res/drawable/ic_call_answer_video.xml (OK - compressed)
+60122826 res/drawable/ic_call_answer_video_low.xml (OK - compressed)
+60123289 res/drawable/ic_call_decline.xml (OK - compressed)
+60124089 res/drawable/ic_call_decline_low.xml (OK - compressed)
+60124863 res/drawable/notification_bg.xml (OK - compressed)
+60125181 res/drawable/notification_bg_low.xml (OK - compressed)
+60125508 res/drawable/notification_icon_background.xml (OK - compressed)
+60125759 res/drawable/notification_tile_bg.xml (OK - compressed)
+60125999 res/layout-v21/notification_action.xml (OK - compressed)
+60126562 res/layout-v21/notification_action_tombstone.xml (OK - compressed)
+60127179 res/layout-v21/notification_template_custom_big.xml (OK - compressed)
+60128045 res/layout-v21/notification_template_icon_group.xml (OK - compressed)
+60128522 res/layout/custom_dialog.xml (OK - compressed)
+60128904 res/layout/ime_base_split_test_activity.xml (OK - compressed)
+60129183 res/layout/ime_secondary_split_test_activity.xml (OK - compressed)
+60129683 res/layout/notification_template_part_chronometer.xml (OK - compressed)
+60130018 res/layout/notification_template_part_time.xml (OK - compressed)
+60130332 resources.arsc (OK)
+60547035 DebugProbesKt.bin (OK - compressed)
+60547900 META-INF/androidx.activity_activity-compose.version (OK)
+60547992 META-INF/androidx.activity_activity-ktx.version (OK)
+60548080 META-INF/androidx.activity_activity.version (OK)
+60548184 META-INF/androidx.annotation_annotation-experimental.version (OK)
+60548268 META-INF/androidx.arch.core_core-runtime.version (OK - compressed)
+60548408 META-INF/androidx.autofill_autofill.version (OK)
+60548508 META-INF/androidx.compose.animation_animation-core.version (OK)
+60548604 META-INF/androidx.compose.animation_animation.version (OK)
+60548708 META-INF/androidx.compose.foundation_foundation-layout.version (OK)
+60548808 META-INF/androidx.compose.foundation_foundation.version (OK)
+60548904 META-INF/androidx.compose.material3_material3.version (OK)
+60549008 META-INF/androidx.compose.material_material-icons-core.version (OK)
+60549116 META-INF/androidx.compose.material_material-icons-extended.version (OK)
+60549216 META-INF/androidx.compose.material_material-ripple.version (OK)
+60549312 META-INF/androidx.compose.material_material.version (OK)
+60549412 META-INF/androidx.compose.runtime_runtime-saveable.version (OK)
+60549504 META-INF/androidx.compose.runtime_runtime.version (OK)
+60549596 META-INF/androidx.compose.ui_ui-geometry.version (OK)
+60549688 META-INF/androidx.compose.ui_ui-graphics.version (OK)
+60549784 META-INF/androidx.compose.ui_ui-test-manifest.version (OK)
+60549872 META-INF/androidx.compose.ui_ui-text.version (OK)
+60549968 META-INF/androidx.compose.ui_ui-tooling-data.version (OK)
+60550068 META-INF/androidx.compose.ui_ui-tooling-preview.version (OK)
+60550160 META-INF/androidx.compose.ui_ui-tooling.version (OK)
+60550248 META-INF/androidx.compose.ui_ui-unit.version (OK)
+60550336 META-INF/androidx.compose.ui_ui-util.version (OK)
+60550420 META-INF/androidx.compose.ui_ui.version (OK)
+60550504 META-INF/androidx.core_core-ktx.version (OK)
+60550584 META-INF/androidx.core_core.version (OK)
+60550692 META-INF/androidx.customview_customview-poolingcontainer.version (OK)
+60550788 META-INF/androidx.documentfile_documentfile.version (OK)
+60550872 META-INF/androidx.emoji2_emoji2.version (OK)
+60550964 META-INF/androidx.graphics_graphics-path.version (OK)
+60551060 META-INF/androidx.interpolator_interpolator.version (OK)
+60551164 META-INF/androidx.lifecycle_lifecycle-livedata-core.version (OK)
+60551260 META-INF/androidx.lifecycle_lifecycle-process.version (OK)
+60551364 META-INF/androidx.lifecycle_lifecycle-runtime-compose.version (OK)
+60551464 META-INF/androidx.lifecycle_lifecycle-runtime-ktx.version (OK)
+60551560 META-INF/androidx.lifecycle_lifecycle-runtime.version (OK)
+60551668 META-INF/androidx.lifecycle_lifecycle-viewmodel-compose.version (OK)
+60551772 META-INF/androidx.lifecycle_lifecycle-viewmodel-ktx.version (OK)
+60551880 META-INF/androidx.lifecycle_lifecycle-viewmodel-savedstate.version (OK)
+60551980 META-INF/androidx.lifecycle_lifecycle-viewmodel.version (OK)
+60552080 META-INF/androidx.navigation_navigation-common-ktx.version (OK)
+60552176 META-INF/androidx.navigation_navigation-common.version (OK)
+60552276 META-INF/androidx.navigation_navigation-compose.version (OK)
+60552380 META-INF/androidx.navigation_navigation-runtime-ktx.version (OK)
+60552480 META-INF/androidx.navigation_navigation-runtime.version (OK)
+60552584 META-INF/androidx.profileinstaller_profileinstaller.version (OK)
+60552668 META-INF/androidx.room_room-ktx.version (OK)
+60552756 META-INF/androidx.room_room-runtime.version (OK)
+60552852 META-INF/androidx.savedstate_savedstate-ktx.version (OK)
+60552944 META-INF/androidx.savedstate_savedstate.version (OK)
+60553036 META-INF/androidx.sqlite_sqlite-framework.version (OK)
+60553120 META-INF/androidx.sqlite_sqlite.version (OK)
+60553212 META-INF/androidx.startup_startup-runtime.version (OK)
+60553296 META-INF/androidx.tracing_tracing.version (OK)
+60553404 META-INF/androidx.versionedparcelable_versionedparcelable.version (OK)
+60553492 META-INF/kotlinx_coroutines_android.version (OK)
+60553576 META-INF/kotlinx_coroutines_core.version (OK)
+60553685 META-INF/services/kotlin.reflect.jvm.internal.impl.builtins.BuiltInsLoader (OK - compressed)
+60553877 META-INF/services/kotlin.reflect.jvm.internal.impl.resolve.ExternalOverridabilityCondition (OK - compressed)
+60554068 META-INF/services/kotlinx.coroutines.CoroutineExceptionHandler (OK - compressed)
+60554215 META-INF/services/kotlinx.coroutines.internal.MainDispatcherFactory (OK - compressed)
+60554338 kotlin/annotation/annotation.kotlin_builtins (OK - compressed)
+60554975 kotlin/collections/collections.kotlin_builtins (OK - compressed)
+60556568 kotlin/coroutines/coroutines.kotlin_builtins (OK - compressed)
+60556795 kotlin/internal/internal.kotlin_builtins (OK - compressed)
+60557248 kotlin/kotlin.kotlin_builtins (OK - compressed)
+60562517 kotlin/ranges/ranges.kotlin_builtins (OK - compressed)
+60563877 kotlin/reflect/reflect.kotlin_builtins (OK - compressed)
+60565244 org/bouncycastle/pqc/crypto/picnic/lowmc.properties (OK - compressed)
+62135449 org/bouncycastle/pqc/crypto/sike/p434.properties (OK - compressed)
+62512079 org/bouncycastle/pqc/crypto/sike/p503.properties (OK - compressed)
+62949533 org/bouncycastle/pqc/crypto/sike/p610.properties (OK - compressed)
+63594960 org/bouncycastle/pqc/crypto/sike/p751.properties (OK - compressed)
+64702660 org/bouncycastle/x509/CertPathReviewerMessages.properties (OK - compressed)
+64708714 org/bouncycastle/x509/CertPathReviewerMessages_de.properties (OK - compressed)
+64715417 classes16.dex (OK - compressed)
+Verification succesful
+
+exit_code=0
+$ /workspace/.toolchain/android-sdk/build-tools/35.0.0/aapt dump badging /workspace/local-ai-workspace/dist/chat-home-refinement/local-ai-workspace-0.5.0-chat-home-6bf0cb6-arm64.apk
+package: name='com.localai.workspace.debug' versionCode='27' versionName='0.5.0-debug' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
+sdkVersion:'29'
+targetSdkVersion:'35'
+uses-permission: name='android.permission.INTERNET'
+uses-permission: name='android.permission.WAKE_LOCK'
+uses-permission: name='com.localai.workspace.debug.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
+application-label:'Local AI Workspace'
+application-label-af:'Local AI Workspace'
+application-label-am:'Local AI Workspace'
+application-label-ar:'Local AI Workspace'
+application-label-as:'Local AI Workspace'
+application-label-az:'Local AI Workspace'
+application-label-be:'Local AI Workspace'
+application-label-bg:'Local AI Workspace'
+application-label-bn:'Local AI Workspace'
+application-label-bs:'Local AI Workspace'
+application-label-ca:'Local AI Workspace'
+application-label-cs:'Local AI Workspace'
+application-label-da:'Local AI Workspace'
+application-label-de:'Local AI Workspace'
+application-label-el:'Local AI Workspace'
+application-label-en-AU:'Local AI Workspace'
+application-label-en-CA:'Local AI Workspace'
+application-label-en-GB:'Local AI Workspace'
+application-label-en-IN:'Local AI Workspace'
+application-label-en-XC:'Local AI Workspace'
+application-label-es:'Local AI Workspace'
+application-label-es-US:'Local AI Workspace'
+application-label-et:'Local AI Workspace'
+application-label-eu:'Local AI Workspace'
+application-label-fa:'Local AI Workspace'
+application-label-fi:'Local AI Workspace'
+application-label-fr:'Local AI Workspace'
+application-label-fr-CA:'Local AI Workspace'
+application-label-gl:'Local AI Workspace'
+application-label-gu:'Local AI Workspace'
+application-label-hi:'Local AI Workspace'
+application-label-hr:'Local AI Workspace'
+application-label-hu:'Local AI Workspace'
+application-label-hy:'Local AI Workspace'
+application-label-in:'Local AI Workspace'
+application-label-is:'Local AI Workspace'
+application-label-it:'Local AI Workspace'
+application-label-iw:'Local AI Workspace'
+application-label-ja:'Local AI Workspace'
+application-label-ka:'Local AI Workspace'
+application-label-kk:'Local AI Workspace'
+application-label-km:'Local AI Workspace'
+application-label-kn:'Local AI Workspace'
+application-label-ko:'Local AI Workspace'
+application-label-ky:'Local AI Workspace'
+application-label-lo:'Local AI Workspace'
+application-label-lt:'Local AI Workspace'
+application-label-lv:'Local AI Workspace'
+application-label-mk:'Local AI Workspace'
+application-label-ml:'Local AI Workspace'
+application-label-mn:'Local AI Workspace'
+application-label-mr:'Local AI Workspace'
+application-label-ms:'Local AI Workspace'
+application-label-my:'Local AI Workspace'
+application-label-nb:'Local AI Workspace'
+application-label-ne:'Local AI Workspace'
+application-label-nl:'Local AI Workspace'
+application-label-or:'Local AI Workspace'
+application-label-pa:'Local AI Workspace'
+application-label-pl:'Local AI Workspace'
+application-label-pt:'Local AI Workspace'
+application-label-pt-BR:'Local AI Workspace'
+application-label-pt-PT:'Local AI Workspace'
+application-label-ro:'Local AI Workspace'
+application-label-ru:'Local AI Workspace'
+application-label-si:'Local AI Workspace'
+application-label-sk:'Local AI Workspace'
+application-label-sl:'Local AI Workspace'
+application-label-sq:'Local AI Workspace'
+application-label-sr:'Local AI Workspace'
+application-label-sr-Latn:'Local AI Workspace'
+application-label-sv:'Local AI Workspace'
+application-label-sw:'Local AI Workspace'
+application-label-ta:'Local AI Workspace'
+application-label-te:'Local AI Workspace'
+application-label-th:'Local AI Workspace'
+application-label-tl:'Local AI Workspace'
+application-label-tr:'Local AI Workspace'
+application-label-uk:'Local AI Workspace'
+application-label-ur:'Local AI Workspace'
+application-label-uz:'Local AI Workspace'
+application-label-vi:'Local AI Workspace'
+application-label-zh-CN:'Local AI Workspace'
+application-label-zh-HK:'Local AI Workspace'
+application-label-zh-TW:'Local AI Workspace'
+application-label-zu:'Local AI Workspace'
+application: label='Local AI Workspace' icon=''
+application-debuggable
+launchable-activity: name='com.localai.workspace.MainActivity'  label='' icon=''
+feature-group: label=''
+  uses-feature: name='android.hardware.faketouch'
+  uses-implied-feature: name='android.hardware.faketouch' reason='default feature for all apps'
+main
+other-activities
+other-receivers
+other-services
+supports-screens: 'small' 'normal' 'large' 'xlarge'
+supports-any-density: 'true'
+locales: '--_--' 'af' 'am' 'ar' 'as' 'az' 'be' 'bg' 'bn' 'bs' 'ca' 'cs' 'da' 'de' 'el' 'en-AU' 'en-CA' 'en-GB' 'en-IN' 'en-XC' 'es' 'es-US' 'et' 'eu' 'fa' 'fi' 'fr' 'fr-CA' 'gl' 'gu' 'hi' 'hr' 'hu' 'hy' 'in' 'is' 'it' 'iw' 'ja' 'ka' 'kk' 'km' 'kn' 'ko' 'ky' 'lo' 'lt' 'lv' 'mk' 'ml' 'mn' 'mr' 'ms' 'my' 'nb' 'ne' 'nl' 'or' 'pa' 'pl' 'pt' 'pt-BR' 'pt-PT' 'ro' 'ru' 'si' 'sk' 'sl' 'sq' 'sr' 'sr-Latn' 'sv' 'sw' 'ta' 'te' 'th' 'tl' 'tr' 'uk' 'ur' 'uz' 'vi' 'zh-CN' 'zh-HK' 'zh-TW' 'zu'
+densities: '160' '240' '320'
+native-code: 'arm64-v8a'
+
+exit_code=0

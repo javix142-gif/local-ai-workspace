@@ -1,0 +1,15 @@
+{
+  "command": [
+    "git",
+    "diff",
+    "--check",
+    "55471af8202a888778f2537f79b43b53be4ace17..HEAD",
+    "--",
+    ".",
+    ":(glob,exclude)docs/validation/chat-home-refinement-20261013/**/*.log"
+  ],
+  "exitCode": 0,
+  "stdout": "",
+  "stderr": "",
+  "rawLogWhitespace": "Unfiltered diff --check exit 2 for original Gradle logs (trailing whitespace and JVM stack indentation). Raw logs preserved unchanged; product/tests/authored documentation check passes with only *.log excluded."
+}

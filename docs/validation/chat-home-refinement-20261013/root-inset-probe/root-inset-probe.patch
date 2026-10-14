@@ -1,0 +1,13 @@
+diff --git a/app/src/main/java/com/localai/workspace/MainActivity.kt b/app/src/main/java/com/localai/workspace/MainActivity.kt
+index 5569473..fe592d3 100644
+--- a/app/src/main/java/com/localai/workspace/MainActivity.kt
++++ b/app/src/main/java/com/localai/workspace/MainActivity.kt
+@@ -200,7 +200,7 @@ private fun LocalAiWorkspaceRoot() {
+         NavHost(
+             navController = navController,
+             startDestination = "workspace",
+-            modifier = Modifier.padding(padding).consumeWindowInsets(padding),
++            modifier = Modifier.padding(padding),
+         ) {
+             composable("workspace") {
+                 WorkspaceScreen(homeViewModel, navController)

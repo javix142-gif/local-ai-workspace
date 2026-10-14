@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.ChatVisualSurfacesUiTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-14T03:03:19" hostname="05497ac86eb0" time="0.964">
+  <properties/>
+  <testcase name="chatAndInspectorSurfacesWrapAtWidthsAndFontScalesWithoutLosingActionsOrReasons" classname="com.localai.workspace.ui.ChatVisualSurfacesUiTest" time="0.964"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -6904,17 +6904,108 @@
     }
   },
   "latestChatHomeVisualRefinement": {
-    "status": "IMPLEMENTED_VALIDATION_PENDING",
+    "status": "PERSONAL_QA_DELIVERED_HOST_PARTIAL_NOT_GLOBAL_PASS",
+    "sourceCommit": "6bf0cb651905c3d5fb616081c152f8ac9aec2d3d",
     "baseHead": "55471af8202a888778f2537f79b43b53be4ace17",
+    "nativeTestSourceCommit": "89ef8fe5128a86cbd573d2d563291e39cb011ec6",
+    "sourceEquivalence": "Final app/test/build tree equals the last NATIVE focused source; only one-off Legacy diagnostic source was temporarily added then archived.",
     "scope": [
-      "explicit sans-serif family across all M3 type roles",
-      "nested scaffold padding consumption",
-      "wrapping header and compact inline composer options",
-      "lighter transcript and compact Workspace cards/actions"
+      "Explicit SansSerif family on all 15 M3 roles; lighter title/heading weights",
+      "Consume nested Scaffold padding once",
+      "Responsive wrapping conversation/agent/model header",
+      "Compact BasicTextField composer with inline Options, 48dp controls and unchanged callbacks",
+      "Lighter assistant transcript surfaces and compact Workspace creation buttons/cards"
     ],
-    "userScreenshots": "Five new UX screenshots not present in this executor; only older installer-conflict screenshot is available. Implementation based on supplied observations.",
-    "backlogProgressChanged": false,
-    "physicalDevice": "NOT_RUN",
-    "next": "Focal HOST layout/callback tests and captures, Debug ARM64 build with retained UX01/UX02a signing key; no full UX02e suite."
+    "userReferenceImages": "Five new user UX images unavailable in this executor; only earlier installer screenshot exists. No direct user-reference comparison claimed.",
+    "HOST": {
+      "build": {
+        "status": "PASS",
+        "exitCode": 0,
+        "durationSeconds": 141.961,
+        "tasks": [
+          ":app:assembleDebug",
+          ":app:compileDebugUnitTestKotlin",
+          ":app:lintDebug",
+          ":app:compileDebugAndroidTestKotlin"
+        ],
+        "policy": "Existing SDK/JDK and dependencies; offline, cache/incremental outputs used; no clean dependency-home reproducibility claim."
+      },
+      "nativeGraphicsFocused": {
+        "status": "PARTIAL_FAIL",
+        "passed": 9,
+        "failed": 2,
+        "total": 11,
+        "errors": 0,
+        "skipped": 0,
+        "failedClass": "WorkspaceRefinementUiTest",
+        "reason": "Robolectric AppNotIdleException after opening the editable project dialog, light/dark; assertions retained.",
+        "cause": "NOT_DETERMINED; isolated removal of NavHost inset consumption did not fix it."
+      },
+      "legacyDiagnostic": {
+        "status": "FAIL",
+        "result": {
+          "tests": 2,
+          "failures": 2,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 0
+        },
+        "reason": "Same editable-dialog idle failure; Legacy worker subsequently Java heap OOM in Robolectric ShadowLineBreaker / NativeObjRegistry. One-off diagnostic archived; no original NATIVE regression removed."
+      },
+      "lint": {
+        "Warning": 41,
+        "Information": 1
+      },
+      "fullJvmSuite": "NOT_RUN",
+      "screenshots": {
+        "status": "VIEWED_NATIVE_HOST",
+        "count": 6,
+        "path": "captures",
+        "scope": "Four component fixtures at viewport 360/393/411dp and fontScale 1/1.3/1.6/2; two real empty-workspace app captures, light/dark. Component images include simulated 120dp bottom inset, synthetic messages/model-status; window itself is 411dp."
+      }
+    },
+    "EMULATOR": {
+      "status": "NOT_RUN",
+      "reason": "No local emulator binary, system image or KVM; no workflow instrumented run dispatched. Code commits use skip-ci to avoid automatic global suite / ephemeral-key QA build."
+    },
+    "PHYSICAL_DEVICE": "NOT_RUN",
+    "apk": {
+      "filename": "local-ai-workspace-0.5.0-chat-home-6bf0cb6-arm64.apk",
+      "bytes": 65570665,
+      "sha256": "de4b77692993ebceff09695a530e6c29dab3f72988bac96d14431e90f219c827",
+      "applicationId": "com.localai.workspace.debug",
+      "versionCode": 27,
+      "versionName": "0.5.0-debug",
+      "abis": [
+        "arm64-v8a"
+      ],
+      "certificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b"
+    },
+    "artifactType": "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
+    "apkChecks": {
+      "zipCrc": "PASS",
+      "payloadPreservation": "PASS",
+      "signature": "PASS v2/v3",
+      "zipalign4AndNative16KiB": "PASS"
+    },
+    "delivery": {
+      "id": "1pFtgGGF_jNNGkRyeAM9z-ZClmvonHovq",
+      "url": "https://drive.google.com/file/d/1pFtgGGF_jNNGkRyeAM9z-ZClmvonHovq/view?usp=drivesdk",
+      "mimeType": "application/vnd.android.package-archive",
+      "readbackBytes": 65570665,
+      "standaloneApk": true,
+      "localHashVerified": true,
+      "drivePayloadIndependentlyRehashed": false
+    },
+    "updateCompatibility": "Same package and retained UX01/UX02a/previous personal APK certificate. versionCode remains 27; equal-version replacement allowed; no uninstall or data clear. Actual phone install not executed.",
+    "backlogChanged": false,
+    "limitations": [
+      "Two native HOST project-dialog interactions remain failed; no definitive product attribution or acceptance claimed.",
+      "Global prior instrumented Room v1 FAIL and six real-model SKIPPED remain historical, not rerun.",
+      "UX02e remains AUDITED_INCOMPLETE_TIMEOUT_NOT_ACCEPTED; M01-06 PENDING_REQUIRES_DEVICE."
+    ],
+    "next": "Independent audit and user checks of chat header/composer and Start project dialog; no new functional/visual phase started.",
+    "evidenceRoot": "docs/validation/chat-home-refinement-20261013",
+    "independentAuditStatus": "PENDING_INDEPENDENT_AUDIT"
   }
 }

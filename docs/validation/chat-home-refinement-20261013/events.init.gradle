@@ -1,0 +1,6 @@
+allprojects {
+    tasks.withType(Test).configureEach {
+        beforeTest { d -> println("TEST_START|${d.className}|${d.name}|${java.time.Instant.now()}") }
+        afterTest { d,r -> println("TEST_END|${d.className}|${d.name}|${r.resultType}|${java.time.Instant.now()}") }
+    }
+}

@@ -1,0 +1,265 @@
+{
+  "first-focal": {
+    "total": {
+      "tests": 11,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 8
+    },
+    "files": [
+      {
+        "path": "first-focal/junit/TEST-com.localai.workspace.ui.WorkspaceRefinementUiTest.xml",
+        "tests": 2,
+        "failures": 2,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T02:39:54"
+      },
+      {
+        "path": "first-focal/junit/TEST-com.localai.workspace.ui.MainActivityThemeCaptureTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T02:39:53"
+      },
+      {
+        "path": "first-focal/junit/TEST-com.localai.workspace.ui.ChatHeaderComposerCompactCaptureTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T02:39:37"
+      },
+      {
+        "path": "first-focal/junit/TEST-com.localai.workspace.ui.MainActivityDarkThemeCaptureTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T02:39:51"
+      },
+      {
+        "path": "first-focal/junit/TEST-com.localai.workspace.ui.ChatHeaderComposerLargeFontCaptureTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T02:39:48"
+      },
+      {
+        "path": "first-focal/junit/TEST-com.localai.workspace.ui.ChatVisualSurfacesUiTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T02:39:48"
+      },
+      {
+        "path": "first-focal/junit/TEST-com.localai.workspace.ui.ChatRefinementUiTest.xml",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T02:39:48"
+      },
+      {
+        "path": "first-focal/junit/TEST-com.localai.workspace.ui.LocalAiThemeTest.xml",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T02:39:50"
+      }
+    ]
+  },
+  "second-focal": {
+    "total": {
+      "tests": 11,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 8
+    },
+    "files": [
+      {
+        "path": "second-focal/junit/TEST-com.localai.workspace.ui.WorkspaceRefinementUiTest.xml",
+        "tests": 2,
+        "failures": 2,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T02:53:12"
+      },
+      {
+        "path": "second-focal/junit/TEST-com.localai.workspace.ui.MainActivityThemeCaptureTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T02:55:17"
+      },
+      {
+        "path": "second-focal/junit/TEST-com.localai.workspace.ui.ChatHeaderComposerCompactCaptureTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T02:55:14"
+      },
+      {
+        "path": "second-focal/junit/TEST-com.localai.workspace.ui.MainActivityDarkThemeCaptureTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T02:55:16"
+      },
+      {
+        "path": "second-focal/junit/TEST-com.localai.workspace.ui.ChatHeaderComposerLargeFontCaptureTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T02:55:15"
+      },
+      {
+        "path": "second-focal/junit/TEST-com.localai.workspace.ui.ChatVisualSurfacesUiTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T02:55:15"
+      },
+      {
+        "path": "second-focal/junit/TEST-com.localai.workspace.ui.ChatRefinementUiTest.xml",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T02:52:59"
+      },
+      {
+        "path": "second-focal/junit/TEST-com.localai.workspace.ui.LocalAiThemeTest.xml",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T02:55:16"
+      }
+    ]
+  },
+  "third-focal": {
+    "total": {
+      "tests": 11,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 9
+    },
+    "files": [
+      {
+        "path": "third-focal/junit/TEST-com.localai.workspace.ui.WorkspaceRefinementUiTest.xml",
+        "tests": 2,
+        "failures": 2,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T03:01:15"
+      },
+      {
+        "path": "third-focal/junit/TEST-com.localai.workspace.ui.MainActivityThemeCaptureTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T03:03:21"
+      },
+      {
+        "path": "third-focal/junit/TEST-com.localai.workspace.ui.ChatHeaderComposerCompactCaptureTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T03:03:17"
+      },
+      {
+        "path": "third-focal/junit/TEST-com.localai.workspace.ui.MainActivityDarkThemeCaptureTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T03:03:20"
+      },
+      {
+        "path": "third-focal/junit/TEST-com.localai.workspace.ui.ChatHeaderComposerLargeFontCaptureTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T03:03:18"
+      },
+      {
+        "path": "third-focal/junit/TEST-com.localai.workspace.ui.ChatVisualSurfacesUiTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T03:03:19"
+      },
+      {
+        "path": "third-focal/junit/TEST-com.localai.workspace.ui.ChatRefinementUiTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T03:01:01"
+      },
+      {
+        "path": "third-focal/junit/TEST-com.localai.workspace.ui.LocalAiThemeTest.xml",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T03:03:19"
+      }
+    ]
+  },
+  "root-inset-probe": {
+    "total": {
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 0
+    },
+    "files": [
+      {
+        "path": "root-inset-probe/junit/TEST-com.localai.workspace.ui.WorkspaceRefinementUiTest.xml",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T03:07:21"
+      }
+    ]
+  },
+  "legacy-dialog-probe": {
+    "total": {
+      "tests": 2,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 0
+    },
+    "files": [
+      {
+        "path": "legacy-dialog-probe/junit/TEST-com.localai.workspace.ui.WorkspaceDialogLegacyDiagnosticTest.xml",
+        "tests": 2,
+        "failures": 2,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T03:15:41"
+      }
+    ]
+  }
+}

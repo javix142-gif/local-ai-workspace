@@ -1,0 +1,29 @@
+{
+  "artifactType": "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
+  "status": "PACKAGING_VERIFIED_DEVICE_NOT_RUN",
+  "sourceCommit": "6bf0cb651905c3d5fb616081c152f8ac9aec2d3d",
+  "sourceApkSha256": "7b08299ef4af63474c976de1c6d685a9bce6f453c64ab3c4211dc5de590431c6",
+  "apk": {
+    "filename": "local-ai-workspace-0.5.0-chat-home-6bf0cb6-arm64.apk",
+    "bytes": 65570665,
+    "sha256": "de4b77692993ebceff09695a530e6c29dab3f72988bac96d14431e90f219c827",
+    "applicationId": "com.localai.workspace.debug",
+    "versionCode": 27,
+    "versionName": "0.5.0-debug",
+    "abis": [
+      "arm64-v8a"
+    ],
+    "certificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b"
+  },
+  "compressedDexEntries": 22,
+  "identicalPayloadEntries": 284,
+  "checks": {
+    "zipCrc": "PASS",
+    "payloadPreservation": "PASS",
+    "signature": "PASS v2/v3",
+    "zipalign4AndNative16KiB": "PASS"
+  },
+  "upgradeCompatibility": "Same package/version and certificate as local-signed UX01/UX02a. Installed-device certificate not accessible; compatibility with other signers is not established.",
+  "EMULATOR": "NOT_RUN",
+  "PHYSICAL_DEVICE": "NOT_RUN"
+}

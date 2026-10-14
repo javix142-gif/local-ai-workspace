@@ -1,6 +1,14 @@
-# Chat and Workspace visual refinement — active
+# Chat and Workspace visual refinement — personal QA delivered
 
-Base `55471af8202a888778f2537f79b43b53be4ace17`. Explicit sans-serif tokens, consumed nested Scaffold insets, wrapping header, inline Options composer and lighter Workspace/transcript presentation are implemented. Validation and current APK are pending. The five new user screenshots are unavailable here; this iteration uses supplied observations. Functional backlog/progress, global Room/model-dependent instrumented result and UX02e incomplete state remain unchanged. No phone/emulator claim.
+Source `6bf0cb651905c3d5fb616081c152f8ac9aec2d3d`; base `55471af8202a888778f2537f79b43b53be4ace17`. Explicit SansSerif typography, lighter headings/Workspace cards, nested inset consumption, wrapping header and compact composer with 48dp controls are implemented. Callback semantics, data, Room, inference, permissions, routing and original functional progress are unchanged. The five new user reference images were unavailable; supplied observations were used.
+
+Final offline provisioned build/lint/Kotlin compiles: exit 0, 141.961s (5 executed/2 cached/138 up-to-date); AndroidTest was compilation/up-to-date only. Last Native focused source `89ef8fe5128a86cbd573d2d563291e39cb011ec6` has the same production/normal test tree as final source: 9/11 PASS, two project-dialog idle failures retained. An inset-removal probe did not resolve them; a one-off Legacy diagnostic also failed (idle/OOM). Cause remains NOT_DETERMINED. Do not call this global HOST PASS. Six Native-host captures opened/inspected; component fixtures are synthetic and use a simulated keyboard inset, while Workspace captures are the real empty app screen before the failed dialog interaction. No emulator or Motorola execution, no full JVM suite.
+
+Standalone personal QA Debug ARM64 APK, `com.localai.workspace.debug`, 0.5.0-debug/27, 65,570,665 bytes. SHA-256 `de4b77692993ebceff09695a530e6c29dab3f72988bac96d14431e90f219c827`; retained Debug certificate `f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b` matches UX01/UX02a and the previous personal delivery. CRC, payload preservation, zipalign and signature v2/v3 PASS. Same-version replacement permitted; installed phone signer/installation not verified. Do not uninstall or clear user data.
+
+Drive readback: https://drive.google.com/file/d/1pFtgGGF_jNNGkRyeAM9z-ZClmvonHovq/view?usp=drivesdk — MIME/folder/bytes verified, Drive payload not independently rehashed. APK/key not stored in Git. Evidence, original failed XML/logs, commands/hashes/captures: [RESULTS](../validation/chat-home-refinement-20261013/RESULTS.md).
+
+Await independent audit and user checks of header/keyboard and Start project dialog. No new phase started. Historical Room/model-dependent instrumented result, UX02e incomplete status, M00-04 and M01-06/device conditions remain unchanged; original 97-task catalog and progress are intact. Orchestrator coordinates the pause.
 
 ---
 

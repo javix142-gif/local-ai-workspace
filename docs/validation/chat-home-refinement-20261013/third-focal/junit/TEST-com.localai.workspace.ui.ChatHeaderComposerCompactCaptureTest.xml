@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.ChatHeaderComposerCompactCaptureTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-14T03:03:17" hostname="05497ac86eb0" time="0.741">
+  <properties/>
+  <testcase name="capturesLightAndDarkAt360DpAndFontScale1" classname="com.localai.workspace.ui.ChatHeaderComposerCompactCaptureTest" time="0.741"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

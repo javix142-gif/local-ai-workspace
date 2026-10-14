@@ -1,0 +1,28 @@
+{
+  "sourceCommit": "89ef8fe5128a86cbd573d2d563291e39cb011ec6",
+  "command": [
+    "./gradlew",
+    "--no-daemon",
+    "--no-parallel",
+    "--max-workers=1",
+    "--offline",
+    "--console=plain",
+    "-Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin",
+    "-Parm64Only=true",
+    "--info",
+    "--init-script",
+    "/workspace/visual-refinement-run-20261013/events.init.gradle",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "com.localai.workspace.ui.WorkspaceRefinementUiTest.compactWorkspaceKeepsBothCreationActionsAndProjectDialog"
+  ],
+  "environment": {
+    "JAVA_HOME": "/workspace/.toolchain/jdk-17",
+    "ANDROID_HOME": "/workspace/.toolchain/android-sdk",
+    "ANDROID_SDK_ROOT": "/workspace/.toolchain/android-sdk"
+  },
+  "emulatorInstalled": false,
+  "localKvm": false,
+  "startedAtUtc": "2026-10-14T03:06:07Z",
+  "wallLimitSeconds": 300
+}

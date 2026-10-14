@@ -1,0 +1,42 @@
+{
+  "sourceCommit": "e8deec547a21d08ce4d9637a5c79984ab4fd3619",
+  "command": [
+    "./gradlew",
+    "--no-daemon",
+    "--no-parallel",
+    "--max-workers=1",
+    "--offline",
+    "--console=plain",
+    "-Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin",
+    "-Parm64Only=true",
+    "--info",
+    "--init-script",
+    "/workspace/visual-refinement-run-20261013/events.init.gradle",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "com.localai.workspace.ui.ChatRefinementUiTest",
+    "--tests",
+    "com.localai.workspace.ui.WorkspaceRefinementUiTest",
+    "--tests",
+    "com.localai.workspace.ui.LocalAiThemeTest",
+    "--tests",
+    "com.localai.workspace.ui.ChatVisualSurfacesUiTest",
+    "--tests",
+    "com.localai.workspace.ui.ChatHeaderComposerCompactCaptureTest",
+    "--tests",
+    "com.localai.workspace.ui.ChatHeaderComposerLargeFontCaptureTest",
+    "--tests",
+    "com.localai.workspace.ui.MainActivityThemeCaptureTest",
+    "--tests",
+    "com.localai.workspace.ui.MainActivityDarkThemeCaptureTest"
+  ],
+  "environment": {
+    "JAVA_HOME": "/workspace/.toolchain/jdk-17",
+    "ANDROID_HOME": "/workspace/.toolchain/android-sdk",
+    "ANDROID_SDK_ROOT": "/workspace/.toolchain/android-sdk"
+  },
+  "emulatorInstalled": false,
+  "localKvm": false,
+  "startedAtUtc": "2026-10-14T02:52:30Z",
+  "wallLimitSeconds": 300
+}
