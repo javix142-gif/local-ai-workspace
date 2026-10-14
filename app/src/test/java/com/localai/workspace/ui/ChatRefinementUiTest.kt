@@ -98,19 +98,33 @@ class ChatRefinementUiTest {
             capture("chat-${width}dp-scale-$scale-${if (dark) "dark" else "light"}.png")
         }
         compose.runOnIdle { configure!!(360, 1f, false, false) }
+        // Editable fields/popups use explicit settled frames on the host. Keep
+        // all visibility and callback assertions while controlling animation time.
+        compose.mainClock.autoAdvance = false
         compose.onNodeWithTag("chat-composer-input").performTextReplacement("A new draft")
+        compose.mainClock.advanceTimeBy(300)
         compose.onNodeWithContentDescription("Send").performClick()
+        compose.mainClock.advanceTimeBy(300)
         assertEquals(1, send)
         compose.onNodeWithContentDescription("Add attachment").performClick()
-        compose.onNodeWithText("File").performClick(); assertEquals(1, attach)
+        compose.mainClock.advanceTimeBy(300)
+        compose.onNodeWithText("File").performClick()
+        compose.mainClock.advanceTimeBy(300)
+        assertEquals(1, attach)
         compose.onNodeWithTag("assistant-options-button").performClick()
+        compose.mainClock.advanceTimeBy(300)
         compose.onNodeWithText("Tools · Auto").performClick()
+        compose.mainClock.advanceTimeBy(300)
         compose.onNodeWithText("Off").performClick()
+        compose.mainClock.advanceTimeBy(300)
         assertTrue(observedProfile.tools.isEmpty())
         compose.onNodeWithText("Done").performClick()
+        compose.mainClock.advanceTimeBy(300)
         compose.onNodeWithText("General Agent", useUnmergedTree = true).assertIsDisplayed()
         compose.runOnIdle { configure!!(360, 1f, false, true) }
+        compose.mainClock.advanceTimeBy(300)
         compose.onNodeWithContentDescription("Stop").assertIsEnabled().performClick()
+        compose.mainClock.advanceTimeBy(300)
         assertEquals(1, stop)
     }
 
@@ -158,9 +172,13 @@ class WorkspaceRefinementUiTest {
                 .outputStream().use { assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)) }
             bitmap.recycle()
         }
+        // Settle the input dialog explicitly; do not auto-run its blinking cursor.
+        compose.mainClock.autoAdvance = false
         compose.onNodeWithText("Start project").performClick()
+        compose.mainClock.advanceTimeBy(300)
         compose.onNodeWithText("Project name").assertIsDisplayed()
         compose.onNodeWithText("Cancel").performClick()
+        compose.mainClock.advanceTimeBy(300)
         compose.onNodeWithText("Start chat").assertIsDisplayed()
     }
 }

@@ -40,6 +40,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.localai.workspace.ui.theme.LocalAiRadii
 import com.localai.workspace.ui.theme.LocalAiSpacing
+import com.localai.workspace.ui.components.minimumAppTouchTarget
 
 /** A Material 3 chat app bar whose height follows its wrapped title content. */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -142,7 +143,8 @@ fun ChatComposer(input: String, generating: Boolean, onInputChange: (String) -> 
                 horizontalArrangement = Arrangement.spacedBy(LocalAiSpacing.x1),
             ) {
                 Box {
-                    IconButton(onClick = { menu = true }, enabled = !generating) { Icon(Icons.Default.Add, "Add attachment") }
+                    IconButton(onClick = { menu = true }, enabled = !generating,
+                        modifier = Modifier.minimumAppTouchTarget()) { Icon(Icons.Default.Add, "Add attachment") }
                     DropdownMenu(expanded = menu && !generating, onDismissRequest = { menu = false }) {
                         if (imageEnabled) DropdownMenuItem(text = { Text("Image") }, leadingIcon = { Icon(Icons.Default.Image, null) },
                             onClick = { menu = false; onAttachImage() })
@@ -166,7 +168,8 @@ fun ChatComposer(input: String, generating: Boolean, onInputChange: (String) -> 
                         }
                     })
                 if (contextualControlsInline) contextualControls?.invoke()
-                IconButton(onClick = if (generating) onStop else onSend, enabled = generating || input.isNotBlank()) {
+                IconButton(onClick = if (generating) onStop else onSend, enabled = generating || input.isNotBlank(),
+                    modifier = Modifier.minimumAppTouchTarget()) {
                     Icon(if (generating) Icons.Default.Stop else Icons.AutoMirrored.Filled.Send, if (generating) "Stop" else "Send")
                 }
             }
