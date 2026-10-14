@@ -19,11 +19,13 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
     val database = databaseOverride ?: SemanticDatabase.create(context)
     val manager = managerOverride ?: EmbeddingEngineManager(context, resourceGate)
     private val operations = Mutex()
+    private val searchVectors = SearchEmbeddingCache()
+    val queryEmbeddingReused = MutableStateFlow(false)
     private val prefs = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE)
     val selection = SemanticModelSelection(context,preferencesName)
     val configurationRevision=MutableStateFlow(0L)
     suspend fun <T> exclusive(block:suspend()->T):T = operations.withLock { manager.exclusive(block) }
-    suspend fun chooseProvider(choice:SemanticProviderChoice)=operations.withLock { manager.unload();selection.choose(choice);configurationRevision.value++ }
+    suspend fun chooseProvider(choice:SemanticProviderChoice)=operations.withLock { searchVectors.clear();manager.unload();selection.choose(choice);configurationRevision.value++ }
     val notice = MutableStateFlow("EG1 remains the chat provider · EG2 experimental")
     val models get() = database.dao().observeModels()
     val jobs get() = database.dao().observeJobs()
@@ -222,6 +224,7 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
         return job
     }
     suspend fun search(query: SemanticInput, scope: SemanticScope, modalities: Set<SemanticModality> = SemanticModality.entries.toSet(), limit: Int = 5, documentIds:Set<String> = emptySet()): List<RetrievalHit> = withContext(Dispatchers.IO) {
+        queryEmbeddingReused.value=false
         require(limit in 1..100); if(scope.type==ScopeType.PROJECT && workspace.projectDao().get(scope.id)==null)throw SemanticFailure(SemanticError.REINDEX_REQUIRED); restore();val model=manager.selected ?: throw SemanticFailure(SemanticError.MODEL_FILE_INVALID)
         val dao=database.dao();val active=dao.active(scope.key) ?: throw SemanticFailure(SemanticError.REINDEX_REQUIRED)
         val space=EmbeddingEngineManager.space(model,dimension)
@@ -240,7 +243,24 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
             SemanticModality.valueOf(it.segment.modality) in modalities && (allowedSourceIds==null || it.segment.sourceId in allowedSourceIds)
         }
         if(corpus.isEmpty())return@withContext emptyList()
-        val queryVector=manager.embed(query,TaskPromptProfile.queryTask(query,modalities),dimension)
+        val task=TaskPromptProfile.queryTask(query,modalities)
+        // Cache only immutable text/code descriptors. Image/audio paths do not identify bytes.
+        // Rank/lexical/source/selection checks ALWAYS rerun; never cache retrieved evidence.
+        val descriptor=when(query) {
+            is SemanticInput.Text->TaskPromptProfile.format(task,query.content,query.title)
+            is SemanticInput.Code->TaskPromptProfile.format(task,query.content,query.filename)
+            else->null
+        }
+        val cacheKey=descriptor?.let { fingerprint(Gson().toJson(listOf(space.id,scope.key,
+            active.indexId,generation.updatedAt.toString(),configurationRevision.value.toString(),
+            manager.profile.toString(),task.name,it))) }
+        val cached=cacheKey?.let(searchVectors::get)
+        val queryVector=cached ?: manager.embed(query,task,dimension).also { result->
+            // Configuration may have changed while this request waited for the native gate.
+            if(result.space==space && cacheKey!=null) searchVectors.put(cacheKey,result)
+        }
+        queryEmbeddingReused.value=cached!=null
+        if(queryVector.space!=space)throw SemanticFailure(SemanticError.SPACE_MISMATCH)
         val ranked=corpus.map { c -> c to SemanticVectors.cosine(queryVector,EmbeddingResult(space,SemanticVectors.decode(c.vector,c.dimension),0)) }.sortedByDescending { it.second }.take(30)
         // Existing FTS remains the lexical source of truth. Fuse ranks, never raw scores from different spaces.
         val lexical=if(scope.type==ScopeType.PROJECT && query is SemanticInput.Text) {

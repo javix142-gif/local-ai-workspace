@@ -7007,5 +7007,17 @@
     "next": "Independent audit and user checks of chat header/composer and Start project dialog; no new functional/visual phase started.",
     "evidenceRoot": "docs/validation/chat-home-refinement-20261013",
     "independentAuditStatus": "PENDING_INDEPENDENT_AUDIT"
+  },
+  "masterOptimizationProgram": {
+    "status": "ACTIVE",
+    "authorization": "User master program: sequential M01/M02/M03 preparatory implementation permitted while M00 physical gates remain pending; FF feature push authorized. Source historical policy unchanged.",
+    "baseHead": "b44470bdda2bf1b99810b637144cd12f3e750970",
+    "originalCatalogUnchanged": true,
+    "firstIncrement": "Bounded EG2 search-query vector reuse, live index/source checks still mandatory",
+    "performanceDeviceBaseline": "PENDING_DEVICE_VALIDATION",
+    "E2B": "RETAINED_DEFAULT",
+    "E4B": "NOT_SELECTED_PENDING_MEMORY_AND_DEVICE_EVALUATION",
+    "scope": "A-F performance, models, retrieval, real artifacts and integration",
+    "formalMilestoneClosure": false
   }
 }

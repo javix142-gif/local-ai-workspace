@@ -108,6 +108,32 @@ class SemanticContextPostfixTest {
     private fun request(project:String,selected:Set<String> = emptySet(),mode:SourceRetrievalMode=SourceRetrievalMode.SEMANTIC_V2_PREFERRED)=ContextRequest(
         "ORCHID",ScopeAccess(projectId=project),includeConversation=false,sourceRetrievalMode=mode,selectedDocumentIds=selected)
 
+    @Test fun repeatedContextQueryReusesEmbeddingButRejectsStaleIndexAndRechecksSelection()=runBlocking {
+        addProject("cache-a");addProject("cache-b")
+        addDocument("cache-a","a-one","one.txt","ORCHID first passage")
+        addDocument("cache-a","a-two","two.txt","ORCHID second passage")
+        addDocument("cache-b","b-one","other.txt","ORCHID other project")
+        index("cache-a","cache-b")
+        val before=driver.calls
+        val first=foundation.build(request("cache-a",setOf("a-one")),memoryEnabled=false)
+        val second=foundation.build(request("cache-a",setOf("a-two")),memoryEnabled=false)
+        assertEquals(before+1,driver.calls)
+        assertTrue(layer.queryEmbeddingReused.value)
+        assertEquals(setOf("a-one"),first.sourceEvidence.map{it.documentId}.toSet())
+        assertEquals(setOf("a-two"),second.sourceEvidence.map{it.documentId}.toSet())
+        foundation.build(request("cache-b"),memoryEnabled=false)
+        assertEquals(before+2,driver.calls)
+        layer.markNeedsReindex("cache-a")
+        val stale=foundation.build(request("cache-a",setOf("a-one")),memoryEnabled=false)
+        assertFalse(layer.queryEmbeddingReused.value)
+        assertTrue(stale.notice.orEmpty().contains("REINDEX_REQUIRED"))
+        assertEquals(before+2,driver.calls)
+        index("cache-a")
+        val indexed=driver.calls
+        foundation.build(request("cache-a"),memoryEnabled=false)
+        assertEquals(indexed+1,driver.calls)
+    }
+
     @Test fun eg2ContextBuildRunsDespiteEmptyPrecomputedEvidenceAndReachesPrompt()=runBlocking {
         addProject("project-a")
         addDocument("project-a","doc-a","notes.txt","ORCHID is the semantic evidence passage for this project.")

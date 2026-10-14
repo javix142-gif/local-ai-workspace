@@ -1,3 +1,9 @@
+# Master optimization / document artifacts program — active
+
+User master authorization supersedes the archived M00-only implementation/push restriction for preparatory M01/M02/M03 work. Original 97 IDs/120 edges/source TODO baseline remain unchanged. Physical dependencies and formal milestone closure remain pending. One executor, feature-only FF, no main/tag/release. Current base `b44470bdda2bf1b99810b637144cd12f3e750970`. E2B remains default; no model weights or extra resident LLM. First increment reuses bounded immutable EG2 query vectors while rechecking READY/current source scope. No phone benchmark improvement claimed. UX02e and historical Room/model skips unchanged.
+
+---
+
 # Chat and Workspace visual refinement — personal QA delivered
 
 Source `6bf0cb651905c3d5fb616081c152f8ac9aec2d3d`; base `55471af8202a888778f2537f79b43b53be4ace17`. Explicit SansSerif typography, lighter headings/Workspace cards, nested inset consumption, wrapping header and compact composer with 48dp controls are implemented. Callback semantics, data, Room, inference, permissions, routing and original functional progress are unchanged. The five new user reference images were unavailable; supplied observations were used.
