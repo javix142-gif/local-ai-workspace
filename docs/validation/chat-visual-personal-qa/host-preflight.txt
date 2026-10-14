@@ -1,0 +1,53 @@
+preflight_utc=2026-10-14T00:07:45Z
+56af9b8b16c5b4327df24d5b23979842812c3f83
+ M app/src/main/java/com/localai/workspace/MainActivity.kt
+ M app/src/main/java/com/localai/workspace/ui/ChatContent.kt
+ M app/src/main/java/com/localai/workspace/ui/ContextMemoryUi.kt
+?? .github/workflows/qa-personal-debug-arm64.yml
+?? app/src/test/java/com/localai/workspace/ui/ChatVisualSurfacesUiTest.kt
+?? docs/validation/chat-visual-personal-qa/
+!! .gradle/
+!! .kotlin/
+!! app/build/
+!! build-m00-before.log
+!! build-m00-full-gate.log
+!! build-m00-targeted-after.log
+!! build-m00-targeted-final.log
+!! dist/
+!! docs/validation/android-emulator-ci/diagnostic-runs/38178581012/job.log
+!! docs/validation/app-preparation-011/adb-devices.log
+!! docs/validation/app-preparation-011/badging.log
+!! docs/validation/app-preparation-011/compile-corrected.log
+!! docs/validation/app-preparation-011/compile-first.log
+!! docs/validation/app-preparation-011/first-test-results/binary/output.bin
+!! docs/validation/app-preparation-011/first-test-results/binary/results.bin
+!! docs/validation/app-preparation-011/gradle-checks-corrected.log
+!! docs/validation/app-preparation-011/gradle-checks.log
+!! docs/validation/app-preparation-011/release-build.log
+!! docs/validation/app-preparation-011/signature.log
+!! docs/validation/app-preparation-011/source-before.tar.gz
+!! docs/validation/badging-017.log
+!! docs/validation/chat-delete-018/badging.log
+!! docs/validation/chat-delete-018/gradle-checks.log
+!! docs/validation/chat-delete-018/gradle-initial-build.log
+!! docs/validation/chat-delete-018/release-build.log
+!! docs/validation/chat-delete-018/signature.log
+!! docs/validation/chat-files-012/adb-devices.log
+!! docs/validation/chat-files-012/artifact-verification.log
+!! docs/validation/chat-files-012/badging.log
+!! docs/validation/chat-files-012/compile-corrected.log
+!! docs/validation/chat-files-012/compile-first.log
+!! docs/validation/chat-files-012/gradle-checks-corrected.log
+!! docs/validation/chat-files-012/gradle-checks.log
+!! docs/validation/chat-files-012/gradle-thread-diagnostic.log
+jdk17=openjdk version "17.0.20.1" 2026-08-18
+jdk21=openjdk version "21.0.12.1" 2026-08-18 LTS
+gradle=Gradle 8.10.2
+sdk=/workspace/.toolchain/android-sdk
+Pkg.Desc = Android NDK
+Pkg.Revision = 27.0.12077973
+Pkg.BaseRevision = 27.0.12077973
+Filesystem      Size  Used Avail Use% Mounted on
+overlay          32G   29G  1.8G  95% /
+none            4.9G  4.6G  345M  94% /tmp
+overlay          32G   29G  1.8G  95% /

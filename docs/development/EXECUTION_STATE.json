@@ -3753,11 +3753,19 @@
   },
   "postDeliveryPause": {
     "priority": "MEJORAS VISUALES Y EXPERIENCIA DE USUARIO",
-    "state": "UX02E_FOCUSED_DIAGNOSTICS_COMPLETE_ROOT_CAUSE_UNDETERMINED_PENDING_INDEPENDENT_AUDIT",
-    "supersedes": "The earlier full JDK17 Gradle gate remains incomplete: app JVM tests stalled in a generic Robolectric Sandbox.runOnMainThread stack and were interrupted at 3311 seconds (exit 130), with zero XML. This bounded diagnosis then passed ChatContentUiTest 15/15 and AuditHarness.writeSelectorReproductions 1/1 in isolated runs; neither reproduced the stall. The active method and root cause remain undetermined; no product defect is attributed. UX-02e remains unaccepted pending independent audit.",
-    "waitFor": "Independent audit of diagnostic-20261013 evidence. No full gate or further tests, UX-02f/UX-03, functional backlog, emulator, physical device or APK under this contract.",
-    "M01-06": "PENDING_REQUIRES_DEVICE",
-    "physicalDevice": "NOT_RUN"
+    "state": "PERSONAL_QA_ARM64_WORKFLOW_PENDING",
+    "waitFor": "Complete and audit the single PERSONAL QA Actions run for code commit 412d61ae1ff9e9da710d6cf6619a935fdb352125. No next visual/functional backlog task is started by this delivery.",
+    "preserves": "UX-02e remains AUDITED_INCOMPLETE_TIMEOUT_NOT_ACCEPTED; M00-04 remains not accepted; M01-06 remains PENDING_REQUIRES_DEVICE; the original 97 task IDs/order/dependencies and progress are unchanged.",
+    "emulator": "NOT_RUN_IN_THIS_CONTRACT; previously recorded global emulator result is unchanged.",
+    "physicalDevice": "NOT_RUN",
+    "priorUx02ePauseContext": {
+      "priority": "MEJORAS VISUALES Y EXPERIENCIA DE USUARIO",
+      "state": "UX02E_FOCUSED_DIAGNOSTICS_COMPLETE_ROOT_CAUSE_UNDETERMINED_PENDING_INDEPENDENT_AUDIT",
+      "supersedes": "The earlier full JDK17 Gradle gate remains incomplete: app JVM tests stalled in a generic Robolectric Sandbox.runOnMainThread stack and were interrupted at 3311 seconds (exit 130), with zero XML. This bounded diagnosis then passed ChatContentUiTest 15/15 and AuditHarness.writeSelectorReproductions 1/1 in isolated runs; neither reproduced the stall. The active method and root cause remain undetermined; no product defect is attributed. UX-02e remains unaccepted pending independent audit.",
+      "waitFor": "Independent audit of diagnostic-20261013 evidence. No full gate or further tests, UX-02f/UX-03, functional backlog, emulator, physical device or APK under this contract.",
+      "M01-06": "PENDING_REQUIRES_DEVICE",
+      "physicalDevice": "NOT_RUN"
+    }
   },
   "latestUx01": {
     "name": "UX-01 shared visual foundation",
@@ -6728,5 +6736,63 @@
       "attempt2JUnitXml": "91013ac484fa4a6bb8559ee36418227f62de9161ab8b1babc8455d15d00a7e96",
       "attempt2SyntheticProfile": "51927202e8e3bd40a033382a57300ea72064775914f51920085e8cf117935ee4"
     }
+  },
+  "latestChatVisualPersonalQa": {
+    "name": "Chat transcript/composer/Context Inspector visual update and personal ARM64 QA artifact",
+    "status": "FOCUSED_HOST_TEST_PASS_PERSONAL_QA_WORKFLOW_PENDING",
+    "branch": "feat/0.5.0-skills-agents",
+    "baseCodeCommit": "56af9b8b16c5b4327df24d5b23979842812c3f83",
+    "sourceCodeCommit": "412d61ae1ff9e9da710d6cf6619a935fdb352125",
+    "workflowPath": ".github/workflows/qa-personal-debug-arm64.yml",
+    "workflowSourceCommit": "PENDING_WORKFLOW_COMMIT",
+    "scope": "Chat transcript rhythm and surfaces, composer surface, Context Inspector budget/included/omitted presentation; existing callbacks and product behavior preserved.",
+    "focusedHostTest": {
+      "status": "PASS",
+      "command": "JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk timeout --signal=TERM --kill-after=10s 300s ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.ui.ChatVisualSurfacesUiTest",
+      "startedAtUtc": "2026-10-14T00:34:36Z",
+      "finishedAtUtc": "2026-10-14T00:35:47Z",
+      "exitCode": 0,
+      "junit": {
+        "tests": 1,
+        "passed": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timestamp": "2026-10-14T00:35:34"
+      },
+      "log": "docs/validation/chat-visual-personal-qa/focused-test-budget-reflow.log",
+      "junitXml": "docs/validation/chat-visual-personal-qa/host-focused-budget-reflow-junit.xml",
+      "environment": "docs/validation/chat-visual-personal-qa/host-environment-budget-reflow.txt"
+    },
+    "captures": {
+      "status": "CAPTURED_AND_OPENED_HOST_SYNTHETIC",
+      "widthPx": 411,
+      "heightPx": 900,
+      "fontScale": 1.6,
+      "files": [
+        "docs/validation/chat-visual-personal-qa/screenshots/chat-context-inspector-final-budget-reflow-411dp-fontScale-1.6.png",
+        "docs/validation/chat-visual-personal-qa/screenshots/chat-composer-generating-final-411dp-fontScale-1.6.png"
+      ],
+      "note": "Robolectric/Compose host captures; Inspector shows percent on its own row and token estimate below. Not Android emulator or Motorola evidence."
+    },
+    "personalQa": {
+      "status": "WORKFLOW_PREPARED_NOT_YET_RUN",
+      "artifactType": "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
+      "expectedApplicationId": "com.localai.workspace.debug",
+      "expectedVersionName": "0.5.0-debug",
+      "expectedVersionCode": 27,
+      "expectedAbi": "arm64-v8a only",
+      "artifactUrl": null,
+      "apkSha256": null,
+      "runId": null
+    },
+    "otherValidation": {
+      "fullJvm": "NOT_RUN",
+      "lintDebug": "NOT_RUN",
+      "localApkBuild": "NOT_RUN",
+      "emulator": "NOT_RUN_IN_THIS_CONTRACT",
+      "physicalDevice": "NOT_RUN"
+    },
+    "limitations": "Earlier focused attempts included a callback visibility failure that was corrected by scrolling Stop into view; the current exact-code run and XML agree 1/1 PASS. The earlier outer execution-session exit mismatch is superseded by this run, whose Gradle and session exit codes are both 0. No full host gate, emulator, Motorola or APK is claimed here."
   }
 }

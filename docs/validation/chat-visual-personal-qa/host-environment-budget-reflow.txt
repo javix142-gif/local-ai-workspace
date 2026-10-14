@@ -1,0 +1,9 @@
+source_commit=412d61ae1ff9e9da710d6cf6619a935fdb352125
+branch=feat/0.5.0-skills-agents
+started_at_utc=2026-10-14T00:34:36Z
+finished_at_utc=2026-10-14T00:35:47Z
+gradle_wrapper=8.10.2
+gradle_runtime_jdk=Temurin 17.0.20.1+1 (/workspace/.toolchain/jdk-17)
+jdk21_toolchain=/workspace/.toolchain/jdk-21-temurin
+android_sdk=/workspace/.toolchain/android-sdk
+mode=offline; preinstalled SDK/toolchains; no install or cache cleanup
