@@ -121,7 +121,9 @@ class ChatRefinementUiTest {
         compose.onNodeWithText("Done").performClick()
         compose.mainClock.advanceTimeBy(300)
         compose.onNodeWithText("General Agent", useUnmergedTree = true).assertIsDisplayed()
+        compose.mainClock.autoAdvance = true
         compose.runOnIdle { configure!!(360, 1f, false, true) }
+        compose.waitForIdle()
         compose.mainClock.advanceTimeBy(300)
         compose.onNodeWithContentDescription("Stop").assertIsEnabled().performClick()
         compose.mainClock.advanceTimeBy(300)
@@ -164,6 +166,13 @@ class WorkspaceRefinementUiTest {
         assertTrue("Creation actions do not overlap", chat.right < project.left)
         compose.onNodeWithText("Chats").assertIsDisplayed()
         compose.onNodeWithText("Projects").assertIsDisplayed()
+        // Complete real UI interactions before software-canvas snapshot capture.
+        compose.onNodeWithText("Start project").performClick()
+        compose.mainClock.advanceTimeBy(300)
+        compose.onNodeWithText("Project name").assertIsDisplayed()
+        compose.onNodeWithText("Cancel").performClick()
+        compose.mainClock.advanceTimeBy(300)
+        compose.onNodeWithText("Start chat").assertIsDisplayed()
         compose.runOnUiThread {
             val view = compose.activity.window.decorView
             val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
@@ -172,13 +181,5 @@ class WorkspaceRefinementUiTest {
                 .outputStream().use { assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)) }
             bitmap.recycle()
         }
-        // Settle the input dialog explicitly; do not auto-run its blinking cursor.
-        compose.mainClock.autoAdvance = false
-        compose.onNodeWithText("Start project").performClick()
-        compose.mainClock.advanceTimeBy(300)
-        compose.onNodeWithText("Project name").assertIsDisplayed()
-        compose.onNodeWithText("Cancel").performClick()
-        compose.mainClock.advanceTimeBy(300)
-        compose.onNodeWithText("Start chat").assertIsDisplayed()
     }
 }
