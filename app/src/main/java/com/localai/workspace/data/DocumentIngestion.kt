@@ -68,6 +68,7 @@ class DocumentParser(private val context: Context) {
             extension == "zip" || mimeType == "application/zip" -> parseZip(file)
             extension == "pdf" || mimeType == "application/pdf" -> parsePdf(file)
             extension == "docx" || mimeType == "application/vnd.openxmlformats-officedocument.wordprocessingml.document" -> parseDocx(file)
+            extension == "pptx" || mimeType == "application/vnd.openxmlformats-officedocument.presentationml.presentation" -> ZipFile(file).use{com.localai.workspace.documents.OfficeText.pptx(it)}
             extension in setOf("html", "htm") || mimeType == "text/html" -> {
                 ParsedDocument(listOf(ParsedPage(null, stripHtml(com.localai.workspace.documents.StructuredDocuments.text(com.localai.workspace.documents.StructuredDocuments.readFile(file)).first))))
             }
@@ -105,21 +106,7 @@ class DocumentParser(private val context: Context) {
     private fun parseDocx(file: File): ParsedDocument {
         ZipFile(file).use { zip ->
             com.localai.workspace.documents.StructuredDocuments.inspect(zip)
-            val entry = zip.getEntry("word/document.xml")
-                ?: throw UnsupportedDocumentException("DOCX does not contain word/document.xml")
-            val xml = zip.getInputStream(entry).use { com.localai.workspace.documents.StructuredDocuments.bounded(it, 8 * 1024 * 1024) }.toString(Charsets.UTF_8)
-            require(!xml.contains("<!DOCTYPE", true) && !xml.contains("<!ENTITY", true)) { "XML entities are forbidden" }
-            val parser = Xml.newPullParser().apply { setInput(xml.reader()) }
-            val text = buildString {
-                var event = parser.eventType
-                while (event != XmlPullParser.END_DOCUMENT) {
-                    if (Thread.currentThread().isInterrupted) throw InterruptedException()
-                    if (event == XmlPullParser.TEXT) append(parser.text).append(' ')
-                    if (event == XmlPullParser.END_TAG && parser.name == "p") append('\n')
-                    event = parser.next()
-                }
-            }
-            return ParsedDocument(listOf(ParsedPage(null, text.trim())))
+            return com.localai.workspace.documents.OfficeText.docx(zip)
         }
     }
 

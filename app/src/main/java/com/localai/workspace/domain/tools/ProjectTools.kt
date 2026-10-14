@@ -10,14 +10,15 @@ import org.json.JSONObject
 class ProjectFileReadTool(private val db: WorkspaceDatabase, private val privateRoot: java.io.File? = null) : LocalTool {
     override val descriptor = ToolDescriptor("files.read", setOf(ToolPermission.READ_LOCAL), ConfirmationPolicy.NEVER)
     override fun validate(arguments: JSONObject): String? = if (arguments.opt("documentId") !is String ||
-        arguments.getString("documentId").length !in 1..128 || arguments.keys().asSequence().any { it !in setOf("documentId", "sheet", "column", "aggregate") } ||
-        listOf("sheet", "column", "aggregate").any { arguments.has(it) && (arguments.opt(it) !is String || arguments.optString(it).length > 256) } ||
+        arguments.getString("documentId").length !in 1..128 || arguments.keys().asSequence().any { it !in setOf("documentId", "sheet", "column", "aggregate", "range") } ||
+        listOf("sheet", "column", "aggregate", "range").any { arguments.has(it) && (arguments.opt(it) !is String || arguments.optString(it).length > 256) } ||
+        (arguments.has("range") && (!arguments.has("sheet") || arguments.has("column") || arguments.has("aggregate") || !Regex("\\$?[A-Z]{1,3}\\$?[1-9][0-9]{0,6}(:\\$?[A-Z]{1,3}\\$?[1-9][0-9]{0,6})?").matches(arguments.optString("range")))) ||
         (arguments.has("aggregate") && !arguments.has("column")) ||
         (arguments.has("aggregate") && arguments.optString("aggregate") != "sum")) "Expected documentId string" else null
     override suspend fun execute(arguments: JSONObject, context: ToolContext): String = withContext(Dispatchers.IO) {
         val doc = db.documentDao().get(arguments.getString("documentId"))
         require(doc != null && doc.projectId == context.projectId && doc.extractionStatus == "READY") { "Document unavailable in this project" }
-        if (arguments.has("aggregate") || arguments.has("column") || arguments.has("sheet")) {
+        if (arguments.has("aggregate") || arguments.has("column") || arguments.has("sheet") || arguments.has("range")) {
             val file = java.io.File(doc.localPath); val root = (privateRoot ?: java.io.File(file.parentFile!!.parentFile, "documents")).canonicalFile
             require(file.canonicalFile.path.startsWith(root.path + java.io.File.separator)) { "Document path outside private import directory" }
             val table = kotlinx.coroutines.runInterruptible(Dispatchers.IO) { when(doc.displayName.substringAfterLast('.').lowercase()) {
@@ -26,6 +27,20 @@ class ProjectFileReadTool(private val db: WorkspaceDatabase, private val private
                 else -> error("Structured aggregation requires XLSX or CSV")
             } }
             val column = arguments.optString("column").takeIf { arguments.has("column") }; require(column == null || Regex("[A-Z]{1,3}").matches(column)) { "column must be A, B, ..." }
+            if(arguments.has("range")) {
+                val addresses=arguments.getString("range").replace("$","").split(':');val first=com.localai.workspace.artifacts.ArtifactSpec.address(addresses.first());val last=com.localai.workspace.artifacts.ArtifactSpec.address(addresses.last())
+                val rows=minOf(first.first,last.first)..maxOf(first.first,last.first);val columns=minOf(first.second,last.second)..maxOf(first.second,last.second)
+                require((rows.last.toLong()-rows.first+1)*(columns.last.toLong()-columns.first+1)<=64){"EXACT_RANGE_LIMIT_64"}
+                val name=arguments.getString("sheet")
+                val cells=table.cells.filter{it.sheet.equals(name,ignoreCase=true)&&it.row in rows&&it.column in columns}.sortedWith(compareBy<com.localai.workspace.documents.StructuredDocuments.Cell>{it.row}.thenBy{it.column})
+                val requested=rows.flatMap{r->columns.map{c->var n=c;var a="";while(n>0){n--;a=('A'.code+n%26).toChar()+a;n/=26};a+r}}
+                val missing=requested.filter{address->cells.none{it.address==address}}
+                val response=JSONObject().put("documentId",doc.id).put("sheet",name).put("range",arguments.getString("range"))
+                    .put("cells",org.json.JSONArray(cells.map{cell->JSONObject().put("sheet",cell.sheet).put("address",cell.address).put("value",cell.value).put("type",cell.type).put("formula",cell.formula)}))
+                    .put("missingCellAddresses",org.json.JSONArray(missing)).put("complete",missing.isEmpty()).put("note","Only recorded cells in this document; missing is not a zero/blank value; formulas/caches not evaluated").toString()
+                if(response.toByteArray(Charsets.UTF_8).size>12000)throw ToolExecutionException("EXACT_EVIDENCE_TOO_LARGE","Recorded values exceed the tool budget; request a smaller range. Nothing was silently truncated.")
+                return@withContext response
+            }
             val selected = table.cells.filter { (column == null || it.address.takeWhile { c -> c.isLetter() } == column) && (!arguments.has("sheet") || it.sheet == arguments.getString("sheet")) }
             require(selected.isNotEmpty()) { "Sheet/column not found" }
             if (!arguments.has("aggregate")) {
@@ -68,7 +83,7 @@ object ChatToolSchemas {
         put("required", org.json.JSONArray().apply { key?.let { put(it) } })
         if(id == "files.read") {
             val properties = getJSONObject("properties")
-            listOf("sheet", "column", "aggregate").forEach { properties.put(it, JSONObject().put("type", "string").put("description", when(it) { "column" -> "Column letter, e.g. A"; "aggregate" -> "Optional sum of numeric cached values"; else -> "Exact worksheet name" })) }
+            listOf("sheet", "column", "aggregate", "range").forEach { properties.put(it, JSONObject().put("type", "string").put("description", when(it) { "range" -> "Exact A1 or inclusive A1:B3, max 64 cells; requires sheet; returns missing addresses explicitly. Cannot combine with column/aggregate.";"column" -> "Column letter, e.g. A"; "aggregate" -> "Optional sum of numeric cached values"; else -> "Exact worksheet name" })) }
         }
         if(id.startsWith("artifacts.") && id!="artifacts.list") {
             val properties=getJSONObject("properties")
