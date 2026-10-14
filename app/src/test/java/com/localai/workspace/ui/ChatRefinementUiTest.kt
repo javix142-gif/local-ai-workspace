@@ -149,7 +149,7 @@ class ChatRefinementUiTest {
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [29], application = MultiProcessUiTestApplication::class, qualifiers = "w360dp-h800dp")
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-class WorkspaceRefinementUiTest {
+open class WorkspaceRefinementUiTest {
     @get:Rule val compose = createAndroidComposeRule<MainActivity>()
 
     @Test fun compactWorkspaceKeepsBothCreationActionsAndProjectDialog() =
@@ -173,6 +173,11 @@ class WorkspaceRefinementUiTest {
         compose.onNodeWithText("Cancel").performClick()
         compose.mainClock.advanceTimeBy(300)
         compose.onNodeWithText("Start chat").assertIsDisplayed()
+        captureWorkspace(captureName)
+    }
+
+
+    protected open fun captureWorkspace(captureName: String) {
         compose.runOnUiThread {
             val view = compose.activity.window.decorView
             val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
@@ -182,4 +187,15 @@ class WorkspaceRefinementUiTest {
             bitmap.recycle()
         }
     }
+}
+
+/** Same real app interactions, alternate host graphics backend. Native failures
+ * remain in WorkspaceRefinementUiTest and must still be reported separately.
+ */
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [29], application = MultiProcessUiTestApplication::class, qualifiers = "w360dp-h800dp")
+@GraphicsMode(GraphicsMode.Mode.LEGACY)
+class WorkspaceDialogLegacyDiagnosticTest : WorkspaceRefinementUiTest() {
+    // Legacy images are not trustworthy visual evidence; do not create them.
+    override fun captureWorkspace(captureName: String) = Unit
 }
