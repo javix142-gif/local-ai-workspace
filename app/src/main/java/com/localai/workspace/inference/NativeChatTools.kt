@@ -21,7 +21,7 @@ internal class NativeChatTools(private val context: Context) : AutoCloseable {
     private var validationDatabase: WorkspaceDatabase? = null
     private val db get() = if(request.getBoolean("validationScope")) validationDatabase ?: WorkspaceDatabase.createValidation(context).also { validationDatabase=it } else database.value
     private val directory = File(context.filesDir, "tool-workspaces")
-    private fun registryFor(db: WorkspaceDatabase) = ToolRegistry(listOf(CalculatorTool(), ProjectFileReadTool(db, File(context.filesDir,"documents")), ProjectFileListTool(db), com.localai.workspace.python.PythonTool(context)))
+    private fun registryFor(db: WorkspaceDatabase) = ToolRegistry(listOf(CalculatorTool(), ProjectFileReadTool(db, File(context.filesDir,"documents")), ProjectFileListTool(db), com.localai.workspace.python.PythonTool(context)) + com.localai.workspace.artifacts.ArtifactTool.IDS.map{com.localai.workspace.artifacts.ArtifactTool(context,it)})
     private val normalRegistry by lazy { registryFor(database.value) }
     private var validationRegistry: ToolRegistry? = null
     private val registry get() = if(request.getBoolean("validationScope")) validationRegistry ?: registryFor(db).also { validationRegistry=it } else normalRegistry
@@ -45,7 +45,7 @@ internal class NativeChatTools(private val context: Context) : AutoCloseable {
                 notify?.invoke(id, "RUNNING", callId)
                 db.withTransaction {
                     require(db.conversationDao().get(conversation)?.projectId == project) { "Tool scope no longer exists" }
-                    db.toolCallDao().insert(ToolCallEntity(callId, conversation, request.getString("messageId"), id, paramsJsonString.take(12000), "READ_LOCAL", status = "RUNNING", startedAt = start))
+                    db.toolCallDao().insert(ToolCallEntity(callId, conversation, request.getString("messageId"), id, paramsJsonString.take(12000), if(id.startsWith("artifacts.")&&id!="artifacts.list")"WRITE_LOCAL"else "READ_LOCAL", status = "RUNNING", startedAt = start))
                 }
                 val result = registry.execute(ToolRequest(id, paramsJsonString, TrustOrigin.MODEL),
                     request.getStringArrayList("enabledTools").orEmpty().toSet(), ToolContext(project, conversation, directory), state)
@@ -60,7 +60,7 @@ internal class NativeChatTools(private val context: Context) : AutoCloseable {
                 // Private Room data for explicit Details, never logcat/benchmark.
                 db.withTransaction {
                     if (db.conversationDao().get(conversation)?.projectId == project) db.toolCallDao().insert(ToolCallEntity(callId, conversation, request.getString("messageId"), id,
-                        paramsJsonString.take(12000), "READ_LOCAL", status = status, startedAt = start, finishedAt = System.currentTimeMillis(), errorCode = if(status == "SUCCESS") null else status, resultJson = response.toString().take(16000)))
+                        paramsJsonString.take(12000), if(id.startsWith("artifacts.")&&id!="artifacts.list")"WRITE_LOCAL"else "READ_LOCAL", status = status, startedAt = start, finishedAt = System.currentTimeMillis(), errorCode = if(status == "SUCCESS") null else status, resultJson = response.toString().take(16000)))
                 }
                 notify?.invoke(id, status, callId)
                 response.toString()

@@ -39,7 +39,8 @@ interface LocalTool {
 
 /**
  * Application-controlled tool loop. Tools receive parsed JSON, never free-form model text.
- * A write or external side effect stops at NeedsConfirmation and cannot continue by itself.
+ * Descriptor policy controls confirmation. Artifact writes create private immutable revisions;
+ * they cannot overwrite imported originals. External/destructive adapters require confirmation.
  */
 class ToolRegistry(
     tools: List<LocalTool>,

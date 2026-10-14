@@ -14,6 +14,8 @@ object AssistantRouting {
             "files.list" -> documents || Regex("archivo|file|documento|document|hoja|sheet|columna|column").containsMatchIn(p)
             "files.read" -> documents || Regex("archivo|file|documento|document|hoja|sheet|columna|column").containsMatchIn(p)
             "python.execute" -> Regex("python|desviación|desviacion|standard deviation|estadíst|statistics|promedio|average").containsMatchIn(p)
+            "artifacts.create","artifacts.revise" -> Regex("crea|genera|redacta|modifica|edita|actualiza|create|generate|write|edit|update").containsMatchIn(p) && Regex("word|docx|excel|xlsx|planilla|presupuesto|pdf|pptx|powerpoint|presentaci|archivo|file|código|codigo|code").containsMatchIn(p)
+            "artifacts.list" -> Regex("artefact|artifact|versi[oó]n|version|borrador|draft").containsMatchIn(p)
             else -> false
         } }.toSet()
     }

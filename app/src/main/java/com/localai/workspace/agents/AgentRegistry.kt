@@ -29,6 +29,6 @@ class AgentRegistry(private val db:AgentsSkillsDatabase) {
     // General offers installed procedures; enabled/eligible/active remain separate routing decisions.
     // Custom Agents retain their explicit assignment, and actual capabilities never expand here.
     private fun availableSkills(agent:AgentDefinition,installed:Set<String>)=if(agent.id==AgentResolver.GENERAL)
-        agent.copy(skillIds=BuiltInSkills.general.skillIds+installed)else agent
+        agent.copy(skillIds=BuiltInSkills.general.skillIds+installed,allowedTools=BuiltInSkills.general.allowedTools)else agent
     private fun record(a:AgentDefinition)=AgentRecord(a.id,gson.toJson(a))
 }

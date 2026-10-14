@@ -95,7 +95,7 @@ fun AssistantControls(profile: AssistantProfile, toolsAvailable: Boolean, thinki
         Column { ThinkingMode.entries.forEach { mode -> TextButton(onClick = { onChange(profile.copy(thinking = mode)); thinking = false }) { Text(mode.name) } } }
     })
     if (tools) AlertDialog(onDismissRequest = { tools = false }, title = { Text("Tools") }, confirmButton = { TextButton(onClick = { tools = false }) { Text("Done") } }, text = {
-        Column { TextButton(onClick = { onChange(profile.copy(tools = emptySet())) }) { Text("Off") }
+        Column(Modifier.heightIn(max = 440.dp).verticalScroll(rememberScrollState())) { TextButton(onClick = { onChange(profile.copy(tools = emptySet())) }) { Text("Off") }
             TextButton(onClick = { onChange(profile.copy(tools = ChatToolSchemas.defaults)) }) { Text("Auto") }
             ChatToolSchemas.available.filter { it != "python.execute" || com.localai.workspace.python.PythonAssets.available() }.forEach { id ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -113,7 +113,7 @@ fun AssistantControls(profile: AssistantProfile, toolsAvailable: Boolean, thinki
 @Composable
 fun ToolExecutionCard(call: ToolCallEntity) {
     var details by remember { mutableStateOf(false) }
-    TextButton(onClick = { details = true }) { Text("${when(call.toolId) { "calculator.evaluate" -> "Calculator"; "python.execute" -> "Python"; else -> "Files" }} · ${if(call.status == "SUCCESS") "✓ Completed" else call.status}") }
+    TextButton(onClick = { details = true }) { Text("${when { call.toolId.startsWith("artifacts.")->"Artifact";call.toolId=="calculator.evaluate"->"Calculator";call.toolId=="python.execute"->"Python";else->"Files" }} · ${if(call.status == "SUCCESS") "✓ Completed" else call.status}") }
     if (details) AlertDialog(onDismissRequest = { details = false }, title = { Text(call.toolId) }, confirmButton = { TextButton(onClick = { details = false }) { Text("Close") } }, text = {
         Column(Modifier.heightIn(max = 400.dp).verticalScroll(rememberScrollState())) { Text("${call.status} · ${(call.finishedAt ?: call.startedAt) - call.startedAt} ms"); Text(call.validatedArgumentsJson); Text(call.resultJson.orEmpty().take(16000)) }
     })

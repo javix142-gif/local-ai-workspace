@@ -885,6 +885,7 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
     var showModelPicker by rememberSaveable { mutableStateOf(false) }
     var showAgent by rememberSaveable { mutableStateOf(false) }
     var showSkills by rememberSaveable { mutableStateOf(false) }
+    var showArtifacts by rememberSaveable { mutableStateOf(false) }
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let(viewModel::attachDocument) }
     val audioPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let(viewModel::attachAudio) }
     val imagePicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let(viewModel::attachImage) }
@@ -922,6 +923,7 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                             DropdownMenuItem(text = { Text("Agent") }, enabled = !generating, onClick = { showChatMenu = false; showAgent = true })
                             DropdownMenuItem(text = { Text("Skills") }, enabled = !generating, onClick = { showChatMenu = false; showSkills = true })
                             DropdownMenuItem(text = { Text("Files") }, onClick = { showChatMenu = false; showFiles = true })
+                            DropdownMenuItem(text = { Text("Artifacts") }, enabled=!generating&&!deletingChat, onClick = { showChatMenu=false;showArtifacts=true })
                             DropdownMenuItem(text = { Text("Memory") }, onClick = { showChatMenu = false; navController.navigate("memory/${project?.id.orEmpty()}") })
                             DropdownMenuItem(text = { Text("Diagnostics") }, onClick = { showChatMenu = false; showDiagnostics = true })
                             DropdownMenuItem(
@@ -1023,6 +1025,7 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
         })
     if (showAgent) AlertDialog(onDismissRequest = { showAgent = false }, title = { Text("Logical Agent") }, text = { com.localai.workspace.ui.ChatAgentSelector(viewModel, !generating) }, confirmButton = { TextButton(onClick = { showAgent = false }) { Text("Done") } })
     if (showSkills) com.localai.workspace.ui.ChatSkillSelection(viewModel) { showSkills = false }
+    if (showArtifacts && project!=null) com.localai.workspace.ui.ArtifactsDialog(project!!.id) { showArtifacts=false }
     if (showDiagnostics) AlertDialog(onDismissRequest = { showDiagnostics = false }, title = { Text("Diagnostics") },
         confirmButton = { TextButton(onClick = { showDiagnostics = false }) { Text("Close") } }, text = {
             Column(Modifier.heightIn(max = 460.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
