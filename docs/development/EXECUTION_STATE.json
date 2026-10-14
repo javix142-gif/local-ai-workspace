@@ -3753,10 +3753,10 @@
   },
   "postDeliveryPause": {
     "priority": "MEJORAS VISUALES Y EXPERIENCIA DE USUARIO",
-    "state": "PERSONAL_QA_ARM64_WORKFLOW_PENDING",
-    "waitFor": "Complete and audit the single PERSONAL QA Actions run for code commit 412d61ae1ff9e9da710d6cf6619a935fdb352125. No next visual/functional backlog task is started by this delivery.",
+    "state": "PERSONAL_QA_ARM64_ARTIFACT_DELIVERED_PENDING_INDEPENDENT_AUDIT",
+    "waitFor": "Independent audit of the personal QA artifact from 0844159b1c8653c15da6a2f47c098e46d38478ba; no next visual/functional backlog task is started by this delivery.",
     "preserves": "UX-02e remains AUDITED_INCOMPLETE_TIMEOUT_NOT_ACCEPTED; M00-04 remains not accepted; M01-06 remains PENDING_REQUIRES_DEVICE; the original 97 task IDs/order/dependencies and progress are unchanged.",
-    "emulator": "NOT_RUN_IN_THIS_CONTRACT; previously recorded global emulator result is unchanged.",
+    "emulator": "NOT_RUN by this personal QA run. The pre-existing global EMULATOR result remains FAIL for the Room v1 fixture with six model-dependent skips.",
     "physicalDevice": "NOT_RUN",
     "priorUx02ePauseContext": {
       "priority": "MEJORAS VISUALES Y EXPERIENCIA DE USUARIO",
@@ -6739,12 +6739,12 @@
   },
   "latestChatVisualPersonalQa": {
     "name": "Chat transcript/composer/Context Inspector visual update and personal ARM64 QA artifact",
-    "status": "FOCUSED_HOST_TEST_PASS_PERSONAL_QA_WORKFLOW_PENDING",
+    "status": "PERSONAL_QA_ARTIFACT_PASS_NOT_RELEASE_NOT_DEVICE_VALIDATED",
     "branch": "feat/0.5.0-skills-agents",
     "baseCodeCommit": "56af9b8b16c5b4327df24d5b23979842812c3f83",
     "sourceCodeCommit": "412d61ae1ff9e9da710d6cf6619a935fdb352125",
     "workflowPath": ".github/workflows/qa-personal-debug-arm64.yml",
-    "workflowSourceCommit": "PENDING_WORKFLOW_COMMIT",
+    "workflowSourceCommit": "0844159b1c8653c15da6a2f47c098e46d38478ba",
     "scope": "Chat transcript rhythm and surfaces, composer surface, Context Inspector budget/included/omitted presentation; existing callbacks and product behavior preserved.",
     "focusedHostTest": {
       "status": "PASS",
@@ -6776,23 +6776,71 @@
       "note": "Robolectric/Compose host captures; Inspector shows percent on its own row and token estimate below. Not Android emulator or Motorola evidence."
     },
     "personalQa": {
-      "status": "WORKFLOW_PREPARED_NOT_YET_RUN",
+      "status": "PASS_PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
       "artifactType": "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
       "expectedApplicationId": "com.localai.workspace.debug",
       "expectedVersionName": "0.5.0-debug",
       "expectedVersionCode": 27,
       "expectedAbi": "arm64-v8a only",
-      "artifactUrl": null,
-      "apkSha256": null,
-      "runId": null
+      "sourceCommit": "0844159b1c8653c15da6a2f47c098e46d38478ba",
+      "runId": 38492777065,
+      "jobId": 115621645827,
+      "event": "push",
+      "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38492777065",
+      "artifactId": 11862891302,
+      "artifactName": "local-ai-workspace-personal-qa-debug-arm64-38492777065-1",
+      "artifactUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38492777065/artifacts/11862891302",
+      "artifactBytes": 47852757,
+      "artifactSha256": "836a7da89a15ccc1459e9d1ad8ce2d10141ae7b2a1a094624578bd8da6857e42",
+      "artifactExpiresAtUtc": "2026-11-13T01:02:36Z",
+      "internalManifestSha256": "aab72cf1f4838efe4f90c42822ad7f13341c21b8c33b2e9304904a7c51583a9b",
+      "internalManifestEntriesVerified": 5,
+      "apkFilename": "local-ai-workspace-0.5.0-debug-arm64.apk",
+      "apkBytes": 119445466,
+      "apkSha256": "f3e87a33662784ac9ace0bd4a5779f59589b7bc891f058b0ccf755076fd35765",
+      "certificateSha256": "39e1d90e77864dfb824bfe716cffe3e9574441e7044db108762e8ed85923f455",
+      "signature": "PASS v2 standard Android Debug",
+      "zipCrc": "PASS",
+      "zipalign": "PASS",
+      "modelPayloads": "NONE",
+      "androidSdkResolved": "/usr/local/lib/android/sdk",
+      "instrumentation": "NOT_RUN",
+      "emulator": "NOT_RUN",
+      "physicalDevice": "NOT_RUN",
+      "artifactEvidence": "docs/validation/chat-visual-personal-qa/final-run-38492777065/"
     },
     "otherValidation": {
       "fullJvm": "NOT_RUN",
       "lintDebug": "NOT_RUN",
       "localApkBuild": "NOT_RUN",
-      "emulator": "NOT_RUN_IN_THIS_CONTRACT",
-      "physicalDevice": "NOT_RUN"
+      "emulator": "NOT_RUN in this contract; historical global instrumentation remains FAIL due Room v1 fixture and six model-dependent skips.",
+      "physicalDevice": "NOT_RUN",
+      "personalQaArtifact": "PASS for the GitHub Actions Debug ARM64 artifact only."
     },
-    "limitations": "Earlier focused attempts included a callback visibility failure that was corrected by scrolling Stop into view; the current exact-code run and XML agree 1/1 PASS. The earlier outer execution-session exit mismatch is superseded by this run, whose Gradle and session exit codes are both 0. No full host gate, emulator, Motorola or APK is claimed here."
+    "limitations": "Focused host test remains PASS 1/1. Personal QA artifact was built and verified on GitHub Actions for exact source SHA 0844159. This is Debug, not Release or device validation. Full JVM suite and lint NOT_RUN; instrumentation/emulator and Motorola NOT_RUN. The earlier run 38491402535 remains a failed, unapproved artifact and is preserved as history. UX-02e and M00-04 remain unaccepted; M01-06 remains PENDING_REQUIRES_DEVICE; original 97 task IDs/order/dependencies/progress are unchanged.",
+    "initialFailedPersonalQaRun": {
+      "runId": 38491402535,
+      "jobId": 115617193626,
+      "sourceCommit": "3b552d0ad96dcda591d39ee3a9f66383fbd3376c",
+      "conclusion": "FAIL_NOT_APPROVED",
+      "artifactId": 11861604731,
+      "artifactSha256": "d9df0546a8409f24853f4ade352f1a95d1cedc9edc861f6f4469ba3f371aee95",
+      "apkSha256": "8754222e182759763f222f0c6774c7f9024b53b323f9870d852dbe28447c505a",
+      "rootCause": "Model suffix scanner falsely classified the only match DebugProbesKt.bin. Artifact payload is a Java class file for kotlin.coroutines.jvm.internal.DebugProbesKt, not a model. The same step also overwrote ANDROID_HOME with an empty expression and did not reach zipalign.",
+      "audit": "docs/validation/chat-visual-personal-qa/failed-run-38491402535/ARTIFACT_AUDIT.txt"
+    },
+    "correctionAudit": {
+      "falsePositiveEntry": {
+        "path": "DebugProbesKt.bin",
+        "bytes": 1728,
+        "crc32": 3370351647,
+        "sha256": "4d13bd92f86a0b1415062b8ed57655c0738ccfbdf0786c1d730d988b27fd4400",
+        "class": "kotlin.coroutines.jvm.internal.DebugProbesKt",
+        "sourceFile": "DebugProbes.kt"
+      },
+      "detector": "Allows only the exact root path plus the audited SHA-256, class-file magic and expected internal class marker. All other model suffixes stay rejected; duplicate ZIP entries are inspected individually.",
+      "androidSdk": "The empty ANDROID_HOME override was removed. The new Actions log resolves /usr/local/lib/android/sdk and validates the explicit build-tools zipalign path.",
+      "localChecks": "Corrected checker passed on failed-run APK; fake .gguf, altered same-path .bin and duplicate altered entry all failed closed. ZIP CRC and zipalign passed on the downloaded failed-run APK."
+    }
   }
 }

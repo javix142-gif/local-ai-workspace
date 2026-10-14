@@ -1,0 +1,16 @@
+Personal QA Debug ARM64 artifact readback
+
+Run: https://github.com/javix142-gif/local-ai-workspace/actions/runs/38492777065
+Artifact: https://github.com/javix142-gif/local-ai-workspace/actions/runs/38492777065/artifacts/11862891302
+Run ID 38492777065; job ID 115621645827; event push; branch feat/0.5.0-skills-agents.
+Source/event SHA: 0844159b1c8653c15da6a2f47c098e46d38478ba.
+Run conclusion SUCCESS; all workflow steps, including APK build, ZIP validation/zipalign, final report, and artifact upload, completed SUCCESS.
+Started 2026-10-14T00:54:24Z; completed 2026-10-14T01:02:42Z. The artifact report records build start 00:54:30.911223Z and completion 01:02:35.880828Z.
+
+Artifact: local-ai-workspace-personal-qa-debug-arm64-38492777065-1; 47,852,757 bytes; SHA-256 836a7da89a15ccc1459e9d1ad8ce2d10141ae7b2a1a094624578bd8da6857e42; expires 2026-11-13T01:02:36Z. Downloaded bytes matched the Actions API size/digest. Outer ZIP testzip returned None. All 5 entries in the included SHA256SUMS matched their bytes; the SHA-256 of the manifest text is aab72cf1f4838efe4f90c42822ad7f13341c21b8c33b2e9304904a7c51583a9b.
+
+APK: local-ai-workspace-0.5.0-debug-arm64.apk; 119,445,466 bytes; SHA-256 f3e87a33662784ac9ace0bd4a5779f59589b7bc891f058b0ccf755076fd35765. Package com.localai.workspace.debug; versionName 0.5.0-debug; versionCode 27; native ABI arm64-v8a only, 9 native libraries. Standard temporary Android Debug certificate SHA-256 39e1d90e77864dfb824bfe716cffe3e9574441e7044db108762e8ed85923f455. apksigner v2 passed; package/version and ABI checks passed; ZIP CRC passed; zipalign check passed.
+
+The resolved Android SDK logged by the ZIP step was /usr/local/lib/android/sdk. It reported ZIP_CRC=PASS, one precisely recognized non-model entry DebugProbesKt.bin (compiled Kotlin coroutine debug-probe class, exact audited content), MODEL_PAYLOADS=NONE, and zipalign verification successful.
+
+Artifact-internal log SHA-256 values are in artifact-SHA256SUMS.txt. Results JSON is preserved byte-for-byte in artifact-RESULTS.json. Instrumented tests, emulator, and physical device are NOT_RUN by this workflow. This is PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION, not a Release or device validation.

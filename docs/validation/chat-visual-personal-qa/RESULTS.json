@@ -2,8 +2,8 @@
   "name": "Chat visual refresh and personal QA ARM64 Debug artifact",
   "branch": "feat/0.5.0-skills-agents",
   "codeCommit": "412d61ae1ff9e9da710d6cf6619a935fdb352125",
-  "workflowCommit": "PENDING_WORKFLOW_COMMIT",
-  "status": "FOCUSED_HOST_PASS_PERSONAL_QA_WORKFLOW_PENDING",
+  "workflowCommit": "0844159b1c8653c15da6a2f47c098e46d38478ba",
+  "status": "FOCUSED_HOST_PASS_PERSONAL_QA_ARTIFACT_PASS_NOT_RELEASE_NOT_DEVICE_VALIDATED",
   "artifactType": "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
   "uiScope": [
     "chat transcript surfaces and rhythm",
@@ -47,32 +47,69 @@
   ],
   "personalQaWorkflow": {
     "path": ".github/workflows/qa-personal-debug-arm64.yml",
-    "status": "PREPARED_PENDING_PUSH_AND_RUN",
-    "trigger": "push to feature branch filtered to this workflow/UI paths; workflow_dispatch",
+    "checkerPath": "scripts/ci/verify_qa_debug_apk_integrity.py",
+    "status": "PASS",
+    "artifactType": "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
+    "trigger": "push to feature branch filtered to workflow/UI paths; workflow_dispatch",
     "permissions": "contents:read",
     "artifactRetentionDays": 30,
+    "sourceCommit": "0844159b1c8653c15da6a2f47c098e46d38478ba",
+    "runId": 38492777065,
+    "jobId": 115621645827,
+    "runAttempt": 1,
+    "event": "push",
+    "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38492777065",
+    "startedAtUtc": "2026-10-14T00:54:24Z",
+    "completedAtUtc": "2026-10-14T01:02:42Z",
+    "androidSdkResolved": "/usr/local/lib/android/sdk",
+    "workflowSteps": "all SUCCESS",
+    "artifact": {
+      "id": 11862891302,
+      "name": "local-ai-workspace-personal-qa-debug-arm64-38492777065-1",
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38492777065/artifacts/11862891302",
+      "bytes": 47852757,
+      "sha256": "836a7da89a15ccc1459e9d1ad8ce2d10141ae7b2a1a094624578bd8da6857e42",
+      "expiresAtUtc": "2026-11-13T01:02:36Z",
+      "internalManifestSha256": "aab72cf1f4838efe4f90c42822ad7f13341c21b8c33b2e9304904a7c51583a9b",
+      "internalManifestEntriesVerified": 5
+    },
+    "apk": {
+      "filename": "local-ai-workspace-0.5.0-debug-arm64.apk",
+      "bytes": 119445466,
+      "sha256": "f3e87a33662784ac9ace0bd4a5779f59589b7bc891f058b0ccf755076fd35765",
+      "applicationId": "com.localai.workspace.debug",
+      "versionName": "0.5.0-debug",
+      "versionCode": 27,
+      "abis": [
+        "arm64-v8a"
+      ],
+      "nativeLibraryCount": 9,
+      "apksigner": "PASS v2; standard Android Debug cert SHA-256 39e1d90e77864dfb824bfe716cffe3e9574441e7044db108762e8ed85923f455",
+      "zipCrc": "PASS",
+      "zipalign": "PASS",
+      "modelPayloads": "NONE; exact known DebugProbesKt.bin coroutine class excluded only by exact path, class markers, and audited content SHA"
+    },
     "checks": [
       "Debug ARM64 build using scripts/ci/build_qa_debug_arm64.py",
-      "standard Android Debug signing/apksigner",
-      "applicationId and version",
+      "standard Android Debug signature and apksigner",
+      "package and version",
       "arm64-v8a-only native libraries",
       "ZIP CRC and zipalign",
-      "SHA256SUMS and RESULTS.json",
-      "No model-weight payload files in APK"
+      "artifact RESULTS.json and SHA256SUMS",
+      "rejects all unrecognized configured model suffix entries"
     ],
-    "runId": null,
-    "artifactId": null,
-    "artifactUrl": null,
-    "apkSha256": null,
-    "bundleSha256": null
+    "instrumentation": "NOT_RUN",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN"
   },
   "validationLayers": {
     "HOST_FOCUSED": "PASS 1/1",
     "HOST_FULL_JVM": "NOT_RUN",
     "LINT": "NOT_RUN",
     "LOCAL_APK": "NOT_RUN",
-    "EMULATOR": "NOT_RUN_IN_THIS_CONTRACT",
-    "PHYSICAL_DEVICE": "NOT_RUN"
+    "EMULATOR": "NOT_RUN in this contract; historical global instrumented status remains FAIL for Room v1 fixture, with six model-dependent cases skipped",
+    "PHYSICAL_DEVICE": "NOT_RUN",
+    "PERSONAL_QA_ARTIFACT": "PASS for Debug ARM64 artifact only; not Release/device validation"
   },
   "globalKnownLimitations": {
     "roomHistoricalV1": "Previously documented emulator gate failure remains unchanged; not rerun here.",
@@ -81,5 +118,30 @@
     "M00_04": "NOT_ACCEPTED",
     "M01_06": "PENDING_REQUIRES_DEVICE",
     "originalBacklog": "97 task IDs/order/dependencies unchanged"
+  },
+  "initialFailedPersonalQaRun": {
+    "runId": "38491402535",
+    "jobId": "115617193626",
+    "sourceCommit": "3b552d0ad96dcda591d39ee3a9f66383fbd3376c",
+    "status": "FAIL_NOT_APPROVED",
+    "artifactId": 11861604731,
+    "artifactUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38491402535/artifacts/11861604731",
+    "artifactSha256": "d9df0546a8409f24853f4ade352f1a95d1cedc9edc861f6f4469ba3f371aee95",
+    "apkSha256": "8754222e182759763f222f0c6774c7f9024b53b323f9870d852dbe28447c505a",
+    "failure": "False positive: only model-suffix match was DebugProbesKt.bin, exact verified Kotlin coroutine JVM class; step also had blank ANDROID_HOME and did not reach zipalign.",
+    "reconciliation": "The artifact APK was independently checked: ZIP CRC and zipalign passed; no model weights were present. This failed workflow result remains historical and is not the delivered artifact."
+  },
+  "correctionAudit": {
+    "workflowCorrectionCommit": "0844159b1c8653c15da6a2f47c098e46d38478ba",
+    "falsePositiveEntry": "DebugProbesKt.bin; 1728 bytes; SHA-256 4d13bd92f86a0b1415062b8ed57655c0738ccfbdf0786c1d730d988b27fd4400; class kotlin.coroutines.jvm.internal.DebugProbesKt, source DebugProbes.kt",
+    "androidHomeCorrection": "Removed the empty ANDROID_HOME expression override; step resolves and logs ANDROID_HOME or ANDROID_SDK_ROOT and checks the explicit zipalign path.",
+    "adversarialCheckerTests": "fake .gguf, modified .bin at exact path, and duplicate exact-path entry with altered content were each rejected (exit 1).",
+    "auditEvidence": "failed-run-38491402535/ARTIFACT_AUDIT.txt"
+  },
+  "evidencePaths": {
+    "failedArtifactAudit": "failed-run-38491402535/ARTIFACT_AUDIT.txt",
+    "finalRunReadback": "final-run-38492777065/RUN_READBACK.txt",
+    "finalRunArtifactResults": "final-run-38492777065/artifact-RESULTS.json",
+    "finalRunArtifactManifest": "final-run-38492777065/artifact-SHA256SUMS.txt"
   }
 }

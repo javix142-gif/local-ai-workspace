@@ -1,0 +1,5 @@
+ed7d1138dfa9e3bcdb6bcd685a5c824567ba608ba21a7f6d7f34219aee0ef8ba  RESULTS.json
+f3e87a33662784ac9ace0bd4a5779f59589b7bc891f058b0ccf755076fd35765  local-ai-workspace-0.5.0-debug-arm64.apk
+f14eb6a670c350e7e6f4abad4372939a94676ea10e339dc8916e74cbed5f9452  logs/apk-integrity.log
+ac9e43345aad677c92a9fabde4b8d8ffa08ef865b91f71075b2265ff82faa9f4  logs/qa-build-sanitized.log
+d730c3bc124dd679e7a7264d8e2c24f9fe971d24b5c58a8efd27e1ccbacb954d  logs/workflow-build.log

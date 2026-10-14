@@ -26,4 +26,4 @@ Corrective checker validation
 Runner SDK finding
 - Run 38491402535 job log shows `ANDROID_HOME:` empty in the ZIP/zipalign step because the workflow assigned `ANDROID_HOME: ${{ env.ANDROID_HOME }}` from an empty expression. The corrected step no longer overrides that variable; it resolves and logs `${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}`, checks the build-tools `zipalign` path, then runs the checker and alignment validation.
 
-Evidence files in this directory preserve the checker output, adversarial results, and complete zipalign output. The corrected workflow requires a new Actions run; no APK is approved until that same-source run completes all validations and uploads its artifact.
+Evidence files in this directory preserve the checker output, adversarial results, and complete zipalign output. This first-run APK remains unapproved because run 38491402535 concluded failure. The corrected workflow later passed on source 0844159b1c8653c15da6a2f47c098e46d38478ba; its distinct artifact is recorded under final-run-38492777065/.
