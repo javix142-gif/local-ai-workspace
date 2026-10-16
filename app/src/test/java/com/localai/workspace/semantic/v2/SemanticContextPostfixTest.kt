@@ -622,6 +622,33 @@ class SemanticContextPostfixTest {
         assertNull(workspace.projectDao().get(projectId))
     }
 
+    @Test fun appGraphWorkspaceDeletionPurgesPersistedSemanticV2Rows()=runBlocking {
+        context.deleteDatabase("semantic_v2.db")
+        val persisted=graph.semanticV2.database
+        val dao=persisted.dao()
+        val projectId="production-delete-hook";addProject(projectId)
+        val scope=SemanticScope(ScopeType.PROJECT,projectId)
+        val generation="generation-to-delete";val source="$generation:document";val segment="$source:0"
+        dao.job(SemanticIndexJob(generation,scope.key,"test-space","READY",1,1,1,1,1,null))
+        dao.activate(SemanticActiveIndex(scope.key,generation,"test-space"))
+        dao.source(SemanticSourceRecord(source,scope.key,"DOCUMENT","private.txt","text/plain","private-path",1,1,"a".repeat(64)))
+        dao.segment(SemanticSegmentRecord(segment,source,"TEXT","private synthetic evidence","private.txt",null,null,null,null,null,"b".repeat(64)))
+        dao.embedding(SemanticEmbeddingRecord(generation,segment,"test-space","test","test-model","c".repeat(64),2,true,"DOCUMENT","b".repeat(64),"RAW",byteArrayOf(0,0,0,0,0,0,128,63),1))
+
+        try {
+            graph.workspace.deleteWorkspace(projectId)
+            assertNull(dao.active(scope.key))
+            assertNull(dao.job(generation))
+            assertEquals(0,dao.count(generation))
+            assertTrue(dao.sources(scope.key).isEmpty())
+            assertTrue(dao.segments(source).isEmpty())
+            assertEquals(0,dao.payloadCount())
+        } finally {
+            persisted.close()
+            context.deleteDatabase("semantic_v2.db")
+        }
+    }
+
     @Test fun realDocumentIngestionAwaitsStaleGenerationMark()=runBlocking {
         context.deleteDatabase("semantic_v2.db")
         val persisted=SemanticDatabase.create(context)
