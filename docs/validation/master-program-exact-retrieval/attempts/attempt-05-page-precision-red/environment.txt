@@ -1,0 +1,16 @@
+sourceSha=06c5bedb7a349d01fb589ea11c0d8e078e540e7e
+branch=codex/master-program-20261016
+startedAtUtc=2026-10-16T20:14:03Z
+openjdk version "21.0.12.1" 2026-08-18
+OpenJDK Runtime Environment (build 21.0.12.1+1-1-deb13u1-Debian)
+OpenJDK 64-Bit Server VM (build 21.0.12.1+1-1-deb13u1-Debian, mixed mode, sharing)
+openjdk version "21.0.12.1" 2026-08-18 LTS
+OpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)
+OpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)
+finishedAtUtc=2026-10-16T20:15:23Z
+exitCode=1
+clarification=The initial unqualified java -version lines above captured the shell ambient PATH only. The Gradle command itself explicitly set JAVA_HOME/PATH to /workspace/.toolchain/jdk-17-temurin; the raw Gradle log confirms the test worker executable was /workspace/.toolchain/jdk-21-temurin/bin/java.
+verifiedRuntimeJdk=/workspace/.toolchain/jdk-17-temurin OpenJDK 17.0.20.1 Temurin
+verifiedRuntimeJavac=/workspace/.toolchain/jdk-17-temurin/bin/javac 17.0.20.1
+verifiedWorkerJdk=/workspace/.toolchain/jdk-21-temurin OpenJDK 21.0.12.1 Temurin
+androidSdk=/workspace/.toolchain/android-sdk; API 35; NDK 27.0.12077973

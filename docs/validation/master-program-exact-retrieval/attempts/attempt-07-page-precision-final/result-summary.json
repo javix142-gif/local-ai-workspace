@@ -1,0 +1,20 @@
+{
+  "sourceSha": "0769ca3b370efb19f5770ea06564c2a7cc2e1717",
+  "classification": "FOCUSED_PASS",
+  "exitCode": 0,
+  "durationSeconds": 77,
+  "gradleDuration": "1m 15s",
+  "tests": 2,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "actionableTasks": 63,
+  "executedTasks": 3,
+  "upToDateTasks": 60,
+  "log": "gradle.log.gz",
+  "junitXml": "junit/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml",
+  "testMethods": [
+    "eg2ExactPageQueryIncludesOnlyRequestedPageAndAbstainsWhenPageIsMissing",
+    "lexicalExactPageQueryIncludesOnlyRequestedPageAndAbstainsWhenPageIsMissing"
+  ]
+}

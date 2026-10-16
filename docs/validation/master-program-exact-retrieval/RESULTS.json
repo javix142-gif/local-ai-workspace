@@ -114,11 +114,16 @@
     "originalSourceEdited": false,
     "M02-05": {
       "status": "TODO",
-      "dependsOn": ["M02-01", "M01-05"]
+      "dependsOn": [
+        "M02-01",
+        "M01-05"
+      ]
     },
     "M02-01": {
       "status": "TODO",
-      "dependsOn": ["M00-10"]
+      "dependsOn": [
+        "M00-10"
+      ]
     },
     "M00-10": {
       "status": "TODO",
@@ -129,5 +134,93 @@
   "overallFullHostGate": "NOT_RUN",
   "emulator": "NOT_RUN",
   "physicalDevice": "NOT_RUN",
-  "apkGenerated": false
+  "apkGenerated": false,
+  "latestFollowUp": {
+    "name": "Exact page locator and abstention in EG2 and legacy fallback",
+    "classification": "PREPARATORY_M02_05_FOCUSED_HOST_PASS_DEPENDENCY_BLOCKED",
+    "baseFeatureHead": "c3ae446ee5ba7bec1063129303250df4d50c89b4",
+    "redTestCommit": "06c5bedb7a349d01fb589ea11c0d8e078e540e7e",
+    "productionCommit": "c8434a3603a48ebe8547bbb049d6cfdf98a61809",
+    "finalTestedSourceSha": "0769ca3b370efb19f5770ea06564c2a7cc2e1717",
+    "commits": [
+      "06c5bedb7a349d01fb589ea11c0d8e078e540e7e",
+      "c8434a3603a48ebe8547bbb049d6cfdf98a61809",
+      "0769ca3b370efb19f5770ea06564c2a7cc2e1717"
+    ],
+    "finding": "Explicit page locators were treated as ordinary query text. EG2 and legacy fallback could return another page, and a page absent from a selected source could fall back to its opening segment.",
+    "behavior": {
+      "supportedQuerySyntax": "Accent-insensitive pagina N / page N; N=1..9999. Other abbreviations are not interpreted as exact page locators.",
+      "eg2": "Semantic V2 hits must carry the requested page; other-page hits are excluded and the existing legacy fallback remains available.",
+      "legacy": "Precomputed evidence is filtered by page. If it contains no matching page, the existing scoped retrieval is invoked. Selected/eligible documents use a bounded Room query on stored page intervals and READY/project/document constraints.",
+      "missingPage": "No matching page yields no source evidence (abstention); unpaginated sources are not assigned an inferred page.",
+      "schemaOrMigrationChanged": false,
+      "fullDocumentScanAdded": false,
+      "projectOrSelectedDocumentScopeChanged": false
+    },
+    "redAttempt": {
+      "sourceSha": "06c5bedb7a349d01fb589ea11c0d8e078e540e7e",
+      "status": "EXPECTED_RED",
+      "exitCode": 1,
+      "durationSeconds": 78,
+      "testsCompleted": 2,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0,
+      "failureCause": "EG2 and legacy production ContextFoundation paths included a page other than the requested page.",
+      "logGzip": "docs/validation/master-program-exact-retrieval/attempts/attempt-05-page-precision-red/gradle.log.gz",
+      "logGzipSha256": "056638afdae6fff45ba1500a2dcd694e262a496b4ddc88bc535d0ec56eae79fc",
+      "logContentSha256": "54176cb007bfc9a8ecd734a5a5de5035f54ffad38454a9d7961c1e58d01379c2",
+      "junitXml": "NOT_PRESERVED; build output was overwritten by the next run and no XML was reconstructed",
+      "limitation": "The raw Gradle log records both test failures and method names; original red JUnit XML is unavailable."
+    },
+    "finalAttempt": {
+      "sourceSha": "0769ca3b370efb19f5770ea06564c2a7cc2e1717",
+      "command": "docs/validation/master-program-exact-retrieval/attempts/attempt-07-page-precision-final/command.txt",
+      "exitCode": 0,
+      "durationSeconds": 77,
+      "gradleDuration": "1m 15s",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "actionableTasks": 63,
+      "executedTasks": 3,
+      "upToDateTasks": 60,
+      "junitXml": "docs/validation/master-program-exact-retrieval/attempts/attempt-07-page-precision-final/junit/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml",
+      "junitSha256": "8ef4919553e978805d874c1afad681f86bf3bd74620b2976869bc0d816873903",
+      "logGzip": "docs/validation/master-program-exact-retrieval/attempts/attempt-07-page-precision-final/gradle.log.gz",
+      "logGzipSha256": "40a802b366cef86160dce3c1d0defdb5d94f13676291eb3191f089b14d873638",
+      "logContentSha256": "3d33e46216fea5af9550fbc064e3e83f85a875818f32ee5df194175945e0a2cd",
+      "methods": [
+        "SemanticContextPostfixTest.eg2ExactPageQueryIncludesOnlyRequestedPageAndAbstainsWhenPageIsMissing",
+        "SemanticContextPostfixTest.lexicalExactPageQueryIncludesOnlyRequestedPageAndAbstainsWhenPageIsMissing"
+      ]
+    },
+    "toolchain": {
+      "gradle": "8.10.2",
+      "runtimeJdk": "Temurin 17.0.20.1",
+      "testWorkerJdk": "Temurin 21.0.12.1",
+      "androidSdk": "/workspace/.toolchain/android-sdk, API 35",
+      "ndk": "27.0.12077973",
+      "gradleUserHome": "/workspace/.gradle-master-program-20261016 (existing populated cache)",
+      "offline": true
+    },
+    "notRun": {
+      "fullAppJvm": "NOT_RUN",
+      "litertCompat": "NOT_RUN",
+      "lint": "NOT_RUN",
+      "androidTestCompile": "NOT_RUN",
+      "emulator": "NOT_RUN",
+      "physicalDevice": "NOT_RUN",
+      "apk": "NOT_GENERATED"
+    },
+    "originalTask": {
+      "id": "M02-05",
+      "sourceStatus": "TODO",
+      "originalTaskCompleted": false,
+      "dependencyAssessment": "M02-01 remains TODO pending device-required M00-10; M02-05 remains preparatory/partial. M02-07 source navigation is a distinct device-required task.",
+      "backlogChanged": false
+    },
+    "evidenceDirectory": "docs/validation/master-program-exact-retrieval/attempts/attempt-05-page-precision-red/ and attempts/attempt-06-page-precision-final/, attempts/attempt-07-page-precision-final/"
+  }
 }

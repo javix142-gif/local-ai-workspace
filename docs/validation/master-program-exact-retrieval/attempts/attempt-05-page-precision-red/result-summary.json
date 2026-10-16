@@ -1,0 +1,17 @@
+{
+  "sourceSha": "06c5bedb7a349d01fb589ea11c0d8e078e540e7e",
+  "classification": "EXPECTED_RED_RETRIEVAL_PAGE_SCOPE_GAP",
+  "exitCode": 1,
+  "durationSeconds": 78,
+  "testsCompleted": 2,
+  "failures": 2,
+  "errors": 0,
+  "skipped": 0,
+  "failedMethods": [
+    "eg2ExactPageQueryIncludesOnlyRequestedPageAndAbstainsWhenPageIsMissing",
+    "lexicalExactPageQueryIncludesOnlyRequestedPageAndAbstainsWhenPageIsMissing"
+  ],
+  "failure": "Both production ContextFoundation routes included a page other than the explicit requested page.",
+  "junitXmlPreserved": false,
+  "log": "gradle.log.gz"
+}

@@ -1,0 +1,16 @@
+{
+  "sourceSha": "c8434a3603a48ebe8547bbb049d6cfdf98a61809",
+  "classification": "FOCUSED_PASS_SUPERSEDED_BY_STRONGER_PRECOMPUTED_EVIDENCE_ASSERTION",
+  "exitCode": 0,
+  "durationSeconds": 122,
+  "gradleDuration": "2m",
+  "tests": 2,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "actionableTasks": 63,
+  "executedTasks": 8,
+  "upToDateTasks": 55,
+  "log": "gradle.log.gz",
+  "junitXml": "junit/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml"
+}

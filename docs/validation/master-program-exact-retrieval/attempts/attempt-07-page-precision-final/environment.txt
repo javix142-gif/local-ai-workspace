@@ -1,0 +1,20 @@
+sourceSha=0769ca3b370efb19f5770ea06564c2a7cc2e1717
+branch=codex/master-program-20261016
+startedAtUtc=2026-10-16T20:19:23Z
+openjdk version "17.0.20.1" 2026-08-18
+OpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)
+OpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)
+javac 17.0.20.1
+openjdk version "21.0.12.1" 2026-08-18 LTS
+OpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)
+OpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)
+androidSdk=/workspace/.toolchain/android-sdk
+androidApi=35
+ndk=27.0.12077973
+gradleWrapper=8.10.2
+gradleRuntime=/workspace/.toolchain/jdk-17-temurin
+testWorker=/workspace/.toolchain/jdk-21-temurin
+gradleUserHome=/workspace/.gradle-master-program-20261016 (existing populated cache; offline)
+finishedAtUtc=2026-10-16T20:20:40Z
+exitCode=0
+durationSeconds=77
