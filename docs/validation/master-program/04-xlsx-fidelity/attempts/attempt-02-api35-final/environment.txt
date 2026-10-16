@@ -1,0 +1,10 @@
+sourceSha=6662910a477640d9e2b11f3051feb7991e31d4a9
+branch=codex/master-program-20261016
+startedAtUtc=2026-10-16T19:46:52Z
+runtimeJdk=Temurin 17.0.20.1
+testWorkerJdk=Temurin 21.0.12.1
+androidSdk=/workspace/.toolchain/android-sdk
+androidPlatform=android-35
+ndk=27.0.12077973
+gradleUserHome=/workspace/.gradle-master-program-20261016
+offline=true

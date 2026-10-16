@@ -1,6 +1,14 @@
 # Master program — real artifacts delivered, native baseline required
 
-## Latest continuation checkpoint — M02-01 synthetic corpus preparation (2026-10-16)
+## Latest continuation checkpoint — M02-02 XLSX fidelity preparation (2026-10-16)
+
+Test-only code commit `6662910a477640d9e2b11f3051feb7991e31d4a9` adds an assertion to the synthetic corpus parser test. It verifies worksheet names/order, numeric and inline-string types, exact cells, serialized `valueType`, formula `$A$2-$A$1`, and cached `A3=4`; the v2 fixture changes `A2` to 7 while preserving the supplied formula cache. No formula evaluator or production change was added.
+
+One API 29 invocation at source `d0dbca3ea6cf55fc4fe7cb6e8212d265e40894c4` ended exit 1 with 11 setup failures because Robolectric could not fetch `android-all-instrumented:10-robolectric-5803371-i7` offline; every XML failure records that same dependency/connection-refused cause before test bodies. I moved the new coverage into the existing API 35 corpus test class, which already uses the locally cached Robolectric runtime. The final exact-SHA API 35 HOST run passed **8/8**, 0 failures/errors/skips, in 59 seconds (Gradle 8.10.2, JDK 17 runtime/JDK 21 worker, offline). This is a focused test pass, not a full host gate. Logs/XML, commands, outcomes, hashes, and the initial infrastructure failure are preserved in [M02-02 XLSX fidelity evidence](../validation/master-program/04-xlsx-fidelity/RESULTS.md).
+
+Original M02-02 remains `TODO` because it depends on M02-01, which remains formally TODO while M00-10/device validation is pending. The source plan is unchanged at 97 IDs, 120 dependencies, all 97 TODO. M02-01's synthetic parser evidence remains preparatory; M02-05 remains partial/TODO; M01-06 remains `PENDING_REQUIRES_DEVICE`. Full JVM/compatibility/lint/AndroidTest, emulator, physical Motorola and APK were not run here. The next authorized preparatory candidate is M02-03 DOCX structure/table coverage; do not mark source IDs complete.
+
+## Previous continuation checkpoint — M02-01 synthetic corpus preparation (2026-10-16)
 
 Code/test commit `481e36633ae84224b63e225d84010ccfa16f8392` adds a focused Robolectric class that exercises the production `DocumentParser` and exact-cell/range selector against the checked-in synthetic corpus. It covers PDF page 2, DOCX table text, XLSX exact cell/range/formula/cache and a versioned value, quoted CSV cell `CSV!A2`, Kotlin line 2, and PPTX slide 2. XLSX expectations state that the cached value is preserved and no formula recalculation occurs. The fixtures include versioned metadata; the corpus manifest verifies 140/140 files. No private Motorola workbook was used.
 
@@ -10,7 +18,7 @@ This is preparatory evidence, not formal task closure. The authentic backlog sti
 
 The initial working HEAD was feature `76f033e1918b659cb84a7321a0519930d5c3ae72`; this increment is to be published only as a fast-forward on `feat/0.5.0-skills-agents`. `main` and peeled `v0.4.2` remain untouched.
 
-## Latest continuation checkpoint — M02-05 focused citation provenance (2026-10-16)
+## Previous continuation checkpoint — M02-05 focused citation provenance (2026-10-16)
 
 Code commit `7b60a53f8a993227dc9d0666b548ef5447e93578` is partial preparatory implementation for the authentic M02-05 “Recuperación exacta por celda pagina y codigo” DoD. The regression showed that an EG2 code hit had a path/line passage in Context but no `ContextBundle.sourceEvidence` when it had no legacy segment row. The fix adds in-turn evidence only for a document present in the active project and selected-document scope; preserves semantic segment identity and line bounds through prompt, citation validation, Room storage, and the existing citation UI. Room schema 9 uses a data-preserving 8→9 migration; schema 8 remains unchanged. Code/range/fallback tests cover the targeted gap. No ranking, formula evaluation, inference, permissions, dependencies or data source formats changed.
 

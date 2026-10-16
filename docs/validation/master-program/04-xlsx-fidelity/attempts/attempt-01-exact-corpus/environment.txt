@@ -1,0 +1,7 @@
+sourceSha=d0dbca3ea6cf55fc4fe7cb6e8212d265e40894c4
+branch=codex/master-program-20261016
+startedAtUtc=2026-10-16T19:44:36Z
+Gradle Wrapper 8.10.2; runtime JDK: openjdk version "17.0.20.1" 2026-08-18
+test worker JDK: Temurin 21.0.12.1 (confirmed by Gradle executor command in log)
+Android SDK API 35; NDK 27.0.12077973
+GRADLE_USER_HOME=/workspace/.gradle-master-program-20261016; offline=true
