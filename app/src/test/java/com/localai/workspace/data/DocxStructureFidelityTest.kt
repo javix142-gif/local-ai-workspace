@@ -28,6 +28,20 @@ class DocxStructureFidelityTest {
         error("Synthetic DOCX structure fixture not found")
     }
 
+    private fun parseDocumentXml(xml: String): ParsedDocument {
+        val file = File.createTempFile("docx-structure-", ".docx", RuntimeEnvironment.getApplication().cacheDir)
+        try {
+            ZipOutputStream(file.outputStream()).use { archive ->
+                archive.putNextEntry(ZipEntry("word/document.xml"))
+                archive.write(xml.toByteArray(Charsets.UTF_8))
+                archive.closeEntry()
+            }
+            return ZipFile(file).use(OfficeText::docx)
+        } finally {
+            file.delete()
+        }
+    }
+
     @Test fun headingsTableLocationsAndExplicitPageBreaksRemainTraceable() = runBlocking {
         val file = fixture()
         val parsed = DocumentParser(RuntimeEnvironment.getApplication()).parse(
@@ -59,7 +73,6 @@ class DocxStructureFidelityTest {
     }
 
     @Test fun tableHeaderEmptyCellsAndPageBreakBeforeRemainTraceable() {
-        val file = File.createTempFile("docx-structure-", ".docx", RuntimeEnvironment.getApplication().cacheDir)
         val xml = """<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>
             <w:p><w:r><w:t>Página uno.</w:t></w:r></w:p>
             <w:tbl><w:tr><w:trPr><w:tblHeader/></w:trPr>
@@ -69,22 +82,25 @@ class DocxStructureFidelityTest {
             <w:p><w:pPr><w:pageBreakBefore w:val="0"/></w:pPr><w:r><w:t>Sin salto.</w:t></w:r></w:p>
             <w:p><w:pPr><w:pageBreakBefore/></w:pPr><w:r><w:t>Página dos.</w:t></w:r></w:p>
         </w:body></w:document>""".trimIndent()
-        try {
-            ZipOutputStream(file.outputStream()).use { archive ->
-                archive.putNextEntry(ZipEntry("word/document.xml"))
-                archive.write(xml.toByteArray(Charsets.UTF_8))
-                archive.closeEntry()
-            }
-            val parsed = ZipFile(file).use(OfficeText::docx)
-            assertEquals(listOf(1, 2), parsed.pages.map { it.pageNumber })
-            val first = parsed.pages[0].text
-            assertTrue(first.contains("[DOCX table=1 row=1 header=true cell=1]"))
-            assertTrue(first.contains("Encabezado"))
-            assertTrue(first.contains("[DOCX table=1 row=1 header=true cell=2]"))
-            assertTrue(first.contains("Sin salto."))
-            assertTrue(parsed.pages[1].text.contains("Página dos."))
-        } finally {
-            file.delete()
-        }
+        val parsed = parseDocumentXml(xml)
+        assertEquals(listOf(1, 2), parsed.pages.map { it.pageNumber })
+        val first = parsed.pages[0].text
+        assertTrue(first.contains("[DOCX table=1 row=1 header=true cell=1]"))
+        assertTrue(first.contains("Encabezado"))
+        assertTrue(first.contains("[DOCX table=1 row=1 header=true cell=2]"))
+        assertTrue(first.contains("Sin salto."))
+        assertTrue(parsed.pages[1].text.contains("Página dos."))
+    }
+
+    @Test fun plainParagraphAndTableSeparatorsRemainCompatible() {
+        val parsed = parseDocumentXml("""<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>
+            <w:p><w:r><w:t>con</w:t></w:r><w:r><w:t>tenido</w:t></w:r></w:p>
+            <w:tbl><w:tr><w:tc><w:p><w:r><w:t>Nombre</w:t></w:r></w:p></w:tc>
+                <w:tc><w:p><w:r><w:t>Valor</w:t></w:r></w:p></w:tc></w:tr></w:tbl>
+        </w:body></w:document>""".trimIndent())
+        assertEquals(1, parsed.pages.size)
+        assertEquals(null, parsed.pages.single().pageNumber)
+        assertTrue(parsed.pages.single().text.startsWith("contenido\n"))
+        assertTrue(parsed.pages.single().text.contains("\t"))
     }
 }
