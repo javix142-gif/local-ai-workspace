@@ -104,10 +104,34 @@ class ArtifactRenderer(private val context:Context) {
             fun line(value:String,font:PDType1Font,size:Float){checkInterrupted();if(stream==null||y<54)page();stream!!.beginText();stream!!.setFont(font,size);stream!!.newLineAtOffset(54f,y);stream!!.showText(value);stream!!.endText();y-=size*1.4f}
             fun paragraph(text:String,bold:Boolean=false,size:Float=12f) {
                 val font=if(bold)PDType1Font.HELVETICA_BOLD else PDType1Font.HELVETICA
+                fun width(value:String)=font.getStringWidth(value)/1000f*size
                 for(raw in text.split('\n')) {
                     var part=""
-                    for(cp in raw.codePoints().toArray()) {val s=String(Character.toChars(cp));require(cp!=9){"PDF_TAB_UNSUPPORTED_USE_SPACES"};val next=part+s
-                        if(font.getStringWidth(next)/1000f*size>504f && part.isNotEmpty()){line(part,font,size);part=s}else part=next
+                    val tokens=mutableListOf<Pair<Boolean,String>>()
+                    for(cp in raw.codePoints().toArray()) {
+                        require(cp!=9){"PDF_TAB_UNSUPPORTED_USE_SPACES"}
+                        val value=String(Character.toChars(cp));val whitespace=Character.isWhitespace(cp)
+                        if(tokens.lastOrNull()?.first==whitespace)tokens[tokens.lastIndex]=whitespace to (tokens.last().second+value)
+                        else tokens+=whitespace to value
+                    }
+                    fun splitOversizedToken(token:String) {
+                        var chunk=""
+                        for(cp in token.codePoints().toArray()) {
+                            val value=String(Character.toChars(cp));val candidate=chunk+value
+                            if(width(candidate)>504f && chunk.isNotEmpty()){line(chunk,font,size);chunk=value}else chunk=candidate
+                        }
+                        part=chunk
+                    }
+                    for((whitespace,token) in tokens) {
+                        val combined=part+token
+                        if(width(combined)<=504f)part=combined
+                        else if(whitespace) {
+                            if(part.isNotEmpty())line(part,font,size)
+                            if(width(token)<=504f)part=token else splitOversizedToken(token)
+                        } else {
+                            if(part.isNotEmpty()){line(part,font,size);part=""}
+                            if(width(token)<=504f)part=token else splitOversizedToken(token)
+                        }
                     }
                     line(part,font,size)
                 };y-=6
