@@ -1,0 +1,67 @@
+    PID    PPID     ELAPSED STAT COMMAND
+      1       0    04:13:46 S+   tail -f /dev/null
+      2       1    04:13:46 S+   /usr/local/bin/cloud-agent-log-forwarder caas-prefix-transfer-server /tmp/caas-prefix-transfer-server.log -- /usr/local/bin/caas-prefix-transfer-server --host 0.0.0.0 --port 1040
+      3       2    04:13:46 S+   /usr/local/bin/caas-prefix-transfer-server --host 0.0.0.0 --port 1040
+    182       1    04:13:31 Ssl  /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --pidfile=/run/codex-docker/dockerd.pid --exec-root=/run/codex-docker/exec-slv1osaz --storage-driver=vfs --group=agent
+    230     182    04:13:31 Ssl  containerd --config /run/codex-docker/exec-slv1osaz/containerd/containerd.toml
+    447       0    04:13:29 Sl+  /opt/codex/bin/codex exec-server --remote https://codex-cloud-environments.chatgpt.com/api --environment-id ccarenv_b64_Y2NhcmVudl83OGQ5ZDQyZmFhNDQ4MTkxYWNmOTU4MzcwNGJiM2FlNw --linux-sandbox-pid-namespace=inherit
+    794       1    02:29:16 Zs   [git] <defunct>
+    801       1    02:29:16 Zs   [git] <defunct>
+   1433       1    02:14:00 Z    [android-cli] <defunct>
+   1758       1    02:11:14 Zs   [java] <defunct>
+   1909       1    02:07:29 Z    [java] <defunct>
+   2186       1    02:02:51 Zs   [java] <defunct>
+   2298       1    02:02:26 Z    [java] <defunct>
+   2477       1    01:59:53 Zs   [java] <defunct>
+   2583       1    01:59:31 Z    [java] <defunct>
+   2731       1    01:58:21 Zs   [java] <defunct>
+   2837       1    01:57:55 Z    [java] <defunct>
+   5169       1    01:38:11 Zs   [java] <defunct>
+   5283       1    01:37:27 Z    [java] <defunct>
+   5536       1    01:30:17 Zs   [git] <defunct>
+   5850       1    01:26:38 Ssl  adb -L tcp:5037 fork-server server --reply-fd 4
+   6238       1    01:18:14 Zs   [git] <defunct>
+   6257       1    01:18:07 Zs   [git] <defunct>
+   6296       1    01:17:53 Zs   [git] <defunct>
+   6765       1    01:10:14 Zs   [git] <defunct>
+   6941       1    01:09:16 Zs   [java] <defunct>
+   7043       1    01:08:25 Z    [java] <defunct>
+   7454       1       56:52 Zs   [git] <defunct>
+   7508       1       56:38 Zs   [java] <defunct>
+   7610       1       56:14 Z    [java] <defunct>
+   7847       1       49:23 Zs   [git] <defunct>
+   7867       1       49:18 Zs   [git] <defunct>
+   7888       1       48:57 Zs   [git] <defunct>
+   8289       1       45:02 Zs   [java] <defunct>
+   8413       1       44:35 Z    [java] <defunct>
+   8612       1       41:55 Zs   [git] <defunct>
+   8663       1       41:42 Zs   [java] <defunct>
+   8768       1       41:05 Z    [java] <defunct>
+   8956       1       37:19 Zs   [git] <defunct>
+   9013       1       36:54 Zs   [java] <defunct>
+   9118       1       36:27 Z    [java] <defunct>
+   9255       1       33:31 Zs   [git] <defunct>
+   9298       1       33:18 Zs   [java] <defunct>
+   9407       1       32:53 Z    [java] <defunct>
+   9714       1       26:32 Zs   [git] <defunct>
+   9755       1       26:12 Zs   [git] <defunct>
+  10084       1       17:13 Zs   [git] <defunct>
+  10119       1       17:10 Zs   [git] <defunct>
+  10247       1       16:51 Zs   [java] <defunct>
+  10368       1       16:22 Z    [java] <defunct>
+  10498       1       15:26 Zs   [git] <defunct>
+  10555       1       15:17 Zs   [java] <defunct>
+  10666       1       14:53 Z    [java] <defunct>
+  11082       1       08:22 Zs   [git] <defunct>
+  11219       1       07:24 Zs   [java] <defunct>
+  11327       1       07:00 Z    [java] <defunct>
+  11515       1       05:37 Zs   [java] <defunct>
+  11622       1       05:13 Z    [java] <defunct>
+  11818       1       04:10 Zs   [git] <defunct>
+  11990     447       03:10 Ss   /bin/bash -lc mkdir -p docs/validation/master-program-document-delete/attempts/attempt-06-executed-api35-focused started=$(date -u +%Y-%m-%dT%H:%M:%SZ) log=docs/validation/master-program-document-delete/attempts/attempt-06-executed-api35-focused/gradle.log printf '%s\n' 'sourceSha=d36c674dd96f4176f03176ddf0bd8bbb54e88aee' 'JAVA_HOME=/workspace/.toolchain/jdk-17-temurin' 'ANDROID_HOME=/workspace/.toolchain/android-sdk' 'ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk' 'GRADLE_USER_HOME=/workspace/.gradle-master-program-20261016' "command=./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17-temurin,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests 'com.localai.workspace.data.DocumentDeletionLifecycleTest.*' --tests 'com.localai.workspace.semantic.v2.SemanticContextPostfixTest.documentRemovalWithoutCallback*' --tests 'com.localai.workspace.ui.DocumentRemovalUiTest.*'" > docs/validation/master-program-document-delete/attempts/attempt-06-executed-api35-focused/command.txt set +e JAVA_HOME=/workspace/.toolchain/jdk-17-temurin PATH=/workspace/.toolchain/jdk-17-temurin/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk GRADLE_USER_HOME=/workspace/.gradle-master-program-20261016 ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17-temurin,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests 'com.localai.workspace.data.DocumentDeletionLifecycleTest.*' --tests 'com.localai.workspace.semantic.v2.SemanticContextPostfixTest.documentRemovalWithoutCallback*' --tests 'com.localai.workspace.ui.DocumentRemovalUiTest.*' 2>&1 | tee "$log" rc=${PIPESTATUS[0]} finished=$(date -u +%Y-%m-%dT%H:%M:%SZ) printf 'startedAtUtc=%s\nfinishedAtUtc=%s\nexitCode=%s\nsourceSha=%s\n' "$started" "$finished" "$rc" 'd36c674dd96f4176f03176ddf0bd8bbb54e88aee' > docs/validation/master-program-document-delete/attempts/attempt-06-executed-api35-focused/run-metadata.txt exit "$rc"
+  11995   11990       03:10 Sl   /workspace/.toolchain/jdk-17-temurin/bin/java -Xmx64m -Xms64m -Dorg.gradle.appname=gradlew -classpath /workspace/local-ai-workspace/gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain --no-daemon --no-parallel --max-workers=1 --offline --console=plain -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17-temurin,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.data.DocumentDeletionLifecycleTest.* --tests com.localai.workspace.semantic.v2.SemanticContextPostfixTest.documentRemovalWithoutCallback* --tests com.localai.workspace.ui.DocumentRemovalUiTest.*
+  11996   11990       03:10 S    tee docs/validation/master-program-document-delete/attempts/attempt-06-executed-api35-focused/gradle.log
+  12029   11995       03:08 Ssl  /workspace/.toolchain/jdk-17-temurin/bin/java --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-opens=java.base/java.nio.charset=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED -Xmx3072m -Dfile.encoding=UTF-8 -Duser.country -Duser.language=en -Duser.variant -cp /workspace/.gradle-master-program-20261016/wrapper/dists/gradle-8.10.2-bin/a04bxjujx95o3nb99gddekhwo/gradle-8.10.2/lib/gradle-daemon-main-8.10.2.jar -javaagent:/workspace/.gradle-master-program-20261016/wrapper/dists/gradle-8.10.2-bin/a04bxjujx95o3nb99gddekhwo/gradle-8.10.2/lib/agents/gradle-instrumentation-agent-8.10.2.jar org.gradle.launcher.daemon.bootstrap.GradleDaemon 8.10.2
+  12132   12029       02:45 Sl   /workspace/.toolchain/jdk-21-temurin/bin/java -Djava.awt.headless=true -Djava.library.path=/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib:/workspace/local-ai-workspace/app/src/testDebug/jniLibs:/workspace/local-ai-workspace/app/src/test/jniLibs -Dorg.gradle.internal.worker.tmpdir=/workspace/local-ai-workspace/app/build/tmp/testDebugUnitTest/work --add-opens=java.base/java.io=ALL-UNNAMED @/workspace/.gradle-master-program-20261016/.tmp/gradle-worker-classpath10421215359980619222txt -Xmx512m -Dfile.encoding=UTF-8 -Duser.country -Duser.language=en -Duser.variant -ea worker.org.gradle.process.internal.worker.GradleWorkerMain 'Gradle Test Executor 1'
+  12252     447       00:00 Ss   /bin/bash -lc set +e out=docs/validation/master-program-document-delete/attempts/attempt-06-executed-api35-focused ps -eo pid,ppid,etime,stat,args > "$out/processes-before-dump-02.txt" timeout 20s /workspace/.toolchain/jdk-21-temurin/bin/jcmd 12132 Thread.print -l > "$out/worker-thread-dump-02.txt" 2> "$out/worker-thread-dump-02.stderr" printf 'targetPid=12132\njcmdExitCode=%s\nthreadDumpBytes=%s\n' "$?" "$(wc -c < "$out/worker-thread-dump-02.txt")" > "$out/dump-command-02.txt" rg -n 'Test worker|Sandbox.runOnMainThread|DocumentRemovalUiTest|BlockingCoroutine|deleteWorkspace|deleteDocument' "$out/worker-thread-dump-02.txt" | head -35 cat "$out/dump-command-02.txt"
+  12255   12252       00:00 R    ps -eo pid,ppid,etime,stat,args

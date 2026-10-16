@@ -1,0 +1,4 @@
+targetPid=12132
+workerJdk=/workspace/.toolchain/jdk-21-temurin
+jcmdExitCode=0
+threadDumpBytes=53510

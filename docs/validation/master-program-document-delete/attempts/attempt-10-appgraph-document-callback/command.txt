@@ -1,0 +1,6 @@
+sourceSha=843bf24620447d749455ec9df1a05278d3cec996
+JAVA_HOME=/workspace/.toolchain/jdk-17-temurin
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk
+GRADLE_USER_HOME=/workspace/.gradle-master-program-20261016
+command=./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17-temurin,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests 'com.localai.workspace.semantic.v2.SemanticContextPostfixTest.appGraphDocumentDeletionPurgesOnlyItsGenerationSourcesAndRetainsSharedVectorPayload'

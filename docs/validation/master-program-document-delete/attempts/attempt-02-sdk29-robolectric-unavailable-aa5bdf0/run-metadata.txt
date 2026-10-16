@@ -1,0 +1,10 @@
+startedAtUtc=2026-10-16T18:30:37Z
+sourceSha=aa5bdf095586ee482bae5968563d29a278a883a3
+gradleRuntimeJdk=/workspace/.toolchain/jdk-17-temurin
+appTestLauncherJdk=/workspace/.toolchain/jdk-21-temurin
+androidSdk=/workspace/.toolchain/android-sdk
+ndk=Pkg.Revision = 27.0.12077973
+cmake=cmake version 3.31.6
+gradleUserHome=/workspace/.gradle-master-program-20261016
+finishedAtUtc=2026-10-16T18:35:25Z
+exitCode=1

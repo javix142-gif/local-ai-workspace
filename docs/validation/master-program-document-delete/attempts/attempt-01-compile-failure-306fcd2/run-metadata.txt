@@ -1,0 +1,7 @@
+startedAtUtc=2026-10-16T18:29:03Z
+sourceSha=306fcd255c34ca64f6d0a9edb949e99b99aabb5a
+javaHome=/workspace/.toolchain/jdk-17-temurin
+androidSdk=/workspace/.toolchain/android-sdk
+gradleUserHome=/workspace/.gradle-master-program-20261016
+finishedAtUtc=2026-10-16T18:30:11Z
+exitCode=1

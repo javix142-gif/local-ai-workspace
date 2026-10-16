@@ -1,0 +1,13 @@
+sourceSha=843bf24620447d749455ec9df1a05278d3cec996
+startedAtUtc=2026-10-16T18:55:15Z
+finishedAtUtc=2026-10-16T18:59:44Z
+durationSeconds=267
+exitCode=0
+task=:app:testDebugUnitTest
+executionStatus=PASS
+executedTests=2
+passed=2
+failed=0
+errors=0
+skipped=0
+methods=reindexPublishesReadyGenerationAndPreservesReadyRollback; changedDocumentCanBeReindexedIntoNewReadyGeneration

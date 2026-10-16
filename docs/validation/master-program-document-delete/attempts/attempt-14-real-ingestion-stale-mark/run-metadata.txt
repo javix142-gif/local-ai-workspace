@@ -1,0 +1,11 @@
+startedAtUtc=2026-10-16T19:00:27Z
+finishedAtUtc=2026-10-16T19:01:09Z
+exitCode=0
+sourceSha=843bf24620447d749455ec9df1a05278d3cec996
+durationSeconds=41
+executedTests=1
+passed=1
+failed=0
+errors=0
+skipped=0
+initScriptSha256=e9ae7cf93b93ced485fe02d94295a8ec0bf988ba0b6e8f37f0acbb7f3d8ea245

@@ -1,0 +1,322 @@
+{
+  "reportType": "PREPARATORY_INCREMENT_HOST_FOCUSED_EVIDENCE_NOT_TASK_CLOSURE",
+  "createdAtUtc": "2026-10-16T19:05:58Z",
+  "workingBranch": "codex/master-program-20261016",
+  "baseRemoteWorkingHead": "62df7fc64bfc854998178e946e731a27f449b28e",
+  "testedSourceCommit": "843bf24620447d749455ec9df1a05278d3cec996",
+  "originalTask": {
+    "id": "M02-06",
+    "title": "Reindex incremental sin evidencia stale",
+    "statusInSource": "TODO",
+    "requiresDevice": false,
+    "dependsOn": [
+      "M02-05"
+    ],
+    "definitionOfDone": "Edit delete reimport mantiene generaciones y scope; invalida índice; no resultados obsoletos silenciosos",
+    "formalCompletion": "NOT_CLAIMED_PARTIAL_PREPARATORY_EVIDENCE"
+  },
+  "implementationSummary": [
+    "Added a project/document scoped remove flow; project ownership is checked before removal.",
+    "Removal clears the corresponding workspace document/segments/FTS/EG1 and embedding references, retains citation snapshots and uses the existing private-file cleanup outbox.",
+    "AppGraph removes only the deleted document source from Semantic V2, marks affected generations stale, and preserves shared vector payloads that still have references.",
+    "Changed document ingestion marks an active Semantic V2 generation NEEDS_REINDEX before the import path returns; reindex can publish a new READY generation while retaining rollback behavior.",
+    "Stale Semantic V2 is rejected for the turn and existing lexical fallback uses only the current document set."
+  ],
+  "changedAppPaths": [
+    "app/src/main/java/com/localai/workspace/AppGraph.kt",
+    "app/src/main/java/com/localai/workspace/MainActivity.kt",
+    "app/src/main/java/com/localai/workspace/data/Daos.kt",
+    "app/src/main/java/com/localai/workspace/data/WorkspaceRepository.kt",
+    "app/src/main/java/com/localai/workspace/semantic/v2/SemanticDatabase.kt",
+    "app/src/main/java/com/localai/workspace/semantic/v2/SemanticLayer.kt",
+    "app/src/main/java/com/localai/workspace/ui/ViewModels.kt",
+    "app/src/test/java/com/localai/workspace/data/DocumentDeletionLifecycleTest.kt",
+    "app/src/test/java/com/localai/workspace/data/WorkspaceLifecycleTest.kt",
+    "app/src/test/java/com/localai/workspace/semantic/v2/SemanticContextPostfixTest.kt",
+    "app/src/test/java/com/localai/workspace/ui/DocumentRemovalUiTest.kt"
+  ],
+  "host": {
+    "focusedAppJvm": "PASS",
+    "commandTask": ":app:testDebugUnitTest",
+    "tests": 7,
+    "passed": 7,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "wallSecondsFromRecordedAttempts": 472,
+    "runs": [
+      {
+        "attempt": "attempt-09-ui-cleanup-wait",
+        "suite": "DocumentRemovalUiTest",
+        "methods": "removingImportedFileRequiresConfirmationAndPreservesItsOriginal",
+        "sourceSha": "843bf24620447d749455ec9df1a05278d3cec996",
+        "startUtc": "2026-10-16T18:50:38Z",
+        "finishUtc": "2026-10-16T18:51:35Z",
+        "durationSeconds": 56,
+        "exitCode": 0,
+        "tests": 1,
+        "passed": 1,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "command": "attempts/attempt-09-ui-cleanup-wait/command.txt",
+        "log": "attempts/attempt-09-ui-cleanup-wait/gradle.log",
+        "xml": [
+          "attempts/attempt-09-ui-cleanup-wait/junit/TEST-com.localai.workspace.ui.DocumentRemovalUiTest.xml"
+        ]
+      },
+      {
+        "attempt": "attempt-10-appgraph-document-callback",
+        "suite": "SemanticContextPostfixTest",
+        "methods": "appGraphDocumentDeletionPurgesOnlyItsGenerationSourcesAndRetainsSharedVectorPayload",
+        "sourceSha": "843bf24620447d749455ec9df1a05278d3cec996",
+        "startUtc": "2026-10-16T18:51:46Z",
+        "finishUtc": "2026-10-16T18:52:20Z",
+        "durationSeconds": 33,
+        "exitCode": 0,
+        "tests": 1,
+        "passed": 1,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "command": "attempts/attempt-10-appgraph-document-callback/command.txt",
+        "log": "attempts/attempt-10-appgraph-document-callback/gradle.log",
+        "xml": [
+          "attempts/attempt-10-appgraph-document-callback/junit/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml"
+        ]
+      },
+      {
+        "attempt": "attempt-11-document-lifecycle",
+        "suite": "DocumentDeletionLifecycleTest",
+        "methods": "deleteIsWorkspaceScopedRetainsCitationAndHonorsSharedPrivatePathReferences",
+        "sourceSha": "843bf24620447d749455ec9df1a05278d3cec996",
+        "startUtc": "2026-10-16T18:52:41Z",
+        "finishUtc": "2026-10-16T18:53:13Z",
+        "durationSeconds": 32,
+        "exitCode": 0,
+        "tests": 1,
+        "passed": 1,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "command": "attempts/attempt-11-document-lifecycle/command.txt",
+        "log": "attempts/attempt-11-document-lifecycle/gradle.log",
+        "xml": [
+          "attempts/attempt-11-document-lifecycle/junit/TEST-com.localai.workspace.data.DocumentDeletionLifecycleTest.xml"
+        ]
+      },
+      {
+        "attempt": "attempt-13-reindex-generation-tests",
+        "suite": "SemanticContextPostfixTest",
+        "methods": "reindexPublishesReadyGenerationAndPreservesReadyRollback; changedDocumentCanBeReindexedIntoNewReadyGeneration",
+        "sourceSha": "843bf24620447d749455ec9df1a05278d3cec996",
+        "startUtc": "2026-10-16T18:55:15Z",
+        "finishUtc": "2026-10-16T18:59:44Z",
+        "durationSeconds": 267,
+        "exitCode": 0,
+        "tests": 2,
+        "passed": 2,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "command": "attempts/attempt-13-reindex-generation-tests/command.txt",
+        "log": "attempts/attempt-13-reindex-generation-tests/gradle.log",
+        "xml": [
+          "attempts/attempt-13-reindex-generation-tests/junit/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml"
+        ]
+      },
+      {
+        "attempt": "attempt-14-real-ingestion-stale-mark",
+        "suite": "SemanticContextPostfixTest",
+        "methods": "realDocumentIngestionAwaitsStaleGenerationMark",
+        "sourceSha": "843bf24620447d749455ec9df1a05278d3cec996",
+        "startUtc": "2026-10-16T19:00:27Z",
+        "finishUtc": "2026-10-16T19:01:09Z",
+        "durationSeconds": 41,
+        "exitCode": 0,
+        "tests": 1,
+        "passed": 1,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "command": "attempts/attempt-14-real-ingestion-stale-mark/command.txt",
+        "log": "attempts/attempt-14-real-ingestion-stale-mark/gradle.log",
+        "xml": [
+          "attempts/attempt-14-real-ingestion-stale-mark/junit/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml"
+        ]
+      },
+      {
+        "attempt": "attempt-15-deletion-stale-fallback",
+        "suite": "SemanticContextPostfixTest",
+        "methods": "documentRemovalWithoutCallbackFailsClosedThenLexicalFallbackUsesOnlyCurrentDocuments",
+        "sourceSha": "843bf24620447d749455ec9df1a05278d3cec996",
+        "startUtc": "2026-10-16T19:01:19Z",
+        "finishUtc": "2026-10-16T19:02:03Z",
+        "durationSeconds": 43,
+        "exitCode": 0,
+        "tests": 1,
+        "passed": 1,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "command": "attempts/attempt-15-deletion-stale-fallback/command.txt",
+        "log": "attempts/attempt-15-deletion-stale-fallback/gradle.log",
+        "xml": [
+          "attempts/attempt-15-deletion-stale-fallback/junit/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml"
+        ]
+      }
+    ],
+    "junitXml": [
+      {
+        "path": "attempts/attempt-09-ui-cleanup-wait/junit/TEST-com.localai.workspace.ui.DocumentRemovalUiTest.xml",
+        "sha256": "d692b487a1857fec660b08608379f71e9c718743ec69dadcbfae9fb4a5b02b36",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "path": "attempts/attempt-10-appgraph-document-callback/junit/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml",
+        "sha256": "91486cdfe4452d6a16d59ab0afd771b0f4154dab5f64d0150da224555a174dff",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "path": "attempts/attempt-11-document-lifecycle/junit/TEST-com.localai.workspace.data.DocumentDeletionLifecycleTest.xml",
+        "sha256": "d789a23fef10b71774520a94528a430b85ed98eead8ab98850f57517c5f7c061",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "path": "attempts/attempt-13-reindex-generation-tests/junit/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml",
+        "sha256": "42ef3600eb1e34416ccc0ceba38478f3a0eae3df37800da5ffd4dde2222e27ae",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "path": "attempts/attempt-14-real-ingestion-stale-mark/junit/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml",
+        "sha256": "9f60d091c1c024ef4fcb3a23c474180abf74d558d5d66fb57e9e8cbbf1d34c3d",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "path": "attempts/attempt-15-deletion-stale-fallback/junit/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml",
+        "sha256": "3b53675210d59771851606c91fa9f5787daa9da3df3f7c1aab5525611a2564f2",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "fullAppJvm": "NOT_RUN",
+    "litertCompatJvm": "NOT_RUN",
+    "lintDebug": "NOT_RUN",
+    "compileDebugAndroidTestKotlin": "NOT_RUN",
+    "assembleDebug": "NOT_RUN",
+    "assembleRelease": "NOT_RUN"
+  },
+  "toolchain": {
+    "gradle": "8.10.2",
+    "gradleRuntimeJdk": "Temurin 17.0.20.1",
+    "appTestLauncherJdk": "Temurin 21.0.12.1",
+    "androidSdk": "API 35",
+    "ndk": "27.0.12077973",
+    "cmake": "3.31.6",
+    "offline": true,
+    "environmentEvidence": "environment-preflight.txt; per-run command.txt and run-metadata.txt"
+  },
+  "historicalAttempts": [
+    {
+      "attempt": "01",
+      "sourceSha": "306fcd255c34ca64f6d0a9edb949e99b99aabb5a",
+      "classification": "COMPILE_FAILURE_TEST_NOT_RUN",
+      "reason": "Compilation issue in initial UI implementation; corrected in subsequent code commit."
+    },
+    {
+      "attempt": "02",
+      "sourceSha": "aa5bdf095586ee482bae5968563d29a278a883a3",
+      "classification": "ENVIRONMENT_BLOCKED_PARTIAL_XML",
+      "reason": "SDK 29 Robolectric setup could not fetch android-all-instrumented offline/network access failed; XML has environment setup failures plus one passing semantic test."
+    },
+    {
+      "attempt": "03",
+      "classification": "FOCUSED_FAILURE_TEST_SELECTOR",
+      "reason": "Three tests ran; duplicate filename node made UI assertion ambiguous, while lifecycle and semantic cases passed."
+    },
+    {
+      "attempt": "04",
+      "classification": "PRECOMMIT_DIAGNOSTIC_PASS_NOT_EXACT_SHA_ATTRIBUTED",
+      "reason": "Three tests passed on the matching working tree before the code commit; excluded from exact-SHA totals."
+    },
+    {
+      "attempt": "05",
+      "classification": "NOT_RUN_UP_TO_DATE",
+      "reason": "Gradle task was UP-TO-DATE; zero tests and zero new XML."
+    },
+    {
+      "attempt": "06",
+      "classification": "INCOMPLETE_TEST_CLEANUP_STALLED",
+      "reason": "Focused UI assertion reached cleanup that awaited unrelated whole-workspace deletion; thread dumps are retained; zero current-run XML. Test cleanup was narrowed."
+    },
+    {
+      "attempts": "07-08",
+      "classification": "TEST_FAILURE_ASYNC_PRIVATE_FILE_CLEANUP",
+      "reason": "Repository row was removed but asynchronous outbox cleanup had not yet deleted the private copy when test asserted; diagnostics showed pending outbox/reference counts; bounded wait added only to test."
+    },
+    {
+      "attempts": "12",
+      "classification": "NOT_RUN_UP_TO_DATE",
+      "reason": "Gradle reported task UP-TO-DATE; no tests executed and no new XML; retained as NOT_RUN."
+    }
+  ],
+  "boundaries": {
+    "workspaceRoomSchemaChanged": false,
+    "semanticDatabaseVersionChanged": false,
+    "dependenciesAdded": false,
+    "modelRuntimeChanged": false,
+    "sourceBacklogEdited": false,
+    "dataMigrationOrReset": false,
+    "userDocumentContentModified": false,
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  },
+  "sourcePlan": {
+    "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmap": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "tasks": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": {
+      "TODO": 97
+    },
+    "sourceFilesEdited": false
+  },
+  "limitations": [
+    "This is partial M02-06 preparatory evidence, not formal completion; the original catalog status remains TODO and prerequisite M02-05 has not been formally closed.",
+    "The regression set covers deletion, stale invalidation, lexical fallback, reindex and rollback; it does not constitute the full application test gate.",
+    "No emulator, Motorola, AndroidTest, APK, latency, or model performance validation was performed in this increment."
+  ],
+  "evidenceManifest": {
+    "path": "docs/validation/master-program-document-delete/SHA256SUMS",
+    "entries": 78,
+    "sha256": "9bcbb6f44e31f3b8ea18b2d4b0a3bb6eb4fc52298fe23b93104961ad696b5a4c",
+    "localVerification": "78/78 payloads verified with sha256sum -c; report, summary and manifest excluded"
+  },
+  "keyEvidenceSha256": {
+    "resultsMd": "24fb8e2ebe684c56f393645cd3aab0e048e5d9c3441c3b1164c0aface4c4baf4",
+    "environmentPreflight": "26703beb99bb05bf4d6f6347a0f297ad8f49f07b3677ebbe695ef01b400254f8",
+    "planSourceCheck": "d70018550e691216a148138769f6f181d74a080b8566bd3a93ccfba08763047d",
+    "checksumManifest": "9bcbb6f44e31f3b8ea18b2d4b0a3bb6eb4fc52298fe23b93104961ad696b5a4c"
+  }
+}

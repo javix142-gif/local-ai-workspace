@@ -1,0 +1,10 @@
+startedAtUtc=2026-10-16T18:40:17Z
+finishedAtUtc=2026-10-16T18:41:31Z
+exitCode=0
+sourceSha=d36c674dd96f4176f03176ddf0bd8bbb54e88aee
+appJvmFocusedTests=3
+passed=3
+failed=0
+errors=0
+skipped=0
+durationSeconds=73

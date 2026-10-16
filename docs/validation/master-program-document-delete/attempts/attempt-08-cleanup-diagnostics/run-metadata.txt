@@ -1,0 +1,11 @@
+startedAtUtc=2026-10-16T18:48:48Z
+finishedAtUtc=2026-10-16T18:49:50Z
+exitCode=1
+sourceSha=5cf8749f2f58977e91ddcbaa9df80edddcf2b2e5
+durationSeconds=61
+executedTests=1
+passed=0
+failed=1
+errors=0
+skipped=0
+failure=The row and segments were absent; pending outbox contained the private file path, documentPathReferences=0, messageReferences=0, root matched. Test observed the private file before asynchronous cleanup completed; this evidence supports a test timing race, not a product failure.

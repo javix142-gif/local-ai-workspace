@@ -1,0 +1,10 @@
+startedAtUtc=2026-10-16T18:38:30Z
+finishedAtUtc=2026-10-16T18:39:42Z
+exitCode=1
+durationSeconds=72
+appJvmFocusedTests=3
+passed=2
+failed=1
+errors=0
+skipped=0
+failure=Compose test selector matched the same filename in the background row and details dialog; no production defect indicated.

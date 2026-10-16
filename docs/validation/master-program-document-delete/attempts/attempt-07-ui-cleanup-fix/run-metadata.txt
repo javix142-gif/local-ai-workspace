@@ -1,0 +1,11 @@
+startedAtUtc=2026-10-16T18:46:36Z
+finishedAtUtc=2026-10-16T18:47:34Z
+exitCode=1
+sourceSha=c4e5e28c91b1ec815f8965bc094f5c245cf89dbe
+durationSeconds=56
+executedTests=1
+passed=0
+failed=1
+errors=0
+skipped=0
+failure=Repository row and segments were removed but imported private file still existed at assertion line 65; source-original assertion was not reached.

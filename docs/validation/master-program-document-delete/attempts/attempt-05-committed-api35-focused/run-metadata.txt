@@ -1,0 +1,7 @@
+startedAtUtc=2026-10-16T18:41:57Z
+finishedAtUtc=2026-10-16T18:42:20Z
+exitCode=0
+sourceSha=d36c674dd96f4176f03176ddf0bd8bbb54e88aee
+executionStatus=NOT_RUN_TASK_UP_TO_DATE
+executedTests=0
+xmlCreatedByInvocation=0
