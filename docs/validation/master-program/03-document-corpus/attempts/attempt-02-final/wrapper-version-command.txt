@@ -1,0 +1,1 @@
+command=env JAVA_HOME=/workspace/.toolchain/jdk-17-temurin PATH=/workspace/.toolchain/jdk-17-temurin/bin:$PATH GRADLE_USER_HOME=/workspace/.gradle-master-program-20261016 ./gradlew --version
