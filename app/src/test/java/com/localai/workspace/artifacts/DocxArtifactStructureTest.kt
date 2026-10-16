@@ -2,10 +2,11 @@ package com.localai.workspace.artifacts
 
 import android.app.Application
 import com.localai.workspace.data.DocumentParser
+import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.AssertNotNull
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -50,7 +51,7 @@ class DocxArtifactStructureTest {
     }
 
     @Test
-    fun generatedDocxResolvesStylesNumberingTablesAndImmutableRevisions() {
+    fun generatedDocxResolvesStylesNumberingTablesAndImmutableRevisions() = runBlocking {
         val root = File(context.cacheDir, "docx-structure-${UUID.randomUUID()}")
         val store = ArtifactStore(context, root)
         val source = JSONObject("""
