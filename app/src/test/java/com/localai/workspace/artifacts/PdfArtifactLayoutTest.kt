@@ -1,7 +1,7 @@
 package com.localai.workspace.artifacts
 
 import android.app.Application
-import com.localai.pdfbox.android.PDFBoxResourceLoader
+import com.tom_roush.pdfbox.android.PDFBoxResourceLoader
 import com.tom_roush.pdfbox.pdmodel.PDDocument
 import com.tom_roush.pdfbox.pdmodel.font.PDType1Font
 import com.tom_roush.pdfbox.text.PDFTextStripper
@@ -72,10 +72,10 @@ class PdfArtifactLayoutTest {
                 assertTrue(extracted.contains("Correcto"))
             }
 
-            val revisedSpec = store.spec(project, first).json()
-                .put("paragraphs", store.spec(project, first).json().getJSONArray("paragraphs").apply {
-                    getJSONObject(0).put("text", "Informe revisado")
-                })
+            val revisedJson = store.spec(project, first).json()
+            val revisedSpec = revisedJson.put("paragraphs", revisedJson.getJSONArray("paragraphs").apply {
+                getJSONObject(0).put("text", "Informe revisado")
+            })
             val second = store.revise(project, first.id, first.version, ArtifactSpec.parse(revisedSpec))
             val secondFile = File(outputDir, "fixture-v2.pdf").apply {
                 writeBytes(store.verifiedFile(project, second).readBytes())
