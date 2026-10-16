@@ -534,6 +534,41 @@ class SemanticContextPostfixTest {
         assertEquals("NEEDS_REINDEX",semanticDb.dao().job(active.indexId)?.state)
     }
 
+    @Test fun documentRemovalWithoutCallbackFailsClosedThenLexicalFallbackUsesOnlyCurrentDocuments()=runBlocking {
+        addProject("project-a")
+        val removed=addDocument("project-a","removed-doc","removed.txt","ORCHID passage that must disappear after removal.")
+        val retained=addDocument("project-a","retained-doc","retained.txt","ORCHID passage that remains in the workspace.")
+        val oldGeneration=index("project-a").getValue("project-a")
+        val repository=WorkspaceRepository(workspace,context.cacheDir)
+        val embeddingCallsBefore=driver.calls
+
+        // This repository intentionally has no sidecar callback, reproducing a process-death gap.
+        assertEquals(0,repository.deleteDocument("project-a",removed.id))
+        try {
+            layer.search(SemanticInput.Text("ORCHID"),SemanticScope(ScopeType.PROJECT,"project-a"))
+            fail("the active generation still names a removed source and must be rejected")
+        } catch(expected:SemanticFailure) { assertEquals(SemanticError.REINDEX_REQUIRED,expected.code) }
+        assertEquals("document drift is detected before query embedding",embeddingCallsBefore,driver.calls)
+        assertEquals("NEEDS_REINDEX",semanticDb.dao().job(oldGeneration)?.state)
+
+        val fallback=foundation.build(request("project-a"),memoryEnabled=false)
+        assertTrue(fallback.notice.orEmpty().contains("SOURCE_SEMANTIC_V2_SKIPPED:REINDEX_REQUIRED"))
+        val evidence=fallback.included.filter { it.kind==com.localai.workspace.context.ContextKind.SOURCE }
+        assertTrue(evidence.isNotEmpty())
+        assertTrue(evidence.all { it.provenance.documentId==retained.id })
+        assertTrue(evidence.none { it.text.contains("must disappear") })
+
+        val freshGeneration=layer.indexProject("project-a")
+        assertNotEquals(oldGeneration,freshGeneration)
+        assertEquals(freshGeneration,semanticDb.dao().active(SemanticScope(ScopeType.PROJECT,"project-a").key)?.indexId)
+        val currentHits=layer.search(SemanticInput.Text("ORCHID"),SemanticScope(ScopeType.PROJECT,"project-a"),setOf(SemanticModality.TEXT))
+        assertTrue(currentHits.isNotEmpty())
+        assertTrue(currentHits.all { it.documentId==retained.id })
+        assertTrue(currentHits.none { it.content?.contains("must disappear")==true })
+        try { layer.switchIndex(oldGeneration);fail("a generation containing the removed document is not a rollback target") }
+        catch(expected:IllegalArgumentException) { assertEquals("NEEDS_REINDEX",semanticDb.dao().job(oldGeneration)?.state) }
+    }
+
     @Test fun indexingFailedAndCancelledGenerationsAreNeverSearchable()=runBlocking {
         addProject("project-a");addDocument("project-a","doc-a","notes.txt","ORCHID generation-state fixture.");index("project-a")
         val scope=SemanticScope(ScopeType.PROJECT,"project-a");val active=semanticDb.dao().active(scope.key)!!
@@ -669,6 +704,56 @@ class SemanticContextPostfixTest {
             app.semanticV2.database.close();ws.close();localScope.coroutineContext[Job]?.cancelAndJoin()
             File(context.filesDir,"documents/self-test-$token").deleteRecursively()
             context.deleteDatabase("semantic_v2.db")
+        }
+    }
+
+    @Test fun appGraphDocumentDeletionPurgesOnlyItsGenerationSourcesAndRetainsSharedVectorPayload()=runBlocking {
+        context.deleteDatabase("semantic_v2.db")
+        val persisted=graph.semanticV2.database
+        val dao=persisted.dao()
+        val projectA="document-delete-a";val projectB="document-delete-b"
+        addProject(projectA);addProject(projectB)
+        val privateRoot=File(context.filesDir,"documents").apply{mkdirs()}
+        val sharedText="ORCHID shared document payload"
+        val pathA=File(privateRoot,"delete-a.txt").apply{writeText(sharedText)}
+        val pathB=File(privateRoot,"keep-b.txt").apply{writeText(sharedText)}
+        val sharedHash=fingerprint(sharedText)
+        val now=System.currentTimeMillis()
+        workspace.documentDao().insert(DocumentEntity("delete-a",projectA,"shared.txt",localPath=pathA.path,mimeType="text/plain",fileHash=sharedHash,byteSize=pathA.length(),extractionStatus="READY",indexingStatus="READY",importedAt=now,updatedAt=now))
+        workspace.documentDao().insert(DocumentEntity("keep-b",projectB,"shared.txt",localPath=pathB.path,mimeType="text/plain",fileHash=sharedHash,byteSize=pathB.length(),extractionStatus="READY",indexingStatus="READY",importedAt=now,updatedAt=now))
+        workspace.documentDao().insertSegments(listOf(
+            DocumentSegmentEntity(documentId="delete-a",segmentIndex=0,text=sharedText,normalizedText=sharedText,contentHash=sharedHash),
+            DocumentSegmentEntity(documentId="keep-b",segmentIndex=0,text=sharedText,normalizedText=sharedText,contentHash=sharedHash),
+        ))
+        val scopeA=SemanticScope(ScopeType.PROJECT,projectA);val scopeB=SemanticScope(ScopeType.PROJECT,projectB)
+        val generationA="generation-delete-a";val generationB="generation-keep-b"
+        suspend fun seedGeneration(generation:String,scope:SemanticScope,documentId:String,path:File) {
+            val source="$generation:$documentId";val segment="$source:0"
+            dao.job(SemanticIndexJob(generation,scope.key,"shared-space","READY",1,1,1,now,now,null))
+            dao.activate(SemanticActiveIndex(scope.key,generation,"shared-space"))
+            dao.source(SemanticSourceRecord(source,scope.key,"DOCUMENT","shared.txt","text/plain",path.path,path.length(),now,sharedHash))
+            dao.segment(SemanticSegmentRecord(segment,source,"TEXT",sharedText,"shared.txt",null,null,null,null,null,sharedHash))
+            dao.embedding(SemanticEmbeddingRecord(generation,segment,"shared-space","test","test-model","c".repeat(64),2,true,"DOCUMENT",sharedHash,"RAW",ByteArray(8),now))
+        }
+        seedGeneration(generationA,scopeA,"delete-a",pathA);seedGeneration(generationB,scopeB,"keep-b",pathB)
+        assertEquals("both generations share one immutable payload",1,dao.payloadCount())
+
+        try {
+            assertEquals(0,graph.workspace.deleteDocument(projectA,"delete-a"))
+            assertEquals(generationA,dao.active(scopeA.key)?.indexId)
+            assertEquals("NEEDS_REINDEX",dao.job(generationA)?.state)
+            assertEquals("READY",dao.job(generationB)?.state)
+            assertEquals(0,dao.count(generationA))
+            assertEquals(1,dao.count(generationB))
+            assertTrue(dao.sources(scopeA.key).isEmpty())
+            assertEquals("the other project keeps its source",1,dao.sources(scopeB.key).size)
+            assertEquals("the payload remains shared with the surviving generation",1,dao.payloadCount())
+            assertFalse(pathA.exists())
+            assertTrue(pathB.exists())
+        } finally {
+            persisted.close()
+            context.deleteDatabase("semantic_v2.db")
+            pathA.delete();pathB.delete()
         }
     }
 }
