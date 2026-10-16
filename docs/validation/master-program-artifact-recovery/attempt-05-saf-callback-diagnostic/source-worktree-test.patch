@@ -1,0 +1,14 @@
+diff --git a/app/src/test/java/com/localai/workspace/ui/ArtifactSafExportUiTest.kt b/app/src/test/java/com/localai/workspace/ui/ArtifactSafExportUiTest.kt
+index f205fbc..0912a77 100644
+--- a/app/src/test/java/com/localai/workspace/ui/ArtifactSafExportUiTest.kt
++++ b/app/src/test/java/com/localai/workspace/ui/ArtifactSafExportUiTest.kt
+@@ -84,5 +84 @@ class ArtifactSafExportUiTest {
+-        compose.waitUntil(10_000) {
+-            runCatching {
+-                compose.onNodeWithTag("artifact-status").assertTextContains("Exported and read back")
+-            }.isSuccess
+-        }
++        compose.waitUntil(10_000) { bytes.size() == expected.size }
+@@ -92 +88 @@ class ArtifactSafExportUiTest {
+-        compose.onNodeWithTag("artifact-status").assertTextContains(revision.name)
++        compose.onNodeWithTag("artifact-status").assertTextContains("Exported and read back: ${revision.name} · v${revision.version}")

@@ -1,0 +1,9 @@
+source_sha=dfff07ec9965d774af90b146156b45072063e4bf
+started_utc=2026-10-16T23:04:57Z
+java17=openjdk version "17.0.20.1" 2026-08-18
+java21=openjdk version "21.0.12.1" 2026-08-18 LTS
+sdk=/workspace/.toolchain/android-sdk
+ndk=/workspace/.toolchain/android-sdk/ndk/27.0.12077973
+gradle_user_home=/workspace/.gradle-master-program-20261016
+finished_utc=2026-10-16T23:05:37Z
+duration_seconds=40

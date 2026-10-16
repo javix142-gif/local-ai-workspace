@@ -1,0 +1,4 @@
+source_sha=6a99135d61f2c7c9a8060ed8f15c97643a6fcedc
+started_utc=2026-10-16T22:58:07Z
+java17=openjdk version "17.0.20.1" 2026-08-18
+java21=openjdk version "21.0.12.1" 2026-08-18 LTS

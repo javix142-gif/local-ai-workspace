@@ -1,0 +1,12 @@
+source_sha=6a99135d61f2c7c9a8060ed8f15c97643a6fcedc
+started_utc=2026-10-16T22:58:24Z
+java17=openjdk version "17.0.20.1" 2026-08-18
+java21=openjdk version "21.0.12.1" 2026-08-18 LTS
+sdk=/workspace/.toolchain/android-sdk
+ndk=/workspace/.toolchain/android-sdk/ndk/27.0.12077973
+gradle_user_home=/workspace/.gradle-master-program-20261016
+finished_utc=2026-10-16T23:03:10Z
+duration_seconds=286
+source_worktree=modified_test_only
+source_worktree_test_diff=source-worktree-test.patch
+source_worktree_test_diff_sha256=f014eb03c60b7fe12fd23f8ff0d8f2a3a61d9cc43f5397de9e80f211dcb0d5a9

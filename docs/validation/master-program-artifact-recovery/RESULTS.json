@@ -1,0 +1,102 @@
+{
+  "name": "Artifact API recovery and SAF export focused host increment",
+  "status": "FOCUSED_HOST_PASS_PREPARATORY_DEPENDENCY_BLOCKED_NOT_FORMAL",
+  "finalTestedCodeSha": "dfff07ec9965d774af90b146156b45072063e4bf",
+  "codeCommits": [
+    "ddb4f798c6d4ee3407140fa0028742db246ca678",
+    "908edd76e483efc55857d5a89f465c975ccadfbe",
+    "6a99135d61f2c7c9a8060ed8f15c97643a6fcedc",
+    "dfff07ec9965d774af90b146156b45072063e4bf"
+  ],
+  "changedFiles": [
+    "app/src/test/java/com/localai/workspace/artifacts/ArtifactPatchRecoveryTest.kt",
+    "app/src/test/java/com/localai/workspace/ui/ArtifactSafExportUiTest.kt"
+  ],
+  "productionChanged": false,
+  "schemaOrDependenciesChanged": false,
+  "finalFocusedRun": {
+    "attempt": "attempt-07-combined-focused",
+    "sourceSha": "dfff07ec9965d774af90b146156b45072063e4bf",
+    "commandFile": "attempt-07-combined-focused/command.txt",
+    "logFile": "attempt-07-combined-focused/gradle.log",
+    "exitCodeFile": "attempt-07-combined-focused/exit-code.txt",
+    "environmentFile": "attempt-07-combined-focused/environment.txt",
+    "xml": [
+      {
+        "path": "attempt-07-combined-focused/TEST-com.localai.workspace.artifacts.ArtifactPatchRecoveryTest.xml",
+        "tests": 1,
+        "passed": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "98758ef29181103ca0874ab8b066a8cbfc75242ebdae71ce74251878ca25e42b"
+      },
+      {
+        "path": "attempt-07-combined-focused/TEST-com.localai.workspace.ui.ArtifactSafExportUiTest.xml",
+        "tests": 1,
+        "passed": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "fa4bb0cb1ef0c5bd6c8a735d0e6de54aa65d50968c93013a6ba0de4f6b08957a"
+      }
+    ],
+    "total": {
+      "tests": 2,
+      "passed": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "gradle": "8.10.2",
+    "runtimeJdk": "Temurin 17.0.20.1",
+    "testWorkerJdk": "Temurin 21.0.12.1",
+    "androidSdk": "API 35 at /workspace/.toolchain/android-sdk",
+    "ndk": "27.0.12077973",
+    "offline": true,
+    "existingGradleUserHome": "/workspace/.gradle-master-program-20261016",
+    "durationSeconds": 40,
+    "executedGradleTasks": 1,
+    "upToDateGradleTasks": 62,
+    "hostGate": "FOCUSED_ONLY"
+  },
+  "attemptInterpretation": {
+    "recoveryAttempt01": "PASS 1/1 at ddb4f79; log retained; XML not retained in that attempt; final attempt 07 also covers this test with XML.",
+    "safAttempts02And03": "Test harness failures while bringing the action into view and waiting for callback completion.",
+    "attempt04": "Shell exit 127 before Gradle because ANDROID_HOME was unset under set -u; no test ran.",
+    "attempt05": "HEAD was 6a99135 but the test worktree was modified by a diagnostic-only patch, preserved as attempt-05-saf-callback-diagnostic/source-worktree-test.patch with its SHA in that attempt manifest. Polling assertion failed even though diagnostic UI status confirms export/readback success and destination length is 51 bytes; not a production failure.",
+    "attempt06": "PASS 1/1 after polling for exact written bytes and asserting status separately.",
+    "attempt07": "PASS 2/2 on final tested source SHA."
+  },
+  "originalTask": {
+    "id": "M03-01",
+    "title": "Diseñar Artifact API y persistencia",
+    "sourceStatus": "TODO",
+    "dependsOn": ["M02-05"],
+    "dependencyStatus": "M02-05 remains TODO; no formal dependency closure",
+    "formalCompletion": false,
+    "preparatoryCoverage": "Focused tests for interrupted committed-revision recovery and user-selected SAF byte/hash readback; broader original task/milestone remains open."
+  },
+  "planSource": {
+    "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmap": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskIds": 97,
+    "uniqueIds": 97,
+    "dependencies": 120,
+    "sourceStatuses": {"TODO": 97},
+    "sourceFilesModified": false
+  },
+  "validation": {
+    "HOST": "PASS_FOCUSED_2_OF_2",
+    "fullJvmSuite": "NOT_RUN",
+    "lint": "NOT_RUN",
+    "assembleDebug": "NOT_RUN",
+    "androidTestCompilation": "NOT_RUN",
+    "EMULATOR": "NOT_RUN_THIS_INCREMENT; historical global result remains Room-v1 FAIL plus six model-dependent skips",
+    "PHYSICAL_DEVICE": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  },
+  "nextPreparatoryAction": "Inspect the existing XLSX artifact adapter and tests against the authentic M03-02 DoD; pursue only a bounded host-verifiable gap and retain M03-02 requires_device=true/source TODO."
+}

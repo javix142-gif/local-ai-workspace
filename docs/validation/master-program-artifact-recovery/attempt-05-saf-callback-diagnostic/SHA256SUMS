@@ -1,0 +1,6 @@
+4d178fff74e2745868dc39300f3aedddee5dbe18c58b24b370ebaec4713714cc  docs/validation/master-program-artifact-recovery/attempt-05-saf-callback-diagnostic/TEST-com.localai.workspace.ui.ArtifactSafExportUiTest.xml
+98c1d9866266c48e18614293a6f21c367acb490f742570f30045a9ac72777be1  docs/validation/master-program-artifact-recovery/attempt-05-saf-callback-diagnostic/command.txt
+73f0ca92e4524540c889f8a964ab91b42c47d61f70449ce533c08f673125bce4  docs/validation/master-program-artifact-recovery/attempt-05-saf-callback-diagnostic/environment.txt
+4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865  docs/validation/master-program-artifact-recovery/attempt-05-saf-callback-diagnostic/exit-code.txt
+c4dcea63ff69b1c3c86e92059bc056f64586187bad8df7384ab8c3f3c8b7ecb7  docs/validation/master-program-artifact-recovery/attempt-05-saf-callback-diagnostic/gradle.log
+f014eb03c60b7fe12fd23f8ff0d8f2a3a61d9cc43f5397de9e80f211dcb0d5a9  docs/validation/master-program-artifact-recovery/attempt-05-saf-callback-diagnostic/source-worktree-test.patch

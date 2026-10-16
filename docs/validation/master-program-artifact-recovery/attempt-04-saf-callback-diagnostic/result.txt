@@ -1,0 +1,1 @@
+The shell invocation exited 127 before invoking Gradle. It ran with `set -u`, then attempted to read `ANDROID_HOME` while recording environment metadata; that variable was unset in the shell. The tool returned `/bin/bash: line 10: ANDROID_HOME: unbound variable`. No Gradle task, test, or XML was produced by this invocation. The environment was corrected for the next actual run.
