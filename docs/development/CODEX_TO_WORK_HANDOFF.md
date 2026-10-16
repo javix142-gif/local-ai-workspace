@@ -1,3 +1,11 @@
+## Current continuation checkpoint — M02-06 stale-index reimport coverage (2026-10-16)
+
+Test-only commit `1433537fd1d46fb5d39622f63a02682f0c55a153` adds one synthetic integration regression for import → index → delete → changed-content reimport → reindex across two project scopes. On the exact code SHA, the focused API 35 HOST run forced task execution and passed 1/1 (0 failures/errors/skips, 8.944 s test body, 3m33s Gradle, exit 0; 63 tasks). It verifies the old generation remains `NEEDS_REINDEX`, stale semantic results are rejected, Context Builder uses current lexical evidence with a notice during the stale window, the replacement publishes a new `READY` generation, and another project's generation/content is unchanged. Full command, JDK/SDK, attempts, XML and compressed logs are in [M02-06 incremental reindex evidence](../validation/master-program-incremental-reindex/RESULTS.md).
+
+An initial filtered command did not discover the test because its Kotlin `@Test` function returned `Boolean`; this was corrected to return `Unit`. A subsequent exact-SHA Gradle run was `UP-TO-DATE` and executed zero tests, so it is not counted. The final `--rerun-tasks` run is the actual exact-SHA test result. No production files, Room schema, workflow, dependency, or runtime changed; the scoped regression was sufficient for this test-only increment. Full JVM/LiteRT gates, lint, APK, AndroidTest compile/run, emulator, and Motorola were not run for this increment.
+
+M02-06 receives preparatory HOST evidence only and remains source `TODO` because it depends on M02-05, still formally `TODO`. The original backlog and roadmap are unchanged: 97 unique IDs, 120 edges, all source statuses `TODO`; canonical hashes remain recorded in `EXECUTION_STATE.json`. EMULATOR remains at the separately documented historical Room-v1 failure plus six actual-model skips; `PHYSICAL_DEVICE=NOT_RUN`; M01-06 remains `PENDING_REQUIRES_DEVICE`. Next bounded review: M03-01's existing Artifact API interrupted-commit recovery path and whether it has direct regression coverage. No original task status is promoted.
+
 # Master program — real artifacts delivered, native baseline required
 
 ## Latest continuation checkpoint — M02-02 XLSX fidelity preparation (2026-10-16)

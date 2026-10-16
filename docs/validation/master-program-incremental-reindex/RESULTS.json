@@ -1,0 +1,94 @@
+{
+  "kind": "PREPARATORY_M02_06_STALE_INDEX_REIMPORT_LIFECYCLE",
+  "status": "FOCUSED_HOST_PASS_PREPARATORY_DEPENDENCY_BLOCKED_NOT_FORMAL",
+  "codeSha": "1433537fd1d46fb5d39622f63a02682f0c55a153",
+  "parentSha": "535468c166116cf0625f75f8006c53590f7bfc16",
+  "changedProduction": false,
+  "productTestPath": "app/src/test/java/com/localai/workspace/semantic/v2/SemanticContextPostfixTest.kt",
+  "test": "com.localai.workspace.semantic.v2.SemanticContextPostfixTest.editDeleteReimportKeepsProjectGenerationsScopedAndNeverServesStaleHits",
+  "focusedHost": {
+    "status": "PASS",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "testSeconds": 8.944,
+    "gradleWallSeconds": 213,
+    "exitCode": 0,
+    "sourceSha": "1433537fd1d46fb5d39622f63a02682f0c55a153",
+    "commandFile": "attempt-04-forced-exact-sha/command.txt",
+    "logFile": "attempt-04-forced-exact-sha/gradle.log.gz",
+    "junitXml": "attempt-04-forced-exact-sha/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml",
+    "environment": "attempt-04-forced-exact-sha/environment.txt",
+    "tasks": 63
+  },
+  "attempts": [
+    {
+      "id": "attempt-01-focused",
+      "status": "NO_TEST_DISCOVERED",
+      "exitCode": 1,
+      "cause": "JUnit did not discover a Kotlin @Test method returning Boolean; test body did not run",
+      "xml": null
+    },
+    {
+      "id": "attempt-02-focused",
+      "status": "PASS_WORKTREE_CONTENT_MATCHES_COMMITTED_PATCH",
+      "exitCode": 0,
+      "tests": 1,
+      "passed": 1,
+      "failures": 0,
+      "sourceHead": "535468c166116cf0625f75f8006c53590f7bfc16",
+      "testDiffSha256": "31557ff94406d9335469b9ced1195086b2eaba4d314ac01918b0d11bbd52a866"
+    },
+    {
+      "id": "attempt-03-committed-source",
+      "status": "BUILD_SUCCESS_TEST_UP_TO_DATE_NOT_EXECUTED",
+      "exitCode": 0,
+      "sourceSha": "1433537fd1d46fb5d39622f63a02682f0c55a153",
+      "testsExecuted": 0
+    },
+    {
+      "id": "attempt-04-forced-exact-sha",
+      "status": "PASS",
+      "exitCode": 0,
+      "sourceSha": "1433537fd1d46fb5d39622f63a02682f0c55a153",
+      "tests": 1,
+      "passed": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "gradleWallSeconds": 213
+    }
+  ],
+  "environment": {
+    "gradle": "8.10.2",
+    "runtimeJdk": "Temurin 17.0.20.1",
+    "testWorkerJdk": "Temurin 21.0.12.1",
+    "androidSdk": "API 35 at /workspace/.toolchain/android-sdk",
+    "ndk": "27.0.12077973",
+    "offline": true,
+    "existingCachesOnly": true
+  },
+  "sourcePlan": {
+    "taskId": "M02-06",
+    "sourceStatus": "TODO",
+    "dependsOn": ["M02-05"],
+    "dependencyStatus": "M02-05 remains TODO; no formal closure claimed",
+    "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmapPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskIds": 97,
+    "uniqueTaskIds": 97,
+    "dependencyEdges": 120,
+    "missingDependencies": 0,
+    "sourceStatuses": {"TODO": 97},
+    "sourceFilesChanged": false
+  },
+  "validationLayers": {
+    "HOST": "FOCUSED_PASS",
+    "EMULATOR": "NOT_RUN_THIS_INCREMENT; latest global state remains historical Room-v1 failure plus six real-model skips",
+    "PHYSICAL_DEVICE": "NOT_RUN"
+  },
+  "nextPreparatoryReview": "M03-01 Artifact API recovery test seam; source task and dependency chain remain TODO"
+}
