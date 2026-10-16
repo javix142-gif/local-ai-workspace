@@ -11,10 +11,41 @@ import java.util.zip.*
 @RunWith(RobolectricTestRunner::class) @Config(sdk=[29], application=android.app.Application::class)
 class StructuredDocumentsTest {
  private fun zip(entries: Map<String,String>): File = File.createTempFile("docs", ".zip").apply { ZipOutputStream(outputStream()).use { z -> entries.forEach { (p,s) -> z.putNextEntry(ZipEntry(p));z.write(s.toByteArray());z.closeEntry() } } }
+ private fun corpusXlsx(name: String): File {
+  var directory: File? = File(System.getProperty("user.dir") ?: ".").canonicalFile
+  while (directory != null) {
+   val candidate = File(directory, "docs/validation/master-program/02-artifacts-documents/synthetic-corpus/$name")
+   if (candidate.isFile) return candidate
+   directory = directory.parentFile
+  }
+  error("Versioned synthetic XLSX corpus file not found: $name")
+ }
  @Test fun csvPreservesQuotedCellsAndRows() { val f=File.createTempFile("csv", ".csv");try { f.writeText("name;value\n\"a;b\";12\n\"multi\nline\";4");val table=S.csv(f);assertEquals("a;b",table.cells[2].value);assertEquals(3,table.cells[4].row);assertEquals("multi\nline",table.cells[4].value) } finally { f.delete() } }
  @Test fun invalidEncodingDoesNotBecomeGibberish() { assertThrows(Exception::class.java) { S.text(byteArrayOf(0xc3.toByte(),0x28)) };assertEquals("a",S.text(byteArrayOf(-1,-2,97,0)).first) }
  @Test fun zipSlipAndBombRejected() { val f=zip(mapOf("../secret" to "x"));try { ZipFile(f).use { assertThrows(Exception::class.java) { S.inspect(it) } } } finally { f.delete() };assertFalse(S.safePath("C:/a"));assertFalse(S.safePath("a\\b"));assertTrue(S.safePath("folder/a.csv")) }
  @Test fun xlsxPreservesSheetAddressCachedValueFormula() { val f=zip(mapOf("xl/workbook.xml" to "<workbook xmlns:r='http://schemas.openxmlformats.org/officeDocument/2006/relationships'><sheets><sheet name='Sales' r:id='r1'/></sheets></workbook>", "xl/_rels/workbook.xml.rels" to "<Relationships><Relationship Id='r1' Target='worksheets/sheet1.xml'/></Relationships>", "xl/worksheets/sheet1.xml" to "<worksheet><sheetData><row r='1'><c r='B1'><f>SUM(A1:A2)</f><v>12</v></c></row></sheetData></worksheet>"));try { val c=S.xlsx(f).cells.single();assertEquals("Sales",c.sheet);assertEquals(2,c.column);assertEquals("12",c.value);assertEquals("SUM(A1:A2)",c.formula) } finally { f.delete() } }
+ @Test fun versionedXlsxPreservesTypesSheetsFormulaAndCachedValueWithoutRecalculation() {
+  val original=S.xlsx(corpusXlsx("v1-fixture.xlsx"))
+  assertEquals(listOf("Hoja1","Hoja2"),original.sheetNames)
+  fun cell(sheet:String,address:String)=original.cells.single { it.sheet==sheet&&it.address==address }
+  assertEquals("n",cell("Hoja1","A1").type);assertEquals("1",cell("Hoja1","A1").value)
+  assertEquals("inlineStr",cell("Hoja1","B1").type);assertEquals("España & <valor>",cell("Hoja1","B1").value)
+  assertEquals("n",cell("Hoja1","A2").type);assertEquals("5",cell("Hoja1","A2").value)
+  val formula=cell("Hoja1","A3")
+  assertEquals("n",formula.type);assertEquals("\$A\$2-\$A\$1",formula.formula);assertEquals("4",formula.value)
+  assertEquals("inlineStr",cell("Hoja2","B14").type);assertEquals("Exacto 界",cell("Hoja2","B14").value)
+  val serialized=original.document().pages.joinToString("\n") { it.text }
+  assertTrue(serialized.contains("\"valueType\":\"n\""))
+  assertTrue(serialized.contains("\"valueType\":\"inlineStr\""))
+  assertTrue(serialized.contains(formula.formula!!))
+  assertFalse("The structured representation must not claim formula recalculation",serialized.contains("recalculated"))
+
+  val revised=S.xlsx(corpusXlsx("v2-fixture.xlsx"))
+  assertEquals(listOf("Hoja1","Hoja2"),revised.sheetNames)
+  assertEquals("7",revised.cells.single { it.sheet=="Hoja1"&&it.address=="A2" }.value)
+  val cached=revised.cells.single { it.sheet=="Hoja1"&&it.address=="A3" }
+  assertEquals("\$A\$2-\$A\$1",cached.formula);assertEquals("4",cached.value)
+ }
  @Test fun xlsxWorksheetOrderMetadataSurvivesIntoStructuredEvidence() {
   val f=zip(mapOf(
    "xl/workbook.xml" to "<workbook xmlns:r='http://schemas.openxmlformats.org/officeDocument/2006/relationships'><sheets><sheet name='Hoja1' r:id='r1'/><sheet name='Depto 2' r:id='r2'/><sheet name='Hoja3' r:id='r3'/></sheets></workbook>",
