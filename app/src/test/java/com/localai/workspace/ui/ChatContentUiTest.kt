@@ -88,6 +88,18 @@ class ChatContentUiTest {
         compose.onNodeWithTag("citation-detail-scroll").assertDoesNotExist()
     }
 
+    @Test fun citationDetailOffersAnActionToOpenItsIndexedSourceSegment() {
+        val evidence = citationEvidence(
+            evidenceId = "LCL-OPEN-1",
+            sourceLabel = "notes.txt",
+            pageStart = 3,
+            excerpt = "Stored excerpt from the cited segment",
+        )
+        compose.setContent { LocalAiTheme { CitationEvidenceDialog(evidence) {} } }
+
+        compose.onNodeWithText("Open indexed source segment").assertIsDisplayed()
+    }
+
     @Test
     @Config(sdk = [35], application = Application::class)
     fun semanticCodeCitationKeepsPathLinesAndOpensTheSameEvidenceId() {
