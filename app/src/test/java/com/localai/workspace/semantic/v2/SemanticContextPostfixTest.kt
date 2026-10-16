@@ -178,6 +178,42 @@ class SemanticContextPostfixTest {
         assertFalse(projectBundle.conversation().userMessage.contains("foreign project passage"))
     }
 
+    @Test fun eg2CodeHitKeepsExactPathAndLineAsCitableEvidence()=runBlocking {
+        addProject("code-project");addProject("foreign-code-project")
+        val document=addDocument("code-project","answer-code","src/Answer.kt","fun answer() = 42")
+        addDocument("foreign-code-project","foreign-answer-code","src/Answer.kt","fun answer() = 999")
+        index("code-project","foreign-code-project")
+
+        val bundle=foundation.build(
+            request("code-project",setOf(document.id)).copy(query="Where is answer defined?"),
+            evidence=emptyList(),
+            memoryEnabled=false,
+        )
+        val source=bundle.included.single{it.kind==com.localai.workspace.context.ContextKind.SOURCE}
+
+        assertEquals("src/Answer.kt",source.provenance.sourceName)
+        assertEquals(1,source.provenance.lineStart)
+        assertEquals(1,source.provenance.lineEnd)
+        val prompt=bundle.conversation().userMessage
+        assertTrue(prompt.contains("source-name=\"src/Answer.kt\""))
+        assertTrue(prompt.contains("line-start=\"1\" line-end=\"1\""))
+        assertTrue(prompt.contains("fun answer() = 42"))
+        assertFalse(prompt.contains("fun answer() = 999"))
+        val evidence=bundle.sourceEvidence.single()
+        assertEquals(document.id,evidence.documentId)
+        assertEquals("src/Answer.kt",evidence.documentTitle)
+        assertNull(evidence.segmentId)
+        assertEquals(source.provenance.segmentId,evidence.semanticSegmentId)
+        assertEquals(1,evidence.lineStart)
+        assertEquals(1,evidence.lineEnd)
+        val validator=com.localai.workspace.domain.rag.CitationValidator()
+        val extracted=validator.extractCandidates("See [${evidence.id}]")
+        assertEquals(listOf(evidence.id),extracted.map{it.evidenceId})
+        assertEquals(listOf(evidence.id),validator.validate(extracted,bundle.sourceEvidence).valid.map{it.evidence.id})
+        assertEquals(listOf("SV2-0000000000000000"),validator.validate(
+            validator.extractCandidates("[SV2-0000000000000000]"),bundle.sourceEvidence).invalidEvidenceIds)
+    }
+
     @Test fun followUpCellQuestionSendsOnlyRelevantCellsWithCellProvenance()=runBlocking {
         addProject("project-a")
         val row1=org.json.JSONObject().put("sheet","Sales").put("row",1).put("cells",org.json.JSONArray()

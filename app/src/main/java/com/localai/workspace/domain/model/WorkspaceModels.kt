@@ -307,7 +307,8 @@ data class RuntimeMetrics(
 
 data class Evidence(
     val id: String,
-    val segmentId: Long,
+    /** Legacy workspace segment identity; null when evidence comes from a Semantic V2-only segment. */
+    val segmentId: Long?,
     val documentId: String,
     val documentTitle: String,
     val excerpt: String,
@@ -317,6 +318,10 @@ data class Evidence(
     val charEnd: Int?,
     val trust: SourceTrust = SourceTrust.UNTRUSTED_DOCUMENT,
     val retrievalScore: Double,
+    /** Canonical Semantic V2 segment identity, when this passage was selected from EG2. */
+    val semanticSegmentId: String? = null,
+    val lineStart: Int? = null,
+    val lineEnd: Int? = null,
 )
 
 data class CitationCandidate(

@@ -38,4 +38,21 @@ class CitationValidatorTest {
         assertTrue(candidates.map { it.evidenceId }.containsAll(listOf("LCL-AB12", "WEB-00FF")))
         assertTrue(candidates.none { it.evidenceId.startsWith("DOC-") })
     }
+
+    @Test
+    fun semanticV2CitationIdsAreAcceptedOnlyWhenPresentInTurnEvidence() {
+        val code = evidence.copy(
+            id = "SV2-0123456789ABCDEF",
+            segmentId = null,
+            documentTitle = "src/Answer.kt",
+            semanticSegmentId = "project:answer:0",
+            lineStart = 4,
+            lineEnd = 6,
+        )
+        val validator = CitationValidator()
+        val extracted = validator.extractCandidates("See [SV2-0123456789abcdef] and [SV2-0123456789ABCDEG].")
+        assertEquals(listOf(code.id), extracted.map { it.evidenceId })
+        assertEquals(listOf(code.id), validator.validate(extracted, listOf(code)).valid.map { it.evidence.id })
+        assertEquals(listOf(code.id), validator.validate(extracted, emptyList()).invalidEvidenceIds)
+    }
 }

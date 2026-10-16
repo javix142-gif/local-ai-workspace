@@ -88,6 +88,43 @@ class ChatContentUiTest {
         compose.onNodeWithTag("citation-detail-scroll").assertDoesNotExist()
     }
 
+    @Test
+    @Config(sdk = [35], application = Application::class)
+    fun semanticCodeCitationKeepsPathLinesAndOpensTheSameEvidenceId() {
+        val evidenceId = "SV2-0123456789ABCDEF"
+        val evidence = listOf(citationEvidence(
+            evidenceId = evidenceId,
+            sourceLabel = "src/Answer.kt",
+            pageStart = null,
+            excerpt = "fun answer() = 42",
+            semanticSegmentId = "project:answer:0",
+            lineStart = 4,
+            lineEnd = 6,
+        ))
+        var selectedId: String? = null
+
+        compose.setContent { LocalAiTheme {
+            var selected by remember { mutableStateOf<String?>(null) }
+            SideEffect { selectedId = selected }
+            Column(Modifier.width(280.dp)) {
+                CitationEvidenceReferences(evidence) { selected = it }
+                selected?.let { id ->
+                    evidence.single { it.evidenceId == id }.let { CitationEvidenceDialog(it) { selected = null } }
+                }
+            }
+        } }
+
+        compose.onNodeWithContentDescription(
+            "Evidence $evidenceId, source src/Answer.kt, lines 4–6",
+        ).assertIsDisplayed().performClick()
+        compose.runOnIdle { assertEquals(evidenceId, selectedId) }
+        compose.onNodeWithTag("citation-source", useUnmergedTree = true).assertTextEquals("src/Answer.kt")
+        compose.onNodeWithTag("citation-detail-lines", useUnmergedTree = true).assertTextEquals("Lines 4–6")
+        compose.onNodeWithTag("citation-excerpt", useUnmergedTree = true).assertTextEquals("fun answer() = 42")
+        compose.onNodeWithText("Metadata comes from the local index, not from model-generated citation text.")
+            .performScrollTo().assertIsDisplayed()
+    }
+
     @Test fun longCitationExcerptAndSourceRemainScrollableAndUntruncatedOnCompactScaledLayout() {
         val sourceLabel = "A deliberately long indexed source label that wraps across lines on a compact screen"
         val excerpt = (1..18).joinToString("\n\n") { paragraph ->
@@ -128,18 +165,24 @@ class ChatContentUiTest {
         sourceLabel: String,
         pageStart: Int?,
         excerpt: String,
+        semanticSegmentId: String? = null,
+        lineStart: Int? = null,
+        lineEnd: Int? = null,
     ) = CitationEvidenceEntity(
         id = "citation-$evidenceId",
         conversationId = "conversation-1",
         messageId = "assistant-message-1",
         evidenceId = evidenceId,
-        segmentId = 42,
+        segmentId = if (semanticSegmentId == null) 42 else null,
         excerpt = excerpt,
         documentId = "document-1",
         sourceLabel = sourceLabel,
         pageStart = pageStart,
         retrievalScore = 0.91,
         createdAt = 1L,
+        semanticSegmentId = semanticSegmentId,
+        lineStart = lineStart,
+        lineEnd = lineEnd,
     )
 
     @Test fun pendingImageIsVisibleAndRemoveClearsIt() {

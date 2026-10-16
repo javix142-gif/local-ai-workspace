@@ -184,7 +184,8 @@ data class CitationEvidenceEntity(
     val conversationId: String,
     val messageId: String,
     val evidenceId: String,
-    val segmentId: Long,
+    /** Nullable for Semantic V2 code segments that have no legacy workspace segment row. */
+    val segmentId: Long?,
     val excerpt: String,
     val documentId: String,
     val sourceLabel: String,
@@ -194,6 +195,9 @@ data class CitationEvidenceEntity(
     val charEnd: Int? = null,
     val retrievalScore: Double,
     val createdAt: Long,
+    val semanticSegmentId: String? = null,
+    val lineStart: Int? = null,
+    val lineEnd: Int? = null,
 )
 
 @Entity(tableName = "tool_calls", indices = [Index("conversationId"), Index("startedAt")])

@@ -1040,6 +1040,9 @@ class ChatViewModel(
                         charEnd = item.charEnd,
                         retrievalScore = item.retrievalScore,
                         createdAt = System.currentTimeMillis(),
+                        semanticSegmentId = item.semanticSegmentId,
+                        lineStart = item.lineStart,
+                        lineEnd = item.lineEnd,
                     )
                 }
                 if (citationRows.isNotEmpty()) graph.workspace.saveCitationEvidence(citationRows)

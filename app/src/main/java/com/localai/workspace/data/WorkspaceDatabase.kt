@@ -22,7 +22,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         ToolCallEntity::class,
         PendingDocumentDeletionEntity::class, SemanticVectorEntity::class,
     ],
-    version = 8,
+    version = 9,
     exportSchema = true,
 )
 abstract class WorkspaceDatabase : RoomDatabase() {
@@ -44,7 +44,50 @@ abstract class WorkspaceDatabase : RoomDatabase() {
             context,
             WorkspaceDatabase::class.java,
             "local_ai_workspace.db",
-        ).enableMultiInstanceInvalidation().addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8).build()
+        ).enableMultiInstanceInvalidation().addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9).build()
+
+        /** Preserves all existing citation rows while allowing V2-only segment and code-line provenance. */
+        val MIGRATION_8_9 = object : Migration(8, 9) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("""
+                    CREATE TABLE citation_evidence_new (
+                        id TEXT NOT NULL,
+                        conversationId TEXT NOT NULL,
+                        messageId TEXT NOT NULL,
+                        evidenceId TEXT NOT NULL,
+                        segmentId INTEGER,
+                        excerpt TEXT NOT NULL,
+                        documentId TEXT NOT NULL,
+                        sourceLabel TEXT NOT NULL,
+                        pageStart INTEGER,
+                        pageEnd INTEGER,
+                        charStart INTEGER,
+                        charEnd INTEGER,
+                        retrievalScore REAL NOT NULL,
+                        createdAt INTEGER NOT NULL,
+                        semanticSegmentId TEXT,
+                        lineStart INTEGER,
+                        lineEnd INTEGER,
+                        PRIMARY KEY(id)
+                    )
+                """.trimIndent())
+                database.execSQL("""
+                    INSERT INTO citation_evidence_new (
+                        id, conversationId, messageId, evidenceId, segmentId, excerpt, documentId,
+                        sourceLabel, pageStart, pageEnd, charStart, charEnd, retrievalScore, createdAt,
+                        semanticSegmentId, lineStart, lineEnd
+                    )
+                    SELECT id, conversationId, messageId, evidenceId, segmentId, excerpt, documentId,
+                        sourceLabel, pageStart, pageEnd, charStart, charEnd, retrievalScore, createdAt,
+                        NULL, NULL, NULL
+                    FROM citation_evidence
+                """.trimIndent())
+                database.execSQL("DROP TABLE citation_evidence")
+                database.execSQL("ALTER TABLE citation_evidence_new RENAME TO citation_evidence")
+                database.execSQL("CREATE INDEX IF NOT EXISTS index_citation_evidence_conversationId ON citation_evidence (conversationId)")
+                database.execSQL("CREATE INDEX IF NOT EXISTS index_citation_evidence_evidenceId ON citation_evidence (evidenceId)")
+            }
+        }
 
         val MIGRATION_7_8 = object : Migration(7, 8) {
             override fun migrate(database: SupportSQLiteDatabase) { database.execSQL("ALTER TABLE messages ADD COLUMN audioPath TEXT") }

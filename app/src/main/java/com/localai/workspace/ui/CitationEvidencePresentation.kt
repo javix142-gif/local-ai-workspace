@@ -39,6 +39,10 @@ internal fun CitationEvidenceReferences(
                 append("Evidence ${item.evidenceId}")
                 item.sourceLabel.takeIf { it.isNotBlank() }?.let { append(", source $it") }
                 item.pageStart?.let { append(", page $it") }
+                item.lineStart?.let { start ->
+                    val end = item.lineEnd?.takeIf { it != start }
+                    append(if (end == null) ", line $start" else ", lines $start–$end")
+                }
             }
             OutlinedCard(
                 onClick = { onCitation(item.evidenceId) },
@@ -62,6 +66,13 @@ internal fun CitationEvidenceReferences(
                     item.pageStart?.let { page ->
                         Text("Page $page", style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                    item.lineStart?.let { start ->
+                        val end = item.lineEnd?.takeIf { it != start }
+                        Text(if (end == null) "Line $start" else "Lines $start–$end",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.testTag("citation-lines"))
                     }
                 }
             }
@@ -102,6 +113,13 @@ internal fun CitationEvidenceDialog(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.testTag("citation-page"))
+                item.lineStart?.let { start ->
+                    val end = item.lineEnd?.takeIf { it != start }
+                    Text(if (end == null) "Line $start" else "Lines $start–$end",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.testTag("citation-detail-lines"))
+                }
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     Text("Excerpt", style = MaterialTheme.typography.labelMedium,
                         modifier = Modifier.semantics { heading() })

@@ -71,6 +71,7 @@ object ContextTemplate {
         fun attribute(name:String,values:List<String>)=values.takeIf{it.isNotEmpty()}?.let{" $name=\"${escape(it.joinToString(","))}\""}.orEmpty()
         val source=if(item.kind==ContextKind.SOURCE)" source-coverage=\"selected-passage\" excerpted-from-segment=\"${p.excerpted}\"" else ""
         return "<context-data id=\"${escape(item.id)}\" kind=\"${item.kind}\" trust=\"${item.trust}\"$source${p.sourceName?.let{" source-name=\"${escape(it)}\""}.orEmpty()}"+
+            p.lineStart?.let{" line-start=\"$it\""}.orEmpty()+p.lineEnd?.let{" line-end=\"$it\""}.orEmpty()+
             attribute("cell-references",p.cellReferences)+attribute("missing-cell-references",p.missingCellReferences)+
             attribute("ambiguous-cell-references",p.ambiguousCellReferences)+attribute("unresolved-cell-references",p.unresolvedCellReferences)+
             attribute("evidence-incomplete-reasons",p.evidenceIncompleteReasons)+attribute("related-segments",p.relatedSegmentIds)+">\n${escape(item.text)}\n</context-data>"

@@ -41,7 +41,12 @@ class WorkspaceMigration3Test {
                     val sql = cursor.getString(1)
                     add(if (table == "projects") sql.replace(Regex(", [`\"]?workspaceKind[`\"]? TEXT NOT NULL DEFAULT 'PROJECT'"), "").also {
                         assertFalse("Version2 fixture must omit the new column", it.contains("workspaceKind"))
-                    } else if (table == "messages") sql.replace(Regex(", [`\"]?effectiveContent[`\"]? TEXT"), "")
+                    } else if (table == "citation_evidence") sql
+                        .replace(Regex(", [`\"]?semanticSegmentId[`\"]? TEXT"), "")
+                        .replace(Regex(", [`\"]?lineStart[`\"]? INTEGER"), "")
+                        .replace(Regex(", [`\"]?lineEnd[`\"]? INTEGER"), "")
+                        .replace(Regex("[`\"]?segmentId[`\"]? INTEGER(?=,|\\))"), "`segmentId` INTEGER NOT NULL")
+                    else if (table == "messages") sql.replace(Regex(", [`\"]?effectiveContent[`\"]? TEXT"), "")
                         .replace(Regex(", [`\"]?effectiveModelId[`\"]? TEXT"), "").replace(Regex(", [`\"]?imagePath[`\"]? TEXT"), "") .replace(Regex(", [`\"]?audioPath[`\"]? TEXT"), "") else if (table == "memory_items") sql.replace(Regex(", [`\"]?kind[`\"]? TEXT NOT NULL DEFAULT 'CONTEXT'"), "") else if (table == "tool_calls") sql.replace(Regex(", [`\"]?resultJson[`\"]? TEXT"), "") else sql)
                 }
             }
@@ -57,8 +62,8 @@ class WorkspaceMigration3Test {
 
         var migrated: WorkspaceDatabase? = null
         try {
-            migrated = Room.databaseBuilder(context, WorkspaceDatabase::class.java, name).addMigrations(WorkspaceDatabase.MIGRATION_2_3, WorkspaceDatabase.MIGRATION_3_4, WorkspaceDatabase.MIGRATION_4_5, WorkspaceDatabase.MIGRATION_5_6, WorkspaceDatabase.MIGRATION_6_7, WorkspaceDatabase.MIGRATION_7_8).build()
-            assertEquals(8, migrated.openHelper.readableDatabase.version) // Forces real migration + Room validation.
+            migrated = Room.databaseBuilder(context, WorkspaceDatabase::class.java, name).addMigrations(WorkspaceDatabase.MIGRATION_2_3, WorkspaceDatabase.MIGRATION_3_4, WorkspaceDatabase.MIGRATION_4_5, WorkspaceDatabase.MIGRATION_5_6, WorkspaceDatabase.MIGRATION_6_7, WorkspaceDatabase.MIGRATION_7_8, WorkspaceDatabase.MIGRATION_8_9).build()
+            assertEquals(9, migrated.openHelper.readableDatabase.version) // Forces real migration + Room validation.
             assertEquals(oldProject, migrated.projectDao().get(oldProject.id))
             assertEquals(oldConversation, migrated.conversationDao().get(oldConversation.id))
             assertEquals(oldMessage, migrated.messageDao().recent(oldConversation.id, 10).single())
@@ -66,7 +71,7 @@ class WorkspaceMigration3Test {
             assertTrue(migrated.pendingDocumentDeletionDao().pending().isEmpty())
             WorkspaceRepository(migrated).deleteWorkspace(oldProject.id)
             migrated.close()
-            migrated = Room.databaseBuilder(context, WorkspaceDatabase::class.java, name).addMigrations(WorkspaceDatabase.MIGRATION_2_3, WorkspaceDatabase.MIGRATION_3_4, WorkspaceDatabase.MIGRATION_4_5, WorkspaceDatabase.MIGRATION_5_6, WorkspaceDatabase.MIGRATION_6_7, WorkspaceDatabase.MIGRATION_7_8).build()
+            migrated = Room.databaseBuilder(context, WorkspaceDatabase::class.java, name).addMigrations(WorkspaceDatabase.MIGRATION_2_3, WorkspaceDatabase.MIGRATION_3_4, WorkspaceDatabase.MIGRATION_4_5, WorkspaceDatabase.MIGRATION_5_6, WorkspaceDatabase.MIGRATION_6_7, WorkspaceDatabase.MIGRATION_7_8, WorkspaceDatabase.MIGRATION_8_9).build()
             assertNull(migrated.projectDao().get(oldProject.id))
             assertEquals(oldModel, migrated.modelDao().get(oldModel.id))
         } finally { migrated?.close(); context.deleteDatabase(name) }

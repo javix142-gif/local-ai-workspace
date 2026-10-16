@@ -28,7 +28,7 @@ class CitationValidator {
 
     /** Extracts only the app-owned citation namespace; document text cannot mint metadata. */
     fun extractCandidates(answer: String): List<CitationCandidate> =
-        Regex("\\b(?:LCL|WEB)-[A-F0-9]{4,12}\\b")
+        Regex("\\b(?:(?:LCL|WEB)-[A-F0-9]{4,12}|SV2-[A-F0-9]{16})\\b")
             .findAll(answer.uppercase())
             .map { CitationCandidate(it.value) }
             .toList()

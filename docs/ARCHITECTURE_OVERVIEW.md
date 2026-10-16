@@ -18,7 +18,7 @@ The LiteRT path uses `LiteRtLmInferenceRuntime` and `LiteRtLmService` with `:lit
 
 ## Storage and context
 
-`WorkspaceDatabase` stores workspace entities and currently has Room schema version 8 with additive migrations defined in `data/WorkspaceDatabase.kt`. Documents are imported into app-private storage; the database stores metadata and extracted/indexed text rather than the model binary.
+`WorkspaceDatabase` stores workspace entities and currently has Room schema version 9 with data-preserving migrations defined in `data/WorkspaceDatabase.kt`. Documents are imported into app-private storage; the database stores metadata and extracted/indexed text rather than the model binary. Citation evidence can point to either a legacy document segment or a Semantic V2 segment; code citations retain the indexed path and line interval.
 
 Semantic Layer V2 has its own `semantic_v2.db` store for sources, segments, embeddings, index jobs and active indexes. `SemanticLayer` coordinates providers, indexing and retrieval. EmbeddingGemma 300M is the legacy GGUF/JNI provider; EmbeddingGemma 2 is an optional LiteRT-LM provider. Embedding spaces include provider/model identity and dimension so vectors from distinct spaces are not compared as if interchangeable.
 

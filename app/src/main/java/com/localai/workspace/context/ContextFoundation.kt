@@ -112,23 +112,34 @@ class ContextFoundation(private val graph:AppGraph, private val semanticLayerPro
                     missingCellReferences=excerpt.missingCellReferences,ambiguousCellReferences=excerpt.ambiguousCellReferences,
                     unresolvedCellReferences=excerpt.unresolvedCellReferences,relatedSegmentIds=relatedIds)
                 if(excerpt.text.isBlank()) return
-                val evidenceHit=hit.legacySegmentId?.let { legacyId->
+                val semanticEvidenceId="SV2-${com.localai.workspace.semantic.v2.fingerprint(hit.segmentId+hit.embeddingSpace).take(16).uppercase()}"
+                val evidenceHit=if(hit.legacySegmentId!=null) {
+                    val legacyId=hit.legacySegmentId
                     val document=graph.database.documentDao().documentForSegment(legacyId)
                     val segment=graph.database.documentDao().segment(legacyId)
-                    if(document==null || segment==null || document.projectId!=access.projectId || document.id!=hit.documentId)null else {
+                    if(document==null || segment==null || document.projectId!=access.projectId || document.id!=hit.documentId ||
+                        (request.selectedDocumentIds.isNotEmpty() && document.id !in request.selectedDocumentIds)) null else {
                         val base=segment.charStart
                         val start=excerpt.charStart?.let{offset->base?.plus(offset)}
                         val end=excerpt.charEnd?.let{offset->base?.plus(offset)}
                         evidence?.firstOrNull{it.segmentId==legacyId && it.documentId==hit.documentId}
-                            ?.copy(excerpt=excerpt.text,charStart=start,charEnd=end)
+                            ?.copy(excerpt=excerpt.text,charStart=start,charEnd=end,semanticSegmentId=hit.segmentId,lineStart=hit.lineStart,lineEnd=hit.lineEnd)
                             ?: Evidence(
                                 id="LCL-${com.localai.workspace.semantic.VectorPersistence.hash("${access.projectId.orEmpty()}:$legacyId").take(8).uppercase()}",
                                 segmentId=legacyId,documentId=document.id,documentTitle=document.displayName,excerpt=excerpt.text,
                                 pageStart=hit.page ?: segment.pageStart,pageEnd=segment.pageEnd,charStart=start,
-                                charEnd=end,retrievalScore=hit.fusedScore)
+                                charEnd=end,retrievalScore=hit.fusedScore,semanticSegmentId=hit.segmentId,lineStart=hit.lineStart,lineEnd=hit.lineEnd)
                     }
+                } else {
+                    val document=hit.documentId?.let{graph.database.documentDao().get(it)}
+                    if(document==null || document.projectId!=access.projectId ||
+                        (request.selectedDocumentIds.isNotEmpty() && document.id !in request.selectedDocumentIds)) null else Evidence(
+                        id=semanticEvidenceId,segmentId=null,documentId=document.id,
+                        documentTitle=hit.sourceName.ifBlank{document.displayName},excerpt=excerpt.text,
+                        pageStart=hit.page,pageEnd=hit.page,charStart=null,charEnd=null,
+                        retrievalScore=hit.fusedScore,semanticSegmentId=hit.segmentId,lineStart=hit.lineStart,lineEnd=hit.lineEnd)
                 }
-                val itemId=evidenceHit?.id ?: "SV2-${com.localai.workspace.semantic.v2.fingerprint(hit.segmentId+hit.embeddingSpace).take(16)}"
+                val itemId=evidenceHit?.id ?: semanticEvidenceId
                 val segmentStart=hit.legacySegmentId?.let{graph.database.documentDao().segment(it)?.charStart}
                 val absoluteStart=excerpt.charStart?.let{offset->segmentStart?.plus(offset)}
                 val absoluteEnd=excerpt.charEnd?.let{offset->segmentStart?.plus(offset)}
@@ -193,8 +204,8 @@ class ContextFoundation(private val graph:AppGraph, private val semanticLayerPro
                     if(attemptedStructuredDocuments.add(source.documentId)) {
                         val relatedCandidates=allowedSources.filter{it.documentId==source.documentId && ContextEvidenceExcerptSelector.isStructuredCellPassage(it.excerpt)}.distinctBy{it.segmentId}
                         val segmentOrder=mutableMapOf<Long,Int>()
-                        relatedCandidates.forEach{candidate->graph.database.documentDao().segment(candidate.segmentId)?.segmentIndex?.let{segmentOrder[candidate.segmentId]=it}}
-                        val related=relatedCandidates.sortedWith(compareBy<Evidence>{segmentOrder[it.segmentId] ?: Int.MAX_VALUE}.thenBy{it.segmentId})
+                        relatedCandidates.forEach{candidate->candidate.segmentId?.let{id->graph.database.documentDao().segment(id)?.segmentIndex?.let{segmentOrder[id]=it}}}
+                        val related=relatedCandidates.sortedWith(compareBy<Evidence>{it.segmentId?.let(segmentOrder::get) ?: Int.MAX_VALUE}.thenBy{it.segmentId ?: Long.MAX_VALUE})
                         val excerpt=ContextEvidenceExcerptSelector.selectRetrievedPassages(request.query,related.map{it.excerpt})
                         if(excerpt!=null){handledStructuredDocuments+=source.documentId;addLegacyExcerpt(related.firstOrNull() ?: source,excerpt,related);continue}
                     }
