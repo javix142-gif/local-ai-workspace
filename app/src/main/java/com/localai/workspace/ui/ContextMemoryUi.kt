@@ -39,6 +39,21 @@ import com.google.gson.GsonBuilder
     var implementDialog by remember{mutableStateOf(false)};var bundlePreview by remember{mutableStateOf<MemoryBundleV1.Preview?>(null)};var selectedBundleKeys by remember{mutableStateOf<Set<String>>(emptySet())};var importResult by remember{mutableStateOf<String?>(null)}
     var bundleReview by remember{mutableStateOf<Map<String,MemoryManager.BundleCandidateReview>>(emptyMap())}
     fun run(block:suspend()->Unit){scope.launch{busy=true;error=null;try{withContext(Dispatchers.IO){block()}}catch(cancel:CancellationException){throw cancel}catch(e:Exception){error=e.message ?: e.javaClass.simpleName}finally{busy=false}}}
+    val memoryBundleExporter=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/zip")){uri->
+        if(uri!=null)scope.launch {
+            busy=true;error=null
+            try {
+                val exported=withContext(Dispatchers.IO){foundation.memory.exportBundle(access)}
+                withContext(Dispatchers.IO){
+                    val output=context.contentResolver.openOutputStream(uri,"w") ?: throw IllegalStateException("MEMORY_EXPORT_DESTINATION_UNAVAILABLE")
+                    output.use{it.write(exported.archive)}
+                }
+                importResult="Exported ${exported.exportedRecords} active in-scope memories. Embeddings were not included."
+                implementDialog=false
+            } catch(cancel:CancellationException){throw cancel} catch(e:Exception){error=e.message ?: e.javaClass.simpleName}
+            finally{busy=false}
+        }
+    }
     val memoryBundlePicker=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()){uri->
         if(uri!=null)scope.launch {
             busy=true;error=null
@@ -76,8 +91,12 @@ import com.google.gson.GsonBuilder
         text={Column(verticalArrangement=Arrangement.spacedBy(8.dp)){
             Text("Prepare portable personal memories for review before bringing them into this device.")
             TextButton(onClick={context.getSystemService(android.content.ClipboardManager::class.java).setPrimaryClip(android.content.ClipData.newPlainText("AWS memory import prompt",MemoryBundleV1.copyPrompt()));implementDialog=false;importResult="Prompt copied. The external assistant receives only the text you paste there."}){Text("COPIAR PROMPT")}
+            TextButton(enabled=!busy,onClick={memoryBundleExporter.launch("AWS_MEMORY_IMPORT.zip")}){Text("EXPORTAR MEMORIA (ZIP)")}
+            Text("Exports active memories available in this scope. Embeddings are excluded. Choose the destination in Android's file picker.",style=MaterialTheme.typography.bodySmall)
             TextButton(enabled=!busy,onClick={memoryBundlePicker.launch(arrayOf("application/zip","application/octet-stream","*/*"))}){Text("IMPORTAR MEMORIA")}
             Text("Imported entries stay pending and are not retrieved until you approve each one.",style=MaterialTheme.typography.bodySmall)
+            if(busy)LinearProgressIndicator(Modifier.fillMaxWidth())
+            error?.let{Text(it,color=MaterialTheme.colorScheme.error,style=MaterialTheme.typography.bodySmall)}
         }},
         confirmButton={TextButton(onClick={implementDialog=false}){Text("Close")}}
     )

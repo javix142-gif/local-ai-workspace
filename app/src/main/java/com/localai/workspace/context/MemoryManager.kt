@@ -3,6 +3,7 @@ package com.localai.workspace.context
 import androidx.room.withTransaction
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
 import com.localai.workspace.semantic.v2.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
@@ -22,6 +23,7 @@ class MemoryManager(val database:MemoryContextDatabase,private val embed:suspend
     }
     suspend fun get(id:String)=database.dao().get(id)
     data class BundleImportResult(val imported:Int,val duplicates:Int,val pendingIds:List<String>)
+    data class BundleExportResult(val archive:ByteArray,val exportedRecords:Int)
     data class BundleCandidateReview(val exactDuplicate:Boolean=false,val possibleContradiction:Boolean=false)
     suspend fun inspectBundle(preview:MemoryBundleV1.Preview):Map<String,BundleCandidateReview> = withContext(Dispatchers.IO){
         val now=System.currentTimeMillis();val duplicateKeys=mutableSetOf<String>();val conflictKeys=mutableSetOf<String>()
@@ -68,13 +70,15 @@ class MemoryManager(val database:MemoryContextDatabase,private val embed:suspend
                     "originalCreatedAt" to candidate.originalCreatedAt,
                     "originalUpdatedAt" to candidate.originalUpdatedAt,
                     "originalStatus" to candidate.originalStatus,
+                    "originalTitle" to candidate.originalTitle,
+                    "originMetadata" to candidate.originalMetadataJson?.let { JsonParser.parseString(it).asJsonObject },
                     "subject" to candidate.subject,
                     "predicate" to candidate.predicate,
                     "object" to candidate.objectValue,
                     "instructionsAreData" to true,
                 ))
                 database.dao().put(MemoryRecord(
-                    id=id,kind=candidate.kind.name,scopeType="USER",scopeId="local",title=candidate.category,
+                    id=id,kind=candidate.kind.name,scopeType="USER",scopeId="local",title=candidate.originalTitle ?: candidate.category,
                     text=candidate.content,status="PENDING",confidence=candidate.confidence ?: .5,
                     createdAt=now,updatedAt=now,sourceType="IMPORTED_UNREVIEWED",sourceId=sourceId,
                     contentHash=hash,indexState="INDEX_PENDING",structuredPayloadJson=provenance,
@@ -94,6 +98,10 @@ class MemoryManager(val database:MemoryContextDatabase,private val embed:suspend
     suspend fun pin(id:String)=database.withTransaction{val m=requireNotNull(get(id));database.dao().put(m.copy(pinned=!m.pinned,updatedAt=System.currentTimeMillis()))}
     suspend fun delete(id:String)=database.withTransaction{val m=get(id) ?: return@withTransaction;database.dao().put(m.copy(status="DELETED",indexState="NOT_INDEXED",updatedAt=System.currentTimeMillis()));database.dao().deleteVectors(id)}
     suspend fun lookup(access:ScopeAccess,kind:MemoryKind?=null,subject:String?=null,predicate:String?=null):List<MemoryRecord>{database.dao().expire(System.currentTimeMillis());return database.dao().active(access.allowed.map{it.key},System.currentTimeMillis()).filter{(kind==null||it.kind==kind.name)&&(subject==null||it.subject==subject)&&(predicate==null||it.predicate==predicate)}}
+    suspend fun exportBundle(access:ScopeAccess):BundleExportResult=withContext(Dispatchers.IO){
+        val records=lookup(access)
+        BundleExportResult(MemoryBundleV1.write(records),records.size)
+    }
     suspend fun recover()=withContext(Dispatchers.IO){indexing.withLock{database.dao().expire(System.currentTimeMillis());database.dao().cleanupVectors();for(m in database.dao().pending()){currentCoroutineContext().ensureActive();index(m)}}}
     suspend fun index(m:MemoryRecord):Boolean {
         if(m.status!="ACTIVE"||m.expiresAt?.let{it<=System.currentTimeMillis()}==true)return false

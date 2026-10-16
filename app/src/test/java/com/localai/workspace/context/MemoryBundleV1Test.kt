@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.localai.workspace.semantic.v2.EmbeddingResult
 import com.localai.workspace.semantic.v2.EmbeddingSpaceKey
 import com.localai.workspace.semantic.v2.ScopeType
@@ -76,6 +77,58 @@ class MemoryBundleV1Test {
         assertTrue(prompt.contains("PENDING"))
         assertTrue(prompt.contains("No sobrescribas recuerdos existentes"))
     }
+
+    @Test fun exportedActiveMemoryRoundTripsMetadataThroughCanonicalZipRoot() {
+        val memory = MemoryRecord(
+            id = "memory-1", kind = "PREFERENCE", scopeType = "USER", scopeId = "local",
+            title = "Language", text = "Responde en español", confidence = .9,
+            createdAt = 1_760_000_000_000, updatedAt = 1_760_000_001_000,
+            sourceType = "USER_EXPLICIT", contentHash = MemoryContent.hash("Responde en español", MemoryKind.PREFERENCE),
+            structuredPayloadJson = """{"trust":"USER_DECLARED","reviewNote":"confirmed"}""",
+            subject = "language", predicate = "response-language", objectValue = "Spanish",
+        )
+        val archive = MemoryBundleV1.write(listOf(memory), exportedAt = "2026-10-16T12:00:00Z")
+        val firstEntry = java.util.zip.ZipInputStream(ByteArrayInputStream(archive)).use { it.nextEntry?.name }
+        assertEquals("AWS_MEMORY_IMPORT/", firstEntry)
+
+        val preview = MemoryBundleV1.read(ByteArrayInputStream(archive))
+        val candidate = preview.candidates.single()
+        assertEquals("Local AI Workspace", preview.sourceLabel)
+        assertEquals(memory.id, candidate.externalId)
+        assertEquals(MemoryKind.PREFERENCE, candidate.kind)
+        assertEquals(memory.text, candidate.content)
+        assertEquals(memory.title, candidate.originalTitle)
+        assertEquals("USER_DECLARED", candidate.trust)
+        assertEquals("ACTIVE", candidate.originalStatus)
+        assertEquals(.9, candidate.confidence!!, 0.0)
+        assertEquals("language", candidate.subject)
+        assertEquals("Spanish", candidate.objectValue)
+        assertTrue(candidate.originalScope.contains("USER"))
+        val origin = JsonParser.parseString(requireNotNull(candidate.originalMetadataJson)).asJsonObject
+        assertEquals("confirmed", origin.get("reviewNote").asString)
+        assertEquals("USER_EXPLICIT", origin.get("sourceType").asString)
+        assertTrue(preview.metadata.contains("\"vectorsIncluded\":false"))
+    }
+
+    @Test fun exportRejectsPendingAndHeuristicallySensitiveRecords() {
+        val approved = testRecord("safe", "A harmless preference")
+        assertWriteInvalid("UNAPPROVED_MEMORY_EXPORT", approved.copy(status = "PENDING"))
+        assertWriteInvalid("SENSITIVE_MEMORY_REQUIRES_REVIEW", testRecord("secret", "password=example"))
+    }
+
+    private fun assertWriteInvalid(reason: String, record: MemoryRecord) {
+        try {
+            MemoryBundleV1.write(listOf(record))
+            fail("Expected $reason")
+        } catch (expected: MemoryBundleV1.InvalidPackage) {
+            assertEquals(reason, expected.reason)
+        }
+    }
+
+    private fun testRecord(id: String, text: String) = MemoryRecord(
+        id = id, kind = "FACT", scopeType = "USER", scopeId = "local", title = null, text = text,
+        contentHash = MemoryContent.hash(text, MemoryKind.FACT), createdAt = 1_760_000_000_000, updatedAt = 1_760_000_000_000,
+    )
 
     private fun assertInvalid(reason: String, bytes: ByteArray) {
         try {
@@ -228,5 +281,46 @@ class MemoryBundleImportTest {
         assertEquals(1, imported.imported)
         assertEquals(1, imported.duplicates)
         assertEquals(2, database.dao().observe().first().size)
+    }
+
+    @Test fun exportIncludesOnlyApprovedMemoriesReadableInSelectedScope() = runBlocking {
+        val user = manager.create("User preference", SemanticScope(ScopeType.USER, "local"), MemoryKind.PREFERENCE)
+        val currentProject = manager.create("Current project decision", SemanticScope(ScopeType.PROJECT, "project-a"), MemoryKind.DECISION)
+        manager.create("Other project decision", SemanticScope(ScopeType.PROJECT, "project-b"), MemoryKind.DECISION)
+        manager.create("Pending note", SemanticScope(ScopeType.USER, "local"), MemoryKind.FACT, pending = true)
+
+        val result = manager.exportBundle(ScopeAccess(projectId = "project-a"))
+        val preview = MemoryBundleV1.read(ByteArrayInputStream(result.archive))
+        assertEquals(2, result.exportedRecords)
+        assertEquals(setOf(user.id, currentProject.id), preview.candidates.map { it.externalId }.toSet())
+        assertEquals(setOf("USER", "PROJECT"), preview.candidates.map { JsonParser.parseString(it.originalScope).asJsonObject.get("type").asString }.toSet())
+        assertEquals(0, embeddingCalls)
+    }
+
+    @Test fun importedBundleRemainsPendingAndPreservesTitleAndOriginOnReexport() = runBlocking {
+        manager.create(
+            "A project preference", SemanticScope(ScopeType.PROJECT, "source-project"), MemoryKind.PREFERENCE,
+            title = "Writing style", structuredPayloadJson = """{"trust":"USER_DECLARED","originMarker":"source-1"}""",
+        )
+        val sourceBundle = manager.exportBundle(ScopeAccess(projectId = "source-project"))
+        val sourceCandidate = MemoryBundleV1.read(ByteArrayInputStream(sourceBundle.archive)).candidates.single()
+        assertEquals("Writing style", sourceCandidate.originalTitle)
+        val imported = manager.importBundlePending(
+            MemoryBundleV1.read(ByteArrayInputStream(sourceBundle.archive)), setOf(sourceCandidate.key),
+        )
+        val pending = requireNotNull(manager.get(imported.pendingIds.single()))
+        assertEquals("PENDING", pending.status)
+        assertEquals("Writing style", pending.title)
+        assertEquals(0, embeddingCalls)
+        assertTrue(manager.exportBundle(ScopeAccess()).archive.let {
+            MemoryBundleV1.read(ByteArrayInputStream(it)).candidates.none { candidate -> candidate.externalId == pending.id }
+        })
+
+        manager.approve(pending.id)
+        val reexported = manager.exportBundle(ScopeAccess())
+        val roundTripped = MemoryBundleV1.read(ByteArrayInputStream(reexported.archive)).candidates.single { it.externalId == pending.id }
+        assertEquals("Writing style", roundTripped.originalTitle)
+        val origin = JsonParser.parseString(requireNotNull(roundTripped.originalMetadataJson)).asJsonObject
+        assertEquals("source-1", origin.getAsJsonObject("originMetadata").get("originMarker").asString)
     }
 }
