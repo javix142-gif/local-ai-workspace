@@ -1,0 +1,10 @@
+{
+  "synthetic": true,
+  "containsPrivateUserData": false,
+  "format": "DOCX",
+  "version": 1,
+  "name": "structure-v1.docx",
+  "bytes": 1376,
+  "sha256": "140218250c3e4d60dabbe5e530b1e534b8a4441ec3320db79d59e9ac1e22f8c3",
+  "purpose": "Headings, paragraph/table coordinates, explicit page-break preservation"
+}

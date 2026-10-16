@@ -1,0 +1,28 @@
+{
+  "synthetic": true,
+  "format": "DOCX",
+  "version": 1,
+  "cases": [
+    {
+      "query": "heading Informe anual",
+      "location": "paragraph 1",
+      "headingStyle": "Heading1",
+      "expected": "Informe anual"
+    },
+    {
+      "query": "table row 2 column 1",
+      "location": "table 1 row 2 cell 1",
+      "expected": "Álvaro"
+    },
+    {
+      "query": "text before explicit page break",
+      "page": 1,
+      "expected": "Antes del salto."
+    },
+    {
+      "query": "text after explicit page break",
+      "page": 2,
+      "expected": "Después del salto."
+    }
+  ]
+}
