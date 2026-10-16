@@ -5,12 +5,16 @@ import com.localai.workspace.domain.model.Evidence
 import com.localai.workspace.domain.model.SourceTrust
 import com.localai.workspace.domain.rag.ReciprocalRankFusion
 import com.localai.workspace.domain.rag.cosineSimilarity
+import com.localai.workspace.documents.CodeLineChunker
+import com.localai.workspace.documents.CodebaseArchive
+import com.localai.workspace.documents.StructuredDocuments
 import com.localai.workspace.rag.RetrievalQuery
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import androidx.room.withTransaction
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.io.File
 import java.security.MessageDigest
 
 object VectorPersistence {
@@ -24,6 +28,7 @@ object VectorPersistence {
 data class RetrievalDiagnostics(val mode: String="LEXICAL",val retrieved: Int=0,val memoryRetrieved:Int=0,val retrievalMs:Long=0,val embeddingMs:Long=0,val notice:String?="Embedding model unavailable")
 data class RetrievalIndexDiagnostics(val status:String="NOT_RUN",val durationMs:Long?=null,val candidateSegments:Int=0,val processedSegments:Int=0,val candidateMemories:Int=0,val processedMemories:Int=0,val failureType:String?=null)
 class SemanticRetrievalService(private val db: WorkspaceDatabase, private val models: EmbeddingProvider) {
+ private data class CodeLineRange(val start:Int,val end:Int)
  val diagnostics=MutableStateFlow(RetrievalDiagnostics())
  val indexingDiagnostics=MutableStateFlow(RetrievalIndexDiagnostics())
  private var nativeEmbeddingNanos=0L
@@ -81,11 +86,49 @@ class SemanticRetrievalService(private val db: WorkspaceDatabase, private val mo
   val byId=(candidates+lexical).associateBy { it.id }
   val ordered=ranks.mapNotNull { byId[it.segmentId] }
   val selected=ordered.take(limit)
+  val lineRangesBySource=mutableMapOf<Pair<String,String>,Map<Long,CodeLineRange>>()
   val result=selected.mapNotNull { s->db.documentDao().documentForSegment(s.id)?.takeIf { it.projectId==projectId }?.let { d->
-   Evidence("LCL-${VectorPersistence.hash("$projectId:${s.id}").take(8).uppercase()}",s.id,d.id,d.displayName,s.text,s.pageStart,s.pageEnd,s.charStart,s.charStart?.plus(s.text.length),SourceTrust.UNTRUSTED_DOCUMENT,ranks.firstOrNull { it.segmentId==s.id }?.fusedScore?:0.0)
+   val sourcePath=s.sectionPath?.takeIf(CodebaseArchive::isCodePath)
+   val location=sourcePath?.let { path ->
+    val key=d.id to path
+    if(!lineRangesBySource.containsKey(key)) lineRangesBySource[key]=codeLineRanges(d,path)
+    lineRangesBySource[key]?.get(s.id)
+   }
+   Evidence(
+    id="LCL-${VectorPersistence.hash("$projectId:${s.id}").take(8).uppercase()}",segmentId=s.id,
+    documentId=d.id,documentTitle=sourcePath ?: d.displayName,excerpt=s.text,
+    pageStart=s.pageStart,pageEnd=s.pageEnd,charStart=s.charStart,charEnd=s.charStart?.plus(s.text.length),
+    trust=SourceTrust.UNTRUSTED_DOCUMENT,retrievalScore=ranks.firstOrNull { it.segmentId==s.id }?.fusedScore?:0.0,
+    lineStart=location?.start,lineEnd=location?.end,
+   )
   } }
   diagnostics.value=diagnostics.value.copy(mode=if(used)"SEMANTIC + LEXICAL" else "LEXICAL",retrieved=result.size,retrievalMs=(System.nanoTime()-start)/1_000_000,embeddingMs=ms,notice=notice)
   result
+ }
+
+ /** Resolve a lexical segment to its original line interval without adding Room columns. */
+ private suspend fun codeLineRanges(document:DocumentEntity,path:String):Map<Long,CodeLineRange> {
+  return try {
+   val file=File(document.localPath)
+   val sourceText=if(document.displayName.substringAfterLast('.',"").equals("zip",true) || document.mimeType=="application/zip") {
+    CodebaseArchive.codeFiles(file).firstOrNull { it.relativePath==path }?.text
+   } else if(path==document.displayName) {
+    StructuredDocuments.text(StructuredDocuments.readFile(file)).first
+   } else null
+   val chunks=sourceText?.let(CodeLineChunker::chunk).orEmpty()
+   if(chunks.isEmpty()) return emptyMap()
+   val siblings=db.documentDao().segmentsForDocument(document.id).filter { it.sectionPath==path }
+   if(siblings.size<chunks.size) return emptyMap()
+   var start=-1
+   for(candidate in 0..(siblings.size-chunks.size)) {
+    if((0 until chunks.size).all { offset->siblings[candidate+offset].text==chunks[offset].text }) {
+     start=candidate;break
+    }
+   }
+   if(start<0) return emptyMap()
+   chunks.indices.associate { offset->siblings[start+offset].id to CodeLineRange(chunks[offset].lineStart,chunks[offset].lineEnd) }
+  } catch(cancel:CancellationException) { throw cancel }
+    catch(_:Exception) { emptyMap() }
  }
  suspend fun memories(projectId:String,query:String,limit:Int=4): List<MemoryItemEntity> = withContext(Dispatchers.IO) {
   diagnostics.value=diagnostics.value.copy(memoryRetrieved=0)

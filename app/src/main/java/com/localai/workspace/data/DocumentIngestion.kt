@@ -73,7 +73,9 @@ class DocumentParser(private val context: Context) {
                 ParsedDocument(listOf(ParsedPage(null, stripHtml(com.localai.workspace.documents.StructuredDocuments.text(com.localai.workspace.documents.StructuredDocuments.readFile(file)).first))))
             }
             extension in setOf("txt", "md", "markdown", "log", "json", "xml", "yaml", "yml", "py", "kt", "java", "js", "ts", "c", "cpp", "h", "rs", "sh", "sql", "toml", "ini") || mimeType in setOf("application/json", "application/xml", "application/yaml") || mimeType.startsWith("text/") -> {
-                ParsedDocument(listOf(ParsedPage(null, com.localai.workspace.documents.StructuredDocuments.text(com.localai.workspace.documents.StructuredDocuments.readFile(file)).first)))
+                val text = com.localai.workspace.documents.StructuredDocuments.text(com.localai.workspace.documents.StructuredDocuments.readFile(file)).first
+                val sourcePath = displayName.takeIf(com.localai.workspace.documents.CodebaseArchive::isCodePath)
+                ParsedDocument(listOf(ParsedPage(null, text, sourcePath)))
             }
             else -> throw UnsupportedDocumentException("No safe local parser is installed for .$extension")
         }

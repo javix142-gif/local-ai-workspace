@@ -360,14 +360,14 @@ class SemanticContextPostfixTest {
         assertNotNull("lexical fallback should include the selected code passage",source)
         requireNotNull(source)
         assertEquals("src/Answer.kt",source.provenance.sourceName)
-        assertEquals(3,source.provenance.lineStart)
-        assertEquals(3,source.provenance.lineEnd)
+        assertEquals(1,source.provenance.lineStart)
+        assertEquals(4,source.provenance.lineEnd)
         assertTrue(source.text.contains("LEXICAL_ARCHIVE_ONLY"))
         val citation=bundle.sourceEvidence.single()
         assertEquals(archive.id,citation.documentId)
         assertEquals("src/Answer.kt",citation.documentTitle)
-        assertEquals(3,citation.lineStart)
-        assertEquals(3,citation.lineEnd)
+        assertEquals(1,citation.lineStart)
+        assertEquals(4,citation.lineEnd)
     }
 
     @Test fun followUpCellQuestionSendsOnlyRelevantCellsWithCellProvenance()=runBlocking {
