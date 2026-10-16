@@ -10,7 +10,11 @@ import kotlinx.coroutines.sync.withLock
 import java.io.File
 import java.util.UUID
 
-class WorkspaceRepository(private val database: WorkspaceDatabase, private val privateDocumentsDirectory: File? = null) {
+class WorkspaceRepository(
+    private val database: WorkspaceDatabase,
+    private val privateDocumentsDirectory: File? = null,
+    private val onWorkspaceDeleted: suspend (String) -> Unit = {},
+) {
     private val projects = database.projectDao()
     private val conversations = database.conversationDao()
     private val messages = database.messageDao()
@@ -101,23 +105,29 @@ class WorkspaceRepository(private val database: WorkspaceDatabase, private val p
 
     /** Remove one project conversation, or the entire isolated owner of a standalone chat. */
     suspend fun deleteConversation(id: String): Int {
-        database.withTransaction {
-            val conversation = conversations.get(id) ?: return@withTransaction
+        val deletedWorkspace = database.withTransaction {
+            val conversation = conversations.get(id) ?: return@withTransaction null
             val owner = conversation.projectId?.let { projects.get(it) }
-            if (owner?.workspaceKind == WorkspaceKind.CHAT) deleteWorkspaceRows(owner.id)
+            if (owner?.workspaceKind == WorkspaceKind.CHAT) {
+                deleteWorkspaceRows(owner.id)
+                owner.id
+            }
             else {
                 database.citationEvidenceDao().deleteForConversation(id)
                 database.toolCallDao().deleteForConversation(id)
                 database.pendingDocumentDeletionDao().insertAll(messages.imagesForConversation(id).map { PendingDocumentDeletionEntity(it) })
                 messages.deleteForConversation(id)
                 conversations.delete(id)
+                null
             }
         }
+        deletedWorkspace?.let { kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) { onWorkspaceDeleted(it) } }
         return cleanupDeletedDocuments()
     }
 
     suspend fun deleteWorkspace(id: String): Int {
         database.withTransaction { deleteWorkspaceRows(id) }
+        kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) { onWorkspaceDeleted(id) }
         return cleanupDeletedDocuments()
     }
 

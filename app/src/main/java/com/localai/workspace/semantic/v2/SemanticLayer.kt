@@ -212,6 +212,10 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
         val job=dao.job(active.indexId) ?: return@withLock
         if(job.state=="READY")dao.job(job.copy(state="NEEDS_REINDEX",updatedAt=System.currentTimeMillis()))
     }
+    /** Remove only derived Semantic V2 state after the user deletes its owning project. */
+    suspend fun deleteProjectScope(projectId:String) = operations.withLock {
+        database.dao().deleteScope(SemanticScope(ScopeType.PROJECT,projectId).key)
+    }
     suspend fun switchIndex(id: String) = operations.withLock {
         val dao=database.dao();val job=dao.job(id) ?: error("Missing index")
         require(job.state=="READY" && job.embeddings>0 && job.segments==job.embeddings && dao.count(id)==job.embeddings)

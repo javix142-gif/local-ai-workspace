@@ -582,6 +582,46 @@ class SemanticContextPostfixTest {
         assertTrue(layer.search(SemanticInput.Text("ORCHID"),SemanticScope(ScopeType.PROJECT,"project-a"),setOf(SemanticModality.TEXT)).any{it.content=="ORCHID updated content."})
     }
 
+    @Test fun deletingWorkspacePurgesOnlyItsSemanticGenerationsAndKeepsSharedPayloads()=runBlocking {
+        addProject("project-a");addProject("project-b")
+        addDocument("project-a","doc-a","notes.txt","ORCHID shared source content.")
+        addDocument("project-b","doc-b","notes.txt","ORCHID shared source content.")
+        val generations=index("project-a","project-b")
+        val dao=semanticDb.dao()
+        val scopeA=SemanticScope(ScopeType.PROJECT,"project-a");val scopeB=SemanticScope(ScopeType.PROJECT,"project-b")
+        val sourceIdsA=dao.sources(scopeA.key).map{it.id}
+        val payloadsBefore=dao.payloadCount()
+        assertTrue("fixture proves payload deduplication across scopes",payloadsBefore>0)
+
+        WorkspaceRepository(workspace,onWorkspaceDeleted={layer.deleteProjectScope(it)}).deleteWorkspace("project-a")
+
+        assertNull(dao.active(scopeA.key))
+        assertNull(dao.job(generations.getValue("project-a")))
+        assertEquals(0,dao.count(generations.getValue("project-a")))
+        assertTrue(dao.sources(scopeA.key).isEmpty())
+        assertTrue(sourceIdsA.all{dao.segments(it).isEmpty()})
+        assertEquals("B's shared payload remains referenced",payloadsBefore,dao.payloadCount())
+        assertEquals(generations.getValue("project-b"),dao.active(scopeB.key)?.indexId)
+        assertEquals("READY",dao.job(generations.getValue("project-b"))?.state)
+        assertTrue(layer.search(SemanticInput.Text("ORCHID"),scopeB,setOf(SemanticModality.TEXT)).any{it.content=="ORCHID shared source content."})
+        assertNull("deleted project is no longer a searchable scope",workspace.projectDao().get("project-a"))
+    }
+
+    @Test fun deletingStandaloneChatAlsoPurgesItsSemanticScope()=runBlocking {
+        val projectId=graph.workspace.createChat()
+        addDocument(projectId,"chat-doc","chat.txt","ORCHID private chat document.")
+        val oldGeneration=index(projectId).getValue(projectId)
+        val conversation=graph.workspace.createConversation(projectId)
+
+        WorkspaceRepository(workspace,onWorkspaceDeleted={layer.deleteProjectScope(it)}).deleteConversation(conversation.id)
+
+        val scope=SemanticScope(ScopeType.PROJECT,projectId)
+        assertNull(semanticDb.dao().active(scope.key))
+        assertNull(semanticDb.dao().job(oldGeneration))
+        assertTrue(semanticDb.dao().sources(scope.key).isEmpty())
+        assertNull(workspace.projectDao().get(projectId))
+    }
+
     @Test fun realDocumentIngestionAwaitsStaleGenerationMark()=runBlocking {
         context.deleteDatabase("semantic_v2.db")
         val persisted=SemanticDatabase.create(context)

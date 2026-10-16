@@ -48,7 +48,9 @@ class AppGraph(context: Context,
     fun releaseIdleModel() { runtimeScope.launch { chatRuntimes.releaseIdle() } }
     /** Compatibility alias for older screens while chat is migrated to the registry. */
     val runtime get() = llamaRuntime
-    val workspace = WorkspaceRepository(database, java.io.File(appContext.filesDir, "documents"))
+    val workspace = WorkspaceRepository(database, java.io.File(appContext.filesDir, "documents"), onWorkspaceDeleted = { id ->
+        if (validationOwner == null) semanticV2.deleteProjectScope(id)
+    })
     val documents = DocumentIngestionService(appContext, database, database.documentDao(), onIndexed = { id ->
         if(validationOwner==null) {
             // Ingestion awaits this callback: stale the active semantic generation before
