@@ -22,7 +22,7 @@ import java.security.MessageDigest
 import java.util.UUID
 import java.util.zip.ZipFile
 
-data class ParsedPage(val pageNumber: Int?, val text: String)
+data class ParsedPage(val pageNumber: Int?, val text: String, val sectionPath: String? = null)
 
 data class ParsedDocument(val pages: List<ParsedPage>)
 
@@ -33,6 +33,8 @@ data class TextChunk(
     val charEnd: Int?,
     val text: String,
     val sectionPath: String? = null,
+    val lineStart: Int? = null,
+    val lineEnd: Int? = null,
 )
 
 class UnsupportedDocumentException(message: String) : Exception(message)
@@ -109,12 +111,12 @@ class DocumentParser(private val context: Context) {
     }
 
     private fun parseZip(file: File): ParsedDocument = ZipFile(file).use { zip ->
-        com.localai.workspace.documents.StructuredDocuments.inspect(zip)
+        val visibleEntries = com.localai.workspace.documents.CodebaseArchive.visibleEntries(zip)
         val pages = mutableListOf<ParsedPage>(); var total = 0;var expandedBytes=0L
-        zip.entries().asSequence().filter { !it.isDirectory }.forEach { entry ->
+        visibleEntries.forEach { entry ->
             val extension = entry.name.substringAfterLast('.', "").lowercase()
-            pages.add(ParsedPage(null, "Archive entry: ${entry.name} · ${entry.size} bytes"))
-            if (extension in setOf("txt", "md", "json", "xml", "yaml", "yml", "py", "kt", "java", "js", "ts", "csv", "xlsx", "docx", "pdf")) {
+            pages.add(ParsedPage(null, "Archive entry: ${entry.name} · ${entry.size} bytes", entry.name))
+            if (extension in setOf("txt", "md", "json", "xml", "yaml", "yml", "py", "kt", "kts", "java", "js", "jsx", "ts", "tsx", "c", "h", "cc", "cpp", "hpp", "rs", "go", "swift", "sh", "sql", "csv", "xlsx", "docx", "pdf")) {
                 val temporary = File.createTempFile("archive-", ".$extension", context.cacheDir)
                 try {
                     zip.getInputStream(entry).use { input -> val bytes=com.localai.workspace.documents.StructuredDocuments.bounded(input, 8 * 1024 * 1024);expandedBytes+=bytes.size;require(expandedBytes<=32L*1024*1024) { "Archive exceeds expanded byte limit" };temporary.writeBytes(bytes) }
@@ -125,7 +127,15 @@ class DocumentParser(private val context: Context) {
                         "docx" -> parseDocx(temporary)
                         else -> ParsedDocument(listOf(ParsedPage(null, com.localai.workspace.documents.StructuredDocuments.text(temporary.readBytes()).first)))
                     }
-                    parsed.pages.forEach { page -> total += page.text.length;require(total <= 1_000_000) { "Archive extracted text exceeds limit" }; pages.add(page.copy(text = "Archive entry: ${entry.name}\n${page.text}")) }
+                    parsed.pages.forEach { page ->
+                        total += page.text.length;require(total <= 1_000_000) { "Archive extracted text exceeds limit" }
+                        val indexedPage = if (com.localai.workspace.documents.CodebaseArchive.isCodePath(entry.name)) {
+                            page.copy(sectionPath = entry.name)
+                        } else {
+                            page.copy(text = "Archive entry: ${entry.name}\n${page.text}", sectionPath = entry.name)
+                        }
+                        pages.add(indexedPage)
+                    }
                 } finally { temporary.delete() }
             }
         }
@@ -148,6 +158,12 @@ class TextChunker(
 ) {
     fun chunk(document: ParsedDocument): List<TextChunk> = buildList {
         document.pages.forEach { page ->
+            if (page.sectionPath?.let(com.localai.workspace.documents.CodebaseArchive::isCodePath) == true) {
+                com.localai.workspace.documents.CodeLineChunker.chunk(page.text,maxCharacters).forEach { code ->
+                    add(TextChunk(page.pageNumber,page.pageNumber,null,null,code.text,page.sectionPath,code.lineStart,code.lineEnd))
+                }
+                return@forEach
+            }
             val source = page.text.trim()
             if (source.isBlank()) return@forEach
             var cursor = 0
@@ -166,6 +182,7 @@ class TextChunker(
                             charStart = cursor,
                             charEnd = boundary,
                             text = chunkText,
+                            sectionPath = page.sectionPath,
                         ),
                     )
                 }

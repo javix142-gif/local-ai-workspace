@@ -125,10 +125,10 @@ class ContextFoundation(private val graph:AppGraph, private val semanticLayerPro
                         val start=excerpt.charStart?.let{offset->base?.plus(offset)}
                         val end=excerpt.charEnd?.let{offset->base?.plus(offset)}
                         evidence?.firstOrNull{it.segmentId==legacyId && it.documentId==hit.documentId}
-                            ?.copy(excerpt=excerpt.text,charStart=start,charEnd=end,semanticSegmentId=hit.segmentId,lineStart=hit.lineStart,lineEnd=hit.lineEnd)
+                            ?.copy(documentTitle=hit.sourceName.ifBlank{document.displayName},excerpt=excerpt.text,charStart=start,charEnd=end,semanticSegmentId=hit.segmentId,lineStart=hit.lineStart,lineEnd=hit.lineEnd)
                             ?: Evidence(
                                 id="LCL-${com.localai.workspace.semantic.VectorPersistence.hash("${access.projectId.orEmpty()}:$legacyId").take(8).uppercase()}",
-                                segmentId=legacyId,documentId=document.id,documentTitle=document.displayName,excerpt=excerpt.text,
+                                segmentId=legacyId,documentId=document.id,documentTitle=hit.sourceName.ifBlank{document.displayName},excerpt=excerpt.text,
                                 pageStart=hit.page ?: segment.pageStart,pageEnd=segment.pageEnd,charStart=start,
                                 charEnd=end,retrievalScore=hit.fusedScore,semanticSegmentId=hit.segmentId,lineStart=hit.lineStart,lineEnd=hit.lineEnd)
                     }

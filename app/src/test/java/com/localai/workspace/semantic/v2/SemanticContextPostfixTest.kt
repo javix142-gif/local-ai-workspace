@@ -298,9 +298,12 @@ class SemanticContextPostfixTest {
     @Test fun codeArchiveSearchKeepsRelativePathAndLineWithoutLeakingOtherProjects()=runBlocking {
         addProject("archive-code-project");addProject("archive-foreign-project")
         val archive=addCodeArchive("archive-code-project","source-archive",linkedMapOf(
-            ".gitignore" to "build/\n",
+            ".gitignore" to "build/\n**/vendor/\n",
+            "src/.gitignore" to "generated/\n",
             "src/Answer.kt" to "package fixture\n\nfun falconLookup() = \"PROJECT_ARCHIVE_ONLY\"\n",
             "build/Generated.kt" to "fun falconLookup() = \"IGNORED_BUILD_ONLY\"\n",
+            "module/vendor/ThirdParty.kt" to "fun thirdParty() = \"IGNORED_VENDOR_ONLY\"\n",
+            "src/generated/Generated.kt" to "fun generated() = \"IGNORED_NESTED_ONLY\"\n",
         ))
         addDocument("archive-foreign-project","foreign-answer","src/Answer.kt","fun falconLookup() = \"FOREIGN_PROJECT_ONLY\"")
         index("archive-code-project","archive-foreign-project")
@@ -313,8 +316,8 @@ class SemanticContextPostfixTest {
         assertNotNull("the selected code excerpt should reach the final context",source)
         requireNotNull(source)
         assertEquals("src/Answer.kt",source.provenance.sourceName)
-        assertEquals(3,source.provenance.lineStart)
-        assertEquals(3,source.provenance.lineEnd)
+        assertEquals(1,source.provenance.lineStart)
+        assertEquals(4,source.provenance.lineEnd)
         assertTrue(source.text.contains("PROJECT_ARCHIVE_ONLY"))
         assertFalse(bundle.conversation().userMessage.contains("IGNORED_BUILD_ONLY"))
         assertFalse(bundle.conversation().userMessage.contains("FOREIGN_PROJECT_ONLY"))
@@ -324,9 +327,12 @@ class SemanticContextPostfixTest {
         val archive=File(context.cacheDir,"ignored-folder-${UUID.randomUUID()}.zip").also{temporaryFiles+=it}
         ZipOutputStream(archive.outputStream()).use { output ->
             listOf(
-                ".gitignore" to "build/\n",
+                ".gitignore" to "build/\n**/vendor/\n",
+                "src/.gitignore" to "generated/\n",
                 "src/Visible.kt" to "VISIBLE_SOURCE_MARKER",
                 "build/Generated.kt" to "IGNORED_BUILD_MARKER",
+                "module/vendor/ThirdParty.kt" to "IGNORED_VENDOR_MARKER",
+                "src/generated/Generated.kt" to "IGNORED_NESTED_MARKER",
                 ".git/objects/secret" to "IGNORED_VCS_MARKER",
             ).forEach { (name,text) -> output.putNextEntry(ZipEntry(name));output.write(text.toByteArray());output.closeEntry() }
         }
@@ -334,6 +340,8 @@ class SemanticContextPostfixTest {
         val extracted=parsed.pages.joinToString("\n"){it.text}
         assertTrue(extracted.contains("VISIBLE_SOURCE_MARKER"))
         assertFalse(extracted.contains("IGNORED_BUILD_MARKER"))
+        assertFalse(extracted.contains("IGNORED_VENDOR_MARKER"))
+        assertFalse(extracted.contains("IGNORED_NESTED_MARKER"))
         assertFalse(extracted.contains("IGNORED_VCS_MARKER"))
     }
 

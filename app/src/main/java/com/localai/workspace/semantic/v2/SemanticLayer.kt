@@ -6,6 +6,11 @@ import androidx.room.withTransaction
 import com.google.ai.edge.litertlm.Capabilities
 import com.google.gson.Gson
 import com.localai.workspace.data.WorkspaceDatabase
+import com.localai.workspace.documents.CodebaseArchive
+import com.localai.workspace.documents.CodeLineChunker
+import com.localai.workspace.documents.StructuredDocuments
+import com.localai.workspace.data.DocumentParser
+import com.localai.workspace.data.TextChunker
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
@@ -14,6 +19,18 @@ import kotlinx.coroutines.sync.withLock
 import java.io.File
 import java.security.MessageDigest
 import java.util.UUID
+
+private data class ProjectIndexChunk(
+    val key:String,
+    val text:String,
+    val modality:String,
+    val title:String,
+    val page:Int?=null,
+    val lineStart:Int?=null,
+    val lineEnd:Int?=null,
+    val language:String?=null,
+    val legacySegmentId:Long?=null,
+)
 
 class SemanticLayer(private val context: Context, private val workspace: WorkspaceDatabase, val resourceGate: Mutex, databaseOverride: SemanticDatabase? = null, preferencesName: String = "semantic_v2", managerOverride: EmbeddingEngineManager? = null) {
     val database = databaseOverride ?: SemanticDatabase.create(context)
@@ -144,19 +161,59 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
                 ensureActive()
                 val sourceId="$id:${document.id}"
                 dao.source(SemanticSourceRecord(sourceId,scope.key,"DOCUMENT",document.displayName,document.mimeType,document.localPath,document.byteSize,document.updatedAt,document.fileHash))
-                val code=document.displayName.substringAfterLast('.',"").lowercase() in setOf("kt","java","py","js","ts","c","cpp","rs","go","swift","sh")
                 val parsed = workspace.documentDao().segmentsForDocument(document.id)
-                val codeChunks = if(code) CodeSegments.chunk(com.localai.workspace.documents.StructuredDocuments.text(com.localai.workspace.documents.StructuredDocuments.readFile(File(document.localPath))).first) else emptyList()
-                val codeLines = mutableMapOf<Long, Pair<Int,Int>>()
-                val chunks = if(code) codeChunks.mapIndexed { i,c -> codeLines[i.toLong()]=c.lineStart to c.lineEnd;com.localai.workspace.data.DocumentSegmentEntity(id=i.toLong(),documentId=document.id,segmentIndex=i,text=c.text,normalizedText=c.text,contentHash=fingerprint(c.text)) } else parsed
+                val extension=document.displayName.substringAfterLast('.',"").lowercase()
+                val chunks:List<ProjectIndexChunk> = when {
+                    extension=="zip" -> {
+                        val archiveFile=File(document.localPath)
+                        val codeFiles=CodebaseArchive.codeFiles(archiveFile)
+                        val codePaths=codeFiles.mapTo(mutableSetOf()){it.relativePath}
+                        val currentChunks=TextChunker().chunk(DocumentParser(context).parse(archiveFile,document.mimeType,document.displayName))
+                        val textChunks=currentChunks.filter { it.sectionPath !in codePaths }.mapIndexed { position,chunk ->
+                            val legacy=parsed.firstOrNull { it.sectionPath==chunk.sectionPath && it.text==chunk.text }
+                            ProjectIndexChunk(
+                                key=legacy?.id?.toString() ?: "archive-text-$position", text=chunk.text, modality="TEXT",
+                                title=chunk.sectionPath ?: document.displayName, page=chunk.pageStart,
+                                legacySegmentId=legacy?.id,
+                            )
+                        }
+                        val codeChunks=codeFiles.flatMap { codeFile ->
+                            CodeSegments.chunk(codeFile.text).mapIndexed { position,chunk ->
+                                val legacy=parsed.firstOrNull { it.sectionPath==codeFile.relativePath && it.text==chunk.text }
+                                ProjectIndexChunk(
+                                    key="archive-code-${fingerprint(codeFile.relativePath).take(12)}-$position",
+                                    text=chunk.text,modality="CODE",title=codeFile.relativePath,
+                                    lineStart=chunk.lineStart,lineEnd=chunk.lineEnd,language=codeFile.language,
+                                    legacySegmentId=legacy?.id,
+                                )
+                            }
+                        }
+                        textChunks+codeChunks
+                    }
+                    extension in setOf("kt","kts","java","py","js","jsx","ts","tsx","c","h","cc","cpp","hpp","rs","go","swift","sh","sql") -> {
+                        val codeText=StructuredDocuments.text(StructuredDocuments.readFile(File(document.localPath))).first
+                        CodeSegments.chunk(codeText).mapIndexed { position,chunk ->
+                            ProjectIndexChunk("code-$position",chunk.text,"CODE",document.displayName,lineStart=chunk.lineStart,lineEnd=chunk.lineEnd,
+                                language=extension)
+                        }
+                    }
+                    else -> parsed.map { chunk ->
+                        ProjectIndexChunk(chunk.id.toString(),chunk.text,"TEXT",chunk.sectionPath ?: document.displayName,
+                            page=chunk.pageStart,legacySegmentId=chunk.id)
+                    }
+                }
                 for (chunk in chunks) {
                     ensureActive()
-                    val segmentId="$sourceId:${chunk.id}"; val task=if(code) EmbeddingTask.CODE_DOCUMENT else EmbeddingTask.DOCUMENT
-                    val effective=TaskPromptProfile.format(task,chunk.text,document.displayName);val hash=fingerprint(effective)
+                    val code=chunk.modality=="CODE"
+                    val segmentId="$sourceId:${chunk.key}"; val task=if(code) EmbeddingTask.CODE_DOCUMENT else EmbeddingTask.DOCUMENT
+                    val effective=TaskPromptProfile.format(task,chunk.text,chunk.title);val hash=fingerprint(effective)
                     val reusable=dao.reusable(hash,space.id,task.name)
-                    val result=if(reusable!=null) EmbeddingResult(space,SemanticVectors.decode(reusable.vector,dim),0) else manager.embed(if(code) SemanticInput.Code(chunk.text,document.displayName) else SemanticInput.Text(chunk.text,document.displayName),task,dim)
+                    val result=if(reusable!=null) EmbeddingResult(space,SemanticVectors.decode(reusable.vector,dim),0) else manager.embed(
+                        if(code) SemanticInput.Code(chunk.text,chunk.title,chunk.language) else SemanticInput.Text(chunk.text,chunk.title),task,dim)
                     if(result.space != space)throw SemanticFailure(SemanticError.SPACE_MISMATCH)
-                    dao.segment(SemanticSegmentRecord(segmentId,sourceId,if(code)"CODE" else "TEXT",chunk.text,document.displayName,chunk.pageStart,codeLines[chunk.id]?.first,codeLines[chunk.id]?.second,null,null,hash,metadataJson=if(code)Gson().toJson(mapOf("language" to document.displayName.substringAfterLast('.'),"relativePath" to document.displayName)) else "{}",legacySegmentId=if(code)null else chunk.id))
+                    dao.segment(SemanticSegmentRecord(segmentId,sourceId,chunk.modality,chunk.text,chunk.title,chunk.page,chunk.lineStart,chunk.lineEnd,null,null,hash,
+                        metadataJson=if(code)Gson().toJson(mapOf("language" to chunk.language,"relativePath" to chunk.title)) else "{}",
+                        legacySegmentId=chunk.legacySegmentId))
                     dao.embedding(SemanticEmbeddingRecord(id,segmentId,space.id,model.provider,model.id,model.sha256,dim,true,task.name,hash,SemanticVectors.FORMAT,SemanticVectors.encode(result.vector),System.currentTimeMillis()))
                     job=job.copy(segments=job.segments+1,embeddings=job.embeddings+1,updatedAt=System.currentTimeMillis());dao.job(job)
                 }
@@ -322,7 +379,7 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
             val semanticRank=ranked.indexOfFirst { it.first.segment.id==c.segment.id };val lexicalRank=lexicalIds.indexOfFirst { c.segment.legacySegmentId==it }
             val fused=(if(semanticRank>=0)1.0/(60+semanticRank+1)else 0.0)+(if(lexicalRank>=0)1.0/(60+lexicalRank+1)else 0.0)
             val s=c.segment
-            RetrievalHit(s.sourceId,s.id,c.sourceName,SemanticModality.valueOf(s.modality),s.textContent,s.page,s.lineStart,s.lineEnd,s.startMs,s.endMs,ranked.firstOrNull { it.first.segment.id==s.id }?.second,if(lexicalRank>=0)1.0/(lexicalRank+1)else null,fused,space.id,sourceDocumentIds[s.sourceId],s.legacySegmentId)
+            RetrievalHit(s.sourceId,s.id,s.title?.takeIf{it.isNotBlank()} ?: c.sourceName,SemanticModality.valueOf(s.modality),s.textContent,s.page,s.lineStart,s.lineEnd,s.startMs,s.endMs,ranked.firstOrNull { it.first.segment.id==s.id }?.second,if(lexicalRank>=0)1.0/(lexicalRank+1)else null,fused,space.id,sourceDocumentIds[s.sourceId],s.legacySegmentId)
         }.sortedByDescending { it.fusedScore }.take(limit)
         val currentActive=dao.active(scope.key);val currentJob=dao.job(active.indexId)
         if(configurationRevision.value!=searchRevision || manager.profile!=searchProfile || manager.selected?.id!=model.id)
