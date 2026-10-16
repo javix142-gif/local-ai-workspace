@@ -67,9 +67,13 @@ class DocxStructureFidelityTest {
         assertTrue(second.text.contains("Después del salto."))
         val chunks = TextChunker(maxCharacters = 1800, overlapCharacters = 0).chunk(parsed)
         assertTrue(chunks.any {
-            it.pageStart == 1 && it.text.contains("[DOCX table=1 row=2 cell=1]") && it.text.contains("Álvaro")
+            it.pageStart == 1 && it.charStart != null && it.charEnd != null && it.charEnd > it.charStart &&
+                it.text.contains("[DOCX table=1 row=2 cell=1]") && it.text.contains("Álvaro")
         })
-        assertTrue(chunks.any { it.pageStart == 2 && it.text.contains("Después del salto.") })
+        assertTrue(chunks.any {
+            it.pageStart == 2 && it.charStart != null && it.charEnd != null && it.charEnd > it.charStart &&
+                it.text.contains("Después del salto.")
+        })
     }
 
     @Test fun tableHeaderEmptyCellsAndPageBreakBeforeRemainTraceable() {
