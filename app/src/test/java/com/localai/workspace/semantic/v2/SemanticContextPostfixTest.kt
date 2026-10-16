@@ -345,6 +345,31 @@ class SemanticContextPostfixTest {
         assertFalse(extracted.contains("IGNORED_VCS_MARKER"))
     }
 
+    @Test fun lexicalCodeArchiveFallbackKeepsRelativePathAndLineInFinalContext()=runBlocking {
+        addProject("archive-lexical")
+        val archive=addCodeArchive("archive-lexical","archive-lexical-doc",linkedMapOf(
+            "src/Answer.kt" to "package fixture\n\nfun falconLookup() = \"LEXICAL_ARCHIVE_ONLY\"\n",
+        ))
+
+        val bundle=foundation.build(
+            request("archive-lexical",setOf(archive.id),SourceRetrievalMode.LEGACY_ONLY)
+                .copy(query="falconLookup"),
+            evidence=emptyList(),memoryEnabled=false,
+        )
+        val source=bundle.included.firstOrNull{it.kind==com.localai.workspace.context.ContextKind.SOURCE}
+        assertNotNull("lexical fallback should include the selected code passage",source)
+        requireNotNull(source)
+        assertEquals("src/Answer.kt",source.provenance.sourceName)
+        assertEquals(3,source.provenance.lineStart)
+        assertEquals(3,source.provenance.lineEnd)
+        assertTrue(source.text.contains("LEXICAL_ARCHIVE_ONLY"))
+        val citation=bundle.sourceEvidence.single()
+        assertEquals(archive.id,citation.documentId)
+        assertEquals("src/Answer.kt",citation.documentTitle)
+        assertEquals(3,citation.lineStart)
+        assertEquals(3,citation.lineEnd)
+    }
+
     @Test fun followUpCellQuestionSendsOnlyRelevantCellsWithCellProvenance()=runBlocking {
         addProject("project-a")
         val row1=org.json.JSONObject().put("sheet","Sales").put("row",1).put("cells",org.json.JSONArray()
