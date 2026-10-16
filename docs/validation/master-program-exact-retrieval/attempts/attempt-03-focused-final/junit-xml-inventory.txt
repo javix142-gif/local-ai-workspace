@@ -1,0 +1,4 @@
+app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.data.WorkspaceCitationEvidenceMigrationTest.xml
+app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.rag.CitationValidatorTest.xml
+app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml
+app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.ui.ChatContentUiTest.xml

@@ -1,0 +1,133 @@
+{
+  "schema": "local-ai-workspace/master-program-focused-evidence-v1",
+  "increment": "M02-05 exact retrieval and citations",
+  "classification": "IMPLEMENTED_FOCUSED_HOST_VALIDATED_PREPARATORY_PARTIAL",
+  "formalOriginalTaskStatus": "TODO",
+  "originalTaskCompleted": false,
+  "baseSourceCommit": "7539123f84bd6982b23653ab169d7e8b6de01e86",
+  "testedSourceCommit": "7b60a53f8a993227dc9d0666b548ef5447e93578",
+  "testedSourceTree": "100f8904a5b0f0703731d79420d4a9beb8e6d807",
+  "workingBranch": "codex/master-program-20261016",
+  "publicationTarget": "feat/0.5.0-skills-agents",
+  "implementation": {
+    "finding": "Semantic V2 code passages had no turn-scoped CitationEvidenceEntity when legacySegmentId was null, so exact EG2 code evidence could not be cited/persisted with path and line provenance.",
+    "changes": [
+      "Create SV2 turn evidence only for a canonical document inside the active project and selected-document scope.",
+      "Persist semanticSegmentId and code lineStart/lineEnd while retaining existing citation rows through Room migration 8 to 9.",
+      "Validate SV2 citation IDs only against evidence supplied for the current turn.",
+      "Render path/line provenance in existing Context prompt and citation presentation.",
+      "Retain EG2 and lexical fallback spreadsheet range regressions, including interior cells."
+    ],
+    "roomSchema": {
+      "oldVersion": 8,
+      "newVersion": 9,
+      "migration": "MIGRATION_8_9",
+      "oldRowsPreserved": true,
+      "exportedSchema": "app/schemas/com.localai.workspace.data.WorkspaceDatabase/9.json"
+    },
+    "dependenciesChanged": false,
+    "retrievalRankingChanged": false,
+    "formulaEvaluationAdded": false
+  },
+  "environment": {
+    "gradle": "8.10.2",
+    "gradleRuntimeJdk": "Temurin 17.0.20.1",
+    "appJvmTestWorker": "Temurin 21.0.12.1",
+    "androidSdk": "/workspace/.toolchain/android-sdk (API 35)",
+    "ndk": "27.0.12077973",
+    "offline": true,
+    "cacheCleaned": false
+  },
+  "runs": [
+    {
+      "id": "attempt-01-code-citation-red",
+      "source": "7539123f84bd6982b23653ab169d7e8b6de01e86 plus test-only regression patch",
+      "result": "EXPECTED_RED",
+      "exitCode": 1,
+      "summary": "The EG2 code hit retained path/line in prompt but was absent from ContextBundle.sourceEvidence. Original XML was not preserved; raw Gradle log and test-only patch remain."
+    },
+    {
+      "id": "attempt-02-focused-green",
+      "result": "FAIL_WITH_PRODUCT_ASSERTION_AND_ENVIRONMENT_BLOCKS",
+      "durationSecondsRecorded": 176,
+      "exitCode": 1,
+      "testsCompleted": 7,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 0,
+      "summary": "One SV2 ID case-normalization failure was corrected. API 29 Robolectric cases could not obtain android-all-instrumented:10-robolectric-5803371-i7 due connection refusal. The metadata gradleVersion field is malformed; raw log identifies Gradle 8.10.2/JDK 17."
+    },
+    {
+      "id": "attempt-03-focused-final",
+      "result": "PARTIAL_FAIL_TEST_SELECTOR_COLLISION",
+      "exitCode": 1,
+      "testsCompleted": 6,
+      "passed": 5,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "passingCases": [
+        "SemanticContextPostfixTest.eg2CodeHitKeepsExactPathAndLineAsCitableEvidence",
+        "SemanticContextPostfixTest.eg2SpreadsheetRangeKeepsInteriorCellInPromptAndProvenance",
+        "SemanticContextPostfixTest.lexicalFallbackSpreadsheetRangeKeepsInteriorCellInPromptAndProvenance",
+        "CitationValidatorTest.semanticV2CitationIdsAreAcceptedOnlyWhenPresentInTurnEvidence",
+        "WorkspaceCitationEvidenceMigrationTest.version8CitationRowsSurviveAndV2CodeLineEvidenceCanBeStored"
+      ],
+      "failure": "ChatContentUiTest assertion used a test tag shared by citation card and dialog."
+    },
+    {
+      "id": "attempt-04-ui-tag-fix",
+      "result": "PASS",
+      "exitCode": 0,
+      "testsCompleted": 1,
+      "passed": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "task": ":app:testDebugUnitTest --tests com.localai.workspace.ui.ChatContentUiTest.semanticCodeCitationKeepsPathLinesAndOpensTheSameEvidenceId",
+      "durationSeconds": 84,
+      "gradleResult": "BUILD SUCCESSFUL"
+    }
+  ],
+  "notRun": {
+    "fullAppJvmSuite": true,
+    "liteRtCompatJvmSuite": true,
+    "lintDebug": true,
+    "assembleDebug": true,
+    "assembleRelease": true,
+    "androidTestCompileOrExecution": true,
+    "emulator": true,
+    "physicalDevice": true,
+    "apk": true
+  },
+  "sourcePlan": {
+    "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmapPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskCount": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": {
+      "TODO": 97
+    },
+    "originalSourceEdited": false,
+    "M02-05": {
+      "status": "TODO",
+      "dependsOn": ["M02-01", "M01-05"]
+    },
+    "M02-01": {
+      "status": "TODO",
+      "dependsOn": ["M00-10"]
+    },
+    "M00-10": {
+      "status": "TODO",
+      "requiresDevice": true
+    },
+    "M01-06": "PENDING_REQUIRES_DEVICE"
+  },
+  "overallFullHostGate": "NOT_RUN",
+  "emulator": "NOT_RUN",
+  "physicalDevice": "NOT_RUN",
+  "apkGenerated": false
+}

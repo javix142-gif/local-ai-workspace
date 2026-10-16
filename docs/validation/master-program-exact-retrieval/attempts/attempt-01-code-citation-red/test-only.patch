@@ -1,0 +1,30 @@
+diff --git a/app/src/test/java/com/localai/workspace/semantic/v2/SemanticContextPostfixTest.kt b/app/src/test/java/com/localai/workspace/semantic/v2/SemanticContextPostfixTest.kt
+index 18a63e3..82fa6a4 100644
+--- a/app/src/test/java/com/localai/workspace/semantic/v2/SemanticContextPostfixTest.kt
++++ b/app/src/test/java/com/localai/workspace/semantic/v2/SemanticContextPostfixTest.kt
+@@ -178,6 +178,25 @@ class SemanticContextPostfixTest {
+         assertFalse(projectBundle.conversation().userMessage.contains("foreign project passage"))
+     }
+
++    @Test fun eg2CodeHitKeepsExactPathAndLineAsCitableEvidence()=runBlocking {
++        addProject("code-project")
++        val document=addDocument("code-project","answer-code","src/Answer.kt","fun answer() = 42")
++        index("code-project")
++
++        val bundle=foundation.build(
++            request("code-project",setOf(document.id)).copy(query="Where is answer defined?"),
++            evidence=emptyList(),
++            memoryEnabled=false,
++        )
++        val source=bundle.included.single{it.kind==com.localai.workspace.context.ContextKind.SOURCE}
++
++        assertEquals("src/Answer.kt",source.provenance.sourceName)
++        assertEquals(1,source.provenance.lineStart)
++        assertEquals(1,source.provenance.lineEnd)
++        assertTrue(bundle.conversation().userMessage.contains("source-name=\"src/Answer.kt\""))
++        assertTrue("Selected Semantic V2 code evidence must be available to turn-local citation validation",bundle.sourceEvidence.any{it.documentId==document.id})
++    }
++
+     @Test fun followUpCellQuestionSendsOnlyRelevantCellsWithCellProvenance()=runBlocking {
+         addProject("project-a")
+         val row1=org.json.JSONObject().put("sheet","Sales").put("row",1).put("cells",org.json.JSONArray()

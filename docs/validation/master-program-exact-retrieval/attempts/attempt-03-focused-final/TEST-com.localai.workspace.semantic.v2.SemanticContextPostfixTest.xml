@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-16T19:22:47" hostname="7023f296b5c7" time="9.719">
+  <properties/>
+  <testcase name="eg2CodeHitKeepsExactPathAndLineAsCitableEvidence" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="9.053"/>
+  <testcase name="eg2SpreadsheetRangeKeepsInteriorCellInPromptAndProvenance" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.346"/>
+  <testcase name="lexicalFallbackSpreadsheetRangeKeepsInteriorCellInPromptAndProvenance" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.32"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

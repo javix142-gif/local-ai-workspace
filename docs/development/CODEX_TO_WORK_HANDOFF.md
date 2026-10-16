@@ -1,5 +1,21 @@
 # Master program — real artifacts delivered, native baseline required
 
+## Latest continuation checkpoint — M02-05 focused citation provenance (2026-10-16)
+
+Code commit `7b60a53f8a993227dc9d0666b548ef5447e93578` is partial preparatory implementation for the authentic M02-05 “Recuperación exacta por celda pagina y codigo” DoD. The regression showed that an EG2 code hit had a path/line passage in Context but no `ContextBundle.sourceEvidence` when it had no legacy segment row. The fix adds in-turn evidence only for a document present in the active project and selected-document scope; preserves semantic segment identity and line bounds through prompt, citation validation, Room storage, and the existing citation UI. Room schema 9 uses a data-preserving 8→9 migration; schema 8 remains unchanged. Code/range/fallback tests cover the targeted gap. No ranking, formula evaluation, inference, permissions, dependencies or data source formats changed.
+
+Exact evidence is in [M02-05 focused retrieval/citation results](../validation/master-program-exact-retrieval/RESULTS.md), with raw commands, logs and XML under that folder. Baseline red was reproduced at `7539123f84bd6982b23653ab169d7e8b6de01e86`: a selected EG2 code passage was absent from turn evidence. The final focused group passed its semantic range/code, validator and Room 8→9 cases (5/5); the Compose assertion initially failed due to a duplicate test tag and passed 1/1 after only the dialog tag was made unique. An earlier 7-case invocation retained its 3 failures: one corrected ID case-normalization issue and two API-29 Robolectric dependency fetch failures. These results are per invocation, not a full green suite.
+
+Gradle Wrapper 8.10.2, Temurin JDK 17 runtime/JDK 21 app test worker, existing API 35 SDK/NDK 27.0.12077973, offline cache. Full app JVM suite, LiteRT compatibility suite, lint, APK build, AndroidTest compilation/execution, emulator, and Motorola were **NOT_RUN** for this increment. UX-02e's prior full-gate stall remains `NOT_DETERMINED`; no retry was made.
+
+The authentic source backlog and roadmap remain unchanged: 97/97 unique IDs, 120 dependencies, all 97 source statuses `TODO`; hashes are unchanged in `plan-source-check.json`. M02-05 depends on M02-01 and M01-05; M02-01 depends on M00-10, still TODO and device-required. Thus M02-05 remains partial/TODO and no source ID is complete. The authorized master prompt permits preparatory M01/M02/M03 work while M00 hardware gates remain pending, without changing the archived plan. M01-06 remains `PENDING_REQUIRES_DEVICE`; `EMULATOR` and `PHYSICAL_DEVICE` were not run here. The next preparatory slice is synthetic/versioned M02-01 corpus work only; do not claim the M00-10 dependency or M02-01/M02-05 complete.
+
+`main` and peeled `v0.4.2` were not modified; both were `de615b772cf37a99e7e08a647c59607b271de606` at preflight. Publication is limited to a fast-forward of `feat/0.5.0-skills-agents`.
+
+---
+
+## Program scope and prior delivery history
+
 First preparatory implementation source `c400dae169c6b511ba90266f9e570912470982a7`, initial base `b44470bdda2bf1b99810b637144cd12f3e750970`. User master authorization supersedes archived M00-only/push rules for preparatory M01/M02/M03. Original 97 task IDs/120 dependencies/order/TODO baseline/progress are intact; no formal milestone closed.
 
 ## Latest continuation checkpoint — document removal and stale reindex (2026-10-16)
@@ -8,7 +24,7 @@ Tested source `843bf24620447d749455ec9df1a05278d3cec996` on `codex/master-progra
 
 Six exact-SHA HOST invocations passed **7/7 JVM tests** (0 failures, errors or skips; 472 seconds summed from recorded wall durations): document-removal confirmation/outbox, AppGraph document-scope cleanup/shared payload retention, lifecycle scope/citation/shared-path behavior, new READY generation/rollback, real-ingestion stale marking, and fail-closed stale retrieval/current-document lexical fallback. Commands, JDK17 Gradle/JDK21 test launcher, SDK/NDK/CMake versions, per-run logs/XML/exit codes and hashes are in [M02 document removal and stale-index evidence](../validation/master-program-document-delete/RESULTS.md); its manifest has 78 payload entries (SHA-256 `9bcbb6f44e31f3b8ea18b2d4b0a3bb6eb4fc52298fe23b93104961ad696b5a4c`) and is verified locally.
 
-This is **partial preparatory evidence**, not formal M02-06 completion. The original M02-06 status remains `TODO`, and M02-05 is not formally closed; no original ID or dependency was changed. Original backlog/roadmap hashes remain `bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235` and `260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5` (97 unique IDs, 120 edges, all 97 source statuses TODO). Full JVM/LiteRT gates, lint, AndroidTest compilation/build, APK, emulator and Motorola were not run in this increment. M01-06 stays `PENDING_REQUIRES_DEVICE`; physical validation is `NOT_RUN`. Next inspect M02-05 exact-retrieval/citation DoD and its M02-01 evidence before selecting a dependent increment. Main and peeled v0.4.2 remain untouched.
+This is **partial preparatory evidence**, not formal M02-06 completion. The original M02-06 status remains `TODO`, and M02-05 is not formally closed; no original ID or dependency was changed. Original backlog/roadmap hashes remain `bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235` and `260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5` (97 unique IDs, 120 edges, all 97 source statuses TODO). Full JVM/LiteRT gates, lint, AndroidTest compilation/build, APK, emulator and Motorola were not run in this increment. M01-06 stays `PENDING_REQUIRES_DEVICE`; physical validation is `NOT_RUN`. At that checkpoint, next was to inspect M02-05; the focused M02-05 work is now recorded above, but that source task remains TODO because its dependencies and full DoD are not closed. Main and peeled v0.4.2 remain untouched.
 
 ## Previous continuation checkpoint — Semantic V2 project-scope cleanup (2026-10-16)
 

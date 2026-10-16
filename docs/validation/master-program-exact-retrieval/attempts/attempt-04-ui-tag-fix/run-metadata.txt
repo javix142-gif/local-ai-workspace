@@ -1,0 +1,7 @@
+startUtc=2026-10-16T19:23:33Z
+baseHead=7539123f84bd6982b23653ab169d7e8b6de01e86
+jdk17=openjdk version "17.0.20.1" 2026-08-18
+jdk21=openjdk version "21.0.12.1" 2026-08-18 LTS
+finishUtc=2026-10-16T19:24:58Z
+durationSeconds=84
+exitCode=0

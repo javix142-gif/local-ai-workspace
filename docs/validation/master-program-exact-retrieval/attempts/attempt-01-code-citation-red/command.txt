@@ -1,0 +1,4 @@
+Base commit before test-only regression: 7539123f84bd6982b23653ab169d7e8b6de01e86
+Working tree includes a test-only patch: SemanticContextPostfixTest.eg2CodeHitKeepsExactPathAndLineAsCitableEvidence
+Command: timeout 300s env JAVA_HOME=/workspace/.toolchain/jdk-17-temurin PATH=/workspace/.toolchain/jdk-17-temurin/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk GRADLE_USER_HOME=/workspace/.gradle-master-program-20261016 ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --info --init-script docs/validation/master-program-document-delete/force-test-execution.init.gradle -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17-temurin,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests 'com.localai.workspace.semantic.v2.SemanticContextPostfixTest.eg2CodeHitKeepsExactPathAndLineAsCitableEvidence'
+Maximum wall timeout: 300 seconds

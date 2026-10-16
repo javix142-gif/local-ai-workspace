@@ -1,0 +1,12 @@
+startUtc=2026-10-16T19:17:47Z
+baseHead=7539123f84bd6982b23653ab169d7e8b6de01e86
+branch=codex/master-program-20261016
+gitStatusBefore= M app/src/main/java/com/localai/workspace/context/ContextBuilder.kt; M app/src/main/java/com/localai/workspace/context/ContextFoundation.kt; M app/src/main/java/com/localai/workspace/data/Entities.kt; M app/src/main/java/com/localai/workspace/data/WorkspaceDatabase.kt; M app/src/main/java/com/localai/workspace/domain/model/WorkspaceModels.kt; M app/src/main/java/com/localai/workspace/domain/rag/CitationValidator.kt; M app/src/main/java/com/localai/workspace/ui/CitationEvidencePresentation.kt; M app/src/main/java/com/localai/workspace/ui/ViewModels.kt; M app/src/test/java/com/localai/workspace/data/WorkspaceMigration3Test.kt; M app/src/test/java/com/localai/workspace/rag/CitationValidatorTest.kt; M app/src/test/java/com/localai/workspace/semantic/v2/SemanticContextPostfixTest.kt; M app/src/test/java/com/localai/workspace/ui/ChatContentUiTest.kt; M docs/ARCHITECTURE_OVERVIEW.md;?? app/src/test/java/com/localai/workspace/data/WorkspaceCitationEvidenceMigrationTest.kt;?? docs/validation/master-program-exact-retrieval/;
+gradleVersion=jdk17=openjdk version "17.0.20.1" 2026-08-18
+jdk21=openjdk version "21.0.12.1" 2026-08-18 LTS
+sdk=/workspace/.toolchain/android-sdk
+ndk=Pkg.Revision = 27.0.12077973
+codeDiffSha256=f97e5674bce4082346ed1b1adb8699eb06ede12539b8fefabb76de161b71e04b
+finishUtc=2026-10-16T19:20:49Z
+durationSeconds=176
+exitCode=1

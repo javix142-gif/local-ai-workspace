@@ -1,0 +1,13 @@
+startUtc=2026-10-16T19:21:40Z
+baseHead=7539123f84bd6982b23653ab169d7e8b6de01e86
+branch=codex/master-program-20261016
+gradleHome=/workspace/.gradle-master-program-20261016
+gradleWrapperDistribution=Gradle-8.10.2-present
+jdk17=openjdk version "17.0.20.1" 2026-08-18
+jdk21=openjdk version "21.0.12.1" 2026-08-18 LTS
+sdk=/workspace/.toolchain/android-sdk
+ndk=Pkg.Revision = 27.0.12077973
+codeDiffSha256=dc81931ce8250fddfdcd030a06ab459d3d3b58ef43b986c3dc525ad3d5f4e58a
+finishUtc=2026-10-16T19:23:08Z
+durationSeconds=88
+exitCode=1
