@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.artifacts.XlsxArtifactRevisionTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-16T23:17:27" hostname="7023f296b5c7" time="8.975">
+  <properties/>
+  <testcase name="explicitSpreadsheetCellChangeRoutesToBoundedCellEditTool" classname="com.localai.workspace.artifacts.XlsxArtifactRevisionTest" time="8.469"/>
+  <testcase name="boundedCellEditToolCreatesImmutableVersionAndPreservesFormulaCacheAndScope" classname="com.localai.workspace.artifacts.XlsxArtifactRevisionTest" time="0.418"/>
+  <testcase name="editingDependencyRetainsFormulaAndCachedValueAcrossSavedVersionsWithoutClaimingRecalculation" classname="com.localai.workspace.artifacts.XlsxArtifactRevisionTest" time="0.087"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

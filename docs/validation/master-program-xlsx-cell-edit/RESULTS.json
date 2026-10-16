@@ -1,0 +1,125 @@
+{
+  "name": "M03-02 bounded generated XLSX cell-edit preparation",
+  "recordedAtUtc": "2026-10-16",
+  "classification": "PREPARATORY_PARTIAL_HOST_PASS_NOT_FORMAL_TASK_COMPLETION",
+  "workingBranch": "codex/master-program-20261016",
+  "targetBranch": "feat/0.5.0-skills-agents",
+  "baseFeatureCommit": "20a50c7166cd53aff02f9580f9056b47f7d9f31d",
+  "codeHeadSha": "045047cca7bc9d9cb11897ccd68d3a16fe74568f",
+  "codeCommits": [
+    "ba868f413e43b13e0685b9979f663e8fae6daa5a",
+    "1ee58e4190112a5e53aa7e84365a517eaba40f6e",
+    "191fdcf655edce40a1b59139a67c424cf4f7c01f",
+    "6cc90c3c1acfbaeda7b148eb0d08579de196b7f0",
+    "045047cca7bc9d9cb11897ccd68d3a16fe74568f"
+  ],
+  "implementation": {
+    "toolId": "artifacts.xlsxSetCells",
+    "scope": "app-private generated XLSX revisions only; imported source documents remain unchanged",
+    "maxDistinctLiteralCellEdits": 64,
+    "requiresCapability": "LOCAL_WRITE",
+    "versioning": "each successful edit creates an immutable new revision and verifies bytes",
+    "formulaCells": "rejected by this exact-cell operation",
+    "formulaRecalculation": false,
+    "rangeExpansion": false,
+    "deterministicRouting": "explicit edit verb + spreadsheet/cell context + A1 address; formula/recalculation requests excluded"
+  },
+  "attempts": [
+    {
+      "id": "formula-cache-exact-source",
+      "sourceSha": "ba868f413e43b13e0685b9979f663e8fae6daa5a",
+      "path": "docs/validation/master-program-xlsx-revisions/attempt-01-exact-source",
+      "status": "PASS",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "durationSeconds": 47
+    },
+    {
+      "id": "routing-red",
+      "sourceSha": "1ee58e4190112a5e53aa7e84365a517eaba40f6e",
+      "path": "docs/validation/master-program-xlsx-cell-edit/attempt-01-red",
+      "status": "EXPECTED_RED",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 1,
+      "failure": "Expected artifacts.xlsxSetCells but routing returned an empty set."
+    },
+    {
+      "id": "initial-green",
+      "sourceSha": "6cc90c3c1acfbaeda7b148eb0d08579de196b7f0",
+      "path": "docs/validation/master-program-xlsx-cell-edit/attempt-02-green-exact-source",
+      "status": "PASS",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "durationSeconds": 87
+    },
+    {
+      "id": "final-project-scope-rerun",
+      "sourceSha": "045047cca7bc9d9cb11897ccd68d3a16fe74568f",
+      "path": "docs/validation/master-program-xlsx-cell-edit/attempt-03-scope-exact-source",
+      "status": "PASS",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "durationSeconds": 271,
+      "gradleDuration": "4m30s",
+      "tasksExecuted": 63,
+      "xmlMethodSeconds": 8.131
+    }
+  ],
+  "hostEnvironment": {
+    "gradle": "8.10.2",
+    "runtimeJdk": "Temurin 17.0.20.1",
+    "workerJdk": "Temurin 21.0.12.1",
+    "androidSdk": "/workspace/.toolchain/android-sdk (API 35)",
+    "ndk": "27.0.12077973",
+    "gradleUserHome": "/workspace/.gradle-master-program-20261016",
+    "offline": true
+  },
+  "notRun": [
+    "full app JVM suite",
+    "full LiteRT compatibility suite",
+    "lint",
+    "assembleDebug or assembleRelease",
+    "AndroidTest compilation or execution",
+    "emulator",
+    "physical Motorola Moto G86",
+    "APK generation"
+  ],
+  "originalTask": {
+    "id": "M03-02",
+    "title": "Exportador XLSX editable",
+    "sourceStatus": "TODO",
+    "requiresDevice": true,
+    "dependsOn": ["M03-01", "M02-02"],
+    "formalCompletion": false,
+    "dependencyStatus": {
+      "M03-01": "TODO; depends on M02-05 TODO",
+      "M02-02": "TODO; depends on M02-01 TODO",
+      "M02-01": "TODO; depends on device-required M00-10"
+    }
+  },
+  "sourcePlan": {
+    "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmapPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "tasks": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": {"TODO": 97},
+    "sourceFilesModified": false
+  },
+  "deviceValidation": "NOT_RUN",
+  "apkGenerated": false
+}
