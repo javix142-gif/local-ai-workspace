@@ -62,7 +62,13 @@ class DocumentRemovalUiTest {
                 assertNull(graph.database.documentDao().get(documentId))
                 assertTrue(graph.database.documentDao().segmentsForDocument(documentId).isEmpty())
             }
-            assertFalse("the app-private imported copy is removed", imported.exists())
+            val cleanupEvidence = runBlocking(Dispatchers.IO) {
+                "pending=${graph.database.pendingDocumentDeletionDao().pending().map { it.localPath }}; " +
+                    "documentPathReferences=${graph.database.documentDao().pathReferences(imported.path)}; " +
+                    "messageReferences=${graph.database.messageDao().imageReferences(imported.path)}; " +
+                    "appDocumentsRoot=${File(graph.contextForMeasurements.filesDir, "documents").canonicalPath}"
+            }
+            assertFalse("the app-private imported copy is removed ($cleanupEvidence)", imported.exists())
             assertTrue("the source file remains untouched", original.isFile)
         } finally {
             // Each Robolectric test receives an isolated application sandbox. Calling the
