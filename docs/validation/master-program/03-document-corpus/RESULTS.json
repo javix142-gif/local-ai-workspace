@@ -19,7 +19,14 @@
     "version": 1,
     "allInputsSynthetic": true,
     "privateMotorolaWorkbookUsed": false,
-    "appParserValidatedFormats": ["pdf", "docx", "xlsx", "csv", "code", "pptx"],
+    "appParserValidatedFormats": [
+      "pdf",
+      "docx",
+      "xlsx",
+      "csv",
+      "code",
+      "pptx"
+    ],
     "exactCases": [
       "XLSX Hoja2!B14",
       "XLSX Hoja1!A1:A3 with formula/cache preserved and no recalculation",
@@ -62,9 +69,14 @@
       "errors": 0,
       "skipped": 0,
       "testTimeSeconds": 9.582,
-      "log": "attempts/attempt-02-final/gradle.log",
-      "logSha256": "887ee9759770701affc27fb98981c183769c29b70333e9141dd24c6c235597a1",
-      "junitSha256": "19863df79d72122c0d0b7b401beeb637f47209384fc455d1e31cbb5c18108f82"
+      "log": "attempts/attempt-02-final/gradle.log.gz",
+      "logSha256": "2caa0ec0b7bc91399a71e9f703661d739db666f23c9f9f29cff13cec19e30741",
+      "junitSha256": "19863df79d72122c0d0b7b401beeb637f47209384fc455d1e31cbb5c18108f82",
+      "logContentSha256": "887ee9759770701affc27fb98981c183769c29b70333e9141dd24c6c235597a1",
+      "logArchiveSha256": "2caa0ec0b7bc91399a71e9f703661d739db666f23c9f9f29cff13cec19e30741",
+      "wrapperVersionLog": "attempts/attempt-02-final/wrapper-version.log.gz",
+      "wrapperVersionLogContentSha256": "77fa8e7fc329d707263998f77d13bbe7ab67c845ed4cceb205f6896efc82c3a6",
+      "wrapperVersionLogArchiveSha256": "305d75c2e8b36dad8ee0fa90a3664ce19bf8152f98e6e66656977bb9595bd260"
     },
     "fullJvmSuite": "NOT_RUN",
     "litertCompat": "NOT_RUN",
