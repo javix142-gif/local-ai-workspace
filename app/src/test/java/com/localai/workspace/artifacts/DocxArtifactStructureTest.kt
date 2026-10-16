@@ -133,8 +133,10 @@ class DocxArtifactStructureTest {
             val parsed = DocumentParser(context).parse(firstOutput, first.format.mime, first.name)
             assertEquals(2, parsed.pages.size)
             assertTrue(parsed.pages[0].text.contains("Informe español"))
-            assertTrue(parsed.pages[0].text.contains("Álvaro"))
+            assertTrue(parsed.pages[0].text.contains("Elemento enumerado"))
             assertTrue(parsed.pages[1].text.contains("Segunda página"))
+            assertTrue(parsed.pages[1].text.contains("Álvaro"))
+            assertTrue(parsed.pages[1].text.contains("42"))
 
             val originalSpec = store.spec("docx-structure-project", first).json()
             val revisedSpec = originalSpec.put("paragraphs", revisedParagraphs(originalSpec))
