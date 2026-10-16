@@ -10,6 +10,10 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import java.io.File
 import kotlinx.coroutines.runBlocking
+import com.localai.workspace.documents.OfficeText
+import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
+import java.util.zip.ZipOutputStream
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35], application = Application::class)
@@ -40,12 +44,47 @@ class DocxStructureFidelityTest {
         assertTrue(first.text.contains("Informe anual"))
         assertTrue(first.text.contains("Introducción del documento."))
         assertTrue(first.text.contains("[DOCX table=1 row=1 cell=1]"))
+        assertTrue(first.text.contains("[DOCX table=1 row=1 cell=2]"))
         assertTrue(first.text.contains("[DOCX table=1 row=2 cell=1]"))
+        assertTrue(first.text.contains("[DOCX table=1 row=2 cell=2]"))
         assertTrue(first.text.contains("Álvaro"))
+        assertTrue(first.text.contains("42"))
         assertTrue(first.text.contains("Antes del salto."))
         assertTrue(second.text.contains("Después del salto."))
         val chunks = TextChunker(maxCharacters = 1800, overlapCharacters = 0).chunk(parsed)
-        assertTrue(chunks.any { it.pageStart == 1 && it.text.contains("Álvaro") })
+        assertTrue(chunks.any {
+            it.pageStart == 1 && it.text.contains("[DOCX table=1 row=2 cell=1]") && it.text.contains("Álvaro")
+        })
         assertTrue(chunks.any { it.pageStart == 2 && it.text.contains("Después del salto.") })
+    }
+
+    @Test fun tableHeaderEmptyCellsAndPageBreakBeforeRemainTraceable() {
+        val file = File.createTempFile("docx-structure-", ".docx", RuntimeEnvironment.getApplication().cacheDir)
+        val xml = """<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>
+            <w:p><w:r><w:t>Página uno.</w:t></w:r></w:p>
+            <w:tbl><w:tr><w:trPr><w:tblHeader/></w:trPr>
+                <w:tc><w:p><w:r><w:t>Encabezado</w:t></w:r></w:p></w:tc>
+                <w:tc><w:p/></w:tc>
+            </w:tr></w:tbl>
+            <w:p><w:pPr><w:pageBreakBefore w:val="0"/></w:pPr><w:r><w:t>Sin salto.</w:t></w:r></w:p>
+            <w:p><w:pPr><w:pageBreakBefore/></w:pPr><w:r><w:t>Página dos.</w:t></w:r></w:p>
+        </w:body></w:document>""".trimIndent()
+        try {
+            ZipOutputStream(file.outputStream()).use { archive ->
+                archive.putNextEntry(ZipEntry("word/document.xml"))
+                archive.write(xml.toByteArray(Charsets.UTF_8))
+                archive.closeEntry()
+            }
+            val parsed = ZipFile(file).use(OfficeText::docx)
+            assertEquals(listOf(1, 2), parsed.pages.map { it.pageNumber })
+            val first = parsed.pages[0].text
+            assertTrue(first.contains("[DOCX table=1 row=1 header=true cell=1]"))
+            assertTrue(first.contains("Encabezado"))
+            assertTrue(first.contains("[DOCX table=1 row=1 header=true cell=2]"))
+            assertTrue(first.contains("Sin salto."))
+            assertTrue(parsed.pages[1].text.contains("Página dos."))
+        } finally {
+            file.delete()
+        }
     }
 }

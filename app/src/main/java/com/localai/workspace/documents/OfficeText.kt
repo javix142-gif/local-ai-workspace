@@ -27,7 +27,167 @@ object OfficeText {
             require(out.length<=1_000_000){"OFFICE_TEXT_LIMIT"};p.next()
         };return out.toString().trim()
     }
-    fun docx(zip:ZipFile)=ParsedDocument(listOf(ParsedPage(null,text(xml(zip,"word/document.xml")))))
+    private fun attribute(parser: XmlPullParser, name: String): String? = (0 until parser.attributeCount)
+        .firstOrNull { parser.getAttributeName(it).substringAfter(':') == name }
+        ?.let(parser::getAttributeValue)
+
+    fun docx(zip: ZipFile): ParsedDocument {
+        val source = parser(xml(zip, "word/document.xml"))
+        val pages = mutableListOf<Pair<Int, String>>()
+        var page = StringBuilder()
+        var pageNumber = 1
+        var hasExplicitPageBreak = false
+        var emittedCharacters = 0
+        var sourceCharacters = 0
+        var paragraphNumber = 0
+        var paragraphOpen = false
+        var paragraphStyle: String? = null
+        var paragraphText = StringBuilder()
+        var inText = false
+        var tableNumber = 0
+        var tableRow = 0
+        var tableCell = 0
+        var rowIsHeader = false
+        var cellOpen = false
+        var cellText = StringBuilder()
+        var cellHasBeenEmitted = false
+
+        fun appendPage(value: String) {
+            emittedCharacters += value.length
+            require(emittedCharacters <= 1_000_000) { "OFFICE_TEXT_LIMIT" }
+            page.append(value)
+        }
+
+        fun appendParagraph(value: String) {
+            require(paragraphText.length + value.length <= 1_000_000) { "OFFICE_TEXT_LIMIT" }
+            paragraphText.append(value)
+        }
+
+        fun appendCell(value: String) {
+            require(cellText.length + value.length <= 1_000_000) { "OFFICE_TEXT_LIMIT" }
+            cellText.append(value)
+        }
+
+        fun styleMarker(): String? {
+            val style = paragraphStyle?.takeIf(String::isNotBlank) ?: return null
+            if (!(style.startsWith("Heading", ignoreCase = true) ||
+                style.equals("Title", ignoreCase = true) || style.equals("Subtitle", ignoreCase = true)
+            )) return null
+            return "[DOCX paragraph=$paragraphNumber heading=$style]"
+        }
+
+        fun emitParagraph(preserveEmpty: Boolean = false) {
+            if (paragraphText.isEmpty() && !preserveEmpty) return
+            val content = paragraphText.toString()
+            paragraphText.setLength(0)
+            val marker = styleMarker()
+            if (cellOpen) {
+                if (cellText.isNotEmpty()) appendCell("\n")
+                if (marker != null) appendCell("$marker\n")
+                appendCell(content)
+            } else {
+                if (page.isNotEmpty() && page.last() != '\n') appendPage("\n")
+                if (marker != null) {
+                    appendPage(marker)
+                    appendPage("\n")
+                }
+                appendPage(content)
+                appendPage("\n")
+            }
+        }
+
+        fun emitCell() {
+            if (cellHasBeenEmitted && cellText.isEmpty()) return
+            if (page.isNotEmpty() && page.last() != '\n' && page.last() != '\t') appendPage("\n")
+            appendPage("[DOCX table=$tableNumber row=$tableRow")
+            if (rowIsHeader) appendPage(" header=true")
+            appendPage(" cell=$tableCell]\n")
+            appendPage(cellText.toString())
+            appendPage("\t")
+            cellText.setLength(0)
+            cellHasBeenEmitted = true
+        }
+
+        fun splitPage() {
+            if (paragraphText.isNotEmpty()) emitParagraph()
+            if (cellOpen && cellText.isNotEmpty()) emitCell()
+            pages.add(pageNumber to page.toString().trimEnd())
+            page = StringBuilder()
+            pageNumber++
+            hasExplicitPageBreak = true
+        }
+
+        while (source.eventType != XmlPullParser.END_DOCUMENT) {
+            if (Thread.currentThread().isInterrupted) throw InterruptedException()
+            when (source.eventType) {
+                XmlPullParser.START_TAG -> when (source.name) {
+                    "p" -> {
+                        paragraphOpen = true
+                        paragraphNumber++
+                        paragraphStyle = null
+                        paragraphText = StringBuilder()
+                    }
+                    "pStyle" -> if (paragraphOpen) {
+                        paragraphStyle = attribute(source, "val")?.takeIf(String::isNotBlank)
+                    }
+                    "pageBreakBefore" -> if (paragraphOpen && attribute(source, "val") !in setOf("0", "false", "off")) {
+                        splitPage()
+                    }
+                    "tbl" -> {
+                        tableNumber++
+                        tableRow = 0
+                    }
+                    "tr" -> {
+                        tableRow++
+                        tableCell = 0
+                        rowIsHeader = false
+                    }
+                    "tblHeader" -> rowIsHeader = attribute(source, "val") !in setOf("0", "false", "off")
+                    "tc" -> {
+                        tableCell++
+                        cellOpen = true
+                        cellText = StringBuilder()
+                        cellHasBeenEmitted = false
+                    }
+                    "t" -> inText = true
+                    "tab" -> appendParagraph("\t")
+                    "cr" -> appendParagraph("\n")
+                    "br" -> if (attribute(source, "type") == "page") splitPage() else appendParagraph("\n")
+                }
+                XmlPullParser.TEXT -> if (inText) {
+                    sourceCharacters += source.text.length
+                    require(sourceCharacters <= 1_000_000) { "OFFICE_TEXT_LIMIT" }
+                    appendParagraph(source.text)
+                }
+                XmlPullParser.END_TAG -> when (source.name) {
+                    "t" -> inText = false
+                    "p" -> {
+                        emitParagraph(preserveEmpty = true)
+                        paragraphOpen = false
+                    }
+                    "tc" -> {
+                        emitCell()
+                        cellOpen = false
+                    }
+                    "tr" -> if (page.isNotEmpty() && page.last() != '\n') appendPage("\n")
+                    "tbl" -> if (page.isNotEmpty() && page.last() != '\n') appendPage("\n")
+                }
+            }
+            source.next()
+        }
+
+        if (paragraphText.isNotEmpty()) emitParagraph()
+        if (cellOpen) emitCell()
+        if (page.isNotEmpty() || pages.isEmpty() || hasExplicitPageBreak) {
+            pages.add(pageNumber to page.toString().trimEnd())
+        }
+        val parsedPages = if (hasExplicitPageBreak) {
+            pages.map { (number, content) -> ParsedPage(number, content) }
+        } else {
+            listOf(ParsedPage(null, pages.firstOrNull()?.second.orEmpty()))
+        }
+        return ParsedDocument(parsedPages)
+    }
     fun pptx(zip:ZipFile):ParsedDocument {
         StructuredDocuments.inspect(zip)
         val rel=parser(xml(zip,"ppt/_rels/presentation.xml.rels"));val targets=mutableMapOf<String,String>()
