@@ -48,7 +48,7 @@ GRADLE_USER_HOME=/workspace/.gradle-master-program-20261016 \
 
 El XML final registra 3 tests, 0 omitidos, 0 fallos y 0 errores; tiempo total de métodos 8.131 s. El log completo conserva recompilación de app/tests y `BUILD SUCCESSFUL in 4m 30s: 63 actionable tasks: 63 executed`. Los manifiestos por intento se verificaron desde la raíz del repositorio. El SHA-256 del XML final está en `attempt-03-scope-exact-source/SHA256SUMS`.
 
-No se ejecutaron suite JVM completa, LiteRT compat completa, lint, assemble APK, AndroidTest instrumentado, emulador ni Motorola. No se midió TTFT, tokens/s, memoria, energía ni calidad en dispositivo. No se generó APK en este incremento.
+No se ejecutaron suite JVM completa, LiteRT compat completa, lint, assemble APK, AndroidTest instrumentado, emulador ni Motorola. No se midió TTFT, tokens/s, memoria, energía ni calidad en dispositivo. No se generó APK en este incremento: no se localizó una clave Debug retenida que se pudiera demostrar compatible con la instalación previa; los artefactos de QA históricos registrados usan huellas de certificado distintas y la huella instalada no se puede comprobar sin el teléfono. Una APK firmada por otra clave podría exigir desinstalar el paquete y arriesgar sus datos, así que no se produjo ni distribuyó.
 
 ## Plan original y límites
 

@@ -7658,7 +7658,7 @@
       "status": "FOCUSED_HOST_PASS_PREPARATORY_DEPENDENCY_AND_DEVICE_GATES_OPEN_NOT_FORMAL",
       "codeCommit": "045047cca7bc9d9cb11897ccd68d3a16fe74568f",
       "evidence": "docs/validation/master-program-xlsx-cell-edit/RESULTS.md",
-      "evidenceManifestSha256": "3e3022b1e0941accd6dc9cbf3c047eb4b0f8de29a950e06fd27011b6ec62584b"
+      "evidenceManifestSha256": "19b4c26f00797a785985852429bb000d7cd1f35e4a62afacea94ce9ade6d32ca"
     }
   },
   "latestMasterProgramIncrement": {
@@ -7667,7 +7667,7 @@
     "status": "FOCUSED_HOST_PASS_PREPARATORY_DEPENDENCY_AND_DEVICE_GATES_OPEN_NOT_FORMAL",
     "codeCommit": "045047cca7bc9d9cb11897ccd68d3a16fe74568f",
     "evidence": "docs/validation/master-program-xlsx-cell-edit/RESULTS.md",
-    "evidenceManifestSha256": "3e3022b1e0941accd6dc9cbf3c047eb4b0f8de29a950e06fd27011b6ec62584b",
+    "evidenceManifestSha256": "19b4c26f00797a785985852429bb000d7cd1f35e4a62afacea94ce9ade6d32ca",
     "details": "Bounded literal cell edits for generated private XLSX drafts; exact-cell tool route, LOCAL_WRITE, immutable version, formula/cache policy and project isolation are covered. M03-02 remains TODO; its dependency chain and physical DoD remain open."
   },
   "previousMasterProgramIncrement": {
@@ -10128,7 +10128,7 @@
       "androidTestCompileAndExecution": "NOT_RUN",
       "emulator": "NOT_RUN_THIS_INCREMENT",
       "physicalDevice": "NOT_RUN",
-      "apk": "NOT_GENERATED"
+      "apk": "NOT_GENERATED_NO_COMPATIBLE_RETAINED_DEBUG_SIGNER_VERIFIED"
     },
     "limitations": [
       "No formula editing or recalculation in this operation.",
@@ -10157,6 +10157,7 @@
     },
     "evidence": "docs/validation/master-program-xlsx-cell-edit/RESULTS.md",
     "evidenceManifest": "docs/validation/master-program-xlsx-cell-edit/SHA256SUMS",
-    "evidenceManifestSha256": "3e3022b1e0941accd6dc9cbf3c047eb4b0f8de29a950e06fd27011b6ec62584b"
+    "evidenceManifestSha256": "19b4c26f00797a785985852429bb000d7cd1f35e4a62afacea94ce9ade6d32ca",
+    "apkDisposition": "No retained compatible Debug signing key was available/verified; historical QA artifacts have different certificate fingerprints and no Motorola install certificate can be inspected. No APK was produced to avoid risking a data-losing uninstall."
   }
 }

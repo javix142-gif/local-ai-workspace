@@ -121,5 +121,6 @@
     "sourceFilesModified": false
   },
   "deviceValidation": "NOT_RUN",
-  "apkGenerated": false
+  "apkGenerated": false,
+  "apkDisposition": "NOT_GENERATED: no retained compatible Debug signing key/certificate was available or verified; producing another signer could require uninstall and risk installed user data."
 }
