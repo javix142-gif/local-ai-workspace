@@ -2,6 +2,16 @@
 
 User authorization permits sequential preparatory M01/M02/M03 work despite unfinished physical M00 gates, and feature-only fast-forward publication. The archived original 97 IDs/120 dependencies/order/TODO baseline are immutable. This document is an implementation crosswalk, not a replacement backlog or formal milestone closure.
 
+## Preparatory portable memory import — 2026-10-16
+
+Code commit `76f6db08f6d582025c68350c910bc627f9deda65` adds the reviewed `AWS_MEMORY_IMPORT_V1` ZIP reader and user-facing import flow. The prompt specifies the manifest, metadata, Markdown, JSONL record fields, integrity hashes, allowed paths and size/count limits. Android SAF selects the ZIP; imported candidates start unselected, may be reviewed/corrected/excluded, and are inserted transactionally as local USER-scope PENDING memories only after explicit selection. Exact duplicates are preserved rather than inserted; possible structured conflicts are visible and never overwrite existing memories. Imported trust/scope/dates/provenance are retained as source metadata, and instruction-like text is treated as data.
+
+Validation on the exact source SHA: `MemoryBundleV1Test` 5/5 and `MemoryBundleImportTest` 4/4; `lintDebug` exit 0 with zero errors, 77 warnings and one information diagnostic. XML, lint report, commands, environment and attempt logs are in `../validation/master-program-memory-import/RESULTS.md`. No new Room schema/migration, runtime, dependency, model, network transfer or APK was added. The original 97-task source remains TODO and unchanged; this preparatory capability does not mark M11-01 or any other source task complete.
+
+Imported items remain pending until user approval. Embeddings are deferred until approval and use of the existing recovery/search paths; indexing can remain pending if EG2 is unavailable. The local sensitive-content check is heuristic, not comprehensive. This increment does not produce a ZIP export, so a complete export/import round trip remains a next implementation step. No full JVM suite, LiteRT compatibility suite, AndroidTest compile, emulator or phone test was run. APK delivery is blocked in this executor because the previous local Debug signing keystore is not mounted; no replacement key was generated, to avoid a package-update signer conflict. P0 latency/model comparisons still require the real Moto G86 baseline.
+
+This is a preparatory program increment on `codex/master-program-20261016`, not a formal backlog completion. The preserved source backlog/roadmap hashes and all 97 IDs, 120 dependencies, order and TODO states remain unchanged.
+
 ## Implemented on production paths
 
 - Semantic V2 `search`: up to eight cached query vectors (24KiB vector payload), hashed immutable descriptors including model space/task/backend, project/index generation/configuration revision. Every search rechecks READY/current index, document scope and ranking. No source/result cache, no media-path caching, no routing-model change. Concurrent configuration change is rejected before publishing evidence. Controlled repeated queries reduced native compute count 2 to 1; not a phone speed/quality claim.

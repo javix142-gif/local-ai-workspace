@@ -1,0 +1,111 @@
+{
+  "sourceCommit": "76f6db08f6d582025c68350c910bc627f9deda65",
+  "attempts": [
+    {
+      "id": 1,
+      "commandFile": "NOT_RECORDED",
+      "log": "logs/attempt-01-wrapper-network.log.gz",
+      "startUtc": "NOT_RECORDED",
+      "endUtc": "2026-10-16T16:33:46Z",
+      "exitCode": 1,
+      "result": "INFRASTRUCTURE_FAILURE_BEFORE_GRADLE",
+      "observation": "Gradle Wrapper distribution download failed with Connection refused; no tasks or tests started."
+    },
+    {
+      "id": 2,
+      "commandFile": "command-proxied.txt",
+      "log": "logs/attempt-02-proxy-tls-certificate.log.gz",
+      "startUtc": "2026-10-16T16:34:08Z",
+      "endUtc": "2026-10-16T16:34:08Z",
+      "exitCode": 1,
+      "result": "INFRASTRUCTURE_FAILURE_BEFORE_GRADLE",
+      "observation": "The proxy connection reached TLS certificate validation, which failed PKIX trust validation; no project task started."
+    },
+    {
+      "id": 3,
+      "commandFile": "command-trusted-proxy.txt",
+      "log": "logs/attempt-03-test-compile-import-error.log.gz",
+      "startUtc": "2026-10-16T16:34:35Z",
+      "endUtc": "2026-10-16T16:42:18Z",
+      "wallDurationSeconds": 463,
+      "exitCode": 1,
+      "result": "TEST_SOURCE_COMPILATION_FAILED",
+      "gradleTasks": {
+        "actionable": 47,
+        "executed": 47
+      },
+      "observation": "The new unit test did not compile because test imports were missing. No JUnit cases ran. Imports were added; production behavior was not implicated."
+    },
+    {
+      "id": 4,
+      "commandFile": "command-focused-rerun.txt",
+      "log": "logs/attempt-04-test-fixture-assertions.log.gz",
+      "startUtc": "2026-10-16T16:43:01Z",
+      "endUtc": "2026-10-16T16:45:06Z",
+      "gradleReportedDuration": "2m 4s",
+      "exitCode": 1,
+      "result": "TEST_FIXTURE_EXPECTATIONS_FAILED",
+      "tests": 9,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0,
+      "observation": "Two assertions had wrong fixture expectations (including category/key expectations); the test data/selection was corrected, with assertions retained."
+    },
+    {
+      "id": 5,
+      "commandFile": "command-final-focused.txt",
+      "log": "logs/attempt-05-test-fixture-selection.log.gz",
+      "startUtc": "2026-10-16T16:46:01Z",
+      "endUtc": "2026-10-16T16:46:55Z",
+      "wallDurationSeconds": 54,
+      "exitCode": 1,
+      "result": "TEST_FIXTURE_SELECTION_EXPECTATION_FAILED",
+      "tests": 9,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "observation": "One fixture selected an additional profile candidate; the test selection was corrected. This was not a demonstrated production defect."
+    },
+    {
+      "id": 6,
+      "commandFile": "command-final-focused-2.txt",
+      "log": "logs/attempt-06-tests-and-lint-pass-before-final-ui-tidy.log.gz",
+      "startUtc": "2026-10-16T16:47:33Z",
+      "endUtc": "2026-10-16T17:05:54Z",
+      "gradleReportedDuration": "18m 19s",
+      "exitCode": 0,
+      "result": "FOCUSED_TESTS_AND_LINT_PASS_BEFORE_FINAL_UI_TIDY",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "gradleTasks": {
+        "actionable": 123,
+        "executed": 63,
+        "upToDate": 60
+      },
+      "observation": "Passed before a final small review-dialog change; the exact final code was validated again by attempt 7."
+    },
+    {
+      "id": 7,
+      "commandFile": "command-verified.txt",
+      "log": "logs/attempt-07-final-offline-verified.log.gz",
+      "startUtc": "2026-10-16T17:07:41Z",
+      "endUtc": "2026-10-16T17:15:02Z",
+      "wallDurationSeconds": 441,
+      "gradleReportedDuration": "7m 19s",
+      "exitCode": 0,
+      "result": "FINAL_SOURCE_FOCUSED_PASS",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "gradleTasks": {
+        "actionable": 123,
+        "executed": 25,
+        "upToDate": 98
+      },
+      "observation": "Offline run on the exact committed source; focused JUnit reports and lint report match this execution."
+    }
+  ]
+}

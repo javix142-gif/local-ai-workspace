@@ -1,0 +1,15 @@
+Source commit: 76f6db08f6d582025c68350c910bc627f9deda65
+Command: see command-verified.txt
+Exit: 0; Gradle BUILD SUCCESSFUL in 7m 19s; wall clock 441 seconds.
+Gradle: 123 actionable tasks; 25 executed; 98 up-to-date.
+
+PASS :app:testDebugUnitTest with class filters MemoryBundleV1Test and MemoryBundleImportTest: 9 tests, 0 failures, 0 errors, 0 skipped. XML is in xml/.
+PASS :app:lintDebug: 0 errors, 77 warnings, 1 information diagnostic in the generated lint report.
+
+NOT_RUN :litert-compat:testDebugUnitTest.
+NOT_RUN complete :app:testDebugUnitTest suite outside the two selected classes.
+NOT_RUN :app:compileDebugAndroidTestKotlin / instrumentation.
+NOT_RUN :app:assembleDebug and :app:assembleRelease; this command did not package an APK.
+NOT_RUN EMULATOR and PHYSICAL_DEVICE.
+
+Earlier failed attempts are retained separately in attempt-history.json and sanitized logs. They include wrapper/network setup failures, one test compilation failure from missing test imports, then fixture expectation failures. They are not the final source result and are not silently omitted.

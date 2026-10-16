@@ -1,0 +1,97 @@
+{
+  "sourceCommit": "76f6db08f6d582025c68350c910bc627f9deda65",
+  "baseFeatureHead": "458864aa03bdedda2388373e6573f500afda7c79",
+  "workingBranch": "codex/master-program-20261016",
+  "increment": "PREPARATORY_PORTABLE_MEMORY_BUNDLE_IMPORT",
+  "execution": {
+    "startedAtUtc": "2026-10-16T17:07:41Z",
+    "finishedAtUtc": "2026-10-16T17:15:02Z",
+    "wallDurationSeconds": 441,
+    "gradleReportedDuration": "7m 19s",
+    "exitCode": 0,
+    "commandFile": "command-verified.txt",
+    "log": "logs/attempt-07-final-offline-verified.log.gz",
+    "gradleVersion": "8.10.2"
+  },
+  "focusedJUnit": {
+    "status": "PASS",
+    "tests": 9,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "suites": [
+      {
+        "suite": "com.localai.workspace.context.MemoryBundleImportTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timeSeconds": 22.863,
+        "path": "xml/TEST-com.localai.workspace.context.MemoryBundleImportTest.xml"
+      },
+      {
+        "suite": "com.localai.workspace.context.MemoryBundleV1Test",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "timeSeconds": 0.267,
+        "path": "xml/TEST-com.localai.workspace.context.MemoryBundleV1Test.xml"
+      }
+    ]
+  },
+  "lintDebug": {
+    "status": "PASS",
+    "errors": 0,
+    "warnings": 77,
+    "information": 1,
+    "reportXml": "lint-results-debug.xml",
+    "reportText": "lint-results-debug.txt"
+  },
+  "notRun": {
+    "litertCompatJvm": "NOT_RUN",
+    "fullAppJvmSuite": "NOT_RUN",
+    "androidTestCompile": "NOT_RUN",
+    "assembleDebug": "NOT_RUN",
+    "assembleRelease": "NOT_RUN",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  },
+  "backlog": {
+    "path": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "sha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "tasks": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": {
+      "TODO": 97
+    },
+    "sourceEdited": false
+  },
+  "roadmap": {
+    "path": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "sha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "sourceEdited": false
+  },
+  "backup": {
+    "path": "/workspace/backup/aws-pre-integral-20261016-458864a/repository.bundle",
+    "sha256": "1dc13d8142c6f0beac1038aa7a8abc5ec766b88648e32aefcfba45e037e4f925"
+  },
+  "productBoundaries": {
+    "roomSchemaChanged": false,
+    "modelRuntimeChanged": false,
+    "networkExport": false,
+    "newDependencies": false,
+    "originalTaskMarkedComplete": false,
+    "apkOrModelBytesStoredInGit": false
+  },
+  "limits": [
+    "Only the two memory-bundle test classes were selected; not the complete JVM suite.",
+    "lintDebug passed with the recorded lint diagnostics; its task graph compiled native release libraries but did not package an APK.",
+    "Import creates PENDING local USER memories after explicit per-item review; embeddings happen only after approval/recovery or a later semantic retrieval.",
+    "Sensitive-data detection reuses heuristic local patterns and is not a comprehensive secret scanner.",
+    "No ZIP export producer is included in this increment; existing JSON export remains separate.",
+    "No EMULATOR or PHYSICAL_DEVICE validation was run."
+  ]
+}

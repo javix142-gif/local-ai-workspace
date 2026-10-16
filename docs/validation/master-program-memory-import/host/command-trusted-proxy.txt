@@ -1,0 +1,6 @@
+JAVA_HOME=/workspace/.toolchain/jdk-17-temurin
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk
+GRADLE_USER_HOME=/workspace/.gradle-master-program-20261016
+JAVA_TOOL_OPTIONS=HTTP_PROXY=proxy:8080; trustStore=/workspace/.toolchain/gradle-truststore (temporary environment CA added; TLS verification enabled)
+COMMAND=./gradlew --no-daemon --no-parallel --max-workers=1 --console=plain --info --no-build-cache -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17-temurin,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.context.MemoryBundleV1Test --tests com.localai.workspace.context.MemoryBundleImportTest :app:lintDebug

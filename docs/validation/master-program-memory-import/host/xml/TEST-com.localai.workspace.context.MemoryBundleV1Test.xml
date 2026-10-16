@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.context.MemoryBundleV1Test" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-16T17:10:18" hostname="7023f296b5c7" time="0.267">
+  <properties/>
+  <testcase name="rejectsHighlyCompressedInputBeforeParsingRecords" classname="com.localai.workspace.context.MemoryBundleV1Test" time="0.202"/>
+  <testcase name="promptCarriesRequestedPurposeAndImportContract" classname="com.localai.workspace.context.MemoryBundleV1Test" time="0.003"/>
+  <testcase name="rejectsInvalidUtf8DuplicateIdsAndIncompatiblePackage" classname="com.localai.workspace.context.MemoryBundleV1Test" time="0.033"/>
+  <testcase name="rejectsBadIntegrityUnknownPathsUnsupportedVersionAndMalformedJsonl" classname="com.localai.workspace.context.MemoryBundleV1Test" time="0.013"/>
+  <testcase name="parsesCanonicalFolderAndRetainsTrustProvenanceAndDates" classname="com.localai.workspace.context.MemoryBundleV1Test" time="0.016"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

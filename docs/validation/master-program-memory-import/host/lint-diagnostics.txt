@@ -1,0 +1,1 @@
+Lint report parsed from lint-results-debug.xml: issues=78, errors=0, warnings=77, information=1. lintDebug task exit is 0.

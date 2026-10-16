@@ -1,0 +1,5 @@
+Read-only signing-key availability check, 2026-10-16.
+HOME=/home/agent
+Checked the Gradle default /home/agent/.android/debug.keystore and candidate paths /workspace/.android/debug.keystore and /workspace/local-ai-workspace/.gradle/debug.keystore: absent.
+Read-only filename search under /workspace, /home/agent, /tmp, /root, /opt and /mnt/data for debug.keystore, *.jks and *.keystore: no result.
+The previous personal Debug certificate SHA-256 in persisted evidence is f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b; this executor has no corresponding private signing key mounted. No replacement key was generated and no APK was signed/uploaded, to avoid delivering a same-package APK that may be incompatible with the installed signer.

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.context.MemoryBundleImportTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-16T17:09:55" hostname="7023f296b5c7" time="22.863">
+  <properties/>
+  <testcase name="exactDuplicatesAndStructuredConflictsAreReportedWithoutOverwriting" classname="com.localai.workspace.context.MemoryBundleImportTest" time="22.03"/>
+  <testcase name="sensitiveCandidateAndUnknownSelectionCannotBeImported" classname="com.localai.workspace.context.MemoryBundleImportTest" time="0.273"/>
+  <testcase name="identicalProjectMemoryDoesNotSuppressPersonalImport" classname="com.localai.workspace.context.MemoryBundleImportTest" time="0.266"/>
+  <testcase name="importIsPendingScopedIdempotentAndIndexedOnlyAfterApproval" classname="com.localai.workspace.context.MemoryBundleImportTest" time="0.293"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
