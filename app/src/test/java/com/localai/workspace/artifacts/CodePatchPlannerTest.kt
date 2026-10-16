@@ -28,6 +28,9 @@ class CodePatchPlannerTest {
         val source="x".repeat(CodePatchPlanner.MAX_BODY_BYTES+1)
         assertRejected("CODE_PATCH_BODY_TOO_LARGE") { CodePatchPlanner.apply(source,CodePatchPlanner.hash(source),listOf(CodePatchEdit("x","y"))) }
         assertRejected("CODE_PATCH_EDIT_COUNT_INVALID") { CodePatchPlanner.apply("x",CodePatchPlanner.hash("x"),emptyList()) }
+        assertRejected("CODE_PATCH_EDIT_COUNT_INVALID") { CodePatchPlanner.validateEdits(List(CodePatchPlanner.MAX_EDITS+1){CodePatchEdit("x","y")}) }
+        assertRejected("CODE_PATCH_SNIPPET_TOO_LARGE") { CodePatchPlanner.validateEdits(listOf(CodePatchEdit("x".repeat(CodePatchPlanner.MAX_SNIPPET_BYTES+1),"y"))) }
+        assertEquals("ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",CodePatchPlanner.hash("abc"))
         assertTrue(CodePatchPlanner.hash("é").matches(Regex("[0-9a-f]{64}")))
     }
 
