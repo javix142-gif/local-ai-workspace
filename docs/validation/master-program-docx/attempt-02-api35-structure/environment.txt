@@ -1,0 +1,9 @@
+Source SHA: dd7abdfa6cba62014973245614b4bc5336f5e0cc
+Branch checkout: codex/master-program-20261016
+Gradle: wrapper 8.10.2, runtime Temurin JDK 17 (/workspace/.toolchain/jdk-17-temurin)
+App test worker/toolchain: Temurin JDK 21 (/workspace/.toolchain/jdk-21-temurin)
+Android SDK: /workspace/.toolchain/android-sdk, API 35
+Android NDK: 27.0.12077973
+Gradle user home: /workspace/.gradle-master-program-20261016, pre-existing cache, offline
+Independent reader: python-docx 1.2.0
+Test configuration: Robolectric SDK 35 (no API 29 android-all download required)

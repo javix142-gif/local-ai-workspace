@@ -1,0 +1,78 @@
+{
+  "kind": "PREPARATORY_M03_03_DOCX_STRUCTURE_AND_READER_CHECK",
+  "status": "FOCUSED_HOST_PASS_PREPARATORY_DEPENDENCIES_AND_DEVICE_GATE_OPEN",
+  "sourceCodeSha": "c0bc7504595c40976d86bf2fe2375f8382b0a94e",
+  "codeCommits": [
+    "dd7abdfa6cba62014973245614b4bc5336f5e0cc",
+    "6bdc710600d2930bffe23182b809bc32597e7f4b",
+    "c0bc7504595c40976d86bf2fe2375f8382b0a94e"
+  ],
+  "productChanged": false,
+  "dependenciesChanged": false,
+  "host": {
+    "finalAttempt": "attempt-04-api35-exact-source",
+    "command": "./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --rerun-tasks -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17-temurin,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.artifacts.DocxArtifactStructureTest",
+    "gradle": "8.10.2",
+    "runtimeJdk": "Temurin 17",
+    "testWorkerJdk": "Temurin 21",
+    "androidSdk": "API 35",
+    "ndk": "27.0.12077973",
+    "offlineExistingCache": true,
+    "exitCode": 0,
+    "elapsedSeconds": 251,
+    "gradleDuration": "4m09s",
+    "tasksExecuted": 63,
+    "junit": {
+      "tests": 1,
+      "passed": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "methodSeconds": 8.507,
+      "xml": "attempt-04-api35-exact-source/TEST-com.localai.workspace.artifacts.DocxArtifactStructureTest.xml"
+    }
+  },
+  "independentReader": {
+    "name": "python-docx",
+    "version": "1.2.0",
+    "exitCode": 0,
+    "documentsOpened": 2,
+    "checks": ["title and heading styles", "bullet numbering relationship", "page-break-before", "2x2 table values and Unicode", "immutable v1 and edited v2"],
+    "v1": {
+      "file": "attempt-04-api35-exact-source/fixture-v1.docx",
+      "bytes": 2584,
+      "sha256": "0e344cfef9e9a0f506a79fbb604c24b3a3bdea9f1cd1641ae4590474241a16df"
+    },
+    "v2": {
+      "file": "attempt-04-api35-exact-source/fixture-v2.docx",
+      "bytes": 2585,
+      "sha256": "aadfe6e7187566ad1d408d7383db405e5a162f4f23f14e8bd9cafb87fe4fd5ce"
+    }
+  },
+  "originalTask": {
+    "id": "M03-03",
+    "status": "TODO",
+    "requiresDevice": true,
+    "dependsOn": ["M03-01", "M02-03"],
+    "dependencyStatus": "Both original dependencies remain TODO; no formal completion claimed"
+  },
+  "otherValidation": {
+    "fullJvmSuite": "NOT_RUN",
+    "liteRtCompatSuite": "NOT_RUN",
+    "lint": "NOT_RUN",
+    "androidTestCompile": "NOT_RUN",
+    "emulatorForThisCodeSha": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  },
+  "sourcePlan": {
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskCount": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "statuses": {"TODO": 97},
+    "sourceModified": false
+  },
+  "nextPreparatoryIncrement": "Inspect M03-04 PDF generation for one bounded host-verifiable gap; preserve original TODO/requires_device/dependencies."
+}

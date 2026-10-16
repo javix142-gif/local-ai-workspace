@@ -1,0 +1,9 @@
+Source branch checkout: codex/master-program-20261016
+Source SHA before run: bacb049bdb3732a6354ec48c3899cd8fb5e2a16a
+Gradle runtime: Temurin JDK 17 at /workspace/.toolchain/jdk-17-temurin
+App test worker: Temurin JDK 21 at /workspace/.toolchain/jdk-21-temurin
+Gradle wrapper: 8.10.2
+Android SDK: /workspace/.toolchain/android-sdk (API 35)
+Android NDK: 27.0.12077973
+Gradle user home: /workspace/.gradle-master-program-20261016 (existing cache, offline)
+Independent reader available before run: python-docx 1.2.0

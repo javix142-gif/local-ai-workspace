@@ -1,0 +1,41 @@
+{
+  "testedCommit": "bacb049bdb3732a6354ec48c3899cd8fb5e2a16a",
+  "emulator": {
+    "runId": 38981700237,
+    "jobId": 117243808571,
+    "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38981700237",
+    "status": "FAIL",
+    "avd": "API 35 x86_64 booted; adb connected",
+    "task": ":app:connectedDebugAndroidTest",
+    "xml": {
+      "tests": 16,
+      "passed": 9,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 6,
+      "executed": 10,
+      "failure": "WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords: authentic historical WorkspaceDatabase/1.json missing"
+    },
+    "modelDependentTests": "6 skipped; no real model weights were installed",
+    "artifact": {
+      "id": 12081328312,
+      "name": "android-emulator-evidence-38981700237-1",
+      "bytes": 151404,
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38981700237/artifacts/12081328312",
+      "sha256": "ec89be926f36ae81d66a08231f58bc9b8e5bff9f8b93291b57d7bb89bb0d313f",
+      "digestCheckedAgainstDownloadedArchive": true
+    }
+  },
+  "qa": {
+    "runId": 38981700277,
+    "jobId": 117243809072,
+    "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38981700277",
+    "status": "FAIL_CLOSED",
+    "gate": "matching SHA instrumentation must succeed",
+    "instrumentationWait": "failure",
+    "apkBuild": "SKIPPED",
+    "artifactUpload": "SKIPPED",
+    "apkProduced": false
+  },
+  "interpretation": "These are existing push-triggered workflows for bacb049; they do not test the later DOCX-only code commit c0bc750. No Android or APK PASS is claimed."
+}

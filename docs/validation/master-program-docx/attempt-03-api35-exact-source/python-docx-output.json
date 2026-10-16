@@ -1,0 +1,44 @@
+{
+  "reader": "python-docx 1.2.0",
+  "file": "app/build/docx-independent-reader/fixture-v1.docx",
+  "paragraphs": [
+    {
+      "text": "Informe español",
+      "style": "Title",
+      "pageBreakBefore": false
+    },
+    {
+      "text": "Primera sección",
+      "style": "Heading 1",
+      "pageBreakBefore": false
+    },
+    {
+      "text": "Texto con ñ, € y <marcas>.",
+      "style": "Normal",
+      "pageBreakBefore": false
+    },
+    {
+      "text": "Elemento enumerado",
+      "style": "Normal",
+      "pageBreakBefore": false
+    },
+    {
+      "text": "Segunda página",
+      "style": "Normal",
+      "pageBreakBefore": true
+    }
+  ],
+  "tables": [
+    [
+      [
+        "Nombre",
+        "Valor"
+      ],
+      [
+        "Álvaro",
+        "42"
+      ]
+    ]
+  ],
+  "sections": 1
+}

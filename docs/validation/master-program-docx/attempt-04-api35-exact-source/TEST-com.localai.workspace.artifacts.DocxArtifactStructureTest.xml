@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.artifacts.DocxArtifactStructureTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-16T23:49:44" hostname="7023f296b5c7" time="8.507">
+  <properties/>
+  <testcase name="generatedDocxResolvesStylesNumberingTablesAndImmutableRevisions" classname="com.localai.workspace.artifacts.DocxArtifactStructureTest" time="8.507"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

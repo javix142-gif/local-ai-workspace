@@ -1,0 +1,6 @@
+Source SHA: c0bc7504595c40976d86bf2fe2375f8382b0a94e
+Branch checkout: codex/master-program-20261016
+Gradle wrapper 8.10.2; Gradle runtime Temurin JDK 17 (/workspace/.toolchain/jdk-17-temurin); test worker/toolchain Temurin JDK 21 (/workspace/.toolchain/jdk-21-temurin)
+Android SDK /workspace/.toolchain/android-sdk (API 35); NDK 27.0.12077973
+Existing Gradle cache /workspace/.gradle-master-program-20261016, offline
+Robolectric SDK 35; no Android components installed during the attempt

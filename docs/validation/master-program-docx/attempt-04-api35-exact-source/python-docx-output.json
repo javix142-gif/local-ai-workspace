@@ -1,0 +1,104 @@
+[
+  {
+    "file": "docs/validation/master-program-docx/attempt-04-api35-exact-source/fixture-v1.docx",
+    "bytes": 2584,
+    "sha256": "0e344cfef9e9a0f506a79fbb604c24b3a3bdea9f1cd1641ae4590474241a16df",
+    "reader": "python-docx 1.2.0",
+    "paragraphs": [
+      {
+        "text": "Informe español",
+        "style": "Title",
+        "pageBreakBefore": false,
+        "numberingId": null
+      },
+      {
+        "text": "Primera sección",
+        "style": "Heading 1",
+        "pageBreakBefore": false,
+        "numberingId": null
+      },
+      {
+        "text": "Texto con ñ, € y <marcas>.",
+        "style": "Normal",
+        "pageBreakBefore": false,
+        "numberingId": null
+      },
+      {
+        "text": "Elemento enumerado",
+        "style": "Normal",
+        "pageBreakBefore": false,
+        "numberingId": 1
+      },
+      {
+        "text": "Segunda página",
+        "style": "Normal",
+        "pageBreakBefore": true,
+        "numberingId": null
+      }
+    ],
+    "tables": [
+      [
+        [
+          "Nombre",
+          "Valor"
+        ],
+        [
+          "Álvaro",
+          "42"
+        ]
+      ]
+    ],
+    "sections": 1
+  },
+  {
+    "file": "docs/validation/master-program-docx/attempt-04-api35-exact-source/fixture-v2.docx",
+    "bytes": 2585,
+    "sha256": "aadfe6e7187566ad1d408d7383db405e5a162f4f23f14e8bd9cafb87fe4fd5ce",
+    "reader": "python-docx 1.2.0",
+    "paragraphs": [
+      {
+        "text": "Informe actualizado",
+        "style": "Title",
+        "pageBreakBefore": false,
+        "numberingId": null
+      },
+      {
+        "text": "Primera sección",
+        "style": "Heading 1",
+        "pageBreakBefore": false,
+        "numberingId": null
+      },
+      {
+        "text": "Texto con ñ, € y <marcas>.",
+        "style": "Normal",
+        "pageBreakBefore": false,
+        "numberingId": null
+      },
+      {
+        "text": "Elemento enumerado",
+        "style": "Normal",
+        "pageBreakBefore": false,
+        "numberingId": 1
+      },
+      {
+        "text": "Segunda página",
+        "style": "Normal",
+        "pageBreakBefore": true,
+        "numberingId": null
+      }
+    ],
+    "tables": [
+      [
+        [
+          "Nombre",
+          "Valor"
+        ],
+        [
+          "Álvaro",
+          "42"
+        ]
+      ]
+    ],
+    "sections": 1
+  }
+]
