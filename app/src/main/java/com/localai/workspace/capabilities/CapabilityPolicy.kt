@@ -27,7 +27,7 @@ class CapabilityPolicy(val enabled:Set<Capability> = Capability.entries.toSet()-
     companion object {
         val localCapabilities=setOf(Capability.LOCAL_READ,Capability.LOCAL_COMPUTE,Capability.LOCAL_WRITE)
         private val confirmation=setOf(Capability.LOCAL_DELETE,Capability.EXTERNAL_SEND,Capability.PURCHASE_PAYMENT,Capability.IRREVERSIBLE_SYSTEM_ACTION,Capability.SENSITIVE_ACTION)
-        fun requirements(id:String)=when(id){"files.read","files.list","artifacts.list","artifacts.read"->setOf(Capability.LOCAL_READ);"artifacts.create","artifacts.revise","artifacts.patchPreview"->setOf(Capability.LOCAL_WRITE);"calculator.evaluate","python.execute"->setOf(Capability.LOCAL_COMPUTE);else->emptySet()}
+        fun requirements(id:String)=when(id){"files.read","files.list","artifacts.list","artifacts.read"->setOf(Capability.LOCAL_READ);"artifacts.create","artifacts.revise","artifacts.patchPreview","artifacts.xlsxSetCells"->setOf(Capability.LOCAL_WRITE);"calculator.evaluate","python.execute"->setOf(Capability.LOCAL_COMPUTE);else->emptySet()}
     }
 }
 data class ToolAvailability(val toolId:String,val available:Boolean,val reason:String)

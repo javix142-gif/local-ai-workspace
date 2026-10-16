@@ -7,12 +7,16 @@ import java.io.RandomAccessFile
 import java.io.FileOutputStream
 import java.security.MessageDigest
 import java.util.UUID
+import java.util.Locale
 import java.util.zip.ZipFile
 import com.localai.workspace.documents.StructuredDocuments
 
 data class ArtifactRevision(val id:String,val version:Int,val name:String,val format:ArtifactFormat,val bytes:Long,val sha256:String,val createdAt:Long,val specSha256:String) {
     fun json()=JSONObject().put("id",id).put("version",version).put("name",name).put("format",format.name).put("bytes",bytes).put("sha256",sha256).put("createdAt",createdAt).put("specSha256",specSha256)
 }
+
+/** One explicit literal-cell update. Formula cells are intentionally not accepted by this operation. */
+data class XlsxLiteralCellEdit(val sheet:String,val address:String,val value:String,val type:String?=null,val style:String?=null)
 
 /** App-private, immutable revisions. Commit is a same-filesystem directory rename after
  * validation/hash/fsync. Incomplete directories never become visible revisions. No Room change.
@@ -122,6 +126,53 @@ class ArtifactStore(context:Context,private val root:File=File(context.filesDir,
     }
     fun create(projectId:String,spec:ArtifactSpec)=commit(projectId,UUID.randomUUID().toString(),0,spec)
     fun revise(projectId:String,id:String,expectedVersion:Int,spec:ArtifactSpec)=commit(projectId,id,expectedVersion,spec)
+    /**
+     * Apply at most 64 exact literal-cell updates to the current private XLSX revision.
+     * Existing formulas/cached values are retained when their cells are not targeted; formula
+     * cells cannot be overwritten here. Every successful edit creates a new immutable revision.
+     */
+    fun setXlsxCellValues(projectId:String,id:String,expectedVersion:Int,edits:List<XlsxLiteralCellEdit>):ArtifactRevision {
+        require(expectedVersion in 1..1000) { "XLSX_REVISION_INVALID" }
+        require(edits.size in 1..64) { "XLSX_CELL_EDIT_LIMIT_64" }
+        val versions=history(projectId,id)
+        val revision=versions.singleOrNull{it.version==expectedVersion} ?: error("ARTIFACT_VERSION_NOT_FOUND")
+        require(versions.firstOrNull()?.version==expectedVersion) { "ARTIFACT_REVISION_NOT_CURRENT" }
+        require(revision.format==ArtifactFormat.XLSX) { "XLSX_ARTIFACT_REQUIRED" }
+        val updated=spec(projectId,revision).json()
+        val sheets=updated.getJSONArray("sheets")
+        val seen=mutableSetOf<String>()
+        edits.forEach { edit ->
+            require(edit.sheet.length in 1..31) { "XLSX_SHEET_NAME_INVALID" }
+            ArtifactSpec.address(edit.address)
+            val sheetKey=edit.sheet.lowercase(Locale.ROOT)
+            require(seen.add("$sheetKey!${edit.address}")) { "XLSX_CELL_EDIT_DUPLICATE" }
+            var target:JSONObject?=null
+            for(index in 0 until sheets.length()) {
+                val candidate=sheets.getJSONObject(index)
+                if(candidate.getString("name").lowercase(Locale.ROOT)==sheetKey) { target=candidate;break }
+            }
+            val sheet=requireNotNull(target) { "XLSX_SHEET_NOT_FOUND" }
+            val cells=sheet.getJSONArray("cells")
+            var existing:JSONObject?=null
+            for(index in 0 until cells.length()) {
+                val cell=cells.getJSONObject(index)
+                if(cell.getString("address")==edit.address) { existing=cell;break }
+            }
+            val existingCell=existing
+            if(existingCell!=null) {
+                require(!existingCell.has("formula")) { "XLSX_FORMULA_CELL_REQUIRES_EXPLICIT_REVISION" }
+                existingCell.put("value",edit.value)
+                edit.type?.let{existingCell.put("type",it)}
+                edit.style?.let{existingCell.put("style",it)}
+            } else {
+                val cell=JSONObject().put("address",edit.address).put("value",edit.value)
+                    .put("type",edit.type ?: "string")
+                edit.style?.let{cell.put("style",it)}
+                cells.put(cell)
+            }
+        }
+        return revise(projectId,id,expectedVersion,ArtifactSpec.parse(updated))
+    }
     private fun commit(projectId:String,id:String,expectedVersion:Int,spec:ArtifactSpec):ArtifactRevision {
         val owner=project(projectId)
         RandomAccessFile(File(owner,".write.lock"),"rw").channel.use { channel->

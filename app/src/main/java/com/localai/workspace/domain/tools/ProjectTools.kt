@@ -72,6 +72,7 @@ object ChatToolSchemas {
     fun schema(id: String): String = JSONObject().put("name", id).put("description", when(id) {
         "artifacts.list" -> "List real private artifact drafts and their IDs/versions in this project."
         "artifacts.read" -> "Read the verified full structured descriptor of an artifact ID/version in this project, before revising it. Missing IDs/versions or oversized descriptors fail explicitly; no guessed content."
+        "artifacts.xlsxSetCells" -> "Edit 1–64 exact literal cells in the current generated XLSX revision. Supply id, expectedVersion, and edits [{sheet,address,value,type?,style?}]. Each edit creates a new immutable version; read the current version first. Formula cells cannot be overwritten by this operation, and formulas/cached values are never recalculated. It does not modify imported originals; export remains a separate user-selected SAF action."
         "artifacts.patchPreview" -> "Prepare a review-only exact text patch for an existing CODE artifact revision in this project. Supply id, expectedVersion, expectedSha256, and edits [{before,after}]. Every before snippet must occur exactly once; no fuzzy matching. This stores a private preview only: it does not change draft bytes, exported files, or workspace documents. The user reviews before/after in Artifacts and explicitly applies it as a new immutable version. No code is executed."
         "artifacts.create", "artifacts.revise" -> "Create a verified private draft or new immutable version, never overwrite imports. Read the current descriptor before revising; preserve unchanged content. spec: format XLSX/DOCX/PDF/PPTX/CODE; name with extension. XLSX sheets [{name,cells:[{address:A1,value:string,type:string|number|boolean,formula:optional without =,style:plain|header}]}]. DOCX/PDF paragraphs [{text,style:title|heading|body|bullet|pageBreak}], tables [{rows:[[strings]]}]. PPTX slides [{title,body}] text-only. CODE body:string. No formula evaluation or code execution. Preview/export through chat Artifacts."
         "calculator.evaluate" -> "Evaluate a bounded arithmetic expression accurately."
@@ -101,6 +102,21 @@ object ChatToolSchemas {
                         .put("properties",JSONObject().put("before",JSONObject().put("type","string")).put("after",JSONObject().put("type","string")))
                         .put("required",org.json.JSONArray().put("before").put("after"))))
             put("required",org.json.JSONArray().put("id").put("expectedVersion").put("expectedSha256").put("edits"))
+        }
+        if(id=="artifacts.xlsxSetCells") {
+            val properties=getJSONObject("properties")
+            properties.put("id",JSONObject().put("type","string"))
+                .put("expectedVersion",JSONObject().put("type","integer").put("minimum",1).put("maximum",1000))
+                .put("edits",JSONObject().put("type","array").put("minItems",1).put("maxItems",64)
+                    .put("items",JSONObject().put("type","object").put("additionalProperties",false)
+                        .put("properties",JSONObject()
+                            .put("sheet",JSONObject().put("type","string").put("maxLength",31))
+                            .put("address",JSONObject().put("type","string").put("description","Exact uppercase A1 address; no range expansion"))
+                            .put("value",JSONObject().put("type","string"))
+                            .put("type",JSONObject().put("type","string").put("enum",org.json.JSONArray().put("string").put("number").put("boolean")))
+                            .put("style",JSONObject().put("type","string").put("enum",org.json.JSONArray().put("plain").put("header"))))
+                        .put("required",org.json.JSONArray().put("sheet").put("address").put("value"))))
+            put("required",org.json.JSONArray().put("id").put("expectedVersion").put("edits"))
         }
         if(id in setOf("artifacts.create","artifacts.revise")) {
             val properties=getJSONObject("properties")
