@@ -1,0 +1,6 @@
+gradle=8.10.2 wrapper
+runtime_jdk=openjdk version "17.0.20.1" 2026-08-18
+worker_jdk=openjdk version "21.0.12.1" 2026-08-18 LTS
+android_sdk=/workspace/.toolchain/android-sdk
+ndk=27.0.12077973
+configuration=offline; existing SDK/NDK/Gradle caches; no install or cache cleanup

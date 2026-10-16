@@ -1,0 +1,7 @@
+:app:kspDebugKotlin EXECUTED
+:app:compileDebugKotlin EXECUTED
+:app:kspDebugUnitTestKotlin EXECUTED
+:app:compileDebugUnitTestKotlin EXECUTED
+:app:testDebugUnitTest SUCCESS (filtered CodePatchPlannerTest only)
+Gradle summary: BUILD SUCCESSFUL in 1m 23s; 63 actionable tasks, 7 executed, 56 up-to-date.
+Test worker command used /workspace/.toolchain/jdk-21-temurin/bin/java.

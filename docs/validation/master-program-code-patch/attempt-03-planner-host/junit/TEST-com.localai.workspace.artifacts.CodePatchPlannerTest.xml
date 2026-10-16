@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.artifacts.CodePatchPlannerTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-16T21:55:57" hostname="7023f296b5c7" time="0.105">
+  <properties/>
+  <testcase name="editAndBodyBoundsAreEnforced" classname="com.localai.workspace.artifacts.CodePatchPlannerTest" time="0.095"/>
+  <testcase name="staleMissingAmbiguousEmptyAndNoOpEditsAreRejected" classname="com.localai.workspace.artifacts.CodePatchPlannerTest" time="0.007"/>
+  <testcase name="exactMultiEditPreservesUnicodeAndLineEndings" classname="com.localai.workspace.artifacts.CodePatchPlannerTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

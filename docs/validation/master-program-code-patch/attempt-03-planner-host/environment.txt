@@ -1,0 +1,11 @@
+source_commit=7c2ab7a603b67b8f8058959a16164a4c1e7781bd
+branch=codex/master-program-20261016
+java17=openjdk version "17.0.20.1" 2026-08-18
+javac17=javac 17.0.20.1
+java21=openjdk version "21.0.12.1" 2026-08-18 LTS
+javac21=javac 21.0.12.1
+gradle_wrapper=https\://services.gradle.org/distributions/gradle-8.10.2-bin.zip
+android_sdk=/workspace/.toolchain/android-sdk
+ndk=27.0.12077973 at /workspace/.toolchain/android-sdk/ndk/27.0.12077973 (installed; no native NDK task in this focused Kotlin test)
+gradle_user_home=/workspace/.gradle-master-program-20261016
+mode=offline; no installations/downloads/cache cleanup

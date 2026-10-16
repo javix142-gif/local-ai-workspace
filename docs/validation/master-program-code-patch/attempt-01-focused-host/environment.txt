@@ -1,0 +1,8 @@
+Gradle Wrapper: 8.10.2
+Gradle runtime: Temurin JDK 17.0.20.1
+App JVM test worker: Temurin JDK 21.0.12.1 (worker observed in test task log)
+Android SDK: /workspace/.toolchain/android-sdk, API 35
+NDK: 27.0.12077973 (pre-existing)
+GRADLE_USER_HOME: /workspace/.gradle-master-program-20261016 (existing; not cleared)
+Offline Gradle dependency resolution: true
+No toolchain install, download, cache cleanup or data cleanup was performed.

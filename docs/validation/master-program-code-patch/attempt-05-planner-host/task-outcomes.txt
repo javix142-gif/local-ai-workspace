@@ -1,0 +1,4 @@
+:app:compileDebugUnitTestKotlin EXECUTED
+:app:testDebugUnitTest SUCCESS (only CodePatchPlannerTest selected)
+Gradle summary: BUILD SUCCESSFUL in 38s; 63 actionable tasks, 3 executed, 60 up-to-date.
+App test worker used /workspace/.toolchain/jdk-21-temurin/bin/java.

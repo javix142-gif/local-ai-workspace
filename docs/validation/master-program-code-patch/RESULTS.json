@@ -1,0 +1,242 @@
+{
+  "schema": "local-ai-workspace-master-program-increment-v1",
+  "title": "Preparatory M03-06 reviewable code patch drafts",
+  "baseFeatureHead": "2cebd17fa13fb52a93d8ebfcf5976c1954a57390",
+  "codeCommit": "7c2ab7a603b67b8f8058959a16164a4c1e7781bd",
+  "testOnlyCommit": "3f6387b304d615cca6d5f403d6ac938d41c964a7",
+  "publicationTarget": "feat/0.5.0-skills-agents",
+  "formalTask": {
+    "id": "M03-06",
+    "sourceStatus": "TODO",
+    "requiresDevice": true,
+    "dependsOn": [
+      "M03-01",
+      "M02-08"
+    ],
+    "claim": "PREPARATORY_PARTIAL_ONLY"
+  },
+  "sourcePlan": {
+    "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmap": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskCount": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "statuses": {
+      "TODO": 97
+    },
+    "changed": false
+  },
+  "backup": {
+    "path": "/workspace/backups/aws-pre-resume-20261016-215330",
+    "archiveSha256": "164f76a3cf5f6359bc36f982730063717b04d83b0f1e61809e431834e25b4809",
+    "manifestSha256": "3d7232d8da931958bbe91e62ff0b35571eba25b66b550111c214621d55472504",
+    "kind": "executor-local recovery copy; not remote"
+  },
+  "implementation": {
+    "scope": "generated app-private CODE artifacts only",
+    "planner": "exact UTF-8 SHA-256 base check; bounded 1..32 edits; each before snippet occurs exactly once; rejects stale/missing/ambiguous/no-op/oversized input",
+    "storage": "project-scoped app-private staged preview; no artifact bytes change until explicit apply; apply creates next immutable revision; old versions retained; export remains a separate SAF action",
+    "tool": "artifacts.patchPreview; LOCAL_WRITE; returns PATCH_PREVIEW_STAGED_NOT_APPLIED; no execution",
+    "ui": "exact before/after bodies and hashes; explicit apply-new-version or discard; no external file path support"
+  },
+  "validation": [
+    {
+      "attempt": "01",
+      "status": "FAIL_TEST_COMPILATION",
+      "exitCode": 1,
+      "durationSecondsWall": 70,
+      "tests": "NOT_RUN",
+      "reason": "unresolved waitUntil import in newly added Compose test; no XML",
+      "evidenceSha256": {
+        "attempt-01-focused-host/command.txt": "f8ac4759baa61285bee7f07792bb1ecd7b27879466e5cc31eb1f6cf11f6aad0a",
+        "attempt-01-focused-host/environment.txt": "cc4eab2da4e807b1329459c0555cacfde2d519294eaf1a7b9f0520a2c6ec5730",
+        "attempt-01-focused-host/exit-code.txt": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "attempt-01-focused-host/finished-at-utc.txt": "c657dd17e9354b412068b1322758a8552cd8de91617d6e4f16e4870dec779a7c",
+        "attempt-01-focused-host/gradle.log": "7cf41db24d93898b0ac30ee852cd2db99793c3b17f2cef3a28cf783d64967932",
+        "attempt-01-focused-host/result.txt": "5a3a0a5cd84f03dfad2b9fd3fbcefb07ebdcae102e1fa841deda910b725a9995",
+        "attempt-01-focused-host/started-at.txt": "51fffa7703bf796031120c0b3a2802ee137fa8fbec3164ca4fcf2ea0bc8f94a1"
+      }
+    },
+    {
+      "attempt": "02",
+      "status": "INFRASTRUCTURE_FAILURE_ROBOLECTRIC_BOOTSTRAP",
+      "exitCode": 1,
+      "durationSecondsWall": 143,
+      "gradleReportedTests": 18,
+      "passed": 3,
+      "failuresDuringBootstrap": 15,
+      "errors": 0,
+      "skipped": 0,
+      "cause": "connection refused fetching org.robolectric:android-all-instrumented:10-robolectric-5803371-i7",
+      "xml": "NOT_PRESERVED; later Gradle test run replaced generated XML before copy",
+      "compilation": "production and test Kotlin compilation completed",
+      "evidenceSha256": {
+        "attempt-02-focused-host/command.txt": "f8ac4759baa61285bee7f07792bb1ecd7b27879466e5cc31eb1f6cf11f6aad0a",
+        "attempt-02-focused-host/environment.txt": "cc4eab2da4e807b1329459c0555cacfde2d519294eaf1a7b9f0520a2c6ec5730",
+        "attempt-02-focused-host/exit-code.txt": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "attempt-02-focused-host/finished-at-utc.txt": "d4cbde8f2e25b27d2952c87fdf7d37d393b2a42179c2e3306508e71811ca07a4",
+        "attempt-02-focused-host/gradle.log": "fcf53eda770172bb02dfda7cf87cb3fe527374be7a02980df79554b44810dfea",
+        "attempt-02-focused-host/junit-inventory.txt": "5e2fd38be4ff8508c133c2529b5db1fff12fc879ec45bc96251b27948385b7e5",
+        "attempt-02-focused-host/result.txt": "912aac0d688d3b0d0c78acb28265f69e855d0611a4867e33b56dc23f00b140b3",
+        "attempt-02-focused-host/started-at.txt": "80a1c65369ec5a95798b525bac5e87456ba1b69058a08ac785893ad694df7847"
+      }
+    },
+    {
+      "attempt": "03",
+      "status": "PASS_FOCUSED",
+      "sourceCommit": "7c2ab7a603b67b8f8058959a16164a4c1e7781bd",
+      "exitCode": 0,
+      "durationSecondsWall": 84,
+      "tests": 3,
+      "passed": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml": "attempt-03-planner-host/junit/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml",
+      "evidenceSha256": {
+        "attempt-03-planner-host/command.txt": "b270316d196c4271559787bd145c9ba9f5e572a566faa51da9fba9a720cb0cc3",
+        "attempt-03-planner-host/environment.txt": "6baf0fd71cad0af50952022e8b2155e4a9b91d8bc4e83a7bfbb0c200c23ca51b",
+        "attempt-03-planner-host/exit-code.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "attempt-03-planner-host/finished-at-utc.txt": "2e600dd11544b26901b24db16756cecc507fea5e03a9e7e34fb9f2160b731c5c",
+        "attempt-03-planner-host/gradle.log": "b4ac08db591ee7005a31eaf9b0f6a0d6aeb11c3721faa7ce555f1e006421e533",
+        "attempt-03-planner-host/junit/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml": "cbf7427518a1812511596cc3f2edc7da4bbd42ee881162ccf1b3dfa3cbb67111",
+        "attempt-03-planner-host/source-commit.txt": "c01674003aa3e7603e75fb5ac3a3467545081cf0800e4cfa7a25e17611c982b2",
+        "attempt-03-planner-host/started-at-utc.txt": "02d669c380d92bd7152d7d504d15c76eebb24e3d971dbdb98b36c63f3f348c9a",
+        "attempt-03-planner-host/task-outcomes.txt": "0a6d45bd7274e22560e3e0528627195d8cd9213c888fc1a3d52a7c68c95d4b1e",
+        "attempt-03-planner-host/xml-inventory.txt": "0399ef24df9d9e1bdb810a3846a0e68b0da83125aa543ad0024868a3bae2b7a0"
+      },
+      "xmlSha256": "cbf7427518a1812511596cc3f2edc7da4bbd42ee881162ccf1b3dfa3cbb67111",
+      "xmlCounts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "attempt": "04",
+      "status": "PASS_LINT",
+      "sourceCommit": "7c2ab7a603b67b8f8058959a16164a4c1e7781bd",
+      "task": ":app:lintDebug",
+      "exitCode": 0,
+      "durationSecondsWall": 276,
+      "issues": {
+        "errors": 0,
+        "warnings": 77,
+        "information": 1
+      },
+      "changedFileIssues": 0,
+      "report": "attempt-04-lint-host/lint-results-debug.xml",
+      "evidenceSha256": {
+        "attempt-04-lint-host/command.txt": "f28db0b921dd65ffb05e09c99ff7bf1b82f40960ab66261ee05a20af368450e6",
+        "attempt-04-lint-host/environment.txt": "9955dfd1dd976d722dfcc96e2388a02d5a3b558740efb9c7318a879a2cd30e74",
+        "attempt-04-lint-host/exit-code.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "attempt-04-lint-host/finished-at-utc.txt": "d9edaca07a02b050656d841a9486a9877d3bbca3a1bbf0844d7fb63423ea333b",
+        "attempt-04-lint-host/gradle.log": "e28d86ae22484c4f2d3a1679c4202180a79c728bbb63987f4c9fe82573721ccc",
+        "attempt-04-lint-host/lint-results-debug.txt": "9c7a9d57dbfa041c40f2015a209981f77dfc0b22a67758bafa33e857bddf385c",
+        "attempt-04-lint-host/lint-results-debug.xml": "f92ac704c68ecf21eea939cefccee6bb165580f35fb91cfc7def690a1b0abb9e",
+        "attempt-04-lint-host/source-commit.txt": "c01674003aa3e7603e75fb5ac3a3467545081cf0800e4cfa7a25e17611c982b2",
+        "attempt-04-lint-host/started-at-utc.txt": "fa15ffd3f1b1c943e4a663fec53b6ad2039bc2f4efe46415c41d7022aeff9f7c",
+        "attempt-04-lint-host/task-outcomes.txt": "f36a1a2b875e9815933971c22920fcfb492d25eae96917b667244cc32127801a"
+      },
+      "lintIssueCounts": {
+        "Error": 0,
+        "Warning": 77,
+        "Information": 1
+      },
+      "lintChangedSourceIssueFiles": []
+    },
+    {
+      "attempt": "05",
+      "status": "PASS_FOCUSED",
+      "sourceCommit": "3f6387b304d615cca6d5f403d6ac938d41c964a7",
+      "exitCode": 0,
+      "durationSecondsWall": 39,
+      "tests": 3,
+      "passed": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml": "attempt-05-planner-host/junit/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml",
+      "evidenceSha256": {
+        "attempt-05-planner-host/command.txt": "b270316d196c4271559787bd145c9ba9f5e572a566faa51da9fba9a720cb0cc3",
+        "attempt-05-planner-host/environment.txt": "88d4db365dfe2bfa7141cd7c87bf9b188a303a4939242df42ddc4e710e874766",
+        "attempt-05-planner-host/exit-code.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "attempt-05-planner-host/finished-at-utc.txt": "e4c148d44a1646465a7e96d1e35063530401081cd3d90d9030be60f03078c2f2",
+        "attempt-05-planner-host/gradle.log": "79d364080fec99ba738dd8ccf00a4516f2ffaa54ed0e03a5b578201c4a51ed48",
+        "attempt-05-planner-host/junit/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml": "4688424bcf6a14c861bf323e49d136279f168737ca12204458cfe4dbfed7ec5f",
+        "attempt-05-planner-host/source-commit.txt": "e2cdf10ad42797b20fcdc4ec9cffae9f7df93cc7ad14e5e543033eff2cd5f6a2",
+        "attempt-05-planner-host/started-at-utc.txt": "506feab053d731f414f9c408612e9f26d969630a4a218f2821890c5db3744a13",
+        "attempt-05-planner-host/task-outcomes.txt": "f5510aa031931a2849e68cf73bc1a17d0ea967ac9f15eb35decb5c0a1f466fb7",
+        "attempt-05-planner-host/xml-inventory.txt": "0399ef24df9d9e1bdb810a3846a0e68b0da83125aa543ad0024868a3bae2b7a0"
+      },
+      "xmlSha256": "4688424bcf6a14c861bf323e49d136279f168737ca12204458cfe4dbfed7ec5f",
+      "xmlCounts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "notRun": {
+    "fullAppJvm": "NOT_RUN",
+    "liteRtCompat": "NOT_RUN",
+    "assembleDebug": "NOT_RUN",
+    "compileDebugAndroidTest": "NOT_RUN",
+    "emulator": "NOT_RUN_FOR_THIS_CODE",
+    "physicalDevice": "NOT_RUN",
+    "MotoG86": "NOT_RUN"
+  },
+  "priorPushRunsOnBaseSha": {
+    "source": "2cebd17fa13fb52a93d8ebfcf5976c1954a57390",
+    "emulatorRun": {
+      "id": 38970584904,
+      "conclusion": "failure",
+      "artifactId": 12076851077,
+      "artifactBytes": 22261,
+      "artifactSha256": "201986d808ff72b4848eebe0ab3352c4eee064d74a724538f031696447eb64e7",
+      "reason": "SDK setup received invalid pinned NDK ZIP; no instrumentation XML/tests"
+    },
+    "officialQaRun": {
+      "id": 38970584801,
+      "conclusion": "failure",
+      "artifact": "none; failed closed on missing successful instrumentation"
+    },
+    "personalQaRun": {
+      "id": 38970584816,
+      "conclusion": "success",
+      "artifactId": 12076981872,
+      "artifactBytes": 48056080,
+      "artifactSha256": "f7d6695d7137c54c8824f8b4fff14e22f2ff0e492688bd6c7b440e07b2a17cc3",
+      "apkSha256ReportedByWorkflow": "27928bf9c8c16c932d9a5f46921ecaae48596845ae3719d833298151384b9e4a",
+      "certificateSha256ReportedByWorkflow": "706cead75d02faf718e67560008c8b9a4b054c80be081d356786add157c5823c",
+      "download": "HTTP 403; APK not locally rehashed; not uploaded to Drive",
+      "appliesToThisCode": "false"
+    }
+  },
+  "device": {
+    "adbDevices": "none",
+    "physicalValidation": "NOT_RUN",
+    "originalWorkbook": "not present in this execution context",
+    "personalDebugSignerCompatibleWithRecordedPrevious": false,
+    "signingCompatibilityEvidence": {
+      "recordedPreviousPersonalCertificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
+      "olderWorkflowArtifactCertificateSha256": "706cead75d02faf718e67560008c8b9a4b054c80be081d356786add157c5823c",
+      "match": false,
+      "artifactSourceSha": "2cebd17fa13fb52a93d8ebfcf5976c1954a57390",
+      "artifactLocallyRehashed": false,
+      "compatibility": "NOT_COMPATIBLE_BY_RECORDED_CERTIFICATE; do not install as an update or uninstall the existing app to test it"
+    }
+  },
+  "nextBlocker": "Robolectric android-all-instrumented artifact/network for store/UI integration tests; real Moto G86 plus a user-selected workspace for original M03-06 DoD",
+  "formalOriginalTasksCompleted": [],
+  "evidenceBundle": {
+    "manifest": "docs/validation/master-program-code-patch/SHA256SUMS",
+    "payloadEntriesExcludingManifest": 47,
+    "verificationCommand": "sha256sum -c docs/validation/master-program-code-patch/SHA256SUMS",
+    "verificationScope": "All 47 currently preserved payload files, including raw attempt logs, command/environment/outcome records, JUnit XML, lint report, RESULTS.md and RESULTS.json."
+  }
+}
