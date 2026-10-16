@@ -59,6 +59,9 @@ class XlsxArtifactRevisionTest {
             assertTrue(readOnly is ToolExecutionResult.Rejected)
             val disabled=registry.execute(request,emptySet(),context,ToolRegistry.ToolLoopState())
             assertTrue(disabled is ToolExecutionResult.Rejected)
+            val otherProject=registry.execute(request,ArtifactTool.IDS,context.copy(projectId="$project-other"),ToolRegistry.ToolLoopState())
+            assertTrue(otherProject is ToolExecutionResult.Failed)
+            assertEquals(1,store.history(project,first.id).size)
             val result=registry.execute(request,ArtifactTool.IDS,context,ToolRegistry.ToolLoopState()) as ToolExecutionResult.Success
             val response=JSONObject(result.output)
             assertEquals("PRIVATE_DRAFT_VERIFIED",response.getString("state"))
