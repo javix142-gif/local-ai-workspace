@@ -26,14 +26,20 @@ import org.json.JSONObject
     val store=remember(context){ArtifactStore(context.applicationContext)}
     var items by remember{mutableStateOf<List<ArtifactRevision>>(emptyList())}
     var versions by remember{mutableStateOf<List<ArtifactRevision>>(emptyList())}
+    var patchPreviews by remember{mutableStateOf<List<CodePatchPreview>>(emptyList())}
     var selected by remember{mutableStateOf<ArtifactRevision?>(null)}
+    var selectedPatch by remember{mutableStateOf<CodePatchPreview?>(null)}
     var descriptor by remember{mutableStateOf("")}
     var savedPreview by remember{mutableStateOf("")}
     var preview by remember{mutableStateOf<ArtifactSpec?>(null)}
     var notice by remember{mutableStateOf("")};var busy by remember{mutableStateOf(false)}
     var exportIdentity by rememberSaveable{mutableStateOf<String?>(null)}
     var lastExport by remember{mutableStateOf<Pair<android.net.Uri,String>?>(null)}
-    suspend fun refresh(){items=withContext(Dispatchers.IO){store.list(projectId)}}
+    suspend fun refresh(){
+        items=withContext(Dispatchers.IO){store.list(projectId)}
+        try { patchPreviews=withContext(Dispatchers.IO){store.codePatchPreviews(projectId)} }
+        catch(e:Exception) { patchPreviews=emptyList();notice="A pending code preview could not be verified: ${e.message ?: "storage data invalid"}. Existing artifacts remain available; do not apply that preview." }
+    }
     fun work(block:suspend()->Unit){busy=true;scope.launch{try{block()}catch(cancel:kotlinx.coroutines.CancellationException){throw cancel}catch(e:Exception){notice=e.message ?: e.javaClass.simpleName}finally{busy=false}}}
     LaunchedEffect(projectId){try{refresh()}catch(e:Exception){notice=e.message.orEmpty()}}
     val export=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")){uri->
@@ -49,7 +55,7 @@ import org.json.JSONObject
         }
     }
     fun load(revision:ArtifactRevision)=work {
-        selected=revision;val spec=withContext(Dispatchers.IO){store.verifiedFile(projectId,revision);store.spec(projectId,revision)}
+        selectedPatch=null;selected=revision;val spec=withContext(Dispatchers.IO){store.verifiedFile(projectId,revision);store.spec(projectId,revision)}
         descriptor=spec.json().toString(2);savedPreview=spec.preview();preview=spec;versions=withContext(Dispatchers.IO){store.history(projectId,revision.id)}
     }
     AlertDialog(onDismissRequest=onDismiss,title={Text("Artifacts · local drafts")},confirmButton={TextButton(onClick=onDismiss){Text("Close")}},text={
@@ -59,12 +65,42 @@ import org.json.JSONObject
             lastExport?.let{(uri,mime)->TextButton(onClick={try{context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW).setDataAndType(uri,mime).addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION))}catch(e:android.content.ActivityNotFoundException){notice="No compatible local reader installed"}}){Text("Open exported file")}}
             if(busy)LinearProgressIndicator(Modifier.fillMaxWidth())
             FlowRow {ArtifactFormat.entries.forEach{format->TextButton(enabled=!busy,onClick={
-                selected=null;versions=emptyList();preview=null;savedPreview=""
+                selected=null;selectedPatch=null;versions=emptyList();preview=null;savedPreview=""
                 val obj=JSONObject().put("format",format.name).put("name","draft.${format.extension}")
                 when(format){ArtifactFormat.CODE->obj.put("body","");ArtifactFormat.XLSX->obj.put("sheets",org.json.JSONArray().put(JSONObject().put("name","Sheet1").put("cells",org.json.JSONArray())));ArtifactFormat.PPTX->obj.put("slides",org.json.JSONArray().put(JSONObject().put("title","").put("body","")));else->obj.put("paragraphs",org.json.JSONArray().put(JSONObject().put("text","").put("style","body")))}
                 descriptor=obj.toString(2)
             }){Text(format.name,style=MaterialTheme.typography.labelSmall)}}}
             items.forEach{revision->TextButton(enabled=!busy,onClick={load(revision)},modifier=Modifier.testTag("artifact-${revision.id}")){Text("${revision.name} · v${revision.version} · ${revision.bytes} bytes")}}
+            if(patchPreviews.isNotEmpty()) {
+                Text("Code patch previews · not applied",style=MaterialTheme.typography.titleSmall)
+                patchPreviews.forEach{patch->TextButton(enabled=!busy,onClick={selectedPatch=patch;selected=null;descriptor="";savedPreview="";preview=null},modifier=Modifier.testTag("artifact-patch-${patch.id}")){
+                    Text("Review ${patch.fileName} · based on v${patch.baseVersion} · ${patch.edits.size} exact edit(s)")
+                }}
+            }
+            selectedPatch?.let{patch->
+                HorizontalDivider()
+                Text("Review code patch · ${patch.fileName}",style=MaterialTheme.typography.titleMedium,modifier=Modifier.testTag("artifact-patch-review-title"))
+                Text("No code bytes or exported file have changed. Applying below creates a new immutable private draft version; exporting it remains a separate action.",style=MaterialTheme.typography.bodySmall)
+                Text("Base v${patch.baseVersion} · ${patch.baseSha256}",style=MaterialTheme.typography.labelSmall)
+                Text("Proposed · ${patch.proposedSha256}",style=MaterialTheme.typography.labelSmall)
+                Text("Before · exact source body",style=MaterialTheme.typography.labelMedium)
+                SelectionContainer{Text(patch.before,Modifier.fillMaxWidth().heightIn(max=120.dp).verticalScroll(rememberScrollState()).testTag("artifact-patch-before"),style=MaterialTheme.typography.bodySmall)}
+                Text("After · proposed source body",style=MaterialTheme.typography.labelMedium)
+                SelectionContainer{Text(patch.after,Modifier.fillMaxWidth().heightIn(max=120.dp).verticalScroll(rememberScrollState()).testTag("artifact-patch-after"),style=MaterialTheme.typography.bodySmall)}
+                FlowRow {
+                    TextButton(enabled=!busy,onClick={work {
+                        val revision=withContext(Dispatchers.IO){store.applyCodePatchPreview(projectId,patch.id)}
+                        val saved=withContext(Dispatchers.IO){store.spec(projectId,revision)}
+                        selected=revision;selectedPatch=null;versions=withContext(Dispatchers.IO){store.history(projectId,revision.id)}
+                        descriptor=saved.json().toString(2);savedPreview=saved.preview();preview=saved
+                        refresh();notice="Patch verified as immutable private draft v${revision.version}. Earlier source version and external workspace files remain unchanged."
+                    }},modifier=Modifier.testTag("artifact-patch-apply")){Text("Apply as new version")}
+                    TextButton(enabled=!busy,onClick={work {
+                        withContext(Dispatchers.IO){store.discardCodePatchPreview(projectId,patch.id)}
+                        selectedPatch=null;refresh();notice="Patch preview discarded; no artifact bytes changed."
+                    }},modifier=Modifier.testTag("artifact-patch-discard")){Text("Discard preview")}
+                }
+            }
             if(descriptor.isNotEmpty()) {
                 OutlinedTextField(descriptor,{descriptor=it;preview=null},enabled=!busy,modifier=Modifier.fillMaxWidth().heightIn(min=120.dp,max=240.dp).testTag("artifact-spec-editor"),label={Text("Structured draft JSON")})
                 TextButton(enabled=!busy,onClick={try{preview=ArtifactSpec.parse(JSONObject(descriptor));notice="Text/structure preview (not page/slide rendering)"}catch(e:Exception){preview=null;notice=e.message.orEmpty()}}){Text("Preview changes")}

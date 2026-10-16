@@ -22,5 +22,7 @@ class Part2ThinkingTest {
   assertEquals(setOf("calculator.evaluate"), AssistantRouting.tools(setOf("calculator.evaluate"), "123 * 47", false))
   assertEquals(setOf("calculator.evaluate"), AssistantRouting.tools(setOf("calculator.evaluate"), "5+5", false))
   assertTrue(AssistantRouting.tools(emptySet(), "Lee el archivo", true).isEmpty())
+  assertEquals(setOf("artifacts.patchPreview"),AssistantRouting.tools(setOf("artifacts.patchPreview"),"Prepara un diff y parche para corregir este código .kt",false))
+  assertTrue(AssistantRouting.tools(emptySet(),"Prepara un diff y parche para corregir este código .kt",false).isEmpty())
  }
 }

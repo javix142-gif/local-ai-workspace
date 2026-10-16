@@ -51,6 +51,75 @@ class ArtifactStore(context:Context,private val root:File=File(context.filesDir,
         require(file.canonicalFile.parentFile==folder&&file.isFile&&file.length()==revision.bytes&&fileHash(file)==revision.sha256){"ARTIFACT_BYTES_CHANGED"}
         return file
     }
+    /** Stage a review-only patch for one exact current CODE revision; no artifact bytes change here. */
+    fun stageCodePatch(projectId:String,id:String,expectedVersion:Int,expectedSha256:String,edits:List<CodePatchEdit>):CodePatchPreview {
+        require(expectedVersion in 1..1000) { "CODE_PATCH_VERSION_INVALID" }
+        val history = history(projectId,id)
+        val revision = history.singleOrNull { it.version == expectedVersion } ?: error("ARTIFACT_VERSION_NOT_FOUND")
+        require(history.firstOrNull()?.version == expectedVersion) { "CODE_PATCH_BASE_NOT_CURRENT" }
+        require(revision.format == ArtifactFormat.CODE) { "CODE_PATCH_CODE_ARTIFACT_REQUIRED" }
+        val file = verifiedFile(projectId,revision)
+        require(fileHash(file) == expectedSha256) { "CODE_PATCH_BASE_HASH_MISMATCH" }
+        val base = spec(projectId,revision)
+        val before = base.json().getString("body")
+        require(CodePatchPlanner.hash(before) == revision.sha256) { "CODE_PATCH_BASE_HASH_MISMATCH" }
+        val after = CodePatchPlanner.apply(before,expectedSha256,edits)
+        val proposed = base.json().put("body",after)
+        ArtifactSpec.parse(proposed)
+        val preview = CodePatchPreview(CodePatchPlanner.newPreviewId(),id,revision.name,revision.version,
+            revision.sha256,CodePatchPlanner.hash(after),System.currentTimeMillis(),before,after,edits.toList())
+        CodePatchPlanner.validatePreview(preview)
+        val folder = patchFolder(projectId)
+        require(folder.listFiles().orEmpty().count { it.isFile && it.name.endsWith(".json") } < MAX_PENDING_PATCHES) { "CODE_PATCH_PREVIEW_LIMIT" }
+        val payload = preview.json().toString()
+        require(payload.toByteArray(Charsets.UTF_8).size <= MAX_PATCH_BYTES) { "CODE_PATCH_PREVIEW_TOO_LARGE" }
+        val target = patchFile(projectId,preview.id)
+        val temp = File(folder,".${preview.id}.pending")
+        try {
+            syncText(temp,payload)
+            check(!target.exists() && temp.renameTo(target)) { "CODE_PATCH_PREVIEW_COMMIT_FAILED" }
+        } finally { if(temp.exists()) temp.delete() }
+        return preview
+    }
+    /** Pending previews are project-scoped and validated again whenever they are read. */
+    fun codePatchPreviews(projectId:String):List<CodePatchPreview> = patchFolder(projectId).listFiles().orEmpty()
+        .filter { it.isFile && it.name.endsWith(".json") }.map { file ->
+            require(file.length() in 1..MAX_PATCH_BYTES.toLong()) { "CODE_PATCH_PREVIEW_INVALID" }
+            CodePatchPreview.parse(JSONObject(file.readText(Charsets.UTF_8))).also { preview ->
+                require(file.name == "${preview.id}.json") { "CODE_PATCH_PREVIEW_INVALID" }
+            }
+        }.sortedWith(compareByDescending<CodePatchPreview>{it.createdAt}.thenBy{it.id})
+    fun codePatchPreview(projectId:String,previewId:String):CodePatchPreview {
+        val file=patchFile(projectId,previewId)
+        require(file.isFile && file.length() in 1..MAX_PATCH_BYTES.toLong()) { "CODE_PATCH_PREVIEW_NOT_FOUND" }
+        return CodePatchPreview.parse(JSONObject(file.readText(Charsets.UTF_8))).also { require(file.name == "${it.id}.json") { "CODE_PATCH_PREVIEW_INVALID" } }
+    }
+    /** Applying creates a new immutable local draft revision. Export to an external folder remains a separate SAF action. */
+    fun applyCodePatchPreview(projectId:String,previewId:String):ArtifactRevision {
+        val preview=codePatchPreview(projectId,previewId)
+        val current=history(projectId,preview.artifactId).firstOrNull()
+        // Recover safely if the process died after the immutable revision commit but before preview cleanup.
+        if(current?.version == preview.baseVersion+1 && current.sha256 == preview.proposedSha256) {
+            patchFile(projectId,previewId).delete()
+            return current
+        }
+        require(current?.version == preview.baseVersion && current.sha256 == preview.baseSha256) { "CODE_PATCH_BASE_STALE" }
+        val original=verifiedFile(projectId,current)
+        require(fileHash(original)==preview.baseSha256 && spec(projectId,current).json().getString("body")==preview.before) { "CODE_PATCH_BASE_STALE" }
+        val updated=ArtifactSpec.parse(spec(projectId,current).json().put("body",preview.after))
+        val revision=revise(projectId,preview.artifactId,preview.baseVersion,updated)
+        check(revision.sha256==preview.proposedSha256) { "CODE_PATCH_RESULT_HASH_MISMATCH" }
+        patchFile(projectId,previewId).delete() // A leftover is stale and harmless; the next apply is idempotent.
+        return revision
+    }
+    /** Discard removes only this app-private, unapplied preview. */
+    fun discardCodePatchPreview(projectId:String,previewId:String) {
+        val file=patchFile(projectId,previewId)
+        require(file.isFile) { "CODE_PATCH_PREVIEW_NOT_FOUND" }
+        val preview=CodePatchPreview.parse(JSONObject(file.readText(Charsets.UTF_8)))
+        require(preview.id==previewId) { "CODE_PATCH_PREVIEW_INVALID" }
+        check(file.delete()) { "CODE_PATCH_PREVIEW_CLEANUP_FAILED" }
+    }
     fun create(projectId:String,spec:ArtifactSpec)=commit(projectId,UUID.randomUUID().toString(),0,spec)
     fun revise(projectId:String,id:String,expectedVersion:Int,spec:ArtifactSpec)=commit(projectId,id,expectedVersion,spec)
     private fun commit(projectId:String,id:String,expectedVersion:Int,spec:ArtifactSpec):ArtifactRevision {
@@ -80,7 +149,18 @@ class ArtifactStore(context:Context,private val root:File=File(context.filesDir,
         }
     }
     private fun syncText(file:File,value:String){FileOutputStream(file).use{it.write(value.toByteArray(Charsets.UTF_8));it.fd.sync()}}
+    private fun patchFolder(projectId:String):File {
+        val owner=project(projectId)
+        return File(owner,".patch-previews").also { require(it.canonicalFile.parentFile==owner.canonicalFile) { "ARTIFACT_PATH_ESCAPE" };check(it.mkdirs()||it.isDirectory) { "ARTIFACT_STORAGE_UNAVAILABLE" } }
+    }
+    private fun patchFile(projectId:String,previewId:String):File {
+        require(Regex("[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}").matches(previewId)) { "CODE_PATCH_ID_INVALID" }
+        val parent=patchFolder(projectId)
+        return File(parent,"$previewId.json").also { require(it.canonicalFile.parentFile==parent.canonicalFile) { "ARTIFACT_PATH_ESCAPE" } }
+    }
     companion object {
+        private const val MAX_PENDING_PATCHES=20
+        private const val MAX_PATCH_BYTES=600*1024
         fun hash(bytes:ByteArray)=MessageDigest.getInstance("SHA-256").digest(bytes).joinToString(""){"%02x".format(it)}
         fun fileHash(file:File):String {val digest=MessageDigest.getInstance("SHA-256");file.inputStream().use{input->val buffer=ByteArray(65536);while(true){if(Thread.currentThread().isInterrupted)throw InterruptedException();val n=input.read(buffer);if(n<0)break;digest.update(buffer,0,n)}};return digest.digest().joinToString(""){"%02x".format(it)}}
     }

@@ -108,6 +108,67 @@ class ArtifactRoundtripTest {
             assertEquals("",ArtifactStore(context,dir).spec("p",revision).json().getString("body"))
         }finally{dir.deleteRecursively()}
     }
+    @Test fun codePatchPreviewDoesNotApplyUntilApprovedAndRevisionsCanBeRestored() {
+        val dir=root();val store=ArtifactStore(context,dir);val project="patch-${UUID.randomUUID()}"
+        try {
+            val originalBody="package sample\n\nfun answer() = 42\n"
+            val first=store.create(project,ArtifactSpec.parse(JSONObject().put("format","CODE").put("name","answer.kt").put("body",originalBody)))
+            val edit=CodePatchEdit("fun answer() = 42","fun answer() = 43")
+            val preview=store.stageCodePatch(project,first.id,first.version,first.sha256,listOf(edit))
+            assertEquals(originalBody,preview.before);assertEquals("package sample\n\nfun answer() = 43\n",preview.after)
+            assertEquals(first.sha256,preview.baseSha256);assertEquals(CodePatchPlanner.hash(preview.after),preview.proposedSha256)
+            assertEquals(1,store.history(project,first.id).size)
+            assertEquals(originalBody,store.verifiedFile(project,first).readText())
+            assertTrue(store.codePatchPreviews(project).single().json().toString().contains(edit.before))
+            assertTrue(store.codePatchPreviews("another-$project").isEmpty())
+
+            val applied=store.applyCodePatchPreview(project,preview.id)
+            assertEquals(2,applied.version);assertEquals(preview.proposedSha256,applied.sha256)
+            assertEquals(originalBody,store.verifiedFile(project,first).readText())
+            assertEquals(preview.after,store.verifiedFile(project,applied).readText())
+            assertTrue(store.codePatchPreviews(project).isEmpty())
+
+            val restored=store.revise(project,first.id,applied.version,store.spec(project,first))
+            assertEquals(3,restored.version);assertEquals(first.sha256,restored.sha256)
+            assertEquals(originalBody,store.verifiedFile(project,restored).readText())
+        }finally{dir.deleteRecursively()}
+    }
+    @Test fun codePatchRejectsStaleOrAmbiguousInputWithoutChangingTheDraft() {
+        val dir=root();val store=ArtifactStore(context,dir);val project="patch-invalid-${UUID.randomUUID()}"
+        try {
+            val body="fun first() = 1\nfun second() = 1\n"
+            val first=store.create(project,ArtifactSpec.parse(JSONObject().put("format","CODE").put("name","same.kt").put("body",body)))
+            try { store.stageCodePatch(project,first.id,1,"0".repeat(64),listOf(CodePatchEdit("fun first() = 1","fun first() = 2")));fail("stale hash must reject") } catch(e:IllegalArgumentException) { assertEquals("CODE_PATCH_BASE_HASH_MISMATCH",e.message) }
+            try { store.stageCodePatch(project,first.id,1,first.sha256,listOf(CodePatchEdit("= 1","= 2")));fail("ambiguous replacement must reject") } catch(e:IllegalArgumentException) { assertEquals("CODE_PATCH_MATCH_AMBIGUOUS",e.message) }
+            assertEquals(body,store.verifiedFile(project,first).readText());assertTrue(store.codePatchPreviews(project).isEmpty())
+            val preview=store.stageCodePatch(project,first.id,1,first.sha256,listOf(CodePatchEdit("fun first() = 1","fun first() = 2")))
+            val spec=store.spec(project,first).json().put("body","changed elsewhere\n")
+            store.revise(project,first.id,1,ArtifactSpec.parse(spec))
+            try { store.applyCodePatchPreview(project,preview.id);fail("stale preview must not overwrite a newer version") } catch(e:IllegalArgumentException) { assertEquals("CODE_PATCH_BASE_STALE",e.message) }
+            assertEquals("changed elsewhere\n",store.verifiedFile(project,store.history(project,first.id).first()).readText())
+            assertEquals(preview.id,store.codePatchPreviews(project).single().id)
+        }finally{dir.deleteRecursively()}
+    }
+    @Test fun patchPreviewToolIsCapabilityGatedAndNeverAppliesTheDraft()=runBlocking {
+        val project="patch-tool-${UUID.randomUUID()}";val store=ArtifactStore(context)
+        val original="fun value() = 1\n";val revision=store.create(project,ArtifactSpec.parse(JSONObject().put("format","CODE").put("name","value.kt").put("body",original)))
+        val args=JSONObject().put("id",revision.id).put("expectedVersion",revision.version).put("expectedSha256",revision.sha256)
+            .put("edits",org.json.JSONArray().put(JSONObject().put("before","fun value() = 1").put("after","fun value() = 2"))).toString()
+        try {
+            val tool=ArtifactTool(context,"artifacts.patchPreview");val registry=ToolRegistry(listOf(tool));val tc=ToolContext(project,"chat",root())
+            assertTrue(registry.execute(ToolRequest("artifacts.patchPreview",args,TrustOrigin.MODEL),emptySet(),tc,ToolRegistry.ToolLoopState()) is ToolExecutionResult.Rejected)
+            assertTrue(registry.execute(ToolRequest("artifacts.patchPreview",args,TrustOrigin.MODEL),ArtifactTool.IDS,tc.copy(grantedCapabilities=setOf(com.localai.workspace.capabilities.Capability.LOCAL_READ)),ToolRegistry.ToolLoopState()) is ToolExecutionResult.Rejected)
+            val result=registry.execute(ToolRequest("artifacts.patchPreview",args,TrustOrigin.MODEL),ArtifactTool.IDS,tc,ToolRegistry.ToolLoopState()) as ToolExecutionResult.Success
+            val output=JSONObject(result.output);assertEquals("PATCH_PREVIEW_STAGED_NOT_APPLIED",output.getString("state"))
+            assertEquals(1,store.history(project,revision.id).size);assertEquals(original,store.verifiedFile(project,revision).readText())
+            assertEquals(output.getString("previewId"),store.codePatchPreviews(project).single().id)
+            assertTrue(ChatToolSchemas.available.contains("artifacts.patchPreview"))
+            val schema=JSONObject(ChatToolSchemas.schema("artifacts.patchPreview"))
+            assertEquals("expectedSha256",schema.getJSONObject("parameters").getJSONArray("required").getString(2))
+        } finally {
+            File(File(context.filesDir,"tool-workspaces"),"artifacts-${ArtifactStore.hash(project.toByteArray(Charsets.UTF_8))}").deleteRecursively()
+        }
+    }
     @Test fun toolCreatesVerifiedBytesOnlyWhenExplicitlyEnabledAndCapable()=runBlocking {
         val tool=ArtifactTool(context,"artifacts.create");val registry=ToolRegistry(listOf(tool));val tc=ToolContext("isolated-tool-${UUID.randomUUID()}","chat",root())
         val args=JSONObject().put("spec",spec("CODE","""{"body":"fun result() = 42"}""").json()).toString()

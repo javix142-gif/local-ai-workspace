@@ -11,7 +11,7 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk=[29], application=android.app.Application::class)
 class ChatToolSchemasTest {
- @Test fun schemasAreRealTypedAndBounded() { for (id in ChatToolSchemas.defaults) { val s=JSONObject(ChatToolSchemas.schema(id));assertEquals(id,s.getString("name"));assertEquals("object",s.getJSONObject("parameters").getString("type")) } }
+ @Test fun schemasAreRealTypedAndBounded() { for (id in ChatToolSchemas.defaults) { val s=JSONObject(ChatToolSchemas.schema(id));assertEquals(id,s.getString("name"));assertEquals("object",s.getJSONObject("parameters").getString("type")) };val patch=JSONObject(ChatToolSchemas.schema("artifacts.patchPreview"));assertEquals(4,patch.getJSONObject("parameters").getJSONArray("required").length());assertTrue(patch.getString("description").contains("review-only exact text patch")) }
  @Test fun officialSdkToolAdapterReturnsActualCalculatorResult() {
   val registry=ToolRegistry(listOf(CalculatorTool()))
   val provider=com.google.ai.edge.litertlm.tool(object:com.google.ai.edge.litertlm.OpenApiTool {
