@@ -18,6 +18,9 @@ data class ProjectBrief(@PrimaryKey val projectId:String,val projectName:String,
     @Query("SELECT * FROM memories ORDER BY updatedAt DESC") fun observe():Flow<List<MemoryRecord>>
     @Query("SELECT COUNT(*) FROM memories WHERE sourceType='APPROVED_LEGACY' AND sourceId=:id") suspend fun importedLegacy(id:String):Int
     @Query("SELECT * FROM memories WHERE id=:id") suspend fun get(id:String):MemoryRecord?
+    @Query("SELECT * FROM memories WHERE sourceType=:sourceType AND sourceId=:sourceId LIMIT 1") suspend fun bySource(sourceType:String,sourceId:String):MemoryRecord?
+    @Query("SELECT * FROM memories WHERE kind=:kind AND contentHash=:hash AND scopeType=:scopeType AND scopeId=:scopeId AND status IN ('ACTIVE','PENDING') AND (expiresAt IS NULL OR expiresAt>:now) LIMIT 1") suspend fun activeDuplicate(kind:String,hash:String,scopeType:String,scopeId:String,now:Long):MemoryRecord?
+    @Query("SELECT * FROM memories WHERE kind=:kind AND subject=:subject AND predicate=:predicate AND scopeType=:scopeType AND scopeId=:scopeId AND status IN ('ACTIVE','PENDING') AND (expiresAt IS NULL OR expiresAt>:now)") suspend fun matchingStructured(kind:String,subject:String,predicate:String,scopeType:String,scopeId:String,now:Long):List<MemoryRecord>
     @Query("SELECT * FROM memories WHERE status='ACTIVE' AND (expiresAt IS NULL OR expiresAt>:now) AND (scopeType||':'||scopeId) IN (:scopes) LIMIT 2000") suspend fun active(scopes:List<String>,now:Long):List<MemoryRecord>
     @Query("SELECT * FROM memories WHERE status='ACTIVE' AND indexState='INDEX_PENDING' LIMIT 100") suspend fun pending():List<MemoryRecord>
     @Query("UPDATE memories SET status='EXPIRED',indexState='NOT_INDEXED' WHERE status='ACTIVE' AND expiresAt IS NOT NULL AND expiresAt<=:now") suspend fun expire(now:Long)

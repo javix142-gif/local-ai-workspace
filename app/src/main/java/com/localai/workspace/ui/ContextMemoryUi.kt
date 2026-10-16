@@ -1,7 +1,11 @@
 package com.localai.workspace.ui
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -32,20 +36,72 @@ import com.google.gson.GsonBuilder
     var query by remember{mutableStateOf("")};var showInactive by remember{mutableStateOf(false)};var projectOnly by remember{mutableStateOf(projectId!=null)};var kindFilter by remember{mutableStateOf<MemoryKind?>(null)};var filters by remember{mutableStateOf(false)}
     var editing by remember{mutableStateOf<MemoryRecord?>(null)};var editor by remember{mutableStateOf(false)};var text by remember{mutableStateOf("")};var ttl by remember{mutableStateOf("")};var kind by remember{mutableStateOf(MemoryKind.FACT)};var choosingKind by remember{mutableStateOf(false)};var scopeMenu by remember{mutableStateOf(false)};var writingScope by remember(projectId){mutableStateOf(projectId?.let{SemanticScope(ScopeType.PROJECT,it)} ?: SemanticScope(ScopeType.USER,"local"))}
     var details by remember{mutableStateOf<MemoryRecord?>(null)};var removal by remember{mutableStateOf<MemoryRecord?>(null)};var error by remember{mutableStateOf<String?>(null)};var busy by remember{mutableStateOf(false)};var brief by remember{mutableStateOf<ProjectBrief?>(null)}
+    var implementDialog by remember{mutableStateOf(false)};var bundlePreview by remember{mutableStateOf<MemoryBundleV1.Preview?>(null)};var selectedBundleKeys by remember{mutableStateOf<Set<String>>(emptySet())};var importResult by remember{mutableStateOf<String?>(null)}
+    var bundleReview by remember{mutableStateOf<Map<String,MemoryManager.BundleCandidateReview>>(emptyMap())}
     fun run(block:suspend()->Unit){scope.launch{busy=true;error=null;try{withContext(Dispatchers.IO){block()}}catch(cancel:CancellationException){throw cancel}catch(e:Exception){error=e.message ?: e.javaClass.simpleName}finally{busy=false}}}
+    val memoryBundlePicker=rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()){uri->
+        if(uri!=null)scope.launch {
+            busy=true;error=null
+            try {
+                val (parsed,review)=withContext(Dispatchers.IO){
+                    val preview=context.contentResolver.openInputStream(uri)?.use(MemoryBundleV1::read) ?: throw IllegalStateException("MEMORY_PACKAGE_UNREADABLE")
+                    preview to foundation.memory.inspectBundle(preview)
+                }
+                bundlePreview=parsed
+                bundleReview=review
+                selectedBundleKeys=emptySet()
+                implementDialog=false
+                importResult=null
+            } catch(cancel:CancellationException){throw cancel} catch(e:Exception){error=e.message ?: e.javaClass.simpleName}
+            finally{busy=false}
+        }
+    }
     SemanticPanel("Structured memory",close) {
         OutlinedTextField(query,{query=it},label={Text("Search saved memory")},singleLine=true,modifier=Modifier.fillMaxWidth())
-        Row { TextButton(onClick={editing=null;text="";ttl="";editor=true}){Text("Add")};TextButton(onClick={filters=!filters}){Text("Filter")};TextButton(onClick={run{context.getSystemService(android.content.ClipboardManager::class.java).setPrimaryClip(android.content.ClipData.newPlainText("Memory export",foundation.memory.exportJson(access)))}}){Text("Export JSON")} }
+        Row { TextButton(onClick={editing=null;text="";ttl="";editor=true}){Text("Add")};TextButton(onClick={filters=!filters}){Text("Filter")};TextButton(onClick={run{context.getSystemService(android.content.ClipboardManager::class.java).setPrimaryClip(android.content.ClipData.newPlainText("Memory export",foundation.memory.exportJson(access)))}}){Text("Export JSON")};TextButton(onClick={implementDialog=true}){Text("IMPLEMENTAR")} }
         if(filters){Row{Checkbox(showInactive,{showInactive=it});Text("Include inactive records")};if(projectId!=null)Row{Checkbox(projectOnly,{projectOnly=it});Text("Project only")};Box{TextButton(onClick={choosingKind=true}){Text(kindFilter?.name ?: "All types")};DropdownMenu(choosingKind,{choosingKind=false}){DropdownMenuItem(text={Text("All types")},onClick={kindFilter=null;choosingKind=false});MemoryKind.entries.forEach{k->DropdownMenuItem(text={Text(k.name)},onClick={kindFilter=k;choosingKind=false})}}}}
-        val visible=all.filter{access.permits(it.scopeType,it.scopeId)&&(!projectOnly||it.scopeType=="PROJECT")&&(showInactive||it.status=="ACTIVE"&&it.expiresAt?.let{t->t>System.currentTimeMillis()}!=false)&&(kindFilter==null||it.kind==kindFilter?.name)&&it.text.contains(query,true)}
+        val visible=all.filter{access.permits(it.scopeType,it.scopeId)&&(!projectOnly||it.scopeType=="PROJECT")&&(showInactive||it.status in setOf("ACTIVE","PENDING")&&it.expiresAt?.let{t->t>System.currentTimeMillis()}!=false)&&(kindFilter==null||it.kind==kindFilter?.name)&&it.text.contains(query,true)}
         if(visible.isEmpty())Text("No saved memory")
         if(visible.size>100)Text("Showing 100 of ${visible.size}; refine the search to see more")
-        visible.take(100).forEach{m->Card(Modifier.fillMaxWidth()){Column(Modifier.padding(12.dp)){Text(m.text,maxLines=4,overflow=androidx.compose.ui.text.style.TextOverflow.Ellipsis);Text("${m.kind.lowercase()} · ${m.scopeType.lowercase()}${if(m.pinned)" · pinned"else""}",style=MaterialTheme.typography.labelSmall);TextButton(onClick={details=m}){Text("Details")}}}}
+        visible.take(100).forEach{m->Card(Modifier.fillMaxWidth()){Column(Modifier.padding(12.dp)){Text(m.text,maxLines=4,overflow=androidx.compose.ui.text.style.TextOverflow.Ellipsis);Text("${m.kind.lowercase()} · ${m.scopeType.lowercase()}${if(m.pinned)" · pinned"else""} · ${m.status.lowercase()}",style=MaterialTheme.typography.labelSmall);TextButton(onClick={details=m}){Text("Details")}}}}
         TextButton(onClick={run{foundation.importApprovedLegacy(access)}}){Text("Copy approved legacy memory")}
         TextButton(onClick={run{foundation.memory.recover()}}){Text("Rebuild pending embeddings")}
+        importResult?.let{Text(it,style=MaterialTheme.typography.bodySmall)}
         if(projectId!=null)TextButton(onClick={run{brief=foundation.database.dao().brief(projectId) ?: ProjectBrief(projectId,graph.database.projectDao().get(projectId)?.name.orEmpty())}}){Text("Project brief")}
         if(busy)LinearProgressIndicator(Modifier.fillMaxWidth());error?.let{Text(it,color=MaterialTheme.colorScheme.error)}
     }
+    if(implementDialog) AlertDialog(
+        onDismissRequest={implementDialog=false},
+        title={Text("Implement memory")},
+        text={Column(verticalArrangement=Arrangement.spacedBy(8.dp)){
+            Text("Prepare portable personal memories for review before bringing them into this device.")
+            TextButton(onClick={context.getSystemService(android.content.ClipboardManager::class.java).setPrimaryClip(android.content.ClipData.newPlainText("AWS memory import prompt",MemoryBundleV1.copyPrompt()));implementDialog=false;importResult="Prompt copied. The external assistant receives only the text you paste there."}){Text("COPIAR PROMPT")}
+            TextButton(enabled=!busy,onClick={memoryBundlePicker.launch(arrayOf("application/zip","application/octet-stream","*/*"))}){Text("IMPORTAR MEMORIA")}
+            Text("Imported entries stay pending and are not retrieved until you approve each one.",style=MaterialTheme.typography.bodySmall)
+        }},
+        confirmButton={TextButton(onClick={implementDialog=false}){Text("Close")}}
+    )
+    bundlePreview?.let{preview->MemoryBundleReviewDialog(
+        preview=preview,selectedKeys=selectedBundleKeys,onSelectionChange={selectedBundleKeys=it},review= bundleReview,busy=busy,
+        onCandidateEdit={key,content->
+            val candidate=preview.candidates.first{it.key==key}
+            val updated=candidate.copy(content=content.trim())
+            val edited=preview.copy(candidates=preview.candidates.map{if(it.key==key)updated.copy(sensitiveCandidate=MemoryBundleV1.isSensitive(updated))else it})
+            bundlePreview=edited
+            if(MemoryBundleV1.isSensitive(updated))selectedBundleKeys=selectedBundleKeys-key else selectedBundleKeys=selectedBundleKeys+key
+            scope.launch{bundleReview=withContext(Dispatchers.IO){foundation.memory.inspectBundle(edited)}}
+        },
+        onDismiss={bundlePreview=null},onImport={
+            run {
+                val result=foundation.memory.importBundlePending(preview,selectedBundleKeys)
+                withContext(Dispatchers.Main){
+                    importResult="Imported ${result.imported} pending memories; ${result.duplicates} duplicates already existed. Review and approve entries individually."
+                    if(result.imported>0){showInactive=true;projectOnly=false}
+                    bundlePreview=null;bundleReview=emptyMap()
+                }
+            }
+        },
+    )}
     if(editor)SemanticPanel(if(editing==null)"Add memory"else"Edit memory",{editor=false}) {
         OutlinedTextField(text,{text=it},label={Text("Content")},modifier=Modifier.fillMaxWidth(),minLines=3)
         if(MemoryContent.secret(text))Text("This may contain a credential. Saving is explicit; avoid storing secrets.",color=MaterialTheme.colorScheme.error)
@@ -67,6 +123,70 @@ import com.google.gson.GsonBuilder
     }}
     removal?.let{m->AlertDialog(onDismissRequest={removal=null},title={Text("Delete memory?")},text={Text("It will no longer be retrieved. Its vectors will be removed; existing source files and chats remain.")},confirmButton={TextButton(onClick={run{foundation.memory.delete(m.id);removal=null}}){Text("Delete")}},dismissButton={TextButton(onClick={removal=null}){Text("Cancel")}})}
     brief?.let{initial->var b by remember(initial){mutableStateOf(initial)};SemanticPanel("Project brief",{brief=null}){listOf("Goal" to b.goal,"Current state" to b.currentState,"Constraints" to b.constraints,"Decisions" to b.keyDecisions,"Active tasks" to b.activeTasks,"Architecture" to b.architecture).forEachIndexed{i,pair->OutlinedTextField(pair.second,{v->b=when(i){0->b.copy(goal=v);1->b.copy(currentState=v);2->b.copy(constraints=v);3->b.copy(keyDecisions=v);4->b.copy(activeTasks=v);else->b.copy(architecture=v)}},label={Text(pair.first)},modifier=Modifier.fillMaxWidth())};Button(onClick={run{foundation.saveBrief(b);brief=null}}){Text("Save")}}}
+}
+
+@Composable
+private fun MemoryBundleReviewDialog(
+    preview:MemoryBundleV1.Preview,
+    selectedKeys:Set<String>,
+    onSelectionChange:(Set<String>)->Unit,
+    review:Map<String,MemoryManager.BundleCandidateReview>,
+    busy:Boolean,
+    onCandidateEdit:(String,String)->Unit,
+    onDismiss:()->Unit,
+    onImport:()->Unit,
+) {
+    var detailKey by remember(preview.bundleId){mutableStateOf<String?>(null)}
+    val reviewed= remember(preview.bundleId){mutableStateListOf<String>()}
+    AlertDialog(
+        onDismissRequest={if(!busy)onDismiss()},
+        title={Text("Review memory package")},
+        text={Column(verticalArrangement=Arrangement.spacedBy(8.dp)){
+            Text("Source: ${preview.sourceLabel.ifBlank{"Unknown"}} · ${preview.exportedAt}",style=MaterialTheme.typography.bodySmall)
+            Text("${preview.candidates.size} entries · ${selectedKeys.size} selected. Potential secrets detected by a basic local pattern are excluded.")
+            Text("Imported records are stored as pending, mapped to this device's user scope, and retain original scope/trust as provenance.",style=MaterialTheme.typography.bodySmall)
+            Text("Package metadata (preview)",style=MaterialTheme.typography.labelLarge)
+            Text(preview.metadata.take(1600),maxLines=8,overflow=androidx.compose.ui.text.style.TextOverflow.Ellipsis,style=MaterialTheme.typography.bodySmall)
+            LazyColumn(Modifier.heightIn(max=420.dp)) {
+                items(preview.candidates,key={it.key}){candidate->
+                    Card(Modifier.fillMaxWidth().padding(vertical=3.dp)) {
+                        Row(Modifier.fillMaxWidth().padding(8.dp),verticalAlignment=androidx.compose.ui.Alignment.Top) {
+                            Checkbox(checked=candidate.key in selectedKeys,enabled=!busy&&!candidate.sensitiveCandidate&&candidate.key in reviewed,onCheckedChange={checked->onSelectionChange(if(checked)selectedKeys+candidate.key else selectedKeys-candidate.key)})
+                            Column(Modifier.weight(1f)) {
+                                Text("${candidate.kind.name} · ${candidate.trust}${if(candidate.sensitiveCandidate)" · excluded: possible secret"else""}",style=MaterialTheme.typography.labelLarge)
+                                Text(candidate.content,maxLines=3,overflow=androidx.compose.ui.text.style.TextOverflow.Ellipsis,style=MaterialTheme.typography.bodySmall)
+                                review[candidate.key]?.let{status->
+                                    if(status.exactDuplicate)Text("Exact duplicate: existing memory will be kept.",style=MaterialTheme.typography.bodySmall)
+                                    if(status.possibleContradiction)Text("Possible overlap with a different structured value. Review manually; nothing will be replaced.",color=MaterialTheme.colorScheme.error,style=MaterialTheme.typography.bodySmall)
+                                }
+                                TextButton(enabled=!busy,onClick={detailKey=candidate.key}){Text(if(candidate.key in reviewed)"Edit / review" else "Review full entry")}
+                            }
+                        }
+                    }
+                }
+            }
+        }},
+        confirmButton={TextButton(enabled=!busy&&selectedKeys.isNotEmpty(),onClick=onImport){Text(if(busy)"Importing…"else"Import selected")}},
+        dismissButton={TextButton(enabled=!busy,onClick=onDismiss){Text("Cancel")}},
+    )
+    detailKey?.let { key ->
+        val candidate=preview.candidates.firstOrNull{it.key==key}
+        if(candidate!=null){
+        var edited by remember(preview.bundleId,key){mutableStateOf(candidate.content)}
+        AlertDialog(
+            onDismissRequest={detailKey=null},
+            title={Text("Imported entry · ${candidate.category}")},
+            text={Column(Modifier.heightIn(max=420.dp).verticalScroll(rememberScrollState())){
+                OutlinedTextField(edited,{edited=it},label={Text("Review and correct this entry")},modifier=Modifier.fillMaxWidth(),minLines=4,maxLines=12)
+                if(MemoryBundleV1.isSensitive(candidate.copy(content=edited)))Text("Possible secret detected. This entry cannot be imported while it matches the local pattern.",color=MaterialTheme.colorScheme.error)
+                Spacer(Modifier.height(8.dp))
+                Text("Trust: ${candidate.trust}\nExternal ID: ${candidate.externalId}\nOriginal scope: ${candidate.originalScope.ifBlank{"unspecified"}}\nOriginal dates: ${candidate.originalCreatedAt ?: "unknown"} / ${candidate.originalUpdatedAt ?: "unknown"}\nProvenance: ${candidate.provenance.ifBlank{"unspecified"}}",style=MaterialTheme.typography.bodySmall)
+            }},
+            confirmButton={TextButton(enabled=edited.isNotBlank()&&!MemoryBundleV1.isSensitive(candidate.copy(content=edited)),onClick={onCandidateEdit(key,edited);reviewed.add(key);detailKey=null}){Text("Save and include")}},
+            dismissButton={TextButton(onClick={onSelectionChange(selectedKeys-key);detailKey=null}){Text("Leave out")}},
+        )
+        }
+    }
 }
 
 @Composable fun ContextDiagnosticsEntry() {

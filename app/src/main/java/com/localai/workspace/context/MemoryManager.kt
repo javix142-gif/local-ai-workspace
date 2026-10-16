@@ -1,6 +1,7 @@
 package com.localai.workspace.context
 
 import androidx.room.withTransaction
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.localai.workspace.semantic.v2.*
 import kotlinx.coroutines.*
@@ -20,6 +21,70 @@ class MemoryManager(val database:MemoryContextDatabase,private val embed:suspend
         }
     }
     suspend fun get(id:String)=database.dao().get(id)
+    data class BundleImportResult(val imported:Int,val duplicates:Int,val pendingIds:List<String>)
+    data class BundleCandidateReview(val exactDuplicate:Boolean=false,val possibleContradiction:Boolean=false)
+    suspend fun inspectBundle(preview:MemoryBundleV1.Preview):Map<String,BundleCandidateReview> = withContext(Dispatchers.IO){
+        val now=System.currentTimeMillis();val duplicateKeys=mutableSetOf<String>();val conflictKeys=mutableSetOf<String>()
+        val seen=mutableMapOf<Pair<String,String>,MutableList<MemoryBundleV1.Candidate>>()
+        for(candidate in preview.candidates){
+            val hash=MemoryContent.hash(candidate.content,candidate.kind)
+            val sourceId="${preview.bundleId}:${candidate.key}"
+            if(database.dao().bySource("IMPORTED_UNREVIEWED",sourceId)!=null || database.dao().activeDuplicate(candidate.kind.name,hash,"USER","local",now)!=null){duplicateKeys+=candidate.key}
+            seen.getOrPut(candidate.kind.name to hash){mutableListOf()}+=candidate
+            if(!candidate.subject.isNullOrBlank()&&!candidate.predicate.isNullOrBlank()){
+                val matches=database.dao().matchingStructured(candidate.kind.name,candidate.subject,candidate.predicate,"USER","local",now)
+                if(matches.any{it.contentHash!=hash})conflictKeys+=candidate.key
+            }
+        }
+        seen.values.filter{group->group.map{it.key}.distinct().size>1}.flatten().forEach{duplicateKeys+=it.key}
+        preview.candidates.filter{!it.subject.isNullOrBlank()&&!it.predicate.isNullOrBlank()}
+            .groupBy{Triple(it.kind.name,it.subject,it.predicate)}.values.filter{group->group.map{MemoryContent.hash(it.content,it.kind)}.distinct().size>1}
+            .flatten().forEach{conflictKeys+=it.key}
+        preview.candidates.associate{it.key to BundleCandidateReview(it.key in duplicateKeys,it.key in conflictKeys)}
+    }
+    suspend fun importBundlePending(preview:MemoryBundleV1.Preview,selectedKeys:Set<String>):BundleImportResult=withContext(Dispatchers.IO){
+        require(selectedKeys.isNotEmpty()){"NO_MEMORIES_SELECTED"}
+        val candidates=preview.candidates.filter{it.key in selectedKeys}
+        require(candidates.size==selectedKeys.size){"UNKNOWN_MEMORY_SELECTION"}
+        require(candidates.all{it.content.isNotBlank()&&it.content.length<=16_000}){"INVALID_MEMORY_CONTENT"}
+        require(candidates.none{it.sensitiveCandidate||MemoryBundleV1.isSensitive(it)}){"SENSITIVE_MEMORY_REQUIRES_REMOVAL"}
+        require(candidates.size<=250){"TOO_MANY_SELECTED_MEMORIES"}
+        val now=System.currentTimeMillis();val pendingIds=mutableListOf<String>();var duplicates=0
+        database.withTransaction {
+            for(candidate in candidates){
+                val sourceId="${preview.bundleId}:${candidate.key}"
+                if(database.dao().bySource("IMPORTED_UNREVIEWED",sourceId)!=null){duplicates++;continue}
+                val hash=MemoryContent.hash(candidate.content,candidate.kind)
+                if(database.dao().activeDuplicate(candidate.kind.name,hash,"USER","local",now)!=null){duplicates++;continue}
+                val id=UUID.randomUUID().toString()
+                val provenance=Gson().toJson(mapOf(
+                    "packageSchema" to MemoryBundleV1.SCHEMA,
+                    "bundleId" to preview.bundleId,
+                    "externalId" to candidate.externalId,
+                    "category" to candidate.category,
+                    "trust" to candidate.trust,
+                    "provenance" to candidate.provenance,
+                    "originalScope" to candidate.originalScope,
+                    "originalCreatedAt" to candidate.originalCreatedAt,
+                    "originalUpdatedAt" to candidate.originalUpdatedAt,
+                    "originalStatus" to candidate.originalStatus,
+                    "subject" to candidate.subject,
+                    "predicate" to candidate.predicate,
+                    "object" to candidate.objectValue,
+                    "instructionsAreData" to true,
+                ))
+                database.dao().put(MemoryRecord(
+                    id=id,kind=candidate.kind.name,scopeType="USER",scopeId="local",title=candidate.category,
+                    text=candidate.content,status="PENDING",confidence=candidate.confidence ?: .5,
+                    createdAt=now,updatedAt=now,sourceType="IMPORTED_UNREVIEWED",sourceId=sourceId,
+                    contentHash=hash,indexState="INDEX_PENDING",structuredPayloadJson=provenance,
+                    subject=candidate.subject,predicate=candidate.predicate,objectValue=candidate.objectValue,
+                ))
+                pendingIds+=id
+            }
+        }
+        BundleImportResult(pendingIds.size,duplicates,pendingIds)
+    }
     suspend fun update(id:String,text:String,expiresAt:Long?=null):MemoryRecord=withContext(Dispatchers.IO){database.withTransaction{
         val old=requireNotNull(get(id));require(old.status in setOf("ACTIVE","PENDING"));require(text.isNotBlank()&&text.length<=16000);val now=System.currentTimeMillis();require(expiresAt==null||expiresAt>now);if(old.status=="PENDING")require(!MemoryContent.secret(text)){"SECRET_CANDIDATE_REJECTED"}
         val next=old.copy(id=UUID.randomUUID().toString(),text=text.trim(),createdAt=now,updatedAt=now,version=old.version+1,supersedesId=old.id,contentHash=MemoryContent.hash(text,MemoryKind.valueOf(old.kind)),expiresAt=expiresAt,indexState="INDEX_PENDING")
