@@ -26,6 +26,8 @@ import org.robolectric.annotation.Config
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.util.UUID
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk=[35],application=Application::class)
@@ -97,6 +99,23 @@ class SemanticContextPostfixTest {
         workspace.documentDao().insert(doc)
         workspace.documentDao().insertSegments(listOf(DocumentSegmentEntity(documentId=id,segmentIndex=0,text=text,normalizedText=text,contentHash=fingerprint(text))))
         return doc
+    }
+
+    private suspend fun addCodeArchive(projectId:String,id:String,entries:Map<String,String>):DocumentEntity {
+        val archive=File(context.cacheDir,"$id.zip").also{temporaryFiles+=it}
+        ZipOutputStream(archive.outputStream()).use { output -> entries.forEach { (name,text) ->
+            output.putNextEntry(ZipEntry(name));output.write(text.toByteArray(Charsets.UTF_8));output.closeEntry()
+        } }
+        val parsed=DocumentParser(context).parse(archive,"application/zip",archive.name)
+        val chunks=TextChunker().chunk(parsed)
+        val now=System.currentTimeMillis()
+        val document=DocumentEntity(id,projectId,archive.name,localPath=archive.path,mimeType="application/zip",fileHash=fingerprint("archive:$id"),byteSize=archive.length(),pageCount=parsed.pages.size,extractionStatus="READY",indexingStatus="READY",importedAt=now,updatedAt=now)
+        workspace.documentDao().insert(document)
+        workspace.documentDao().insertSegments(chunks.mapIndexed { index,chunk ->
+            DocumentSegmentEntity(documentId=id,segmentIndex=index,pageStart=chunk.pageStart,pageEnd=chunk.pageEnd,charStart=chunk.charStart,charEnd=chunk.charEnd,
+                text=chunk.text,normalizedText=chunk.text.lowercase(),sectionPath=chunk.sectionPath,contentHash=fingerprint(chunk.text))
+        })
+        return document
     }
 
     private suspend fun addPagedDocument(projectId:String,id:String):DocumentEntity {
@@ -274,6 +293,48 @@ class SemanticContextPostfixTest {
         assertEquals(listOf(evidence.id),validator.validate(extracted,bundle.sourceEvidence).valid.map{it.evidence.id})
         assertEquals(listOf("SV2-0000000000000000"),validator.validate(
             validator.extractCandidates("[SV2-0000000000000000]"),bundle.sourceEvidence).invalidEvidenceIds)
+    }
+
+    @Test fun codeArchiveSearchKeepsRelativePathAndLineWithoutLeakingOtherProjects()=runBlocking {
+        addProject("archive-code-project");addProject("archive-foreign-project")
+        val archive=addCodeArchive("archive-code-project","source-archive",linkedMapOf(
+            ".gitignore" to "build/\n",
+            "src/Answer.kt" to "package fixture\n\nfun falconLookup() = \"PROJECT_ARCHIVE_ONLY\"\n",
+            "build/Generated.kt" to "fun falconLookup() = \"IGNORED_BUILD_ONLY\"\n",
+        ))
+        addDocument("archive-foreign-project","foreign-answer","src/Answer.kt","fun falconLookup() = \"FOREIGN_PROJECT_ONLY\"")
+        index("archive-code-project","archive-foreign-project")
+
+        val bundle=foundation.build(
+            request("archive-code-project",setOf(archive.id)).copy(query="Where is falconLookup defined?"),
+            evidence=emptyList(),memoryEnabled=false,
+        )
+        val source=bundle.included.firstOrNull{it.kind==com.localai.workspace.context.ContextKind.SOURCE && it.text.contains("PROJECT_ARCHIVE_ONLY")}
+        assertNotNull("the selected code excerpt should reach the final context",source)
+        requireNotNull(source)
+        assertEquals("src/Answer.kt",source.provenance.sourceName)
+        assertEquals(3,source.provenance.lineStart)
+        assertEquals(3,source.provenance.lineEnd)
+        assertTrue(source.text.contains("PROJECT_ARCHIVE_ONLY"))
+        assertFalse(bundle.conversation().userMessage.contains("IGNORED_BUILD_ONLY"))
+        assertFalse(bundle.conversation().userMessage.contains("FOREIGN_PROJECT_ONLY"))
+    }
+
+    @Test fun codeArchiveParserExcludesGitIgnoredDirectoryContent()=runBlocking {
+        val archive=File(context.cacheDir,"ignored-folder-${UUID.randomUUID()}.zip").also{temporaryFiles+=it}
+        ZipOutputStream(archive.outputStream()).use { output ->
+            listOf(
+                ".gitignore" to "build/\n",
+                "src/Visible.kt" to "VISIBLE_SOURCE_MARKER",
+                "build/Generated.kt" to "IGNORED_BUILD_MARKER",
+                ".git/objects/secret" to "IGNORED_VCS_MARKER",
+            ).forEach { (name,text) -> output.putNextEntry(ZipEntry(name));output.write(text.toByteArray());output.closeEntry() }
+        }
+        val parsed=DocumentParser(context).parse(archive,"application/zip",archive.name)
+        val extracted=parsed.pages.joinToString("\n"){it.text}
+        assertTrue(extracted.contains("VISIBLE_SOURCE_MARKER"))
+        assertFalse(extracted.contains("IGNORED_BUILD_MARKER"))
+        assertFalse(extracted.contains("IGNORED_VCS_MARKER"))
     }
 
     @Test fun followUpCellQuestionSendsOnlyRelevantCellsWithCellProvenance()=runBlocking {
