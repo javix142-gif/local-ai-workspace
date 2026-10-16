@@ -88,7 +88,9 @@ class ChatContentUiTest {
         compose.onNodeWithTag("citation-detail-scroll").assertDoesNotExist()
     }
 
-    @Test fun citationDetailOffersAnActionToOpenItsIndexedSourceSegment() {
+    @Test
+    @Config(sdk = [35], application = Application::class)
+    fun citationDetailOffersAnActionToOpenItsIndexedSourceSegment() {
         val evidence = citationEvidence(
             evidenceId = "LCL-OPEN-1",
             sourceLabel = "notes.txt",
