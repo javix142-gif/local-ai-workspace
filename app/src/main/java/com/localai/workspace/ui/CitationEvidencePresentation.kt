@@ -85,6 +85,7 @@ internal fun CitationEvidenceReferences(
 internal fun CitationEvidenceDialog(
     item: CitationEvidenceEntity,
     onDismiss: () -> Unit,
+    onOpenSource: () -> Unit = {},
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -135,6 +136,43 @@ internal fun CitationEvidenceDialog(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
+                TextButton(
+                    onClick = onOpenSource,
+                    modifier = Modifier.fillMaxWidth().testTag("citation-open-source"),
+                ) { Text("Open indexed source segment") }
+            }
+        },
+    )
+}
+
+/** Opens only the exact local segment linked to this citation, with the saved excerpt as fallback. */
+@Composable
+internal fun CitationSourcePreviewDialog(
+    preview: CitationSourcePreview,
+    onBackToCitation: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Indexed source segment") },
+        confirmButton = { TextButton(onClick = onDismiss) { Text("Close") } },
+        dismissButton = { TextButton(onClick = onBackToCitation) { Text("Back to citation") } },
+        text = {
+            Column(
+                Modifier.fillMaxWidth().heightIn(max = 420.dp).verticalScroll(rememberScrollState())
+                    .testTag("citation-source-preview-scroll"),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Text(preview.sourceName, style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier.testTag("citation-source-preview-name"))
+                Text(preview.location, style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.testTag("citation-source-preview-location"))
+                Text(preview.text, style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.testTag("citation-source-preview-text"))
+                Text(preview.notice, style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.testTag("citation-source-preview-notice"))
             }
         },
     )

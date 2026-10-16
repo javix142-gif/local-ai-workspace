@@ -30,8 +30,10 @@ data class IndexedSegment(@Embedded val segment: SemanticSegmentRecord, val sour
     @Query("DELETE FROM semantic_models_v2 WHERE id=:id") suspend fun removeModel(id: String)
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun source(value: SemanticSourceRecord)
     @Query("SELECT * FROM semantic_sources WHERE scopeKey=:scope") suspend fun sources(scope: String): List<SemanticSourceRecord>
+    @Query("SELECT * FROM semantic_sources WHERE id=:id LIMIT 1") suspend fun source(id: String): SemanticSourceRecord?
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun segment(value: SemanticSegmentRecord)
     @Query("SELECT * FROM semantic_segments WHERE sourceId=:id ORDER BY id") suspend fun segments(id: String): List<SemanticSegmentRecord>
+    @Query("SELECT * FROM semantic_segments WHERE id=:id LIMIT 1") suspend fun segment(id: String): SemanticSegmentRecord?
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun link(value: SemanticEmbeddingLink)
     @Insert(onConflict = OnConflictStrategy.IGNORE) suspend fun payload(value: SemanticVectorPayload)
     @Transaction suspend fun embedding(value: SemanticEmbeddingRecord) {

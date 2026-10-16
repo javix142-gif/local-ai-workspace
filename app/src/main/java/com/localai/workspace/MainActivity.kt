@@ -89,6 +89,7 @@ import com.localai.workspace.ui.ChatRichText
 import com.localai.workspace.ui.AssistantResponseCopyAction
 import com.localai.workspace.ui.CitationEvidenceDialog
 import com.localai.workspace.ui.CitationEvidenceReferences
+import com.localai.workspace.ui.CitationSourcePreviewDialog
 import com.localai.workspace.ui.ChatTopBar
 import com.localai.workspace.ui.ChatMessageSurface
 import com.localai.workspace.ui.humanModelName
@@ -878,6 +879,16 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
     var previewId by rememberSaveable { mutableStateOf<String?>(null) }
     var previewText by remember { mutableStateOf("") }
     LaunchedEffect(previewId) { previewText = ""; previewId?.let { previewText = viewModel.previewDocument(it) } }
+    var citationSourceRequest by remember { mutableStateOf<com.localai.workspace.data.CitationEvidenceEntity?>(null) }
+    var citationSourcePreview by remember { mutableStateOf<com.localai.workspace.ui.CitationSourcePreview?>(null) }
+    var citationSourceReturn by remember { mutableStateOf<com.localai.workspace.data.CitationEvidenceEntity?>(null) }
+    var citationSourceUnavailable by remember { mutableStateOf(false) }
+    LaunchedEffect(citationSourceRequest) {
+        val request = citationSourceRequest ?: return@LaunchedEffect
+        citationSourcePreview = viewModel.previewCitationSource(request)
+        citationSourceUnavailable = citationSourcePreview == null
+        citationSourceRequest = null
+    }
     val generating by viewModel.isGenerating.collectAsStateWithLifecycle()
     val deletingChat by viewModel.isDeletingChat.collectAsStateWithLifecycle()
     var showChatMenu by rememberSaveable { mutableStateOf(false) }
@@ -889,10 +900,10 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
     val generationProgress by viewModel.generationProgress.collectAsStateWithLifecycle()
     val generationError by viewModel.generationError.collectAsStateWithLifecycle()
     val preparation by viewModel.modelPreparation.collectAsStateWithLifecycle()
-    val evidence by viewModel.evidence.collectAsStateWithLifecycle()
+    val citationEvidenceByMessage by viewModel.citationEvidenceByMessage.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     var input by rememberSaveable { mutableStateOf("") }
-    var selectedEvidence by remember { mutableStateOf<String?>(null) }
+    var selectedEvidence by remember { mutableStateOf<com.localai.workspace.data.CitationEvidenceEntity?>(null) }
     var showTechnicalError by rememberSaveable { mutableStateOf(false) }
     var historicalDiagnostic by remember { mutableStateOf<GenerationError?>(null) }
     var selectedMetrics by rememberSaveable { mutableStateOf<String?>(null) }
@@ -905,7 +916,7 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
     val audioPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let(viewModel::attachAudio) }
     val imagePicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let(viewModel::attachImage) }
     LaunchedEffect(Unit) { viewModel.notices.collectLatest { snackbarHostState.showSnackbar(it) } }
-    val citation = selectedEvidence?.let { id -> evidence.firstOrNull { it.evidenceId == id } }
+    val citation = selectedEvidence
     val selectedModel = models.firstOrNull { it.id == selectedModelId } ?: models.firstOrNull()
     val visionEnabled = selectedModel?.let { capabilityAvailability(it.toDescriptor(), ModelCapability.VISION) == CapabilityAvailability.AVAILABLE } == true
 
@@ -1008,9 +1019,10 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                 ) {
                     items(messages, key = { it.id }) { message ->
                         val content = if (message.status == "GENERATING" && message.id == messages.lastOrNull()?.id) streaming else message.content
+                        val messageEvidence = citationEvidenceByMessage[message.id].orEmpty()
                         Column {
                         toolCalls.filter { it.messageId == message.id }.forEach { com.localai.workspace.ui.ToolExecutionCard(it) }
-                        MessageBubble(message, content, evidence,
+                        MessageBubble(message, content, messageEvidence,
                             activeLabel = if (generating && message.id == messages.lastOrNull()?.id) compactGenerationLabel(generationProgress.stage, generationProgress.cancellationRequested) else null,
                             canContinue = !generating && !deletingChat && message.id == messages.lastOrNull()?.id && message.status == "COMPLETE",
                             onContinue = { viewModel.continueResponse(message.id) },
@@ -1019,7 +1031,7 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                             } else null,
                             onMetrics = { selectedMetrics = it },
                             onDiagnostic = { historicalDiagnostic = it; showTechnicalError = true },
-                            onCitation = { selectedEvidence = it })
+                            onCitation = { id -> selectedEvidence = messageEvidence.singleOrNull { it.evidenceId == id } })
                         }
                     }
                 }
@@ -1112,8 +1124,43 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
         ResponseDetailsDialog(metrics, onDismiss = { selectedMetrics = null })
     }
     citation?.let { item ->
-        CitationEvidenceDialog(item) { selectedEvidence = null }
+        CitationEvidenceDialog(
+            item,
+            onDismiss = { selectedEvidence = null },
+            onOpenSource = {
+                citationSourceReturn = item
+                selectedEvidence = null
+                citationSourcePreview = null
+                citationSourceUnavailable = false
+                citationSourceRequest = item
+            },
+        )
     }
+    citationSourcePreview?.let { preview ->
+        CitationSourcePreviewDialog(
+            preview = preview,
+            onBackToCitation = {
+                citationSourcePreview = null
+                selectedEvidence = citationSourceReturn
+                citationSourceReturn = null
+            },
+            onDismiss = { citationSourcePreview = null; citationSourceReturn = null },
+        )
+    }
+    if (citationSourceUnavailable) AlertDialog(
+        onDismissRequest = {
+            citationSourceUnavailable = false
+            selectedEvidence = citationSourceReturn
+            citationSourceReturn = null
+        },
+        title = { Text("Source unavailable") },
+        text = { Text("This citation is no longer associated with the active conversation.") },
+        confirmButton = { TextButton(onClick = {
+            citationSourceUnavailable = false
+            selectedEvidence = citationSourceReturn
+            citationSourceReturn = null
+        }) { Text("Back to citation") } },
+    )
 }
 
 @Composable

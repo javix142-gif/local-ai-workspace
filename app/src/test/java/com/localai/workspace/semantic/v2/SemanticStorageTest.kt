@@ -48,6 +48,28 @@ class SemanticStorageTest {
             val hit=dao.corpus("index","PROJECT:p","space",10).single();assertEquals(10,hit.segment.lineStart);assertEquals(100L,hit.segment.startMs);assertTrue(dao.corpus("index","PROJECT:other","space",10).isEmpty());assertTrue(dao.corpus("index","PROJECT:p","different",10).isEmpty())
         } finally { db.close() }
     }
+
+    @Test
+    @Config(sdk = [35], application = Application::class)
+    fun citationSegmentReadRequiresExactScopeAndAuthorizedDocumentPath()=runBlocking {
+        val context = RuntimeEnvironment.getApplication()
+        val db = Room.inMemoryDatabaseBuilder(context, SemanticDatabase::class.java).build()
+        val workspace = Room.inMemoryDatabaseBuilder(context, WorkspaceDatabase::class.java).build()
+        val path = "/private/project/document.txt"
+        val source = SemanticSourceRecord("generation:document", "PROJECT:project", "DOCUMENT", "document.txt", "text/plain", path, 120, 1, "hash")
+        val segment = SemanticSegmentRecord("segment-1", source.id, "TEXT", "exact stored segment", "document.txt", 2, null, null, null, null, "segment-hash")
+        try {
+            db.dao().source(source)
+            db.dao().segment(segment)
+            val layer = SemanticLayer(context, workspace, kotlinx.coroutines.sync.Mutex(), db, "citation-preview-test")
+
+            assertEquals(segment, layer.citationSourceSegment(segment.id, "PROJECT:project", path)?.second)
+            assertNull(layer.citationSourceSegment(segment.id, "PROJECT:other", path))
+            assertNull(layer.citationSourceSegment(segment.id, "PROJECT:project", "/private/other/document.txt"))
+            db.dao().source(source.copy(permissionState = "REVOKED"))
+            assertNull(layer.citationSourceSegment(segment.id, "PROJECT:project", path))
+        } finally { db.close(); workspace.close() }
+    }
     @Test fun sameSegmentCanRetainDifferentRepresentationsWithoutOverwriting()=runBlocking {
         val db=Room.inMemoryDatabaseBuilder(RuntimeEnvironment.getApplication(),SemanticDatabase::class.java).build()
         try { val dao=db.dao();val row=SemanticEmbeddingRecord("index","audio-segment","space","litert","model","a".repeat(64),768,true,"DOCUMENT","audio-hash",SemanticVectors.FORMAT,ByteArray(3072),1)

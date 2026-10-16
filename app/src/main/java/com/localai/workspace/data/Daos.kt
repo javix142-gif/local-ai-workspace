@@ -250,6 +250,12 @@ interface CitationEvidenceDao {
 
     @Query("SELECT * FROM citation_evidence WHERE messageId = :messageId ORDER BY id")
     fun observeForMessage(messageId: String): Flow<List<CitationEvidenceEntity>>
+
+    @Query("SELECT * FROM citation_evidence WHERE conversationId = :conversationId ORDER BY createdAt, id")
+    fun observeForConversation(conversationId: String): Flow<List<CitationEvidenceEntity>>
+
+    @Query("SELECT * FROM citation_evidence WHERE id = :id AND conversationId = :conversationId AND messageId = :messageId LIMIT 1")
+    suspend fun findForMessage(id: String, conversationId: String, messageId: String): CitationEvidenceEntity?
 }
 
 @Dao

@@ -47,6 +47,20 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
     val models get() = database.dao().observeModels()
     val jobs get() = database.dao().observeJobs()
     var dimension: Int get() = prefs.getInt("dimension", 768); private set(value) { check(prefs.edit().putInt("dimension", value).commit()) }
+    /** Reads the exact citation segment only when its source still matches the caller's local scope/path. */
+    suspend fun citationSourceSegment(
+        segmentId: String,
+        expectedScopeKey: String,
+        expectedLocalPath: String,
+    ): Pair<SemanticSourceRecord, SemanticSegmentRecord>? {
+        val dao = database.dao()
+        val segment = dao.segment(segmentId) ?: return null
+        val source = dao.source(segment.sourceId) ?: return null
+        if (source.scopeKey != expectedScopeKey || source.sourceType != "DOCUMENT" ||
+            source.permissionState != "AUTHORIZED" || source.reference != expectedLocalPath ||
+            segment.modality !in setOf("TEXT", "CODE") || segment.textContent.isNullOrBlank()) return null
+        return source to segment
+    }
     suspend fun setDimension(value: Int) = operations.withLock { require(value in setOf(768,256)); manager.configureDimension(value); dimension = value; configurationRevision.value++; notice.value = "Configuration changed · engine loads on first use · existing indexes retained" }
     suspend fun activate(id: String, profile: EmbeddingRuntimeProfile = EmbeddingRuntimeProfile()) = operations.withLock {
         val record = database.dao().model(id) ?: throw SemanticFailure(SemanticError.MODEL_FILE_INVALID)

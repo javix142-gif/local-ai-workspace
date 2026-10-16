@@ -452,6 +452,13 @@ class ChatViewModel(
                 if (id == null) kotlinx.coroutines.flow.flowOf(emptyList()) else graph.workspace.observeMessages(id)
             }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
         }
+    val citationEvidenceByMessage: StateFlow<Map<String, List<CitationEvidenceEntity>>> = _conversationId
+        .flatMapLatest { conversationId ->
+            if (conversationId == null) kotlinx.coroutines.flow.flowOf(emptyMap())
+            else graph.database.citationEvidenceDao().observeForConversation(conversationId)
+                .map(::groupCitationEvidenceByMessage)
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
     val isGenerating: StateFlow<Boolean> = _isGenerating.asStateFlow()
     val streamingText: StateFlow<String> = _streamingText.asStateFlow()
     val evidence: StateFlow<List<CitationEvidenceEntity>> = _evidence.asStateFlow()
@@ -1159,6 +1166,32 @@ class ChatViewModel(
         val doc = graph.database.documentDao().get(id)?.takeIf { it.projectId == projectId } ?: return "File no longer exists"
         if (doc.indexingStatus != "READY") return doc.errorMessage ?: "File is still being read"
         return graph.database.documentDao().openingSegments(id, 3).joinToString("\n\n") { it.text }.ifBlank { "No readable text" }
+    }
+    internal suspend fun previewCitationSource(citation: CitationEvidenceEntity): CitationSourcePreview? {
+        val conversationId = _conversationId.value ?: return null
+        if (citation.conversationId != conversationId) return null
+        val dao = graph.database.citationEvidenceDao()
+        val stored = dao.findForMessage(citation.id, conversationId, citation.messageId) ?: citation
+        val document = graph.database.documentDao().get(stored.documentId)
+            ?.takeIf { it.projectId == projectId }
+        val legacySegment = stored.segmentId?.let { graph.database.documentDao().segment(it) }
+        val scope = graph.database.projectDao().get(projectId)?.let { workspace ->
+            if (workspace.workspaceKind == com.localai.workspace.data.WorkspaceKind.PROJECT) "PROJECT:$projectId"
+            else "SESSION:$conversationId"
+        } ?: ""
+        val semanticSourceAndSegment = if (document != null && !stored.semanticSegmentId.isNullOrBlank() && scope.isNotBlank()) {
+            graph.semanticV2.citationSourceSegment(stored.semanticSegmentId, scope, document.localPath)
+        } else null
+        return resolveCitationSourcePreview(
+            citation = stored,
+            activeConversationId = conversationId,
+            expectedProjectId = projectId,
+            expectedSemanticScopeKey = scope,
+            document = document,
+            legacySegment = legacySegment,
+            semanticSource = semanticSourceAndSegment?.first,
+            semanticSegment = semanticSourceAndSegment?.second,
+        )
     }
     fun analyzeDocument(id: String) {
         selectDocument(id, true)

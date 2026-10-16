@@ -58,7 +58,7 @@ class ChatContentUiTest {
                 CitationEvidenceReferences(evidence) { selectedEvidenceId = it }
                 selectedEvidenceId?.let { id ->
                     evidence.firstOrNull { it.evidenceId == id }?.let { item ->
-                        CitationEvidenceDialog(item) { selectedEvidenceId = null }
+                        CitationEvidenceDialog(item, onDismiss = { selectedEvidenceId = null })
                     }
                 }
             }
@@ -97,9 +97,49 @@ class ChatContentUiTest {
             pageStart = 3,
             excerpt = "Stored excerpt from the cited segment",
         )
-        compose.setContent { LocalAiTheme { CitationEvidenceDialog(evidence) {} } }
+        var opened = false
+        compose.setContent { LocalAiTheme { CitationEvidenceDialog(evidence, {}, onOpenSource = { opened = true }) } }
 
-        compose.onNodeWithText("Open indexed source segment").assertIsDisplayed()
+        compose.onNodeWithTag("citation-open-source").assertIsDisplayed().performScrollTo().performClick()
+        compose.runOnIdle { assertTrue(opened) }
+    }
+
+    @Test
+    @Config(sdk = [35], application = Application::class)
+    fun indexedSourcePreviewRetainsExactSegmentAndLocationAtLargeTextScale() {
+        val preview = CitationSourcePreview(
+            sourceName = "notes.txt", location = "Page 3 · Text offsets 120–148",
+            text = "Full indexed segment · exact source text", notice = "Indexed segment only; this is not a full-document review.",
+            indexedSegmentAvailable = true,
+        )
+        var fontScale by mutableStateOf(1f)
+        var updateScale: ((Float) -> Unit)? = null
+        var returnedToCitation = false
+
+        compose.setContent { LocalAiTheme {
+            val density = LocalDensity.current
+            SideEffect { updateScale = { fontScale = it } }
+            CompositionLocalProvider(LocalDensity provides Density(density.density, fontScale)) {
+                CitationSourcePreviewDialog(preview, onBackToCitation = { returnedToCitation = true }, onDismiss = {})
+            }
+        } }
+
+        listOf(1f, 1.6f).forEach { scale ->
+            compose.runOnIdle { updateScale?.invoke(scale) }
+            compose.waitForIdle()
+            compose.onNodeWithTag("citation-source-preview-scroll")
+                .assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.VerticalScrollAxisRange))
+            compose.onNodeWithTag("citation-source-preview-name", useUnmergedTree = true).assertTextEquals("notes.txt").assertIsDisplayed()
+            compose.onNodeWithTag("citation-source-preview-location", useUnmergedTree = true)
+                .assertTextEquals("Page 3 · Text offsets 120–148").assertIsDisplayed()
+            compose.onNodeWithTag("citation-source-preview-text", useUnmergedTree = true)
+                .assertTextEquals("Full indexed segment · exact source text").assertIsDisplayed()
+            compose.onNodeWithTag("citation-source-preview-notice", useUnmergedTree = true)
+                .assertTextEquals("Indexed segment only; this is not a full-document review.")
+                .assertIsDisplayed()
+        }
+        compose.onNodeWithText("Back to citation").performClick()
+        compose.runOnIdle { assertTrue(returnedToCitation) }
     }
 
     @Test
@@ -123,7 +163,9 @@ class ChatContentUiTest {
             Column(Modifier.width(280.dp)) {
                 CitationEvidenceReferences(evidence) { selected = it }
                 selected?.let { id ->
-                    evidence.single { it.evidenceId == id }.let { CitationEvidenceDialog(it) { selected = null } }
+                    evidence.single { it.evidenceId == id }.let {
+                        CitationEvidenceDialog(it, onDismiss = { selected = null })
+                    }
                 }
             }
         } }
@@ -152,7 +194,7 @@ class ChatContentUiTest {
             val systemDensity = LocalDensity.current
             SideEffect { updateScale = { fontScale = it } }
             CompositionLocalProvider(LocalDensity provides Density(systemDensity.density, fontScale)) {
-                CitationEvidenceDialog(evidence) {}
+                CitationEvidenceDialog(evidence, onDismiss = {})
             }
         } }
 

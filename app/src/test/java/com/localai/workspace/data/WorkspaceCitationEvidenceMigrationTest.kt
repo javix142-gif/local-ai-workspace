@@ -106,6 +106,10 @@ class WorkspaceCitationEvidenceMigrationTest {
             )
             migrated.citationEvidenceDao().insertAll(listOf(codeCitation))
             assertEquals(codeCitation, migrated.citationEvidenceDao().observeForMessage("message-2").first().single())
+            assertEquals(
+                listOf("legacy-citation", "code-citation"),
+                migrated.citationEvidenceDao().observeForConversation("chat-1").first().map { it.id },
+            )
         } finally {
             migrated?.close()
             context.deleteDatabase(name)
