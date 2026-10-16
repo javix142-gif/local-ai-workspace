@@ -1,0 +1,2 @@
+finishedAtUtc=2026-10-16T20:01:14Z
+exitCode=1

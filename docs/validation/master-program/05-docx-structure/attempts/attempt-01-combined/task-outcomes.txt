@@ -1,0 +1,6 @@
+source SHA: 4c91d79fe8f9ffe052a33f710f5818afad5df446
+Gradle task :app:testDebugUnitTest: FAILED (overall task exit 1)
+Filtered DocxStructureFidelityTest: 2 tests, 2 passed, 0 failures, 0 errors, 0 skipped.
+Filtered OfficeRetrievalTest: 2 tests reported setup failures, 0 passed, 2 failures, 0 errors, 0 skipped. Both failures occur before the test bodies because Robolectric cannot obtain org.robolectric:android-all-instrumented:10-robolectric-5803371-i7; the offline cache lacks this API runtime and its fetch attempts return Connection refused. These are infrastructure/runtime failures, not demonstrated product failures.
+Overall wall time from recorded UTC timestamps: 103 seconds. Gradle log task summary: 63 actionable tasks, 7 executed, 56 up-to-date. No full suite, lint, AndroidTest compile, emulator, device or APK.
+capturedAtUtc=2026-10-16T20:01:54Z

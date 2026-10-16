@@ -1,0 +1,95 @@
+{
+  "kind": "PREPARATORY_M02_03_DOCX_STRUCTURE",
+  "status": "PREPARATORY_HOST_FOCUSED_PASS_DEPENDENCY_BLOCKED",
+  "baseFeatureHead": "c5d8d6cdf29177764667bc6dba636f02a528ff84",
+  "productionCommit": "4c91d79fe8f9ffe052a33f710f5818afad5df446",
+  "testedSourceSha": "2646c745b6c3393fbdbdad1d49a1b1490a7cd3e8",
+  "originalTask": {
+    "id": "M02-03",
+    "status": "TODO",
+    "dependsOn": [
+      "M02-01"
+    ],
+    "dependencyBlock": "M02-01 remains TODO and depends on device-required M00-10. Preparatory work is authorized; no original task status changed."
+  },
+  "changes": {
+    "production": [
+      "app/src/main/java/com/localai/workspace/documents/OfficeText.kt"
+    ],
+    "tests": [
+      "app/src/test/java/com/localai/workspace/data/DocxStructureFidelityTest.kt"
+    ],
+    "fixtures": [
+      {
+        "path": "docs/validation/master-program/05-docx-structure/fixtures/structure-v1.docx",
+        "synthetic": true,
+        "bytes": 1376,
+        "sha256": "140218250c3e4d60dabbe5e530b1e534b8a4441ec3320db79d59e9ac1e22f8c3"
+      }
+    ]
+  },
+  "host": {
+    "toolchain": {
+      "gradle": "8.10.2",
+      "gradleRuntime": "Temurin 17.0.20.1",
+      "testWorker": "Temurin 21.0.12.1",
+      "androidApi": 35,
+      "ndk": "27.0.12077973",
+      "offline": true,
+      "gradleUserHome": "/workspace/.gradle-master-program-20261016 (existing cache)"
+    },
+    "redBaseline": {
+      "sourceSha": "49e4eb15a9ebd1e783a4b1724f9c1b0852d4c0e4",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "expectedFailure": "Explicit page break expected two traceable pages but parser returned one."
+    },
+    "api29CompatibilityAttempt": {
+      "sourceSha": "4c91d79fe8f9ffe052a33f710f5818afad5df446",
+      "gradleExitCode": 1,
+      "docxFocusedTests": 2,
+      "docxFocusedPassed": 2,
+      "officeRetrievalTests": 2,
+      "officeRetrievalSetupFailures": 2,
+      "cause": "Robolectric android-all-instrumented:10-robolectric-5803371-i7 missing from existing offline cache; network fetch failed Connection refused before test bodies."
+    },
+    "finalFocused": {
+      "sourceSha": "2646c745b6c3393fbdbdad1d49a1b1490a7cd3e8",
+      "commandFile": "attempts/attempt-03-location-final/command.txt",
+      "tests": 3,
+      "passed": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "durationSecondsWall": 123,
+      "gradleReportedDuration": "1m 43s",
+      "actionableTasks": 63,
+      "executedTasks": 3,
+      "upToDateTasks": 60,
+      "exitCode": 0,
+      "junit": "attempts/attempt-03-location-final/junit/TEST-com.localai.workspace.data.DocxStructureFidelityTest.xml",
+      "gradleLogContentSha256": "3b2eb654ea273443ff595aeb5c84aca37af86f32a6b38ca2e00fffff8b10e8c2",
+      "gradleLogGzipSha256": "68217f00ccb8896be138376a5e2150af703406c74a9f0055d12112c9413142b2",
+      "junitSha256": "18088fc84ca5e1ae713e1515c27588c2cb28da1a7bb469bc740089ea403f1663"
+    }
+  },
+  "notRun": {
+    "fullJvmSuite": true,
+    "liteRtCompatibility": true,
+    "lint": true,
+    "androidTestCompile": true,
+    "emulator": true,
+    "physicalDevice": true,
+    "apk": true
+  },
+  "sourceBacklogChanged": false,
+  "mainOrTagChanged": false,
+  "evidence": {
+    "results": "RESULTS.md",
+    "manifest": "SHA256SUMS",
+    "manifestEntries": 31,
+    "manifestScope": "All versioned payloads below this directory except SHA256SUMS; raw ignored .log files are archived losslessly as .log.gz."
+  }
+}

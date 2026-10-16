@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.data.DocxStructureFidelityTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-16T20:06:34" hostname="7023f296b5c7" time="12.452">
+  <properties/>
+  <testcase name="plainParagraphAndTableSeparatorsRemainCompatible" classname="com.localai.workspace.data.DocxStructureFidelityTest" time="12.079"/>
+  <testcase name="headingsTableLocationsAndExplicitPageBreaksRemainTraceable" classname="com.localai.workspace.data.DocxStructureFidelityTest" time="0.291"/>
+  <testcase name="tableHeaderEmptyCellsAndPageBreakBeforeRemainTraceable" classname="com.localai.workspace.data.DocxStructureFidelityTest" time="0.079"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,4 @@
+source SHA: 88e4c21899bac393e519ae0b655132bb4e97b83f
+Task :app:testDebugUnitTest: PASS, exit 0.
+Filtered class DocxStructureFidelityTest: 3 tests, 3 passed, 0 failures, 0 errors, 0 skipped.
+Gradle reports BUILD SUCCESSFUL. This was a single filtered class, not the full JVM suite or full HOST gate.

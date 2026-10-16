@@ -1,0 +1,11 @@
+sourceSha=2646c745b6c3393fbdbdad1d49a1b1490a7cd3e8
+branch=codex/master-program-20261016
+startedAtUtc=2026-10-16T20:04:45Z
+Gradle=8.10.2 wrapper
+runtimeJdk=openjdk version "17.0.20.1" 2026-08-18
+testWorkerJdk=/workspace/.toolchain/jdk-21-temurin (Gradle toolchain discovery)
+AndroidSdk=/workspace/.toolchain/android-sdk
+AndroidApi=35
+NDK=27.0.12077973
+GRADLE_USER_HOME=/workspace/.gradle-master-program-20261016 (existing populated cache; offline)
+network=disabled by Gradle --offline

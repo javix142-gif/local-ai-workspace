@@ -1,0 +1,3 @@
+finishedAtUtc=2026-10-16T19:53:44Z
+durationSeconds=111
+exitCode=1
