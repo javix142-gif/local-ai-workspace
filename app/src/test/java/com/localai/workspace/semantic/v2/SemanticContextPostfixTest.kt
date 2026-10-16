@@ -633,7 +633,7 @@ class SemanticContextPostfixTest {
         dao.activate(SemanticActiveIndex(scope.key,generation,"test-space"))
         dao.source(SemanticSourceRecord(source,scope.key,"DOCUMENT","private.txt","text/plain","private-path",1,1,"a".repeat(64)))
         dao.segment(SemanticSegmentRecord(segment,source,"TEXT","private synthetic evidence","private.txt",null,null,null,null,null,"b".repeat(64)))
-        dao.embedding(SemanticEmbeddingRecord(generation,segment,"test-space","test","test-model","c".repeat(64),2,true,"DOCUMENT","b".repeat(64),"RAW",byteArrayOf(0,0,0,0,0,0,128,63),1))
+        dao.embedding(SemanticEmbeddingRecord(generation,segment,"test-space","test","test-model","c".repeat(64),2,true,"DOCUMENT","b".repeat(64),"RAW",ByteArray(8),1))
 
         try {
             graph.workspace.deleteWorkspace(projectId)
