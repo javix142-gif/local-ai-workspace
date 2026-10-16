@@ -1,0 +1,79 @@
+{
+  "increment": "preparatory-M02-07-citation-source-navigation",
+  "status": "PREPARATORY_FOCUSED_HOST_PASS_DEVICE_GATE_PENDING",
+  "codeCommit": "ab0b14f128fdc12907391ddab0ca6f36f9f3465f",
+  "sourceTask": {
+    "id": "M02-07",
+    "sourceStatus": "TODO",
+    "requiresDevice": true,
+    "dependsOn": ["M02-05"],
+    "dependencyStatus": "M02-05 remains source TODO; its M02-01 and M01-05 prerequisites are not formally closed. This increment is preparatory only."
+  },
+  "sourcePlan": {
+    "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmap": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskIds": 97,
+    "uniqueTaskIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": {"TODO": 97},
+    "sourceFilesModified": false
+  },
+  "implementation": {
+    "citationRowsObserved": "By active conversation, grouped by assistant message; taps retain existing evidenceId callback.",
+    "legacySegment": "Exact segment ID plus cited document ID and active project identity.",
+    "semanticSegment": "Exact segment ID, DOCUMENT source, authorized state, expected project/session scope and exact local path; TEXT/CODE only.",
+    "fallback": "Saved citation excerpt with explicit segment-unavailable notice; no cross-document or cross-project search.",
+    "schemaOrMigrationChanged": false,
+    "retrievalOrInferenceChanged": false,
+    "permissionsOrDependenciesChanged": false
+  },
+  "host": {
+    "status": "FOCUSED_PASS",
+    "sourceCodeCommit": "ab0b14f128fdc12907391ddab0ca6f36f9f3465f",
+    "attempt": "attempts/attempt-06-focused-host",
+    "startedAtUtc": "2026-10-16T21:30:47Z",
+    "finishedAtUtc": "2026-10-16T21:31:49Z",
+    "durationSeconds": 62,
+    "gradle": "8.10.2",
+    "gradleRuntimeJdk": "Temurin 17.0.20.1",
+    "testWorkerJdk": "Temurin 21.0.12.1",
+    "androidSdk": "API 35 at /workspace/.toolchain/android-sdk",
+    "ndk": "27.0.12077973",
+    "offline": true,
+    "commandExitCode": 0,
+    "tests": 9,
+    "passed": 9,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "junit": [
+      {"file": "attempts/attempt-06-focused-host/TEST-com.localai.workspace.ui.CitationSourcePreviewTest.xml", "tests": 5, "failures": 0, "errors": 0, "skipped": 0},
+      {"file": "attempts/attempt-06-focused-host/TEST-com.localai.workspace.ui.ChatContentUiTest.xml", "tests": 2, "failures": 0, "errors": 0, "skipped": 0},
+      {"file": "attempts/attempt-06-focused-host/TEST-com.localai.workspace.data.WorkspaceCitationEvidenceMigrationTest.xml", "tests": 1, "failures": 0, "errors": 0, "skipped": 0},
+      {"file": "attempts/attempt-06-focused-host/TEST-com.localai.workspace.semantic.v2.SemanticStorageTest.xml", "tests": 1, "failures": 0, "errors": 0, "skipped": 0}
+    ],
+    "fullJvmGate": "NOT_RUN",
+    "lint": "NOT_RUN",
+    "androidTestCompile": "NOT_RUN"
+  },
+  "automatedPreviousSha": {
+    "sourceSha": "a42135088ad87d7a3e483570f3b915bdd34dd966",
+    "emulatorRun": 38967472318,
+    "emulatorStatus": "FAIL",
+    "reportedCases": {"total": 16, "passed": 9, "failed": 1, "errors": 0, "skipped": 6, "executed": 10},
+    "failure": "Historical Room v1 migration fixture missing WorkspaceDatabase/1.json",
+    "qaRun": 38967472333,
+    "qaStatus": "FAILED_CLOSED_NO_APK",
+    "artifactId": 12075588913,
+    "artifactBytes": 152260,
+    "artifactSha256": "94e9ee6060bab2bd2aa8e13af48d03f54515232821830b4cf5f55c415a04aa68",
+    "localDownload": "HTTP 403; digest and size came from Actions API, not local rehash"
+  },
+  "emulatorThisSource": "NOT_RUN_YET",
+  "physicalDevice": "NOT_RUN",
+  "apk": "NOT_BUILT",
+  "formalOriginalTaskCompletion": false,
+  "nextPreparationCandidate": "Review M02-06 stale-index reindex behavior/test gaps against its original DoD; preserve it as preparatory because M02-05 remains formally open."
+}

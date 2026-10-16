@@ -1,0 +1,4 @@
+:app:testDebugUnitTest --tests com.localai.workspace.ui.CitationSourcePreviewTest --tests com.localai.workspace.ui.ChatContentUiTest.citationDetailOffersAnActionToOpenItsIndexedSourceSegment --tests com.localai.workspace.ui.ChatContentUiTest.indexedSourcePreviewRetainsExactSegmentAndLocationAtLargeTextScale --tests com.localai.workspace.data.WorkspaceCitationEvidenceMigrationTest.version8CitationRowsSurviveAndV2CodeLineEvidenceCanBeStored --tests com.localai.workspace.semantic.v2.SemanticStorageTest.citationSegmentReadRequiresExactScopeAndAuthorizedDocumentPath = PASS (exit 0)
+JUnit: 9 tests, 9 passed, 0 failures, 0 errors, 0 skipped across 4 XML files.
+Gradle log: BUILD SUCCESSFUL in 1m; 63 actionable tasks, 3 executed, 60 up-to-date.
+Not reached by this command: full app JVM suite, LiteRT compatibility JVM suite, lintDebug, AndroidTest compilation, emulator and physical device.

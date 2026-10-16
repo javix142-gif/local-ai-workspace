@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.ChatContentUiTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-16T21:31:30" hostname="7023f296b5c7" time="11.8">
+  <properties/>
+  <testcase name="indexedSourcePreviewRetainsExactSegmentAndLocationAtLargeTextScale" classname="com.localai.workspace.ui.ChatContentUiTest" time="11.372"/>
+  <testcase name="citationDetailOffersAnActionToOpenItsIndexedSourceSegment" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.426"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
