@@ -81,15 +81,11 @@ class ArtifactSafExportUiTest {
         compose.onNodeWithTag("artifact-${revision.id}").assertIsDisplayed().performClick()
         compose.onNodeWithText("Preview changes").performClick()
         compose.onNodeWithText("Export saved v1").performScrollTo().assertIsDisplayed().performClick()
-        compose.waitUntil(10_000) {
-            runCatching {
-                compose.onNodeWithTag("artifact-status").assertTextContains("Exported and read back")
-            }.isSuccess
-        }
+        compose.waitUntil(10_000) { bytes.size() == expected.size }
 
         assertEquals("CreateDocument receives the artifact's suggested name",revision.name,registry.requestedName)
         assertArrayEquals("SAF destination bytes match the immutable verified artifact",expected,bytes.toByteArray())
-        compose.onNodeWithTag("artifact-status").assertTextContains(revision.name)
+        compose.onNodeWithTag("artifact-status").assertTextContains("Exported and read back: ${revision.name} · v${revision.version}")
         assertEquals(revision.sha256,ArtifactStore.hash(bytes.toByteArray()))
     }
 }
