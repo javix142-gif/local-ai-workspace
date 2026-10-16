@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-16T20:47:11" hostname="7023f296b5c7" time="14.839">
+  <properties/>
+  <testcase name="codeArchiveSearchKeepsRelativePathAndLineWithoutLeakingOtherProjects" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="14.649"/>
+  <testcase name="codeArchiveParserExcludesGitIgnoredDirectoryContent" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.188"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

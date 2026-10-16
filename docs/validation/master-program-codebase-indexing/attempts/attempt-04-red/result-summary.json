@@ -1,0 +1,22 @@
+{
+  "sourceSha": "dd4bd0c59098692557c8b10176dcf418f3cf8f25",
+  "status": "RED_REPRODUCED",
+  "startedAtUtc": "2026-10-16T20:37:42Z",
+  "finishedAtUtc": "2026-10-16T20:38:27Z",
+  "durationSeconds": 45.0,
+  "exitCode": 1,
+  "tests": 2,
+  "failures": 2,
+  "errors": 0,
+  "skipped": 0,
+  "failureDetails": [
+    {
+      "test": "codeArchiveSearchKeepsRelativePathAndLineWithoutLeakingOtherProjects",
+      "message": "org.junit.ComparisonFailure: expected:<s[rc/Answer.kt]> but was:<s[ource-archive.zip]>"
+    },
+    {
+      "test": "codeArchiveParserExcludesGitIgnoredDirectoryContent",
+      "message": "java.lang.AssertionError"
+    }
+  ]
+}

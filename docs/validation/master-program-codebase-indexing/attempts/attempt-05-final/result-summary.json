@@ -1,0 +1,47 @@
+{
+  "codeCommit": "1863a68e407fd40d10fcc4fb13d21afeef94d60b",
+  "codeTreeSha": "731ea3efba9fa4f84575fe2a730774c2491e614c",
+  "testRunHeadBeforeCommit": "dd4bd0c59098692557c8b10176dcf418f3cf8f25",
+  "sourceTreeWasStagedAndUncommittedAtRun": true,
+  "status": "FOCUSED_HOST_PASS",
+  "startedAtUtc": "2026-10-16T20:43:21Z",
+  "finishedAtUtc": "2026-10-16T20:47:27Z",
+  "wallSeconds": 246,
+  "gradleReported": "BUILD SUCCESSFUL in 4m 5s",
+  "exitCode": 0,
+  "gradleTasks": {
+    "actionable": 63,
+    "executed": 63
+  },
+  "tests": 5,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "junitSuites": [
+    {
+      "path": "attempts/attempt-05-final/junit/TEST-com.localai.workspace.semantic.v2.CodeSegmentsTest.xml",
+      "sha256": "3ef9fd975d60bf41751395e71a55fc0247de72efb2d098694cc5f2630306266d",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.004
+    },
+    {
+      "path": "attempts/attempt-05-final/junit/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml",
+      "sha256": "2ed521fbd0609c663a18334b723c5753f3eed783f3be1bc6f2a039679475bfa8",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 14.839
+    }
+  ],
+  "gradle": "8.10.2",
+  "gradleRuntimeJdk": "Temurin 17.0.20.1",
+  "testWorkerJdk": "Temurin 21.0.12.1",
+  "androidSdk": "/workspace/.toolchain/android-sdk",
+  "ndk": "27.0.12077973",
+  "offline": true,
+  "scope": "two code archive integration regressions plus existing CodeSegmentsTest; no full suite/lint/AndroidTest/device/APK"
+}

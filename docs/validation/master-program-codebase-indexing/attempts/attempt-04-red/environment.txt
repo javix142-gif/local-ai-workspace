@@ -1,0 +1,5 @@
+sourceCommit=dd4bd0c59098692557c8b10176dcf418f3cf8f25
+jdk17=/workspace/.toolchain/jdk-17-temurin openjdk version "17.0.20.1" 2026-08-18
+jdk21=/workspace/.toolchain/jdk-21-temurin openjdk version "21.0.12.1" 2026-08-18 LTS
+androidSdk=/workspace/.toolchain/android-sdk
+ndk=Pkg.Revision = 27.0.12077973
