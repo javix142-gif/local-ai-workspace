@@ -1,0 +1,1 @@
+Production files were staged at run time, and test source was commit 9cdee355943ff62656ad8973b13acb7b39766772. Full staged tree SHA 39217cec246002b38681374fa29594a68d77eb00. The run demonstrated path=src/Answer.kt and lineStart=1; the failure was the test draft expecting lineStart=3, whereas the stored code chunk covers lines 1-4.

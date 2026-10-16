@@ -1,0 +1,9 @@
+baseHead=9cdee355943ff62656ad8973b13acb7b39766772
+testedTreeSha=39217cec246002b38681374fa29594a68d77eb00
+workingTreeProductionSources=staged
+jdk17=/workspace/.toolchain/jdk-17-temurin
+jdk21=/workspace/.toolchain/jdk-21-temurin
+androidSdk=/workspace/.toolchain/android-sdk
+ndk=27.0.12077973
+gradle=8.10.2
+network=offline

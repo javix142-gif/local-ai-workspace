@@ -67,5 +67,182 @@
   "fullJvmGate": "NOT_RUN",
   "lint": "NOT_RUN",
   "androidTest": "NOT_RUN",
-  "apk": "NOT_GENERATED"
+  "apk": "NOT_GENERATED",
+  "implementationCommits": [
+    "dd4bd0c59098692557c8b10176dcf418f3cf8f25",
+    "1863a68e407fd40d10fcc4fb13d21afeef94d60b",
+    "9cdee355943ff62656ad8973b13acb7b39766772",
+    "a6037e8d0260386a4f42448b05f81c251208ea7e"
+  ],
+  "finalCodeCommit": "a6037e8d0260386a4f42448b05f81c251208ea7e",
+  "finalCodeTreeSha": "8a67620f2a00e5df4a0c6717944c6c3e450beead",
+  "status": "PREPARATORY_FOCUSED_HOST_PASS_DEPENDENCY_BLOCKED",
+  "lexicalFallbackFollowUp": {
+    "name": "Lexical fallback source path and line provenance for code archives",
+    "status": "PREPARATORY_FOCUSED_HOST_PASS_DEPENDENCY_BLOCKED",
+    "formalOriginalTaskCompletion": false,
+    "sourceTaskStatus": "TODO",
+    "formalTask": "M02-08 remains preparatory only; it depends on M02-05 and the chain through M02-01/M00-10 remains formally open.",
+    "baseFeatureHead": "661c7e2a83b9f629f79dd79175da19337a6d7a3d",
+    "codeCommits": [
+      "9cdee355943ff62656ad8973b13acb7b39766772",
+      "a6037e8d0260386a4f42448b05f81c251208ea7e"
+    ],
+    "finalCodeCommit": "a6037e8d0260386a4f42448b05f81c251208ea7e",
+    "testedCodeTreeSha": "8a67620f2a00e5df4a0c6717944c6c3e450beead",
+    "finding": "Legacy lexical retrieval of a code archive used the archive display name and did not preserve source line coordinates in final ContextBundle provenance.",
+    "change": [
+      "DocumentIngestion marks a standalone recognized code document with its source display path so shared code chunking can retain line bounds.",
+      "SemanticRetrievalService resolves path/line metadata from the authorized current source or bounded CodebaseArchive and emits line bounds only when source chunk sequence matches stored segments.",
+      "ContextFoundation carries legacy evidence line bounds into ContextProvenance; final context/citation retain the selected source path and stored chunk interval."
+    ],
+    "redReproduction": {
+      "sourceCommit": "9cdee355943ff62656ad8973b13acb7b39766772",
+      "attempt": "docs/validation/master-program-codebase-indexing/attempts/attempt-06-lexical-red",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 1,
+      "failure": "Expected src/Answer.kt; actual provenance title was archive-lexical-doc.zip.",
+      "junit": "NOT_PRESERVED; a later Gradle invocation replaced test-results before copying. Full compressed Gradle log retains the failing assertion.",
+      "rawLogSha256": "4e106e7c8a45268487d4b06bf6fe317a6db505f8773aa6113db2278613384646",
+      "compressedLogSha256": "41e32e677092353b56163aeb4928e8d1c39f9aa1a74a0b5477f2eabe316dfa61"
+    },
+    "diagnosticAttempt": {
+      "attempt": "docs/validation/master-program-codebase-indexing/attempts/attempt-07-line-range-diagnostic",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 1,
+      "failure": "Expected lineStart 3 but got 1 because the stored CodeLineChunker segment spans source lines 1–4.",
+      "classification": "TEST_EXPECTATION_MISMATCH_NOT_PRODUCT_FAILURE; assertion was corrected to the actual whole stored chunk interval, preserving path and line coverage."
+    },
+    "focusedPass": {
+      "attempt": "docs/validation/master-program-codebase-indexing/attempts/attempt-08-lexical-final",
+      "testedTreeSha": "8a67620f2a00e5df4a0c6717944c6c3e450beead",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "wallSeconds": 62,
+      "gradleReported": "BUILD SUCCESSFUL in 1m 2s",
+      "gradleTasks": {
+        "actionable": 63,
+        "executed": 3,
+        "upToDate": 60
+      },
+      "junitSha256": "a91492c33e828365214108c5f6edc851268204639ad81cf4e4b3a3c3f0ed2266"
+    },
+    "exactCommittedSourceRun": {
+      "attempt": "docs/validation/master-program-codebase-indexing/attempts/attempt-09-committed-source-final",
+      "sourceCommit": "a6037e8d0260386a4f42448b05f81c251208ea7e",
+      "sourceTreeSha": "8a67620f2a00e5df4a0c6717944c6c3e450beead",
+      "command": "attempts/attempt-09-committed-source-final/command.txt",
+      "startedAtUtc": "2026-10-16T21:02:43Z",
+      "finishedAtUtc": "2026-10-16T21:03:15Z",
+      "wallSeconds": 32,
+      "exitCode": 0,
+      "gradleReported": "BUILD SUCCESSFUL in 32s",
+      "gradleTasks": {
+        "actionable": 63,
+        "executed": 1,
+        "upToDate": 62
+      },
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "junit": [
+        {
+          "path": "attempts/attempt-09-committed-source-final/junit/TEST-com.localai.workspace.semantic.v2.CodeSegmentsTest.xml",
+          "sha256": "30372d0569d92abf3207a8cb436a44e752c51b29bc0fa69aef99516ce8536988",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "attempts/attempt-09-committed-source-final/junit/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml",
+          "sha256": "d1e10faa0a15cdafd11fb4c78e4d8005e77eba4c9456d68bceef259abf5bfea2",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "rawLogSha256": "93f26494b0d600fd6f2fc729e6f8493085e8685aa368b71102b4fef5ae310b49",
+      "compressedLogSha256": "db9c7bc079b837efe11f6809f934e596a8fda96bdce7f15fc3a8b9d739bd69c5",
+      "toolchain": {
+        "gradle": "8.10.2",
+        "gradleRuntime": "Temurin 17.0.20.1",
+        "testWorker": "Temurin 21.0.12.1",
+        "androidSdk": "/workspace/.toolchain/android-sdk",
+        "ndk": "27.0.12077973",
+        "network": "offline"
+      },
+      "notRun": {
+        "fullAppJvm": "NOT_RUN",
+        "liteRtCompat": "NOT_RUN",
+        "lint": "NOT_RUN",
+        "androidTestCompile": "NOT_RUN",
+        "emulator": "NOT_RUN",
+        "physicalDevice": "NOT_RUN",
+        "apk": "NOT_GENERATED"
+      }
+    },
+    "limitations": [
+      "M02-08 still depends on open M02-05/M02-01/M00-10; no formal task completion.",
+      "Code path/line references are bounded to recognized source formats, current authorized source, supported archive limits and exact matching stored chunks; no symbol-aware parsing.",
+      "Git ignore support is a bounded subset; unsupported syntax rejects the archive.",
+      "No full JVM gate, lint, AndroidTest compile, emulator, Motorola, APK or device-performance measurement."
+    ],
+    "sourcePlan": {
+      "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+      "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+      "roadmapPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+      "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+      "taskCount": 97,
+      "uniqueIds": 97,
+      "dependencyEdges": 120,
+      "sourceStatuses": {
+        "TODO": 97
+      },
+      "originalsEdited": false
+    },
+    "evidence": "docs/validation/master-program-codebase-indexing/RESULTS.md",
+    "nextPreparatoryIncrement": "Reconcile the authentic backlog dependencies before choosing another preparatory ID; preserve all source TODO statuses and do not claim M02-05/M02-08 complete."
+  },
+  "previousPublishedAutomationRun": {
+    "sourceCommit": "661c7e2a83b9f629f79dd79175da19337a6d7a3d",
+    "emulatorRunId": 38965340181,
+    "emulatorRunUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38965340181",
+    "emulatorConclusion": "FAIL",
+    "startedAtUtc": "2026-10-16T20:52:17Z",
+    "completedAtUtc": "2026-10-16T21:06:55Z",
+    "avdBoot": "PASS",
+    "connectedInstrumentationTask": "EXECUTED_FAIL",
+    "gradleExitCode": 1,
+    "junitXmlFiles": 1,
+    "tests": 16,
+    "passed": 9,
+    "failed": 1,
+    "errors": 0,
+    "skipped": 6,
+    "executed": 10,
+    "failure": "Historical Room v1 migration fixture remains unavailable; six model-dependent tests skipped.",
+    "artifactId": 12074682795,
+    "artifactName": "android-emulator-evidence-38965340181-1",
+    "artifactBytes": 151132,
+    "artifactSha256": "8a8c4b67bc0eb2f2c873e9025ec62c2e8b0c18f52f6e56618c35a7dc2cd9ff5b",
+    "artifactUrl": "https://api.github.com/repos/javix142-gif/local-ai-workspace/actions/artifacts/12074682795",
+    "artifactReadback": "GitHub API reports artifact available; gh run download returned HTTP 403 Forbidden for its signed blob URL, so payload was not rehashed locally.",
+    "qaRunId": 38965340152,
+    "qaRunUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38965340152",
+    "qaConclusion": "FAIL_CLOSED_ANDROID_INSTRUMENTATION_NOT_SUCCESSFUL",
+    "apk": "NOT_BUILT_OR_UPLOADED",
+    "relevance": "This automatic run tested previous published source 661c7e2 and is not validation of final local code a6037e8."
+  }
 }

@@ -1,0 +1,5 @@
+sourceCommit=a6037e8d0260386a4f42448b05f81c251208ea7e
+sourceTreeSha=8a67620f2a00e5df4a0c6717944c6c3e450beead
+runCheckoutHead=a6037e8d0260386a4f42448b05f81c251208ea7e
+trackedSourceTreeUnchangedDuringRun=true
+command=command.txt

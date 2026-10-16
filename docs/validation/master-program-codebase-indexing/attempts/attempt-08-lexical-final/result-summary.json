@@ -1,0 +1,29 @@
+{
+  "status": "FOCUSED_HOST_PASS",
+  "baseHeadAtRun": "9cdee355943ff62656ad8973b13acb7b39766772",
+  "testedTreeSha": "8a67620f2a00e5df4a0c6717944c6c3e450beead",
+  "startedAtUtc": "2026-10-16T21:00:58Z",
+  "finishedAtUtc": "2026-10-16T21:02:01Z",
+  "wallSeconds": 62,
+  "exitCode": 0,
+  "gradleReported": "BUILD SUCCESSFUL in 1m 2s",
+  "tasks": {
+    "actionable": 63,
+    "executed": 3,
+    "upToDate": 60
+  },
+  "tests": 1,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "junitPath": "attempt-08-lexical-final/junit/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml",
+  "junitSha256": "a91492c33e828365214108c5f6edc851268204639ad81cf4e4b3a3c3f0ed2266",
+  "gradleLogSha256": "1030716f6e7d2ac4e7f4df12b6b737368da8ddccb051fa69d9dccc1fae3c073d",
+  "compressedGradleLogSha256": "059f81c05e2225263c04f4c17e7fd629284deef31ba7ff81e7b85aa8c5cfa7d4",
+  "gradle": "8.10.2",
+  "runtimeJdk": "Temurin 17.0.20.1",
+  "testWorkerJdk": "Temurin 21.0.12.1",
+  "androidSdk": "/workspace/.toolchain/android-sdk",
+  "ndk": "27.0.12077973",
+  "offline": true
+}

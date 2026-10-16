@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-16T21:01:53" hostname="7023f296b5c7" time="7.169">
+  <properties/>
+  <testcase name="lexicalCodeArchiveFallbackKeepsRelativePathAndLineInFinalContext" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="7.169"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

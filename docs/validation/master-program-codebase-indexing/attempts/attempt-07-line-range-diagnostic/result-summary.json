@@ -1,0 +1,17 @@
+{
+  "status": "FAIL_TEST_EXPECTATION_MISMATCH_NOT_PRODUCT_FAILURE",
+  "sourceCommitAtRun": "9cdee355943ff62656ad8973b13acb7b39766772",
+  "sourceTreeSha": "39217cec246002b38681374fa29594a68d77eb00",
+  "startedAtUtc": "2026-10-16T20:57:00Z",
+  "finishedAtUtc": "2026-10-16T21:00:16Z",
+  "exitCode": 1,
+  "tests": 1,
+  "failures": 1,
+  "errors": 0,
+  "skipped": 0,
+  "failureMessage": "java.lang.AssertionError: expected:<3> but was:<1>",
+  "interpretation": "Production now returned the relative archive path; CodeLineChunker reports the complete stored source chunk as lines 1-4, while this test draft expected only the function declaration line 3. Test expectation is being corrected to assert the actual chunk range without weakening path/line coverage.",
+  "junitSha256": "3879268991ec29c772715b877ec1ee285d33e91bcaef4460105dcdbfd3e3c1ab",
+  "gradleLogSha256": "2766e993898a45eae88b2d88520059ac5fe98a75d1dfb4f9de96e29dd305c90e",
+  "compressedGradleLogSha256": "bef601fe44edc4146257a3530d954fd157b77d65ba0237ff6a570753085ff301"
+}

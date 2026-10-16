@@ -1,0 +1,86 @@
+{
+  "sourceCommit": "a6037e8d0260386a4f42448b05f81c251208ea7e",
+  "sourceTreeSha": "8a67620f2a00e5df4a0c6717944c6c3e450beead",
+  "status": "FOCUSED_HOST_PASS",
+  "startedAtUtc": "2026-10-16T21:02:43Z",
+  "finishedAtUtc": "2026-10-16T21:03:15Z",
+  "wallSeconds": 32,
+  "exitCode": 0,
+  "gradleReported": "BUILD SUCCESSFUL in 32s",
+  "gradleTasks": {
+    "actionable": 63,
+    "executed": 1,
+    "upToDate": 62
+  },
+  "tests": 6,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "junitSuites": [
+    {
+      "path": "junit/TEST-com.localai.workspace.semantic.v2.CodeSegmentsTest.xml",
+      "sha256": "30372d0569d92abf3207a8cb436a44e752c51b29bc0fa69aef99516ce8536988",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.028,
+      "cases": [
+        {
+          "class": "com.localai.workspace.semantic.v2.CodeSegmentsTest",
+          "name": "oversizedSingleLineIsExplicitFailure",
+          "status": "PASS"
+        },
+        {
+          "class": "com.localai.workspace.semantic.v2.CodeSegmentsTest",
+          "name": "preservesLinesAndRelativePositions",
+          "status": "PASS"
+        },
+        {
+          "class": "com.localai.workspace.semantic.v2.CodeSegmentsTest",
+          "name": "retainsLeadingBlankLineProvenance",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "junit/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml",
+      "sha256": "d1e10faa0a15cdafd11fb4c78e4d8005e77eba4c9456d68bceef259abf5bfea2",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 8.022,
+      "cases": [
+        {
+          "class": "com.localai.workspace.semantic.v2.SemanticContextPostfixTest",
+          "name": "codeArchiveSearchKeepsRelativePathAndLineWithoutLeakingOtherProjects",
+          "status": "PASS"
+        },
+        {
+          "class": "com.localai.workspace.semantic.v2.SemanticContextPostfixTest",
+          "name": "lexicalCodeArchiveFallbackKeepsRelativePathAndLineInFinalContext",
+          "status": "PASS"
+        },
+        {
+          "class": "com.localai.workspace.semantic.v2.SemanticContextPostfixTest",
+          "name": "codeArchiveParserExcludesGitIgnoredDirectoryContent",
+          "status": "PASS"
+        }
+      ]
+    }
+  ],
+  "runtime": "Gradle 8.10.2, JDK 17",
+  "testWorker": "JDK 21 available through Gradle toolchain discovery",
+  "androidSdk": "/workspace/.toolchain/android-sdk",
+  "ndk": "27.0.12077973",
+  "offline": true,
+  "fullJvmGate": "NOT_RUN",
+  "lint": "NOT_RUN",
+  "androidTestCompile": "NOT_RUN",
+  "emulator": "NOT_RUN",
+  "physicalDevice": "NOT_RUN",
+  "apk": "NOT_GENERATED",
+  "runtimeJdkVersion": "Temurin 17.0.20.1+1",
+  "workerJdkVersion": "Temurin 21.0.12.1+1 LTS"
+}
