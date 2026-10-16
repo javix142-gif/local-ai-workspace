@@ -26,7 +26,12 @@
     "statuses": {
       "TODO": 97
     },
-    "changed": false
+    "changed": false,
+    "taskIds": 97,
+    "uniqueTaskIds": 97,
+    "sourceStatuses": {
+      "TODO": 97
+    }
   },
   "backup": {
     "path": "/workspace/backups/aws-pre-resume-20261016-215330",
@@ -235,8 +240,130 @@
   "formalOriginalTasksCompleted": [],
   "evidenceBundle": {
     "manifest": "docs/validation/master-program-code-patch/SHA256SUMS",
-    "payloadEntriesExcludingManifest": 47,
+    "payloadEntriesExcludingManifest": 54,
     "verificationCommand": "sha256sum -c docs/validation/master-program-code-patch/SHA256SUMS",
-    "verificationScope": "All 47 currently preserved payload files, including raw attempt logs, command/environment/outcome records, JUnit XML, lint report, RESULTS.md and RESULTS.json."
+    "verificationScope": "All 54 preserved evidence payload files, including host attempts, JUnit XML, lint report, exact-source Actions emulator artifact ZIP and summary, personal QA RESULTS/SHA256SUMS, RUN_READBACK.md and RESULTS files."
+  },
+  "actionsValidation": {
+    "sourceCommit": "9cfb0d8112342ee097ac64aa573e5d35b446f834",
+    "featureBranch": "feat/0.5.0-skills-agents",
+    "androidEmulator": {
+      "runId": 38974433001,
+      "jobId": 117220332118,
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38974433001",
+      "status": "FAIL",
+      "startedAtUtc": "2026-10-16T22:13:23Z",
+      "finishedAtUtc": "2026-10-16T22:27:41Z",
+      "workflow": ".github/workflows/android-emulator-instrumented.yml",
+      "task": ":app:connectedDebugAndroidTest",
+      "gradleExitCode": 1,
+      "api": 35,
+      "abi": "x86_64",
+      "adbConnected": true,
+      "xmlCount": 1,
+      "counts": {
+        "total": 16,
+        "passed": 9,
+        "failed": 1,
+        "errors": 0,
+        "skipped": 6,
+        "executed": 10
+      },
+      "failure": {
+        "test": "com.localai.workspace.data.WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords",
+        "reason": "Room MigrationTestHelper could not load the authentic com.localai.workspace.data.WorkspaceDatabase/1.json. No schema or migration test was fabricated/changed."
+      },
+      "skippedModelTests": [
+        "LiteRtLmDeviceSmokeTest.normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole",
+        "LiteRtLmDeviceSmokeTest.cpuFirstTokenStreamingCompletionCancelRetryAndUnload",
+        "NormalChatNativeDeviceTest.plain_chat_legacy_off_real_native",
+        "NormalChatNativeDeviceTest.plain_chat_context_v1_on_real_native",
+        "NormalChatNativeDeviceTest.cancel_then_retry_real_native",
+        "NormalChatNativeDeviceTest.project_chat_context_v1_on_real_native"
+      ],
+      "headerCaptures": {
+        "standard": {
+          "status": "PASS",
+          "bytes": 47792,
+          "sha256": "214f9e93a5f68d47b1e2825fcf0bc4727f91e0d60073c024746673397441084f",
+          "dimensions": "1080x1920"
+        },
+        "largeFont": {
+          "status": "MISSING_IN_ARTIFACT",
+          "reason": "CAPTURE_END_MISSING; SHA256_MISMATCH"
+        }
+      },
+      "collectorNotes": {
+        "applicationApkInstalledAfterTests": false,
+        "interpretation": "post-run package-state check only; does not establish that installation failed before tests"
+      },
+      "artifact": {
+        "id": 12078013782,
+        "name": "android-emulator-evidence-38974433001-1",
+        "bytes": 82124,
+        "sha256": "2633ee3a938e65ab86575c6520a206393215030b0ca3a6a3163278ebc58e30bf",
+        "expiresAtUtc": "2026-10-23T22:27:37Z",
+        "localFile": "docs/validation/master-program-code-patch/actions/emulator-38974433001/android-emulator-evidence.zip"
+      },
+      "deviceClass": "EMULATOR_NOT_PHYSICAL",
+      "physicalDevice": "NOT_RUN"
+    },
+    "personalQa": {
+      "runId": 38975236297,
+      "jobId": 117222974355,
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38975236297",
+      "status": "PASS_PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
+      "event": "workflow_dispatch",
+      "workflow": ".github/workflows/qa-personal-debug-arm64.yml",
+      "sourceCommit": "9cfb0d8112342ee097ac64aa573e5d35b446f834",
+      "startedAtUtc": "2026-10-16T22:21:27.015351+00:00",
+      "completedAtUtc": "2026-10-16T22:28:31.941053+00:00",
+      "command": "./gradlew :app:clean :app:assembleDebug -Parm64Only=true --no-daemon --no-parallel --max-workers=2 --stacktrace --console=plain",
+      "apk": {
+        "filename": "local-ai-workspace-0.5.0-debug-arm64.apk",
+        "bytes": 120051674,
+        "sha256": "fc18e2d802814cf0e37b1a8edbc81d73740a9a8cd849684e5153e5bf1953730f",
+        "applicationId": "com.localai.workspace.debug",
+        "versionName": "0.5.0-debug",
+        "versionCode": 27,
+        "abi": "arm64-v8a only",
+        "nativeLibraries": 9,
+        "modelsIncluded": false,
+        "signature": "APK v2 PASS",
+        "certificateSha256": "635bc83888b30d6cdc1fcd62b2984e94fbae04db5619c2baf061b53a2656977b",
+        "zipCrc": "PASS",
+        "zipalign": "PASS"
+      },
+      "instrumentation": "NOT_RUN by this workflow; separate emulator run above failed",
+      "artifact": {
+        "id": 12078078659,
+        "name": "local-ai-workspace-personal-qa-debug-arm64-38975236297-1",
+        "bytes": 48074199,
+        "sha256": "2275b4382b63903f8c1afb7b2b1c26181fba81bc36f546c949ad866ef23fb491",
+        "expiresAtUtc": "2026-11-15T22:28:32Z",
+        "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38975236297/artifacts/12078078659"
+      },
+      "drive": {
+        "id": "1kiiLJWiW-dnCnArZVw4TVj6GIcXdPWri",
+        "url": "https://drive.google.com/file/d/1kiiLJWiW-dnCnArZVw4TVj6GIcXdPWri/view?usp=drivesdk",
+        "name": "local-ai-workspace-0.5.0-debug-arm64-QA-9cfb0d8.apk.zip",
+        "mimeType": "application/zip",
+        "bytes": 46508187,
+        "sha256": "da911324c5d1ef81a4b81667b63d113bed236f06a5fba5672b0c5d21992642ca",
+        "readbackBytesMatch": true,
+        "members": [
+          "local-ai-workspace-0.5.0-debug-arm64.apk"
+        ],
+        "apkSha256": "fc18e2d802814cf0e37b1a8edbc81d73740a9a8cd849684e5153e5bf1953730f",
+        "directApkUpload": "REJECTED_HTTP_413_FILE_TOO_LARGE_LIMIT_104857600",
+        "note": "One-member ZIP is used because Drive connector rejects the 120051674-byte APK; extracting yields the exact validated APK bytes."
+      },
+      "updateCompatibility": {
+        "status": "NOT_COMPATIBLE_WITH_LAST_RECORDED_PERSONAL_APK_SIGNER",
+        "currentCertificateSha256": "635bc83888b30d6cdc1fcd62b2984e94fbae04db5619c2baf061b53a2656977b",
+        "previousRecordedCertificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
+        "safeInstall": "Do not install as an update over the previous APK. Different signing certificate means Android rejects update; uninstall could remove local app data."
+      }
+    }
   }
 }

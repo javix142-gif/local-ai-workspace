@@ -1,0 +1,58 @@
+{
+  "status": "PASS",
+  "artifactType": "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
+  "sourceCommit": "9cfb0d8112342ee097ac64aa573e5d35b446f834",
+  "eventCommit": "9cfb0d8112342ee097ac64aa573e5d35b446f834",
+  "branchRef": "refs/heads/feat/0.5.0-skills-agents",
+  "runId": "38975236297",
+  "runAttempt": "1",
+  "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38975236297",
+  "startedAtUtc": "2026-10-16T22:21:27.015351+00:00",
+  "buildCommand": "./gradlew :app:clean :app:assembleDebug -Parm64Only=true --no-daemon --no-parallel --max-workers=2 --stacktrace --console=plain",
+  "buildEnvironment": {
+    "runner": "GitHub-hosted ubuntu-24.04",
+    "jdk": "Temurin 17",
+    "gradleWrapper": "8.10.2",
+    "androidPlatform": "35",
+    "buildTools": "35.0.0",
+    "ndk": "27.0.12077973",
+    "cmake": "3.31.6",
+    "requestedAbi": "arm64-v8a"
+  },
+  "emulator": "NOT_RUN",
+  "physicalDevice": "NOT_RUN",
+  "debugKeystoreExported": false,
+  "completedAtUtc": "2026-10-16T22:28:31.941053+00:00",
+  "stage": "APK_VERIFIED",
+  "apk": {
+    "filename": "local-ai-workspace-0.5.0-debug-arm64.apk",
+    "bytes": 120051674,
+    "sha256": "fc18e2d802814cf0e37b1a8edbc81d73740a9a8cd849684e5153e5bf1953730f",
+    "packageName": "com.localai.workspace.debug",
+    "versionCode": 27,
+    "versionName": "0.5.0-debug",
+    "abis": [
+      "arm64-v8a"
+    ],
+    "nativeLibraryCount": 9,
+    "signatureVerified": true,
+    "signingVariant": "Gradle Debug build type; temporary standard Android debug keystore",
+    "certificateDn": "C=US, O=Android, CN=Android Debug",
+    "certificateSha256": "635bc83888b30d6cdc1fcd62b2984e94fbae04db5619c2baf061b53a2656977b"
+  },
+  "validation": {
+    "apksigner": "PASS",
+    "packageAndVersion": "PASS",
+    "arm64Only": "PASS",
+    "noReleaseSigningKeyExported": true,
+    "apkZipIntegrity": "PASS",
+    "zipalign": "PASS"
+  },
+  "warning": "Personal Debug QA build. Not a Release, production distribution, emulator test, or physical-device validation.",
+  "androidInstrumentation": {
+    "status": "NOT_RUN",
+    "reason": "This personal APK workflow does not invoke connected or instrumented tests."
+  },
+  "instrumentedTests": "NOT_RUN",
+  "workflowJobStatus": "SUCCESS"
+}
