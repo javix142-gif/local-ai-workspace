@@ -3,6 +3,7 @@ package com.localai.workspace.artifacts
 import android.app.Application
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
+import com.localai.workspace.data.AssistantRouting
 import com.localai.workspace.documents.StructuredDocuments
 import org.json.JSONArray
 import org.json.JSONObject
@@ -20,6 +21,11 @@ import java.util.zip.ZipFile
 @Config(sdk=[35],application=Application::class)
 class XlsxArtifactRevisionTest {
     private val context:Context get()=ApplicationProvider.getApplicationContext()
+
+    @Test fun explicitSpreadsheetCellChangeRoutesToBoundedCellEditTool() {
+        val enabled=setOf("artifacts.xlsxSetCells")
+        assertEquals(enabled,AssistantRouting.tools(enabled,"Actualiza la celda A2 del Excel",documents=false))
+    }
 
     @Test fun editingDependencyRetainsFormulaAndCachedValueAcrossSavedVersionsWithoutClaimingRecalculation() {
         val root=File(context.cacheDir,"xlsx-revision-${UUID.randomUUID()}")
