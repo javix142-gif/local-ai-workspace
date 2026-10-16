@@ -10,6 +10,9 @@ object RetrievalQuery {
     private val ignored = setOf("el", "la", "los", "las", "de", "del", "en", "con", "por", "para", "que", "cual", "cuales", "como", "una", "uno", "un", "me", "mi", "mis", "es", "son", "se", "si", "no", "puedes", "puede", "quiero", "sobre", "the", "of", "and", "this", "that", "what", "is", "my", "can", "you", "file", "document", "archivo", "archivos", "documento", "documentos", "adjunto", "adjuntos", "resume", "resumen", "analiza", "leer", "lee", "contiene", "dice")
     fun terms(text: String) = Regex("[\\p{L}\\p{N}]{2,}").findAll(normalize(text)).map { it.value }
         .filter { it !in ignored }.distinct().take(24).toList()
+    /** Explicit locator syntax only; unsupported abbreviations do not imply a page constraint. */
+    fun exactPageNumber(text: String): Int? = Regex("\\b(?:pagina|page)\\s+([1-9][0-9]{0,3})\\b")
+        .find(normalize(text))?.groupValues?.getOrNull(1)?.toIntOrNull()
     fun refersToDocument(text: String) = Regex("\\b(archivo[s]?|documento[s]?|adjunto[s]?|pdf|informe|file[s]?|document[s]?|resume|resumen|summari[sz]e)\\b")
         .containsMatchIn(normalize(text))
 }

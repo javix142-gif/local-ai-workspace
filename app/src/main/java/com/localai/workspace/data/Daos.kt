@@ -189,6 +189,9 @@ interface DocumentDao {
     @Query("SELECT s.* FROM document_segments s INNER JOIN documents d ON s.documentId=d.id WHERE d.projectId=:projectId AND d.id IN (:documentIds) AND d.extractionStatus='READY' AND d.indexingStatus='READY' ORDER BY s.documentId, s.segmentIndex, s.id LIMIT :limit")
     suspend fun segmentsForDocuments(projectId: String, documentIds: List<String>, limit: Int): List<DocumentSegmentEntity>
 
+    @Query("SELECT s.* FROM document_segments s INNER JOIN documents d ON s.documentId=d.id WHERE d.projectId=:projectId AND d.id IN (:documentIds) AND d.extractionStatus='READY' AND d.indexingStatus='READY' AND s.pageStart IS NOT NULL AND s.pageStart<=:pageNumber AND COALESCE(s.pageEnd,s.pageStart)>=:pageNumber ORDER BY s.documentId, s.segmentIndex, s.id LIMIT :limit")
+    suspend fun segmentsForPageInDocuments(projectId: String, documentIds: List<String>, pageNumber: Int, limit: Int): List<DocumentSegmentEntity>
+
     @Query("SELECT * FROM document_segments WHERE documentId = :documentId ORDER BY segmentIndex")
     suspend fun segmentsForDocument(documentId: String): List<DocumentSegmentEntity>
 

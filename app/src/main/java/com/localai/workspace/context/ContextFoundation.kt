@@ -3,6 +3,7 @@ package com.localai.workspace.context
 import android.content.Context
 import com.localai.workspace.AppGraph
 import com.localai.workspace.domain.model.*
+import com.localai.workspace.rag.RetrievalQuery
 import com.localai.workspace.semantic.v2.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -86,6 +87,7 @@ class ContextFoundation(private val graph:AppGraph, private val semanticLayerPro
         val memoryMs=(System.nanoTime()-memoryStart)/1_000_000
         access.projectId?.let{id->database.dao().brief(id)?.let{all+=ContextItem("P1",ContextKind.PROJECT,it.markdown(),SemanticScope(ScopeType.PROJECT,id),ContextTrust.USER_PROJECT_DATA,70,provenance=ContextProvenance(sourceId=id))}}
         val retrieveStart=System.nanoTime()
+        val exactPage=RetrievalQuery.exactPageNumber(request.query)
         val sourceScope=access.projectId?.let{SemanticScope(ScopeType.PROJECT,it)} ?: SemanticScope(ScopeType.GLOBAL)
         val layer=semanticLayerProvider()
         var sourceNotice:String?=null
@@ -95,7 +97,7 @@ class ContextFoundation(private val graph:AppGraph, private val semanticLayerPro
         }
         val v2Hits=if(canUseV2)try {
             layer.search(SemanticInput.Text(request.query),sourceScope,setOf(SemanticModality.TEXT,SemanticModality.CODE),limit=4,documentIds=request.selectedDocumentIds)
-                .filter { it.content!=null && it.modality in setOf(SemanticModality.TEXT,SemanticModality.CODE) }
+                .filter { it.content!=null && it.modality in setOf(SemanticModality.TEXT,SemanticModality.CODE) && (exactPage==null || it.page==exactPage) }
         }catch(cancel:CancellationException){throw cancel}catch(failure:Exception){
             sourceNotice="SOURCE_SEMANTIC_V2_SKIPPED:${if(failure is SemanticFailure)failure.code.name else failure.javaClass.simpleName};LEGACY_FALLBACK"
             emptyList()
@@ -170,15 +172,22 @@ class ContextFoundation(private val graph:AppGraph, private val semanticLayerPro
         } else if(request.sourceRetrievalMode!=SourceRetrievalMode.DISABLED) {
             // The retrieval policy, not whether a legacy list happens to be null or empty,
             // decides whether Semantic V2 runs and whether lexical fallback is required.
+            fun matchesRequestedPage(item:Evidence):Boolean {
+                if(exactPage==null)return true
+                val start=item.pageStart ?: return false
+                val end=item.pageEnd ?: start
+                return exactPage in start..end
+            }
+            val precomputed=evidence.orEmpty().filter(::matchesRequestedPage)
             val sources=when {
-                evidence?.isNotEmpty()==true -> evidence
+                precomputed.isNotEmpty() -> precomputed
                 access.projectId!=null -> graph.retrieval.retrieve(access.projectId,request.query,documentIds=request.selectedDocumentIds)
                 else -> emptyList()
             }
             val allowedSources=sources.filter { e->
                 val original=graph.database.documentDao().get(e.documentId)
                 check(original!=null&&original.projectId==access.projectId){"SOURCE_SCOPE_MISMATCH"}
-                request.selectedDocumentIds.isEmpty() || e.documentId in request.selectedDocumentIds
+                (request.selectedDocumentIds.isEmpty() || e.documentId in request.selectedDocumentIds) && matchesRequestedPage(e)
             }
             suspend fun addLegacyExcerpt(primary:Evidence,excerpt:ContextEvidenceExcerpt,related:List<Evidence>) {
                 val relatedIds=related.map{it.segmentId.toString()}.distinct()

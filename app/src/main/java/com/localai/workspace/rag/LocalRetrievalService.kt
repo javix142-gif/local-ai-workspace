@@ -18,10 +18,16 @@ class LocalRetrievalService(private val documents: DocumentDao, private val embe
         if (query.isBlank() || limit <= 0 || (documentIds.isEmpty() && RetrievalQuery.greeting(query))) return@withContext emptyList()
         val ready = documents.forProject(projectId).filter { it.extractionStatus == "READY" && it.indexingStatus == "READY" }
         if (ready.isEmpty()) return@withContext emptyList()
+        val exactPage = RetrievalQuery.exactPageNumber(query)
         val terms = RetrievalQuery.terms(query)
         val selected = if (documentIds.isNotEmpty()) ready.filter { it.id in documentIds }
             else if (RetrievalQuery.refersToDocument(query)) ready.take(limit) else emptyList()
         if (documentIds.isNotEmpty() && selected.isEmpty()) return@withContext emptyList()
+        if (exactPage != null && selected.isNotEmpty()) {
+            return@withContext documents.segmentsForPageInDocuments(
+                projectId, selected.map { it.id }, exactPage, limit,
+            ).mapNotNull { evidence(projectId, it, 1.0) }
+        }
         val lexical = if (terms.isEmpty()) emptyList() else documents.searchLexical(projectId,
             terms.joinToString(" OR ") { "\"$it\"" }, limit * 6)
         if (selected.isNotEmpty()) {
@@ -44,8 +50,13 @@ class LocalRetrievalService(private val documents: DocumentDao, private val embe
             segment.id to cosineSimilarity(queryEmbedding, embeddingRuntime.embed(segment.normalizedText))
         }.filter { it.second > 0.0 }.sortedByDescending { it.second }.take(limit * 6)
         val segmentsById = (lexical + allSegments).associateBy { it.id }
-        ReciprocalRankFusion.fuse(lexical.map { it.id }, vectors).take(limit).mapNotNull { rank ->
+        val ranked = ReciprocalRankFusion.fuse(lexical.map { it.id }, vectors).take(limit).mapNotNull { rank ->
             segmentsById[rank.segmentId]?.let { evidence(projectId, it, rank.fusedScore) }
+        }
+        if (exactPage == null) ranked else ranked.filter { item ->
+            val start = item.pageStart ?: return@filter false
+            val end = item.pageEnd ?: start
+            exactPage in start..end
         }
     }
 
