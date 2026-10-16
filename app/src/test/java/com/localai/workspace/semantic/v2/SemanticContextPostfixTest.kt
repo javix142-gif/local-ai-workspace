@@ -99,6 +99,18 @@ class SemanticContextPostfixTest {
         return doc
     }
 
+    private suspend fun addPagedDocument(projectId:String,id:String):DocumentEntity {
+        val first="ORCHID marker from page one"
+        val second="ORCHID marker from page two"
+        val document=addDocument(projectId,id,"report.pdf","$first\n$second")
+        workspace.documentDao().deleteSegments(document.id)
+        workspace.documentDao().insertSegments(listOf(first,second).mapIndexed { index,text ->
+            DocumentSegmentEntity(documentId=document.id,segmentIndex=index,pageStart=index+1,pageEnd=index+1,
+                charStart=0,charEnd=text.length,text=text,normalizedText=text.lowercase(),contentHash=fingerprint("${index+1}:$text"))
+        })
+        return document
+    }
+
     private suspend fun index(vararg projects:String):Map<String,String> {
         val indexes=linkedMapOf<String,String>()
         for(project in projects)indexes[project]=layer.indexProject(project)
@@ -159,6 +171,53 @@ class SemanticContextPostfixTest {
         assertTrue(bundle.conversation().userMessage.contains("ORCHID is the semantic evidence passage"))
         assertEquals(1,bundle.sourceEvidence.size)
         assertFalse(bundle.included.single{it.kind==com.localai.workspace.context.ContextKind.SOURCE}.provenance.excerpted)
+    }
+
+    @Test fun eg2ExactPageQueryIncludesOnlyRequestedPageAndAbstainsWhenPageIsMissing()=runBlocking {
+        addProject("page-eg2")
+        val document=addPagedDocument("page-eg2","page-eg2-doc")
+        index("page-eg2")
+
+        val requested=foundation.build(
+            request("page-eg2",setOf(document.id)).copy(query="Busca ORCHID en la página 2"),
+            evidence=emptyList(),memoryEnabled=false,
+        )
+        val requestedSources=requested.included.filter{it.kind==com.localai.workspace.context.ContextKind.SOURCE}
+        assertTrue("EG2 exact-page query must not include page 1",requestedSources.isNotEmpty() && requestedSources.all{it.provenance.page==2})
+        assertTrue(requested.conversation().userMessage.contains("page two"))
+        assertFalse(requested.conversation().userMessage.contains("page one"))
+        assertEquals(listOf(2),requested.sourceEvidence.mapNotNull{it.pageStart}.distinct())
+
+        val absent=foundation.build(
+            request("page-eg2",setOf(document.id)).copy(query="Busca ORCHID en la página 9"),
+            evidence=emptyList(),memoryEnabled=false,
+        )
+        assertTrue("a missing exact page must abstain instead of citing another page",absent.included.none{it.kind==com.localai.workspace.context.ContextKind.SOURCE})
+        assertTrue(absent.sourceEvidence.isEmpty())
+    }
+
+    @Test fun lexicalExactPageQueryIncludesOnlyRequestedPageAndAbstainsWhenPageIsMissing()=runBlocking {
+        addProject("page-legacy")
+        val document=addPagedDocument("page-legacy","page-legacy-doc")
+
+        val requested=foundation.build(
+            request("page-legacy",setOf(document.id),SourceRetrievalMode.LEGACY_ONLY)
+                .copy(query="Busca ORCHID en la página 2"),
+            evidence=emptyList(),memoryEnabled=false,
+        )
+        val requestedSources=requested.included.filter{it.kind==com.localai.workspace.context.ContextKind.SOURCE}
+        assertTrue("legacy exact-page query must not include page 1",requestedSources.isNotEmpty() && requestedSources.all{it.provenance.page==2})
+        assertTrue(requested.conversation().userMessage.contains("page two"))
+        assertFalse(requested.conversation().userMessage.contains("page one"))
+        assertEquals(listOf(2),requested.sourceEvidence.mapNotNull{it.pageStart}.distinct())
+
+        val absent=foundation.build(
+            request("page-legacy",setOf(document.id),SourceRetrievalMode.LEGACY_ONLY)
+                .copy(query="Busca ORCHID en la page 9"),
+            evidence=emptyList(),memoryEnabled=false,
+        )
+        assertTrue("a missing exact page must abstain instead of citing another page",absent.included.none{it.kind==com.localai.workspace.context.ContextKind.SOURCE})
+        assertTrue(absent.sourceEvidence.isEmpty())
     }
 
     @Test fun projectIsolationAndSelectedDocumentScopeArePreserved()=runBlocking {
