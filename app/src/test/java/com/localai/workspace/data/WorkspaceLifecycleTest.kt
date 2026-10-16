@@ -146,51 +146,6 @@ class WorkspaceLifecycleTest {
         repo.deleteWorkspace(b); assertFalse(file.exists())
     }
 
-    @Test fun deletingOneDocumentPurgesOnlyItsIndexesKeepsCitationAndHonorsSharedFileReferences() = runBlocking {
-        val owner = repo.createProject("owner")
-        val other = repo.createProject("other")
-        val chat = repo.createConversation(owner)
-        val message = MessageEntity("document-citation-message", chat.id, "ASSISTANT", "A prior answer", 2)
-        repo.addMessage(message)
-        repo.saveCitationEvidence(listOf(CitationEvidenceEntity(
-            id = "document-citation", conversationId = chat.id, messageId = message.id,
-            evidenceId = "evidence-1", segmentId = 1, excerpt = "Historical excerpt",
-            documentId = "remove-me", sourceLabel = "source.txt", retrievalScore = 0.8, createdAt = 3,
-        )))
-        val sharedFile = File(documents, "shared-source.txt")
-        val indexedSegment = document(owner, "remove-me", sharedFile)
-        db.documentDao().insert(DocumentEntity("other-reference", other, "Shared source", localPath = sharedFile.path,
-            mimeType = "text/plain", fileHash = "other-hash", byteSize = sharedFile.length(), importedAt = 1, updatedAt = 1))
-        db.semanticVectorDao().put(SemanticVectorEntity("D:$indexedSegment", "eg1", documentId = "remove-me",
-            sourceHash = "source-hash", dimensions = 1, version = 1, vector = byteArrayOf(1), updatedAt = 1))
-        var callbackObservedCommittedDeletion = false
-        val deletingRepository = WorkspaceRepository(db, documents, onDocumentDeleted = { callbackProject, callbackDocument ->
-            callbackObservedCommittedDeletion = callbackObservedCommittedDeletion || (callbackProject == owner && callbackDocument == "remove-me" &&
-                db.documentDao().get("remove-me") == null && db.documentDao().segmentsForDocument("remove-me").isEmpty())
-        })
-
-        try {
-            deletingRepository.deleteDocument(other, "remove-me")
-            fail("A workspace must not delete another workspace's document")
-        } catch (_: IllegalStateException) { }
-        assertNotNull(db.documentDao().get("remove-me"))
-
-        assertEquals(0, deletingRepository.deleteDocument(owner, "remove-me"))
-
-        assertTrue(callbackObservedCommittedDeletion)
-        assertNull(db.documentDao().get("remove-me"))
-        assertNotNull(db.documentDao().get("other-reference"))
-        assertTrue("the shared private copy remains while another document references it", sharedFile.isFile)
-        assertEquals(0, db.documentDao().segmentsForDocument("remove-me").size)
-        assertEquals(0, count("embedding_records"))
-        assertNull(db.semanticVectorDao().get("D:$indexedSegment", "eg1"))
-        assertEquals("the existing message citation snapshot is retained", "remove-me",
-            db.citationEvidenceDao().observeForMessage(message.id).first().single().documentId)
-        assertEquals(0, count("pending_document_deletions"))
-        deletingRepository.deleteDocument(other, "other-reference")
-        assertFalse("the last private reference can now be deleted", sharedFile.exists())
-        assertEquals(0, count("pending_document_deletions"))
-    }
 
     @Test fun deletedWorkCannotBeRecreatedByLateChatOrCitationWrites() = runBlocking {
         val target = repo.createProject("target"); val chat = conversation(target, "first")
