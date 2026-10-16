@@ -4,6 +4,11 @@ import android.app.Application
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.localai.workspace.data.AssistantRouting
+import com.localai.workspace.domain.tools.ToolContext
+import com.localai.workspace.domain.tools.ToolExecutionResult
+import com.localai.workspace.domain.tools.ToolRegistry
+import com.localai.workspace.security.ToolRequest
+import com.localai.workspace.security.TrustOrigin
 import com.localai.workspace.documents.StructuredDocuments
 import org.json.JSONArray
 import org.json.JSONObject
@@ -11,6 +16,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
+import kotlinx.coroutines.runBlocking
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.io.File
@@ -25,6 +31,64 @@ class XlsxArtifactRevisionTest {
     @Test fun explicitSpreadsheetCellChangeRoutesToBoundedCellEditTool() {
         val enabled=setOf("artifacts.xlsxSetCells")
         assertEquals(enabled,AssistantRouting.tools(enabled,"Actualiza la celda A2 del Excel",documents=false))
+    }
+
+    @Test fun boundedCellEditToolCreatesImmutableVersionAndPreservesFormulaCacheAndScope()=runBlocking {
+        val project="xlsx-cell-edit-${UUID.randomUUID()}"
+        val store=ArtifactStore(context)
+        val fixture=JSONObject().put("format","XLSX").put("name","budget.xlsx").put("sheets",JSONArray()
+            .put(JSONObject().put("name","Hoja1").put("cells",JSONArray()
+                .put(JSONObject().put("address","A1").put("value","1").put("type","number"))
+                .put(JSONObject().put("address","A2").put("value","5").put("type","number"))
+                .put(JSONObject().put("address","A3").put("formula","\$A\$2-\$A\$1").put("value","4").put("type","number"))))
+            .put(JSONObject().put("name","Hoja2").put("cells",JSONArray()
+                .put(JSONObject().put("address","B14").put("value","scope remains")))))
+        try {
+            val first=store.create(project,ArtifactSpec.parse(fixture))
+            val originalHash=first.sha256
+            val tool=ArtifactTool(context,"artifacts.xlsxSetCells")
+            val registry=ToolRegistry(listOf(tool))
+            val context=ToolContext(project,"chat",File(this@XlsxArtifactRevisionTest.context.cacheDir,"xlsx-cell-edit-work"))
+            val edits=JSONArray()
+                .put(JSONObject().put("sheet","hoja1").put("address","A2").put("value","7").put("type","number"))
+                .put(JSONObject().put("sheet","Hoja2").put("address","B14").put("value","updated"))
+            val args=JSONObject().put("id",first.id).put("expectedVersion",first.version).put("edits",edits).toString()
+            val request=ToolRequest("artifacts.xlsxSetCells",args,TrustOrigin.MODEL)
+
+            val readOnly=registry.execute(request,ArtifactTool.IDS,context.copy(grantedCapabilities=setOf(com.localai.workspace.capabilities.Capability.LOCAL_READ)),ToolRegistry.ToolLoopState())
+            assertTrue(readOnly is ToolExecutionResult.Rejected)
+            val disabled=registry.execute(request,emptySet(),context,ToolRegistry.ToolLoopState())
+            assertTrue(disabled is ToolExecutionResult.Rejected)
+            val result=registry.execute(request,ArtifactTool.IDS,context,ToolRegistry.ToolLoopState()) as ToolExecutionResult.Success
+            val response=JSONObject(result.output)
+            assertEquals("PRIVATE_DRAFT_VERIFIED",response.getString("state"))
+            assertTrue(response.getString("note").contains("not recalculated"))
+            assertTrue(com.localai.workspace.domain.tools.ChatToolSchemas.available.contains("artifacts.xlsxSetCells"))
+            val schema=JSONObject(com.localai.workspace.domain.tools.ChatToolSchemas.schema("artifacts.xlsxSetCells"))
+            assertEquals(64,schema.getJSONObject("parameters").getJSONObject("properties").getJSONObject("edits").getInt("maxItems"))
+
+            val latest=store.history(project,first.id).maxBy{it.version}
+            assertEquals(2,latest.version)
+            val oldFile=store.verifiedFile(project,first)
+            val newFile=store.verifiedFile(project,latest)
+            assertEquals(originalHash,ArtifactStore.fileHash(oldFile))
+            val table=StructuredDocuments.xlsx(newFile)
+            assertEquals("7",table.cells.single{it.sheet=="Hoja1"&&it.address=="A2"}.value)
+            assertEquals("updated",table.cells.single{it.sheet=="Hoja2"&&it.address=="B14"}.value)
+            val formula=table.cells.single{it.sheet=="Hoja1"&&it.address=="A3"}
+            assertEquals("\$A\$2-\$A\$1",formula.formula)
+            assertEquals("4",formula.value)
+
+            val formulaEdit=JSONObject().put("id",latest.id).put("expectedVersion",latest.version)
+                .put("edits",JSONArray().put(JSONObject().put("sheet","Hoja1").put("address","A3").put("value","11").put("type","number"))).toString()
+            val rejectedFormula=registry.execute(ToolRequest("artifacts.xlsxSetCells",formulaEdit,TrustOrigin.MODEL),ArtifactTool.IDS,context,ToolRegistry.ToolLoopState())
+            assertTrue(rejectedFormula is ToolExecutionResult.Failed)
+            assertTrue((rejectedFormula as ToolExecutionResult.Failed).message.contains("XLSX_FORMULA_CELL_REQUIRES_EXPLICIT_REVISION"))
+            assertEquals(2,store.history(project,first.id).size)
+            assertEquals(originalHash,ArtifactStore.fileHash(store.verifiedFile(project,first)))
+        } finally {
+            File(File(context.filesDir,"tool-workspaces"),"artifacts-${ArtifactStore.hash(project.toByteArray(Charsets.UTF_8))}").deleteRecursively()
+        }
     }
 
     @Test fun editingDependencyRetainsFormulaAndCachedValueAcrossSavedVersionsWithoutClaimingRecalculation() {
