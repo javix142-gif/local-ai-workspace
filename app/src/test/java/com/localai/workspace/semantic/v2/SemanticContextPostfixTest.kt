@@ -899,6 +899,76 @@ class SemanticContextPostfixTest {
         }
     }
 
+    @Test fun editDeleteReimportKeepsProjectGenerationsScopedAndNeverServesStaleHits()=runBlocking {
+        val projectA="reimport-project-a"
+        val projectB="reimport-project-b"
+        addProject(projectA);addProject(projectB)
+        addDocument(projectA,"reimport-retained-a","retained.txt","ORCHID RETAINEDA stays in project A.")
+        addDocument(projectB,"reimport-only-b","other.txt","ORCHID PROJECTBONLY stays in project B.")
+
+        val privateRoot=File(context.cacheDir,"m02-06-reimport-${UUID.randomUUID()}").apply{mkdirs()}
+        val importer=DocumentIngestionService(context,workspace,workspace.documentDao(),
+            onIndexed={id->layer.markNeedsReindex(id)},outputDirectory=privateRoot)
+        suspend fun importText(project:String,name:String,text:String):String {
+            val uri=Uri.parse("content://local.fixture/${UUID.randomUUID()}/$name")
+            shadowOf(context.contentResolver).registerInputStream(uri,ByteArrayInputStream(text.toByteArray(Charsets.UTF_8)))
+            return importer.ingest(project,uri).getOrThrow()
+        }
+
+        val editedDocumentId=importText(projectA,"edited.txt","ORCHID OLDREVISION must never return after replacement.")
+        val oldGenerationA=index(projectA).getValue(projectA)
+        val generationB=index(projectB).getValue(projectB)
+        val scopeA=SemanticScope(ScopeType.PROJECT,projectA)
+        val scopeB=SemanticScope(ScopeType.PROJECT,projectB)
+        assertTrue(layer.search(SemanticInput.Text("OLDREVISION"),scopeA,setOf(SemanticModality.TEXT))
+            .any{it.content?.contains("OLDREVISION")==true})
+        assertTrue(layer.search(SemanticInput.Text("PROJECTBONLY"),scopeB,setOf(SemanticModality.TEXT))
+            .any{it.documentId=="reimport-only-b"})
+
+        val repository=WorkspaceRepository(workspace,privateRoot,onDocumentDeleted={id,documentId->
+            layer.deleteDocumentSources(id,documentId)
+        })
+        assertEquals(0,repository.deleteDocument(projectA,editedDocumentId))
+        assertEquals("NEEDS_REINDEX",semanticDb.dao().job(oldGenerationA)?.state)
+        assertNotNull("the stale generation remains auditable",semanticDb.dao().job(oldGenerationA))
+        assertEquals("READY",semanticDb.dao().job(generationB)?.state)
+        try {
+            layer.search(SemanticInput.Text("OLDREVISION"),scopeA,setOf(SemanticModality.TEXT))
+            fail("a deleted document's active vectors must not be served")
+        } catch(expected:SemanticFailure) {
+            assertEquals(SemanticError.REINDEX_REQUIRED,expected.code)
+        }
+
+        val replacementId=importText(projectA,"edited.txt","ORCHID NEWREVISION replaces the deleted text.")
+        assertNotEquals("a changed file is a new immutable import",editedDocumentId,replacementId)
+        assertEquals("reimport does not reactivate the old generation","NEEDS_REINDEX",semanticDb.dao().job(oldGenerationA)?.state)
+        assertEquals("another project remains searchable","READY",semanticDb.dao().job(generationB)?.state)
+
+        val fallback=foundation.build(
+            ContextRequest("ORCHID NEWREVISION",ScopeAccess(projectId=projectA),includeConversation=false),
+            evidence=emptyList(),memoryEnabled=false,
+        )
+        assertTrue(fallback.notice.orEmpty().contains("REINDEX_REQUIRED"))
+        val fallbackSources=fallback.included.filter{it.kind==com.localai.workspace.context.ContextKind.SOURCE}
+        assertTrue(fallbackSources.any{it.text.contains("NEWREVISION")})
+        assertTrue(fallbackSources.any{it.provenance.documentId=="reimport-retained-a"})
+        assertTrue(fallbackSources.none{it.text.contains("OLDREVISION") || it.text.contains("PROJECTBONLY")})
+        assertEquals("project B keeps its active generation",generationB,semanticDb.dao().active(scopeB.key)?.indexId)
+        assertTrue(layer.search(SemanticInput.Text("PROJECTBONLY"),scopeB,setOf(SemanticModality.TEXT))
+            .any{it.content?.contains("PROJECTBONLY")==true})
+
+        val freshGenerationA=layer.indexProject(projectA)
+        assertNotEquals(oldGenerationA,freshGenerationA)
+        assertEquals("old generation remains stale history","NEEDS_REINDEX",semanticDb.dao().job(oldGenerationA)?.state)
+        assertEquals("replacement is published only after indexing","READY",semanticDb.dao().job(freshGenerationA)?.state)
+        val currentHits=layer.search(SemanticInput.Text("NEWREVISION"),scopeA,setOf(SemanticModality.TEXT))
+        assertTrue(currentHits.any{it.documentId==replacementId && it.content?.contains("NEWREVISION")==true})
+        assertTrue(currentHits.none{it.content?.contains("OLDREVISION")==true || it.content?.contains("PROJECTBONLY")==true})
+        assertEquals("project B's generation is unchanged",generationB,semanticDb.dao().active(scopeB.key)?.indexId)
+        privateRoot.deleteRecursively()
+        Unit
+    }
+
     @Test fun appGraphDocumentDeletionPurgesOnlyItsGenerationSourcesAndRetainsSharedVectorPayload()=runBlocking {
         context.deleteDatabase("semantic_v2.db")
         val persisted=graph.semanticV2.database
