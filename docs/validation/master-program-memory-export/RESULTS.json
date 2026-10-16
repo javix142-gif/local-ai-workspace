@@ -1,0 +1,107 @@
+{
+  "increment": "Portable reviewed memory bundle export and round-trip",
+  "kind": "PREPARATORY_MEMORY_BUNDLE_EXPORT",
+  "status": "IMPLEMENTED_FOCUSED_HOST_VALIDATED_PENDING_INDEPENDENT_AUDIT",
+  "codeCommit": "b6d68b1c443696cf243003ce806f1e425a89af9d",
+  "branch": "codex/master-program-20261016",
+  "baseCommit": "f666c34ea83b32acc2dac37a78dff2ec2c4149c7",
+  "formalOriginalBacklogTask": "NONE",
+  "originalTaskCompletion": "NO_ID_MARKED_COMPLETE",
+  "filesChanged": [
+    "app/src/main/java/com/localai/workspace/context/MemoryBundleV1.kt",
+    "app/src/main/java/com/localai/workspace/context/MemoryManager.kt",
+    "app/src/main/java/com/localai/workspace/ui/ContextMemoryUi.kt",
+    "app/src/test/java/com/localai/workspace/context/MemoryBundleV1Test.kt"
+  ],
+  "host": {
+    "status": "PASS_FOCUSED",
+    "command": "./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --no-build-cache -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17-temurin,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.context.MemoryBundleV1Test --tests com.localai.workspace.context.MemoryBundleImportTest :app:lintDebug",
+    "startedAtUtc": "2026-10-16T17:49:16Z",
+    "finishedAtUtc": "2026-10-16T17:55:06Z",
+    "wallSecondsByTimestamp": 350,
+    "gradleReportedDuration": "5m 49s",
+    "exitCode": 0,
+    "gradle": "8.10.2",
+    "gradleRuntimeJdk": "Temurin 17.0.20.1",
+    "testWorkerJdk": "Temurin 21.0.12.1",
+    "androidSdk": "API 35; /workspace/.toolchain/android-sdk",
+    "ndk": "27.0.12077973",
+    "cmake": "3.31.6",
+    "offline": true,
+    "gradleUserHome": "Existing /workspace/.gradle-master-program-20261016; no copying or cleanup",
+    "focusedJvm": {
+      "tests": 13,
+      "passed": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": {
+        "MemoryBundleV1Test": 7,
+        "MemoryBundleImportTest": 6
+      }
+    },
+    "lintDebug": {
+      "status": "PASS",
+      "exitCode": 0,
+      "actionableTasks": 123,
+      "executedTasks": 18,
+      "upToDateTasks": 105,
+      "currentRunWarningCount": "NOT_CLAIMED; lintReportDebug was UP-TO-DATE"
+    },
+    "xml": [
+      "host/xml/TEST-com.localai.workspace.context.MemoryBundleV1Test.xml",
+      "host/xml/TEST-com.localai.workspace.context.MemoryBundleImportTest.xml"
+    ],
+    "log": "host/logs/focused-tests-and-lint.log",
+    "priorAttempt": {
+      "codeSha": "0f31e918efd63601818a01ebcb8529fba5befd9b",
+      "status": "PASS_FOCUSED_SUPERSEDED_BY_UI_ERROR_COPY_FOLLOWUP",
+      "tests": 13,
+      "passed": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "evidence": "attempts/attempt-01-code-0f31/host"
+    }
+  },
+  "notRun": {
+    "fullJvmSuite": "NOT_RUN",
+    "litertCompatJvm": "NOT_RUN",
+    "androidTestCompilation": "NOT_RUN",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED_SIGNING_KEY_UNAVAILABLE"
+  },
+  "implementationBoundaries": {
+    "bundleSchema": "AWS_MEMORY_IMPORT_V1",
+    "zipRoot": "AWS_MEMORY_IMPORT/",
+    "exportScope": "Only active, non-expired records returned by the existing ScopeAccess/lookup path",
+    "pendingOrSensitive": "Pending records are not returned by lookup and writer rejects non-ACTIVE records; local heuristic flags reject export with SENSITIVE_MEMORY_REQUIRES_REVIEW",
+    "vectorsIncluded": false,
+    "importSemantics": "Re-import creates local USER-scope PENDING records; original scope/provenance/title are metadata and do not grant scope or instructions",
+    "embedding": "Not executed during export/import; existing approval/recovery/search path remains responsible",
+    "persistenceSchemaChanged": false,
+    "dependenciesAdded": false,
+    "networkTransfer": false
+  },
+  "limitations": [
+    "Sensitive-content detection is heuristic and not comprehensive.",
+    "SAF destination provider may be local or cloud-selected by the user; the app does not transmit the archive independently.",
+    "A provider write failure can leave a partial destination file; no automatic deletion is attempted.",
+    "No full JVM suite, LiteRT compatibility suite, AndroidTest compilation, emulator or Motorola test was run.",
+    "No APK was generated because the compatible prior Debug signing key is not mounted in this executor."
+  ],
+  "originalPlan": {
+    "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "taskCount": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "sourceStates": {
+      "TODO": 97
+    },
+    "originalsEdited": false
+  },
+  "evidence": "docs/validation/master-program-memory-export/RESULTS.md",
+  "checksumManifest": "docs/validation/master-program-memory-export/SHA256SUMS"
+}

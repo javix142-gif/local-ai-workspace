@@ -1,0 +1,99 @@
+{
+  "codeSha": "b6d68b1c443696cf243003ce806f1e425a89af9d",
+  "commandExitCode": 0,
+  "focusedJvm": {
+    "tests": 13,
+    "passed": 13,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "suites": [
+    {
+      "xml": "docs/validation/master-program-memory-export/host/xml/TEST-com.localai.workspace.context.MemoryBundleImportTest.xml",
+      "suite": "com.localai.workspace.context.MemoryBundleImportTest",
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 6
+      },
+      "cases": [
+        {
+          "name": "exactDuplicatesAndStructuredConflictsAreReportedWithoutOverwriting",
+          "status": "PASS"
+        },
+        {
+          "name": "sensitiveCandidateAndUnknownSelectionCannotBeImported",
+          "status": "PASS"
+        },
+        {
+          "name": "identicalProjectMemoryDoesNotSuppressPersonalImport",
+          "status": "PASS"
+        },
+        {
+          "name": "exportIncludesOnlyApprovedMemoriesReadableInSelectedScope",
+          "status": "PASS"
+        },
+        {
+          "name": "importIsPendingScopedIdempotentAndIndexedOnlyAfterApproval",
+          "status": "PASS"
+        },
+        {
+          "name": "importedBundleRemainsPendingAndPreservesTitleAndOriginOnReexport",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "xml": "docs/validation/master-program-memory-export/host/xml/TEST-com.localai.workspace.context.MemoryBundleV1Test.xml",
+      "suite": "com.localai.workspace.context.MemoryBundleV1Test",
+      "counts": {
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 7
+      },
+      "cases": [
+        {
+          "name": "rejectsHighlyCompressedInputBeforeParsingRecords",
+          "status": "PASS"
+        },
+        {
+          "name": "promptCarriesRequestedPurposeAndImportContract",
+          "status": "PASS"
+        },
+        {
+          "name": "exportedActiveMemoryRoundTripsMetadataThroughCanonicalZipRoot",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsInvalidUtf8DuplicateIdsAndIncompatiblePackage",
+          "status": "PASS"
+        },
+        {
+          "name": "rejectsBadIntegrityUnknownPathsUnsupportedVersionAndMalformedJsonl",
+          "status": "PASS"
+        },
+        {
+          "name": "parsesCanonicalFolderAndRetainsTrustProvenanceAndDates",
+          "status": "PASS"
+        },
+        {
+          "name": "exportRejectsPendingAndHeuristicallySensitiveRecords",
+          "status": "PASS"
+        }
+      ]
+    }
+  ],
+  "lintDebug": {
+    "status": "PASS",
+    "exitCode": 0,
+    "note": "lintAnalyzeDebug executed; lintReportDebug was UP-TO-DATE, so no current-run warning count is claimed."
+  },
+  "emulator": "NOT_RUN",
+  "physicalDevice": "NOT_RUN",
+  "apk": "NOT_GENERATED"
+}

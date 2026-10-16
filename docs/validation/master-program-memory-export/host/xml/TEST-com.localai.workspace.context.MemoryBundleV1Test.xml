@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.context.MemoryBundleV1Test" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-16T17:50:31" hostname="7023f296b5c7" time="0.231">
+  <properties/>
+  <testcase name="rejectsHighlyCompressedInputBeforeParsingRecords" classname="com.localai.workspace.context.MemoryBundleV1Test" time="0.099"/>
+  <testcase name="promptCarriesRequestedPurposeAndImportContract" classname="com.localai.workspace.context.MemoryBundleV1Test" time="0.001"/>
+  <testcase name="exportedActiveMemoryRoundTripsMetadataThroughCanonicalZipRoot" classname="com.localai.workspace.context.MemoryBundleV1Test" time="0.104"/>
+  <testcase name="rejectsInvalidUtf8DuplicateIdsAndIncompatiblePackage" classname="com.localai.workspace.context.MemoryBundleV1Test" time="0.009"/>
+  <testcase name="rejectsBadIntegrityUnknownPathsUnsupportedVersionAndMalformedJsonl" classname="com.localai.workspace.context.MemoryBundleV1Test" time="0.009"/>
+  <testcase name="parsesCanonicalFolderAndRetainsTrustProvenanceAndDates" classname="com.localai.workspace.context.MemoryBundleV1Test" time="0.006"/>
+  <testcase name="exportRejectsPendingAndHeuristicallySensitiveRecords" classname="com.localai.workspace.context.MemoryBundleV1Test" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

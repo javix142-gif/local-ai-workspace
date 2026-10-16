@@ -1,0 +1,17 @@
+code_sha=b6d68b1c443696cf243003ce806f1e425a89af9d
+branch=codex/master-program-20261016
+gradle_wrapper=8.10.2
+gradle_runtime_jdk=/workspace/.toolchain/jdk-17-temurin (Temurin 17.0.20.1; java and javac present; java.compiler present)
+test_worker_jdk=/workspace/.toolchain/jdk-21-temurin (Temurin 21.0.12.1; java and javac present; java.compiler present; app Test launcher configured for Java 21)
+android_home=/workspace/.toolchain/android-sdk
+android_sdk_root=/workspace/.toolchain/android-sdk
+android_sdk_platform=platforms/android-35 (source.properties present; AndroidVersion.ApiLevel=35)
+ndk=27.0.12077973 (source.properties present)
+cmake=3.31.6
+gradle_user_home=/workspace/.gradle-master-program-20261016 (reused existing cache; no cache copying or cleanup)
+network_mode=Gradle --offline
+workspace_free_disk_before=23G
+android_tests=NOT_RUN
+emulator=NOT_RUN
+physical_device=NOT_RUN
+apk=NOT_GENERATED
