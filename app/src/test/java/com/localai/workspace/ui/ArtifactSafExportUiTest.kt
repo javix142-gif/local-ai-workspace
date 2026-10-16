@@ -14,6 +14,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.core.app.ActivityOptionsCompat
 import androidx.test.core.app.ApplicationProvider
 import com.localai.workspace.artifacts.ArtifactSpec
@@ -79,7 +80,7 @@ class ArtifactSafExportUiTest {
         }
         compose.onNodeWithTag("artifact-${revision.id}").assertIsDisplayed().performClick()
         compose.onNodeWithText("Preview changes").performClick()
-        compose.onNodeWithText("Export saved v1").assertIsDisplayed().performClick()
+        compose.onNodeWithText("Export saved v1").performScrollTo().assertIsDisplayed().performClick()
         compose.waitUntil(10_000) {
             runCatching {
                 compose.onNodeWithTag("artifact-status").assertTextContains("Exported and read back")
