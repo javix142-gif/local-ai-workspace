@@ -1,11 +1,21 @@
 {
   "synthetic": true,
   "notPrivateMotorolaWorkbook": true,
+  "corpusVersion": 1,
+  "appParserValidatedFormats": ["pdf", "docx", "xlsx", "csv", "code", "pptx"],
   "cases": [
     {
       "file": "v1-fixture.xlsx",
       "query": "Hoja2!B14",
       "expected": "Exacto 界"
+    },
+    {
+      "file": "v1-fixture.xlsx",
+      "query": "Suma Hoja1!A1:A3",
+      "expectedCellReferences": ["Hoja1!A1", "Hoja1!A2", "Hoja1!A3"],
+      "expectedValues": ["1", "5", "4"],
+      "formula": "$A$2-$A$1",
+      "recalculated": false
     },
     {
       "file": "v1-fixture.xlsx",
@@ -44,7 +54,8 @@
       "file": "quoted.csv",
       "query": "row 2 column 1",
       "expected": "Álvaro; equipo",
-      "scope": "Python CSV checked; existing app quoted CSV regression passed, this additional fixture not separately run through Android parser"
+      "cellReference": "CSV!A2",
+      "scope": "Validated by the application's DocumentParser and exact-cell selector"
     }
   ]
 }

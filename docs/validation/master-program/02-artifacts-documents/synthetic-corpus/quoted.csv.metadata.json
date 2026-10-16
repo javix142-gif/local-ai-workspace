@@ -1,0 +1,11 @@
+{
+  "synthetic": true,
+  "format": "CSV",
+  "version": 1,
+  "name": "quoted.csv",
+  "bytes": 56,
+  "sha256": "6229cd72d3136b77c6bd78f8c144bbb3f5df0acda996148491a62c08e11c83e2",
+  "encoding": "UTF-8",
+  "delimiter": ";",
+  "containsPrivateUserData": false
+}
