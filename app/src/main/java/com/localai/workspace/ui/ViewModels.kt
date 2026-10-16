@@ -130,6 +130,21 @@ class HomeViewModel(private val graph: AppGraph) : ViewModel() {
         _notices.emit(if (pending == 0) "Private file cleanup completed" else "$pending private files still need cleanup")
     } }
 
+    fun deleteDocument(projectId: String, documentId: String, onDeleted: () -> Unit = {}) {
+        if (documentImports[projectId]?.isActive == true) {
+            viewModelScope.launch { _notices.emit("Wait for the current file import to finish before removing a file.") }
+            return
+        }
+        viewModelScope.launch {
+            try {
+                val pending = graph.workspace.deleteDocument(projectId, documentId)
+                _notices.emit(if (pending == 0) "File removed from this workspace" else "File removed. Some private files still need cleanup; retry from Workspace.")
+                onDeleted()
+            } catch (cancelled: CancellationException) { throw cancelled }
+            catch (error: Exception) { _notices.emit(error.message ?: "Could not remove this file") }
+        }
+    }
+
     fun attachProjectDocument(projectId: String, uri: android.net.Uri) {
         if (projectId in _deletingChats.value || documentImports[projectId]?.isActive == true) return
         documentImports[projectId] = viewModelScope.launch {

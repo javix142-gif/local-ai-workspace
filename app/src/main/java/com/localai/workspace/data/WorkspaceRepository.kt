@@ -14,6 +14,7 @@ class WorkspaceRepository(
     private val database: WorkspaceDatabase,
     private val privateDocumentsDirectory: File? = null,
     private val onWorkspaceDeleted: suspend (String) -> Unit = {},
+    private val onDocumentDeleted: suspend (String, String) -> Unit = { _, _ -> },
 ) {
     private val projects = database.projectDao()
     private val conversations = database.conversationDao()
@@ -128,6 +129,27 @@ class WorkspaceRepository(
     suspend fun deleteWorkspace(id: String): Int {
         database.withTransaction { deleteWorkspaceRows(id) }
         kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) { onWorkspaceDeleted(id) }
+        return cleanupDeletedDocuments()
+    }
+
+    /** Remove one imported private copy and its derived indexes, retaining chat citation snapshots. */
+    suspend fun deleteDocument(projectId: String, documentId: String): Int {
+        database.withTransaction {
+            check(projects.get(projectId) != null) { "This workspace was deleted" }
+            val documents = database.documentDao()
+            val document = checkNotNull(documents.get(documentId)?.takeIf { it.projectId == projectId }) {
+                "This document does not belong to this workspace"
+            }
+            database.pendingDocumentDeletionDao().insertAll(listOf(PendingDocumentDeletionEntity(document.localPath)))
+            database.semanticVectorDao().deleteForDocument(documentId)
+            documents.deleteEmbeddingsForDocument(documentId)
+            // Room's external-content FTS triggers remove these rows from lexical search.
+            documents.deleteSegments(documentId)
+            documents.deleteDocument(projectId, documentId)
+        }
+        kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) {
+            onDocumentDeleted(projectId, documentId)
+        }
         return cleanupDeletedDocuments()
     }
 

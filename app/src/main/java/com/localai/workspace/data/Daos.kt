@@ -148,11 +148,17 @@ interface DocumentDao {
     @Query("DELETE FROM embedding_records WHERE segmentId IN (SELECT id FROM document_segments WHERE documentId IN (SELECT id FROM documents WHERE projectId = :projectId))")
     suspend fun deleteEmbeddingsForProject(projectId: String)
 
+    @Query("DELETE FROM embedding_records WHERE segmentId IN (SELECT id FROM document_segments WHERE documentId = :documentId)")
+    suspend fun deleteEmbeddingsForDocument(documentId: String)
+
     @Query("DELETE FROM document_segments WHERE documentId IN (SELECT id FROM documents WHERE projectId = :projectId)")
     suspend fun deleteSegmentsForProject(projectId: String)
 
     @Query("DELETE FROM documents WHERE projectId = :projectId")
     suspend fun deleteForProject(projectId: String)
+
+    @Query("DELETE FROM documents WHERE id = :documentId AND projectId = :projectId")
+    suspend fun deleteDocument(projectId: String, documentId: String)
 
     @Query("SELECT COUNT(*) FROM documents WHERE localPath = :path")
     suspend fun pathReferences(path: String): Int
@@ -278,5 +284,6 @@ interface PendingDocumentDeletionDao {
  @Query("SELECT * FROM semantic_vectors WHERE originId = :origin AND modelId = :model LIMIT 1") suspend fun get(origin: String, model: String): SemanticVectorEntity?
  @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun put(record: SemanticVectorEntity)
  @Query("DELETE FROM semantic_vectors WHERE documentId IN (SELECT id FROM documents WHERE projectId = :projectId) OR memoryId IN (SELECT id FROM memory_items WHERE scopeType = 'PROJECT' AND scopeId = :projectId)") suspend fun deleteForProject(projectId: String)
+ @Query("DELETE FROM semantic_vectors WHERE documentId = :documentId") suspend fun deleteForDocument(documentId: String)
  @Query("DELETE FROM semantic_vectors WHERE memoryId = :id") suspend fun deleteMemory(id: String)
 }

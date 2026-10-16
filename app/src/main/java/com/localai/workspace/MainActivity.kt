@@ -400,6 +400,7 @@ private fun ProjectScreen(viewModel: HomeViewModel, navController: NavHostContro
     var showDelete by rememberSaveable { mutableStateOf(false) }
     var deleteChatId by rememberSaveable { mutableStateOf<String?>(null) }
     var fileDetailsId by rememberSaveable { mutableStateOf<String?>(null) }
+    var confirmFileDeleteId by rememberSaveable { mutableStateOf<String?>(null) }
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let { viewModel.attachProjectDocument(projectId, it) } }
     Column(Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
         TopAppBar(title = { Text(project?.name ?: "Project", maxLines = 1, overflow = TextOverflow.Ellipsis) },
@@ -454,11 +455,22 @@ private fun ProjectScreen(viewModel: HomeViewModel, navController: NavHostContro
     }
     documents.firstOrNull { it.id == fileDetailsId }?.let { file -> AlertDialog(onDismissRequest = { fileDetailsId = null },
         title = { Text(file.displayName) }, confirmButton = { TextButton(onClick = { fileDetailsId = null }) { Text("Done") } },
+        dismissButton = { TextButton(onClick = { fileDetailsId = null; confirmFileDeleteId = file.id }) { Text("Remove file") } },
         text = { Column(Modifier.heightIn(max = 380.dp).verticalScroll(rememberScrollState())) {
             Text("${formatBytes(file.byteSize)} · ${file.mimeType}")
             Text("Extraction: ${file.extractionStatus}"); Text("Indexing: ${file.indexingStatus}")
             file.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
         } }) }
+    documents.firstOrNull { it.id == confirmFileDeleteId }?.let { file -> AlertDialog(onDismissRequest = {
+        confirmFileDeleteId = null; fileDetailsId = file.id
+    }, title = { Text("Remove file from workspace?") },
+        confirmButton = { TextButton(onClick = {
+            confirmFileDeleteId = null
+            fileDetailsId = file.id
+            viewModel.deleteDocument(projectId, file.id) { fileDetailsId = null }
+        }) { Text("Remove file") } },
+        dismissButton = { TextButton(onClick = { confirmFileDeleteId = null; fileDetailsId = file.id }) { Text("Keep file") } },
+        text = { Text("This removes the imported private copy and its search index from this workspace. The original file on your device is not deleted, and existing chat citation snapshots are kept.") }))
     if (showDelete && project != null) DeleteWorkspaceDialog(project!!.name, false,
         onDismiss = { showDelete = false }, onConfirm = { showDelete = false; viewModel.deleteWorkspace(projectId) { navController.popBackStack() } })
     chats.firstOrNull { it.id == deleteChatId }?.let { chat -> DeleteChatDialog(chat.title, { deleteChatId = null }, {

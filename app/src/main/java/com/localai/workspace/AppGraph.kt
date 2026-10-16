@@ -50,6 +50,8 @@ class AppGraph(context: Context,
     val runtime get() = llamaRuntime
     val workspace = WorkspaceRepository(database, java.io.File(appContext.filesDir, "documents"), onWorkspaceDeleted = { id ->
         if (validationOwner == null) semanticV2.deleteProjectScope(id)
+    }, onDocumentDeleted = { projectId, documentId ->
+        if (validationOwner == null) semanticV2.deleteDocumentSources(projectId, documentId)
     })
     val documents = DocumentIngestionService(appContext, database, database.documentDao(), onIndexed = { id ->
         if(validationOwner==null) {

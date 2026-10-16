@@ -43,6 +43,8 @@ data class IndexedSegment(@Embedded val segment: SemanticSegmentRecord, val sour
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun job(value: SemanticIndexJob)
     @Query("SELECT * FROM semantic_index_jobs ORDER BY updatedAt DESC") fun observeJobs(): Flow<List<SemanticIndexJob>>
     @Query("SELECT * FROM semantic_index_jobs WHERE id=:id") suspend fun job(id: String): SemanticIndexJob?
+    @Query("UPDATE semantic_index_jobs SET state='NEEDS_REINDEX',errorCode=:reason,updatedAt=:updatedAt WHERE id=:id AND state='READY'") suspend fun markReadyNeedsReindex(id: String, reason: String, updatedAt: Long): Int
+    @Query("UPDATE semantic_index_jobs SET state='NEEDS_REINDEX',errorCode='DOCUMENT_REMOVED',updatedAt=:updatedAt WHERE id IN (:ids) AND state='READY'") suspend fun markGenerationsNeedsReindex(ids: List<String>, updatedAt: Long): Int
     @Query("SELECT * FROM semantic_active_indexes WHERE scopeKey=:scope") suspend fun active(scope: String): SemanticActiveIndex?
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun activate(value: SemanticActiveIndex)
     @Query("SELECT COUNT(*) FROM semantic_embeddings_v2 WHERE indexId=:id") suspend fun count(id: String): Int
@@ -50,6 +52,9 @@ data class IndexedSegment(@Embedded val segment: SemanticSegmentRecord, val sour
     @Query("DELETE FROM semantic_embeddings_v2 WHERE indexId IN (SELECT id FROM semantic_index_jobs WHERE scopeKey=:scope)") suspend fun deleteEmbeddingsForScope(scope: String)
     @Query("DELETE FROM semantic_segments WHERE sourceId IN (SELECT id FROM semantic_sources WHERE scopeKey=:scope)") suspend fun deleteSegmentsForScope(scope: String)
     @Query("DELETE FROM semantic_sources WHERE scopeKey=:scope") suspend fun deleteSourcesForScope(scope: String)
+    @Query("DELETE FROM semantic_embeddings_v2 WHERE segmentId IN (SELECT id FROM semantic_segments WHERE sourceId IN (:sourceIds))") suspend fun deleteEmbeddingsForSources(sourceIds: List<String>)
+    @Query("DELETE FROM semantic_segments WHERE sourceId IN (:sourceIds)") suspend fun deleteSegmentsForSources(sourceIds: List<String>)
+    @Query("DELETE FROM semantic_sources WHERE scopeKey=:scope AND id IN (:sourceIds)") suspend fun deleteSources(scope: String, sourceIds: List<String>)
     @Query("DELETE FROM semantic_index_jobs WHERE scopeKey=:scope") suspend fun deleteJobsForScope(scope: String)
     @Query("DELETE FROM semantic_vector_payloads_v2 WHERE NOT EXISTS (SELECT 1 FROM semantic_embeddings_v2 e WHERE e.embeddingSpaceKey=semantic_vector_payloads_v2.embeddingSpaceKey AND e.taskType=semantic_vector_payloads_v2.taskType AND e.contentHash=semantic_vector_payloads_v2.contentHash)") suspend fun deleteOrphanPayloads()
     @Transaction suspend fun deleteScope(scope: String) {
@@ -59,6 +64,15 @@ data class IndexedSegment(@Embedded val segment: SemanticSegmentRecord, val sour
         deleteSourcesForScope(scope)
         deleteJobsForScope(scope)
         deleteOrphanPayloads()
+    }
+    @Transaction suspend fun deleteDocumentSources(scope: String, sourceIds: List<String>, generationIds: List<String>, updatedAt: Long) {
+        if (generationIds.isNotEmpty()) markGenerationsNeedsReindex(generationIds, updatedAt)
+        if (sourceIds.isNotEmpty()) {
+            deleteEmbeddingsForSources(sourceIds)
+            deleteSegmentsForSources(sourceIds)
+            deleteSources(scope, sourceIds)
+            deleteOrphanPayloads()
+        }
     }
     @Query("SELECT s.*, o.displayName AS sourceName, p.vector AS vector, e.dimension AS dimension, e.embeddingSpaceKey AS spaceKey, e.modelHash AS modelHash, e.modelId AS modelId FROM semantic_segments s JOIN semantic_sources o ON o.id=s.sourceId JOIN semantic_embeddings_v2 e ON e.segmentId=s.id JOIN semantic_vector_payloads_v2 p ON p.embeddingSpaceKey=e.embeddingSpaceKey AND p.taskType=e.taskType AND p.contentHash=e.contentHash WHERE e.indexId=:indexId AND o.scopeKey=:scope AND e.embeddingSpaceKey=:space LIMIT :limit") suspend fun corpus(indexId: String, scope: String, space: String, limit: Int): List<IndexedSegment>
 }

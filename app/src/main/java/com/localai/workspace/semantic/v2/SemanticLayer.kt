@@ -216,9 +216,29 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
     suspend fun deleteProjectScope(projectId:String) = operations.withLock {
         database.dao().deleteScope(SemanticScope(ScopeType.PROJECT,projectId).key)
     }
+    /** Purge one document's derived EG2 records while retaining other sources and generation history. */
+    suspend fun deleteDocumentSources(projectId:String, documentId:String) = operations.withLock {
+        val scope=SemanticScope(ScopeType.PROJECT,projectId)
+        val dao=database.dao()
+        val sourceIds=dao.sources(scope.key).asSequence()
+            .filter { it.sourceType=="DOCUMENT" && it.id.substringAfterLast(':')==documentId }
+            .map { it.id }.distinct().toList()
+        // Even an active generation that did not contain this document becomes stale: a later
+        // selection/rollback must not depend on an interrupted or partially observed mutation.
+        val generationIds=(sourceIds.map { it.substringBefore(':') } + listOfNotNull(dao.active(scope.key)?.indexId)).distinct()
+        database.withTransaction { dao.deleteDocumentSources(scope.key,sourceIds,generationIds,System.currentTimeMillis()) }
+    }
     suspend fun switchIndex(id: String) = operations.withLock {
         val dao=database.dao();val job=dao.job(id) ?: error("Missing index")
         require(job.state=="READY" && job.embeddings>0 && job.segments==job.embeddings && dao.count(id)==job.embeddings)
+        if (job.scopeKey.startsWith("PROJECT:")) {
+            val projectId=job.scopeKey.removePrefix("PROJECT:")
+            val projectDocuments=workspace.documentDao().forProject(projectId).filter { it.extractionStatus=="READY" }
+            if (!documentSourcesMatch(job.scopeKey,id,projectDocuments)) {
+                dao.markReadyNeedsReindex(id,"DOCUMENT_SOURCES_CHANGED",System.currentTimeMillis())
+                throw IllegalArgumentException("Document sources changed; reindex before activating this generation")
+            }
+        }
         dao.activate(SemanticActiveIndex(job.scopeKey,id,job.spaceKey))
     }
     private suspend fun requireReadyGeneration(scope:SemanticScope,active:SemanticActiveIndex):SemanticIndexJob {
@@ -226,6 +246,23 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
         if(job==null || job.scopeKey!=scope.key || job.spaceKey!=active.spaceKey || job.state!="READY" || job.embeddings<=0 || job.segments!=job.embeddings || dao.count(active.indexId)!=job.embeddings)
             throw SemanticFailure(SemanticError.REINDEX_REQUIRED)
         return job
+    }
+    private suspend fun documentSourcesMatch(
+        scopeKey:String,
+        indexId:String,
+        documents:List<com.localai.workspace.data.DocumentEntity>,
+    ):Boolean {
+        val prefix="$indexId:"
+        val actual=database.dao().sources(scopeKey)
+            .filter { it.sourceType=="DOCUMENT" && it.id.startsWith(prefix) }
+            .associateBy { it.id }
+        if(actual.size!=documents.size)return false
+        return documents.all { document ->
+            val source=actual["$prefix${document.id}"] ?: return@all false
+            source.displayName==document.displayName && source.mimeType==document.mimeType &&
+                source.reference==document.localPath && source.size==document.byteSize &&
+                source.modifiedAt==document.updatedAt && source.contentHash==document.fileHash
+        }
     }
     suspend fun search(query: SemanticInput, scope: SemanticScope, modalities: Set<SemanticModality> = SemanticModality.entries.toSet(), limit: Int = 5, documentIds:Set<String> = emptySet()): List<RetrievalHit> = withContext(Dispatchers.IO) {
         queryEmbeddingReused.value=false
@@ -238,11 +275,16 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
         if(active.spaceKey!=space.id) throw SemanticFailure(SemanticError.SPACE_MISMATCH)
         val generation=requireReadyGeneration(scope,active)
         if(generation.embeddings>10_000)throw SemanticFailure(SemanticError.REINDEX_REQUIRED)
-        val projectDocuments=if(scope.type==ScopeType.PROJECT)workspace.documentDao().forProject(scope.id).filter{it.extractionStatus=="READY" && it.indexingStatus=="READY"}else emptyList()
+        val indexedProjectDocuments=if(scope.type==ScopeType.PROJECT)workspace.documentDao().forProject(scope.id).filter{it.extractionStatus=="READY"}else emptyList()
+        if(scope.type==ScopeType.PROJECT && !documentSourcesMatch(scope.key,active.indexId,indexedProjectDocuments)) {
+            dao.markReadyNeedsReindex(active.indexId,"DOCUMENT_SOURCES_CHANGED",System.currentTimeMillis())
+            throw SemanticFailure(SemanticError.REINDEX_REQUIRED)
+        }
+        val projectDocuments=indexedProjectDocuments.filter { it.indexingStatus=="READY" }
         val documentIdByPath=projectDocuments.associate{it.localPath to it.id}
         val validSelectedIds=if(documentIds.isEmpty())emptySet()else projectDocuments.asSequence().map{it.id}.filter{it in documentIds}.toSet()
         if(documentIds.isNotEmpty()&&validSelectedIds.isEmpty())return@withContext emptyList()
-        val sources=if(scope.type==ScopeType.PROJECT)dao.sources(scope.key).filter{it.sourceType=="DOCUMENT"}else emptyList()
+        val sources=if(scope.type==ScopeType.PROJECT)dao.sources(scope.key).filter{it.sourceType=="DOCUMENT" && it.id.startsWith("${active.indexId}:")}else emptyList()
         val sourceDocumentIds=sources.mapNotNull { source->documentIdByPath[source.reference]?.let{source.id to it} }.toMap()
         val allowedSourceIds=if(documentIds.isEmpty())null else sourceDocumentIds.filterValues{it in validSelectedIds}.keys
         if(allowedSourceIds!=null&&allowedSourceIds.isEmpty())return@withContext emptyList()
