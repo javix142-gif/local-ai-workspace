@@ -65,8 +65,11 @@ class DocumentRemovalUiTest {
             assertFalse("the app-private imported copy is removed", imported.exists())
             assertTrue("the source file remains untouched", original.isFile)
         } finally {
-            runBlocking(Dispatchers.IO) { graph.workspace.deleteWorkspace(projectId) }
+            // Each Robolectric test receives an isolated application sandbox. Calling the
+            // unrelated workspace/semantic-index deletion path here can block after the UI
+            // assertions have completed; remove only this test's files during fixture cleanup.
             original.delete()
+            imported.delete()
         }
     }
 
