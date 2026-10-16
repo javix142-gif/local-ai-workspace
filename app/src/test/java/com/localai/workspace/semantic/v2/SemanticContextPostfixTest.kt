@@ -199,11 +199,14 @@ class SemanticContextPostfixTest {
     @Test fun lexicalExactPageQueryIncludesOnlyRequestedPageAndAbstainsWhenPageIsMissing()=runBlocking {
         addProject("page-legacy")
         val document=addPagedDocument("page-legacy","page-legacy-doc")
+        val precomputedWrongPage=graph.retrieval.retrieve("page-legacy","ORCHID",documentIds=setOf(document.id))
+            .filter{it.pageStart==1}
+        assertTrue("fixture must supply stale precomputed evidence from page 1",precomputedWrongPage.isNotEmpty())
 
         val requested=foundation.build(
             request("page-legacy",setOf(document.id),SourceRetrievalMode.LEGACY_ONLY)
                 .copy(query="Busca ORCHID en la página 2"),
-            evidence=emptyList(),memoryEnabled=false,
+            evidence=precomputedWrongPage,memoryEnabled=false,
         )
         val requestedSources=requested.included.filter{it.kind==com.localai.workspace.context.ContextKind.SOURCE}
         assertTrue("legacy exact-page query must not include page 1",requestedSources.isNotEmpty() && requestedSources.all{it.provenance.page==2})
@@ -214,7 +217,7 @@ class SemanticContextPostfixTest {
         val absent=foundation.build(
             request("page-legacy",setOf(document.id),SourceRetrievalMode.LEGACY_ONLY)
                 .copy(query="Busca ORCHID en la page 9"),
-            evidence=emptyList(),memoryEnabled=false,
+            evidence=precomputedWrongPage,memoryEnabled=false,
         )
         assertTrue("a missing exact page must abstain instead of citing another page",absent.included.none{it.kind==com.localai.workspace.context.ContextKind.SOURCE})
         assertTrue(absent.sourceEvidence.isEmpty())
