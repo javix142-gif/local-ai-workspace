@@ -1,0 +1,8 @@
+Source SHA: 8b91675646abca8c4e3e22f3ecd86d97ee817345
+:app:testDebugUnitTest (three explicit SemanticContextPostfixTest method filters): PASS, exit 0
+JUnit: 3 tests, 0 failures, 0 errors, 0 skipped
+:litert-compat:testDebugUnitTest: NOT_RUN
+:app:lintDebug: NOT_RUN
+:app:compileDebugAndroidTestKotlin: NOT_RUN
+assembleDebug / assembleRelease: NOT_RUN
+EMULATOR / PHYSICAL_DEVICE: NOT_RUN

@@ -1,0 +1,156 @@
+diff --git a/app/src/main/java/com/localai/workspace/AppGraph.kt b/app/src/main/java/com/localai/workspace/AppGraph.kt
+index b6d132e..acbbd33 100644
+--- a/app/src/main/java/com/localai/workspace/AppGraph.kt
++++ b/app/src/main/java/com/localai/workspace/AppGraph.kt
+@@ -48,7 +48,9 @@ class AppGraph(context: Context,
+     fun releaseIdleModel() { runtimeScope.launch { chatRuntimes.releaseIdle() } }
+     /** Compatibility alias for older screens while chat is migrated to the registry. */
+     val runtime get() = llamaRuntime
+-    val workspace = WorkspaceRepository(database, java.io.File(appContext.filesDir, "documents"))
++    val workspace = WorkspaceRepository(database, java.io.File(appContext.filesDir, "documents"), onWorkspaceDeleted = { id ->
++        if (validationOwner == null) semanticV2.deleteProjectScope(id)
++    })
+     val documents = DocumentIngestionService(appContext, database, database.documentDao(), onIndexed = { id ->
+         if(validationOwner==null) {
+             // Ingestion awaits this callback: stale the active semantic generation before
+diff --git a/app/src/main/java/com/localai/workspace/data/WorkspaceRepository.kt b/app/src/main/java/com/localai/workspace/data/WorkspaceRepository.kt
+index 7a2b9a5..a8982af 100644
+--- a/app/src/main/java/com/localai/workspace/data/WorkspaceRepository.kt
++++ b/app/src/main/java/com/localai/workspace/data/WorkspaceRepository.kt
+@@ -10,7 +10,11 @@ import kotlinx.coroutines.sync.withLock
+ import java.io.File
+ import java.util.UUID
+ 
+-class WorkspaceRepository(private val database: WorkspaceDatabase, private val privateDocumentsDirectory: File? = null) {
++class WorkspaceRepository(
++    private val database: WorkspaceDatabase,
++    private val privateDocumentsDirectory: File? = null,
++    private val onWorkspaceDeleted: suspend (String) -> Unit = {},
++) {
+     private val projects = database.projectDao()
+     private val conversations = database.conversationDao()
+     private val messages = database.messageDao()
+@@ -101,23 +105,29 @@ class WorkspaceRepository(private val database: WorkspaceDatabase, private val p
+ 
+     /** Remove one project conversation, or the entire isolated owner of a standalone chat. */
+     suspend fun deleteConversation(id: String): Int {
+-        database.withTransaction {
+-            val conversation = conversations.get(id) ?: return@withTransaction
++        val deletedWorkspace = database.withTransaction {
++            val conversation = conversations.get(id) ?: return@withTransaction null
+             val owner = conversation.projectId?.let { projects.get(it) }
+-            if (owner?.workspaceKind == WorkspaceKind.CHAT) deleteWorkspaceRows(owner.id)
++            if (owner?.workspaceKind == WorkspaceKind.CHAT) {
++                deleteWorkspaceRows(owner.id)
++                owner.id
++            }
+             else {
+                 database.citationEvidenceDao().deleteForConversation(id)
+                 database.toolCallDao().deleteForConversation(id)
+                 database.pendingDocumentDeletionDao().insertAll(messages.imagesForConversation(id).map { PendingDocumentDeletionEntity(it) })
+                 messages.deleteForConversation(id)
+                 conversations.delete(id)
++                null
+             }
+         }
++        deletedWorkspace?.let { kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) { onWorkspaceDeleted(it) } }
+         return cleanupDeletedDocuments()
+     }
+ 
+     suspend fun deleteWorkspace(id: String): Int {
+         database.withTransaction { deleteWorkspaceRows(id) }
++        kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) { onWorkspaceDeleted(id) }
+         return cleanupDeletedDocuments()
+     }
+ 
+diff --git a/app/src/main/java/com/localai/workspace/semantic/v2/SemanticDatabase.kt b/app/src/main/java/com/localai/workspace/semantic/v2/SemanticDatabase.kt
+index 34d77e0..8e0c02b 100644
+--- a/app/src/main/java/com/localai/workspace/semantic/v2/SemanticDatabase.kt
++++ b/app/src/main/java/com/localai/workspace/semantic/v2/SemanticDatabase.kt
+@@ -46,6 +46,20 @@ data class IndexedSegment(@Embedded val segment: SemanticSegmentRecord, val sour
+     @Query("SELECT * FROM semantic_active_indexes WHERE scopeKey=:scope") suspend fun active(scope: String): SemanticActiveIndex?
+     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun activate(value: SemanticActiveIndex)
+     @Query("SELECT COUNT(*) FROM semantic_embeddings_v2 WHERE indexId=:id") suspend fun count(id: String): Int
++    @Query("DELETE FROM semantic_active_indexes WHERE scopeKey=:scope") suspend fun deleteActive(scope: String)
++    @Query("DELETE FROM semantic_embeddings_v2 WHERE indexId IN (SELECT id FROM semantic_index_jobs WHERE scopeKey=:scope)") suspend fun deleteEmbeddingsForScope(scope: String)
++    @Query("DELETE FROM semantic_segments WHERE sourceId IN (SELECT id FROM semantic_sources WHERE scopeKey=:scope)") suspend fun deleteSegmentsForScope(scope: String)
++    @Query("DELETE FROM semantic_sources WHERE scopeKey=:scope") suspend fun deleteSourcesForScope(scope: String)
++    @Query("DELETE FROM semantic_index_jobs WHERE scopeKey=:scope") suspend fun deleteJobsForScope(scope: String)
++    @Query("DELETE FROM semantic_vector_payloads_v2 WHERE NOT EXISTS (SELECT 1 FROM semantic_embeddings_v2 e WHERE e.embeddingSpaceKey=semantic_vector_payloads_v2.embeddingSpaceKey AND e.taskType=semantic_vector_payloads_v2.taskType AND e.contentHash=semantic_vector_payloads_v2.contentHash)") suspend fun deleteOrphanPayloads()
++    @Transaction suspend fun deleteScope(scope: String) {
++        deleteActive(scope)
++        deleteEmbeddingsForScope(scope)
++        deleteSegmentsForScope(scope)
++        deleteSourcesForScope(scope)
++        deleteJobsForScope(scope)
++        deleteOrphanPayloads()
++    }
+     @Query("SELECT s.*, o.displayName AS sourceName, p.vector AS vector, e.dimension AS dimension, e.embeddingSpaceKey AS spaceKey, e.modelHash AS modelHash, e.modelId AS modelId FROM semantic_segments s JOIN semantic_sources o ON o.id=s.sourceId JOIN semantic_embeddings_v2 e ON e.segmentId=s.id JOIN semantic_vector_payloads_v2 p ON p.embeddingSpaceKey=e.embeddingSpaceKey AND p.taskType=e.taskType AND p.contentHash=e.contentHash WHERE e.indexId=:indexId AND o.scopeKey=:scope AND e.embeddingSpaceKey=:space LIMIT :limit") suspend fun corpus(indexId: String, scope: String, space: String, limit: Int): List<IndexedSegment>
+ }
+ /** Sidecar DB is additive: the complete version-8 workspace, including EG1 vectors, is untouched. */
+diff --git a/app/src/main/java/com/localai/workspace/semantic/v2/SemanticLayer.kt b/app/src/main/java/com/localai/workspace/semantic/v2/SemanticLayer.kt
+index da599de..02736b3 100644
+--- a/app/src/main/java/com/localai/workspace/semantic/v2/SemanticLayer.kt
++++ b/app/src/main/java/com/localai/workspace/semantic/v2/SemanticLayer.kt
+@@ -212,6 +212,10 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
+         val job=dao.job(active.indexId) ?: return@withLock
+         if(job.state=="READY")dao.job(job.copy(state="NEEDS_REINDEX",updatedAt=System.currentTimeMillis()))
+     }
++    /** Remove only derived Semantic V2 state after the user deletes its owning project. */
++    suspend fun deleteProjectScope(projectId:String) = operations.withLock {
++        database.dao().deleteScope(SemanticScope(ScopeType.PROJECT,projectId).key)
++    }
+     suspend fun switchIndex(id: String) = operations.withLock {
+         val dao=database.dao();val job=dao.job(id) ?: error("Missing index")
+         require(job.state=="READY" && job.embeddings>0 && job.segments==job.embeddings && dao.count(id)==job.embeddings)
+diff --git a/app/src/test/java/com/localai/workspace/semantic/v2/SemanticContextPostfixTest.kt b/app/src/test/java/com/localai/workspace/semantic/v2/SemanticContextPostfixTest.kt
+index edac8e6..6db6c85 100644
+--- a/app/src/test/java/com/localai/workspace/semantic/v2/SemanticContextPostfixTest.kt
++++ b/app/src/test/java/com/localai/workspace/semantic/v2/SemanticContextPostfixTest.kt
+@@ -582,6 +582,46 @@ class SemanticContextPostfixTest {
+         assertTrue(layer.search(SemanticInput.Text("ORCHID"),SemanticScope(ScopeType.PROJECT,"project-a"),setOf(SemanticModality.TEXT)).any{it.content=="ORCHID updated content."})
+     }
+ 
++    @Test fun deletingWorkspacePurgesOnlyItsSemanticGenerationsAndKeepsSharedPayloads()=runBlocking {
++        addProject("project-a");addProject("project-b")
++        addDocument("project-a","doc-a","notes.txt","ORCHID shared source content.")
++        addDocument("project-b","doc-b","notes.txt","ORCHID shared source content.")
++        val generations=index("project-a","project-b")
++        val dao=semanticDb.dao()
++        val scopeA=SemanticScope(ScopeType.PROJECT,"project-a");val scopeB=SemanticScope(ScopeType.PROJECT,"project-b")
++        val sourceIdsA=dao.sources(scopeA.key).map{it.id}
++        val payloadsBefore=dao.payloadCount()
++        assertTrue("fixture proves payload deduplication across scopes",payloadsBefore>0)
++
++        WorkspaceRepository(workspace,onWorkspaceDeleted={layer.deleteProjectScope(it)}).deleteWorkspace("project-a")
++
++        assertNull(dao.active(scopeA.key))
++        assertNull(dao.job(generations.getValue("project-a")))
++        assertEquals(0,dao.count(generations.getValue("project-a")))
++        assertTrue(dao.sources(scopeA.key).isEmpty())
++        assertTrue(sourceIdsA.all{dao.segments(it).isEmpty()})
++        assertEquals("B's shared payload remains referenced",payloadsBefore,dao.payloadCount())
++        assertEquals(generations.getValue("project-b"),dao.active(scopeB.key)?.indexId)
++        assertEquals("READY",dao.job(generations.getValue("project-b"))?.state)
++        assertTrue(layer.search(SemanticInput.Text("ORCHID"),scopeB,setOf(SemanticModality.TEXT)).any{it.content=="ORCHID shared source content."})
++        assertNull("deleted project is no longer a searchable scope",workspace.projectDao().get("project-a"))
++    }
++
++    @Test fun deletingStandaloneChatAlsoPurgesItsSemanticScope()=runBlocking {
++        val projectId=graph.workspace.createChat()
++        addDocument(projectId,"chat-doc","chat.txt","ORCHID private chat document.")
++        val oldGeneration=index(projectId).getValue(projectId)
++        val conversation=graph.workspace.createConversation(projectId)
++
++        WorkspaceRepository(workspace,onWorkspaceDeleted={layer.deleteProjectScope(it)}).deleteConversation(conversation.id)
++
++        val scope=SemanticScope(ScopeType.PROJECT,projectId)
++        assertNull(semanticDb.dao().active(scope.key))
++        assertNull(semanticDb.dao().job(oldGeneration))
++        assertTrue(semanticDb.dao().sources(scope.key).isEmpty())
++        assertNull(workspace.projectDao().get(projectId))
++    }
++
+     @Test fun realDocumentIngestionAwaitsStaleGenerationMark()=runBlocking {
+         context.deleteDatabase("semantic_v2.db")
+         val persisted=SemanticDatabase.create(context)

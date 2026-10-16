@@ -1,0 +1,127 @@
+{
+  "increment": "M02 Semantic V2 project-scope cleanup after explicit workspace deletion",
+  "status": "IMPLEMENTED_FOCUSED_HOST_VALIDATED_PREPARATORY_PARTIAL",
+  "testedCodeSha": "8b91675646abca8c4e3e22f3ecd86d97ee817345",
+  "codeCommits": [
+    "377d73d82df3d6fee61a3d3e20ada05970b2bd27",
+    "0d25b5ffa20b048617f44544999acc728f73ba67",
+    "8b91675646abca8c4e3e22f3ecd86d97ee817345"
+  ],
+  "branch": "codex/master-program-20261016",
+  "baseWorkingCommit": "51451bba4b2ba2e46c65dec5fefa57e094eebbb2",
+  "featureBaseSha": "458864aa03bdedda2388373e6573f500afda7c79",
+  "sourceFinding": "Workspace/project deletion removed WorkspaceDatabase and EG1 state but left Semantic V2 scope rows, generations, and vector links in its sidecar database.",
+  "implementation": {
+    "deletionRoutes": [
+      "user-confirmed project/workspace delete",
+      "deletion of a standalone CHAT workspace through conversation delete"
+    ],
+    "scope": "PROJECT:<deleted projectId> only",
+    "transaction": "Semantic V2 cleanup runs after the WorkspaceDatabase deletion transaction commits; active pointer, generation links, segments, sources and jobs are removed in one sidecar Room transaction.",
+    "sharedPayloads": "vector payloads are deleted only if no remaining embedding link references them",
+    "schemaChanged": false,
+    "sourceDocumentsOrUserFilesModified": false,
+    "searchIsolation": "other project scope and its READY generation remain searchable",
+    "originalTaskStatus": "M02-06 remains TODO; this increment supplies only partial host evidence and marks no original ID complete"
+  },
+  "host": {
+    "focusedJvm": "PASS",
+    "command": "See final-host/run-metadata.txt",
+    "startedAtUtc": "2026-10-16T18:12:36Z",
+    "finishedAtUtc": "2026-10-16T18:16:14Z",
+    "durationSeconds": 218,
+    "gradleReportedDuration": "3m37s",
+    "exitCode": 0,
+    "gradle": "8.10.2",
+    "runtimeJdk": "Temurin 17.0.20.1",
+    "appTestLauncher": "Temurin 21.0.12.1 (configured by app/build.gradle.kts)",
+    "sdk": "Android API 35",
+    "ndk": "27.0.12077973",
+    "cmake": "3.31.6",
+    "offline": true,
+    "noBuildCache": true,
+    "rerunTasks": true,
+    "actionableTasks": 63,
+    "executedTasks": 63,
+    "tests": {
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "cases": [
+      {
+        "class": "com.localai.workspace.semantic.v2.SemanticContextPostfixTest",
+        "method": "deletingStandaloneChatAlsoPurgesItsSemanticScope",
+        "seconds": 9.202
+      },
+      {
+        "class": "com.localai.workspace.semantic.v2.SemanticContextPostfixTest",
+        "method": "deletingWorkspacePurgesOnlyItsSemanticGenerationsAndKeepsSharedPayloads",
+        "seconds": 0.468
+      },
+      {
+        "class": "com.localai.workspace.semantic.v2.SemanticContextPostfixTest",
+        "method": "appGraphWorkspaceDeletionPurgesPersistedSemanticV2Rows",
+        "seconds": 0.239
+      }
+    ],
+    "xml": "final-host/junit/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml",
+    "gradleLog": "final-host/gradle.log",
+    "failedAttempt": {
+      "codeSha": "0d25b5ffa20b048617f44544999acc728f73ba67",
+      "status": "COMPILE_FAILURE_TEST_NOT_RUN",
+      "exitCode": 1,
+      "cause": "fixture supplied Int literals where ByteArray requires Byte; no test started and no current-run JUnit XML was produced",
+      "evidence": "attempts/attempt-03-compile-failure/gradle.log",
+      "copiedOldXml": "attempts/attempt-03-compile-failure/stale-xml-from-attempt-02-not-current/previous-attempt-02-xml.not-current.xml"
+    },
+    "earlierFocusedRuns": [
+      {
+        "codeSha": "377d73d82df3d6fee61a3d3e20ada05970b2bd27",
+        "status": "PASS",
+        "tests": 2,
+        "evidence": "attempts/attempt-02-code-377d"
+      },
+      {
+        "codeSha": "NOT_COMMITTED_DURING_RUN",
+        "status": "PRECOMMIT_DIAGNOSTIC_PASS_NOT_FINAL_SHA_ATTRIBUTED",
+        "tests": 2,
+        "evidence": "attempts/attempt-01-precommit"
+      }
+    ]
+  },
+  "notRun": {
+    "fullAppJvm": "NOT_RUN",
+    "litertCompatJvm": "NOT_RUN",
+    "lintDebug": "NOT_RUN",
+    "androidTestCompile": "NOT_RUN",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  },
+  "limitations": [
+    "Document-level remove/edit API is absent and not added here; this does not satisfy the complete M02-06 DoD.",
+    "No full JVM suite, LiteRT compatibility suite, lint, AndroidTest compilation, APK, emulator, or device test was run.",
+    "This is derived-index cleanup only; it does not change imported source bytes, project files, or Room schema."
+  ],
+  "originalPlan": {
+    "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "tasks": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "sourceStates": {
+      "TODO": 97
+    },
+    "roadmap": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "edited": false
+  },
+  "evidenceManifest": {
+    "path": "docs/validation/master-program-semantic-scope-cleanup/SHA256SUMS",
+    "entries": 23,
+    "sha256": "e9f6da0f568fe5476ee1885b517b47bb278bcbf736eecdf40f728a01b55b5c2f",
+    "verification": "All listed payloads verified locally with sha256sum -c; report JSON/Markdown and the manifest itself are excluded from the payload manifest."
+  }
+}

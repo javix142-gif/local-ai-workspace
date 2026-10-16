@@ -1,0 +1,6 @@
+started_at_utc=2026-10-16T18:00:52Z
+code_sha=51451bba4b2ba2e46c65dec5fefa57e094eebbb2
+java17=openjdk version "17.0.20.1" 2026-08-18
+java21=openjdk version "21.0.12.1" 2026-08-18 LTS
+command=JAVA_HOME=/workspace/.toolchain/jdk-17-temurin PATH=/workspace/.toolchain/jdk-17-temurin/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk GRADLE_USER_HOME=/workspace/.gradle-master-program-20261016 ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --no-build-cache -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17-temurin,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.semantic.v2.SemanticContextPostfixTest.deletingWorkspacePurgesOnlyItsSemanticGenerationsAndKeepsSharedPayloads --tests com.localai.workspace.semantic.v2.SemanticContextPostfixTest.deletingStandaloneChatAlsoPurgesItsSemanticScopeexit_code=0
+finished_at_utc=2026-10-16T18:03:27Z

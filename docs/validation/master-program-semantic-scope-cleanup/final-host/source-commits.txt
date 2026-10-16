@@ -1,0 +1,4 @@
+377d73d82df3d6fee61a3d3e20ada05970b2bd27 fix(semantic): purge project index on workspace deletion
+0d25b5ffa20b048617f44544999acc728f73ba67 test(semantic): cover workspace deletion scope cleanup
+8b91675646abca8c4e3e22f3ecd86d97ee817345 test(semantic): fix deletion fixture vector bytes
+Tested code HEAD: 8b91675646abca8c4e3e22f3ecd86d97ee817345

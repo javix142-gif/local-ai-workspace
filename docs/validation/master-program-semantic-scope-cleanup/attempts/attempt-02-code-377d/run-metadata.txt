@@ -1,0 +1,14 @@
+status=PASS
+code_sha=377d73d82df3d6fee61a3d3e20ada05970b2bd27
+runtime=Temurin_JDK_17.0.20.1
+app_test_worker=Temurin_JDK_21.0.12.1
+android_sdk=/workspace/.toolchain/android-sdk
+android_platform=API_35
+android_ndk=27.0.12077973
+cmake=3.31.6
+gradle=8.10.2
+gradle_user_home=/workspace/.gradle-master-program-20261016
+started_at_utc=2026-10-16T18:04:50Z
+command=JAVA_HOME=/workspace/.toolchain/jdk-17-temurin PATH=/workspace/.toolchain/jdk-17-temurin/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk GRADLE_USER_HOME=/workspace/.gradle-master-program-20261016 ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --no-build-cache --rerun-tasks -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17-temurin,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.semantic.v2.SemanticContextPostfixTest.deletingWorkspacePurgesOnlyItsSemanticGenerationsAndKeepsSharedPayloads --tests com.localai.workspace.semantic.v2.SemanticContextPostfixTest.deletingStandaloneChatAlsoPurgesItsSemanticScope
+exit_code=0
+finished_at_utc=2026-10-16T18:08:02Z

@@ -1,0 +1,24 @@
+{
+  "suite": "com.localai.workspace.semantic.v2.SemanticContextPostfixTest",
+  "tests": 3,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "cases": [
+    {
+      "class": "com.localai.workspace.semantic.v2.SemanticContextPostfixTest",
+      "name": "deletingStandaloneChatAlsoPurgesItsSemanticScope",
+      "seconds": 9.202
+    },
+    {
+      "class": "com.localai.workspace.semantic.v2.SemanticContextPostfixTest",
+      "name": "deletingWorkspacePurgesOnlyItsSemanticGenerationsAndKeepsSharedPayloads",
+      "seconds": 0.468
+    },
+    {
+      "class": "com.localai.workspace.semantic.v2.SemanticContextPostfixTest",
+      "name": "appGraphWorkspaceDeletionPurgesPersistedSemanticV2Rows",
+      "seconds": 0.239
+    }
+  ]
+}

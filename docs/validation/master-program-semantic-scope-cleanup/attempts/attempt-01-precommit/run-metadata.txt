@@ -1,0 +1,10 @@
+status=PRECOMMIT_DIAGNOSTIC_PASS_NOT_FINAL_SHA_ATTRIBUTED
+base_commit_sha=51451bba4b2ba2e46c65dec5fefa57e094eebbb2
+source_working_tree_patch_sha256=ea4bbbba5a4a73076b7199285280710c22b7b8b22ecde008d38448c26f3081b6
+started_at_utc=2026-10-16T18:00:52Z
+finished_at_utc=2026-10-16T18:03:27Z
+duration_seconds=155
+gradle_reported_duration=2m33s
+exit_code=0
+result=2_tests_0_failures_0_errors_0_skipped
+note=Run included the source diff recorded beside this file; final acceptance run will use the committed source SHA.

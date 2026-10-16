@@ -1,0 +1,8 @@
+Confirmed by source inspection before the fix:
+- AppGraph created WorkspaceRepository without any callback to SemanticLayer.
+- WorkspaceRepository.deleteWorkspace and deleting a standalone CHAT conversation removed WorkspaceDatabase rows, EG1 vectors and files, but never accessed SemanticDatabase.
+- Semantic V2 generations, source/segment rows, active-index pointer and vector links/payloads therefore remained after owner deletion.
+
+The production workspace deletion hook now runs after the WorkspaceDatabase transaction commits. It awaits SemanticLayer's operation mutex and performs one SemanticDatabase transaction scoped to exactly PROJECT:<id>. It deletes only that scope's active pointer, generation embedding links, segments, sources and jobs, then removes vector payloads only when no remaining embedding references them. A standalone CHAT deletion uses the same path. Ordinary conversation deletion inside a persistent project does not delete that project scope.
+
+No source document, memory, model, Room workspace schema or SemanticDatabase version is changed by this cleanup. If another project's index shares the vector payload, its link keeps the payload alive. Existing missing-project search guard remains in place. This does not add document-level delete/edit APIs or make the full M02-06 DoD complete.

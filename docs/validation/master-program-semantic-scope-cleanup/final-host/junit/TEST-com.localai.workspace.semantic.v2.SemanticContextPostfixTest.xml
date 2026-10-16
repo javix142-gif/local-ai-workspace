@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-16T18:16:03" hostname="7023f296b5c7" time="9.91">
+  <properties/>
+  <testcase name="deletingStandaloneChatAlsoPurgesItsSemanticScope" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="9.202"/>
+  <testcase name="deletingWorkspacePurgesOnlyItsSemanticGenerationsAndKeepsSharedPayloads" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.468"/>
+  <testcase name="appGraphWorkspaceDeletionPurgesPersistedSemanticV2Rows" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.239"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
