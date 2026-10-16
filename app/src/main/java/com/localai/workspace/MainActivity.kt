@@ -470,7 +470,10 @@ private fun ProjectScreen(viewModel: HomeViewModel, navController: NavHostContro
             viewModel.deleteDocument(projectId, file.id) { fileDetailsId = null }
         }) { Text("Remove file") } },
         dismissButton = { TextButton(onClick = { confirmFileDeleteId = null; fileDetailsId = file.id }) { Text("Keep file") } },
-        text = { Text("This removes the imported private copy and its search index from this workspace. The original file on your device is not deleted, and existing chat citation snapshots are kept.") }))
+        text = {
+            Text("This removes the imported private copy and its search index from this workspace. The original file on your device is not deleted, and existing chat citation snapshots are kept.")
+        })
+    }
     if (showDelete && project != null) DeleteWorkspaceDialog(project!!.name, false,
         onDismiss = { showDelete = false }, onConfirm = { showDelete = false; viewModel.deleteWorkspace(projectId) { navController.popBackStack() } })
     chats.firstOrNull { it.id == deleteChatId }?.let { chat -> DeleteChatDialog(chat.title, { deleteChatId = null }, {
