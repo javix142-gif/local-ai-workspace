@@ -58,6 +58,8 @@ class DocumentRemovalUiTest {
             compose.onNodeWithText("Remove file from workspace?").assertIsDisplayed()
             compose.onNodeWithText("Remove file").performClick()
             compose.waitUntil(15_000) { compose.onAllNodesWithText(displayName).fetchSemanticsNodes().isEmpty() }
+            // The Room flow removes the row before the repository finishes the durable file-cleanup outbox.
+            compose.waitUntil(15_000) { !imported.exists() }
             runBlocking(Dispatchers.IO) {
                 assertNull(graph.database.documentDao().get(documentId))
                 assertTrue(graph.database.documentDao().segmentsForDocument(documentId).isEmpty())
