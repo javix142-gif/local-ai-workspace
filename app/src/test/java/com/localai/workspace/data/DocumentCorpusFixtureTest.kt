@@ -2,6 +2,7 @@ package com.localai.workspace.data
 
 import android.app.Application
 import com.localai.workspace.context.ContextEvidenceExcerptSelector
+import com.localai.workspace.documents.StructuredDocuments
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -107,6 +108,38 @@ class DocumentCorpusFixtureTest {
         assertNotNull(revised)
         assertTrue(revised!!.text.contains("=7"))
         assertTrue(v2.contains("A3") && v2.contains("\$A\$2-\$A\$1") && v2.contains("4"))
+    }
+
+    @Test fun xlsxPreservesCellTypesSheetOrderFormulaAndCachedValueWithoutRecalculation() {
+        val original = StructuredDocuments.xlsx(File(corpus, "v1-fixture.xlsx"))
+        assertEquals(listOf("Hoja1", "Hoja2"), original.sheetNames)
+        fun cell(sheet: String, address: String) = original.cells.single { it.sheet == sheet && it.address == address }
+
+        assertEquals("n", cell("Hoja1", "A1").type)
+        assertEquals("1", cell("Hoja1", "A1").value)
+        assertEquals("inlineStr", cell("Hoja1", "B1").type)
+        assertEquals("España & <valor>", cell("Hoja1", "B1").value)
+        assertEquals("n", cell("Hoja1", "A2").type)
+        assertEquals("5", cell("Hoja1", "A2").value)
+        val formula = cell("Hoja1", "A3")
+        assertEquals("n", formula.type)
+        assertEquals("\$A\$2-\$A\$1", formula.formula)
+        assertEquals("4", formula.value)
+        assertEquals("inlineStr", cell("Hoja2", "B14").type)
+        assertEquals("Exacto 界", cell("Hoja2", "B14").value)
+
+        val serialized = original.document().pages.joinToString("\n") { it.text }
+        assertTrue(serialized.contains("\"valueType\":\"n\""))
+        assertTrue(serialized.contains("\"valueType\":\"inlineStr\""))
+        assertTrue(serialized.contains(formula.formula!!))
+        assertFalse("The structured representation must not claim formula recalculation", serialized.contains("recalculated"))
+
+        val revised = StructuredDocuments.xlsx(File(corpus, "v2-fixture.xlsx"))
+        assertEquals(listOf("Hoja1", "Hoja2"), revised.sheetNames)
+        assertEquals("7", revised.cells.single { it.sheet == "Hoja1" && it.address == "A2" }.value)
+        val cached = revised.cells.single { it.sheet == "Hoja1" && it.address == "A3" }
+        assertEquals("\$A\$2-\$A\$1", cached.formula)
+        assertEquals("4", cached.value)
     }
 
     @Test fun docxTableCellMatchesExpectedAnswer() = runBlocking {
