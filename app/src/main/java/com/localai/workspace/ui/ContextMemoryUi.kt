@@ -25,6 +25,16 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import com.google.gson.GsonBuilder
 
+private fun memoryBundleExportError(failure:Exception):String = when(failure) {
+    is MemoryBundleV1.InvalidPackage -> when(failure.reason) {
+        "SENSITIVE_MEMORY_REQUIRES_REVIEW" -> "Export stopped: a saved memory may contain sensitive information. Review or edit it before exporting."
+        "TOO_MANY_RECORDS" -> "Export is limited to 250 memories. Narrow the scope or review saved records; none were silently omitted."
+        "EXPORT_SIZE_LIMIT_EXCEEDED", "ARCHIVE_TOO_LARGE" -> "The selected memories exceed the portable ZIP size limit; no partial archive was exported."
+        else -> failure.reason
+    }
+    else -> failure.message ?: failure.javaClass.simpleName
+}
+
 @Composable fun ContextMemoryEntry(projectId:String?=null) {
     var open by remember{mutableStateOf(false)}
     TextButton(onClick={open=true}){Text("Structured memory")}
@@ -50,7 +60,7 @@ import com.google.gson.GsonBuilder
                 }
                 importResult="Exported ${exported.exportedRecords} active in-scope memories. Embeddings were not included."
                 implementDialog=false
-            } catch(cancel:CancellationException){throw cancel} catch(e:Exception){error=e.message ?: e.javaClass.simpleName}
+            } catch(cancel:CancellationException){throw cancel} catch(e:Exception){error=memoryBundleExportError(e)}
             finally{busy=false}
         }
     }
