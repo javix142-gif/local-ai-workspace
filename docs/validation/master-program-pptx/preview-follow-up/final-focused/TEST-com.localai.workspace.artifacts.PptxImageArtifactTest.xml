@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.artifacts.PptxImageArtifactTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-17T01:42:21" hostname="7023f296b5c7" time="7.496">
+  <properties/>
+  <testcase name="rejectsMalformedOversizedOrUnlabelledPptxImages" classname="com.localai.workspace.artifacts.PptxImageArtifactTest" time="6.932"/>
+  <testcase name="generatedPptxEmbedsAccessiblePngAndKeepsImageAcrossImmutableRevision" classname="com.localai.workspace.artifacts.PptxImageArtifactTest" time="0.461"/>
+  <testcase name="textualPreviewDistinguishesImageRevisionWithoutExposingPngPayload" classname="com.localai.workspace.artifacts.PptxImageArtifactTest" time="0.101"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

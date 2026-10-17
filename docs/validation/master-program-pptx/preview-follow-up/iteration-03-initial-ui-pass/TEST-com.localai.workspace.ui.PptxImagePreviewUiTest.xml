@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.PptxImagePreviewUiTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-17T01:36:43" hostname="7023f296b5c7" time="11.237">
+  <properties/>
+  <testcase name="savedPptxShowsAccessibleBoundedImageAssetWithoutChangingRevision" classname="com.localai.workspace.ui.PptxImagePreviewUiTest" time="11.237"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

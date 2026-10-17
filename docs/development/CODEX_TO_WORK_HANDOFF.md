@@ -1,4 +1,14 @@
-# Current continuation checkpoint — preparatory M03-05 PPTX images and automatic CI (2026-10-17)
+# Current continuation checkpoint — M03-05 PPTX image asset preview follow-up (2026-10-17)
+
+Code commit `b5222c0a388777ee4570fb40290a9e760266efe1` adds a bounded visual preview for caller-supplied PPTX PNG assets and a SHA-256 identity in the textual before/after preview. Alt text, source dimensions, slide number/title and a clear “slide layout is not rendered” notice are visible. Parsing/decoding run off the UI thread, preview bitmaps are downsampled and capped, and previewing does not change bytes or revision history.
+
+Final focused host execution passed 4/4 tests with exit 0. Proportional `lintDebug` passed with 77 warnings, 1 information finding and 0 errors (none in changed files); `compileDebugAndroidTestKotlin` completed successfully but did not run instrumentation. Full JVM/LiteRT, emulator, physical device, APK and performance tests were not run for this follow-up. Commands, logs, XML and hashes are in `../validation/master-program-pptx/preview-follow-up/`; the source task remains partial.
+
+The focused and proportional Gradle invocations started at parent HEAD `998769a954c21db2641694d478e148eec073d736` with the five final source/test changes in the working tree; those files were committed unchanged afterward as `b5222c0a388777ee4570fb40290a9e760266efe1`. No Git tree object was captured at invocation, so the evidence is attributed to the working-tree source change rather than claiming Gradle launched at the code commit. The 40-entry follow-up manifest is SHA-256 `6b97bb107b3168874b7fa95afd6e102c0d7dc3547891c033aaf73bf9b0001b53`; the enclosing 105-entry PPTX evidence manifest is SHA-256 `aea7216b242dcc2e0c8c069d80372ff17aca4fb7a1e34237a510eaad839bb181`.
+
+The known overall emulator status is still FAIL on the previous code for the authentic Room-v1 fixture and six tests skipped for absent real models. No emulator/Motorola validation of this follow-up is claimed. M03-05 remains source `TODO`, `requires_device=true`, depends on M03-01 `TODO`, and neither task is formally complete. The original 97 task IDs, order, 120 dependency edges and all-TODO source baseline are unchanged; M01-06 remains `PENDING_REQUIRES_DEVICE`; `PHYSICAL_DEVICE=NOT_RUN`.
+
+## Previous checkpoint — bounded PPTX image insertion and automatic CI
 
 Code commit `6231732ad8557465abfc8155925fdcbc90d1eb87` adds bounded embedding of a caller-supplied PNG plus alternative text into generated PPTX slides. It validates canonical Base64, PNG chunks/CRCs, byte and pixel limits, and a sampled bitmap decode; writes a real media part, slide relationship and picture shape; locks aspect ratio; and preserves layout/master/theme. The preview remains textual/structural, not a slide canvas. No image generation, URL/path access, remote fetch, dependency, runtime, Room, or original plan change was made.
 

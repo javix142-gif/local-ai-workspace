@@ -1,0 +1,1 @@
+XML note: The assertion-failure iteration reported 4 tests / 1 failure in the raw Gradle log. Its JUnit XML was not captured before the next run overwrote Gradle test output; no XML is claimed for this iteration.

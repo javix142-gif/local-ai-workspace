@@ -1,0 +1,121 @@
+{
+  "increment": "Preparatory M03-05 PPTX image preview identity and visual asset preview",
+  "baseHead": "998769a954c21db2641694d478e148eec073d736",
+  "codeSha": "b5222c0a388777ee4570fb40290a9e760266efe1",
+  "status": "FOCUSED_HOST_PASS_AND_LINT_ANDROIDTEST_COMPILE_PASS_PARTIAL_NOT_FORMAL",
+  "sourceTask": {
+    "id": "M03-05",
+    "status": "TODO",
+    "requiresDevice": true,
+    "dependsOn": [
+      "M03-01"
+    ],
+    "dependencyStatus": "TODO",
+    "formalCompletion": "NOT_CLAIMED"
+  },
+  "changes": {
+    "textPreview": "Shows validated PNG SHA-256 beside alt text; never includes Base64 payload.",
+    "visualAssetPreview": "Displays only caller-supplied bounded PNG assets with accessible alt text, source dimensions, slide identity, and an explicit non-slide-render disclaimer.",
+    "execution": "PPTX parsing/preview text/image decoding run on Dispatchers.Default.",
+    "bounds": {
+      "perImageDecodedPixels": 65536,
+      "totalDecodedPixels": 1000000,
+      "inputBytes": "Existing PptxImagePayloadValidator limits unchanged"
+    },
+    "persistence": "Preview does not write or revise stored artifacts; existing bytes and revision history remain unchanged.",
+    "notImplemented": [
+      "Image generation",
+      "Slide-canvas/WYSIWYG rendering",
+      "Network or path image loading"
+    ]
+  },
+  "host": {
+    "gradle": "8.10.2",
+    "runtimeJdk": "Temurin 17.0.20.1",
+    "toolchainDiscoveryPaths": [
+      "/workspace/.toolchain/jdk-17-temurin",
+      "/workspace/.toolchain/jdk-21-temurin"
+    ],
+    "androidSdk": "/workspace/.toolchain/android-sdk (API 35 already installed)",
+    "gradleUserHome": "/workspace/.gradle-master-program-20261016 (existing offline cache)",
+    "redBaseline": {
+      "sourceHead": "998769a954c21db2641694d478e148eec073d736",
+      "localChange": "New regression test only; production still had the old preview.",
+      "exitCode": 1,
+      "tests": 1,
+      "failures": 1,
+      "meaning": "Different PNG bytes with same alt text produced identical textual previews."
+    },
+    "finalFocused": {
+      "exitCode": 0,
+      "buildSuccessful": true,
+      "startedAtUtc": "2026-10-17T01:42:00Z",
+      "finishedAtUtc": "2026-10-17T01:42:35Z",
+      "gradleReportedDuration": "34s",
+      "junit": {
+        "tests": 4,
+        "passed": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "suites": {
+          "PptxImageArtifactTest": 3,
+          "PptxImagePreviewUiTest": 1
+        },
+        "xml": [
+          "final-focused/TEST-com.localai.workspace.artifacts.PptxImageArtifactTest.xml",
+          "final-focused/TEST-com.localai.workspace.ui.PptxImagePreviewUiTest.xml"
+        ]
+      },
+      "commandFile": "final-focused/command.txt",
+      "log": "final-focused/gradle.log"
+    },
+    "proportionalGate": {
+      "exitCode": 0,
+      "buildSuccessful": true,
+      "startedAtUtc": "2026-10-17T01:42:49Z",
+      "finishedAtUtc": "2026-10-17T01:48:47Z",
+      "gradleReportedDuration": "5m56s",
+      "tasks": {
+        ":app:lintDebug": "PASS",
+        ":app:compileDebugAndroidTestKotlin": "PASS_COMPILE_ONLY"
+      },
+      "lint": {
+        "warnings": 77,
+        "information": 1,
+        "errors": 0,
+        "issuesInChangedFiles": 0,
+        "xml": "final-host-gates/lint-results-debug.xml"
+      },
+      "commandFile": "final-host-gates/command.txt",
+      "log": "final-host-gates/gradle.log"
+    },
+    "notRun": {
+      "fullAppJvmSuite": true,
+      "liteRtCompatSuite": true,
+      "connectedInstrumentation": true,
+      "emulator": true,
+      "physicalDevice": true,
+      "apk": true,
+      "performanceBenchmark": true
+    },
+    "sourceHeadAtInvocation": "998769a954c21db2641694d478e148eec073d736",
+    "sourceChangesCommittedAfterRunAs": "b5222c0a388777ee4570fb40290a9e760266efe1",
+    "invocationGitTreeObject": "NOT_CAPTURED",
+    "attribution": "Both invocations started at the parent Git HEAD with the five final source/test files in the working tree; those files were committed unchanged afterward."
+  },
+  "priorGlobalEmulatorStatus": {
+    "runId": 38988880055,
+    "status": "FAIL",
+    "reason": "Authentic Room-v1 schema fixture unavailable; six model-dependent tests skipped.",
+    "appliesToCode": "6231732ad8557465abfc8155925fdcbc90d1eb87",
+    "notReexecutedForThisFollowUp": true
+  },
+  "limitations": [
+    "The image preview does not render the final slide layout or typography placement.",
+    "M03-05 and dependency M03-01 remain source TODO.",
+    "No APK or device validation was performed."
+  ],
+  "evidenceDirectory": "docs/validation/master-program-pptx/preview-follow-up/",
+  "manifest": "SHA256SUMS"
+}

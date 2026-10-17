@@ -206,5 +206,36 @@
     },
     "physicalDevice": "NOT_RUN",
     "interpretation": "Room v1 migration fixture failure persists; six model-dependent tests skipped. The connected task did execute and XML counts are authoritative. No APK generated. M03-05 and M03-01 remain TODO."
+  },
+  "latestFollowUp": {
+    "name": "PPTX image preview identity and visual asset preview",
+    "codeSha": "b5222c0a388777ee4570fb40290a9e760266efe1",
+    "baseHead": "998769a954c21db2641694d478e148eec073d736",
+    "status": "FOCUSED_HOST_PASS_AND_LINT_ANDROIDTEST_COMPILE_PASS_PARTIAL_NOT_FORMAL",
+    "resultsFile": "preview-follow-up/RESULTS.md",
+    "manifest": "preview-follow-up/SHA256SUMS",
+    "focusedTests": {
+      "tests": 4,
+      "passed": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "lint": {
+      "status": "PASS",
+      "warnings": 77,
+      "information": 1,
+      "errors": 0
+    },
+    "androidTestCompilation": "PASS_COMPILE_ONLY",
+    "emulator": "NOT_RUN_FOR_FOLLOW_UP",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED",
+    "sourceHeadAtInvocation": "998769a954c21db2641694d478e148eec073d736",
+    "sourceChangesCommittedAfterRunAs": "b5222c0a388777ee4570fb40290a9e760266efe1",
+    "invocationGitTreeObject": "NOT_CAPTURED",
+    "attribution": "Gradle ran from parent HEAD with the five final source/test files in the working tree; those files were committed unchanged afterward.",
+    "evidenceManifestSha256": "6b97bb107b3168874b7fa95afd6e102c0d7dc3547891c033aaf73bf9b0001b53",
+    "evidenceManifestEntries": 40
   }
 }
