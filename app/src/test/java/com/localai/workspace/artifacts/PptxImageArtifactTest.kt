@@ -67,7 +67,7 @@ class PptxImageArtifactTest {
                 val height = pictureExt.attributes.getNamedItem("cy").nodeValue.toLong()
                 assertTrue("Image aspect ratio must be preserved", kotlin.math.abs(width.toDouble() / height - 2.0) < 0.02)
                 val rels = xml(zip, relsXml).getElementsByTagName("Relationship")
-                val imageRelationship = (0 until rels.length()).map { rels.item(it) }
+                val imageRelationship = (0 until rels.length).map { rels.item(it) }
                     .single { it.attributes.getNamedItem("Type").nodeValue.endsWith("/image") }
                 assertEquals("rIdImage", imageRelationship.attributes.getNamedItem("Id").nodeValue)
                 assertEquals("../media/image1.png", imageRelationship.attributes.getNamedItem("Target").nodeValue)
