@@ -1,0 +1,5 @@
+Source SHA: 648515e7e69bfeea0c7101c0d8ed4ab01270b634
+:app:testDebugUnitTest --tests com.localai.workspace.artifacts.PdfArtifactLayoutTest: EXECUTED, PASS
+Gradle actionable tasks: 63 executed, 0 failed
+JUnit: tests=1, failures=0, errors=0, skipped=0; test method=7.214 s
+Gradle: BUILD SUCCESSFUL, 3m45s, process exit code 0

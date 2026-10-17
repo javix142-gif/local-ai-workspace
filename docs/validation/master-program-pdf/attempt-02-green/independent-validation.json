@@ -1,0 +1,74 @@
+{
+  "independent_readers": [
+    "PyMuPDF 1.26.6",
+    "pypdf 6.10.0"
+  ],
+  "fixtures": [
+    {
+      "file": "fixture-v1.pdf",
+      "bytes": 1617,
+      "sha256": "823f7c65c6aec97fd52286f3d64f7f330660af7f17afbb906ab4029225efeb2e",
+      "reader_pages": 2,
+      "page_geometry_pt": [
+        [
+          612.0,
+          792.0
+        ],
+        [
+          612.0,
+          792.0
+        ]
+      ],
+      "font_sizes_pt": [
+        12.0,
+        16.0,
+        20.0
+      ],
+      "title_font_sizes_pt": [
+        20.0
+      ],
+      "heading_font_sizes_pt": [
+        16.0
+      ],
+      "body_font_sizes_pt": [
+        12.0
+      ],
+      "marker_is_single_word": true,
+      "all_text_bounds_inside_page": true,
+      "checks": "PASS"
+    },
+    {
+      "file": "fixture-v2.pdf",
+      "bytes": 1617,
+      "sha256": "673530978f9feb81e901c7c7f09660b4ced084d1c0d8ebdd6fdc80e34dcc23a2",
+      "reader_pages": 2,
+      "page_geometry_pt": [
+        [
+          612.0,
+          792.0
+        ],
+        [
+          612.0,
+          792.0
+        ]
+      ],
+      "font_sizes_pt": [
+        12.0,
+        16.0,
+        20.0
+      ],
+      "title_font_sizes_pt": [
+        20.0
+      ],
+      "heading_font_sizes_pt": [
+        16.0
+      ],
+      "body_font_sizes_pt": [
+        12.0
+      ],
+      "marker_is_single_word": null,
+      "all_text_bounds_inside_page": true,
+      "checks": "PASS"
+    }
+  ]
+}

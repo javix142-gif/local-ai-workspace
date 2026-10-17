@@ -1,0 +1,6 @@
+Source SHA: 3532cc69e177ece728e0c2e21c72da0e79cc025f
+:app:testDebugUnitTest --tests com.localai.workspace.artifacts.PdfArtifactLayoutTest: EXECUTED, expected regression reproduced
+Gradle actionable tasks: 63 executed; Gradle test task failed on the single test assertion
+JUnit: tests=1, failures=1, errors=0, skipped=0
+Failure: PdfArtifactLayoutTest.kt:70; PDFTextStripper produced WORD_BOUNDARY and _MARKER as separate words/lines.
+Gradle: BUILD FAILED, 3m47s, process exit code 1

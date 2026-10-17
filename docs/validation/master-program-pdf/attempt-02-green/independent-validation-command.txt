@@ -1,0 +1,1 @@
+python3 docs/validation/master-program-pdf/attempt-02-green/verify_pdf.py

@@ -1,0 +1,138 @@
+{
+  "name": "M03-04 PDF word-boundary and layout preparation",
+  "status": "FOCUSED_HOST_PASS_PREPARATORY_DEPENDENCY_AND_DEVICE_GATES_OPEN_NOT_FORMAL",
+  "baseFeatureHead": "bacb049bdb3732a6354ec48c3899cd8fb5e2a16a",
+  "workingBranch": "codex/master-program-20261016",
+  "publicationTarget": "feat/0.5.0-skills-agents",
+  "redSourceCodeSha": "3532cc69e177ece728e0c2e21c72da0e79cc025f",
+  "sourceCodeSha": "648515e7e69bfeea0c7101c0d8ed4ab01270b634",
+  "codeCommits": [
+    "72db6f0d9a389b5722fb93e2492974b4013769b7",
+    "3532cc69e177ece728e0c2e21c72da0e79cc025f",
+    "648515e7e69bfeea0c7101c0d8ed4ab01270b634"
+  ],
+  "filesChanged": [
+    "app/src/main/java/com/localai/workspace/artifacts/ArtifactRenderer.kt",
+    "app/src/test/java/com/localai/workspace/artifacts/PdfArtifactLayoutTest.kt"
+  ],
+  "finding": "The prior renderer wrapped by Unicode code point at the line-width boundary and split normal words. It now wraps at whitespace and splits only a token wider than the available width, using Unicode code points for that fallback.",
+  "redAttempt": {
+    "status": "EXPECTED_PRODUCT_REGRESSION_REPRODUCED",
+    "commandFile": "attempt-01-red/command.txt",
+    "sourceSha": "3532cc69e177ece728e0c2e21c72da0e79cc025f",
+    "startedAtUtc": "2026-10-16T23:54:24Z",
+    "finishedAtUtc": "2026-10-16T23:58:12Z",
+    "wallSeconds": 228,
+    "gradleDuration": "3m47s",
+    "exitCode": 1,
+    "tasksExecuted": 63,
+    "junit": {
+      "tests": 1,
+      "passed": 0,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "failedAssertion": "PdfArtifactLayoutTest.kt:70: marker WORD_BOUNDARY_MARKER was split as WORD_BOUNDARY and _MARKER",
+      "xml": "attempt-01-red/TEST-com.localai.workspace.artifacts.PdfArtifactLayoutTest.xml",
+      "gradleLog": "attempt-01-red/gradle.log"
+    }
+  },
+  "greenAttempt": {
+    "status": "PASS",
+    "sourceSha": "648515e7e69bfeea0c7101c0d8ed4ab01270b634",
+    "commandFile": "attempt-02-green/command.txt",
+    "startedAtUtc": "2026-10-16T23:59:05Z",
+    "finishedAtUtc": "2026-10-17T00:02:52Z",
+    "wallSeconds": 227,
+    "gradleDuration": "3m45s",
+    "exitCode": 0,
+    "tasksExecuted": 63,
+    "gradle": "8.10.2",
+    "runtimeJdk": "Temurin 17",
+    "workerJdk": "Temurin 21",
+    "androidSdk": "/workspace/.toolchain/android-sdk API 35",
+    "ndk": "27.0.12077973",
+    "gradleUserHome": "/workspace/.gradle-master-program-20261016 (existing cache; offline)",
+    "junit": {
+      "tests": 1,
+      "passed": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "methodSeconds": 7.214,
+      "xml": "attempt-02-green/TEST-com.localai.workspace.artifacts.PdfArtifactLayoutTest.xml",
+      "gradleLog": "attempt-02-green/gradle.log"
+    }
+  },
+  "independentReaders": {
+    "status": "PASS",
+    "command": "python3 docs/validation/master-program-pdf/attempt-02-green/verify_pdf.py",
+    "exitCode": 0,
+    "versions": [
+      "PyMuPDF 1.26.6",
+      "pypdf 6.10.0"
+    ],
+    "result": "attempt-02-green/independent-validation.json",
+    "fixtures": [
+      {
+        "file": "attempt-02-green/fixture-v1.pdf",
+        "bytes": 1617,
+        "sha256": "823f7c65c6aec97fd52286f3d64f7f330660af7f17afbb906ab4029225efeb2e",
+        "pages": 2,
+        "pageSizePt": "612x792",
+        "titlePt": 20,
+        "headingPt": 16,
+        "bodyPt": 12,
+        "wordBoundaryMarkerSingleWord": true,
+        "allTextInsidePageBounds": true
+      },
+      {
+        "file": "attempt-02-green/fixture-v2.pdf",
+        "bytes": 1617,
+        "sha256": "673530978f9feb81e901c7c7f09660b4ced084d1c0d8ebdd6fdc80e34dcc23a2",
+        "pages": 2,
+        "pageSizePt": "612x792",
+        "titlePt": 20,
+        "headingPt": 16,
+        "bodyPt": 12,
+        "allTextInsidePageBounds": true
+      }
+    ]
+  },
+  "originalTask": {
+    "id": "M03-04",
+    "title": "Generador local PDF",
+    "sourceStatus": "TODO",
+    "requiresDevice": true,
+    "dependsOn": [
+      "M03-01"
+    ],
+    "dependencyStatus": "M03-01 remains source TODO; no formal completion is claimed"
+  },
+  "otherValidation": {
+    "fullJvmSuite": "NOT_RUN",
+    "liteRtCompatSuite": "NOT_RUN",
+    "lint": "NOT_RUN",
+    "androidTestCompile": "NOT_RUN",
+    "emulator": "NOT_RUN_FOR_THIS_SOURCE_SHA",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  },
+  "sourcePlan": {
+    "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmap": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "tasks": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "statuses": {
+      "TODO": 97
+    },
+    "modified": false
+  },
+  "knownGlobalStates": {
+    "emulator": "Historical global run remains FAIL: authentic Room v1 fixture unavailable; six actual-model tests skipped.",
+    "physicalDevice": "NOT_RUN; no Motorola claim."
+  }
+}
