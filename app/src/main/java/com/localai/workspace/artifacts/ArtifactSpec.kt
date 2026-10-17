@@ -26,7 +26,11 @@ class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String
             buildString {
                 append("Slide ").append(index + 1).append(" · ").append(slide.getString("title")).append('\n')
                 append(slide.getString("body"))
-                if (slide.has("imageAltText")) append("\n[PNG image: ").append(slide.getString("imageAltText")).append(']')
+                if (slide.has("imageAltText")) {
+                    val image = PptxImagePayloadValidator.decodeAndValidate(slide.getString("imagePngBase64"))
+                    append("\n[PNG image: ").append(slide.getString("imageAltText")).append(']')
+                    append("\n[PNG SHA-256: ").append(ArtifactStore.hash(image.bytes)).append(']')
+                }
             }
         }.joinToString("\n\n")
         else->json().getJSONArray("paragraphs").objects().joinToString("\n\n"){it.getString("text")}+

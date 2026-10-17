@@ -1,11 +1,14 @@
 package com.localai.workspace.artifacts
 
 import android.app.Application
+import android.graphics.Bitmap
+import android.graphics.Color
 import com.localai.workspace.data.DocumentParser
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
@@ -32,6 +35,22 @@ class PptxImageArtifactTest {
           "slides":[{"title":"$title","body":"España y una imagen local.","imagePngBase64":"$pngBase64","imageAltText":"Mapa & datos"}]
         }
     """.trimIndent()))
+
+    private fun specWithImage(title: String, image: String) = ArtifactSpec.parse(JSONObject()
+        .put("format", "PPTX").put("name", "visual.pptx")
+        .put("slides", org.json.JSONArray().put(JSONObject()
+            .put("title", title).put("body", "España y una imagen local.")
+            .put("imagePngBase64", image).put("imageAltText", "Mapa & datos"))))
+
+    private fun solidPngBase64(color: Int): String = java.io.ByteArrayOutputStream().use { output ->
+        Bitmap.createBitmap(2, 1, Bitmap.Config.ARGB_8888).apply {
+            setPixel(0, 0, color)
+            setPixel(1, 0, color)
+            compress(Bitmap.CompressFormat.PNG, 100, output)
+            recycle()
+        }
+        java.util.Base64.getEncoder().encodeToString(output.toByteArray())
+    }
 
     @Test
     fun generatedPptxEmbedsAccessiblePngAndKeepsImageAcrossImmutableRevision() = runBlocking {
@@ -134,6 +153,22 @@ class PptxImageArtifactTest {
                 assertTrue("Expected a specific image-validation reason", failure.message?.startsWith("PPTX_IMAGE_") == true)
             }
         }
+    }
+
+    @Test
+    fun textualPreviewDistinguishesImageRevisionWithoutExposingPngPayload() {
+        val red = solidPngBase64(Color.RED)
+        val blue = solidPngBase64(Color.BLUE)
+        val first = specWithImage("Informe visual", red).preview()
+        val revised = specWithImage("Informe visual", blue).preview()
+
+        assertTrue(first.contains("Mapa & datos"))
+        assertTrue("The selectable textual preview must not expose the PNG payload", !first.contains(red))
+        val redHash = ArtifactStore.hash(PptxImagePayloadValidator.decodeAndValidate(red).bytes)
+        val blueHash = ArtifactStore.hash(PptxImagePayloadValidator.decodeAndValidate(blue).bytes)
+        assertTrue(first.contains("PNG SHA-256: $redHash"))
+        assertTrue(revised.contains("PNG SHA-256: $blueHash"))
+        assertNotEquals("Different image bytes need a visible revision marker even when alt text is unchanged", first, revised)
     }
 
     private fun xml(zip: ZipFile, path: String) =
