@@ -1,0 +1,20 @@
+source_commit=b48338c557a94351157de18378a5221d00a4ba43
+source_tree=2313d77ab258beb6dd72b940a28da60772656adc
+test=ContextOmissionInspectorUiTest.materialDropReasonIsVisibleInInspectorWithoutShowingDroppedMemoryText
+sdk=35
+network=offline
+java_home=/workspace/.toolchain/jdk-17-temurin
+openjdk version "17.0.20.1" 2026-08-18
+OpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)
+OpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)
+worker_java_home=/workspace/.toolchain/jdk-21-temurin
+openjdk version "21.0.12.1" 2026-08-18 LTS
+OpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)
+OpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)
+robolectric_api35_artifact=/home/agent/.m2/repository/org/robolectric/android-all-instrumented/15-robolectric-12650502-i7/android-all-instrumented-15-robolectric-12650502-i7.jar
+artifact_size=199527464
+gradle_user_home=/workspace/.gradle-master-program-20261016
+ndk_revision=Pkg.Revision = 27.0.12077973
+Filesystem      Size  Used Avail Use% Mounted on
+overlay          32G  7.7G   23G  26% /
+none            4.9G  955M  4.0G  20% /tmp

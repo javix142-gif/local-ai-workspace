@@ -1,0 +1,17 @@
+OS=Linux 6.18.44 x86_64
+GRADLE_WRAPPER=8.10.2
+JAVA_HOME=/workspace/.toolchain/jdk-17-temurin
+openjdk version "17.0.20.1" 2026-08-18
+OpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)
+OpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)
+JDK17_JAVAC=javac 17.0.20.1
+TEST_WORKER_JDK_HOME=/workspace/.toolchain/jdk-21-temurin
+openjdk version "21.0.12.1" 2026-08-18 LTS
+OpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)
+OpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)
+JDK21_JAVAC=javac 21.0.12.1
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+NDK=Pkg.Revision = 27.0.12077973
+CMAKE=cmake version 3.31.6
+GRADLE_USER_HOME=/workspace/.gradle-master-program-20261016
+NETWORK_MODE=offline

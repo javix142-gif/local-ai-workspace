@@ -1,0 +1,1 @@
+Captured from unified exec session completion result (exit_code=1); shell errexit prevented the wrapper from writing its post-command metadata.

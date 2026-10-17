@@ -1,0 +1,5 @@
+Attempt 02 — FOCUSED_PASS (intermediate assertion set)
+Command: :app:testDebugUnitTest --tests com.localai.workspace.data.DocumentPipelineTimingTest
+Gradle exit code 0; BUILD SUCCESSFUL in 1m49s; elapsed UTC 2026-10-17T02:53:38Z–02:55:28Z (~110 s).
+JUnit: 1 test, 0 failures, 0 errors, 0 skipped; method xlsxImportAndBackgroundIndexShareOnlyOpaqueTimingRunId passed in 7.766 s.
+This run preceded a later strengthening that checks the synthetic cell text sentinel; the final 2/2 run including that assertion is attempt-05.

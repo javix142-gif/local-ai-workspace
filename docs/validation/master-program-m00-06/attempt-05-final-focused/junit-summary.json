@@ -1,0 +1,27 @@
+{
+  "suites": [
+    {
+      "path": "xml/TEST-com.localai.workspace.data.DocumentPipelineTimingTest.xml",
+      "class": "com.localai.workspace.data.DocumentPipelineTimingTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 7.492
+    },
+    {
+      "path": "xml/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml",
+      "class": "com.localai.workspace.semantic.v2.SemanticContextPostfixTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.923
+    }
+  ],
+  "tests": 2,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "passed": 2
+}

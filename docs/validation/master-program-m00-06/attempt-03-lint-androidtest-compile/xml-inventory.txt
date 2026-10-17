@@ -1,0 +1,1 @@
+No JUnit XML applies to lint/AndroidTest Kotlin compilation; AndroidTest was compile-only.

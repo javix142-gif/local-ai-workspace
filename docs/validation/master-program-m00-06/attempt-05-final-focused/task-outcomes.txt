@@ -1,0 +1,5 @@
+Final focused HOST validation on staged source tree 1837a28dd2f86a5c6ab2c6478e818a1498413b72.
+Command ran two exact filters in one :app:testDebugUnitTest invocation; Gradle exit code 0; BUILD SUCCESSFUL in 50 s; 2026-10-17T03:02:45Z–03:03:35Z.
+DocumentPipelineTimingTest.xlsxImportAndBackgroundIndexShareOnlyOpaqueTimingRunId: PASS, 7.492 s.
+SemanticContextPostfixTest.editDeleteReimportKeepsProjectGenerationsScopedAndNeverServesStaleHits: PASS, 0.923 s.
+JUnit total 2, passed 2, failures 0, errors 0, skipped 0. XML files are the exact outputs copied from this invocation.

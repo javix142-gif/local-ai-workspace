@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuite name="com.localai.workspace.data.WorkspaceDatabaseMigrationTest" tests="7" failures="2" errors="0" skipped="2" time="35.803" timestamp="2026-10-17T03:18:33" hostname="localhost">
+  <properties>
+    <property name="device" value="emulator-5554 - 15" />
+    <property name="flavor" value="" />
+    <property name="project" value=":app" />
+  </properties>
+  <testcase name="v1ModelsAreExtendedWithoutLosingExistingRecords" classname="com.localai.workspace.data.WorkspaceDatabaseMigrationTest" time="0.013">
+    <failure>java.io.FileNotFoundException: Cannot find the schema file in the assets folder. Make sure to include the exported json schemas in your test assert inputs. See https://developer.android.com/training/data-storage/room/migrating-db-versions#export-schema for details. Missing file: com.localai.workspace.data.WorkspaceDatabase/1.json
+at androidx.room.testing.MigrationTestHelper.loadSchema(MigrationTestHelper.kt:440)
+at androidx.room.testing.MigrationTestHelper.createDatabase(MigrationTestHelper.kt:196)
+at com.localai.workspace.data.WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords(WorkspaceDatabaseMigrationTest.kt:23)
+</failure>
+  </testcase>
+  <testcase name="normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole" classname="com.localai.workspace.inference.LiteRtLmDeviceSmokeTest" time="0.001">
+    <skipped />
+  </testcase>
+  <testcase name="cpuFirstTokenStreamingCompletionCancelRetryAndUnload" classname="com.localai.workspace.inference.LiteRtLmDeviceSmokeTest" time="0.001">
+    <skipped />
+  </testcase>
+  <testcase name="modelsExposeExperimentalSemanticDialogWithoutAddingAnotherNavigationRoute" classname="com.localai.workspace.semantic.SemanticV2NavigationTest" time="7.643" />
+  <testcase name="builtInSkillsCanBeInspectedWithoutRunningTools" classname="com.localai.workspace.ui.AgentsSkillsNavigationTest" time="7.694" />
+  <testcase name="generalAgentIsProtectedAndValidationIsDeveloperOnly" classname="com.localai.workspace.ui.AgentsSkillsNavigationTest" time="6.708" />
+  <testcase name="largeFontScaleExpandsHeaderAndKeepsAllThreeLinesVisible" classname="com.localai.workspace.ui.ChatHeaderLayoutTest" time="1.553">
+    <failure></failure>
+  </testcase>
+  <system-err>Test run failed to complete. Expected 16 tests, received 6
+</system-err>
+</testsuite>

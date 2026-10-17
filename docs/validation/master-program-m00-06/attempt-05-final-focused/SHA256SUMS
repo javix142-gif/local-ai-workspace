@@ -1,0 +1,16 @@
+b5792422f731333b34ddc5c49c1e9a673805a7b7251a1955e852259273ab3309  ./base-head.txt
+eb0c7e284d6fd20d4ea26cb44c9ed7e82f4bbbab23043105e1298a7691fa7b70  ./command.txt
+7ea9844ae84eccbf55e8330640865e36c43521e45a1baec24233327aab7e6595  ./duration-seconds.txt
+13c45c81b3039e9c1c11847aef74dc3e26f0f99b259876d6432e3ef6626c0e8b  ./end-utc.txt
+4469788b4b15e9088cc2763a1064260841f28a395bc8bf33fedf428929ce57be  ./environment.txt
+9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./exit-code.txt
+8d4d9229ed1fa98811856db9b15e142237d77ab07a3fa7d8b12a4735814c0489  ./gradle.log
+34c4c6845439c606caf228d36f5aad00f0d1520cacace07f6aa806bb25bc5868  ./junit-summary.json
+b99543dbc67bf5295ed1d3fdefa9979382f0bf9256c94d3319c405f429c70c8e  ./staged-patch-sha256.txt
+c3661c40b6046850a341acf423ac03d043030466002a16c08d1c43bc72935d73  ./start-utc.txt
+619f9dd9f39bfc9133644f7ce2c775c99844c2ab820840b4ea0fbed9e4e14015  ./task-outcomes.txt
+27971efb8d6711e77776fbd391dc196ca56d48d9d2c2fcd0cb5cd66b450b0eb9  ./tested-index-tree.txt
+bb04fe15f08dc0ce1dd7a8ab98196ca3516675b26ffe27540790f3a6d9ac3b37  ./worktree-status-before.txt
+76b210599ec9c4bbbae952940ce7bde2c68e49dbb0c0a3322dc6f02f3c664a61  ./xml-inventory.txt
+bd3a5c24d575148d435c58efbef44e577576ea810a64e81dd9d0cf553c44b1f7  ./xml/TEST-com.localai.workspace.data.DocumentPipelineTimingTest.xml
+26e754627389802923cc1c6c86b702cedad070a4381e3e131ab2ed877a1faf62  ./xml/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml

@@ -1,0 +1,98 @@
+{
+  "sourceCommit": "9dc50102f47d551d9d3d0298c65106e802d1021c",
+  "sourceTree": "daa6c615534b445ef37196fabdde6242cb99f1fa",
+  "branch": "feat/0.5.0-skills-agents",
+  "emulator": {
+    "runId": 38997371699,
+    "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38997371699",
+    "jobId": 117292766307,
+    "jobUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38997371699/job/117292766307",
+    "workflow": ".github/workflows/android-emulator-instrumented.yml",
+    "status": "FAIL_INCOMPLETE_INSTRUMENTATION",
+    "startedAtUtc": "2026-10-17T03:04:28Z",
+    "finishedAtUtc": "2026-10-17T03:18:39Z",
+    "steps": {
+      "sdkApi35NdkCmake": "PASS",
+      "kvm": "PASS",
+      "avdBoot": "PASS",
+      "adb": "PASS_CONNECTED_emulator-5554",
+      "connectedTask": "FAIL",
+      "collector": "FAIL_INCOMPLETE_COUNTS",
+      "artifactUpload": "PASS"
+    },
+    "device": {
+      "api": 35,
+      "release": "15",
+      "abi": "x86_64",
+      "model": "sdk_gphone64_x86_64",
+      "resolution": "1080x1920",
+      "densityDpi": 420
+    },
+    "task": ":app:connectedDebugAndroidTest",
+    "command": "./gradlew :app:connectedDebugAndroidTest --no-daemon --no-parallel --max-workers=2 --stacktrace --console=plain",
+    "gradleExitCode": 1,
+    "gradleEnd": "BUILD FAILED in 12m 26s; 114 actionable tasks (102 executed, 12 from cache)",
+    "gradleProgress": ["6/16", "7/16", "9/16"],
+    "junitExpectedVsReceived": "Gradle reports: Expected 16 tests, received 6",
+    "xml": {
+      "path": "artifact-contents/instrumented-xml/debug/TEST-emulator-5554 - 15-_app-.xml",
+      "tests": 7,
+      "passed": 3,
+      "failed": 2,
+      "errors": 0,
+      "skipped": 2,
+      "executed": 5,
+      "internallyConsistent": true,
+      "consistentWithGradleRun": false,
+      "cases": [
+        {"class": "com.localai.workspace.data.WorkspaceDatabaseMigrationTest", "name": "v1ModelsAreExtendedWithoutLosingExistingRecords", "result": "FAIL", "reason": "Authentic WorkspaceDatabase/1.json unavailable; no schema was fabricated or test changed."},
+        {"class": "com.localai.workspace.inference.LiteRtLmDeviceSmokeTest", "name": "normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole", "result": "SKIPPED", "reason": "Real model absent; test assumption preserved."},
+        {"class": "com.localai.workspace.inference.LiteRtLmDeviceSmokeTest", "name": "cpuFirstTokenStreamingCompletionCancelRetryAndUnload", "result": "SKIPPED", "reason": "Real model absent; test assumption preserved."},
+        {"class": "com.localai.workspace.semantic.SemanticV2NavigationTest", "name": "modelsExposeExperimentalSemanticDialogWithoutAddingAnotherNavigationRoute", "result": "PASS"},
+        {"class": "com.localai.workspace.ui.AgentsSkillsNavigationTest", "name": "builtInSkillsCanBeInspectedWithoutRunningTools", "result": "PASS"},
+        {"class": "com.localai.workspace.ui.AgentsSkillsNavigationTest", "name": "generalAgentIsProtectedAndValidationIsDeveloperOnly", "result": "PASS"},
+        {"class": "com.localai.workspace.ui.ChatHeaderLayoutTest", "name": "largeFontScaleExpandsHeaderAndKeepsAllThreeLinesVisible", "result": "FAIL", "failureMessage": "Empty failure element in XML; no assertion/exception detail captured."}
+      ],
+      "testRunnerEvents": {"started": 10, "finished": 9, "failedEvents": 1, "modelAssumptions": 2},
+      "missingFromXmlDespiteLogEvents": [
+        "ChatHeaderLayoutTest.standardFontScaleKeepsAgentTitleAndModelInsideHeader logged finished but is absent from XML",
+        "ContextMemoryDeviceTest.inspectorDoesNotStartGenerationAutomatically logged finished but is absent from XML"
+      ],
+      "lastUnfinishedEvent": "ContextMemoryDeviceTest.structuredMemoryEntryAndEditorAreAccessible logged started without a finished event in the filtered log"
+    },
+    "roomFailure": "The migration test fails loading missing authentic schema v1; this historical fixture remains unavailable.",
+    "headerFailure": {
+      "classification": "UNEXPLAINED_TEST_RESULT; NOT_ATTRIBUTED_TO_9DC5010",
+      "evidence": "The changed-file list contains no ChatHeader or instrumentation test file; the test source is identical to b48338c. TestRunner logged START and FINISHED but no failure event/stack for the case; its XML failure node is empty. Captured Compose images show all three lines and the recorded header/body bounds do not overlap.",
+      "rootCause": "NOT_DETERMINED"
+    },
+    "postTaskApplicationPackageCheck": {"installed": false, "cause": "NOT_DETERMINED"},
+    "screenshots": [
+      {"path": "artifact-contents/ui-diagnostics/screenshots/chat-header-standard.png", "validPng": true, "width": 1080, "height": 1920, "bytes": 47792, "sha256": "214f9e93a5f68d47b1e2825fcf0bc4727f91e0d60073c024746673397441084f", "visualInspection": "Three labels visible; host/emulator capture only."},
+      {"path": "artifact-contents/ui-diagnostics/screenshots/chat-header-large-font.png", "validPng": true, "width": 1080, "height": 1920, "bytes": 82777, "sha256": "648e95eee679b74cd1e415fd9e704a203fc1a336e1a3b8ad0c45cf39d78a8469", "visualInspection": "Three labels visible at Compose font scale 1.6; host/emulator capture only."}
+    ]
+  },
+  "emulatorArtifact": {
+    "id": 12087494744,
+    "name": "android-emulator-evidence-38997371699-1",
+    "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38997371699/artifacts/12087494744",
+    "bytes": 149528,
+    "sha256": "4c03ee8cc624ee2ae905e58743c9cd9c8e95630c06b2db0d99ba86885f65f4fa",
+    "expiresAtUtc": "2026-10-24T03:18:36Z",
+    "zipCrc": "PASS",
+    "internalManifest": {"entries": 32, "verified": 32}
+  },
+  "officialQa": {
+    "runId": 38997371673,
+    "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38997371673",
+    "jobId": 117292766236,
+    "sourceCommit": "9dc50102f47d551d9d3d0298c65106e802d1021c",
+    "status": "FAIL_CLOSED_BEFORE_APK_BUILD",
+    "gateReason": "ANDROID_INSTRUMENTATION_NOT_SUCCESSFUL",
+    "build": "SKIPPED",
+    "upload": "SKIPPED",
+    "artifactCount": 0
+  },
+  "physicalDevice": "NOT_RUN",
+  "originalTaskM00_06": "TODO; this increment is only import-to-EG1 timing correlation and does not complete the cross-stage/model/device DoD."
+}

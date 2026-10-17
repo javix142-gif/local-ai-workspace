@@ -1,0 +1,4 @@
+> Task :app:lintDebug
+> Task :app:compileDebugAndroidTestKotlin
+BUILD SUCCESSFUL in 4m 59s
+121 actionable tasks: 17 executed, 104 up-to-date

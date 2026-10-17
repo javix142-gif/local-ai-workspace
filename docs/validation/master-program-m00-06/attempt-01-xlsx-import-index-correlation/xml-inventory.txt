@@ -1,0 +1,1 @@
+No JUnit XML was generated: Kotlin test compilation failed before Gradle test execution.

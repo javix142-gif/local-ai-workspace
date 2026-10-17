@@ -1,0 +1,7 @@
+Attempt 01 — NOT_EXECUTED_TEST_COMPILE_FAILURE
+Gradle command targeted DocumentPipelineTimingTest.
+Gradle exit code: 1; duration 220 s (2026-10-17T02:49:35Z–02:53:15Z).
+Failed task: :app:compileDebugUnitTestKotlin.
+Compiler diagnostics: unresolved reference kotlinx.coroutines.launch; suspension call outside coroutine body.
+JUnit test methods started: 0. JUnit XML produced: none.
+This was a test-harness import error, fixed by importing kotlinx.coroutines.launch; it is not a product failure.

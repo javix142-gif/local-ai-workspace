@@ -1,0 +1,4 @@
+Proportional HOST gate — PASS, Gradle exit code 0; BUILD SUCCESSFUL in 4m50s; 2026-10-17T02:55:59Z–03:00:50Z (291 s).
+:app:lintDebug: PASS; 77 warnings, 1 informational finding, 0 errors; 0 lint findings in changed files.
+:app:compileDebugAndroidTestKotlin: PASS_COMPILE_ONLY; Kotlin compile task executed; no instrumentation ran.
+Gradle also executed required native CMake release configuration/build dependencies for arm64-v8a and x86_64. No APK packaging task was requested or produced.

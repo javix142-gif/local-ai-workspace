@@ -1,0 +1,24 @@
+{
+  "suites": [
+    {
+      "file": "TEST-com.localai.workspace.semantic.v2.SemanticIndexRestartRecoveryTest.xml",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-com.localai.workspace.ui.SemanticIndexJobLabelTest.xml",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "totals": {
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

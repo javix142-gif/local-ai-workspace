@@ -1,0 +1,1 @@
+timeout --signal=INT --kill-after=15s 300s env ... ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --rerun-tasks -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17-temurin,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.semantic.v2.SemanticIndexRestartRecoveryTest

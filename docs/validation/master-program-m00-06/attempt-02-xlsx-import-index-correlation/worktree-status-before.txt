@@ -1,0 +1,10 @@
+M  app/src/main/java/com/localai/workspace/AppGraph.kt
+M  app/src/main/java/com/localai/workspace/data/DocumentIngestion.kt
+M  app/src/main/java/com/localai/workspace/semantic/SemanticRetrievalService.kt
+M  app/src/main/java/com/localai/workspace/ui/PerformanceScreen.kt
+A  app/src/test/java/com/localai/workspace/data/DocumentPipelineTimingTest.kt
+M  app/src/test/java/com/localai/workspace/semantic/v2/SemanticContextPostfixTest.kt
+ M docs/development/CODEX_TO_WORK_HANDOFF.md
+ M docs/development/MASTER_OPTIMIZATION_PROGRAM.md
+?? docs/validation/master-program-m00-06/
+?? docs/validation/master-program-semantic-recovery/

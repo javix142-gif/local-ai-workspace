@@ -1,0 +1,4 @@
+Focused regression: :app:testDebugUnitTest --tests com.localai.workspace.semantic.v2.SemanticContextPostfixTest.editDeleteReimportKeepsProjectGenerationsScopedAndNeverServesStaleHits
+Gradle exit code 0; BUILD SUCCESSFUL in 31 s; 2026-10-17T03:01:50Z–03:02:21Z.
+The selected method passed (0.923 s) and covers changed onIndexed callback behavior during delete/re-import and stale-generation fallback.
+Its Gradle XML was superseded by the immediately following combined final focused invocation. The same method and XML result are retained with attempt-05; no pass count relies on a reconstructed XML.

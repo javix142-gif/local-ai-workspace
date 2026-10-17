@@ -1,0 +1,2 @@
+TEST-com.localai.workspace.data.DocumentPipelineTimingTest.xml: 1/1 PASS, 0 failure/error/skip.
+The XML was copied before the subsequent Gradle invocation.

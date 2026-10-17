@@ -1,0 +1,2 @@
+name=standard transport=logcat_base64_chunks_v1 logcatExitCode=0 captureRecords=1 localFilePresent=True pngValid=True dimensions=1080x1920 bytes=47792 sha256=214f9e93a5f68d47b1e2825fcf0bc4727f91e0d60073c024746673397441084f errors=
+name=large-font transport=logcat_base64_chunks_v1 logcatExitCode=0 captureRecords=1 localFilePresent=True pngValid=True dimensions=1080x1920 bytes=82777 sha256=648e95eee679b74cd1e415fd9e704a203fc1a336e1a3b8ad0c45cf39d78a8469 errors=

@@ -1,0 +1,3 @@
+TEST-com.localai.workspace.data.DocumentPipelineTimingTest.xml tests=1 failures=0 errors=0 skipped=0; method 7.492 s.
+TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml tests=1 failures=0 errors=0 skipped=0; method 0.923 s.
+Combined: 2/2 PASS.
