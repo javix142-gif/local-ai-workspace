@@ -1,0 +1,1 @@
+This XML file was copied from the prior attempt-05 JUnit output and is not output from attempt-06. Attempt-06 reported :app:testDebugUnitTest UP-TO-DATE; it executed zero tests. The XML must not be counted for attempt-06.

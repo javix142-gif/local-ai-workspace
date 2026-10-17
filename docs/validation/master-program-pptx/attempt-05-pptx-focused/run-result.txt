@@ -1,0 +1,13 @@
+status=INTERRUPTED_BY_USER_AFTER_TEST_XML
+source_git_head_at_invocation=58a63b261c17e0463249683f0c17a1175b8a501a
+source_code_candidate_committed_later=6231732ad8557465abfc8155925fdcbc90d1eb87
+working_tree_at_invocation=dirty with the production/test changes later committed in 6231732; no separate tree hash captured
+junit_tests=2
+junit_failures=0
+junit_errors=0
+junit_skipped=0
+junit_time_seconds=7.727
+junit_timestamp=2026-10-17T00:37:19Z (suite start; XML file mtime 00:37:27Z)
+gradle_exit_code=UNOBSERVED
+build_successful_marker=NOT_CAPTURED
+interpretation=JUnit XML proves both focused methods completed successfully; the interrupted Gradle session has no trustworthy process exit or BUILD SUCCESSFUL record. Do not count this as a completed Gradle invocation or full host gate.

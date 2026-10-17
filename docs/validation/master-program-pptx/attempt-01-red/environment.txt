@@ -1,0 +1,13 @@
+Source SHA: bb079919a36339c74c1018cfb86222ae25a525cc
+Branch checkout: codex/master-program-20261016
+Gradle wrapper 8.10.2; runtime Temurin JDK 17 (/workspace/.toolchain/jdk-17-temurin); worker/toolchain Temurin JDK 21 (/workspace/.toolchain/jdk-21-temurin)
+Android SDK /workspace/.toolchain/android-sdk (API 35); NDK 27.0.12077973
+Existing Gradle cache /workspace/.gradle-master-program-20261016, offline
+Robolectric SDK 35. No components installed.
+java17=openjdk version "17.0.20.1" 2026-08-18 OpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1) OpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)
+java21=openjdk version "21.0.12.1" 2026-08-18 LTS OpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS) OpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)
+SDK=/workspace/.toolchain/android-sdk
+NDK=/workspace/.toolchain/android-sdk/ndk/27.0.12077973
+GRADLE_USER_HOME=/workspace/.gradle-master-program-20261016
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk

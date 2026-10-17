@@ -1,0 +1,26 @@
+{
+  "source_note": "Artifact generated during attempt-04 before the XML namespace assertion failed; ArtifactRenderer source was unchanged in the subsequent test-harness corrections.",
+  "artifact": "app/build/pptx-image/fixture-v1.pptx",
+  "bytes": 5464,
+  "sha256": "794ffc02dd8acfa650bbf660e2fd44b0580bcb6ae384c2463d838cacc04ca4c5",
+  "zip_crc": "PASS",
+  "python_pptx": "PASS",
+  "slides": 1,
+  "layout": "Blank",
+  "master_count": 1,
+  "theme_part_present": true,
+  "picture_count": 1,
+  "image_alt_text": "Mapa & datos",
+  "image_bytes": 72,
+  "image_sha256": "3431e53e66db1ed7740699afa02201bdf19354227ef76a560eb6df149df95a1b",
+  "image_dimensions_px": [
+    2,
+    1
+  ],
+  "shape_aspect_ratio": 2.0,
+  "slide_size_emu": [
+    12192000,
+    6858000
+  ],
+  "title_and_body_text": "PASS"
+}

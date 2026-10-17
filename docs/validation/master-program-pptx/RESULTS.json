@@ -1,0 +1,162 @@
+{
+  "increment": "Preparatory M03-05 PPTX image insertion",
+  "status": "PARTIAL_HOST_EVIDENCE_GRADLE_COMPLETION_UNOBSERVED_DEVICE_AND_DEPENDENCY_GATES_OPEN",
+  "codeSha": "6231732ad8557465abfc8155925fdcbc90d1eb87",
+  "codeCommits": [
+    "72a46ceb72e5afe742eff2601128b1baeffa982c",
+    "bb079919a36339c74c1018cfb86222ae25a525cc",
+    "58a63b261c17e0463249683f0c17a1175b8a501a",
+    "6231732ad8557465abfc8155925fdcbc90d1eb87"
+  ],
+  "sourceTask": {
+    "id": "M03-05",
+    "status": "TODO",
+    "requiresDevice": true,
+    "dependsOn": [
+      "M03-01"
+    ],
+    "dependencyStatus": "TODO",
+    "formalCompletion": "NOT_CLAIMED"
+  },
+  "implementation": {
+    "scope": "One user-supplied, bounded PNG plus required alt text per selected PPTX slide; no image generation, URL/path loading, or remote access.",
+    "validation": "Canonical base64; PNG signature/chunk order/CRC; dimension and decoded-pixel limits; bounded bytes; sampled bitmap decode.",
+    "package": "Actual PNG part, content-type declaration, slide relationship, p:pic shape with alt description and preserved aspect ratio; layout/master/theme retained.",
+    "preview": "Text/structure preview only; explicitly not a slide canvas or WYSIWYG renderer.",
+    "preservation": "Existing source/import files and prior immutable artifact revisions remain unchanged."
+  },
+  "host": {
+    "environment": {
+      "gradle": "8.10.2",
+      "gradleRuntimeJdk": "Temurin 17.0.20.1",
+      "testWorkerJdk": "Temurin 21.0.12.1",
+      "androidSdk": "API 35 at /workspace/.toolchain/android-sdk",
+      "ndk": "27.0.12077973",
+      "gradleUserHome": "/workspace/.gradle-master-program-20261016 (existing cache, offline)"
+    },
+    "attempt05": {
+      "status": "INTERRUPTED_BY_USER_AFTER_TEST_XML",
+      "command": "timeout --signal=INT --kill-after=15s 10m env ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk GRADLE_USER_HOME=/workspace/.gradle-master-program-20261016 JAVA_HOME=/workspace/.toolchain/jdk-17-temurin PATH=/workspace/.toolchain/jdk-17-temurin/bin:$PATH ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --rerun-tasks -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17-temurin,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.artifacts.PptxImageArtifactTest",
+      "gitHeadAtInvocation": "58a63b261c17e0463249683f0c17a1175b8a501a",
+      "committedCandidateTree": "6231732ad8557465abfc8155925fdcbc90d1eb87 (the dirty production/test changes present during execution were committed later; no independent tree hash was captured at invocation)",
+      "junit": {
+        "tests": 2,
+        "passed": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "suiteSeconds": 7.727,
+        "xml": "attempt-05-pptx-focused/junit/TEST-com.localai.workspace.artifacts.PptxImageArtifactTest.xml",
+        "xmlTimestamp": "2026-10-17T00:37:19Z",
+        "methods": [
+          "rejectsMalformedOversizedOrUnlabelledPptxImages",
+          "generatedPptxEmbedsAccessiblePngAndKeepsImageAcrossImmutableRevision"
+        ]
+      },
+      "gradleExitCode": "UNOBSERVED",
+      "buildSuccessful": "NOT_CAPTURED",
+      "interpretation": "The XML demonstrates the focused tests completed. The user-aborted exec session did not return a Gradle exit code or final BUILD SUCCESSFUL marker; this is not a completed Gradle command."
+    },
+    "attempt06": {
+      "status": "GRADLE_EXIT_0_NO_TEST_EXECUTED",
+      "sourceSha": "6231732ad8557465abfc8155925fdcbc90d1eb87",
+      "exitCode": 0,
+      "durationSeconds": 21.998,
+      "summary": "BUILD SUCCESSFUL; 63 actionable tasks all UP-TO-DATE; :app:testDebugUnitTest UP-TO-DATE. Zero tests ran in this invocation. The copied attempt-05 XML is explicitly identified and not counted."
+    },
+    "independentReader": {
+      "status": "PASS_FOR_RECORDED_PACKAGE_HASH",
+      "package": "app/build/pptx-image/fixture-v1.pptx",
+      "bytes": 5464,
+      "sha256": "794ffc02dd8acfa650bbf660e2fd44b0580bcb6ae384c2463d838cacc04ca4c5",
+      "zipCrc": "PASS",
+      "pythonPptx": "PASS",
+      "slides": 1,
+      "layout": "Blank",
+      "masterCount": 1,
+      "themePresent": true,
+      "pictures": 1,
+      "altText": "Mapa & datos",
+      "embeddedPngBytes": 72,
+      "embeddedPngSha256": "3431e53e66db1ed7740699afa02201bdf19354227ef76a560eb6df149df95a1b",
+      "dimensionsPx": [
+        2,
+        1
+      ],
+      "provenance": "The independent reader output was produced in attempt-04; the final package has the same SHA-256 and the renderer output for this valid fixture was unchanged by later test-harness/diagnostic fixes."
+    }
+  },
+  "notRun": {
+    "fullJvmApp": "NOT_RUN",
+    "litertCompat": "NOT_RUN",
+    "lint": "NOT_RUN",
+    "androidTestCompile": "NOT_RUN",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  },
+  "limitations": [
+    "No full host gate or complete Gradle exit status for the final focused run.",
+    "Robolectric ArtifactRoundtripTest API 29 attempt failed before test bodies when android-all-instrumented:10-robolectric-5803371-i7 could not be fetched; this is an infrastructure limitation, not evidence against the PPTX renderer.",
+    "No Android viewer or Moto G86 validation.",
+    "The supplied-image path does not generate images and has no slide-canvas preview.",
+    "M03-05 and dependency M03-01 remain source TODO; no original task is marked complete."
+  ],
+  "evidenceDirectory": "docs/validation/master-program-pptx/",
+  "evidenceManifest": "SHA256SUMS",
+  "attemptHistory": [
+    {
+      "id": "attempt-01-red",
+      "exitCode": 1,
+      "status": "TEST_HARNESS_COMPILE_FAILURE",
+      "testsExecuted": 0,
+      "note": "NodeList.length typo; no valid behavior red established."
+    },
+    {
+      "id": "attempt-02-red",
+      "exitCode": 1,
+      "status": "EXPECTED_BEHAVIOR_FAILURE",
+      "tests": 1,
+      "failures": 1,
+      "note": "PPTX image descriptor rejected as ARTIFACT_FIELD_UNSUPPORTED before implementation."
+    },
+    {
+      "id": "attempt-03-focused",
+      "exitCode": 1,
+      "status": "TEST_HARNESS_COMPILE_FAILURE",
+      "testsExecuted": 0,
+      "note": "Unresolved JUnit fail import; accompanying XML is stale from attempt-02 and not counted."
+    },
+    {
+      "id": "attempt-04-focused-final",
+      "exitCode": 1,
+      "status": "TEST_ASSERTION_AND_ROBOLECTRIC_INFRASTRUCTURE_FAILURE",
+      "pptxImageTests": {
+        "tests": 2,
+        "failures": 2,
+        "note": "Namespace-aware XML assertion and diagnostic expectation needed correction; no claim of final test pass."
+      },
+      "artifactRoundtripTests": {
+        "tests": 10,
+        "failures": 10,
+        "note": "Failed during Robolectric bootstrap before test bodies because android-all-instrumented:10-robolectric-5803371-i7 could not be fetched."
+      },
+      "independentPackageReader": "PASS_FOR_PACKAGE_SHA_794FFC02; reader output is preserved."
+    },
+    {
+      "id": "attempt-05-pptx-focused",
+      "exitCode": "UNOBSERVED",
+      "status": "INTERRUPTED_BY_USER_AFTER_TEST_XML",
+      "tests": 2,
+      "passed": 2,
+      "note": "Only JUnit XML proves test method completion; Gradle completion/exit not observed."
+    },
+    {
+      "id": "attempt-06-committed-focused",
+      "exitCode": 0,
+      "status": "GRADLE_SUCCESS_UP_TO_DATE_NO_TESTS",
+      "testsExecuted": 0,
+      "note": "All 63 tasks UP-TO-DATE. Its duplicate XML is labeled and not counted."
+    }
+  ]
+}

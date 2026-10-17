@@ -1,0 +1,1 @@
+The exec session was aborted by the user after approximately 16.7 seconds. The Gradle child continued writing build outputs; a JUnit XML appeared at 2026-10-17T00:37:19Z and reports two passing test methods. The original caller did not observe process completion, a final log, or an exit code. Keep the XML as execution evidence but do not infer Gradle exit 0 from it.

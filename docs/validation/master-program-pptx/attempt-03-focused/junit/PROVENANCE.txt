@@ -1,0 +1,1 @@
+The XML copied into this attempt is stale output from attempt-02. Attempt-03 failed while compiling the test harness and did not execute a test; do not count this XML for attempt-03.
