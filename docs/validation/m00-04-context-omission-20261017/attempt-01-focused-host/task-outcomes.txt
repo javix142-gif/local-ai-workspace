@@ -1,0 +1,6 @@
+Gradle command: :app:testDebugUnitTest with exactly two --tests filters.
+Result: FAILED; exit code 1; wall duration 47 seconds.
+Gradle summary: BUILD FAILED in 47s; 63 actionable tasks: 1 executed, 62 up-to-date.
+Executed task: :app:testDebugUnitTest (FAILED).
+Selected JUnit methods: 2 testcase results; both reported failure; 0 passed, 0 errors, 0 skipped.
+No LiteRT, lint, AndroidTest, emulator, physical-device or APK task was run.

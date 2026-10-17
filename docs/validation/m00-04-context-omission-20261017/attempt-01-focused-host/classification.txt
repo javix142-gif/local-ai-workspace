@@ -1,0 +1,5 @@
+M00-04 remains NOT ACCEPTED; no product defect demonstrated.
+- ChatSessionPipelineTest.materialContextOmissionWarnsWhileRoutineOmissionStaysDiagnosticOnly: JUnit FAIL at Robolectric sandbox setup. Robolectric attempted to fetch org.robolectric:android-all-instrumented:10-robolectric-5803371-i7; MavenArtifactFetcher received java.net.ConnectException: Connection refused. Gradle used --offline, but Robolectric's own runtime artifact fetch still attempted network. The test assertion result is NOT_RUN.
+- ContextOmissionInspectorUiTest.materialDropReasonIsVisibleInInspectorWithoutShowingDroppedMemoryText: JUnit FAIL with NullPointerException in Room MultiInstanceInvalidationClient.serviceConnection.onServiceConnected; the caller was Robolectric ShadowInstrumentation.bindService while Compose/Espresso drained the main looper. Inspector assertion outcome is NOT_DETERMINED.
+- No ENOSPC appears in this attempt's log; preflight had 22 GiB free. No hang occurred and no thread dump was needed.
+- Overall classification: HOST_VALIDATION_BLOCKED_BY_TEST_ENVIRONMENT; PRODUCT_FAILURE_NOT_ESTABLISHED; M00-04 source task remains TODO and not accepted.

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.ContextOmissionInspectorUiTest" tests="1" skipped="0" failures="1" errors="0" timestamp="2026-10-17T04:09:44" hostname="7023f296b5c7" time="9.604">
+  <properties/>
+  <testcase name="materialDropReasonIsVisibleInInspectorWithoutShowingDroppedMemoryText" classname="com.localai.workspace.ui.ContextOmissionInspectorUiTest" time="9.604">
+    <failure message="java.lang.NullPointerException: Parameter specified as non-null is null: method androidx.room.MultiInstanceInvalidationClient$serviceConnection$1.onServiceConnected, parameter name" type="java.lang.NullPointerException">java.lang.NullPointerException: Parameter specified as non-null is null: method androidx.room.MultiInstanceInvalidationClient$serviceConnection$1.onServiceConnected, parameter name
+	at androidx.room.MultiInstanceInvalidationClient$serviceConnection$1.onServiceConnected(MultiInstanceInvalidationClient.kt)
+	at org.robolectric.shadows.ShadowInstrumentation.lambda$bindService$0(ShadowInstrumentation.java:737)
+	at android.os.Handler.handleCallback(Handler.java:959)
+	at android.os.Handler.dispatchMessage(Handler.java:100)
+	at org.robolectric.shadows.ShadowPausedLooper$IdlingRunnable.doRun(ShadowPausedLooper.java:599)
+	at org.robolectric.shadows.ShadowPausedLooper$ControlRunnable.run(ShadowPausedLooper.java:562)
+	at org.robolectric.shadows.ShadowPausedLooper.executeOnLooper(ShadowPausedLooper.java:684)
+	at org.robolectric.shadows.ShadowPausedLooper.idle(ShadowPausedLooper.java:104)
+	at org.robolectric.android.internal.LocalControlledLooper.drainMainThreadUntilIdle(LocalControlledLooper.java:18)
+	at androidx.test.espresso.Espresso.onIdle(Espresso.java:11)
+	at androidx.test.espresso.Espresso.onIdle(Espresso.java:1)
+	at androidx.compose.ui.test.EspressoLink_androidKt.runEspressoOnIdle(EspressoLink.android.kt:92)
+	at androidx.compose.ui.test.RobolectricIdlingStrategy$runUntilIdle$1.invoke(RobolectricIdlingStrategy.android.kt:66)
+	at androidx.compose.ui.test.RobolectricIdlingStrategy$runUntilIdle$1.invoke(RobolectricIdlingStrategy.android.kt:48)
+	at androidx.compose.ui.test.AndroidSynchronization_androidKt.runOnUiThread(AndroidSynchronization.android.kt:33)
+	at androidx.compose.ui.test.RobolectricIdlingStrategy.runUntilIdle(RobolectricIdlingStrategy.android.kt:48)
+	at androidx.compose.ui.test.AndroidComposeUiTestEnvironment.runTest(ComposeUiTest.android.kt:326)
+	at androidx.compose.ui.test.junit4.AndroidComposeTestRule$apply$1.evaluate(AndroidComposeTestRule.android.kt:271)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+</failure>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

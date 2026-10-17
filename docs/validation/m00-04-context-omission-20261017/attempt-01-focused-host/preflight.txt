@@ -1,0 +1,15 @@
+Preflight timestamp: 2026-10-17T04:08:31Z
+Code commit under test: fdd80c0971b5ae1637ad7e616bdb4aa8f5de8700
+Product/test source tree: 8f2a1bafc41f2a32181ef48dc8259efbe7ed7ef5
+Documentation HEAD before run: 5c1189bc00fad9cb34593d411a37f23c779a5b07
+Branch: codex/master-program-20261016 (publication target remains feat/0.5.0-skills-agents)
+Tracked working tree before creating this evidence directory: clean
+The only untracked path after preflight is this run's evidence directory.
+JDK 17 runtime: /workspace/.toolchain/jdk-17-temurin; java 17.0.20.1, javac 17.0.20.1
+JDK 21 worker/toolchain: /workspace/.toolchain/jdk-21-temurin; java 21.0.12.1 LTS, javac 21.0.12.1
+Android SDK: /workspace/.toolchain/android-sdk
+Android NDK: 27.0.12077973; source.properties present
+Gradle user home: /workspace/.gradle-master-program-20261016; cache size 2,201,961,097 bytes
+Existing app/build size: 848,737,053 bytes (not cleaned or copied)
+Free disk before test: 22 GiB of 32 GiB on /workspace
+No SDK, NDK, JDK, Gradle cache or project build output was installed, deleted or copied for this run.

@@ -1,0 +1,39 @@
+{
+  "tests": 2,
+  "failures": 2,
+  "errors": 0,
+  "skipped": 0,
+  "passed": 0,
+  "xmlFiles": 2,
+  "cases": [
+    {
+      "class": "com.localai.workspace.ui.ChatSessionPipelineTest",
+      "name": "materialContextOmissionWarnsWhileRoutineOmissionStaysDiagnosticOnly",
+      "timeSeconds": 5.455,
+      "status": "FAIL",
+      "failureType": "java.lang.AssertionError",
+      "failureMessage": "java.lang.AssertionError: Failed to fetch maven artifact org.robolectric:android-all-instrumented:10-robolectric-5803371-i7"
+    },
+    {
+      "class": "com.localai.workspace.ui.ContextOmissionInspectorUiTest",
+      "name": "materialDropReasonIsVisibleInInspectorWithoutShowingDroppedMemoryText",
+      "timeSeconds": 9.604,
+      "status": "FAIL",
+      "failureType": "java.lang.NullPointerException",
+      "failureMessage": "java.lang.NullPointerException: Parameter specified as non-null is null: method androidx.room.MultiInstanceInvalidationClient$serviceConnection$1.onServiceConnected, parameter name"
+    }
+  ],
+  "codeCommit": "fdd80c0971b5ae1637ad7e616bdb4aa8f5de8700",
+  "testedTreeSha": "8f2a1bafc41f2a32181ef48dc8259efbe7ed7ef5",
+  "documentationHeadBeforeRun": "5c1189bc00fad9cb34593d411a37f23c779a5b07",
+  "startedAtUtc": "2026-10-17T04:09:08Z",
+  "finishedAtUtc": "2026-10-17T04:09:55Z",
+  "durationSeconds": 47,
+  "exitCode": 1,
+  "status": "HOST_VALIDATION_BLOCKED_BY_TEST_ENVIRONMENT",
+  "productFailureDemonstrated": false,
+  "gradleTasks": {
+    ":app:testDebugUnitTest": "FAILED",
+    "otherHostTasks": "NOT_RUN"
+  }
+}
