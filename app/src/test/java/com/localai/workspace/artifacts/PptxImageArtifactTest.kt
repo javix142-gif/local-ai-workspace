@@ -7,6 +7,7 @@ import org.json.JSONObject
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -15,6 +16,7 @@ import org.robolectric.annotation.Config
 import java.io.File
 import java.util.UUID
 import java.util.zip.ZipFile
+import java.util.zip.CRC32
 import javax.xml.parsers.DocumentBuilderFactory
 
 @RunWith(RobolectricTestRunner::class)
@@ -43,6 +45,7 @@ class PptxImageArtifactTest {
                 writeBytes(store.verifiedFile(project, first).readBytes())
             }
             assertTrue(spec("Informe visual").preview().contains("[PNG image: Mapa & datos]"))
+            assertTrue("The textual preview must not expose the base64 payload", !spec("Informe visual").preview().contains(pngBase64))
             val slideXml = "ppt/slides/slide1.xml"
             val relsXml = "ppt/slides/_rels/slide1.xml.rels"
             ZipFile(firstFile).use { zip ->
@@ -101,6 +104,40 @@ class PptxImageArtifactTest {
         }
     }
 
+    @Test
+    fun rejectsMalformedOversizedOrUnlabelledPptxImages() {
+        val tooLarge = java.util.Base64.getEncoder().encodeToString(ByteArray(PptxImagePayloadValidator.MAX_IMAGE_BYTES + 1))
+        val oversizedDimensions = pngBytes.copyOf()
+        java.nio.ByteBuffer.wrap(oversizedDimensions).putInt(16, PptxImagePayloadValidator.MAX_DIMENSION + 1)
+        val headerCrc = CRC32().apply { update(oversizedDimensions, 12, 17) }.value.toInt()
+        java.nio.ByteBuffer.wrap(oversizedDimensions).putInt(29, headerCrc)
+        val badCrc = pngBytes.copyOf().apply { this[29] = (this[29].toInt() xor 1).toByte() }
+        val invalidDescriptors = listOf(
+            JSONObject().put("imagePngBase64", pngBase64),
+            JSONObject().put("imageAltText", "Map without bytes"),
+            JSONObject().put("imagePngBase64", "%%%not-base64%%%").put("imageAltText", "Image"),
+            JSONObject().put("imagePngBase64", java.util.Base64.getEncoder().encodeToString("not a PNG".toByteArray())).put("imageAltText", "Image"),
+            JSONObject().put("imagePngBase64", java.util.Base64.getEncoder().encodeToString(badCrc)).put("imageAltText", "Image"),
+            JSONObject().put("imagePngBase64", java.util.Base64.getEncoder().encodeToString(oversizedDimensions)).put("imageAltText", "Image"),
+            JSONObject().put("imagePngBase64", tooLarge).put("imageAltText", "Image"),
+            JSONObject().put("imagePngBase64", pngBase64).put("imageAltText", " "),
+            JSONObject().put("imagePngBase64", pngBase64).put("imageAltText", "x".repeat(121))
+        )
+        invalidDescriptors.forEach { fields ->
+            val slide = JSONObject().put("title", "Slide").put("body", "Body")
+            fields.keys().forEach { slide.put(it, fields.get(it)) }
+            val source = JSONObject().put("format", "PPTX").put("name", "invalid.pptx").put("slides", org.json.JSONArray().put(slide))
+            try {
+                ArtifactSpec.parse(source)
+                fail("invalid image descriptor must be rejected: $fields")
+            } catch (failure: IllegalArgumentException) {
+                assertTrue("Expected a specific image-validation reason", failure.message?.startsWith("PPTX_IMAGE_") == true)
+            }
+        }
+    }
+
     private fun xml(zip: ZipFile, path: String) =
-        zip.getInputStream(zip.getEntry(path)).use { DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(it) }
+        zip.getInputStream(zip.getEntry(path)).use {
+            DocumentBuilderFactory.newInstance().apply { isNamespaceAware = true }.newDocumentBuilder().parse(it)
+        }
 }

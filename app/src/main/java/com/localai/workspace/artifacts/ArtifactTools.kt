@@ -74,7 +74,7 @@ class ArtifactTool(context:Context,private val operation:String):LocalTool {
             val revision=if(operation=="artifacts.create")store.create(context.projectId,spec)else store.revise(context.projectId,arguments.getString("id"),arguments.getInt("expectedVersion"),spec)
             store.verifiedFile(context.projectId,revision)
             JSONObject().put("artifact",revision.json()).put("state","PRIVATE_DRAFT_VERIFIED")
-                .put("note","Actual bytes created locally. Open Artifacts in this chat to preview, edit versions and export. Original imports are unchanged. Formulas not recalculated; CODE not executed; PDF regenerated; PPTX text-only.").toString()
+                .put("note","Actual bytes created locally. Open Artifacts in this chat for the text/structure preview, version editing and explicit export. Original imports are unchanged. Formulas are not recalculated; CODE is not executed; PDF is regenerated. PPTX can embed only a supplied, validated PNG with alt text; the preview is not a slide canvas.").toString()
         }
     }
     companion object {val IDS=setOf("artifacts.create","artifacts.revise","artifacts.list","artifacts.read","artifacts.patchPreview","artifacts.xlsxSetCells")}

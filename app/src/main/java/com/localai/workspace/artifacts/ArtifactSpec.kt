@@ -22,7 +22,13 @@ class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String
                 c.getString("address")+" = "+c.optString("value","")+c.optString("formula","").takeIf{it.isNotBlank()}.let{if(it==null)"" else " [formula: $it; not recalculated]"}
             }
         }
-        ArtifactFormat.PPTX->json().getJSONArray("slides").objects().joinToString("\n\n") { it.getString("title")+"\n"+it.getString("body") }
+        ArtifactFormat.PPTX->json().getJSONArray("slides").objects().mapIndexed { index, slide ->
+            buildString {
+                append("Slide ").append(index + 1).append(" · ").append(slide.getString("title")).append('\n')
+                append(slide.getString("body"))
+                if (slide.has("imageAltText")) append("\n[PNG image: ").append(slide.getString("imageAltText")).append(']')
+            }
+        }.joinToString("\n\n")
         else->json().getJSONArray("paragraphs").objects().joinToString("\n\n"){it.getString("text")}+
             json().optJSONArray("tables")?.objects().orEmpty().joinToString("\n\n",prefix="\n") { t->
                 t.getJSONArray("rows").arrays().joinToString("\n"){row->(0 until row.length()).joinToString(" | "){row.getString(it)}}
@@ -64,7 +70,21 @@ class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String
                         }
                     }
                 }
-                ArtifactFormat.PPTX->{val slides=input.getJSONArray("slides");require(slides.length() in 1..30){"SLIDE_LIMIT"};slides.objects().forEach{fields(it,setOf("title","body"));text(it.getString("title"),120);text(it.getString("body"),1000)}}
+                ArtifactFormat.PPTX->{
+                    val slides=input.getJSONArray("slides");require(slides.length() in 1..30){"SLIDE_LIMIT"}
+                    var totalImageBytes=0L
+                    slides.objects().forEach{slide->
+                        fields(slide,setOf("title","body","imagePngBase64","imageAltText"))
+                        text(slide.getString("title"),120);text(slide.getString("body"),1000)
+                        val hasImage=slide.has("imagePngBase64");val hasAlt=slide.has("imageAltText")
+                        require(hasImage==hasAlt){"PPTX_IMAGE_FIELDS_REQUIRED_TOGETHER"}
+                        if(hasImage) {
+                            val alt=slide.getString("imageAltText");require(alt.length in 1..120){"PPTX_IMAGE_ALT_TEXT_LIMIT"};text(alt,120);require(alt.isNotBlank()){"PPTX_IMAGE_ALT_REQUIRED"}
+                            totalImageBytes+=PptxImagePayloadValidator.decodeAndValidate(slide.getString("imagePngBase64")).bytes.size
+                            require(totalImageBytes<=PptxImagePayloadValidator.MAX_TOTAL_IMAGE_BYTES){"PPTX_TOTAL_IMAGE_BYTES_LIMIT"}
+                        }
+                    }
+                }
                 else->{
                     val paragraphs=input.getJSONArray("paragraphs");require(paragraphs.length() in 1..500){"PARAGRAPH_LIMIT"}
                     paragraphs.objects().forEach{fields(it,setOf("text","style"));text(it.getString("text"),10000);require(it.optString("style","body") in setOf("title","heading","body","bullet","pageBreak")){"PARAGRAPH_STYLE_UNSUPPORTED"}}
