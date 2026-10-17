@@ -78,7 +78,7 @@ class SemanticStorageTest {
     }
     @Test fun interruptedJobRecoveryPreservesActiveIndex()=runBlocking {
         val db=Room.inMemoryDatabaseBuilder(RuntimeEnvironment.getApplication(),SemanticDatabase::class.java).build()
-        try { val dao=db.dao();dao.activate(SemanticActiveIndex("GLOBAL:","blue","space"));dao.job(SemanticIndexJob("green","GLOBAL:","space","INDEXING",1,1,1,1,1,null));dao.recoverInterruptedJobs();assertEquals("CANCELLED",dao.job("green")!!.state);assertEquals("blue",dao.active("GLOBAL:")!!.indexId)
+        try { val dao=db.dao();dao.activate(SemanticActiveIndex("GLOBAL:","blue","space"));dao.job(SemanticIndexJob("green","GLOBAL:","space","INDEXING",1,1,1,1,1,null));assertEquals(1,dao.recoverInterruptedJobs(2));assertEquals("CANCELLED",dao.job("green")!!.state);assertEquals("PROCESS_RESTART_RECOVERABLE",dao.job("green")!!.errorCode);assertEquals(2,dao.job("green")!!.updatedAt);assertEquals("blue",dao.active("GLOBAL:")!!.indexId)
         } finally { db.close() }
     }
 

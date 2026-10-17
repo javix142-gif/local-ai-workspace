@@ -17,6 +17,7 @@ open class LocalAiApplication : Application() {
         graph = AppGraph(this)
         graph.modelPreparation.start()
         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
+            try { graph.semanticV2.recover() } catch(error:Exception) { android.util.Log.e("LocalAI/Semantic","index_recovery_failed type=${error.javaClass.simpleName}") }
             try { graph.semanticDiagnostics.recover() } catch(error:Exception) { android.util.Log.e("LocalAI/Semantic","benchmark_recovery_failed type=${error.javaClass.simpleName}") }
             com.localai.workspace.inference.LiteRtCapabilityRefresh.refresh(graph.database.modelDao(),graph.liteRtLmRuntime)
             graph.workspace.cleanupDeletedDocuments()

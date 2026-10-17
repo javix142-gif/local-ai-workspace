@@ -22,7 +22,7 @@ data class SemanticIndexJob(@PrimaryKey val id: String, val scopeKey: String, va
 data class SemanticActiveIndex(@PrimaryKey val scopeKey: String, val indexId: String, val spaceKey: String)
 data class IndexedSegment(@Embedded val segment: SemanticSegmentRecord, val sourceName: String, val vector: ByteArray, val dimension: Int, val spaceKey: String, val modelHash: String, val modelId: String)
 @Dao interface SemanticDao {
-    @Query("UPDATE semantic_index_jobs SET state='CANCELLED',errorCode='INDEX_JOB_CANCELLED' WHERE state='INDEXING'") suspend fun recoverInterruptedJobs()
+    @Query("UPDATE semantic_index_jobs SET state='CANCELLED',errorCode='PROCESS_RESTART_RECOVERABLE',updatedAt=:recoveredAt WHERE state='INDEXING'") suspend fun recoverInterruptedJobs(recoveredAt: Long): Int
     @Query("SELECT * FROM semantic_models_v2 ORDER BY importedAt DESC") fun observeModels(): Flow<List<SemanticModelRecord>>
     @Query("SELECT * FROM semantic_models_v2 WHERE id=:id") suspend fun model(id: String): SemanticModelRecord?
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun model(value: SemanticModelRecord)

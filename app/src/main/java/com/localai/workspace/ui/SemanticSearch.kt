@@ -45,7 +45,7 @@ import kotlinx.coroutines.sync.withLock
         if(eg2){
             TextButton(enabled=!busy&&!externalBusy,onClick={media.launch(arrayOf("image/*","audio/*","video/*"))}){Text("Index media · experimental")}
             val scopedJobs=jobs.filter{it.scopeKey==target.key}
-            scopedJobs.firstOrNull()?.let{job->Text("${indexLabel(job.state)} · ${job.sources} sources · ${job.segments} segments",style=MaterialTheme.typography.bodySmall)}
+            scopedJobs.firstOrNull()?.let{job->Text("${indexJobLabel(job)} · ${job.sources} sources · ${job.segments} segments",style=MaterialTheme.typography.bodySmall)}
             if(scopedJobs.count{it.state in setOf("READY","NEEDS_REINDEX")}>1){
                 TextButton(onClick={previous=!previous}){Text("Previous indexes")}
                 if(previous)scopedJobs.filter{it.state in setOf("READY","NEEDS_REINDEX")}.forEach{job->TextButton(enabled=!busy&&!externalBusy,onClick={run{
@@ -60,3 +60,4 @@ import kotlinx.coroutines.sync.withLock
     }
 }
 internal fun indexLabel(state:String)=when(state){"READY"->"Indexed";"NEEDS_REINDEX"->"Needs reindex";"INDEXING"->"Indexing";"FAILED"->"Failed";"CANCELLED"->"Cancelled";else->"Not indexed"}
+internal fun indexJobLabel(job:SemanticIndexJob)=if(job.state=="CANCELLED"&&job.errorCode=="PROCESS_RESTART_RECOVERABLE")"Interrupted by app restart · re-index to reuse matching vectors" else indexLabel(job.state)

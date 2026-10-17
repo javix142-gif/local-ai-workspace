@@ -36,6 +36,8 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
     val database = databaseOverride ?: SemanticDatabase.create(context)
     val manager = managerOverride ?: EmbeddingEngineManager(context, resourceGate)
     private val operations = Mutex()
+    private val recoveryLock = Mutex()
+    private var recovered = false
     private val searchVectors = SearchEmbeddingCache()
     val queryEmbeddingReused = MutableStateFlow(false)
     private val prefs = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE)
@@ -68,9 +70,13 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
         check(prefs.edit().putString("selected", id).putString("provider","EG2").commit());manager.configureDimension(dimension);configurationRevision.value++
         notice.value = "EG2 selected for Semantic V2 · EG1 chat unchanged"
     }
-    suspend fun recover() {
-        if(!operations.tryLock())return
-        try { database.dao().recoverInterruptedJobs();File(context.filesDir,"semantic-models-v2").listFiles()?.filter { it.extension=="part" }?.forEach { it.delete() } } finally { operations.unlock() }
+    suspend fun recover() = recoveryLock.withLock {
+        if (recovered) return@withLock
+        operations.withLock {
+            database.dao().recoverInterruptedJobs(System.currentTimeMillis())
+            File(context.filesDir,"semantic-models-v2").listFiles()?.filter { it.extension=="part" }?.forEach { it.delete() }
+            recovered = true
+        }
     }
     suspend fun restore() { if(manager.selected==null)selection.find(database.dao().observeModels().first())?.let { manager.select(it);manager.configureDimension(dimension);configurationRevision.value++ } }
     suspend fun remove(id: String) = operations.withLock {
@@ -80,7 +86,7 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
         database.dao().removeModel(id)
         File(model.privatePath).takeIf { it.canonicalFile.parentFile == File(context.filesDir,"semantic-models-v2").canonicalFile }?.delete()
     }
-    suspend fun import(uri: Uri, observer:((String,Long?,String?)->Unit)?=null): SemanticModelRecord = withContext(Dispatchers.IO) { operations.withLock {
+    suspend fun import(uri: Uri, observer:((String,Long?,String?)->Unit)?=null): SemanticModelRecord = withContext(Dispatchers.IO) { recover(); operations.withLock {
         val dir = File(context.filesDir, "semantic-models-v2").apply { mkdirs() }
         val temp = File(dir,"${UUID.randomUUID()}.part")
         val previous = manager.selected; val oldProfile = manager.profile
@@ -144,7 +150,7 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
         } finally { withContext(NonCancellable) { manager.unload();if(old!=null)manager.select(old,profile) } }
     }
     /** New generations of source/segment IDs preserve old index provenance during blue/green builds. */
-    suspend fun indexProject(projectId: String): String = withContext(Dispatchers.IO) { operations.withLock {
+    suspend fun indexProject(projectId: String): String = withContext(Dispatchers.IO) { recover(); operations.withLock {
         restore(); val model=manager.selected ?: throw SemanticFailure(SemanticError.MODEL_FILE_INVALID)
         val dim=dimension;val space=EmbeddingEngineManager.space(model,dim); val scope=SemanticScope(ScopeType.PROJECT,projectId)
         val id=UUID.randomUUID().toString(); val start=System.currentTimeMillis(); val dao=database.dao()
@@ -240,7 +246,7 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
         } catch(cancel:CancellationException) { withContext(NonCancellable) { dao.job(job.copy(state="CANCELLED",errorCode="INDEX_JOB_CANCELLED",updatedAt=System.currentTimeMillis())) };throw cancel }
         catch(error:Throwable) { dao.job(job.copy(state="FAILED",errorCode=(error as? SemanticFailure)?.code?.name ?: "INDEX_FAILED",updatedAt=System.currentTimeMillis()));throw error }
     } }
-    suspend fun indexMedia(uri: Uri, scope: SemanticScope, modality: SemanticModality): String = withContext(Dispatchers.IO) { operations.withLock {
+    suspend fun indexMedia(uri: Uri, scope: SemanticScope, modality: SemanticModality): String = withContext(Dispatchers.IO) { recover(); operations.withLock {
         restore(); val model=manager.selected ?: throw SemanticFailure(SemanticError.MODEL_FILE_INVALID)
         val prepared=when(modality) { SemanticModality.IMAGE -> SemanticMedia(context).image(uri); SemanticModality.AUDIO -> SemanticMedia(context).audio(uri); SemanticModality.VIDEO -> SemanticMedia(context).video(uri); else -> throw SemanticFailure(SemanticError.MODALITY_UNSUPPORTED) }
         val id=UUID.randomUUID().toString();val space=EmbeddingEngineManager.space(model,dimension);val dao=database.dao();val now=System.currentTimeMillis()
