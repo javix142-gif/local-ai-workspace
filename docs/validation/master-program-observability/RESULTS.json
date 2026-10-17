@@ -1,0 +1,172 @@
+{
+  "schema": "aws-master-increment-result-v1",
+  "name": "Normal chat generation checkpoint timeline presentation",
+  "status": "HOST_PASS_EMULATOR_FAIL_QA_FAIL_CLOSED",
+  "baseFeatureSha": "585a86ce1e4c900e4c421db4f208c84ab96b21a6",
+  "codeCommit": "fdd80c0971b5ae1637ad7e616bdb4aa8f5de8700",
+  "testedSourceTreeSha": "8f2a1bafc41f2a32181ef48dc8259efbe7ed7ef5",
+  "branch": "feat/0.5.0-skills-agents",
+  "workBranch": "codex/master-program-20261016",
+  "implementation": {
+    "summary": "Presents existing NormalGenerationTrace checkpoints as elapsed-from-request and adjacent interval values, in recorded order. Explains that spans may overlap and are not additive. Backwards monotonic timestamps render timings unavailable.",
+    "newInstrumentation": false,
+    "modelOrRuntimeChange": false,
+    "dependenciesOrDatabaseChange": false
+  },
+  "host": {
+    "environment": {
+      "gradle": "8.10.2",
+      "gradleRuntimeJdk": "Temurin 17.0.20.1",
+      "testLauncherJdk": "Temurin 21.0.12.1 (project Test task configuration)",
+      "toolchainDiscovery": [
+        "/workspace/.toolchain/jdk-17-temurin",
+        "/workspace/.toolchain/jdk-21-temurin"
+      ],
+      "androidSdk": "/workspace/.toolchain/android-sdk",
+      "gradleUserHome": "/workspace/.gradle-master-program-20261016",
+      "offline": true,
+      "dependencyInstallation": false
+    },
+    "focusedTest": {
+      "commandFile": "attempt-01-generation-timeline/command.txt",
+      "log": "attempt-01-generation-timeline/gradle.log",
+      "junitXml": "attempt-01-generation-timeline/xml/TEST-com.localai.workspace.performance.GenerationTimelinePresentationTest.xml",
+      "startUtc": "2026-10-17T03:27:26Z",
+      "endUtc": "2026-10-17T03:31:38Z",
+      "durationSeconds": 252,
+      "exitCode": 0,
+      "tests": 2,
+      "passed": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "gradleTasksExecuted": 63
+    },
+    "proportionalGate": {
+      "commandFile": "attempt-02-lint-androidtest-assemble/command.txt",
+      "log": "attempt-02-lint-androidtest-assemble/gradle.log",
+      "lintReport": "attempt-02-lint-androidtest-assemble/lint-results-debug.xml",
+      "startUtc": "2026-10-17T03:31:59Z",
+      "endUtc": "2026-10-17T03:42:35Z",
+      "durationSeconds": 636,
+      "exitCode": 0,
+      "buildSummary": "BUILD SUCCESSFUL in 10m 35s; 145 actionable tasks: 37 executed, 108 up-to-date",
+      "lintDebug": {
+        "status": "PASS",
+        "errors": 0,
+        "warnings": 77,
+        "information": 1,
+        "findingsInChangedFiles": 0
+      },
+      "compileDebugAndroidTestKotlin": {
+        "status": "PASS_COMPILE_ONLY",
+        "instrumentation": "NOT_RUN"
+      },
+      "assembleDebug": "PASS",
+      "fullJvmSuite": "NOT_RUN",
+      "litertCompatSuite": "NOT_RUN"
+    }
+  },
+  "localAssembleDebugOutput": {
+    "status": "BUILT_NOT_DISTRIBUTED_NOT_UPDATE_COMPATIBLE",
+    "path": "app/build/outputs/apk/debug/app-debug.apk",
+    "bytes": 157965163,
+    "sha256": "5dda27f74eb1e54c48076a22b6f8f1e90dedda1c01c3764d8ffb5169b0fd5938",
+    "applicationId": "com.localai.workspace.debug",
+    "versionName": "0.5.0-debug",
+    "versionCode": 27,
+    "abis": [
+      "arm64-v8a",
+      "armeabi-v7a",
+      "x86",
+      "x86_64"
+    ],
+    "signatureScheme": "v2 verified",
+    "certificateSha256": "3f0dc5e9a575d54f7e18cc9ecfe130c85f49353da2ae6bab9fd579b645b35e5e",
+    "previousRecordedPersonalCertificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
+    "reasonNotDelivered": "Universal ABI package and signer differs from the previously recorded personal update certificate; no update-safe APK is available from this build."
+  },
+  "automation": {
+    "emulator": {
+      "runId": 39000019030,
+      "jobId": 117300768724,
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39000019030",
+      "sourceSha": "fdd80c0971b5ae1637ad7e616bdb4aa8f5de8700",
+      "status": "EMULATOR_FAIL",
+      "startedAtUtc": "2026-10-17T03:45:49Z",
+      "completedAtUtc": "2026-10-17T04:01:04Z",
+      "durationSeconds": 915,
+      "adb": "PASS; emulator-5554 connected",
+      "device": {
+        "api": 35,
+        "androidRelease": "15",
+        "abi": "x86_64",
+        "model": "sdk_gphone64_x86_64",
+        "resolution": "1080x1920",
+        "densityDpi": 420
+      },
+      "connectedTask": ":app:connectedDebugAndroidTest",
+      "gradleExitCode": 1,
+      "xml": {
+        "files": 1,
+        "tests": 16,
+        "passed": 9,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 6,
+        "executed": 10,
+        "internallyConsistent": true
+      },
+      "failure": "WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords: authentic WorkspaceDatabase/1.json unavailable; test/schema unchanged",
+      "modelDependentSkips": 6,
+      "progressDiscrepancy": "Gradle logs report starting 16, then 22/16 and Finished 22 tests; XML contains 16. Cause NOT_DETERMINED.",
+      "postTaskPackageCheck": "com.localai.workspace.debug not installed; cause NOT_DETERMINED",
+      "largeFontScreenshot": "Missing due incomplete logcat chunk transfer; capture requirement not passed",
+      "artifact": {
+        "id": 12089112333,
+        "name": "android-emulator-evidence-39000019030-1",
+        "bytes": 81861,
+        "sha256": "626cbd6a5e85782dbd4e4d3f3c355ba5297da0fed219847843b62bdde50067fc",
+        "expiresAtUtc": "2026-10-24T04:00:59Z"
+      },
+      "evidence": "automatic-ci-39000019030/RUN_READBACK.json"
+    },
+    "officialQa": {
+      "runId": 39000019176,
+      "jobId": 117300769295,
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39000019176",
+      "sourceSha": "fdd80c0971b5ae1637ad7e616bdb4aa8f5de8700",
+      "status": "FAIL_CLOSED_BY_INSTRUMENTATION_GATE",
+      "apkBuild": "SKIPPED",
+      "artifactCount": 0,
+      "apk": "NOT_GENERATED"
+    },
+    "personalQa": "NOT_DISPATCHED; local universal build signer differs from previously recorded personal update signer."
+  },
+  "physicalDevice": "NOT_RUN",
+  "formalOriginalTask": {
+    "id": "M00-06",
+    "sourceStatus": "TODO",
+    "completion": "NOT_COMPLETE"
+  },
+  "backlog": {
+    "taskIds": 97,
+    "uniqueTaskIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": {
+      "TODO": 97
+    },
+    "filesChanged": false
+  },
+  "devicePerformance": "NOT_MEASURED",
+  "evidenceReadback": {
+    "runReadback": "automatic-ci-39000019030/RUN_READBACK.json",
+    "artifactZip": "automatic-ci-39000019030/artifact.zip",
+    "emulatorWorkflowLog": "automatic-ci-39000019030/workflow-job.log",
+    "qaGateWorkflowLog": "automatic-ci-39000019030/qa-gate-workflow-job.log",
+    "artifactApiDigest": "sha256:626cbd6a5e85782dbd4e4d3f3c355ba5297da0fed219847843b62bdde50067fc",
+    "internalManifestEntries": 31,
+    "internalManifestEntriesVerified": 31,
+    "artifactZipCrc": "PASS"
+  }
+}

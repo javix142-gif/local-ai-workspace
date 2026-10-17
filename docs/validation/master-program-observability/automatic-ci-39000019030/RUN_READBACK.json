@@ -1,0 +1,142 @@
+{
+  "sourceCommit": "fdd80c0971b5ae1637ad7e616bdb4aa8f5de8700",
+  "runId": 39000019030,
+  "runAttempt": 1,
+  "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39000019030",
+  "jobId": 117300768724,
+  "jobUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39000019030/job/117300768724",
+  "workflow": ".github/workflows/android-emulator-instrumented.yml",
+  "startedAtUtc": "2026-10-17T03:45:49Z",
+  "completedAtUtc": "2026-10-17T04:01:04Z",
+  "durationSeconds": 915,
+  "classification": "EMULATOR_FAIL_INSTRUMENTATION; QA_FAIL_CLOSED; NO_APK",
+  "emulator": {
+    "runner": "GitHub-hosted ubuntu-24.04",
+    "avd": "localai-api35-x86_64",
+    "avdPreflight": "PASS",
+    "kvm": "PASS",
+    "adb": "PASS",
+    "adbSerial": "emulator-5554",
+    "model": "sdk_gphone64_x86_64",
+    "api": 35,
+    "androidRelease": "15",
+    "abi": "x86_64",
+    "resolution": "1080x1920",
+    "densityDpi": 420,
+    "physicalDevice": "NOT_RUN"
+  },
+  "instrumentation": {
+    "task": ":app:connectedDebugAndroidTest",
+    "command": "./gradlew :app:connectedDebugAndroidTest --no-daemon --no-parallel --max-workers=2 --stacktrace --console=plain",
+    "exitCode": 1,
+    "gradleSummary": "BUILD FAILED in 13m 29s; 114 actionable tasks: 103 executed, 11 from cache",
+    "xmlFiles": 1,
+    "xmlPath": "extracted/instrumented-xml/debug/TEST-emulator-5554 - 15-_app-.xml",
+    "xmlSha256": "4589b5c6ed37ffae22ae2df95d36d685efddb8e7f62f25553ee53666a50b0363",
+    "counts": {
+      "total": 16,
+      "passed": 9,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 6,
+      "executed": 10
+    },
+    "failure": {
+      "test": "com.localai.workspace.data.WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords",
+      "classification": "HISTORICAL_FIXTURE_UNAVAILABLE",
+      "reason": "The authentic com.localai.workspace.data.WorkspaceDatabase/1.json schema is unavailable; no schema was fabricated and the migration test was not changed."
+    },
+    "skips": {
+      "count": 6,
+      "reason": "Real model weights unavailable; no model was downloaded.",
+      "tests": [
+        "LiteRtLmDeviceSmokeTest.normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole",
+        "LiteRtLmDeviceSmokeTest.cpuFirstTokenStreamingCompletionCancelRetryAndUnload",
+        "NormalChatNativeDeviceTest.plain_chat_legacy_off_real_native",
+        "NormalChatNativeDeviceTest.plain_chat_context_v1_on_real_native",
+        "NormalChatNativeDeviceTest.cancel_then_retry_real_native",
+        "NormalChatNativeDeviceTest.project_chat_context_v1_on_real_native"
+      ]
+    },
+    "testCountDiscrepancy": {
+      "status": "UNRESOLVED",
+      "gradleStart": "Starting 16 tests",
+      "gradleProgressEnd": "22/16 completed",
+      "gradleFinished": "Finished 22 tests",
+      "xmlTotal": 16,
+      "note": "XML is internally consistent, but the Gradle progress/finished count does not match it. No cause is inferred."
+    },
+    "postTaskPackageCheck": {
+      "checked": true,
+      "applicationPackage": "com.localai.workspace.debug",
+      "installed": false,
+      "cause": "NOT_DETERMINED"
+    }
+  },
+  "headerCapture": {
+    "standard": {
+      "path": "extracted/ui-diagnostics/screenshots/chat-header-standard.png",
+      "status": "PRESENT_VALID_PNG",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 47792,
+      "sha256": "214f9e93a5f68d47b1e2825fcf0bc4727f91e0d60073c024746673397441084f"
+    },
+    "largeFont": {
+      "status": "MISSING_INCOMPLETE_TRANSFER",
+      "transportErrors": [
+        "BYTE_COUNT_MISMATCH",
+        "CAPTURE_END_MISSING",
+        "CHUNK_SET_INCOMPLETE",
+        "DIMENSION_MISMATCH",
+        "PNG_INVALID",
+        "SHA256_MISMATCH"
+      ]
+    },
+    "acceptance": "Capture evidence incomplete; the two ChatHeader test assertions passed in the XML, but the large-font visual capture is not validated."
+  },
+  "artifact": {
+    "id": 12089112333,
+    "name": "android-emulator-evidence-39000019030-1",
+    "path": "artifact.zip",
+    "bytes": 81861,
+    "sha256": "626cbd6a5e85782dbd4e4d3f3c355ba5297da0fed219847843b62bdde50067fc",
+    "apiDigest": "sha256:626cbd6a5e85782dbd4e4d3f3c355ba5297da0fed219847843b62bdde50067fc",
+    "zipCrc": "PASS",
+    "expiresAtUtc": "2026-10-24T04:00:59Z",
+    "internalManifest": {
+      "path": "extracted/SHA256SUMS",
+      "entries": 31,
+      "verified": 31,
+      "sha256": "a0a9f5995147b59869470ebb7ebf1bedef771e3d3247f68708d7b840e18f198e"
+    }
+  },
+  "workflowLogs": {
+    "emulator": {
+      "path": "workflow-job.log",
+      "bytes": 336279,
+      "sha256": "d0e77115f7f7c5bf7167c9d17aac575ca4bc201fb06e381ed51573eb1b86dc85"
+    },
+    "officialQaGate": {
+      "path": "qa-gate-workflow-job.log",
+      "bytes": 17324,
+      "sha256": "0ed2417cb973af220870fe1c89f393cda02383c77dcbe01e46cdd43d92bccf1e"
+    }
+  },
+  "officialQa": {
+    "runId": 39000019176,
+    "jobId": 117300769295,
+    "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39000019176",
+    "sourceCommit": "fdd80c0971b5ae1637ad7e616bdb4aa8f5de8700",
+    "conclusion": "FAIL_CLOSED_BY_INSTRUMENTATION_GATE",
+    "gateReason": "ANDROID_INSTRUMENTATION_NOT_SUCCESSFUL",
+    "jdkSetup": "SKIPPED",
+    "apkBuild": "SKIPPED",
+    "upload": "SKIPPED",
+    "artifactCount": 0,
+    "apk": "NOT_GENERATED"
+  },
+  "host": "The focused test and proportional host build gates passed as recorded in the parent RESULTS report; no local Android instrumentation was run for this readback.",
+  "physicalDevice": "NOT_RUN",
+  "modelPerformance": "NOT_MEASURED"
+}

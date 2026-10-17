@@ -1,0 +1,46 @@
+{
+  "screenshots": [
+    {
+      "name": "standard",
+      "transport": "logcat_base64_chunks_v1",
+      "collectorCommand": "adb -s <serial> logcat -d -v raw -s M00HeaderPng:I",
+      "logcatExitCode": 0,
+      "logcatBytes": 175949,
+      "localPath": "ui-diagnostics/screenshots/chat-header-standard.png",
+      "localFilePresent": true,
+      "pngValid": true,
+      "widthPixels": 1080,
+      "heightPixels": 1920,
+      "bytes": 47792,
+      "sha256": "214f9e93a5f68d47b1e2825fcf0bc4727f91e0d60073c024746673397441084f",
+      "captureRecordsFound": 1,
+      "expectedChunkCount": 125,
+      "receivedChunkCount": 125,
+      "endMarkerReceived": true,
+      "errors": []
+    },
+    {
+      "name": "large-font",
+      "transport": "logcat_base64_chunks_v1",
+      "collectorCommand": "adb -s <serial> logcat -d -v raw -s M00HeaderPng:I",
+      "logcatExitCode": 0,
+      "logcatBytes": 175949,
+      "localPath": "ui-diagnostics/screenshots/chat-header-large-font.png",
+      "localFilePresent": false,
+      "pngValid": false,
+      "widthPixels": null,
+      "heightPixels": null,
+      "bytes": 0,
+      "sha256": null,
+      "captureRecordsFound": 1,
+      "errors": [
+        "BYTE_COUNT_MISMATCH",
+        "CAPTURE_END_MISSING",
+        "CHUNK_SET_INCOMPLETE",
+        "DIMENSION_MISMATCH",
+        "PNG_INVALID",
+        "SHA256_MISMATCH"
+      ]
+    }
+  ]
+}

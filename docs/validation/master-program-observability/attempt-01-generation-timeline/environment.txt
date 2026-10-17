@@ -1,0 +1,8 @@
+JAVA_HOME=/workspace/.toolchain/jdk-17-temurin (Gradle runtime)
+JDK 21=/workspace/.toolchain/jdk-21-temurin (app Test task javaLauncher, as configured in app/build.gradle.kts)
+Gradle toolchain discovery=/workspace/.toolchain/jdk-17-temurin,/workspace/.toolchain/jdk-21-temurin
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk
+GRADLE_USER_HOME=/workspace/.gradle-master-program-20261016
+Gradle=8.10.2 wrapper
+Network/dependency installation=not requested; offline mode

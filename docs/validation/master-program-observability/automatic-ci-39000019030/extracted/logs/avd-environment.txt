@@ -1,0 +1,10 @@
+HOME=/home/runner
+ANDROID_HOME=/usr/local/lib/android/sdk
+ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
+ANDROID_USER_HOME=<unset>
+ANDROID_AVD_HOME=/home/runner/.android/avd
+ANDROID_SDK_HOME=<unset>
+XDG_CONFIG_HOME=/home/runner/.config
+resolved_android_sdk_root=/usr/local/lib/android/sdk
+avdmanager_executable=/usr/local/lib/android/sdk/cmdline-tools/latest/bin/avdmanager
+emulator_executable=/usr/local/lib/android/sdk/emulator/emulator
