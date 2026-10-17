@@ -908,7 +908,7 @@ class SemanticContextPostfixTest {
 
         val privateRoot=File(context.cacheDir,"m02-06-reimport-${UUID.randomUUID()}").apply{mkdirs()}
         val importer=DocumentIngestionService(context,workspace,workspace.documentDao(),
-            onIndexed={id->layer.markNeedsReindex(id)},outputDirectory=privateRoot)
+            onIndexed={id,_->layer.markNeedsReindex(id);false},outputDirectory=privateRoot)
         suspend fun importText(project:String,name:String,text:String):String {
             val uri=Uri.parse("content://local.fixture/${UUID.randomUUID()}/$name")
             shadowOf(context.contentResolver).registerInputStream(uri,ByteArrayInputStream(text.toByteArray(Charsets.UTF_8)))

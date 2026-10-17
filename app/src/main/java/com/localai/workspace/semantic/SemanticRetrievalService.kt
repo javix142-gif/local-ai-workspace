@@ -26,7 +26,7 @@ object VectorPersistence {
  }
 }
 data class RetrievalDiagnostics(val mode: String="LEXICAL",val retrieved: Int=0,val memoryRetrieved:Int=0,val retrievalMs:Long=0,val embeddingMs:Long=0,val notice:String?="Embedding model unavailable")
-data class RetrievalIndexDiagnostics(val status:String="NOT_RUN",val durationMs:Long?=null,val candidateSegments:Int=0,val processedSegments:Int=0,val candidateMemories:Int=0,val processedMemories:Int=0,val failureType:String?=null)
+data class RetrievalIndexDiagnostics(val status:String="NOT_RUN",val durationMs:Long?=null,val candidateSegments:Int=0,val processedSegments:Int=0,val candidateMemories:Int=0,val processedMemories:Int=0,val failureType:String?=null,val runId:String?=null)
 class SemanticRetrievalService(private val db: WorkspaceDatabase, private val models: EmbeddingProvider) {
  private data class CodeLineRange(val start:Int,val end:Int)
  val diagnostics=MutableStateFlow(RetrievalDiagnostics())
@@ -149,23 +149,24 @@ class SemanticRetrievalService(private val db: WorkspaceDatabase, private val mo
   } catch(cancel:CancellationException){throw cancel} catch(error:Throwable){diagnostics.value=diagnostics.value.copy(notice="Memory embeddings failed: ${error.javaClass.simpleName}; lexical fallback")}
   diagnostics.value=diagnostics.value.copy(memoryRetrieved=result.size);result
  }
- suspend fun indexProject(projectId: String) {
+ suspend fun indexProject(projectId: String, diagnosticRunId: String = java.util.UUID.randomUUID().toString()) {
+  require(diagnosticRunId.isNotBlank() && diagnosticRunId.length <= 64)
   val started=System.nanoTime();var segmentCount=0;var memoryCount=0;var completedSegments=0;var completedMemories=0
-  indexingDiagnostics.value=RetrievalIndexDiagnostics("RUNNING")
+  indexingDiagnostics.value=RetrievalIndexDiagnostics(status="RUNNING",runId=diagnosticRunId)
   try {
    models.use { encoder->
     val segments=db.documentDao().segmentsForProject(projectId,1000);segmentCount=segments.size
     val memories=db.memoryDao().relevant(projectId,1000).filter { it.sourceType=="USER_APPROVED" };memoryCount=memories.size
-    indexingDiagnostics.value=RetrievalIndexDiagnostics("RUNNING",candidateSegments=segmentCount,candidateMemories=memoryCount)
+    indexingDiagnostics.value=RetrievalIndexDiagnostics(status="RUNNING",candidateSegments=segmentCount,candidateMemories=memoryCount,runId=diagnosticRunId)
     segments.forEach { currentCoroutineContext().ensureActive();vector(encoder,"D:${it.id}",it.text,it.documentId);completedSegments++ }
     memories.forEach { currentCoroutineContext().ensureActive();vector(encoder,"M:${it.id}",it.content,memoryId=it.id);completedMemories++ }
    } ?: error("Embedding model unavailable")
-   indexingDiagnostics.value=RetrievalIndexDiagnostics("COMPLETE",(System.nanoTime()-started)/1_000_000,segmentCount,completedSegments,memoryCount,completedMemories)
+   indexingDiagnostics.value=RetrievalIndexDiagnostics("COMPLETE",(System.nanoTime()-started)/1_000_000,segmentCount,completedSegments,memoryCount,completedMemories,runId=diagnosticRunId)
   } catch(cancel:CancellationException) {
-   indexingDiagnostics.value=RetrievalIndexDiagnostics("CANCELLED",(System.nanoTime()-started)/1_000_000,segmentCount,completedSegments,memoryCount,completedMemories)
+   indexingDiagnostics.value=RetrievalIndexDiagnostics("CANCELLED",(System.nanoTime()-started)/1_000_000,segmentCount,completedSegments,memoryCount,completedMemories,runId=diagnosticRunId)
    throw cancel
   } catch(error:Throwable) {
-   indexingDiagnostics.value=RetrievalIndexDiagnostics("FAILED",(System.nanoTime()-started)/1_000_000,segmentCount,completedSegments,memoryCount,completedMemories,error.javaClass.simpleName)
+   indexingDiagnostics.value=RetrievalIndexDiagnostics("FAILED",(System.nanoTime()-started)/1_000_000,segmentCount,completedSegments,memoryCount,completedMemories,error.javaClass.simpleName,diagnosticRunId)
    throw error
   }
  }

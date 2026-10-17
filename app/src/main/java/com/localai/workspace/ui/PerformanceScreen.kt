@@ -120,11 +120,23 @@ fun PerformanceScreen(graph: AppGraph, back: () -> Unit) {
                 if(item.failureStage!=null) append("Failure stage/type: ${item.failureStage} / ${item.failureType ?: "unknown"}")
             }, style = MaterialTheme.typography.bodySmall)
         } ?: Text("No document import measured")
-        Text("Legacy EG1 background indexing: ${retrievalIndexDiagnostics.status} · ${retrievalIndexDiagnostics.durationMs ?: "unavailable"} ms · " +
+        Text("Latest EG1 project indexing: ${retrievalIndexDiagnostics.status} · ${retrievalIndexDiagnostics.durationMs ?: "unavailable"} ms · " +
             "segments ${retrievalIndexDiagnostics.processedSegments}/${retrievalIndexDiagnostics.candidateSegments} · " +
             "memories ${retrievalIndexDiagnostics.processedMemories}/${retrievalIndexDiagnostics.candidateMemories}" +
-            (retrievalIndexDiagnostics.failureType?.let { " · $it" } ?: ""), style = MaterialTheme.typography.bodySmall)
-        Text("Document timings contain metadata only; post-import callback does not imply background indexing finished.", style = MaterialTheme.typography.bodySmall)
+            (retrievalIndexDiagnostics.failureType?.let { " · $it" } ?: "") +
+            (retrievalIndexDiagnostics.runId?.let { " · run ${it.take(8)}" } ?: ""), style = MaterialTheme.typography.bodySmall)
+        val importedIndexRun = importDiagnostics?.indexRunId
+        val importedIndexDiagnostics = importedIndexRun?.takeIf { it == retrievalIndexDiagnostics.runId }?.let { retrievalIndexDiagnostics }
+        Text(
+            when {
+                importDiagnostics == null -> "Last import index correlation: unavailable"
+                importedIndexRun == null -> "Last import index correlation: no EG1 project-index run was scheduled"
+                importedIndexDiagnostics != null -> "Last import index run ${importedIndexRun.take(8)}: ${importedIndexDiagnostics.status} · ${importedIndexDiagnostics.durationMs ?: "unavailable"} ms · segments ${importedIndexDiagnostics.processedSegments}/${importedIndexDiagnostics.candidateSegments}"
+                else -> "Last import index run ${importedIndexRun.take(8)} was scheduled; the latest EG1 diagnostics now belong to another run"
+            },
+            style = MaterialTheme.typography.bodySmall,
+        )
+        Text("Document timings contain metadata only; import callback time is not the background-index duration. A run ID links the latest import to its EG1 project-index diagnostics.", style = MaterialTheme.typography.bodySmall)
         Text("LAST GENERATION", style = MaterialTheme.typography.titleMedium)
         Text(buildString {
             fun value(label: String, item: Any?) { append("$label: ${item ?: "unavailable"}\n") }

@@ -53,13 +53,16 @@ class AppGraph(context: Context,
     }, onDocumentDeleted = { projectId, documentId ->
         if (validationOwner == null) semanticV2.deleteDocumentSources(projectId, documentId)
     })
-    val documents = DocumentIngestionService(appContext, database, database.documentDao(), onIndexed = { id ->
+    val documents = DocumentIngestionService(appContext, database, database.documentDao(), onIndexed = { id, indexRunId ->
         if(validationOwner==null) {
             // Ingestion awaits this callback: stale the active semantic generation before
             // reporting the import complete, rather than racing chat against a fire-and-forget job.
             kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) { semanticV2.markNeedsReindex(id) }
         }
-        if(embeddingModels.id != null) runtimeScope.launch { try { retrieval.indexProject(id) } catch(cancel: kotlinx.coroutines.CancellationException) { throw cancel } catch(error: Throwable) { embeddingModels.status.value = "Index failed: ${error.javaClass.simpleName} · lexical fallback" } }
+        if(embeddingModels.id != null) {
+            runtimeScope.launch { try { retrieval.indexProject(id, indexRunId) } catch(cancel: kotlinx.coroutines.CancellationException) { throw cancel } catch(error: Throwable) { embeddingModels.status.value = "Index failed: ${error.javaClass.simpleName} · lexical fallback" } }
+            true
+        } else false
     }, outputDirectory = validationId?.let { java.io.File(appContext.filesDir,"documents/self-test-"+it) })
     val modelImport = ModelImportService(appContext, database.modelDao(), runtimes)
     val liteRtDefaults = com.localai.workspace.data.LiteRtChatDefaultsUpgrade(appContext, database.modelDao(), readOnly = validationOwner != null)

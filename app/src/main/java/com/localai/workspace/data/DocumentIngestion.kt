@@ -56,6 +56,8 @@ data class DocumentIngestionDiagnostics(
     val segmentCount: Int? = null,
     val failureStage: String? = null,
     val failureType: String? = null,
+    /** Random correlation ID only; it does not encode a project, document or file identity. */
+    val indexRunId: String? = null,
 )
 
 class DocumentParser(private val context: Context) {
@@ -199,7 +201,8 @@ class DocumentIngestionService(
     private val context: Context,
     private val database: WorkspaceDatabase,
     private val documents: DocumentDao,
-    private val onIndexed: (suspend (String) -> Unit)? = null,
+    /** Return true only when a background project-index run was actually scheduled. */
+    private val onIndexed: (suspend (projectId: String, indexRunId: String) -> Boolean)? = null,
     private val outputDirectory: File? = null,
 ) {
     private val _lastDiagnostics = MutableStateFlow<DocumentIngestionDiagnostics?>(null)
@@ -220,6 +223,7 @@ class DocumentIngestionService(
         var chunkMs:Long?=null
         var segmentCommitMs:Long?=null
         var postImportCallbackMs:Long?=null
+        var indexRunId:String?=null
         var pageCount:Int?=null
         var segmentCount:Int?=null
         var failureStage:String?=null
@@ -319,7 +323,8 @@ class DocumentIngestionService(
             if (documents.get(documentId)?.extractionStatus == "READY") {
                 failureStage="POST_IMPORT_CALLBACK"
                 val callbackStarted=System.nanoTime()
-                onIndexed?.invoke(projectId)
+                val proposedIndexRunId = UUID.randomUUID().toString()
+                if (onIndexed?.invoke(projectId, proposedIndexRunId) == true) indexRunId=proposedIndexRunId
                 postImportCallbackMs=(System.nanoTime()-callbackStarted)/1_000_000
                 failureStage=null
             }
@@ -339,7 +344,7 @@ class DocumentIngestionService(
             }
         }
         _lastDiagnostics.value=DocumentIngestionDiagnostics(diagnosticStatus,format,sourceBytes,copyHashMs,metadataCommitMs,parseMs,chunkMs,segmentCommitMs,postImportCallbackMs,
-            (System.nanoTime()-totalStarted)/1_000_000,pageCount,segmentCount,failureStage,failure?.javaClass?.simpleName)
+            (System.nanoTime()-totalStarted)/1_000_000,pageCount,segmentCount,failureStage,failure?.javaClass?.simpleName,indexRunId)
         (failure as? kotlinx.coroutines.CancellationException)?.let { throw it }
         result
     }
