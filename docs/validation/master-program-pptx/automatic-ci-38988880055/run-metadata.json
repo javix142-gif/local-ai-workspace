@@ -1,0 +1,60 @@
+{
+  "sourceCodeSha": "6231732ad8557465abfc8155925fdcbc90d1eb87",
+  "workflowCheckoutSha": "06bd56e84a4a8dab2a907d136245e68761d75430",
+  "emulator": {
+    "runId": 38988880055,
+    "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38988880055",
+    "jobId": 117266559214,
+    "workflow": ".github/workflows/android-emulator-instrumented.yml",
+    "conclusion": "failure",
+    "label": "EMULATOR",
+    "api": 35,
+    "androidRelease": "15",
+    "abi": "x86_64",
+    "model": "sdk_gphone64_x86_64",
+    "adbConnected": true,
+    "task": ":app:connectedDebugAndroidTest",
+    "command": "./gradlew :app:connectedDebugAndroidTest --no-daemon --no-parallel --max-workers=2 --stacktrace --console=plain",
+    "gradleExitCode": 1,
+    "junit": {
+      "xml": "github-artifact-12084179250.zip:instrumented-xml/debug/TEST-emulator-5554 - 15-_app-.xml",
+      "total": 16,
+      "passed": 9,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 6,
+      "executed": 10,
+      "failure": "WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords: missing authentic WorkspaceDatabase/1.json"
+    },
+    "postTaskPackageCheck": {
+      "applicationApkInstalled": false,
+      "cause": "NOT_DETERMINED"
+    },
+    "artifact": {
+      "id": 12084179250,
+      "name": "android-emulator-evidence-38988880055-1",
+      "bytes": 151505,
+      "sha256": "cec74c1ae48df16f49e5910b4e882d39653a3dc80a43682f5956b173d2a14013",
+      "expiresAtUtc": "2026-10-24T01:15:02Z",
+      "preservedPath": "github-artifact-12084179250.zip",
+      "internalPayloadChecks": "all entries in internal SHA256SUMS verified locally"
+    }
+  },
+  "qa": {
+    "runId": 38988880049,
+    "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38988880049",
+    "jobId": 117266559052,
+    "workflow": ".github/workflows/qa-debug-arm64-apk.yml",
+    "conclusion": "failure",
+    "gateResult": "ANDROID_INSTRUMENTATION_NOT_SUCCESSFUL",
+    "apkBuild": "SKIPPED",
+    "artifactUpload": "SKIPPED",
+    "artifactCount": 0,
+    "log": "qa-gate-job.log.gz",
+    "logUncompressedSha256": "6a84de1664b419d374ef49fcfc1f1d9d42016ae8be06a45a3b0b35fd650da24c",
+    "logGzipSha256": "7b972c786546fd05d40aab85502428d17a3432a42618cb77e09b832c8b9b3f93"
+  },
+  "physicalDevice": "NOT_RUN",
+  "mainSha": "de615b772cf37a99e7e08a647c59607b271de606",
+  "v042PeeledSha": "de615b772cf37a99e7e08a647c59607b271de606"
+}

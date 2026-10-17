@@ -1,6 +1,6 @@
 {
   "increment": "Preparatory M03-05 PPTX image insertion",
-  "status": "PARTIAL_HOST_EVIDENCE_GRADLE_COMPLETION_UNOBSERVED_DEVICE_AND_DEPENDENCY_GATES_OPEN",
+  "status": "PARTIAL_HOST_IMPLEMENTATION_AND_EMULATOR_FAIL_QA_FAIL_CLOSED_NOT_FORMAL",
   "codeSha": "6231732ad8557465abfc8155925fdcbc90d1eb87",
   "codeCommits": [
     "72a46ceb72e5afe742eff2601128b1baeffa982c",
@@ -90,10 +90,11 @@
     "fullJvmApp": "NOT_RUN",
     "litertCompat": "NOT_RUN",
     "lint": "NOT_RUN",
-    "androidTestCompile": "NOT_RUN",
-    "emulator": "NOT_RUN",
+    "androidTestCompile": "COMPILED_AS_PART_OF_CONNECTED_TASK",
+    "emulator": "EXECUTED_FAIL",
     "physicalDevice": "NOT_RUN",
-    "apk": "NOT_GENERATED"
+    "apk": "NOT_GENERATED",
+    "androidTestCompileOnly": "NOT_RUN"
   },
   "limitations": [
     "No full host gate or complete Gradle exit status for the final focused run.",
@@ -158,5 +159,52 @@
       "testsExecuted": 0,
       "note": "All 63 tasks UP-TO-DATE. Its duplicate XML is labeled and not counted."
     }
-  ]
+  ],
+  "automaticCi": {
+    "productCodeSha": "6231732ad8557465abfc8155925fdcbc90d1eb87",
+    "workflowCheckoutSha": "06bd56e84a4a8dab2a907d136245e68761d75430",
+    "emulator": {
+      "runId": 38988880055,
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38988880055",
+      "jobId": 117266559214,
+      "status": "FAIL_EXECUTED_WITH_FAILURES",
+      "api": 35,
+      "androidRelease": "15",
+      "abi": "x86_64",
+      "adbConnected": true,
+      "task": ":app:connectedDebugAndroidTest",
+      "exitCode": 1,
+      "counts": {
+        "total": 16,
+        "passed": 9,
+        "failed": 1,
+        "errors": 0,
+        "skipped": 6,
+        "executed": 10
+      },
+      "failure": "WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords: authentic WorkspaceDatabase/1.json unavailable",
+      "postTaskApplicationPackageInstalled": false,
+      "postTaskCheckCause": "NOT_DETERMINED",
+      "artifactId": 12084179250,
+      "artifactBytes": 151505,
+      "artifactSha256": "cec74c1ae48df16f49e5910b4e882d39653a3dc80a43682f5956b173d2a14013",
+      "artifact": "automatic-ci-38988880055/github-artifact-12084179250.zip",
+      "innerPayloadManifestEntriesVerified": 32
+    },
+    "officialQaGate": {
+      "runId": 38988880049,
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38988880049",
+      "jobId": 117266559052,
+      "status": "FAIL_CLOSED",
+      "reason": "ANDROID_INSTRUMENTATION_NOT_SUCCESSFUL",
+      "apkBuild": "SKIPPED",
+      "artifactUpload": "SKIPPED",
+      "artifactCount": 0,
+      "jobLog": "automatic-ci-38988880055/qa-gate-job.log.gz",
+      "jobLogUncompressedSha256": "6a84de1664b419d374ef49fcfc1f1d9d42016ae8be06a45a3b0b35fd650da24c",
+      "jobLogGzipSha256": "7b972c786546fd05d40aab85502428d17a3432a42618cb77e09b832c8b9b3f93"
+    },
+    "physicalDevice": "NOT_RUN",
+    "interpretation": "Room v1 migration fixture failure persists; six model-dependent tests skipped. The connected task did execute and XML counts are authoritative. No APK generated. M03-05 and M03-01 remain TODO."
+  }
 }

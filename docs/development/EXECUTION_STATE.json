@@ -67,21 +67,31 @@
       "errors": 0,
       "skipped": 6,
       "executed": 10,
-      "testedCodeHeadSha": "5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1",
-      "runId": "38186081844",
-      "jobId": "114608571077",
-      "artifactId": "11720321131",
-      "artifactBytes": 108492,
-      "artifactSha256": "0ef4c876e0e275200000085434f6c8a01d648db7afab4eecada7b6e8dbdf709c",
-      "xml": "docs/validation/android-emulator-ci/compose-capture-5e93ba6/artifact/extracted/instrumented-xml/TEST-emulator-5554 - 15-_app-.xml.gz",
-      "xmlSha256": "7308771822916837b384afee469035639eb8f51cd1cfebb1476be9a9dc8eec3f",
-      "failure": "WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords: authentic WorkspaceDatabase/1.json unavailable",
-      "chatHeader": "Both standard and large-font ChatHeaderLayoutTest cases pass all three assertIsDisplayed checks and model-before-body bounds.",
-      "screenshotsVisuallyReviewed": true,
-      "recordStatus": "Latest connected AndroidTest run 38186081844 for exact code SHA 5e93ba6; standard and large-font Compose-root screenshots visually show all three lines; one unchanged Room v1 schema test fails; six real-model tests skipped.",
-      "xmlOriginalSha256": "7308771822916837b384afee469035639eb8f51cd1cfebb1476be9a9dc8eec3f"
+      "testedCodeHeadSha": "6231732ad8557465abfc8155925fdcbc90d1eb87",
+      "workflowCheckoutSha": "06bd56e84a4a8dab2a907d136245e68761d75430",
+      "runId": "38988880055",
+      "jobId": "117266559214",
+      "artifactId": "12084179250",
+      "artifactBytes": 151505,
+      "artifactSha256": "cec74c1ae48df16f49e5910b4e882d39653a3dc80a43682f5956b173d2a14013",
+      "xmlPath": "docs/validation/master-program-pptx/automatic-ci-38988880055/github-artifact-12084179250.zip:instrumented-xml/debug/TEST-emulator-5554 - 15-_app-.xml",
+      "failure": "WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords: authentic WorkspaceDatabase/1.json unavailable; schema/test unchanged.",
+      "recordStatus": "Exact-source push-triggered run; JUnit XML read from preserved workflow artifact; EMULATOR FAIL.",
+      "previousRun": {
+        "runId": "38981700237",
+        "codeSha": "bacb049bdb3732a6354ec48c3899cd8fb5e2a16a",
+        "counts": {
+          "total": 16,
+          "passed": 9,
+          "failed": 1,
+          "errors": 0,
+          "skipped": 6,
+          "executed": 10
+        },
+        "status": "Historical immediately preceding emulator result before M03-05."
+      }
     },
-    "recordStatus": "Latest instrumented XML is run 38186081844 on code SHA 5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1. Both Compose-root captures are visually representative; one Room v1 migration test fails and six actual-model tests are skipped. Host compile and collector tests are recorded in latestM00CaptureRecovery."
+    "recordStatus": "Latest current-program instrumented result: run 38988880055 on M03-05 code SHA 6231732; Room v1 schema failure and six model-dependent skips. Global emulator gate remains FAIL."
   },
   "finalHostGate": {
     "status": "COMPLETED_DEVICE_NOT_RUN",
@@ -141,14 +151,14 @@
     "adbAvailable": true,
     "kvm": true,
     "systemImages": 1,
-    "instrumentedTests": "EXECUTED_WITH_FAILURES: run 38981700237; 9 passed, 1 failed (authentic Room v1 schema unavailable), 6 model-dependent skipped; XML 1; 10 executed.",
-    "latestRunId": "38981700237",
-    "latestRunSourceSha": "bacb049bdb3732a6354ec48c3899cd8fb5e2a16a",
-    "latestRunStatus": "API 35 x86_64 AVD booted, ADB connected and connectedDebugAndroidTest executed. XML reports 16 total: 9 pass, 1 Room-v1 fixture failure, 6 actual-model skips. This is EMULATOR FAIL.",
-    "latestRunUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38981700237",
-    "latestJobId": "117243808571",
-    "latestArtifactId": "12081328312",
-    "latestArtifactSha256": "ec89be926f36ae81d66a08231f58bc9b8e5bff9f8b93291b57d7bb89bb0d313f",
+    "instrumentedTests": "EXECUTED_WITH_FAILURES: latest run 38988880055 on code 6231732; 9 PASS, 1 authentic Room v1 schema FAIL, 6 model-dependent SKIPPED; XML 16 total, 10 executed; AVD/ADB passed.",
+    "latestRunId": "38988880055",
+    "latestRunSourceSha": "06bd56e84a4a8dab2a907d136245e68761d75430",
+    "latestRunStatus": "API 35 Android 15 x86_64 emulator booted and ADB connected; connectedDebugAndroidTest executed 16 XML cases: 9 pass, 1 authentic Room-v1 schema failure, 6 model-dependent skips; 10 executed. Post-task application package check was false, cause NOT_DETERMINED. EMULATOR FAIL.",
+    "latestRunUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38988880055",
+    "latestJobId": "117266559214",
+    "latestArtifactId": "12084179250",
+    "latestArtifactSha256": "cec74c1ae48df16f49e5910b4e882d39653a3dc80a43682f5956b173d2a14013",
     "priorLocalEnvironment": {
       "availability": "NOT_AVAILABLE",
       "adbAvailable": false,
@@ -159,14 +169,16 @@
     },
     "physicalDevice": "NOT_RUN",
     "previousLatestRun": {
-      "latestRunId": "38186081844",
-      "latestRunSourceSha": "5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1",
-      "latestRunStatus": "API 35 x86_64 emulator/ADB and connectedDebugAndroidTest passed execution; XML reports 16 total, 9 passed, 1 Room v1 schema failure, 6 actual-model skips. Both Compose-root screenshots are valid and visually show all three lines. Collector post-test package check is false; it does not negate the 16-case XML. QA gate failed closed with no APK artifact.",
-      "latestRunUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38186081844",
-      "latestJobId": "114608571077",
-      "latestArtifactId": "11720321131",
-      "latestArtifactSha256": "0ef4c876e0e275200000085434f6c8a01d648db7afab4eecada7b6e8dbdf709c"
-    }
+      "latestRunId": "38981700237",
+      "latestRunSourceSha": "bacb049bdb3732a6354ec48c3899cd8fb5e2a16a",
+      "latestRunStatus": "API 35 x86_64 AVD booted, ADB connected and connectedDebugAndroidTest executed. XML reports 16 total: 9 pass, 1 Room-v1 fixture failure, 6 actual-model skips. This is EMULATOR FAIL.",
+      "latestRunUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38981700237",
+      "latestJobId": "117243808571",
+      "latestArtifactId": "12081328312",
+      "latestArtifactSha256": "ec89be926f36ae81d66a08231f58bc9b8e5bff9f8b93291b57d7bb89bb0d313f"
+    },
+    "latestQaRunId": "38988880049",
+    "latestQaRunStatus": "FAIL_CLOSED; official QA build/upload skipped; no artifact."
   },
   "physicalDeviceResults": {
     "historicalAgentsSkillsV1": {
@@ -250,7 +262,7 @@
     "Fresh empty-home ARM64 assembleRelease remains INFRASTRUCTURE_FAILURE / RETRY_EXHAUSTED after two attempts before Gradle startup; lower-level network cause NOT_DETERMINED. Do not repeat that procedure.",
     "Same-SHA QA gate run 38186082135 for code SHA 5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1 failed closed; JDK/APK build/upload were skipped and GitHub reports zero artifacts. No APK was generated by this recovery."
   ],
-  "nextRecommendedTask": "Continue the master program only with the next bounded, source-backed host-preparation increment after M03-05 evidence publication. M03-05 remains TODO, requires_device=true, and depends on M03-01 TODO; do not claim formal completion. Preserve the original 97 IDs, 120 dependencies, and source TODO statuses.",
+  "nextRecommendedTask": "Continue the authorized master program with the next bounded, source-backed preparatory increment. The exact current CI result is EMULATOR FAIL for the unchanged historical Room-v1 fixture plus six model-dependent skips; the same-SHA official QA gate failed closed with no APK. Do not claim M03-05/M03-01 completion, do not repeat the global gate without a justified change, preserve all 97 original TODO IDs and 120 dependencies, and keep PHYSICAL_DEVICE=NOT_RUN.",
   "m00_03": {
     "status": "IMPLEMENTED_TESTED_HOST_DEVICE_NOT_RUN",
     "baseCommit": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
@@ -1068,6 +1080,57 @@
         "xml": "docs/validation/android-emulator-ci/diagnostic-runs/38182644492/artifact/instrumented-xml/TEST-emulator-5554-15-app.xml.gz",
         "xmlSha256": "77437afc9b748cdc9197c62de5e810c87c071c4e3876b1695354daae6ada4855",
         "xmlOriginalSha256": "a5c49e9873c7bbf6f3bf94bb4eb73a1430ea3f9e91b00432d5517ae2168d6355"
+      },
+      {
+        "runId": "38981700237",
+        "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38981700237",
+        "sourceCommit": "bacb049bdb3732a6354ec48c3899cd8fb5e2a16a",
+        "status": "EMULATOR_EXECUTED_WITH_FAILURES",
+        "historicalStatus": "API 35 x86_64 AVD booted, ADB connected and connectedDebugAndroidTest executed. XML reports 16 total: 9 pass, 1 Room-v1 fixture failure, 6 actual-model skips. This is EMULATOR FAIL.",
+        "artifactId": "12081328312",
+        "artifactSha256": "ec89be926f36ae81d66a08231f58bc9b8e5bff9f8b93291b57d7bb89bb0d313f"
+      },
+      {
+        "runId": "38988880055",
+        "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38988880055",
+        "sourceCommit": "06bd56e84a4a8dab2a907d136245e68761d75430",
+        "productCodeSha": "6231732ad8557465abfc8155925fdcbc90d1eb87",
+        "workflowPath": ".github/workflows/android-emulator-instrumented.yml",
+        "jobId": "117266559214",
+        "status": "EMULATOR_FAIL_EXECUTED_WITH_FAILURES",
+        "label": "EMULATOR",
+        "api": 35,
+        "androidRelease": "15",
+        "abi": "x86_64",
+        "emulatorModel": "sdk_gphone64_x86_64",
+        "adbConnected": true,
+        "task": ":app:connectedDebugAndroidTest",
+        "command": "./gradlew :app:connectedDebugAndroidTest --no-daemon --no-parallel --max-workers=2 --stacktrace --console=plain",
+        "gradleExitCode": 1,
+        "xmlCount": 1,
+        "counts": {
+          "total": 16,
+          "passed": 9,
+          "failed": 1,
+          "errors": 0,
+          "skipped": 6,
+          "executed": 10
+        },
+        "failure": "WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords: authentic WorkspaceDatabase/1.json unavailable; schema/test unchanged.",
+        "skippedCases": "Six existing model-dependent instrumentation cases; no model downloads.",
+        "postTaskPackageCheck": {
+          "checked": true,
+          "applicationApkInstalled": false,
+          "cause": "NOT_DETERMINED"
+        },
+        "artifactId": "12084179250",
+        "artifactName": "android-emulator-evidence-38988880055-1",
+        "artifactBytes": 151505,
+        "artifactSha256": "cec74c1ae48df16f49e5910b4e882d39653a3dc80a43682f5956b173d2a14013",
+        "artifactPath": "docs/validation/master-program-pptx/automatic-ci-38988880055/github-artifact-12084179250.zip",
+        "internalManifestEntriesVerified": 32,
+        "physicalDevice": "NOT_RUN",
+        "notes": "The Gradle progress stream printed 22/16; the internally consistent JUnit XML is authoritative."
       }
     ],
     "finalStatus": "Latest run 38186081844 on 5e93ba6 executed 10 tests (9 pass, 1 Room v1 fixture failure, 6 model skips); both Compose-root screenshots visually show the header. QA run 38186082135 failed closed and produced no APK. EMULATOR remains FAIL; PHYSICAL_DEVICE NOT_RUN.",
@@ -1643,7 +1706,69 @@
       "room": "ENVIRONMENT_UNAVAILABLE; authentic WorkspaceDatabase/1.json not available",
       "m01_06": "PENDING_REQUIRES_DEVICE",
       "physicalDevice": "NOT_RUN"
-    }
+    },
+    "latestObservedRun": {
+      "runId": "38988880055",
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38988880055",
+      "sourceCommit": "06bd56e84a4a8dab2a907d136245e68761d75430",
+      "productCodeSha": "6231732ad8557465abfc8155925fdcbc90d1eb87",
+      "workflowPath": ".github/workflows/android-emulator-instrumented.yml",
+      "jobId": "117266559214",
+      "status": "EMULATOR_FAIL_EXECUTED_WITH_FAILURES",
+      "label": "EMULATOR",
+      "api": 35,
+      "androidRelease": "15",
+      "abi": "x86_64",
+      "emulatorModel": "sdk_gphone64_x86_64",
+      "adbConnected": true,
+      "task": ":app:connectedDebugAndroidTest",
+      "command": "./gradlew :app:connectedDebugAndroidTest --no-daemon --no-parallel --max-workers=2 --stacktrace --console=plain",
+      "gradleExitCode": 1,
+      "xmlCount": 1,
+      "counts": {
+        "total": 16,
+        "passed": 9,
+        "failed": 1,
+        "errors": 0,
+        "skipped": 6,
+        "executed": 10
+      },
+      "failure": "WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords: authentic WorkspaceDatabase/1.json unavailable; schema/test unchanged.",
+      "skippedCases": "Six existing model-dependent instrumentation cases; no model downloads.",
+      "postTaskPackageCheck": {
+        "checked": true,
+        "applicationApkInstalled": false,
+        "cause": "NOT_DETERMINED"
+      },
+      "artifactId": "12084179250",
+      "artifactName": "android-emulator-evidence-38988880055-1",
+      "artifactBytes": 151505,
+      "artifactSha256": "cec74c1ae48df16f49e5910b4e882d39653a3dc80a43682f5956b173d2a14013",
+      "artifactPath": "docs/validation/master-program-pptx/automatic-ci-38988880055/github-artifact-12084179250.zip",
+      "internalManifestEntriesVerified": 32,
+      "physicalDevice": "NOT_RUN",
+      "notes": "The Gradle progress stream printed 22/16; the internally consistent JUnit XML is authoritative."
+    },
+    "latestOfficialQaGate": {
+      "runId": "38988880049",
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38988880049",
+      "sourceCommit": "06bd56e84a4a8dab2a907d136245e68761d75430",
+      "workflowPath": ".github/workflows/qa-debug-arm64-apk.yml",
+      "jobId": "117266559052",
+      "status": "FAIL_CLOSED_BEFORE_APK_BUILD",
+      "gateReason": "ANDROID_INSTRUMENTATION_NOT_SUCCESSFUL",
+      "apkBuild": "SKIPPED",
+      "artifactUpload": "SKIPPED",
+      "artifactCount": 0,
+      "logPath": "docs/validation/master-program-pptx/automatic-ci-38988880055/qa-gate-job.log.gz",
+      "logUncompressedSha256": "6a84de1664b419d374ef49fcfc1f1d9d42016ae8be06a45a3b0b35fd650da24c",
+      "logGzipSha256": "7b972c786546fd05d40aab85502428d17a3432a42618cb77e09b832c8b9b3f93"
+    },
+    "recordStatus": "Latest push-triggered emulator run 38988880055 executed and failed on the authentic Room v1 schema fixture; same-SHA official QA run 38988880049 failed closed before APK build. See latestMasterProgramAutomation.",
+    "latestArtifactDigest": "sha256:cec74c1ae48df16f49e5910b4e882d39653a3dc80a43682f5956b173d2a14013",
+    "latestQaArtifactCount": 0,
+    "latestQaJobId": "117266559052",
+    "latestQaRunId": "38988880049"
   },
   "latestQaArm64Artifact": {
     "name": "QA ARM64 Debug APK build and artifact verification",
@@ -3584,16 +3709,20 @@
     }
   },
   "currentAndroidValidation": {
-    "androidTestCompilation": "Connected instrumentation task compiled/installed its test APK as part of the run on bacb049; no separate compile-only task was run for that SHA.",
-    "instrumentedTests": "FAIL_EXECUTED_WITH_FAILURES: run 38981700237 on bacb049; 9 PASS, 1 authentic Room-v1 schema FAIL, 6 actual-model SKIPPED; 16 XML cases, 10 executed.",
-    "emulator": "API 35 x86_64 AVD booted and ADB connected; :app:connectedDebugAndroidTest executed and failed on Room v1 fixture.",
+    "androidTestCompilation": "Test APK compiled/installed as part of connectedDebugAndroidTest in run 38988880055; separate compile-only task NOT_RUN.",
+    "instrumentedTests": "FAIL_EXECUTED_WITH_FAILURES: run 38988880055, code 6231732; 9 PASS, 1 authentic Room-v1 schema FAIL, 6 model-dependent SKIPPED; XML 16 total, 10 executed.",
+    "emulator": "API 35 Android 15 x86_64 AVD booted and ADB connected; :app:connectedDebugAndroidTest ran and exited 1.",
     "physicalDevice": "NOT_RUN",
     "previousValidation": {
       "androidTestCompilation": "PASS on code SHA 5e93ba67aae84b1103ffad70e7c8ee28c75d0bb1; host Gradle compile log independently verified.",
       "instrumentedTests": "FAIL_EXECUTED_WITH_FAILURES: run 38186081844, 9 PASS, 1 Room schema FAIL, 6 actual-model SKIPPED; XML independently inspected.",
       "emulator": "API 35 x86_64 emulator booted and ADB connected; connectedDebugAndroidTest executed 16 XML cases.",
       "physicalDevice": "NOT_RUN"
-    }
+    },
+    "officialQaGate": "Run 38988880049 failed closed on same SHA before APK build/upload; no artifact.",
+    "latestRunUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38988880055",
+    "latestArtifactId": 12084179250,
+    "latestArtifactSha256": "cec74c1ae48df16f49e5910b4e882d39653a3dc80a43682f5956b173d2a14013"
   },
   "latestPersonalQaDelivery": {
     "name": "0.5.0 personal QA ARM64 Debug delivery and bounded Room v1 source review",
@@ -7704,13 +7833,76 @@
   "latestMasterProgramIncrement": {
     "name": "Preparatory M03-05: bounded supplied PNG images in PPTX artifacts",
     "kind": "PREPARATORY_M03_05_PPTX_IMAGE_EMBEDDING",
-    "status": "PARTIAL_HOST_EVIDENCE_GRADLE_COMPLETION_UNOBSERVED_DEPENDENCY_AND_DEVICE_GATES_OPEN_NOT_FORMAL",
+    "status": "PARTIAL_HOST_IMPLEMENTATION_AND_EMULATOR_FAIL_QA_FAIL_CLOSED_NOT_FORMAL",
     "codeCommit": "6231732ad8557465abfc8155925fdcbc90d1eb87",
     "evidence": "docs/validation/master-program-pptx/RESULTS.md",
     "details": "One supplied bounded PNG is embedded into a real PPTX package. The focused JUnit XML reports 2/2, but its Gradle invocation was interrupted and has no observed exit; a later command exited 0 with all tasks UP-TO-DATE and ran no tests. Independent package reader PASS is tied to the recorded identical package hash. M03-05/M03-01 and device gates remain TODO/open.",
     "evidenceManifestPath": "docs/validation/master-program-pptx/SHA256SUMS",
-    "evidenceManifestSha256": "cfcebd5c3e3b2e39ab130306f5dc9b09f3441ffe7affde11b75c6e1c6a275c07",
-    "evidenceManifestEntries": 61
+    "evidenceManifestSha256": "cb65fa8c4cf2bc84f74ff7b7b950eb0cf81f2e8ec6cd79195f95318c62ea9b99",
+    "evidenceManifestEntries": 66,
+    "automaticCiValidation": {
+      "emulator": {
+        "runId": "38988880055",
+        "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38988880055",
+        "sourceCommit": "06bd56e84a4a8dab2a907d136245e68761d75430",
+        "productCodeSha": "6231732ad8557465abfc8155925fdcbc90d1eb87",
+        "workflowPath": ".github/workflows/android-emulator-instrumented.yml",
+        "jobId": "117266559214",
+        "status": "EMULATOR_FAIL_EXECUTED_WITH_FAILURES",
+        "label": "EMULATOR",
+        "api": 35,
+        "androidRelease": "15",
+        "abi": "x86_64",
+        "emulatorModel": "sdk_gphone64_x86_64",
+        "adbConnected": true,
+        "task": ":app:connectedDebugAndroidTest",
+        "command": "./gradlew :app:connectedDebugAndroidTest --no-daemon --no-parallel --max-workers=2 --stacktrace --console=plain",
+        "gradleExitCode": 1,
+        "xmlCount": 1,
+        "counts": {
+          "total": 16,
+          "passed": 9,
+          "failed": 1,
+          "errors": 0,
+          "skipped": 6,
+          "executed": 10
+        },
+        "failure": "WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords: authentic WorkspaceDatabase/1.json unavailable; schema/test unchanged.",
+        "skippedCases": "Six existing model-dependent instrumentation cases; no model downloads.",
+        "postTaskPackageCheck": {
+          "checked": true,
+          "applicationApkInstalled": false,
+          "cause": "NOT_DETERMINED"
+        },
+        "artifactId": "12084179250",
+        "artifactName": "android-emulator-evidence-38988880055-1",
+        "artifactBytes": 151505,
+        "artifactSha256": "cec74c1ae48df16f49e5910b4e882d39653a3dc80a43682f5956b173d2a14013",
+        "artifactPath": "docs/validation/master-program-pptx/automatic-ci-38988880055/github-artifact-12084179250.zip",
+        "internalManifestEntriesVerified": 32,
+        "physicalDevice": "NOT_RUN",
+        "notes": "The Gradle progress stream printed 22/16; the internally consistent JUnit XML is authoritative.",
+        "artifactExpiresAtUtc": "2026-10-24T01:15:02Z"
+      },
+      "officialQaGate": {
+        "runId": "38988880049",
+        "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38988880049",
+        "sourceCommit": "06bd56e84a4a8dab2a907d136245e68761d75430",
+        "workflowPath": ".github/workflows/qa-debug-arm64-apk.yml",
+        "jobId": "117266559052",
+        "status": "FAIL_CLOSED_BEFORE_APK_BUILD",
+        "gateReason": "ANDROID_INSTRUMENTATION_NOT_SUCCESSFUL",
+        "apkBuild": "SKIPPED",
+        "artifactUpload": "SKIPPED",
+        "artifactCount": 0,
+        "logPath": "docs/validation/master-program-pptx/automatic-ci-38988880055/qa-gate-job.log.gz",
+        "logUncompressedSha256": "6a84de1664b419d374ef49fcfc1f1d9d42016ae8be06a45a3b0b35fd650da24c",
+        "logGzipSha256": "7b972c786546fd05d40aab85502428d17a3432a42618cb77e09b832c8b9b3f93"
+      },
+      "recordedAtUtc": "2026-10-17",
+      "classification": "EMULATOR_FAIL; QA_GATE_FAIL_CLOSED; NO_APK_GENERATED"
+    },
+    "automaticCiEvidenceDirectory": "docs/validation/master-program-pptx/automatic-ci-38988880055/"
   },
   "previousMasterProgramIncrement": {
     "name": "Exact citation source-segment preview from persisted assistant evidence",
@@ -8745,6 +8937,17 @@
         },
         "sourceFilesModified": false
       }
+    },
+    {
+      "name": "M03-05 automatic API 35 instrumentation and same-SHA QA gate follow-up",
+      "kind": "M03_05_AUTOMATIC_CI_EVIDENCE",
+      "status": "EMULATOR_FAIL_ROOM_V1_SCHEMA; OFFICIAL_QA_FAIL_CLOSED_NO_APK",
+      "codeCommit": "6231732ad8557465abfc8155925fdcbc90d1eb87",
+      "evidenceCommit": "06bd56e84a4a8dab2a907d136245e68761d75430",
+      "emulatorRunId": "38988880055",
+      "qaRunId": "38988880049",
+      "evidence": "docs/validation/master-program-pptx/automatic-ci-38988880055/RESULTS.md",
+      "formalOriginalTask": "M03-05 remains TODO; M03-01 remains TODO; no formal completion claimed."
     }
   ],
   "latestM02_01Preparation": {
@@ -10517,7 +10720,7 @@
   "latestM03_05Preparation": {
     "name": "Preparatory M03-05: bounded supplied PNG images in PPTX artifacts",
     "kind": "PREPARATORY_M03_05_PPTX_IMAGE_EMBEDDING",
-    "status": "PARTIAL_HOST_EVIDENCE_GRADLE_COMPLETION_UNOBSERVED_DEPENDENCY_AND_DEVICE_GATES_OPEN_NOT_FORMAL",
+    "status": "PARTIAL_HOST_IMPLEMENTATION_AND_EMULATOR_FAIL_QA_FAIL_CLOSED_NOT_FORMAL",
     "codeCommit": "6231732ad8557465abfc8155925fdcbc90d1eb87",
     "codeCommits": [
       "72a46ceb72e5afe742eff2601128b1baeffa982c",
@@ -10646,7 +10849,134 @@
     ],
     "evidence": "docs/validation/master-program-pptx/RESULTS.md",
     "evidenceManifestPath": "docs/validation/master-program-pptx/SHA256SUMS",
-    "evidenceManifestSha256": "cfcebd5c3e3b2e39ab130306f5dc9b09f3441ffe7affde11b75c6e1c6a275c07",
-    "evidenceManifestEntries": 61
+    "evidenceManifestSha256": "cb65fa8c4cf2bc84f74ff7b7b950eb0cf81f2e8ec6cd79195f95318c62ea9b99",
+    "evidenceManifestEntries": 66,
+    "automaticCiValidation": {
+      "emulator": {
+        "runId": "38988880055",
+        "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38988880055",
+        "sourceCommit": "06bd56e84a4a8dab2a907d136245e68761d75430",
+        "productCodeSha": "6231732ad8557465abfc8155925fdcbc90d1eb87",
+        "workflowPath": ".github/workflows/android-emulator-instrumented.yml",
+        "jobId": "117266559214",
+        "status": "EMULATOR_FAIL_EXECUTED_WITH_FAILURES",
+        "label": "EMULATOR",
+        "api": 35,
+        "androidRelease": "15",
+        "abi": "x86_64",
+        "emulatorModel": "sdk_gphone64_x86_64",
+        "adbConnected": true,
+        "task": ":app:connectedDebugAndroidTest",
+        "command": "./gradlew :app:connectedDebugAndroidTest --no-daemon --no-parallel --max-workers=2 --stacktrace --console=plain",
+        "gradleExitCode": 1,
+        "xmlCount": 1,
+        "counts": {
+          "total": 16,
+          "passed": 9,
+          "failed": 1,
+          "errors": 0,
+          "skipped": 6,
+          "executed": 10
+        },
+        "failure": "WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords: authentic WorkspaceDatabase/1.json unavailable; schema/test unchanged.",
+        "skippedCases": "Six existing model-dependent instrumentation cases; no model downloads.",
+        "postTaskPackageCheck": {
+          "checked": true,
+          "applicationApkInstalled": false,
+          "cause": "NOT_DETERMINED"
+        },
+        "artifactId": "12084179250",
+        "artifactName": "android-emulator-evidence-38988880055-1",
+        "artifactBytes": 151505,
+        "artifactSha256": "cec74c1ae48df16f49e5910b4e882d39653a3dc80a43682f5956b173d2a14013",
+        "artifactPath": "docs/validation/master-program-pptx/automatic-ci-38988880055/github-artifact-12084179250.zip",
+        "internalManifestEntriesVerified": 32,
+        "physicalDevice": "NOT_RUN",
+        "notes": "The Gradle progress stream printed 22/16; the internally consistent JUnit XML is authoritative.",
+        "artifactExpiresAtUtc": "2026-10-24T01:15:02Z"
+      },
+      "officialQaGate": {
+        "runId": "38988880049",
+        "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38988880049",
+        "sourceCommit": "06bd56e84a4a8dab2a907d136245e68761d75430",
+        "workflowPath": ".github/workflows/qa-debug-arm64-apk.yml",
+        "jobId": "117266559052",
+        "status": "FAIL_CLOSED_BEFORE_APK_BUILD",
+        "gateReason": "ANDROID_INSTRUMENTATION_NOT_SUCCESSFUL",
+        "apkBuild": "SKIPPED",
+        "artifactUpload": "SKIPPED",
+        "artifactCount": 0,
+        "logPath": "docs/validation/master-program-pptx/automatic-ci-38988880055/qa-gate-job.log.gz",
+        "logUncompressedSha256": "6a84de1664b419d374ef49fcfc1f1d9d42016ae8be06a45a3b0b35fd650da24c",
+        "logGzipSha256": "7b972c786546fd05d40aab85502428d17a3432a42618cb77e09b832c8b9b3f93"
+      },
+      "recordedAtUtc": "2026-10-17",
+      "classification": "EMULATOR_FAIL; QA_GATE_FAIL_CLOSED; NO_APK_GENERATED"
+    },
+    "automaticCiEvidenceDirectory": "docs/validation/master-program-pptx/automatic-ci-38988880055/"
+  },
+  "latestMasterProgramAutomation": {
+    "emulator": {
+      "runId": "38988880055",
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38988880055",
+      "sourceCommit": "06bd56e84a4a8dab2a907d136245e68761d75430",
+      "productCodeSha": "6231732ad8557465abfc8155925fdcbc90d1eb87",
+      "workflowPath": ".github/workflows/android-emulator-instrumented.yml",
+      "jobId": "117266559214",
+      "status": "EMULATOR_FAIL_EXECUTED_WITH_FAILURES",
+      "label": "EMULATOR",
+      "api": 35,
+      "androidRelease": "15",
+      "abi": "x86_64",
+      "emulatorModel": "sdk_gphone64_x86_64",
+      "adbConnected": true,
+      "task": ":app:connectedDebugAndroidTest",
+      "command": "./gradlew :app:connectedDebugAndroidTest --no-daemon --no-parallel --max-workers=2 --stacktrace --console=plain",
+      "gradleExitCode": 1,
+      "xmlCount": 1,
+      "counts": {
+        "total": 16,
+        "passed": 9,
+        "failed": 1,
+        "errors": 0,
+        "skipped": 6,
+        "executed": 10
+      },
+      "failure": "WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords: authentic WorkspaceDatabase/1.json unavailable; schema/test unchanged.",
+      "skippedCases": "Six existing model-dependent instrumentation cases; no model downloads.",
+      "postTaskPackageCheck": {
+        "checked": true,
+        "applicationApkInstalled": false,
+        "cause": "NOT_DETERMINED"
+      },
+      "artifactId": "12084179250",
+      "artifactName": "android-emulator-evidence-38988880055-1",
+      "artifactBytes": 151505,
+      "artifactSha256": "cec74c1ae48df16f49e5910b4e882d39653a3dc80a43682f5956b173d2a14013",
+      "artifactPath": "docs/validation/master-program-pptx/automatic-ci-38988880055/github-artifact-12084179250.zip",
+      "internalManifestEntriesVerified": 32,
+      "physicalDevice": "NOT_RUN",
+      "notes": "The Gradle progress stream printed 22/16; the internally consistent JUnit XML is authoritative.",
+      "artifactExpiresAtUtc": "2026-10-24T01:15:02Z"
+    },
+    "officialQaGate": {
+      "runId": "38988880049",
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38988880049",
+      "sourceCommit": "06bd56e84a4a8dab2a907d136245e68761d75430",
+      "workflowPath": ".github/workflows/qa-debug-arm64-apk.yml",
+      "jobId": "117266559052",
+      "status": "FAIL_CLOSED_BEFORE_APK_BUILD",
+      "gateReason": "ANDROID_INSTRUMENTATION_NOT_SUCCESSFUL",
+      "apkBuild": "SKIPPED",
+      "artifactUpload": "SKIPPED",
+      "artifactCount": 0,
+      "logPath": "docs/validation/master-program-pptx/automatic-ci-38988880055/qa-gate-job.log.gz",
+      "logUncompressedSha256": "6a84de1664b419d374ef49fcfc1f1d9d42016ae8be06a45a3b0b35fd650da24c",
+      "logGzipSha256": "7b972c786546fd05d40aab85502428d17a3432a42618cb77e09b832c8b9b3f93"
+    },
+    "recordedAtUtc": "2026-10-17",
+    "classification": "EMULATOR_FAIL; QA_GATE_FAIL_CLOSED; NO_APK_GENERATED",
+    "evidenceManifestSha256": "cb65fa8c4cf2bc84f74ff7b7b950eb0cf81f2e8ec6cd79195f95318c62ea9b99",
+    "evidenceManifestEntries": 66
   }
 }
