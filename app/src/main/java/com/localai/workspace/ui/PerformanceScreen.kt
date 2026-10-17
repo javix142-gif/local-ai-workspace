@@ -107,6 +107,14 @@ fun PerformanceScreen(graph: AppGraph, back: () -> Unit) {
         Text("NORMAL CHAT TRACE", style = MaterialTheme.typography.titleMedium)
         chatTrace?.let { trace ->
             Text("Run: ${trace.runId}\nPhase: ${trace.phase}\nWorker checkpoint: ${trace.workerCheckpoint ?: "unavailable"}\nNative first callback: ${trace.firstCallbackMs ?: "unavailable"} ms\nFirst UI content: ${trace.firstVisibleUiMs ?: "unavailable"} ms\nNative in flight: ${trace.nativeInFlight ?: "unknown"}\nGate locked / owned: ${trace.gateLocked} / ${trace.gateOwned}\nCancelled: ${trace.cancelled}\nError class: ${trace.errorClass ?: "none"}\nProcess restart observed: ${trace.processRestartObserved}")
+            Text("REQUEST TIMELINE", style = MaterialTheme.typography.titleSmall)
+            Text("Elapsed time is relative to send accepted; Δ is from the preceding recorded checkpoint. Gaps may contain nested work; phases are not additive.", style = MaterialTheme.typography.bodySmall)
+            GenerationTimelinePresentation.rows(trace).forEach { row ->
+                Text(
+                    "${row.ordinal}. ${row.phase} · t+${row.elapsedSinceRequestMs?.let { "$it ms" } ?: "unavailable"} · Δ ${row.intervalSincePreviousMs?.let { "$it ms" } ?: "—"}",
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
             TextButton(onClick = { (context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(ClipData.newPlainText("Normal chat trace", graph.normalGenerationTrace.report())) }) { Text("Copy normal chat trace") }
         } ?: Text("No normal generation recorded")
         Text("LAST DOCUMENT PROCESSING", style = MaterialTheme.typography.titleMedium)
