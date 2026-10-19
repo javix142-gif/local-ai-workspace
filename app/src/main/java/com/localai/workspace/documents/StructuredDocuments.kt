@@ -16,8 +16,9 @@ object StructuredDocuments {
  const val MAX_ENTRIES = 100
  const val MAX_CELLS = 100000
  const val MAX_REPRESENTATION_BYTES = 8 * 1024 * 1024
- data class Cell(val sheet: String, val row: Int, val column: Int, val address: String, val value: String, val formula: String? = null, val type: String? = null)
- data class Table(val cells: List<Cell>, val encoding: String = "UTF-8", val sheetNames: List<String> = cells.map { it.sheet }.distinct()) {
+ data class Cell(val sheet: String, val row: Int, val column: Int, val address: String, val value: String, val formula: String? = null, val type: String? = null, val styleIndex: Int? = null)
+ data class CellStyle(val index: Int, val numberFormatId: Int, val numberFormatCode: String? = null)
+ data class Table(val cells: List<Cell>, val encoding: String = "UTF-8", val sheetNames: List<String> = cells.map { it.sheet }.distinct(), val cellStyles: List<CellStyle> = emptyList()) {
   fun document(): ParsedDocument {
    // Enforce the limit against the actual UTF-8 JSON representation. A fixed
    // per-cell allowance rejected formatted blank cells and small repeated values.
@@ -30,11 +31,29 @@ object StructuredDocuments {
    }
    fun quoted(out: StringBuilder, value: String) = append(out, JSONObject.quote(value))
    val sheetsInOrder = sheetNames.ifEmpty { cells.map { it.sheet }.distinct() }
+   val stylesByIndex=cellStyles.associateBy { it.index }
    val pages = sheetsInOrder.mapIndexed { sheetOrder, sheet ->
     val sheetCells = cells.filter { it.sheet == sheet }
     require(sheet.length <= 128) { "Worksheet name exceeds limit" }
     val out = StringBuilder()
-    append(out, "{\"sheet\":"); quoted(out, sheet); append(out, ",\"sheetOrder\":$sheetOrder,\"sheetMetadata\":true}\n")
+    append(out, "{\"sheet\":"); quoted(out, sheet); append(out, ",\"sheetOrder\":$sheetOrder,\"sheetMetadata\":true")
+    val usedStyles=sheetCells.mapNotNull { it.styleIndex }.distinct().sorted()
+    if(usedStyles.isNotEmpty()) {
+     append(out, ",\"cellStyles\":[")
+     usedStyles.forEachIndexed { index, styleIndex ->
+      if(index>0) append(out, ",")
+      val style=stylesByIndex[styleIndex]
+      append(out, "{\"index\":$styleIndex")
+      if(style==null) append(out, ",\"metadataAvailable\":false")
+      else {
+       append(out, ",\"numberFormatId\":${style.numberFormatId}")
+       style.numberFormatCode?.let { append(out, ",\"numberFormatCode\":");quoted(out,it) }
+      }
+      append(out, "}")
+     }
+     append(out, "]")
+    }
+    append(out, "}\n")
     val firstRow = sheetCells.asSequence().filter { it.row == 1 }.sortedBy { it.column }.toList()
     if(firstRow.isNotEmpty() && firstRow.all { it.value.isNotBlank() && it.value.toDoubleOrNull()==null && it.formula==null } && firstRow.map { it.value }.toSet().size==firstRow.size) {
      append(out, "{\"sheet\":"); quoted(out, sheet); append(out, ",\"sheetOrder\":$sheetOrder,\"headerCandidate\":[")
@@ -54,6 +73,7 @@ object StructuredDocuments {
       append(out, "{\"column\":${cell.column},\"address\":"); quoted(out, cell.address)
       append(out, ",\"value\":"); quoted(out, cell.value)
       append(out, ",\"valueType\":"); quoted(out, cell.type ?: "raw")
+      cell.styleIndex?.let { append(out, ",\"styleIndex\":$it") }
       cell.formula?.let { append(out, ",\"formula\":"); quoted(out, it) }
       append(out, "}")
      }
@@ -135,11 +155,36 @@ object StructuredDocuments {
    val name=p.getAttributeValue(null,"name") ?: "Sheet"; require(name.length<=128) { "Worksheet name exceeds limit" }
    sheets.add(name to requireNotNull(rels[id]) { "Missing worksheet relation" })
   } }
+  val customNumberFormats=mutableMapOf<Int,String>()
+  val numberFormatIdsByStyle=mutableListOf<Int>()
+  zip.getEntry("xl/styles.xml")?.let {
+   var inNumberFormats=false;var inCellFormats=false
+   xml(bytes("xl/styles.xml")) { p->when(p.eventType) {
+    XmlPullParser.START_TAG -> when(p.name) {
+     "numFmts" -> inNumberFormats=true
+     "cellXfs" -> inCellFormats=true
+     "numFmt" -> if(inNumberFormats) {
+      require(customNumberFormats.size<MAX_CELLS) { "XLSX number format limit exceeded" }
+      val id=p.getAttributeValue(null,"numFmtId")?.toIntOrNull() ?: error("Invalid XLSX number format id")
+      val code=p.getAttributeValue(null,"formatCode") ?: error("XLSX number format code missing")
+      require(id in 0..65535 && code.length<=32768 && customNumberFormats.put(id,code)==null) { "Invalid or duplicate XLSX number format" }
+     }
+     "xf" -> if(inCellFormats) {
+      require(numberFormatIdsByStyle.size<MAX_CELLS) { "XLSX cell style limit exceeded" }
+      val id=p.getAttributeValue(null,"numFmtId")?.toIntOrNull() ?: 0
+      require(id in 0..65535) { "Invalid XLSX style number format id" }
+      numberFormatIdsByStyle+=id
+     }
+    }
+    XmlPullParser.END_TAG -> when(p.name) { "numFmts" -> inNumberFormats=false;"cellXfs" -> inCellFormats=false }
+   } }
+  }
+  val cellStyles=numberFormatIdsByStyle.mapIndexed { index,id->CellStyle(index,id,customNumberFormats[id]) }
   val cells=mutableListOf<Cell>(); var seenCells=0
   sheets.forEach { (sheet,path)->
-   var address="";var type="";var value=StringBuilder();var formula=StringBuilder();var tag="";var hasValueElement=false
+   var address="";var type="";var value=StringBuilder();var formula=StringBuilder();var tag="";var hasValueElement=false;var styleIndex:Int?=null
    xml(bytes(path)) { p->when(p.eventType) {
-    XmlPullParser.START_TAG -> { if(p.name=="c") { address=p.getAttributeValue(null,"r")?:error("Cell missing address");type=p.getAttributeValue(null,"t").orEmpty();value=StringBuilder();formula=StringBuilder();hasValueElement=false };if(p.name=="v"||p.name=="t")hasValueElement=true;tag=p.name }
+    XmlPullParser.START_TAG -> { if(p.name=="c") { address=p.getAttributeValue(null,"r")?:error("Cell missing address");type=p.getAttributeValue(null,"t").orEmpty();value=StringBuilder();formula=StringBuilder();hasValueElement=false;styleIndex=p.getAttributeValue(null,"s")?.let { raw->val parsed=raw.toIntOrNull() ?: error("Invalid XLSX cell style index");require(parsed in 0..65535) { "Invalid XLSX cell style index" };parsed.takeIf { it>0 } } };if(p.name=="v"||p.name=="t")hasValueElement=true;tag=p.name }
     XmlPullParser.TEXT -> { if(tag=="v"||tag=="t") value.append(p.text);if(tag=="f")formula.append(p.text);require(value.length<=32768&&formula.length<=32768) }
     XmlPullParser.END_TAG -> { if(p.name=="c") {
      require(++seenCells<=MAX_CELLS) { "XLSX exceeds 100000 cells" }
@@ -148,11 +193,11 @@ object StructuredDocuments {
      val v=if(type=="s"&&hasValueElement) shared.getOrNull(value.toString().toIntOrNull()?:-1)?:error("Invalid shared string") else value.toString()
      // Style-only and empty formatted cells add no document content. Keep empty
      // cached results when a formula exists so formula provenance is preserved.
-     if(v.isNotEmpty() || formulaText!=null) cells.add(Cell(sheet,row,col,address,v,formulaText,type.ifBlank { "n" }))
+     if(v.isNotEmpty() || formulaText!=null) cells.add(Cell(sheet,row,col,address,v,formulaText,type.ifBlank { "n" },styleIndex))
     };tag="" }
    } }
   }
-  Table(cells, sheetNames = sheets.map { it.first })
+  Table(cells, sheetNames = sheets.map { it.first },cellStyles=cellStyles)
  }
  private fun utf8Length(text: String): Int {
   var bytes=0; var i=0
