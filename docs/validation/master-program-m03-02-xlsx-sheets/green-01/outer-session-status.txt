@@ -1,0 +1,1 @@
+The execution tool session returned exit_code=1 although command exit-code.txt=0, Gradle log ends with BUILD SUCCESSFUL, and fresh JUnit XML is 1/1 pass. Cause of this outer status discrepancy: NOT_DETERMINED.

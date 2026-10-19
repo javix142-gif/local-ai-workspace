@@ -1,0 +1,133 @@
+{
+  "increment": "M03-02 generated XLSX worksheet addition",
+  "kind": "PREPARATORY_M03_02_XLSX_ADD_SHEET",
+  "classification": "FOCUSED_HOST_JUNIT_PASS_WITH_OUTER_EXEC_STATUS_DISCREPANCY; PREPARATORY_ONLY_NOT_FORMAL",
+  "sourceTask": {
+    "id": "M03-02",
+    "status": "TODO",
+    "requiresDevice": true,
+    "dependsOn": [
+      "M03-01",
+      "M02-02"
+    ],
+    "formalCompletion": false
+  },
+  "dependencyStatus": {
+    "M03-01": "TODO; depends on M02-05",
+    "M02-02": "TODO; depends on M02-01"
+  },
+  "baseSha": "4ee6f922bc938d3ffeb6bebbc3cd2189f8116e54",
+  "redSourceSha": "332aa99cec18a54d9c3ea6c17fdab5c807998e62",
+  "testedCodeSha": "0ea514c498af7bbc2b4e0f1326591b3b2173718d",
+  "commits": {
+    "redTest": "332aa99cec18a54d9c3ea6c17fdab5c807998e62",
+    "code": "0ea514c498af7bbc2b4e0f1326591b3b2173718d"
+  },
+  "changedFiles": [
+    "app/src/main/java/com/localai/workspace/artifacts/ArtifactStore.kt",
+    "app/src/main/java/com/localai/workspace/artifacts/ArtifactTools.kt",
+    "app/src/main/java/com/localai/workspace/capabilities/CapabilityPolicy.kt",
+    "app/src/main/java/com/localai/workspace/data/AssistantRouting.kt",
+    "app/src/main/java/com/localai/workspace/domain/tools/ProjectTools.kt",
+    "app/src/main/java/com/localai/workspace/inference/NativeChatTools.kt",
+    "app/src/test/java/com/localai/workspace/artifacts/XlsxArtifactRevisionTest.kt"
+  ],
+  "red": {
+    "status": "EXPECTED_RED_MISSING_TOOL_ROUTING",
+    "sourceSha": "332aa99cec18a54d9c3ea6c17fdab5c807998e62",
+    "command": "red-01/command.txt",
+    "exitCode": 1,
+    "junit": {
+      "tests": 1,
+      "passed": 0,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "failure": "routing assertion: no operation selected for add-sheet request"
+    },
+    "xml": "red-01/junit-xml/TEST-com.localai.workspace.artifacts.XlsxArtifactRevisionTest.xml",
+    "durationSeconds": 47,
+    "xmlSha256": "0d4513535a2d5ec0b60c51a33f1a9d83677c480cc340f85d3e09755e4ab50543",
+    "rawLogSha256": "faf9f28092d7d9d3e46adf1d427fd14af4f2750ca71a079c421bf163dfb14758",
+    "compressedLogSha256": "7a25620fe0bf4e285132acf3e24dac70b0b4f1d8837c828839f988bb3765084c"
+  },
+  "green": {
+    "status": "PASS_WITH_OUTER_EXEC_STATUS_DISCREPANCY",
+    "sourceSha": "0ea514c498af7bbc2b4e0f1326591b3b2173718d",
+    "command": "green-01/command.txt",
+    "capturedGradleExitCode": 0,
+    "outerToolExitCode": 1,
+    "outerExitCause": "NOT_DETERMINED",
+    "gradleVersion": "8.10.2",
+    "gradleRuntimeJdk": "/workspace/.toolchain/jdk-17",
+    "testWorkerToolchain": "/workspace/.toolchain/jdk-21-temurin",
+    "androidSdk": "/workspace/.toolchain/android-sdk (API 35 existing)",
+    "gradleUserHome": "/workspace/.gradle (existing; offline)",
+    "wallDurationSeconds": 80,
+    "gradleDurationSeconds": 79,
+    "actionableTasks": 63,
+    "executedTasks": 7,
+    "upToDateTasks": 56,
+    "junit": {
+      "tests": 1,
+      "passed": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "testcaseSeconds": 5.926,
+      "method": "addingWorksheetRoutesAndPreservesExistingGeneratedWorkbookAsNewRevision"
+    },
+    "xml": "green-01/junit-xml/TEST-com.localai.workspace.artifacts.XlsxArtifactRevisionTest.xml",
+    "logGzip": "green-01/gradle.log.gz",
+    "xmlSha256": "374e4b9866108ef152c59ff59c89f4205e7520907de0be5e839594c4a26ae3eb",
+    "rawLogSha256": "a5513bf58ff38498a9716b3c59ce46f615b209ff5f5baed275775dd9d385c659",
+    "compressedLogSha256": "954723a737f2b9ba8b16cc20fb9c43982e69811ed483ff0cae6a7663d40d6a5e"
+  },
+  "independentReader": {
+    "reader": "openpyxl",
+    "version": "3.1.5",
+    "zipCrc": "PASS",
+    "sheetNames": [
+      "Hoja1",
+      "Hoja2",
+      "Resumen"
+    ],
+    "preservedValues": {
+      "Hoja1!A1": 1,
+      "Hoja1!A2": 5,
+      "Hoja2!B14": "preserve"
+    },
+    "preservedFormula": "=$A$2-$A$1",
+    "cachedFormulaValue": 4,
+    "newSheetEmpty": true,
+    "fullCalcOnLoad": true,
+    "bytes": 2946,
+    "sha256": "f116441b3efc2e593dd591f4c15c143595cbfdeb684f409b933cdead17f30461"
+  },
+  "formulaSemantics": "The app preserves supplied formula/cache data and requests compatible-reader recalculation; it does not evaluate formulas.",
+  "notRun": {
+    "fullAppJvm": "NOT_RUN",
+    "litertCompatJvm": "NOT_RUN",
+    "lint": "NOT_RUN",
+    "androidTestCompilation": "NOT_RUN",
+    "emulator": "NOT_RUN_THIS_INCREMENT",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  },
+  "sourcePlan": {
+    "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmap": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskIds": 97,
+    "uniqueTaskIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": "all TODO, unchanged"
+  },
+  "evidencePath": "docs/validation/master-program-m03-02-xlsx-sheets",
+  "generatedWorkbook": {
+    "path": "green-01/generated/sheet-added.xlsx",
+    "bytes": 2946,
+    "sha256": "f116441b3efc2e593dd591f4c15c143595cbfdeb684f409b933cdead17f30461"
+  }
+}

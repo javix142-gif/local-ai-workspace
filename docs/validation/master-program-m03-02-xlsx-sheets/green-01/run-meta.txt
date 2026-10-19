@@ -1,0 +1,11 @@
+source_sha=0ea514c498af7bbc2b4e0f1326591b3b2173718d
+started_utc=2026-10-19T13:37:29Z
+finished_utc=2026-10-19T13:38:49Z
+exit_code=0
+gradle_reported_duration_seconds=79
+wall_duration_seconds=80
+junit_tests=1; passed=1; failed=0; errors=0; skipped=0
+junit_method=addingWorksheetRoutesAndPreservesExistingGeneratedWorkbookAsNewRevision
+junit_case_seconds=5.926
+gradle_captured_exit_code=0
+outer_exec_session_exit_code=1; cause=NOT_DETERMINED

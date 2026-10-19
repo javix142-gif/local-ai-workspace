@@ -1,0 +1,21 @@
+{
+  "reader": "openpyxl",
+  "version": "3.1.5",
+  "zipCrc": "PASS",
+  "sheetNames": [
+    "Hoja1",
+    "Hoja2",
+    "Resumen"
+  ],
+  "preservedValues": {
+    "Hoja1!A1": 1,
+    "Hoja1!A2": 5,
+    "Hoja2!B14": "preserve"
+  },
+  "preservedFormula": "=$A$2-$A$1",
+  "cachedFormulaValue": 4,
+  "newSheetEmpty": true,
+  "fullCalcOnLoad": true,
+  "bytes": 2946,
+  "sha256": "f116441b3efc2e593dd591f4c15c143595cbfdeb684f409b933cdead17f30461"
+}

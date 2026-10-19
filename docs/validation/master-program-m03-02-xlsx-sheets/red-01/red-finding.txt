@@ -1,0 +1,1 @@
+Expected failure demonstrating missing operation selection. The test method stopped at AssistantRouting.tools; ArtifactStore/ArtifactTool execution assertions were not reached. No production defect was claimed from the red run because the feature did not yet exist.

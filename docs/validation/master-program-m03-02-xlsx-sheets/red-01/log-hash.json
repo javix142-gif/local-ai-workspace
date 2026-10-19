@@ -1,0 +1,8 @@
+{
+  "rawBytes": 5854,
+  "rawSha256": "faf9f28092d7d9d3e46adf1d427fd14af4f2750ca71a079c421bf163dfb14758",
+  "gzipPath": "gradle.log.gz",
+  "gzipBytes": 1481,
+  "gzipSha256": "7a25620fe0bf4e285132acf3e24dac70b0b4f1d8837c828839f988bb3765084c",
+  "roundTripVerified": true
+}

@@ -1,4 +1,14 @@
-# Current master-program checkpoint — M03-01 patch-preview Apply follow-up (2026-10-19)
+# Current master-program checkpoint — M03-02 XLSX worksheet addition (2026-10-19)
+
+Code commit `0ea514c498af7bbc2b4e0f1326591b3b2173718d` adds the bounded `artifacts.xlsxAddSheet` operation to the existing app-private generated-XLSX path. It creates one empty worksheet in a new immutable revision, preserves existing sheets/cells/formulas/cached values, enforces the existing sheet-name rules and 16-sheet limit, uses the current-version check, and routes the request through the existing LOCAL_WRITE tool capability. The app still does not evaluate formulas; export remains an explicit SAF action; imported workbooks are unchanged.
+
+The regression was red at source `332aa99cec18a54d9c3ea6c17fdab5c807998e62`: 1/1 expected failure because deterministic routing selected no tool for “Agrega una hoja Resumen al libro Excel.” At code `0ea514c`, the same focused test passed 1/1 (0 failure/error/skip), captured Gradle exit 0 and `BUILD SUCCESSFUL`; 7/63 actionable tasks executed in 80 seconds wall. The outer execution tool returned 1, cause `NOT_DETERMINED`. openpyxl 3.1.5 independently opened the generated synthetic workbook, verified ZIP CRC, `Hoja1`/`Hoja2`/`Resumen`, preserved values, formula/cache 4, and empty new sheet. Commands, red/green XML, compressed logs, generated workbook, reader result and checksums: [`M03-02 worksheet-add evidence`](../validation/master-program-m03-02-xlsx-sheets/RESULTS.md).
+
+This remains preparatory only: original M03-02 is `TODO`, `requires_device=true`, and depends on M03-01/M02-02, which remain TODO; M03-01 depends on M02-05. Full app/LiteRT tests, lint, AndroidTest compilation, emulator, Motorola and APK were not run. M01-06 remains `PENDING_REQUIRES_DEVICE`; physical device `NOT_RUN`; the 97 task IDs, 120 dependencies and source TODO statuses are unchanged. `main` and peeled `v0.4.2` remain unchanged.
+
+---
+
+# Previous master-program checkpoint — M03-01 patch-preview Apply follow-up (2026-10-19)
 
 On source SHA `f8a409369d3da0deed58eca71768f6063d2e7757`, the previously unrerun `ArtifactsPatchPreviewUiTest.previewShowsExactBeforeAndAfterAndOnlyAppliesAfterUserAction` case passed: fresh JUnit XML 1/1, no failure/error/skip, testcase 7.801 s. Gradle 8.10.2/JDK 17, with the JDK 21 toolchain exposed, ran `:app:testDebugUnitTest --tests ...` offline with `--rerun-tasks`; 63 tasks executed, Gradle reported `BUILD SUCCESSFUL` in 3m34s, and the captured command exit was 0. The execution tool's outer session returned 1; its cause remains `NOT_DETERMINED`. The complete compressed log, command, exit marker, XML, metadata and hashes are in [`M03-01 apply-only evidence`](../validation/master-program-m03-01/attempt-08-apply-only/).
 

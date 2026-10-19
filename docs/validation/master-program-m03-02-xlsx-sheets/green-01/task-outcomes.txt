@@ -1,0 +1,2 @@
+:app:testDebugUnitTest=EXECUTED; 63 actionable tasks; 7 executed; 56 up-to-date; Gradle BUILD SUCCESSFUL in 1m19s; captured exit=0.
+Filtered JUnit: 1 test, 1 pass, 0 failures/errors/skips; testcase=5.926s.
