@@ -201,7 +201,7 @@ class DocxArtifactStructureTest {
                 val instances = numbering.getElementsByTagNameNS(word, "num")
                 assertEquals(3, instances.length)
                 assertEquals(listOf("0", "1", "1"), (0 until instances.length).map {
-                    instances.item(it).getElementsByTagNameNS(word, "abstractNumId").item(0)
+                    (instances.item(it) as org.w3c.dom.Element).getElementsByTagNameNS(word, "abstractNumId").item(0)
                         .attributes.getNamedItemNS(word, "val").nodeValue
                 })
             }
