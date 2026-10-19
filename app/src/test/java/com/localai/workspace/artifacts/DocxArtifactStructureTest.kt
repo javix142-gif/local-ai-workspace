@@ -171,18 +171,30 @@ class DocxArtifactStructureTest {
         try {
             val revision = store.create("docx-ordered-project", ArtifactSpec.parse(source))
             val file = store.verifiedFile("docx-ordered-project", revision)
-            val children = ZipFile(file).use { zip ->
+            fun bodyChildren(target: File): List<String> = ZipFile(target).use { zip ->
                 val body = xml(zip, "word/document.xml").getElementsByTagNameNS(word, "body").item(0)
                 (0 until body.childNodes.length).mapNotNull { index ->
                     body.childNodes.item(index).takeIf { it.nodeType == org.w3c.dom.Node.ELEMENT_NODE }?.localName
                 }
             }
-            assertEquals(listOf("p", "tbl", "p", "sectPr"), children)
+            val originalHash = revision.sha256
+            assertEquals(listOf("p", "tbl", "p", "sectPr"), bodyChildren(file))
             val preview = store.spec("docx-ordered-project", revision).preview()
             assertTrue(preview.indexOf("Before the table") < preview.indexOf("Label"))
             assertTrue(preview.indexOf("Label") < preview.indexOf("After the table"))
             File("build/docx-independent-reader").mkdirs()
-            File("build/docx-independent-reader/ordered-blocks.docx").writeBytes(file.readBytes())
+            File("build/docx-independent-reader/ordered-blocks-v1.docx").writeBytes(file.readBytes())
+
+            val revisedSpec = store.spec("docx-ordered-project", revision).json()
+            revisedSpec.getJSONArray("blocks").getJSONObject(2).put("text", "After the revised table")
+            val revised = store.revise("docx-ordered-project", revision.id, revision.version, ArtifactSpec.parse(revisedSpec))
+            assertEquals(2, store.history("docx-ordered-project", revision.id).size)
+            assertEquals(originalHash, ArtifactStore.fileHash(store.verifiedFile("docx-ordered-project", revision)))
+            val revisedFile = store.verifiedFile("docx-ordered-project", revised)
+            assertEquals(listOf("p", "tbl", "p", "sectPr"), bodyChildren(revisedFile))
+            assertTrue(store.spec("docx-ordered-project", revision).preview().contains("After the table"))
+            assertTrue(store.spec("docx-ordered-project", revised).preview().contains("After the revised table"))
+            File("build/docx-independent-reader/ordered-blocks-v2.docx").writeBytes(revisedFile.readBytes())
         } finally {
             root.deleteRecursively()
         }
