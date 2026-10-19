@@ -41,6 +41,13 @@ import org.json.JSONObject
     var notice by remember{mutableStateOf("")};var busy by remember{mutableStateOf(false)}
     var exportIdentity by rememberSaveable{mutableStateOf<String?>(null)}
     var lastExport by remember{mutableStateOf<Pair<android.net.Uri,String>?>(null)}
+    val selectedDocxTemplate = remember(descriptor) {
+        runCatching {
+            JSONObject(descriptor).takeIf { it.optString("format") == ArtifactFormat.DOCX.name }
+                ?.optString("template", "standard")
+                ?.takeIf { it in setOf("standard", "report", "meeting_minutes") }
+        }.getOrNull()
+    }
     suspend fun refresh(){
         items=withContext(Dispatchers.IO){store.list(projectId)}
         try { patchPreviews=withContext(Dispatchers.IO){store.codePatchPreviews(projectId)} }
@@ -87,7 +94,7 @@ import org.json.JSONObject
                     ArtifactFormat.CODE->obj.put("body","")
                     ArtifactFormat.XLSX->obj.put("sheets",org.json.JSONArray().put(JSONObject().put("name","Sheet1").put("cells",org.json.JSONArray())))
                     ArtifactFormat.PPTX->obj.put("slides",org.json.JSONArray().put(JSONObject().put("title","").put("body","")))
-                    ArtifactFormat.DOCX->obj.put("blocks",org.json.JSONArray().put(JSONObject().put("kind","paragraph").put("text","").put("style","body")))
+                    ArtifactFormat.DOCX->obj.put("template","standard").put("blocks",org.json.JSONArray().put(JSONObject().put("kind","paragraph").put("text","").put("style","body")))
                     ArtifactFormat.PDF->obj.put("paragraphs",org.json.JSONArray().put(JSONObject().put("text","").put("style","body")))
                 }
                 descriptor=obj.toString(2)
@@ -126,6 +133,18 @@ import org.json.JSONObject
             }
             if(descriptor.isNotEmpty()) {
                 OutlinedTextField(descriptor,{descriptor=it;preview=null;previewText="";imagePreviews=emptyList()},enabled=!busy,modifier=Modifier.fillMaxWidth().heightIn(min=120.dp,max=240.dp).testTag("artifact-spec-editor"),label={Text("Structured draft JSON")})
+                if(selectedDocxTemplate != null) {
+                    Text("Built-in DOCX template",style=MaterialTheme.typography.labelMedium)
+                    FlowRow {
+                        listOf("standard" to "Standard", "report" to "Report", "meeting_minutes" to "Meeting minutes").forEach { (value,label) ->
+                            TextButton(enabled=!busy,onClick={
+                                descriptor=JSONObject(descriptor).put("template",value).toString(2)
+                                preview=null;previewText="";imagePreviews=emptyList()
+                            },modifier=Modifier.testTag("docx-template-$value")) { Text(label) }
+                        }
+                    }
+                    Text("Selected template: ${when(selectedDocxTemplate) { "standard"->"Standard";"report"->"Report";else->"Meeting minutes" }}",style=MaterialTheme.typography.bodySmall,modifier=Modifier.testTag("docx-selected-template"))
+                }
                 TextButton(enabled=!busy,onClick={val source=descriptor;preview=null;previewText="";imagePreviews=emptyList();work {
                     val prepared=parsePreview(source)
                     preview=prepared.first;previewText=prepared.second;imagePreviews=prepared.third

@@ -15,6 +15,7 @@ import java.util.zip.ZipOutputStream
  * XLSX caches are supplied values, never evaluated. PDF is controlled regeneration, not PDF editing.
  */
 class ArtifactRenderer(private val context:Context) {
+    private data class DocxTemplateStyle(val font:String,val color:String,val titleSize:Int,val headingSize:Int)
     fun render(spec:ArtifactSpec,target:File) {
         check(!target.exists()){"TARGET_ALREADY_EXISTS"}
         when(spec.format) {
@@ -86,9 +87,30 @@ class ArtifactRenderer(private val context:Context) {
             "_rels/.rels" to rels(Triple("rId1","officeDocument","word/document.xml")),
             "word/document.xml" to declaration("<w:document xmlns:w=\"$ns\"><w:body>$content<w:sectPr><w:pgSz w:w=\"11906\" w:h=\"16838\"/><w:pgMar w:top=\"1440\" w:right=\"1440\" w:bottom=\"1440\" w:left=\"1440\"/></w:sectPr></w:body></w:document>"),
             "word/_rels/document.xml.rels" to rels(Triple("styles","styles","styles.xml"),Triple("numbering","numbering","numbering.xml")),
-            "word/styles.xml" to declaration("<w:styles xmlns:w=\"$ns\"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii=\"Calibri\" w:hAnsi=\"Calibri\"/><w:sz w:val=\"24\"/></w:rPr></w:rPrDefault></w:docDefaults><w:style w:type=\"paragraph\" w:default=\"1\" w:styleId=\"Normal\"><w:name w:val=\"Normal\"/></w:style><w:style w:type=\"paragraph\" w:styleId=\"Title\"><w:name w:val=\"Title\"/><w:rPr><w:b/><w:sz w:val=\"40\"/></w:rPr></w:style><w:style w:type=\"paragraph\" w:styleId=\"Heading1\"><w:name w:val=\"heading 1\"/><w:rPr><w:b/><w:sz w:val=\"32\"/></w:rPr></w:style></w:styles>"),
+            "word/styles.xml" to docxStyles(descriptor.optString("template", "standard")),
             "word/numbering.xml" to declaration("<w:numbering xmlns:w=\"$ns\"><w:abstractNum w:abstractNumId=\"0\"><w:lvl w:ilvl=\"0\"><w:start w:val=\"1\"/><w:numFmt w:val=\"bullet\"/><w:lvlText w:val=\"•\"/><w:pPr><w:ind w:left=\"720\" w:hanging=\"360\"/></w:pPr></w:lvl></w:abstractNum><w:num w:numId=\"1\"><w:abstractNumId w:val=\"0\"/></w:num></w:numbering>")
         )
+    }
+    private fun docxStyles(template:String):String {
+        val legacy="<w:styles xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii=\"Calibri\" w:hAnsi=\"Calibri\"/><w:sz w:val=\"24\"/></w:rPr></w:rPrDefault></w:docDefaults><w:style w:type=\"paragraph\" w:default=\"1\" w:styleId=\"Normal\"><w:name w:val=\"Normal\"/></w:style><w:style w:type=\"paragraph\" w:styleId=\"Title\"><w:name w:val=\"Title\"/><w:rPr><w:b/><w:sz w:val=\"40\"/></w:rPr></w:style><w:style w:type=\"paragraph\" w:styleId=\"Heading1\"><w:name w:val=\"heading 1\"/><w:rPr><w:b/><w:sz w:val=\"32\"/></w:rPr></w:style></w:styles>"
+        if(template=="standard")return declaration(legacy)
+        val style=when(template) {
+            "report"->DocxTemplateStyle("Calibri","3E746D",40,32)
+            "meeting_minutes"->DocxTemplateStyle("Arial","1D2522",36,28)
+            else->error("DOCX_TEMPLATE_UNSUPPORTED")
+        }
+        val family=style.font
+        val color=style.color
+        val titleHalfPoints=style.titleSize
+        val headingHalfPoints=style.headingSize
+        return declaration("""
+            <w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+              <w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="$family" w:hAnsi="$family" w:eastAsia="$family" w:cs="$family"/><w:sz w:val="24"/><w:lang w:val="es-ES"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="160" w:line="276" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>
+              <w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/><w:pPr><w:spacing w:after="160" w:line="276" w:lineRule="auto"/></w:pPr><w:rPr><w:rFonts w:ascii="$family" w:hAnsi="$family" w:eastAsia="$family" w:cs="$family"/><w:sz w:val="24"/></w:rPr></w:style>
+              <w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:uiPriority w:val="10"/><w:qFormat/><w:pPr><w:keepNext/><w:spacing w:before="240" w:after="200"/></w:pPr><w:rPr><w:rFonts w:ascii="$family" w:hAnsi="$family" w:eastAsia="$family" w:cs="$family"/><w:b/><w:color w:val="$color"/><w:sz w:val="$titleHalfPoints"/><w:szCs w:val="$titleHalfPoints"/></w:rPr></w:style>
+              <w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:uiPriority w:val="9"/><w:qFormat/><w:pPr><w:keepNext/><w:outlineLvl w:val="0"/><w:spacing w:before="240" w:after="120"/></w:pPr><w:rPr><w:rFonts w:ascii="$family" w:hAnsi="$family" w:eastAsia="$family" w:cs="$family"/><w:b/><w:color w:val="$color"/><w:sz w:val="$headingHalfPoints"/><w:szCs w:val="$headingHalfPoints"/></w:rPr></w:style>
+            </w:styles>
+        """.trimIndent())
     }
     private fun pptx(spec:ArtifactSpec):Map<String,ByteArray> {
         val slides=spec.json().getJSONArray("slides").objects();val p="http://schemas.openxmlformats.org/presentationml/2006/main";val a="http://schemas.openxmlformats.org/drawingml/2006/main"

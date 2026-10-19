@@ -62,7 +62,7 @@ class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String
             require(name.length in 1..100 && Regex("[\\p{L}\\p{N}][\\p{L}\\p{N}\\p{M}._ -]*").matches(name) && !name.contains("..")){"ARTIFACT_NAME_INVALID"}
             val extension=name.substringAfterLast('.',"").lowercase(Locale.ROOT)
             require(if(format==ArtifactFormat.CODE)extension in setOf("txt","md","kt","java","py","js","ts","json","xml","html","css","c","cpp","h","rs","go","sh","sql")else extension==format.extension){"ARTIFACT_EXTENSION_MISMATCH"}
-            val keys=setOf("format","name")+when(format){ArtifactFormat.CODE->setOf("body");ArtifactFormat.XLSX->setOf("sheets");ArtifactFormat.PPTX->setOf("slides");ArtifactFormat.DOCX->setOf("paragraphs","tables","blocks");ArtifactFormat.PDF->setOf("paragraphs","tables")}
+            val keys=setOf("format","name")+when(format){ArtifactFormat.CODE->setOf("body");ArtifactFormat.XLSX->setOf("sheets");ArtifactFormat.PPTX->setOf("slides");ArtifactFormat.DOCX->setOf("paragraphs","tables","blocks","template");ArtifactFormat.PDF->setOf("paragraphs","tables")}
             fields(input,keys)
             when(format) {
                 ArtifactFormat.CODE->text(input.getString("body"),128*1024)
@@ -105,6 +105,9 @@ class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String
                     }
                 }
                 ArtifactFormat.DOCX->{
+                    if(input.has("template")) {
+                        require(input.optString("template") in setOf("standard","report","meeting_minutes")) {"DOCX_TEMPLATE_UNSUPPORTED"}
+                    }
                     if(input.has("blocks")) {
                         require(!input.has("paragraphs")&&!input.has("tables")){"DOCX_BLOCKS_CANNOT_MIX_LEGACY_CONTENT"}
                         val blocks=input.getJSONArray("blocks");require(blocks.length() in 1..516){"DOCX_BLOCK_LIMIT"}
