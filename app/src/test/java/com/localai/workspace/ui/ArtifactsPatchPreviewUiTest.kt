@@ -56,7 +56,7 @@ class ArtifactsPatchPreviewUiTest {
 
         compose.onNodeWithTag("artifact-patch-apply").performScrollTo().performClick()
         compose.waitUntil(10_000) { compose.onAllNodesWithTag("artifact-status").fetchSemanticsNodes().isNotEmpty() }
-        compose.onNodeWithTag("artifact-status").assertTextContains("Patch verified as immutable private draft v2")
+        compose.onNodeWithTag("artifact-status").assertTextContains("Patch verified as immutable private draft v2. Earlier source version and external workspace files remain unchanged.")
         compose.waitUntil(10_000) { store.history(project,revision.id).size==2 }
         assertEquals("fun answer() = 43\n",store.verifiedFile(project,store.history(project,revision.id).first()).readText())
         assertEquals(body,store.verifiedFile(project,revision).readText())
