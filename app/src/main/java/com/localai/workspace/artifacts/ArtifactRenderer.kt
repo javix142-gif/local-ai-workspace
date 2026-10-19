@@ -203,9 +203,93 @@ class ArtifactRenderer(private val context:Context) {
                     line(part,font,size)
                 };y-=6
             }
+            fun tableCellLines(text:String,font:PDType1Font,size:Float,maxWidth:Float):List<String> {
+                fun width(value:String)=font.getStringWidth(value)/1000f*size
+                val output=mutableListOf<String>()
+                for(raw in text.split('\n')) {
+                    var current=""
+                    val segments=mutableListOf<Pair<Boolean,String>>()
+                    for(cp in raw.codePoints().toArray()) {
+                        require(cp!=9){"PDF_TAB_UNSUPPORTED_USE_SPACES"}
+                        val value=String(Character.toChars(cp));val whitespace=Character.isWhitespace(cp)
+                        if(segments.lastOrNull()?.first==whitespace)segments[segments.lastIndex]=whitespace to (segments.last().second+value)
+                        else segments+=whitespace to value
+                    }
+                    fun wrapSegment(segment:String) {
+                        var part=""
+                        for(cp in segment.codePoints().toArray()) {
+                            val value=String(Character.toChars(cp));val candidate=part+value
+                            if(width(candidate)>maxWidth && part.isNotEmpty()){output+=part;part=value}else part=candidate
+                        }
+                        current=part
+                    }
+                    for((_,segment) in segments) {
+                        val combined=current+segment
+                        if(width(combined)<=maxWidth)current=combined
+                        else {
+                            if(current.isNotEmpty()){output+=current;current=""}
+                            wrapSegment(segment)
+                        }
+                    }
+                    output+=current
+                }
+                return output.ifEmpty{listOf("")}
+            }
+            fun table(value:JSONObject) {
+                val rows=value.getJSONArray("rows").arrays()
+                val columns=rows.first().length()
+                val left=54f;val tableWidth=504f;val columnWidth=tableWidth/columns
+                val fontSize=9f;val lineHeight=fontSize*1.25f;val padding=4f;val bottom=54f
+                for((rowIndex,row) in rows.withIndex()) {
+                    val font=if(rowIndex==0)PDType1Font.HELVETICA_BOLD else PDType1Font.HELVETICA
+                    val cells=(0 until columns).map{tableCellLines(row.getString(it),font,fontSize,columnWidth-padding*2)}
+                    val rowLineCount=maxOf(1,cells.maxOf{it.size})
+                    var offset=0
+                    while(offset<rowLineCount) {
+                        if(stream==null)y=0f
+                        if(stream==null || y-bottom-2*padding<lineHeight)page()
+                        val linesAvailable=((y-bottom-2*padding)/lineHeight).toInt().coerceAtLeast(1)
+                        val chunkLines=minOf(rowLineCount-offset,linesAvailable)
+                        val rowHeight=chunkLines*lineHeight+padding*2
+                        val rowTop=y;val rowBottom=rowTop-rowHeight
+                        stream!!.saveGraphicsState()
+                        if(rowIndex==0 && offset==0) {
+                            stream!!.setNonStrokingColor(239,241,238)
+                            for(column in 0 until columns) {
+                                stream!!.addRect(left+column*columnWidth,rowBottom,columnWidth,rowHeight)
+                                stream!!.fill()
+                            }
+                        }
+                        stream!!.setStrokingColor(119,129,124)
+                        stream!!.setLineWidth(0.5f)
+                        for(column in 0 until columns) {
+                            stream!!.addRect(left+column*columnWidth,rowBottom,columnWidth,rowHeight)
+                            stream!!.stroke()
+                        }
+                        stream!!.restoreGraphicsState()
+                        for(column in 0 until columns) {
+                            val last=minOf(offset+chunkLines,cells[column].size)
+                            for(lineIndex in offset until last) {
+                                val text=cells[column][lineIndex]
+                                if(text.isNotEmpty()) {
+                                    stream!!.beginText()
+                                    stream!!.setFont(font,fontSize)
+                                    stream!!.newLineAtOffset(left+column*columnWidth+padding,rowTop-padding-fontSize-(lineIndex-offset)*lineHeight)
+                                    stream!!.showText(text)
+                                    stream!!.endText()
+                                }
+                            }
+                        }
+                        y=rowBottom-4f
+                        offset+=chunkLines
+                        if(offset<rowLineCount)page()
+                    }
+                }
+                y-=6f
+            }
             try {
                 spec.json().getJSONArray("paragraphs").objects().forEach{p->val style=p.optString("style","body");if(style=="pageBreak" && stream!=null)page();paragraph(p.getString("text"),style in setOf("title","heading"),if(style=="title")20f else if(style=="heading")16f else 12f)}
-                spec.json().optJSONArray("tables")?.objects()?.forEach{t->t.getJSONArray("rows").arrays().forEach{row->paragraph((0 until row.length()).joinToString(" | "){row.getString(it)})}}
+                spec.json().optJSONArray("tables")?.objects()?.forEach(::table)
                 stream?.close();stream=null;doc.save(target)
             }finally{stream?.close()}
         }
