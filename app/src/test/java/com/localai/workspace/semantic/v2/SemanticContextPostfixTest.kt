@@ -501,6 +501,7 @@ class SemanticContextPostfixTest {
         assertTrue(prompt.contains("Hoja1!LOG10=cell-value"))
         assertTrue(prompt.contains("cell-references=\"Hoja1!A3,Hoja1!LOG10\""))
         assertEquals(source.text,bundle.sourceEvidence.single().excerpt)
+        assertEquals(listOf("Hoja1!A3", "Hoja1!LOG10"), bundle.sourceEvidence.single().cellReferences)
         assertTrue(bundle.sourceEvidenceIssues.isEmpty())
     }
 
@@ -522,6 +523,7 @@ class SemanticContextPostfixTest {
         assertTrue(bundle.notice.orEmpty().contains("SOURCE_SEMANTIC_V2_SKIPPED"))
         assertEquals(listOf("Hoja1!A3"),source.provenance.cellReferences)
         assertEquals(listOf("Hoja2!LOG10"),source.provenance.missingCellReferences)
+        assertEquals(listOf("Hoja1!A3"), bundle.sourceEvidence.single().cellReferences)
         assertTrue(issue.reasons.contains("SHEET_NOT_FOUND"))
         assertTrue(bundle.requiresUserNotice)
         assertTrue(bundle.conversation().userMessage.contains("missing-cell-references=\"Hoja2!LOG10\""))
