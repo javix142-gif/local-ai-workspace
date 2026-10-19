@@ -1,0 +1,1 @@
+./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --info --rerun-tasks :app:testDebugUnitTest --tests com.localai.workspace.artifacts.DocxArtifactStructureTest

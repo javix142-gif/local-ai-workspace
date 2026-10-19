@@ -1,3 +1,13 @@
+# Current checkpoint — M03-03 DOCX ordered-list generation preparation (2026-10-19)
+
+Production code `d1bd2062c0638ac3edd44d243d4783a578f2d00e` adds real decimal numbering to generated DOCX paragraphs. A `numbered` style is accepted in DOCX block and legacy descriptors only, rendered with OOXML numbering instances, shown in the preview and documented to the artifact tool. Consecutive items continue, and a non-list paragraph/table starts a new decimal run. Existing bullet output remains intact; PDF rejects the DOCX-only style.
+
+The exact tested tree `356db30a9982dec804060ea5492d998c2de5d9f7` passed the focused `DocxArtifactStructureTest` class 4/4, zero failures/errors/skips; Gradle exit 0 with 63/63 actionable tasks executed. A separate `python-docx 1.2.0` read of the generated synthetic DOCX confirmed ZIP CRC, required package parts, paragraph order and numbering IDs. The expected-red run had failed because the descriptor rejected `numbered`. One intervening attempt failed while compiling a DOM test assertion; it ran no tests and generated no fresh XML, and the assertion type was corrected without changing production.
+
+Evidence, timestamps, commands, preflight, lossless compressed Gradle logs, JUnit XML, test output and checksums are in [`M03-03 ordered DOCX list preparation`](../validation/master-program-docx-numbered-lists-20261019/RESULTS.md). This is preparatory only: original M03-03 remains `TODO`, `requires_device=true`, and depends on M03-01 and M02-03, both `TODO`. Full app/LiteRT suites, lint, assembly, AndroidTest, emulator, physical-device and APK were `NOT_RUN`.
+
+The original backlog remains byte-identical with 97 unique IDs and 120 dependencies; all 97 source statuses remain TODO. M01-06 stays `PENDING_REQUIRES_DEVICE`; `PHYSICAL_DEVICE=NOT_RUN`. Continue sequentially with bounded, source-backed work and preserve task dependencies.
+
 # Current recovery checkpoint — DOCX list extraction preparation (2026-10-19)
 
 The exact focused HOST run at test/code tree `f88c756fa78f0f6d31a538ef16c470bd39c033fa` passed `DocxStructureFidelityTest` 5/5 (0 failures/errors/skips), Gradle 8.10.2 exit 0, 63/63 actionable tasks executed. A test-first red run at `a351f5f` reproduced that the production parser returned list items as plain paragraphs without list markers. Production code at `dadcb46` resolves common explicit DOCX `numPr`/`numbering.xml` lists, including bullet/nesting, decimal and tested alphabetic start overrides; unknown explicit numbering remains visibly unresolved and item text is retained. See [`M02-03 DOCX list evidence`](../validation/master-program-docx-list-markers-20261019/RESULTS.md) and the recorded commands, logs, XML, preflight and checksums.

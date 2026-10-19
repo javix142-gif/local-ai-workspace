@@ -1,0 +1,7 @@
+Classification=TEST_SOURCE_COMPILE_FAILURE
+GradleExit=1
+Task=:app:compileDebugUnitTestKotlin FAILED
+TestExecution=NOT_REACHED
+FreshJUnitXml=NONE
+Cause=The new test called getElementsByTagNameNS on org.w3c.dom.Node; that method is declared on Element.
+The XML inventory before and after contains the same pre-existing DocxArtifactStructureTest XML timestamped 2026-10-19T20:32:25.065Z, before this attempt started at 20:34:52Z. That stale XML is excluded from this attempt's results.

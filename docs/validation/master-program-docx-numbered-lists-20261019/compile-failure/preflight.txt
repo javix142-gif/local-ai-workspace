@@ -1,0 +1,9 @@
+testBaseSha=008d7b53bd393e9a33e4c699ea8e323abf7a2997
+branch=codex/master-program-recovery-20261019
+testSourceDiffSha256=15ea6be3c6a4c355403e54db0d81c661663e645c206b1eba486e545baf0c880f
+startedAtUtc=2026-10-19T20:29:15Z
+runtimeJdk=openjdk version "17.0.20.1" 2026-08-18
+testLauncherJdk=openjdk version "21.0.12.1" 2026-08-18 LTS
+gradle=Gradle 8.10.2
+androidSdk=/workspace/.toolchain/android-sdk API35
+ndk=Pkg.Revision = 27.0.12077973

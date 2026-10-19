@@ -1,0 +1,8 @@
+originalPath=gradle.log
+originalBytes=469189
+originalSha256=ee28365891107402ed00dd7f19b9ffa2591504bbc3efd11c4d5332c902da0086
+compressedPath=gradle.log.gz
+compressedBytes=40975
+compressedSha256=0e609d8491452250e0e3e67c002755a7dc7baf423e00e5fd0c949202dc5ae03a
+compression=gzip level 9, mtime 0
+losslessDecompressionCheck=PASS

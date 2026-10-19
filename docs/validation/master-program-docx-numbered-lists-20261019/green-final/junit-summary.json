@@ -1,0 +1,25 @@
+{
+  "tests": 4,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "timeSeconds": 5.553,
+  "testcases": [
+    {
+      "name": "generatedDocxEmitsOrderedListNumberingAndKeepsBulletList",
+      "state": "PASS"
+    },
+    {
+      "name": "generatedDocxResolvesStylesNumberingTablesAndImmutableRevisions",
+      "state": "PASS"
+    },
+    {
+      "name": "generatedDocxPreservesParagraphAndTableBlockOrder",
+      "state": "PASS"
+    },
+    {
+      "name": "generatedDocxBuiltInTemplatesResolveStylesAndKeepDocumentContent",
+      "state": "PASS"
+    }
+  ]
+}

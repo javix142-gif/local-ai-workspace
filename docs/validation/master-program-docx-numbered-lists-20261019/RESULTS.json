@@ -1,0 +1,172 @@
+{
+  "name": "DOCX ordered list generation preparation",
+  "kind": "PREPARATORY_M03_03_DOCX_ORDERED_LIST_GENERATION",
+  "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO",
+  "workingBranch": "codex/master-program-recovery-20261019",
+  "productionBaseSha": "008d7b53bd393e9a33e4c699ea8e323abf7a2997",
+  "redTestCommit": "84bb54ff49c99ebfd0975d3b162cd534798d3e9c",
+  "productionCommit": "d1bd2062c0638ac3edd44d243d4783a578f2d00e",
+  "testCompileCorrectionCommit": "356db30a9982dec804060ea5492d998c2de5d9f7",
+  "testedTreeSha": "356db30a9982dec804060ea5492d998c2de5d9f7",
+  "finding": "The DOCX artifact contract and renderer supported bullet paragraphs only; ordered list intent could not be expressed and produced no numbered OOXML paragraphs.",
+  "implementation": {
+    "input": "Added the DOCX-only paragraph style numbered to both ordered blocks and legacy paragraphs; PDF rejects the new style rather than silently ignoring it.",
+    "package": "Generated a decimal abstract numbering definition and a distinct numbering instance for each contiguous numbered run; number IDs are referenced by w:numPr. Existing bullet numbering remains numId 1.",
+    "restart": "Consecutive numbered paragraphs share a list instance; a non-list paragraph, table, page break, heading, title or bullet ends the run and a later numbered run starts at one.",
+    "preview": "DOCX preview now shows decimal/bullet markers matching the generated list semantics.",
+    "tool": "The create/revise tool description exposes numbered and documents decimal continuation/restart behavior.",
+    "validation": "The generated DOCX is parsed by the app extractor and independently opened by python-docx 1.2.0; ZIP CRC and required OPC parts pass."
+  },
+  "host": {
+    "red": {
+      "productionBaseSha": "008d7b53bd393e9a33e4c699ea8e323abf7a2997",
+      "testCommitCreatedAfterRun": "84bb54ff49c99ebfd0975d3b162cd534798d3e9c",
+      "test": "DocxArtifactStructureTest.generatedDocxEmitsOrderedListNumberingAndKeepsBulletList",
+      "counts": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "exitCode": 1,
+      "startedAtUtc": "2026-10-19T20:29:20Z",
+      "finishedAtUtc": "2026-10-19T20:32:25Z",
+      "wallSeconds": 185,
+      "failure": "ArtifactSpec.parse rejected style=numbered with PARAGRAPH_STYLE_UNSUPPORTED before any DOCX was created.",
+      "xml": "red-baseline/TEST-com.localai.workspace.artifacts.DocxArtifactStructureTest.xml",
+      "xmlSha256": "92b907370abea2e4a16d99a8e51c462b21f2a250687ca121e2fb9cf90817f07c",
+      "log": "red-baseline/gradle.log.gz",
+      "logOriginalSha256": "db2a01d2a74b394def45e746903b2369232a9f74b3c0f95d5155022610c8ba21"
+    },
+    "compileFailure": {
+      "sourceTreeSha": "d1bd2062c0638ac3edd44d243d4783a578f2d00e",
+      "counts": {
+        "tests": "NOT_REACHED",
+        "freshXml": 0
+      },
+      "exitCode": 1,
+      "startedAtUtc": "2026-10-19T20:34:52Z",
+      "finishedAtUtc": "2026-10-19T20:37:52Z",
+      "task": "app:compileDebugUnitTestKotlin",
+      "classification": "TEST_SOURCE_COMPILE_FAILURE; no product failure demonstrated",
+      "cause": "New test called getElementsByTagNameNS on org.w3c.dom.Node instead of Element; corrected in test-only commit 356db30.",
+      "preexistingXmlExcluded": true,
+      "log": "compile-failure/gradle.log.gz",
+      "logOriginalSha256": "ee28365891107402ed00dd7f19b9ffa2591504bbc3efd11c4d5332c902da0086"
+    },
+    "finalFocusedRun": {
+      "productionSha": "d1bd2062c0638ac3edd44d243d4783a578f2d00e",
+      "testedTreeSha": "356db30a9982dec804060ea5492d998c2de5d9f7",
+      "command": "./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --info --rerun-tasks :app:testDebugUnitTest --tests com.localai.workspace.artifacts.DocxArtifactStructureTest",
+      "testClass": "com.localai.workspace.artifacts.DocxArtifactStructureTest",
+      "counts": {
+        "tests": 4,
+        "passed": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-19T20:38:25Z",
+      "finishedAtUtc": "2026-10-19T20:41:36Z",
+      "wallSeconds": 191,
+      "gradleReportedDuration": "3m 6s",
+      "actionableTasks": 63,
+      "executedTasks": 63,
+      "xml": "green-final/TEST-com.localai.workspace.artifacts.DocxArtifactStructureTest.xml",
+      "xmlSha256": "0d607e090175b7e9e0b28ca1e6ac1535c21f089de75b6a598aa20875f0c1d1f6",
+      "log": "green-final/gradle.log.gz",
+      "logOriginalSha256": "d8d9bda51fce4a79c6bae7c5802c25fe705fa774aa2474d28e2485857aef8448",
+      "testsListed": [
+        "generatedDocxEmitsOrderedListNumberingAndKeepsBulletList",
+        "generatedDocxResolvesStylesNumberingTablesAndImmutableRevisions",
+        "generatedDocxPreservesParagraphAndTableBlockOrder",
+        "generatedDocxBuiltInTemplatesResolveStylesAndKeepDocumentContent"
+      ]
+    }
+  },
+  "independentReader": {
+    "reader": "python-docx 1.2.0",
+    "script": "green-final/verify_generated_docx.py",
+    "artifact": "green-final/ordered-list.docx",
+    "bytes": 2436,
+    "sha256": "6c5a98807345d0af5ba8ca394b82944a402a9ae192550db6ae5d35338c0d5236",
+    "zipCrc": "PASS",
+    "requiredOpcParts": "PASS",
+    "paragraphNumberingIds": [
+      "2",
+      "2",
+      null,
+      "3",
+      "1"
+    ],
+    "interpretation": "python-docx verifies document paragraphs and OOXML numbering references; the app parser test verifies displayed decimal markers 1, 2, restart 1, and the bullet glyph."
+  },
+  "environment": {
+    "gradle": "8.10.2",
+    "runtimeJdk": "Temurin 17.0.20.1",
+    "testLauncherJdk": "Temurin 21.0.12.1",
+    "androidSdk": "/workspace/.toolchain/android-sdk API 35",
+    "ndk": "27.0.12077973",
+    "gradleUserHome": "/workspace/.gradle pre-existing cache",
+    "network": "No downloads; Gradle invocations used --offline"
+  },
+  "otherGates": {
+    "fullAppJvm": "NOT_RUN",
+    "litertCompatJvm": "NOT_RUN",
+    "lintDebug": "NOT_RUN",
+    "androidTestCompilation": "NOT_RUN",
+    "assembleDebug": "NOT_RUN",
+    "assembleRelease": "NOT_RUN",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  },
+  "sourceTask": {
+    "id": "M03-03",
+    "sourceStatus": "TODO",
+    "requiresDevice": true,
+    "dependsOn": [
+      "M03-01",
+      "M02-03"
+    ],
+    "dependencyStatuses": {
+      "M03-01": "TODO",
+      "M02-03": "TODO"
+    },
+    "formalCompletion": false,
+    "classification": "Preparatory generation subset only; does not meet full document templates/table/reader/device definition of done."
+  },
+  "limitations": [
+    "Only flat decimal numbering at level 0 is generated; custom starts, nested ordered numbering, Roman/letter output formats and list restart/group identifiers are not part of this increment.",
+    "Numbered input is supported only for DOCX; PDF rejects this style.",
+    "The independent reader checks package structure and numbering references but does not render in Microsoft Word, LibreOffice or Android office software.",
+    "No user document or personal file was used."
+  ],
+  "sourcePlanUnchanged": {
+    "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "roadmapPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskCount": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": {
+      "TODO": 97
+    },
+    "sourceFilesModified": false,
+    "M01_06": "PENDING_REQUIRES_DEVICE",
+    "PHYSICAL_DEVICE": "NOT_RUN"
+  },
+  "manifest": {
+    "path": "docs/validation/master-program-docx-numbered-lists-20261019/SHA256SUMS",
+    "entries": 45,
+    "sha256": "50c3aa2e408058de110272bbb6bf3488cf53d3fc4189f2419d9ba2aad5f3d348",
+    "locallyVerified": "45/45",
+    "excludes": [
+      "RESULTS.md",
+      "RESULTS.json",
+      "SHA256SUMS"
+    ]
+  }
+}

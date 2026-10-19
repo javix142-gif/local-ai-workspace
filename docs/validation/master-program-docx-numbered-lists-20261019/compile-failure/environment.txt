@@ -1,0 +1,11 @@
+JAVA_HOME=/workspace/.toolchain/jdk-17
+PATH=/workspace/.toolchain/jdk-17/bin:$PATH
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk
+GRADLE_USER_HOME=/workspace/.gradle
+Gradle runtime: Temurin 17.0.20.1
+App test launcher: Temurin 21.0.12.1
+Gradle: 8.10.2
+Android SDK: API 35
+NDK: 27.0.12077973
+Network/downloads: none; --offline used

@@ -1,0 +1,36 @@
+{
+  "reader": "python-docx 1.2.0",
+  "artifact": "ordered-list.docx",
+  "bytes": 2436,
+  "sha256": "6c5a98807345d0af5ba8ca394b82944a402a9ae192550db6ae5d35338c0d5236",
+  "zipCrc": "PASS",
+  "requiredOpcParts": "PASS",
+  "paragraphs": [
+    {
+      "text": "Primer paso",
+      "numId": "2",
+      "ilvl": "0"
+    },
+    {
+      "text": "Segundo paso",
+      "numId": "2",
+      "ilvl": "0"
+    },
+    {
+      "text": "Texto intermedio",
+      "numId": null,
+      "ilvl": null
+    },
+    {
+      "text": "Nuevo primer paso",
+      "numId": "3",
+      "ilvl": "0"
+    },
+    {
+      "text": "Nota con viñeta",
+      "numId": "1",
+      "ilvl": "0"
+    }
+  ],
+  "numberingIds": "PASS"
+}

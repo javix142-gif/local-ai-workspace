@@ -1,0 +1,6 @@
+d1bd206 feat(artifacts): generate ordered DOCX lists
+ .../workspace/artifacts/ArtifactRenderer.kt        | 28 +++++++++++++--
+ .../localai/workspace/artifacts/ArtifactSpec.kt    | 30 ++++++++++------
+ .../localai/workspace/domain/tools/ProjectTools.kt |  2 +-
+ .../artifacts/DocxArtifactStructureTest.kt         | 42 ++++++++++++++++++++--
+ 4 files changed, 85 insertions(+), 17 deletions(-)

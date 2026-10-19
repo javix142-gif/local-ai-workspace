@@ -16347,10 +16347,10 @@
   },
   "latestMasterProgramContinuation": {
     "status": "ACTIVE_PREPARATORY_IMPLEMENTATION",
-    "codeSha": "f88c756fa78f0f6d31a538ef16c470bd39c033fa",
-    "currentIncrement": "M02-03 explicit DOCX list marker extraction (preparatory)",
-    "evidence": "docs/validation/master-program-docx-list-markers-20261019/RESULTS.md",
-    "next": "Continue sequentially with a source-backed preparatory implementation gap; keep M02-03 TODO until M02-01 and the complete M02-03 definition of done are satisfied.",
+    "codeSha": "356db30a9982dec804060ea5492d998c2de5d9f7",
+    "currentIncrement": "M03-03 decimal ordered-list generation preparation",
+    "evidence": "docs/validation/master-program-docx-numbered-lists-20261019/RESULTS.md",
+    "next": "Continue with the next source-backed capability increment. Keep M03-03 TODO because M03-01 and M02-03 remain TODO and device validation is required. Do not promote source task states from this subset.",
     "noFormalTasksClosed": true,
     "sourcePlan": {
       "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
@@ -16363,7 +16363,8 @@
         "TODO": 97
       },
       "sourceFilesModified": false
-    }
+    },
+    "productCodeSha": "d1bd2062c0638ac3edd44d243d4783a578f2d00e"
   },
   "latestM03_01SafMimePreparation": {
     "name": "M03-01 preparatory format-aware SAF export MIME",
@@ -17544,6 +17545,148 @@
         "RESULTS.json",
         "SHA256SUMS"
       ]
+    }
+  },
+  "latestM03_03DocxOrderedListGenerationPreparation": {
+    "name": "DOCX ordered list generation preparation",
+    "kind": "PREPARATORY_M03_03_DOCX_ORDERED_LIST_GENERATION",
+    "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO",
+    "productionBaseSha": "008d7b53bd393e9a33e4c699ea8e323abf7a2997",
+    "redTestCommit": "84bb54ff49c99ebfd0975d3b162cd534798d3e9c",
+    "productionCommit": "d1bd2062c0638ac3edd44d243d4783a578f2d00e",
+    "testCompileCorrectionCommit": "356db30a9982dec804060ea5492d998c2de5d9f7",
+    "testedTreeSha": "356db30a9982dec804060ea5492d998c2de5d9f7",
+    "workingBranch": "codex/master-program-recovery-20261019",
+    "evidenceDirectory": "docs/validation/master-program-docx-numbered-lists-20261019",
+    "evidenceManifest": {
+      "path": "docs/validation/master-program-docx-numbered-lists-20261019/SHA256SUMS",
+      "entries": 45,
+      "sha256": "50c3aa2e408058de110272bbb6bf3488cf53d3fc4189f2419d9ba2aad5f3d348",
+      "locallyVerified": "45/45",
+      "excludes": [
+        "RESULTS.md",
+        "RESULTS.json",
+        "SHA256SUMS"
+      ]
+    },
+    "finding": "The artifact specification and renderer allowed DOCX bullets but had no input style or OOXML numbering instance for ordered lists.",
+    "implementation": {
+      "input": "DOCX block and legacy paragraph forms accept numbered; PDF continues to reject it.",
+      "ooxml": "Flat decimal level-zero list instances are emitted per contiguous run. Existing bullet numId 1 remains intact.",
+      "restart": "A paragraph/table boundary, title, heading, pageBreak or bullet terminates the active numbered run; a later run starts from one.",
+      "previewAndTool": "Artifact preview and artifacts.create/revise tool description expose list markers and restart behavior.",
+      "limits": [
+        "No custom start, nested ordered levels, Roman/alpha generated output, or list group identifier.",
+        "No Office GUI rendering validation."
+      ]
+    },
+    "host": {
+      "red": {
+        "productionBaseSha": "008d7b53bd393e9a33e4c699ea8e323abf7a2997",
+        "testCommitCreatedAfterRun": "84bb54ff49c99ebfd0975d3b162cd534798d3e9c",
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "exitCode": 1,
+        "failure": "ArtifactSpec rejected style numbered with PARAGRAPH_STYLE_UNSUPPORTED before creating the package.",
+        "startedAtUtc": "2026-10-19T20:29:20Z",
+        "finishedAtUtc": "2026-10-19T20:32:25Z",
+        "xml": "docs/validation/master-program-docx-numbered-lists-20261019/red-baseline/TEST-com.localai.workspace.artifacts.DocxArtifactStructureTest.xml",
+        "xmlSha256": "92b907370abea2e4a16d99a8e51c462b21f2a250687ca121e2fb9cf90817f07c",
+        "log": "docs/validation/master-program-docx-numbered-lists-20261019/red-baseline/gradle.log.gz"
+      },
+      "compileFailure": {
+        "sourceTreeSha": "d1bd2062c0638ac3edd44d243d4783a578f2d00e",
+        "exitCode": 1,
+        "testExecution": "NOT_REACHED",
+        "freshXml": 0,
+        "classification": "TEST_SOURCE_COMPILE_FAILURE",
+        "cause": "DOM test used getElementsByTagNameNS on Node rather than Element; corrected in test-only commit 356db30. The old XML was excluded.",
+        "log": "docs/validation/master-program-docx-numbered-lists-20261019/compile-failure/gradle.log.gz"
+      },
+      "finalFocusedRun": {
+        "productionSha": "d1bd2062c0638ac3edd44d243d4783a578f2d00e",
+        "testedTreeSha": "356db30a9982dec804060ea5492d998c2de5d9f7",
+        "testClass": "com.localai.workspace.artifacts.DocxArtifactStructureTest",
+        "tests": 4,
+        "passed": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "exitCode": 0,
+        "startedAtUtc": "2026-10-19T20:38:25Z",
+        "finishedAtUtc": "2026-10-19T20:41:36Z",
+        "wallSeconds": 191,
+        "gradleDuration": "3m 6s",
+        "tasksExecuted": "63/63",
+        "xml": "docs/validation/master-program-docx-numbered-lists-20261019/green-final/TEST-com.localai.workspace.artifacts.DocxArtifactStructureTest.xml",
+        "xmlSha256": "0d607e090175b7e9e0b28ca1e6ac1535c21f089de75b6a598aa20875f0c1d1f6",
+        "log": "docs/validation/master-program-docx-numbered-lists-20261019/green-final/gradle.log.gz"
+      }
+    },
+    "independentReader": {
+      "name": "python-docx 1.2.0",
+      "artifact": "docs/validation/master-program-docx-numbered-lists-20261019/green-final/ordered-list.docx",
+      "bytes": 2436,
+      "sha256": "6c5a98807345d0af5ba8ca394b82944a402a9ae192550db6ae5d35338c0d5236",
+      "zipCrc": "PASS",
+      "numberingIds": [
+        "2",
+        "2",
+        null,
+        "3",
+        "1"
+      ]
+    },
+    "environment": {
+      "gradle": "8.10.2",
+      "runtimeJdk": "Temurin 17.0.20.1",
+      "testLauncherJdk": "Temurin 21.0.12.1",
+      "androidSdk": "API 35 already present",
+      "ndk": "27.0.12077973 already present",
+      "gradleUserHome": "/workspace/.gradle pre-existing",
+      "offline": true
+    },
+    "otherGates": {
+      "fullAppJvm": "NOT_RUN",
+      "litertCompatJvm": "NOT_RUN",
+      "lintDebug": "NOT_RUN",
+      "androidTestCompilation": "NOT_RUN",
+      "assembleDebug": "NOT_RUN",
+      "assembleRelease": "NOT_RUN",
+      "emulator": "NOT_RUN",
+      "physicalDevice": "NOT_RUN",
+      "apk": "NOT_GENERATED"
+    },
+    "sourceTask": {
+      "id": "M03-03",
+      "sourceStatus": "TODO",
+      "requiresDevice": true,
+      "dependsOn": [
+        "M03-01",
+        "M02-03"
+      ],
+      "dependencyStatuses": {
+        "M03-01": "TODO",
+        "M02-03": "TODO"
+      },
+      "formalCompletion": false
+    },
+    "sourcePlanUnchanged": {
+      "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+      "roadmapPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+      "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+      "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+      "taskCount": 97,
+      "uniqueIds": 97,
+      "dependencyEdges": 120,
+      "sourceStatuses": {
+        "TODO": 97
+      },
+      "sourceFilesModified": false,
+      "M01_06": "PENDING_REQUIRES_DEVICE",
+      "PHYSICAL_DEVICE": "NOT_RUN"
     }
   }
 }
