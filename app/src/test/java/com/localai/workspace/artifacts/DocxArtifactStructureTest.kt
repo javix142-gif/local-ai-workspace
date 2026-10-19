@@ -156,6 +156,53 @@ class DocxArtifactStructureTest {
     }
 
     @Test
+    fun generatedDocxEmitsOrderedListNumberingAndKeepsBulletList() = runBlocking {
+        val root = File(context.cacheDir, "docx-ordered-list-${UUID.randomUUID()}")
+        val store = ArtifactStore(context, root)
+        val source = JSONObject("""
+            {
+              "format":"DOCX","name":"pasos.docx",
+              "blocks":[
+                {"kind":"paragraph","text":"Primer paso","style":"numbered"},
+                {"kind":"paragraph","text":"Segundo paso","style":"numbered"},
+                {"kind":"paragraph","text":"Nota con viñeta","style":"bullet"}
+              ]
+            }
+        """.trimIndent())
+        try {
+            val revision = store.create("docx-ordered-list-project", ArtifactSpec.parse(source))
+            val file = store.verifiedFile("docx-ordered-list-project", revision)
+            File("build/docx-independent-reader").mkdirs()
+            File("build/docx-independent-reader/ordered-list.docx").writeBytes(file.readBytes())
+
+            ZipFile(file).use { zip ->
+                val document = xml(zip, "word/document.xml")
+                val numberIds = document.getElementsByTagNameNS(word, "numId")
+                assertEquals(3, numberIds.length)
+                assertEquals(listOf("2", "2", "1"), (0 until numberIds.length).map {
+                    numberIds.item(it).attributes.getNamedItemNS(word, "val").nodeValue
+                })
+
+                val numbering = xml(zip, "word/numbering.xml")
+                val formats = numbering.getElementsByTagNameNS(word, "numFmt")
+                assertEquals(setOf("bullet", "decimal"), (0 until formats.length).map {
+                    formats.item(it).attributes.getNamedItemNS(word, "val").nodeValue
+                }.toSet())
+                val instances = numbering.getElementsByTagNameNS(word, "num")
+                assertEquals(2, instances.length)
+            }
+
+            val parsed = DocumentParser(context).parse(file, revision.format.mime, revision.name)
+            val text = parsed.pages.joinToString("\n") { it.text }
+            assertTrue("Ordered numbering should survive the generated DOCX roundtrip: $text", text.contains("1. Primer paso"))
+            assertTrue("The second numbered paragraph should advance: $text", text.contains("2. Segundo paso"))
+            assertTrue("Existing bullet numbering should remain available: $text", text.contains("• Nota con viñeta"))
+        } finally {
+            root.deleteRecursively()
+        }
+    }
+
+    @Test
     fun generatedDocxPreservesParagraphAndTableBlockOrder() = runBlocking {
         val root = File(context.cacheDir, "docx-ordered-blocks-${UUID.randomUUID()}")
         val store = ArtifactStore(context, root)
