@@ -19,6 +19,30 @@ import java.util.UUID
 class ArtifactPatchRecoveryTest {
     private val context:Context get()=ApplicationProvider.getApplicationContext()
 
+    @Test fun listingCleansOnlyAbandonedRevisionStagingDirectoriesAndKeepsCommittedBytes() {
+        val root=File(context.cacheDir,"artifact-stage-recovery-${UUID.randomUUID()}")
+        val project="stage-recovery-${UUID.randomUUID()}"
+        val body="fun answer() = 42\n"
+        try {
+            val store=ArtifactStore(context,root)
+            val revision=store.create(project,ArtifactSpec.parse(JSONObject()
+                .put("format","CODE").put("name","answer.kt").put("body",body)))
+            val owner=File(root,"artifacts-${ArtifactStore.hash(project.toByteArray(Charsets.UTF_8))}")
+            val item=File(owner,revision.id)
+            val abandoned=File(item,".pending-${UUID.randomUUID()}").apply { check(mkdir()) }
+            File(abandoned,"answer.kt").writeText("partial bytes")
+            val unrelated=File(item,"scratch.tmp").apply { writeText("leave unrelated entries alone") }
+
+            assertEquals(listOf(revision),store.list(project))
+            assertFalse(abandoned.exists())
+            assertTrue(unrelated.isFile)
+            assertEquals(1,store.history(project,revision.id).size)
+            assertEquals(body,store.verifiedFile(project,revision).readText())
+        } finally {
+            root.deleteRecursively()
+        }
+    }
+
     @Test fun applyingAfterCommittedRevisionAndProcessRestartCleansPendingPreviewIdempotently() {
         val root=File(context.cacheDir,"artifact-recovery-${UUID.randomUUID()}")
         val project="recovery-${UUID.randomUUID()}"
