@@ -25,7 +25,9 @@ import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import java.io.ByteArrayInputStream
 import java.io.File
+import java.util.Collections
 import java.util.UUID
+import java.util.concurrent.Executor
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
@@ -42,6 +44,7 @@ class SemanticContextPostfixTest {
     private lateinit var driver:FakeDriver
     private lateinit var appScope:CoroutineScope
     private val temporaryFiles=mutableListOf<File>()
+    private val semanticQueries=Collections.synchronizedList(mutableListOf<Pair<String,List<Any?>>>() )
     private val prefsName="semantic-context-postfix-${UUID.randomUUID()}"
     private val modelFile=File(context.filesDir,"semantic-context-${UUID.randomUUID()}.litertlm")
 
@@ -65,7 +68,9 @@ class SemanticContextPostfixTest {
         context.getSharedPreferences("local_embedding_model",0).edit().clear().commit()
         appScope=CoroutineScope(SupervisorJob()+Dispatchers.IO)
         workspace=Room.inMemoryDatabaseBuilder(context,WorkspaceDatabase::class.java).build()
-        semanticDb=Room.inMemoryDatabaseBuilder(context,SemanticDatabase::class.java).build()
+        semanticDb=Room.inMemoryDatabaseBuilder(context,SemanticDatabase::class.java)
+            .setQueryCallback({ sql,args -> semanticQueries+=sql to args.toList() },Executor { it.run() })
+            .build()
         graph=AppGraph(context,databaseOverride=workspace,applicationScope=appScope,nativeScope=appScope,validationId="semantic-postfix-${UUID.randomUUID()}")
         driver=FakeDriver()
         manager=EmbeddingEngineManager(context,graph.inferenceGate){driver}
@@ -99,6 +104,41 @@ class SemanticContextPostfixTest {
         workspace.documentDao().insert(doc)
         workspace.documentDao().insertSegments(listOf(DocumentSegmentEntity(documentId=id,segmentIndex=0,text=text,normalizedText=text,contentHash=fingerprint(text))))
         return doc
+    }
+
+    private suspend fun addDocumentWithSegments(projectId:String,id:String,name:String,texts:List<String>):DocumentEntity {
+        val path=File(context.cacheDir,"$id.txt").apply{writeText(texts.joinToString("\n"))}.also{temporaryFiles+=it}
+        val now=System.currentTimeMillis()
+        val document=DocumentEntity(id,projectId,name,localPath=path.path,mimeType="text/plain",fileHash=fingerprint(path.readText()),byteSize=path.length(),extractionStatus="READY",indexingStatus="READY",importedAt=now,updatedAt=now)
+        workspace.documentDao().insert(document)
+        workspace.documentDao().insertSegments(texts.mapIndexed { index,text ->
+            DocumentSegmentEntity(documentId=id,segmentIndex=index,text=text,normalizedText=text.lowercase(),contentHash=fingerprint(text))
+        })
+        return document
+    }
+
+    private suspend fun seedReadySemanticIndex(projectId:String,indexId:String,documents:List<DocumentEntity>) {
+        val dao=semanticDb.dao()
+        val scope=SemanticScope(ScopeType.PROJECT,projectId)
+        val model=manager.selected ?: error("fixture EG2 model must be selected")
+        val dimension=layer.dimension
+        val space=EmbeddingEngineManager.space(model,dimension)
+        val vector=SemanticVectors.encode(FloatArray(dimension){if(it==0)1f else 0f})
+        var count=0
+        for(document in documents) {
+            val sourceId="$indexId:${document.id}"
+            dao.source(SemanticSourceRecord(sourceId,scope.key,"DOCUMENT",document.displayName,document.mimeType,document.localPath,document.byteSize,document.updatedAt,document.fileHash))
+            for(segment in workspace.documentDao().segmentsForDocument(document.id)) {
+                val segmentId="$sourceId:${segment.segmentIndex.toString().padStart(4,'0')}"
+                val taskContent=TaskPromptProfile.format(EmbeddingTask.DOCUMENT,segment.text,document.displayName)
+                val contentHash=fingerprint(taskContent)
+                dao.segment(SemanticSegmentRecord(segmentId,sourceId,"TEXT",segment.text,document.displayName,null,null,null,null,null,contentHash,legacySegmentId=segment.id))
+                dao.embedding(SemanticEmbeddingRecord(indexId,segmentId,space.id,model.provider,model.id,model.sha256,dimension,true,"DOCUMENT",contentHash,SemanticVectors.FORMAT,vector,1))
+                count++
+            }
+        }
+        dao.job(SemanticIndexJob(indexId,scope.key,space.id,"READY",documents.size,count,count,1,1,null))
+        dao.activate(SemanticActiveIndex(scope.key,indexId,space.id))
     }
 
     private suspend fun addCodeArchive(projectId:String,id:String,entries:Map<String,String>):DocumentEntity {
@@ -257,6 +297,40 @@ class SemanticContextPostfixTest {
         val projectBundle=foundation.build(request("project-a"),evidence=emptyList(),memoryEnabled=false)
         assertTrue(projectBundle.included.filter{it.kind==com.localai.workspace.context.ContextKind.SOURCE}.all{it.scope.id=="project-a"})
         assertFalse(projectBundle.conversation().userMessage.contains("foreign project passage"))
+    }
+
+    @Test fun searchReadsSelectedSemanticCorpusInBoundedPages()=runBlocking {
+        addProject("paged-search")
+        val unselectedTexts=(0 until 256).map { "Unselected passage $it." }
+        val unselected=addDocumentWithSegments("paged-search","a-unselected","a-unselected.txt",unselectedTexts)
+        val selectedText="Selected evidence contains BOUNDARYTOKEN."
+        val selected=addDocumentWithSegments("paged-search","z-selected","z-selected.txt",listOf(selectedText))
+        seedReadySemanticIndex("paged-search","paged-search-index",listOf(unselected,selected))
+
+        semanticQueries.clear()
+        val embeddingCalls=driver.calls
+        val modalityMiss=layer.search(
+            SemanticInput.Text("BOUNDARYTOKEN"),SemanticScope(ScopeType.PROJECT,"paged-search"),
+            setOf(SemanticModality.IMAGE),limit=100,documentIds=setOf(selected.id),
+        )
+        assertTrue(modalityMiss.isEmpty())
+        assertEquals("No query embedding when every selected row has another modality",embeddingCalls,driver.calls)
+
+        semanticQueries.clear()
+        val hits=layer.search(
+            SemanticInput.Text("BOUNDARYTOKEN"),SemanticScope(ScopeType.PROJECT,"paged-search"),
+            setOf(SemanticModality.TEXT),limit=100,documentIds=setOf(selected.id),
+        )
+        assertTrue("selected lexical evidence beyond the first corpus page remains searchable",hits.any{it.content==selectedText})
+        assertEquals("only the query is embedded after the already seeded index",embeddingCalls+1,driver.calls)
+
+        val corpusReads=semanticQueries.toList().filter { (sql,_) ->
+            sql.contains("FROM semantic_segments s",ignoreCase=true) &&
+                sql.contains("semantic_vector_payloads_v2",ignoreCase=true)
+        }
+        assertEquals("257 eligible rows across two pages rather than one 10,000-row materialization",2,corpusReads.size)
+        assertTrue("page queries must use a stable keyset order",corpusReads.all{it.first.contains("ORDER BY s.id",ignoreCase=true)})
+        assertEquals(listOf(256,256),corpusReads.map{(it.second.last() as Number).toInt()})
     }
 
     @Test fun eg2CodeHitKeepsExactPathAndLineAsCitableEvidence()=runBlocking {
