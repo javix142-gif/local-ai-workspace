@@ -7,6 +7,7 @@ import com.localai.workspace.data.AssistantRouting
 import com.localai.workspace.domain.tools.ToolContext
 import com.localai.workspace.domain.tools.ToolExecutionResult
 import com.localai.workspace.domain.tools.ToolRegistry
+import com.localai.workspace.domain.tools.ChatToolSchemas
 import com.localai.workspace.security.ToolRequest
 import com.localai.workspace.security.TrustOrigin
 import com.localai.workspace.documents.StructuredDocuments
@@ -37,6 +38,62 @@ class XlsxArtifactRevisionTest {
         val destination=File(directory,name).canonicalFile
         check(destination.parentFile==directory)
         file.copyTo(destination,overwrite=true)
+    }
+
+    @Test fun addingWorksheetRoutesAndPreservesExistingGeneratedWorkbookAsNewRevision()=runBlocking {
+        val toolId="artifacts.xlsxAddSheet"
+        val enabled=setOf(toolId)
+        assertEquals(enabled,AssistantRouting.tools(enabled,"Agrega una hoja Resumen al libro Excel",documents=false))
+        val project="xlsx-add-sheet-${UUID.randomUUID()}"
+        val root=File(context.cacheDir,"xlsx-add-sheet-${UUID.randomUUID()}")
+        val store=ArtifactStore(context,root)
+        val fixture=JSONObject().put("format","XLSX").put("name","budget.xlsx").put("sheets",JSONArray()
+            .put(JSONObject().put("name","Hoja1").put("cells",JSONArray()
+                .put(JSONObject().put("address","A1").put("value","1").put("type","number"))
+                .put(JSONObject().put("address","A2").put("value","5").put("type","number"))
+                .put(JSONObject().put("address","A3").put("formula","\$A\$2-\$A\$1").put("value","4").put("type","number"))))
+            .put(JSONObject().put("name","Hoja2").put("cells",JSONArray()
+                .put(JSONObject().put("address","B14").put("value","preserve")))))
+        try {
+            val original=store.create(project,ArtifactSpec.parse(fixture))
+            val originalHash=original.sha256
+            val args=JSONObject().put("id",original.id).put("expectedVersion",original.version).put("name","Resumen")
+            val registry=ToolRegistry(listOf(ArtifactTool(context,toolId)))
+            val toolContext=ToolContext(project,"chat",File(context.cacheDir,"xlsx-add-sheet-work"))
+            val result=registry.execute(ToolRequest(toolId,args.toString(),TrustOrigin.MODEL),setOf(toolId),toolContext,ToolRegistry.ToolLoopState())
+            assertTrue("Adding a worksheet should return a verified new workbook revision",result is ToolExecutionResult.Success)
+            val response=JSONObject((result as ToolExecutionResult.Success).output)
+            assertEquals("PRIVATE_DRAFT_VERIFIED",response.getString("state"))
+            assertTrue(ChatToolSchemas.available.contains(toolId))
+            assertEquals(setOf(com.localai.workspace.capabilities.Capability.LOCAL_WRITE),
+                com.localai.workspace.capabilities.CapabilityPolicy.requirements(toolId))
+
+            val history=store.history(project,original.id)
+            assertEquals(2,history.size)
+            assertEquals(originalHash,ArtifactStore.fileHash(store.verifiedFile(project,original)))
+            val latest=history.single{it.version==2}
+            val updated=store.spec(project,latest).json().getJSONArray("sheets")
+            assertEquals(3,updated.length())
+            assertEquals("Hoja1",updated.getJSONObject(0).getString("name"))
+            assertEquals("Hoja2",updated.getJSONObject(1).getString("name"))
+            assertEquals("Resumen",updated.getJSONObject(2).getString("name"))
+            assertEquals(3,updated.getJSONObject(0).getJSONArray("cells").length())
+            assertEquals("A3",updated.getJSONObject(0).getJSONArray("cells").getJSONObject(2).getString("address"))
+            assertEquals(0,updated.getJSONObject(2).getJSONArray("cells").length())
+            val table=StructuredDocuments.xlsx(store.verifiedFile(project,latest))
+            assertEquals("1",table.cells.single{it.sheet=="Hoja1"&&it.address=="A1"}.value)
+            assertEquals("5",table.cells.single{it.sheet=="Hoja1"&&it.address=="A2"}.value)
+            assertEquals("4",table.cells.single{it.sheet=="Hoja1"&&it.address=="A3"}.value)
+            assertEquals("\$A\$2-\$A\$1",table.cells.single{it.sheet=="Hoja1"&&it.address=="A3"}.formula)
+            assertEquals("preserve",table.cells.single{it.sheet=="Hoja2"&&it.address=="B14"}.value)
+
+            val schema=JSONObject(ChatToolSchemas.schema(toolId))
+            val parameters=schema.getJSONObject("parameters")
+            assertEquals(setOf("id","expectedVersion","name"),parameters.getJSONArray("required").let{a->(0 until a.length()).map(a::getString).toSet()})
+            assertEquals(31,parameters.getJSONObject("properties").getJSONObject("name").getInt("maxLength"))
+        } finally {
+            root.deleteRecursively()
+        }
     }
 
     @Test fun explicitSpreadsheetCellChangeRoutesToBoundedCellEditTool() {
