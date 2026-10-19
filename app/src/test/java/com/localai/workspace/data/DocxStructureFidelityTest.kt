@@ -140,4 +140,13 @@ class DocxStructureFidelityTest {
         assertTrue("Numbering should resolve from numbering.xml: $text", text.contains("1. Primero numerado"))
         assertTrue("The same numId should increment in document order: $text", text.contains("2. Segundo numerado"))
     }
+
+    @Test fun unresolvedDocxListDefinitionIsVisibleAndKeepsItemText() {
+        val document = """<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>
+            <w:p><w:pPr><w:numPr><w:numId w:val="99"/></w:numPr></w:pPr><w:r><w:t>Elemento sin definición</w:t></w:r></w:p>
+        </w:body></w:document>""".trimIndent()
+        val text = parseDocumentXml(document).pages.single().text
+        assertTrue("Missing numbering metadata must be visible: $text", text.contains("[DOCX list unresolved numId=99"))
+        assertTrue("An unresolved list must retain its actual text: $text", text.contains("Elemento sin definición"))
+    }
 }

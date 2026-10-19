@@ -6,6 +6,233 @@ import java.util.zip.ZipFile
 import com.localai.workspace.data.ParsedDocument
 import com.localai.workspace.data.ParsedPage
 
+/**
+ * Bounded resolver for the common explicit Word numbering structures used by paragraphs.
+ * Unknown or missing definitions are returned as visible markers instead of flattening a list
+ * item into ordinary prose.
+ */
+private class DocxNumbering private constructor(
+    private val abstractLevels: Map<String, Map<Int, Level>>,
+    private val instances: Map<String, NumberingInstance>,
+) {
+    private data class Level(val format: String?, val text: String?, val start: Int)
+    private data class NumberingInstance(
+        val abstractId: String,
+        val overrides: Map<Int, Level>,
+        val startOverrides: Map<Int, Int>,
+    )
+
+    fun marker(
+        rawNumId: String,
+        rawLevel: String?,
+        counters: MutableMap<Pair<String, Int>, Int>,
+    ): String {
+        if (rawNumId == "0") return ""
+        val level = when {
+            rawLevel == null -> 0
+            else -> rawLevel.toIntOrNull() ?: return unresolved(rawNumId, rawLevel)
+        }
+        if (level !in 0..8) return unresolved(rawNumId, rawLevel)
+        val instance = instances[rawNumId] ?: return unresolved(rawNumId, rawLevel)
+        val definition = instance.overrides[level] ?: abstractLevels[instance.abstractId]?.get(level)
+            ?: return unresolved(rawNumId, rawLevel)
+        val format = definition.format ?: return unresolved(rawNumId, rawLevel)
+        val start = instance.startOverrides[level] ?: definition.start
+        if (start !in 1..MAX_COUNTER) return unresolved(rawNumId, rawLevel)
+
+        counters.keys.removeAll { it.first == rawNumId && it.second > level }
+        val key = rawNumId to level
+        val value = counters[key]?.let { previous ->
+            if (previous >= MAX_COUNTER) return unresolved(rawNumId, rawLevel)
+            previous + 1
+        } ?: start
+        counters[key] = value
+        val indent = "  ".repeat(level)
+
+        if (format == "bullet") {
+            val glyph = when (level % 3) { 0 -> "•"; 1 -> "◦"; else -> "▪" }
+            return "$indent$glyph "
+        }
+        if (format == "none") return "${indent}[DOCX list item level=${level + 1}] "
+
+        val template = definition.text ?: return unresolved(rawNumId, rawLevel)
+        var unresolvedReference = false
+        val rendered = REFERENCE.replace(template) { match ->
+            val referencedLevel = match.groupValues[1].toInt() - 1
+            val referencedDefinition = instance.overrides[referencedLevel]
+                ?: abstractLevels[instance.abstractId]?.get(referencedLevel)
+            val referencedFormat = referencedDefinition?.format
+            val referencedStart = instance.startOverrides[referencedLevel]
+                ?: referencedDefinition?.start
+            val referencedValue = counters[rawNumId to referencedLevel] ?: referencedStart
+            val replacement = if (referencedFormat != null && referencedValue != null) {
+                formatNumber(referencedValue, referencedFormat)
+            } else null
+            if (replacement == null) {
+                unresolvedReference = true
+                match.value
+            } else replacement
+        }
+        if (unresolvedReference || Regex("%[0-9]").containsMatchIn(rendered)) {
+            return unresolved(rawNumId, rawLevel)
+        }
+        return "$indent$rendered "
+    }
+
+    private fun unresolved(numId: String, level: String?): String =
+        "[DOCX list unresolved numId=${numId.take(24)} level=${level?.take(8) ?: "1"}] "
+
+    private fun formatNumber(value: Int, format: String): String? = when (format) {
+        "decimal" -> value.toString()
+        "decimalZero" -> if (value < 10) "0$value" else value.toString()
+        "lowerLetter" -> letters(value, upper = false)
+        "upperLetter" -> letters(value, upper = true)
+        "lowerRoman" -> roman(value)?.lowercase()
+        "upperRoman" -> roman(value)
+        else -> null
+    }
+
+    private fun letters(value: Int, upper: Boolean): String? {
+        if (value !in 1..MAX_COUNTER) return null
+        var remaining = value
+        val output = StringBuilder()
+        val base = if (upper) 'A'.code else 'a'.code
+        while (remaining > 0) {
+            remaining--
+            output.append((base + remaining % 26).toChar())
+            remaining /= 26
+        }
+        return output.reverse().toString()
+    }
+
+    private fun roman(value: Int): String? {
+        if (value !in 1..3999) return null
+        var remaining = value
+        val output = StringBuilder()
+        val symbols = listOf(
+            1000 to "M", 900 to "CM", 500 to "D", 400 to "CD", 100 to "C", 90 to "XC",
+            50 to "L", 40 to "XL", 10 to "X", 9 to "IX", 5 to "V", 4 to "IV", 1 to "I",
+        )
+        symbols.forEach { (amount, symbol) ->
+            while (remaining >= amount) {
+                output.append(symbol)
+                remaining -= amount
+            }
+        }
+        return output.toString()
+    }
+
+    companion object {
+        private const val MAX_NUMBERING_DEFINITIONS = 4096
+        private const val MAX_COUNTER = 1_000_000
+        private val REFERENCE = Regex("%([1-9])")
+        val EMPTY = DocxNumbering(emptyMap(), emptyMap())
+
+        fun read(zip: ZipFile): DocxNumbering {
+            val entry = zip.getEntry("word/numbering.xml") ?: return EMPTY
+            val bytes = zip.getInputStream(entry).use { StructuredDocuments.bounded(it, 8 * 1024 * 1024) }
+            val text = StructuredDocuments.text(bytes).first
+            require(!text.contains("<!DOCTYPE", true) && !text.contains("<!ENTITY", true)) {
+                "XML_ENTITIES_FORBIDDEN"
+            }
+            val parser = Xml.newPullParser().apply { setInput(text.reader()) }
+            val abstracts = linkedMapOf<String, MutableMap<Int, Level>>()
+            val instances = linkedMapOf<String, NumberingInstance>()
+            var abstractId: String? = null
+            var numId: String? = null
+            var numAbstractId: String? = null
+            var overrideLevel: Int? = null
+            var activeLevel: Int? = null
+            var activeLevelTarget: String? = null
+            var activeFormat: String? = null
+            var activeText: String? = null
+            var activeStart = 1
+            val levelOverrides = linkedMapOf<Int, Level>()
+            val startOverrides = linkedMapOf<Int, Int>()
+
+            fun attr(name: String): String? = (0 until parser.attributeCount)
+                .firstOrNull { parser.getAttributeName(it).substringAfter(':') == name }
+                ?.let(parser::getAttributeValue)
+
+            while (parser.eventType != XmlPullParser.END_DOCUMENT) {
+                if (Thread.currentThread().isInterrupted) throw InterruptedException()
+                when (parser.eventType) {
+                    XmlPullParser.START_TAG -> when (parser.name) {
+                        "abstractNum" -> {
+                            abstractId = attr("abstractNumId")
+                            if (abstractId != null) require(abstracts.size < MAX_NUMBERING_DEFINITIONS) {
+                                "DOCX_NUMBERING_LIMIT"
+                            }
+                        }
+                        "num" -> {
+                            numId = attr("numId")
+                            numAbstractId = null
+                            levelOverrides.clear()
+                            startOverrides.clear()
+                            if (numId != null) require(instances.size < MAX_NUMBERING_DEFINITIONS) {
+                                "DOCX_NUMBERING_LIMIT"
+                            }
+                        }
+                        "lvlOverride" -> overrideLevel = attr("ilvl")?.toIntOrNull()
+                        "lvl" -> {
+                            val index = attr("ilvl")?.toIntOrNull() ?: overrideLevel
+                            if (index != null && index in 0..8) {
+                                activeLevel = index
+                                activeLevelTarget = when {
+                                    abstractId != null -> "abstract"
+                                    numId != null && overrideLevel != null -> "override"
+                                    else -> null
+                                }
+                                activeFormat = null
+                                activeText = null
+                                activeStart = 1
+                            }
+                        }
+                        "abstractNumId" -> if (numId != null && activeLevel == null) {
+                            numAbstractId = attr("val")
+                        }
+                        "startOverride" -> if (numId != null && overrideLevel != null) {
+                            attr("val")?.toIntOrNull()?.let { startOverrides[overrideLevel!!] = it }
+                        }
+                        "numFmt" -> if (activeLevel != null) activeFormat = attr("val")
+                        "lvlText" -> if (activeLevel != null) activeText = attr("val")
+                        "start" -> if (activeLevel != null) activeStart = attr("val")?.toIntOrNull() ?: 1
+                    }
+                    XmlPullParser.END_TAG -> when (parser.name) {
+                        "lvl" -> {
+                            val index = activeLevel
+                            val definition = index?.let { Level(activeFormat, activeText, activeStart) }
+                            when (activeLevelTarget) {
+                                "abstract" -> if (abstractId != null && index != null && definition != null) {
+                                    abstracts.getOrPut(abstractId!!) { linkedMapOf() }[index] = definition
+                                }
+                                "override" -> if (index != null && definition != null) levelOverrides[index] = definition
+                            }
+                            activeLevel = null
+                            activeLevelTarget = null
+                        }
+                        "lvlOverride" -> overrideLevel = null
+                        "abstractNum" -> abstractId = null
+                        "num" -> {
+                            val id = numId
+                            val abstract = numAbstractId
+                            if (id != null && abstract != null) {
+                                instances[id] = NumberingInstance(abstract, levelOverrides.toMap(), startOverrides.toMap())
+                            }
+                            numId = null
+                            numAbstractId = null
+                            levelOverrides.clear()
+                            startOverrides.clear()
+                        }
+                    }
+                }
+                parser.next()
+            }
+            return DocxNumbering(abstracts.mapValues { it.value.toMap() }, instances)
+        }
+    }
+}
+
 /** Bounded extraction of actual text nodes; field instructions/XML indentation are not prose. */
 object OfficeText {
     private fun xml(zip:ZipFile,name:String):String {
@@ -33,6 +260,8 @@ object OfficeText {
 
     fun docx(zip: ZipFile): ParsedDocument {
         val source = parser(xml(zip, "word/document.xml"))
+        val numbering = DocxNumbering.read(zip)
+        val numberingCounters = mutableMapOf<Pair<String, Int>, Int>()
         val pages = mutableListOf<Pair<Int, String>>()
         var page = StringBuilder()
         var pageNumber = 1
@@ -43,6 +272,12 @@ object OfficeText {
         var paragraphOpen = false
         var paragraphStyle: String? = null
         var paragraphText = StringBuilder()
+        var inNumPr = false
+        var paragraphNumId: String? = null
+        var paragraphListLevel: String? = null
+        var paragraphListMarker: String? = null
+        var paragraphListMarkerResolved = false
+        var paragraphListMarkerEmitted = false
         var inText = false
         var tableNumber = 0
         var tableRow = 0
@@ -78,7 +313,15 @@ object OfficeText {
 
         fun emitParagraph(preserveEmpty: Boolean = false) {
             if (paragraphText.isEmpty() && !preserveEmpty) return
-            val content = paragraphText.toString()
+            if (!paragraphListMarkerResolved) {
+                paragraphListMarker = paragraphNumId?.let {
+                    numbering.marker(it, paragraphListLevel, numberingCounters)
+                }
+                paragraphListMarkerResolved = true
+            }
+            val listMarker = if (paragraphListMarkerEmitted) "" else paragraphListMarker.orEmpty()
+            if (listMarker.isNotEmpty()) paragraphListMarkerEmitted = true
+            val content = listMarker + paragraphText.toString()
             paragraphText.setLength(0)
             val marker = styleMarker()
             if (cellOpen) {
@@ -126,7 +369,15 @@ object OfficeText {
                         paragraphNumber++
                         paragraphStyle = null
                         paragraphText = StringBuilder()
+                        paragraphNumId = null
+                        paragraphListLevel = null
+                        paragraphListMarker = null
+                        paragraphListMarkerResolved = false
+                        paragraphListMarkerEmitted = false
                     }
+                    "numPr" -> if (paragraphOpen) inNumPr = true
+                    "numId" -> if (paragraphOpen && inNumPr) paragraphNumId = attribute(source, "val")
+                    "ilvl" -> if (paragraphOpen && inNumPr) paragraphListLevel = attribute(source, "val")
                     "pStyle" -> if (paragraphOpen) {
                         paragraphStyle = attribute(source, "val")?.takeIf(String::isNotBlank)
                     }
@@ -164,7 +415,9 @@ object OfficeText {
                     "p" -> {
                         emitParagraph(preserveEmpty = true)
                         paragraphOpen = false
+                        inNumPr = false
                     }
+                    "numPr" -> inNumPr = false
                     "tc" -> {
                         emitCell()
                         cellOpen = false
