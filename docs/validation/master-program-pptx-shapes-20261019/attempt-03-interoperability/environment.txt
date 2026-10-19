@@ -1,0 +1,11 @@
+Code/test commit: b46827368ad289a73ea9bde342e86aaebe54efa8
+Production implementation commit: 8573aa3 (same production files as tested tree)
+Branch: codex/aws-master-resume-20261019
+Gradle wrapper: 8.10.2
+Gradle runtime: Eclipse Temurin 17.0.20.1 at /workspace/.toolchain/jdk-17
+Test worker: Eclipse Temurin 21.0.12.1 at /workspace/.toolchain/jdk-21-temurin (confirmed in Gradle log)
+Android SDK: API 35 at /workspace/.toolchain/android-sdk
+Android NDK: 27.0.12077973, preinstalled
+GRADLE_USER_HOME: /workspace/.gradle existing cache; --offline
+No toolchain/dependency installation, cache cleanup, emulator/device, or APK build.
+At invocation the tracked source matched b468273; untracked files were validation evidence only.

@@ -1,0 +1,8 @@
+Figure 1: type=RECTANGLE; text='Entrada'; description='Entrada & revisión'
+Figure 2: type=OVAL; text='Aprobado'; description='Resultado aprobado'
+Figure 3: type=ROUNDED_RECTANGLE; text=''; description='Revisión pendiente'
+Traceback (most recent call last):
+  File "/workspace/aws-master-resume-20261019/docs/validation/master-program-pptx-shapes-20261019/attempt-03-interoperability/reader-validation.py", line 20, in <module>
+    assert shape.auto_shape_type.name == expected_type, (name, shape.auto_shape_type.name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('Figure 4', 'ISOSCELES_TRIANGLE')

@@ -1,0 +1,10 @@
+{
+  "tests": 6,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "suite": "com.localai.workspace.artifacts.PptxImageArtifactTest",
+  "xmlTimestamp": "2026-10-19T22:29:50",
+  "xmlTimeSeconds": 5.549,
+  "status": "PASS"
+}

@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "increment": "PPTX bounded editable native figures; preparatory implementation only",
+  "branch": "codex/aws-master-resume-20261019",
+  "productionCommit": "8573aa3ef5c865c5554c6ba67751b6f51768c20e",
+  "testedCodeCommit": "b46827368ad289a73ea9bde342e86aaebe54efa8",
+  "redRegression": {
+    "sourceBase": "1f955a8f4abac3d04a8a4b946e938f644e0e928d",
+    "testContentCommitAfterRun": "b14c737e8ac73aa39e88b6ad1acfa073906ae848",
+    "test": "PptxImageArtifactTest.generatedPptxRendersBoundedAccessibleEditableFiguresAndKeepsRevisionImmutable",
+    "startedAtUtc": "2026-10-19T22:22:09Z",
+    "finishedAtUtc": "2026-10-19T22:25:35Z",
+    "durationSeconds": 206,
+    "exitCode": 1,
+    "tests": 1,
+    "passed": 0,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0,
+    "failure": "ARTIFACT_FIELD_UNSUPPORTED in ArtifactSpec.fields while parsing PPTX slide shapes",
+    "log": "attempt-01-red/gradle.log",
+    "logSha256": "49185b096b10fd9d397906a7e3bc50b0ee710c8dfa700abd0c3b2c13de087f36",
+    "xml": "attempt-01-red/TEST-com.localai.workspace.artifacts.PptxImageArtifactTest.xml",
+    "xmlSha256": "59b1bcf14e594ad15f80e779042f59609c2c926eee319820c459ed4cd8f7f114"
+  },
+  "focusedGreenRuns": [
+    {
+      "testedCodeCommit": "8573aa3ef5c865c5554c6ba67751b6f51768c20e",
+      "attempt": "attempt-02-green",
+      "startedAtUtc": "2026-10-19T22:28:50Z",
+      "finishedAtUtc": "2026-10-19T22:29:56Z",
+      "wallSeconds": 66,
+      "command": "./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --info -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.artifacts.PptxImageArtifactTest",
+      "exitCode": 0,
+      "tests": 6,
+      "passed": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "gradleDurationSeconds": 64,
+      "log": "attempt-02-green/gradle.log",
+      "logSha256": "b7c0ce962e0b86f53f52c96bffdb27b2f35bb7f7d069d614d69ec8b988cb5f53",
+      "xml": "attempt-02-green/TEST-com.localai.workspace.artifacts.PptxImageArtifactTest.xml",
+      "xmlSha256": "35a41217725280dc9bba5db7a0724ee290bd2d688533d73abff77a6c27f25e4b"
+    },
+    {
+      "testedCodeCommit": "b46827368ad289a73ea9bde342e86aaebe54efa8",
+      "attempt": "attempt-03-interoperability",
+      "startedAtUtc": "2026-10-19T22:31:00Z",
+      "finishedAtUtc": "2026-10-19T22:31:45Z",
+      "wallSeconds": 45,
+      "command": "./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.artifacts.PptxImageArtifactTest",
+      "exitCode": 0,
+      "tests": 6,
+      "passed": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "gradleDurationSeconds": 43,
+      "log": "attempt-03-interoperability/gradle.log",
+      "logSha256": "f511521da8ed0faf4be5d0eca4e132bf7f87d4bb9f7b164975ca54bc647ebd89",
+      "xml": "attempt-03-interoperability/TEST-com.localai.workspace.artifacts.PptxImageArtifactTest.xml",
+      "xmlSha256": "caeaf6bb6b351a1260d55da53672d6de248aaac7b55feb0d23c8d93e213d6222"
+    }
+  ],
+  "independentReader": {
+    "reader": "python-pptx 1.0.2",
+    "status": "PASS",
+    "exitCode": 0,
+    "artifact": "generated-figures-v1.pptx",
+    "bytes": 5408,
+    "sha256": "06e7931da175fbba3d0736680625dfae380b9af8288d4d412841eb59de9d21e9",
+    "zipCrc": "PASS",
+    "slides": 1,
+    "slideWidthEmu": 12192000,
+    "slideHeightEmu": 6858000,
+    "editableFigures": [
+      {
+        "name": "Figure 1",
+        "preset": "RECTANGLE",
+        "label": "Entrada",
+        "description": "Entrada & revisión"
+      },
+      {
+        "name": "Figure 2",
+        "preset": "OVAL",
+        "label": "Aprobado",
+        "description": "Resultado aprobado"
+      },
+      {
+        "name": "Figure 3",
+        "preset": "ROUNDED_RECTANGLE",
+        "label": "",
+        "description": "Revisión pendiente"
+      },
+      {
+        "name": "Figure 4",
+        "preset": "ISOSCELES_TRIANGLE",
+        "label": "",
+        "description": "Decisión requerida"
+      }
+    ],
+    "initialCheckerAttempt": {
+      "exitCode": 1,
+      "classification": "VALIDATOR_EXPECTATION_ERROR",
+      "detail": "The first assertion expected enum name TRIANGLE; python-pptx reports the standard preset as ISOSCELES_TRIANGLE. No artifact change; corrected checker then passed."
+    },
+    "readerCommand": "attempt-03-interoperability/reader-command.txt",
+    "readerLog": "attempt-03-interoperability/reader-validation.log",
+    "readerLogSha256": "4072c1d7204496f20623fe78bf185ac7028c092568c8acfd1ab929ed9f3d777b"
+  },
+  "implementation": {
+    "geometries": [
+      "rectangle",
+      "ellipse",
+      "roundedRectangle",
+      "triangle"
+    ],
+    "limits": {
+      "maxPerSlide": 12,
+      "maxPerDeck": 120,
+      "normalizedCoordinateRange": [
+        0,
+        1000
+      ]
+    },
+    "accessibility": "Each figure requires a description stored as DrawingML alternative text; optional visible labels use black/white color selected from fill luminance.",
+    "dataSafety": "No external XML, URL, path, image generation, dependency, database or model/runtime changes; artifact revisions remain immutable."
+  },
+  "originalTask": {
+    "id": "M03-05",
+    "sourceStatus": "TODO",
+    "requiresDevice": true,
+    "dependsOn": [
+      "M03-01"
+    ],
+    "dependencyStatus": "TODO",
+    "formalCompletion": false
+  },
+  "sourceCatalog": {
+    "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmap": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskCount": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": {
+      "TODO": 97
+    },
+    "sourceFilesModified": false
+  },
+  "notRun": [
+    "full JVM suite",
+    "LiteRT compatibility suite",
+    "lint",
+    "assembleDebug",
+    "assembleRelease",
+    "AndroidTest compilation",
+    "emulator instrumentation",
+    "physical device",
+    "APK"
+  ],
+  "limitations": [
+    "No Microsoft PowerPoint or LibreOffice visual rendering check.",
+    "No Android viewer or Motorola validation.",
+    "This preparatory increment does not satisfy the full M03-05 DoD or its dependency M03-01.",
+    "No performance or inference measurements."
+  ],
+  "states": {
+    "HOST": "FOCUSED_PASS; 6/6 artifact tests plus independent python-pptx package read",
+    "EMULATOR": "NOT_RUN",
+    "PHYSICAL_DEVICE": "NOT_RUN"
+  }
+}

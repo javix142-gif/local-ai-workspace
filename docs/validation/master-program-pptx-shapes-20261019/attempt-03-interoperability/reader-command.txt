@@ -1,0 +1,1 @@
+python3 docs/validation/master-program-pptx-shapes-20261019/attempt-03-interoperability/reader-validation.py

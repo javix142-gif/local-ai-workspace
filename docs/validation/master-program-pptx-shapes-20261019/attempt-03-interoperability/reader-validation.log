@@ -1,0 +1,5 @@
+Figure 1: type=RECTANGLE; text='Entrada'; description='Entrada & revisión'
+Figure 2: type=OVAL; text='Aprobado'; description='Resultado aprobado'
+Figure 3: type=ROUNDED_RECTANGLE; text=''; description='Revisión pendiente'
+Figure 4: type=ISOSCELES_TRIANGLE; text=''; description='Decisión requerida'
+PASS python-pptx=1.0.2; slides=1; zip_crc=PASS; editable_figures=4; bytes=5408

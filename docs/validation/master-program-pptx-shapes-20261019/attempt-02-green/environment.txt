@@ -1,0 +1,10 @@
+Code commit: 8573aa3
+Repository branch: codex/aws-master-resume-20261019
+Gradle wrapper: 8.10.2
+Gradle runtime: Eclipse Temurin 17.0.20.1 (/workspace/.toolchain/jdk-17)
+Test worker: Eclipse Temurin JDK 21 (/workspace/.toolchain/jdk-21-temurin), confirmed in Gradle log
+Android SDK: /workspace/.toolchain/android-sdk, compile SDK API 35
+NDK: 27.0.12077973 (preinstalled)
+Dependency mode: --offline; no install/download/cleanup
+Scope: :app:testDebugUnitTest --tests com.localai.workspace.artifacts.PptxImageArtifactTest
+Timeout wrapper: 300 seconds; elapsed wall time from recorded UTC timestamps: 66 seconds

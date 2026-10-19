@@ -1,0 +1,19 @@
+{
+  "tests": 6,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "suite": "com.localai.workspace.artifacts.PptxImageArtifactTest",
+  "xmlTimestamp": "2026-10-19T22:31:39",
+  "xmlTimeSeconds": 5.273,
+  "status": "PASS",
+  "independentReader": "python-pptx 1.0.2",
+  "readerExitCode": 0,
+  "readerInitialExpectationMismatch": {
+    "status": "VALIDATOR_EXPECTATION_ERROR",
+    "expected": "TRIANGLE",
+    "observedStandardOOXMLName": "ISOSCELES_TRIANGLE",
+    "productArtifactChanged": false
+  },
+  "artifact": "docs/validation/master-program-pptx-shapes-20261019/generated-figures-v1.pptx"
+}
