@@ -1,0 +1,1 @@
+Red test source: commit b2681a631cd6e7a91bcc196e83c3524918c347a (test-only, based on f219397 benchmark code); its newly added continuation-header assertion fails against the existing renderer.

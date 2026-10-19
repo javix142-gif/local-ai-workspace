@@ -1,0 +1,77 @@
+{
+  "increment": "Generated PDF table continuation headers",
+  "status": "FOCUSED_HOST_PASS_PREPARATORY_NOT_FORMAL",
+  "red": {
+    "sourceSha": "b2681a631cd6e7a91bcc196e83c3524918c347a4",
+    "exitCode": 1,
+    "durationSeconds": 42,
+    "tests": 2,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0,
+    "failure": "Per-page header assertion observed [true, false, false].",
+    "xml": "red-b2681a6/TEST-com.localai.workspace.artifacts.PdfArtifactLayoutTest.xml"
+  },
+  "green": {
+    "sourceSha": "786f979ba50a1bd2d609712e297bec24909a0ac5",
+    "exitCode": 0,
+    "gradleDurationSeconds": 53,
+    "capturedWallSeconds": 54,
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "actionableTasks": 63,
+    "executedTasks": 7,
+    "upToDateTasks": 56,
+    "xml": "green-786f979/TEST-com.localai.workspace.artifacts.PdfArtifactLayoutTest.xml"
+  },
+  "independentReaders": {
+    "pypdf": "6.10.0",
+    "PyMuPDF": "1.26.6",
+    "pages": 3,
+    "allPagesHaveHeader": true,
+    "continuedHeaderPrecedesCellText": true,
+    "datoTokens": 300,
+    "outOfBoundsWords": 0,
+    "pdf": "green-786f979/synthetic-long-table.pdf",
+    "pdfBytes": 3234
+  },
+  "environment": {
+    "gradle": "8.10.2",
+    "gradleJdk": "17",
+    "testWorkerJdk": "Temurin 21.0.12.1",
+    "androidApi": 35,
+    "ndk": "27.0.12077973",
+    "gradleUserHome": "/workspace/.gradle existing offline cache"
+  },
+  "otherGates": {
+    "fullJvm": "NOT_RUN",
+    "liteRtCompat": "NOT_RUN",
+    "lint": "NOT_RUN",
+    "assemble": "NOT_RUN",
+    "androidTestCompile": "NOT_RUN",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  },
+  "sourceTask": {
+    "id": "M03-04",
+    "sourceStatus": "TODO",
+    "requiresDevice": true,
+    "dependsOn": [
+      "M03-01"
+    ],
+    "formalCompletion": false
+  },
+  "limitations": [
+    "When the first row is too tall to leave room for one body line after it, continuation header repetition is suppressed.",
+    "Synthetic HOST test only; no imported-PDF, Android, physical-device or external office-reader validation."
+  ],
+  "sourceCatalog": {
+    "taskIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": "TODO",
+    "modified": false
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "readerVersions": {
+    "pypdf": "6.10.0",
+    "PyMuPDF": "1.26.6"
+  },
+  "pdfBytes": 3234,
+  "pages": 3,
+  "pageResults": [
+    {
+      "page": 1,
+      "widthPoints": 612.0,
+      "heightPoints": 792.0,
+      "pypdfHasHeader": true,
+      "fitzHeaderBeforeCellText": true,
+      "headerFound": true,
+      "cellTextFound": true,
+      "wordCount": 128,
+      "outOfBoundsWords": 0
+    },
+    {
+      "page": 2,
+      "widthPoints": 612.0,
+      "heightPoints": 792.0,
+      "pypdfHasHeader": true,
+      "fitzHeaderBeforeCellText": true,
+      "headerFound": true,
+      "cellTextFound": true,
+      "wordCount": 124,
+      "outOfBoundsWords": 0
+    },
+    {
+      "page": 3,
+      "widthPoints": 612.0,
+      "heightPoints": 792.0,
+      "pypdfHasHeader": true,
+      "fitzHeaderBeforeCellText": true,
+      "headerFound": true,
+      "cellTextFound": true,
+      "wordCount": 93,
+      "outOfBoundsWords": 0
+    }
+  ],
+  "pypdfTotalDatoTokens": 300,
+  "allPagesHaveHeaderInBothReaders": true,
+  "allContinuationHeadersPrecedeCellText": true,
+  "allPageTextWithinBounds": true
+}

@@ -2,7 +2,7 @@
   "repository": "https://github.com/javix142-gif/local-ai-workspace.git",
   "branch": "feat/0.5.0-skills-agents",
   "startingHeadSha": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
-  "testedCodeHeadSha": "f21939773735ff17f338d571cadc793484f0bd01",
+  "testedCodeHeadSha": "786f979ba50a1bd2d609712e297bec24909a0ac5",
   "version": "0.5.0",
   "applicationId": "com.localai.workspace",
   "completedTasks": [
@@ -552,7 +552,7 @@
     "PPTXImageEmbedding": "IMPLEMENTED_HOST_TESTED_WITH_FOCUSED_APPROXIMATE_LAYOUT_PREVIEW; caller-supplied PNG only, no generated images or WYSIWYG/render fidelity claim; current preview evidence is not Android/device validation.",
     "latestMasterProgramRecoveryCheckpoint": "Latest focused M00/M02/M03 preparatory evidence on codex/master-program-20261019. It does not change source TODO states, task IDs, order, dependencies, or device gates."
   },
-  "currentSourceHeadSha": "f21939773735ff17f338d571cadc793484f0bd01",
+  "currentSourceHeadSha": "786f979ba50a1bd2d609712e297bec24909a0ac5",
   "lastFullJvmTestCodeSha": "f54c1430cab4ea59a302b58dd2aa27deea579c49",
   "latestDelivery": {
     "name": "Clean-checkout model-source ignore matrix and release reproducibility follow-up",
@@ -7296,7 +7296,8 @@
       "XLSXFormulaEditing": "IMPLEMENTED_FOCUSED_HOST_JUNIT_AND_OPENPYXL_TESTED_PREPARATORY; app-private generated revisions only; app does not evaluate formulas; Excel/LibreOffice GUI and device validation pending",
       "GeneratedDOCXInterleavedParagraphTable": "IMPLEMENTED_FOCUSED_HOST_TESTED_AND_OPENED_BY_PYTHON_DOCX; synthetic generated paragraphs/tables preserve submitted order and immutable revisions; source M03-03 remains TODO/device-gated; lint/AndroidTest compile offline-blocked.",
       "GeneratedXLSXNativeTables": "IMPLEMENTED_FOCUSED_HOST_TESTED_PREPARATORY; bounded native OOXML tables for app-generated workbooks; immutable add/resize; no formula evaluation; Excel GUI/Android/device validation pending.",
-      "BenchmarkCohortPreparationMemoryPresentation": "IMPLEMENTED_HOST_TESTED_FOCUSED_5_OF_5; aggregated existing records only; no runtime collection changes; device measurements pending."
+      "BenchmarkCohortPreparationMemoryPresentation": "IMPLEMENTED_HOST_TESTED_FOCUSED_5_OF_5; aggregated existing records only; no runtime collection changes; device measurements pending.",
+      "GeneratedPdfRepeatedTableHeaders": "IMPLEMENTED_FOCUSED_HOST_TESTED_PREPARATORY; red regression reproduced missing continuation headers; green PdfArtifactLayoutTest 2/2; pypdf/PyMuPDF verified three synthetic pages and all 300 data tokens; exceptional too-tall header repetition suppressed; device/external-reader validation pending."
     },
     "latestDelivery": {
       "artifactType": "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
@@ -7383,63 +7384,86 @@
     ],
     "independentHumanAudit": "PENDING",
     "physicalDevice": "NOT_RUN",
-    "latestSourceCommit": "f21939773735ff17f338d571cadc793484f0bd01",
+    "latestSourceCommit": "786f979ba50a1bd2d609712e297bec24909a0ac5",
     "workingBranch": "codex/master-program-20261019",
     "latestIncrement": {
-      "name": "Benchmark cohort preparation, prefill and memory presentation (preparatory)",
-      "kind": "PREPARATORY_PERFORMANCE_BENCHMARK_COHORT_METRICS",
+      "name": "Generated PDF table continuation headers",
+      "kind": "PREPARATORY_M03_04_PDF_TABLE_HEADER_CONTINUATION",
       "status": "FOCUSED_HOST_PASS_PREPARATORY_NOT_FORMAL",
-      "codeSha": "f21939773735ff17f338d571cadc793484f0bd01",
-      "testedCodeSha": "f21939773735ff17f338d571cadc793484f0bd01",
-      "testedTreeSha": "80c7f97cfce709e1d50b7222e7b6db446e00dbe0",
+      "codeSha": "786f979ba50a1bd2d609712e297bec24909a0ac5",
+      "testedCodeSha": "786f979ba50a1bd2d609712e297bec24909a0ac5",
+      "testedTreeSha": "b6415e4d3cacbcd4763de85375a1c5053fb77ec8",
       "workingBranch": "codex/master-program-recovery-20261019",
-      "evidence": "docs/validation/master-program-benchmark-cohort-metrics-f219397/RESULTS.md",
+      "evidence": "docs/validation/master-program-pdf-table-header-20261019/RESULTS.md",
       "evidenceManifest": {
-        "path": "docs/validation/master-program-benchmark-cohort-metrics-f219397/SHA256SUMS",
-        "entries": 12,
-        "sha256": "f92f5e8c05c4c21d08dfacbb13012c55996f6d55ff299824c781e6e35615bbf3",
-        "locallyVerified": "12/12"
+        "path": "docs/validation/master-program-pdf-table-header-20261019/SHA256SUMS",
+        "entries": 24,
+        "sha256": "c5cc22efc7f3f82fa3f5691e45aff3b0efacff87805ab690c6fab233ae4faac9",
+        "locallyVerified": "24/24"
       },
       "host": {
-        "testClass": "com.localai.workspace.performance.BenchmarkSummaryTest",
-        "tests": 5,
-        "passed": 5,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "gradleExitCode": 0,
-        "gradleDurationSeconds": 179,
-        "actionableTasks": 63,
-        "executedTasks": 63,
-        "xml": "docs/validation/master-program-benchmark-cohort-metrics-f219397/junit/TEST-com.localai.workspace.performance.BenchmarkSummaryTest.xml",
-        "log": "docs/validation/master-program-benchmark-cohort-metrics-f219397/gradle.log",
+        "testClass": "com.localai.workspace.artifacts.PdfArtifactLayoutTest",
+        "redReproduction": {
+          "sourceSha": "b2681a631cd6e7a91bcc196e83c3524918c347a",
+          "tests": 2,
+          "failures": 1,
+          "errors": 0,
+          "skipped": 0,
+          "gradleExitCode": 1,
+          "durationSeconds": 42,
+          "assertion": "Each table page should repeat its header row: [true, false, false]"
+        },
+        "finalFocused": {
+          "tests": 2,
+          "passed": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "gradleExitCode": 0,
+          "gradleDurationSeconds": 53,
+          "capturedWallSeconds": 54,
+          "actionableTasks": 63,
+          "executedTasks": 7,
+          "upToDateTasks": 56,
+          "xml": "docs/validation/master-program-pdf-table-header-20261019/green-786f979/TEST-com.localai.workspace.artifacts.PdfArtifactLayoutTest.xml",
+          "log": "docs/validation/master-program-pdf-table-header-20261019/green-786f979/gradle.log"
+        },
         "otherGates": {
           "fullAppJvm": "NOT_RUN",
           "liteRtCompatJvm": "NOT_RUN",
           "lintDebug": "NOT_RUN",
-          "assembly": "NOT_RUN",
+          "assemble": "NOT_RUN",
           "androidTestCompile": "NOT_RUN",
           "emulator": "NOT_RUN",
           "physicalDevice": "NOT_RUN",
           "apk": "NOT_GENERATED"
         }
       },
-      "implementation": "The existing same-device/model/task/config/backend cohort aggregates now expose model-load/preparation, prefill, app/worker PSS endpoint maxima and available-RAM-after p50/p95 on the Performance screen. This is presentation over recorded metrics only; no collection/inference/runtime change.",
-      "measurementLimits": "Synthetic values validate aggregation and formatting. PSS is max(before,after) endpoint, not generation peak. No Moto/model performance measurement.",
+      "implementation": "ArtifactRenderer repeats the first table row as a header when starting continuation pages. It reserves 4 pt beyond one body line; if the header is exceptionally tall and cannot leave this room, repetition is suppressed.",
+      "independentValidation": {
+        "readers": [
+          "pypdf 6.10.0",
+          "PyMuPDF 1.26.6"
+        ],
+        "syntheticPdfPages": 3,
+        "headersOnAllPages": true,
+        "continuationHeadersPrecedeCellText": true,
+        "datoTokensPreserved": 300,
+        "outOfBoundsWords": 0,
+        "pdf": "docs/validation/master-program-pdf-table-header-20261019/green-786f979/synthetic-long-table.pdf"
+      },
       "sourceTask": {
-        "relatedTask": "M01-01",
+        "id": "M03-04",
+        "title": "Generador local PDF",
         "sourceStatus": "TODO",
         "requiresDevice": true,
         "dependsOn": [
-          "M00-10"
+          "M03-01"
         ],
-        "dependencyStatus": "M00-10 remains TODO",
-        "formalCompletion": false,
-        "note": "This increment does not provide the Moto protocol, repeated sample or device result required by M01-01."
-      },
-      "M00-06": {
-        "sourceStatus": "TODO",
-        "note": "This display addition does not complete the original cross-stage timeline or model/device metric DoD."
+        "dependencyStatuses": {
+          "M03-01": "TODO"
+        },
+        "formalCompletion": false
       },
       "sourcePlanUnchanged": {
         "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
@@ -7451,7 +7475,11 @@
           "TODO": 97
         },
         "sourceFilesModified": false
-      }
+      },
+      "limitations": [
+        "Synthetic focused HOST evidence only; imported-PDF editing, mobile/office reader fidelity and Motorola remain unverified.",
+        "No full JVM/LiteRT, lint, assembly, AndroidTest, emulator or APK in this increment."
+      ]
     },
     "previousIncrement": {
       "name": "Preparatory M00-06: correlate XLSX import and EG1 indexing diagnostics",
@@ -8267,16 +8295,16 @@
         }
       }
     },
-    "currentSourceCommit": "f21939773735ff17f338d571cadc793484f0bd01",
-    "latestSourceTreeSha": "80c7f97cfce709e1d50b7222e7b6db446e00dbe0",
+    "currentSourceCommit": "786f979ba50a1bd2d609712e297bec24909a0ac5",
+    "latestSourceTreeSha": "b6415e4d3cacbcd4763de85375a1c5053fb77ec8",
     "latestM03_02FormulaEditFollowUp": "docs/validation/master-program-m03-02-xlsx-formulas/RESULTS.md",
-    "latestCodeSourceSha": "f21939773735ff17f338d571cadc793484f0bd01",
-    "lastPreparatoryIncrement": "Benchmark cohort presentation now exposes p50/p95 model load/preparation, prefill, observed PSS endpoints and available RAM from recorded same-cohort benchmark records; focused HOST 5/5 only, no phone measurements or source task completion.",
+    "latestCodeSourceSha": "786f979ba50a1bd2d609712e297bec24909a0ac5",
+    "lastPreparatoryIncrement": "Generated PDF tables now repeat the first row on continuation pages when a bounded body-line reserve fits; exact focused HOST test 2/2 and independent pypdf/PyMuPDF checks, no device or full-gate validation.",
     "previousLatestSourceCommit": "0551915039efdd17557271a793163290f30be8d2",
     "latestSourceIncrement": {
-      "name": "Benchmark cohort preparation, prefill and memory presentation (preparatory)",
-      "codeSha": "f21939773735ff17f338d571cadc793484f0bd01",
-      "evidence": "docs/validation/master-program-benchmark-cohort-metrics-f219397/RESULTS.md",
+      "name": "Generated PDF table continuation headers",
+      "codeSha": "786f979ba50a1bd2d609712e297bec24909a0ac5",
+      "evidence": "docs/validation/master-program-pdf-table-header-20261019/RESULTS.md",
       "status": "FOCUSED_HOST_PASS_PREPARATORY_NOT_FORMAL"
     }
   },
@@ -10020,6 +10048,101 @@
         },
         "sourceFilesModified": false
       }
+    },
+    {
+      "name": "Generated PDF table continuation headers",
+      "kind": "PREPARATORY_M03_04_PDF_TABLE_HEADER_CONTINUATION",
+      "status": "FOCUSED_HOST_PASS_PREPARATORY_NOT_FORMAL",
+      "codeSha": "786f979ba50a1bd2d609712e297bec24909a0ac5",
+      "testedCodeSha": "786f979ba50a1bd2d609712e297bec24909a0ac5",
+      "testedTreeSha": "b6415e4d3cacbcd4763de85375a1c5053fb77ec8",
+      "workingBranch": "codex/master-program-recovery-20261019",
+      "evidence": "docs/validation/master-program-pdf-table-header-20261019/RESULTS.md",
+      "evidenceManifest": {
+        "path": "docs/validation/master-program-pdf-table-header-20261019/SHA256SUMS",
+        "entries": 24,
+        "sha256": "c5cc22efc7f3f82fa3f5691e45aff3b0efacff87805ab690c6fab233ae4faac9",
+        "locallyVerified": "24/24"
+      },
+      "host": {
+        "testClass": "com.localai.workspace.artifacts.PdfArtifactLayoutTest",
+        "redReproduction": {
+          "sourceSha": "b2681a631cd6e7a91bcc196e83c3524918c347a",
+          "tests": 2,
+          "failures": 1,
+          "errors": 0,
+          "skipped": 0,
+          "gradleExitCode": 1,
+          "durationSeconds": 42,
+          "assertion": "Each table page should repeat its header row: [true, false, false]"
+        },
+        "finalFocused": {
+          "tests": 2,
+          "passed": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "gradleExitCode": 0,
+          "gradleDurationSeconds": 53,
+          "capturedWallSeconds": 54,
+          "actionableTasks": 63,
+          "executedTasks": 7,
+          "upToDateTasks": 56,
+          "xml": "docs/validation/master-program-pdf-table-header-20261019/green-786f979/TEST-com.localai.workspace.artifacts.PdfArtifactLayoutTest.xml",
+          "log": "docs/validation/master-program-pdf-table-header-20261019/green-786f979/gradle.log"
+        },
+        "otherGates": {
+          "fullAppJvm": "NOT_RUN",
+          "liteRtCompatJvm": "NOT_RUN",
+          "lintDebug": "NOT_RUN",
+          "assemble": "NOT_RUN",
+          "androidTestCompile": "NOT_RUN",
+          "emulator": "NOT_RUN",
+          "physicalDevice": "NOT_RUN",
+          "apk": "NOT_GENERATED"
+        }
+      },
+      "implementation": "ArtifactRenderer repeats the first table row as a header when starting continuation pages. It reserves 4 pt beyond one body line; if the header is exceptionally tall and cannot leave this room, repetition is suppressed.",
+      "independentValidation": {
+        "readers": [
+          "pypdf 6.10.0",
+          "PyMuPDF 1.26.6"
+        ],
+        "syntheticPdfPages": 3,
+        "headersOnAllPages": true,
+        "continuationHeadersPrecedeCellText": true,
+        "datoTokensPreserved": 300,
+        "outOfBoundsWords": 0,
+        "pdf": "docs/validation/master-program-pdf-table-header-20261019/green-786f979/synthetic-long-table.pdf"
+      },
+      "sourceTask": {
+        "id": "M03-04",
+        "title": "Generador local PDF",
+        "sourceStatus": "TODO",
+        "requiresDevice": true,
+        "dependsOn": [
+          "M03-01"
+        ],
+        "dependencyStatuses": {
+          "M03-01": "TODO"
+        },
+        "formalCompletion": false
+      },
+      "sourcePlanUnchanged": {
+        "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+        "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+        "taskCount": 97,
+        "uniqueIds": 97,
+        "dependencyEdges": 120,
+        "sourceStatusCounts": {
+          "TODO": 97
+        },
+        "sourceFilesModified": false
+      },
+      "limitations": [
+        "Synthetic focused HOST evidence only; imported-PDF editing, mobile/office reader fidelity and Motorola remain unverified.",
+        "No full JVM/LiteRT, lint, assembly, AndroidTest, emulator or APK in this increment."
+      ]
     }
   ],
   "latestM02_01Preparation": {
@@ -15409,5 +15532,100 @@
       "M03_02FormulaCellFollowUp": "docs/validation/master-program-m03-02-xlsx-tables/cell-edit-follow-up-20261019/RESULTS.md",
       "M00_06ContextComposition": "docs/validation/master-program-context-composition-22014ed/RESULTS.md"
     }
+  },
+  "latestM03_04PdfTableHeaders": {
+    "name": "Generated PDF table continuation headers",
+    "kind": "PREPARATORY_M03_04_PDF_TABLE_HEADER_CONTINUATION",
+    "status": "FOCUSED_HOST_PASS_PREPARATORY_NOT_FORMAL",
+    "codeSha": "786f979ba50a1bd2d609712e297bec24909a0ac5",
+    "testedCodeSha": "786f979ba50a1bd2d609712e297bec24909a0ac5",
+    "testedTreeSha": "b6415e4d3cacbcd4763de85375a1c5053fb77ec8",
+    "workingBranch": "codex/master-program-recovery-20261019",
+    "evidence": "docs/validation/master-program-pdf-table-header-20261019/RESULTS.md",
+    "evidenceManifest": {
+      "path": "docs/validation/master-program-pdf-table-header-20261019/SHA256SUMS",
+      "entries": 24,
+      "sha256": "c5cc22efc7f3f82fa3f5691e45aff3b0efacff87805ab690c6fab233ae4faac9",
+      "locallyVerified": "24/24"
+    },
+    "host": {
+      "testClass": "com.localai.workspace.artifacts.PdfArtifactLayoutTest",
+      "redReproduction": {
+        "sourceSha": "b2681a631cd6e7a91bcc196e83c3524918c347a",
+        "tests": 2,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "gradleExitCode": 1,
+        "durationSeconds": 42,
+        "assertion": "Each table page should repeat its header row: [true, false, false]"
+      },
+      "finalFocused": {
+        "tests": 2,
+        "passed": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "gradleExitCode": 0,
+        "gradleDurationSeconds": 53,
+        "capturedWallSeconds": 54,
+        "actionableTasks": 63,
+        "executedTasks": 7,
+        "upToDateTasks": 56,
+        "xml": "docs/validation/master-program-pdf-table-header-20261019/green-786f979/TEST-com.localai.workspace.artifacts.PdfArtifactLayoutTest.xml",
+        "log": "docs/validation/master-program-pdf-table-header-20261019/green-786f979/gradle.log"
+      },
+      "otherGates": {
+        "fullAppJvm": "NOT_RUN",
+        "liteRtCompatJvm": "NOT_RUN",
+        "lintDebug": "NOT_RUN",
+        "assemble": "NOT_RUN",
+        "androidTestCompile": "NOT_RUN",
+        "emulator": "NOT_RUN",
+        "physicalDevice": "NOT_RUN",
+        "apk": "NOT_GENERATED"
+      }
+    },
+    "implementation": "ArtifactRenderer repeats the first table row as a header when starting continuation pages. It reserves 4 pt beyond one body line; if the header is exceptionally tall and cannot leave this room, repetition is suppressed.",
+    "independentValidation": {
+      "readers": [
+        "pypdf 6.10.0",
+        "PyMuPDF 1.26.6"
+      ],
+      "syntheticPdfPages": 3,
+      "headersOnAllPages": true,
+      "continuationHeadersPrecedeCellText": true,
+      "datoTokensPreserved": 300,
+      "outOfBoundsWords": 0,
+      "pdf": "docs/validation/master-program-pdf-table-header-20261019/green-786f979/synthetic-long-table.pdf"
+    },
+    "sourceTask": {
+      "id": "M03-04",
+      "title": "Generador local PDF",
+      "sourceStatus": "TODO",
+      "requiresDevice": true,
+      "dependsOn": [
+        "M03-01"
+      ],
+      "dependencyStatuses": {
+        "M03-01": "TODO"
+      },
+      "formalCompletion": false
+    },
+    "sourcePlanUnchanged": {
+      "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+      "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+      "taskCount": 97,
+      "uniqueIds": 97,
+      "dependencyEdges": 120,
+      "sourceStatusCounts": {
+        "TODO": 97
+      },
+      "sourceFilesModified": false
+    },
+    "limitations": [
+      "Synthetic focused HOST evidence only; imported-PDF editing, mobile/office reader fidelity and Motorola remain unverified.",
+      "No full JVM/LiteRT, lint, assembly, AndroidTest, emulator or APK in this increment."
+    ]
   }
 }

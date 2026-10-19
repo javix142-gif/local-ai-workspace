@@ -1,0 +1,103 @@
+diff --git a/app/src/main/java/com/localai/workspace/artifacts/ArtifactRenderer.kt b/app/src/main/java/com/localai/workspace/artifacts/ArtifactRenderer.kt
+index c7b94ee..db84013 100644
+--- a/app/src/main/java/com/localai/workspace/artifacts/ArtifactRenderer.kt
++++ b/app/src/main/java/com/localai/workspace/artifacts/ArtifactRenderer.kt
+@@ -257,49 +257,65 @@ class ArtifactRenderer(private val context:Context) {
+                 val columns=rows.first().length()
+                 val left=54f;val tableWidth=504f;val columnWidth=tableWidth/columns
+                 val fontSize=9f;val lineHeight=fontSize*1.25f;val padding=4f;val bottom=54f
++                val headerFont=PDType1Font.HELVETICA_BOLD
++                val headerCells=(0 until columns).map{tableCellLines(rows.first().getString(it),headerFont,fontSize,columnWidth-padding*2)}
++                val headerLineCount=maxOf(1,headerCells.maxOf{it.size})
++                val headerHeight=headerLineCount*lineHeight+padding*2
++                val pageContentHeight=PDPage().mediaBox.height-bottom*2
++                // A very tall first row cannot be repeated without consuming the full page.
++                val repeatHeaderOnContinuation=headerHeight+lineHeight+padding*2+4f<=pageContentHeight
++                fun drawChunk(cells:List<List<String>>,font:PDType1Font,offset:Int,chunkLines:Int,rowHeight:Float,headerBackground:Boolean) {
++                    val rowTop=y;val rowBottom=rowTop-rowHeight
++                    stream!!.saveGraphicsState()
++                    if(headerBackground) {
++                        stream!!.setNonStrokingColor(239,241,238)
++                        for(column in 0 until columns) {
++                            stream!!.addRect(left+column*columnWidth,rowBottom,columnWidth,rowHeight)
++                            stream!!.fill()
++                        }
++                    }
++                    stream!!.setStrokingColor(119,129,124)
++                    stream!!.setLineWidth(0.5f)
++                    for(column in 0 until columns) {
++                        stream!!.addRect(left+column*columnWidth,rowBottom,columnWidth,rowHeight)
++                        stream!!.stroke()
++                    }
++                    stream!!.restoreGraphicsState()
++                    for(column in 0 until columns) {
++                        val last=minOf(offset+chunkLines,cells[column].size)
++                        for(lineIndex in offset until last) {
++                            val text=cells[column][lineIndex]
++                            if(text.isNotEmpty()) {
++                                stream!!.beginText()
++                                stream!!.setFont(font,fontSize)
++                                stream!!.newLineAtOffset(left+column*columnWidth+padding,rowTop-padding-fontSize-(lineIndex-offset)*lineHeight)
++                                stream!!.showText(text)
++                                stream!!.endText()
++                            }
++                        }
++                    }
++                    y=rowBottom-4f
++                }
++                fun continuationPage(repeatHeader:Boolean) {
++                    page()
++                    if(repeatHeader && repeatHeaderOnContinuation) {
++                        drawChunk(headerCells,headerFont,0,headerLineCount,headerHeight,headerBackground=true)
++                    }
++                }
+                 for((rowIndex,row) in rows.withIndex()) {
+                     val font=if(rowIndex==0)PDType1Font.HELVETICA_BOLD else PDType1Font.HELVETICA
+-                    val cells=(0 until columns).map{tableCellLines(row.getString(it),font,fontSize,columnWidth-padding*2)}
++                    val cells=if(rowIndex==0)headerCells else (0 until columns).map{tableCellLines(row.getString(it),font,fontSize,columnWidth-padding*2)}
+                     val rowLineCount=maxOf(1,cells.maxOf{it.size})
+                     var offset=0
+                     while(offset<rowLineCount) {
+                         if(stream==null)y=0f
+-                        if(stream==null || y-bottom-2*padding<lineHeight)page()
++                        if(stream==null || y-bottom-2*padding<lineHeight)continuationPage(repeatHeader=rowIndex>0)
+                         val linesAvailable=((y-bottom-2*padding)/lineHeight).toInt().coerceAtLeast(1)
+                         val chunkLines=minOf(rowLineCount-offset,linesAvailable)
+                         val rowHeight=chunkLines*lineHeight+padding*2
+-                        val rowTop=y;val rowBottom=rowTop-rowHeight
+-                        stream!!.saveGraphicsState()
+-                        if(rowIndex==0 && offset==0) {
+-                            stream!!.setNonStrokingColor(239,241,238)
+-                            for(column in 0 until columns) {
+-                                stream!!.addRect(left+column*columnWidth,rowBottom,columnWidth,rowHeight)
+-                                stream!!.fill()
+-                            }
+-                        }
+-                        stream!!.setStrokingColor(119,129,124)
+-                        stream!!.setLineWidth(0.5f)
+-                        for(column in 0 until columns) {
+-                            stream!!.addRect(left+column*columnWidth,rowBottom,columnWidth,rowHeight)
+-                            stream!!.stroke()
+-                        }
+-                        stream!!.restoreGraphicsState()
+-                        for(column in 0 until columns) {
+-                            val last=minOf(offset+chunkLines,cells[column].size)
+-                            for(lineIndex in offset until last) {
+-                                val text=cells[column][lineIndex]
+-                                if(text.isNotEmpty()) {
+-                                    stream!!.beginText()
+-                                    stream!!.setFont(font,fontSize)
+-                                    stream!!.newLineAtOffset(left+column*columnWidth+padding,rowTop-padding-fontSize-(lineIndex-offset)*lineHeight)
+-                                    stream!!.showText(text)
+-                                    stream!!.endText()
+-                                }
+-                            }
+-                        }
+-                        y=rowBottom-4f
++                        drawChunk(cells,font,offset,chunkLines,rowHeight,headerBackground=rowIndex==0&&offset==0)
+                         offset+=chunkLines
+-                        if(offset<rowLineCount)page()
++                        if(offset<rowLineCount)continuationPage(repeatHeader=rowIndex>0)
+                     }
+                 }
+                 y-=6f

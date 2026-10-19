@@ -1,0 +1,8 @@
+JAVA_HOME=/workspace/.toolchain/jdk-17
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk
+GRADLE_USER_HOME=/workspace/.gradle (existing offline cache)
+Gradle wrapper=8.10.2
+test worker=Temurin JDK 21.0.12.1 (project-configured)
+Android platform=API 35
+NDK=27.0.12077973 (present; no native test task requested)
