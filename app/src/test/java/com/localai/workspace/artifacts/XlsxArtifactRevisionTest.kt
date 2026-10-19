@@ -30,6 +30,15 @@ import java.util.zip.ZipFile
 class XlsxArtifactRevisionTest {
     private val context:Context get()=ApplicationProvider.getApplicationContext()
 
+    private fun exportInteropFixture(name:String,file:File) {
+        val configured=System.getenv("LOCALAI_XLSX_INTEROP_DIR")?.takeIf{it.isNotBlank()}?:return
+        val directory=File(configured).canonicalFile
+        check(directory.isDirectory||directory.mkdirs())
+        val destination=File(directory,name).canonicalFile
+        check(destination.parentFile==directory)
+        file.copyTo(destination,overwrite=true)
+    }
+
     @Test fun explicitSpreadsheetCellChangeRoutesToBoundedCellEditTool() {
         val enabled=setOf("artifacts.xlsxSetCells")
         assertEquals(enabled,AssistantRouting.tools(enabled,"Actualiza la celda A2 del Excel",documents=false))
@@ -52,6 +61,7 @@ class XlsxArtifactRevisionTest {
         try {
             val first=store.create(project,ArtifactSpec.parse(fixture))
             val originalHash=first.sha256
+            exportInteropFixture("original.xlsx",store.verifiedFile(project,first))
             val tool=ArtifactTool(context,"artifacts.xlsxSetCells")
             val registry=ToolRegistry(listOf(tool))
             val toolContext=ToolContext(project,"chat",File(context.cacheDir,"xlsx-formula-edit-work"))
@@ -71,6 +81,7 @@ class XlsxArtifactRevisionTest {
             val versions=store.history(project,first.id)
             assertEquals(2,versions.size)
             val latest=versions.maxBy{it.version}
+            exportInteropFixture("formula-edited.xlsx",store.verifiedFile(project,latest))
             assertEquals(originalHash,ArtifactStore.fileHash(store.verifiedFile(project,first)))
             val originalCell=StructuredDocuments.xlsx(store.verifiedFile(project,first)).cells.single{it.sheet=="Hoja1"&&it.address=="A3"}
             assertEquals("\$A\$2-\$A\$1",originalCell.formula)
