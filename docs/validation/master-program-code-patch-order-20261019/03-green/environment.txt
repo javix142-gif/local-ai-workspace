@@ -1,0 +1,9 @@
+codeSha=aebd6bbe03d4f958cce526dd4d2f98d2883e0841
+branch=codex/master-program-recovery-20261019
+gradleUserHome=/workspace/.gradle
+gradle=distributionUrl=https\://services.gradle.org/distributions/gradle-8.10.2-bin.zip
+runtimeJdk=openjdk version "17.0.20.1" 2026-08-18
+workerJdk=openjdk version "21.0.12.1" 2026-08-18 LTS
+androidSdk=/workspace/.toolchain/android-sdk
+ndk=Pkg.Revision = 27.0.12077973
+startedAtUtc=2026-10-19T19:38:12+00:00

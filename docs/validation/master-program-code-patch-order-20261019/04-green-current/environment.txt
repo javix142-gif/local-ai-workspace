@@ -1,0 +1,6 @@
+codeSha=f235a2385d0f885291256ba7ed7299aceeee36a4
+branch=codex/master-program-recovery-20261019
+gradleUserHome=/workspace/.gradle
+runtimeJdk=openjdk version "17.0.20.1" 2026-08-18
+workerJdk=openjdk version "21.0.12.1" 2026-08-18 LTS
+startedAtUtc=2026-10-19T19:40:14+00:00

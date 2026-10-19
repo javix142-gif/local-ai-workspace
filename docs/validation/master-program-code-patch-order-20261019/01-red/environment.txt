@@ -1,0 +1,8 @@
+baseCodeSha=efb5a089268be3b03238b97561b07733a44b071f
+branch=codex/master-program-recovery-20261019
+jdk17=openjdk version "17.0.20.1" 2026-08-18
+jdk17_javac=javac 17.0.20.1
+jdk21=openjdk version "21.0.12.1" 2026-08-18 LTS
+androidSdk=/workspace/.toolchain/android-sdk
+ndkRevision=Pkg.Revision = 27.0.12077973
+startedAtUtc=2026-10-19T19:36:20+00:00

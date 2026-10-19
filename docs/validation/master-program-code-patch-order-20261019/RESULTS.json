@@ -1,0 +1,126 @@
+{
+  "name": "M03-06 preparatory fix: resolve multi-edits against original source",
+  "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO",
+  "workingBranch": "codex/master-program-recovery-20261019",
+  "baselineCodeSha": "efb5a089268be3b03238b97561b07733a44b071f",
+  "codeCommits": [
+    "aebd6bbe03d4f958cce526dd4d2f98d2883e0841",
+    "f235a2385d0f885291256ba7ed7299aceeee36a4"
+  ],
+  "testedCodeSha": "f235a2385d0f885291256ba7ed7299aceeee36a4",
+  "testedTreeSha": "404cc8e0fc179b80e2ee7b92e13f2db2a89fd201",
+  "changedFiles": [
+    "app/src/main/java/com/localai/workspace/artifacts/CodePatch.kt",
+    "app/src/test/java/com/localai/workspace/artifacts/CodePatchPlannerTest.kt"
+  ],
+  "finding": "CodePatchPlanner.apply previously located and applied each edit on the already-mutated result. A first replacement could make the next original snippet ambiguous. The red regression reproduced CODE_PATCH_MATCH_AMBIGUOUS for alpha→beta followed by beta→gamma.",
+  "implementation": "Locate each unique before-snippet in the immutable source, sort ranges, reject overlapping ranges, then apply replacements from the end of the source toward the beginning. Existing size, UTF-8 byte and stale-base hash guards remain.",
+  "host": {
+    "class": "com.localai.workspace.artifacts.CodePatchPlannerTest",
+    "red": {
+      "sourceCodeSha": "efb5a089268be3b03238b97561b07733a44b071f",
+      "testWorkingTree": "only the regression test was added before the red run",
+      "counts": {
+        "tests": 4,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "expectedFailure": "multiEditsAreResolvedFromOriginalSourceRegardlessOfOrder: CODE_PATCH_MATCH_AMBIGUOUS",
+      "exitCode": 1,
+      "log": "02-red-offline-cache/gradle.log",
+      "xml": "02-red-offline-cache/xml/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml"
+    },
+    "green": {
+      "testedCodeSha": "f235a2385d0f885291256ba7ed7299aceeee36a4",
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed": 5,
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-19T19:40:14Z",
+      "finishedAtUtc": "2026-10-19T19:43:26Z",
+      "wallSeconds": 192,
+      "gradleReportedDuration": "3m 10s",
+      "actionableTasks": 63,
+      "executedTasks": 63,
+      "runtimeJdk": "Temurin 17.0.20.1",
+      "workerJdk": "Temurin 21.0.12.1",
+      "gradle": "8.10.2",
+      "androidSdk": "/workspace/.toolchain/android-sdk",
+      "ndk": "27.0.12077973",
+      "log": "04-green-current/gradle.log",
+      "xml": "04-green-current/xml/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml",
+      "xmlSha256": "e37448d405b20806f955413cecf10ebb16ee9bbb20ba01c944215abf50a1ca9b",
+      "command": "04-green-current/command.txt"
+    }
+  },
+  "attempts": [
+    {
+      "id": "01-red",
+      "classification": "INFRASTRUCTURE_FAILURE_BEFORE_GRADLE",
+      "exitCode": 1,
+      "startedAtUtc": "2026-10-19T19:36:20Z",
+      "finishedAtUtc": "2026-10-19T19:36:25Z",
+      "detail": "Gradle wrapper distribution fetch failed with Connection refused; no Gradle task or test started; no XML."
+    },
+    {
+      "id": "02-red-offline-cache",
+      "classification": "EXPECTED_RED_PRODUCT_REGRESSION_REPRODUCED",
+      "exitCode": 1,
+      "durationSeconds": 35,
+      "detail": "Cached Gradle distribution allowed the baseline reproduction; 4 tests, 3 passed, 1 failed as expected."
+    },
+    {
+      "id": "03-green",
+      "classification": "IMPLEMENTATION_COMPILE_FAILURE_NOT_TESTED",
+      "codeSha": "aebd6bbe03d4f958cce526dd4d2f98d2883e0841",
+      "exitCode": 1,
+      "durationSeconds": 92,
+      "detail": "Kotlin compilation failed because the new located-edit record was referenced using a nonexistent 'after' property; no fresh JUnit XML. The preserved NOT_GREEN_XML.txt marks this attempt; no red XML is attributed to it."
+    },
+    {
+      "id": "04-green-current",
+      "classification": "FOCUSED_HOST_PASS",
+      "codeSha": "f235a2385d0f885291256ba7ed7299aceeee36a4",
+      "exitCode": 0,
+      "durationSeconds": 192,
+      "detail": "Corrected implementation compiled and the focused class passed 5/5."
+    }
+  ],
+  "notRun": {
+    "fullAppJvm": "NOT_RUN",
+    "liteRtCompatJvm": "NOT_RUN",
+    "lintDebug": "NOT_RUN",
+    "androidTestCompilation": "NOT_RUN",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  },
+  "sourceTask": {
+    "id": "M03-06",
+    "sourceStatus": "TODO",
+    "requiresDevice": true,
+    "dependsOn": [
+      "M03-01",
+      "M02-08"
+    ],
+    "formalCompletion": false,
+    "classification": "Preparatory code-patch correctness only; complete diff preview/recovery, device gate and upstream dependencies are not closed."
+  },
+  "planIntegrity": {
+    "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskCount": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": {
+      "TODO": 97
+    },
+    "sourceFilesModified": false
+  }
+}

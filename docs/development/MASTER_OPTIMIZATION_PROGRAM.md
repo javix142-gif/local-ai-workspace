@@ -297,3 +297,10 @@ The attempted openpyxl read is `NOT_VALIDATED`, because the minimal parser fixtu
 ## 2026-10-19 — M03-07 current-source preview revalidation
 
 The recovered history already contains the bounded revision diff and cancel-preservation path. Exact code SHA `a72db3db5ad5e8ca7c6b178e723a9fc332d865ea` passed `ArtifactRevisionPreviewUiTest` 2/2, including full-body fallback for oversized diffs and unchanged saved bytes/hash after cancellation. This does not complete M03-07: the original task remains `TODO`, is device-required, and depends on M03-01 (`TODO`). See `docs/validation/master-program-m03-07-revalidation-20261019/RESULTS.md`. No original task status or dependency changed.
+
+
+## 2026-10-19 — M03-06 preparatory multi-edit patch ordering
+
+`CodePatchPlanner.apply` now locates each edit in the same original body, rejects intersecting ranges and applies non-overlapping replacements from right to left. This fixes the reproduced case where an earlier replacement created a false ambiguous match for a later edit. Test-first evidence: baseline `efb5a089268be3b03238b97561b07733a44b071f` expected-red 3/4; corrected source `f235a2385d0f885291256ba7ed7299aceeee36a4` focused test class 5/5, exit 0, 192-second wall time, Gradle 8.10.2/JDK 17 with JDK 21 test worker. See `docs/validation/master-program-code-patch-order-20261019/RESULTS.md`.
+
+This does not close source task M03-06: it remains TODO, requires device validation, and depends on M03-01 and M02-08, still TODO. No other gate or APK was run. The original plan remains 97 unique IDs, 120 dependency edges, all source statuses TODO.
