@@ -154,6 +154,40 @@ class DocxArtifactStructureTest {
         }
     }
 
+    @Test
+    fun generatedDocxPreservesParagraphAndTableBlockOrder() = runBlocking {
+        val root = File(context.cacheDir, "docx-ordered-blocks-${UUID.randomUUID()}")
+        val store = ArtifactStore(context, root)
+        val source = JSONObject("""
+            {
+              "format":"DOCX","name":"ordered.docx",
+              "blocks":[
+                {"kind":"paragraph","text":"Before the table","style":"body"},
+                {"kind":"table","rows":[["Label","Value"],["Entry","7"]]},
+                {"kind":"paragraph","text":"After the table","style":"body"}
+              ]
+            }
+        """.trimIndent())
+        try {
+            val revision = store.create("docx-ordered-project", ArtifactSpec.parse(source))
+            val file = store.verifiedFile("docx-ordered-project", revision)
+            val children = ZipFile(file).use { zip ->
+                val body = xml(zip, "word/document.xml").getElementsByTagNameNS(word, "body").item(0)
+                (0 until body.childNodes.length).mapNotNull { index ->
+                    body.childNodes.item(index).takeIf { it.nodeType == org.w3c.dom.Node.ELEMENT_NODE }?.localName
+                }
+            }
+            assertEquals(listOf("p", "tbl", "p", "sectPr"), children)
+            val preview = store.spec("docx-ordered-project", revision).preview()
+            assertTrue(preview.indexOf("Before the table") < preview.indexOf("Label"))
+            assertTrue(preview.indexOf("Label") < preview.indexOf("After the table"))
+            File("build/docx-independent-reader").mkdirs()
+            File("build/docx-independent-reader/ordered-blocks.docx").writeBytes(file.readBytes())
+        } finally {
+            root.deleteRecursively()
+        }
+    }
+
     private fun revisedParagraphs(original: JSONObject): org.json.JSONArray =
         original.getJSONArray("paragraphs").apply { getJSONObject(0).put("text", "Informe actualizado") }
 }
