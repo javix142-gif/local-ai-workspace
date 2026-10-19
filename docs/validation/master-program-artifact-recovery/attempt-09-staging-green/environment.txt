@@ -1,0 +1,8 @@
+Gradle runtime JDK: openjdk version "17.0.20.1" 2026-08-18
+JDK 17 javac: javac 17.0.20.1
+JDK 21 worker toolchain: openjdk version "21.0.12.1" 2026-08-18 LTS
+JDK 21 javac: javac 21.0.12.1
+Android SDK: /workspace/.toolchain/android-sdk
+NDK: Pkg.Revision = 27.0.12077973
+Gradle user home: /workspace/.gradle (existing cache; offline)
+Filesystem: overlay          32G  6.5G   24G  22% /

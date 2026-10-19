@@ -1,20 +1,112 @@
 {
-  "name": "Artifact API recovery and SAF export focused host increment",
-  "status": "FOCUSED_HOST_PASS_PREPARATORY_DEPENDENCY_BLOCKED_NOT_FORMAL",
-  "finalTestedCodeSha": "dfff07ec9965d774af90b146156b45072063e4bf",
+  "name": "ArtifactStore recovery, SAF export, and crash-abandoned staging recovery",
+  "status": "FOCUSED_GRADLE_TESTS_PASS_WITH_OUTER_EXECUTOR_STATUS_DISCREPANCY; PREPARATORY_ONLY_NOT_FORMAL",
+  "finalTestedCodeSha": "3015ebec721bb6f66a6d19cc57947ae442d37ed4",
   "codeCommits": [
     "ddb4f798c6d4ee3407140fa0028742db246ca678",
     "908edd76e483efc55857d5a89f465c975ccadfbe",
     "6a99135d61f2c7c9a8060ed8f15c97643a6fcedc",
-    "dfff07ec9965d774af90b146156b45072063e4bf"
+    "dfff07ec9965d774af90b146156b45072063e4bf",
+    "c87228c3fd7d076f5116bed92c09efd2f468dfcc",
+    "26ff528e02be5e9cdcc17ebb776232a78556dae6",
+    "3015ebec721bb6f66a6d19cc57947ae442d37ed4"
   ],
   "changedFiles": [
+    "app/src/main/java/com/localai/workspace/artifacts/ArtifactStore.kt",
     "app/src/test/java/com/localai/workspace/artifacts/ArtifactPatchRecoveryTest.kt",
     "app/src/test/java/com/localai/workspace/ui/ArtifactSafExportUiTest.kt"
   ],
-  "productionChanged": false,
+  "productionChanged": true,
   "schemaOrDependenciesChanged": false,
   "finalFocusedRun": {
+    "attempt": "attempt-10-staging-green-final",
+    "sourceSha": "3015ebec721bb6f66a6d19cc57947ae442d37ed4",
+    "commandFile": "attempt-10-staging-green-final/command.txt",
+    "logFile": "attempt-10-staging-green-final/gradle.log.gz",
+    "exitCode": 0,
+    "outerExecutorExitCode": 1,
+    "outerStatus": "UNRESOLVED_DISCREPANCY; not normalized",
+    "junit": [
+      {
+        "path": "attempt-10-staging-green-final/junit/TEST-com.localai.workspace.artifacts.ArtifactPatchRecoveryTest.xml",
+        "tests": 3,
+        "passed": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "a79407a183e98c0ae22ebd0d9f7346680df2c83718ae4fab26b3243b655d980f"
+      }
+    ],
+    "gradle": "8.10.2",
+    "runtimeJdk": "Temurin 17.0.20.1",
+    "testWorkerToolchainJdk": "Temurin 21.0.12.1",
+    "androidSdk": "API 35 at /workspace/.toolchain/android-sdk",
+    "ndk": "27.0.12077973",
+    "offline": true,
+    "existingGradleUserHome": "/workspace/.gradle",
+    "durationSeconds": 41,
+    "executedGradleTasks": 3,
+    "upToDateGradleTasks": 60,
+    "gradleSummary": "BUILD SUCCESSFUL in 40s",
+    "hostGate": "FOCUSED_CLASS_ONLY",
+    "gradleLogPayload": {
+      "originalPath": "gradle.log",
+      "originalBytes": 4970,
+      "originalSha256": "6382dcbeed1d2e81b7d776eb4e11359521daea1fd7a2ab5dfe78b5fcf5102212",
+      "compressedPath": "gradle.log.gz",
+      "compressedBytes": 1127,
+      "compressedSha256": "e79c36c8a3d6e538831702fee8b366a395dc3572a94bcc287486b6177e29b90f",
+      "compression": "gzip mtime=0; payload is lossless"
+    }
+  },
+  "attemptInterpretation": {
+    "recoveryAttempt01": "PASS 1/1 at ddb4f79; log retained; XML not retained in that attempt; final attempt 07 also covers this test with XML.",
+    "safAttempts02And03": "Test harness failures while bringing the action into view and waiting for callback completion.",
+    "attempt04": "Shell exit 127 before Gradle because ANDROID_HOME was unset under set -u; no test ran.",
+    "attempt05": "HEAD was 6a99135 but the test worktree was modified by a diagnostic-only patch, preserved as attempt-05-saf-callback-diagnostic/source-worktree-test.patch with its SHA in that attempt manifest. Polling assertion failed even though diagnostic UI status confirms export/readback success and destination length is 51 bytes; not a production failure.",
+    "attempt06": "PASS 1/1 after polling for exact written bytes and asserting status separately.",
+    "attempt07": "PASS 2/2 on final tested source SHA.",
+    "attempt08StagingRed": "Expected baseline failure: listing left a .pending-UUID folder behind.",
+    "attempt09StagingGreen": "Gradle marker/log/XML pass 2/2 at 26ff528; outer executor session reported exit 1, cause NOT_DETERMINED.",
+    "attempt10StagingGreenFinal": "Gradle marker/log/XML pass 3/3 at 3015ebe; outer executor session reported exit 1, cause NOT_DETERMINED; no full host gate."
+  },
+  "originalTask": {
+    "id": "M03-01",
+    "title": "Diseñar Artifact API y persistencia",
+    "sourceStatus": "TODO",
+    "dependsOn": [
+      "M02-05"
+    ],
+    "dependencyStatus": "M02-05 remains TODO; no formal dependency closure",
+    "formalCompletion": false,
+    "preparatoryCoverage": "Earlier attempt 07 covered immutable revision recovery and explicit SAF byte/hash readback; follow-up now also covers cleanup of crash-abandoned staging while preserving a live writer and committed revisions. Full task remains TODO."
+  },
+  "planSource": {
+    "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmap": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskIds": 97,
+    "uniqueIds": 97,
+    "dependencies": 120,
+    "sourceStatuses": {
+      "TODO": 97
+    },
+    "sourceFilesModified": false
+  },
+  "validation": {
+    "HOST": "FOCUSED_GRADLE_PASS_3_OF_3; OUTER_EXECUTOR_STATUS_DISCREPANCY_UNRESOLVED; PREPARATORY_ONLY",
+    "fullJvmSuite": "NOT_RUN",
+    "litertCompat": "NOT_RUN",
+    "lint": "NOT_RUN",
+    "assembleDebug": "NOT_RUN",
+    "androidTestCompilation": "NOT_RUN",
+    "EMULATOR": "NOT_RUN_THIS_INCREMENT; historical global result remains Room-v1 FAIL plus six model-dependent skips",
+    "PHYSICAL_DEVICE": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  },
+  "nextPreparatoryAction": "Continue with the next source-backed bounded host-verifiable artifact capability. M03-01 remains source TODO due M02-05, and no original task status is promoted.",
+  "previousApiSafFocusedRun": {
     "attempt": "attempt-07-combined-focused",
     "sourceSha": "dfff07ec9965d774af90b146156b45072063e4bf",
     "commandFile": "attempt-07-combined-focused/command.txt",
@@ -60,43 +152,189 @@
     "upToDateGradleTasks": 62,
     "hostGate": "FOCUSED_ONLY"
   },
-  "attemptInterpretation": {
-    "recoveryAttempt01": "PASS 1/1 at ddb4f79; log retained; XML not retained in that attempt; final attempt 07 also covers this test with XML.",
-    "safAttempts02And03": "Test harness failures while bringing the action into view and waiting for callback completion.",
-    "attempt04": "Shell exit 127 before Gradle because ANDROID_HOME was unset under set -u; no test ran.",
-    "attempt05": "HEAD was 6a99135 but the test worktree was modified by a diagnostic-only patch, preserved as attempt-05-saf-callback-diagnostic/source-worktree-test.patch with its SHA in that attempt manifest. Polling assertion failed even though diagnostic UI status confirms export/readback success and destination length is 51 bytes; not a production failure.",
-    "attempt06": "PASS 1/1 after polling for exact written bytes and asserting status separately.",
-    "attempt07": "PASS 2/2 on final tested source SHA."
+  "latestStagingRecoveryFollowup": {
+    "status": "FOCUSED_GRADLE_TESTS_PASS_WITH_OUTER_EXECUTOR_STATUS_DISCREPANCY; PREPARATORY_ONLY_NOT_FORMAL",
+    "sourceTask": {
+      "id": "M03-01",
+      "sourceStatus": "TODO",
+      "dependsOn": [
+        "M02-05"
+      ],
+      "dependencyStatus": "M02-05 remains TODO",
+      "formalCompletion": false
+    },
+    "codeCommits": [
+      {
+        "sha": "c87228c3fd7d076f5116bed92c09efd2f468dfcc",
+        "purpose": "test-first baseline regression"
+      },
+      {
+        "sha": "26ff528e02be5e9cdcc17ebb776232a78556dae6",
+        "purpose": "scoped abandoned staging recovery"
+      },
+      {
+        "sha": "3015ebec721bb6f66a6d19cc57947ae442d37ed4",
+        "purpose": "live-writer lock preservation regression"
+      }
+    ],
+    "changedFiles": [
+      "app/src/main/java/com/localai/workspace/artifacts/ArtifactStore.kt",
+      "app/src/test/java/com/localai/workspace/artifacts/ArtifactPatchRecoveryTest.kt"
+    ],
+    "implementation": "ArtifactStore.list opportunistically cleans only exact .pending-UUID directories under UUID artifact items while holding the existing project write lock; commit applies the same cleanup after locking. Canonical parent checks and no-follow Files.walkFileTree protect other paths. A busy writer causes list to skip recovery and preserve committed revisions.",
+    "attempts": [
+      {
+        "id": "attempt-08-staging-red",
+        "sourceSha": "c87228c3fd7d076f5116bed92c09efd2f468dfcc",
+        "status": "EXPECTED_RED_BASELINE",
+        "tests": 1,
+        "passed": 0,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "gradleExitCode": 1,
+        "xml": "attempt-08-staging-red/junit/TEST-com.localai.workspace.artifacts.ArtifactPatchRecoveryTest.xml",
+        "evidence": "attempt-08-staging-red/",
+        "gradleLog": "attempt-08-staging-red/gradle.log.gz",
+        "gradleLogPayload": {
+          "originalPath": "gradle.log",
+          "originalBytes": 5507,
+          "originalSha256": "79659ad37466fbb88792187cb483c5c09f560a8b7b27df4f560de27c5fcf3af9",
+          "compressedPath": "gradle.log.gz",
+          "compressedBytes": 1395,
+          "compressedSha256": "60309099af1dbe44d68f06d6ffe68fa56515d1c567594e6a1d1df21fbabbc809",
+          "compression": "gzip mtime=0; payload is lossless"
+        }
+      },
+      {
+        "id": "attempt-09-staging-green",
+        "sourceSha": "26ff528e02be5e9cdcc17ebb776232a78556dae6",
+        "status": "GRADLE_PASS_OUTER_EXECUTOR_STATUS_DISCREPANCY",
+        "tests": 2,
+        "passed": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "gradleExitCode": 0,
+        "outerExecutorExitCode": 1,
+        "durationSeconds": 212,
+        "evidence": "attempt-09-staging-green/",
+        "gradleLog": "attempt-09-staging-green/gradle.log.gz",
+        "gradleLogPayload": {
+          "originalPath": "gradle.log",
+          "originalBytes": 5184,
+          "originalSha256": "bf829a60672dbaf6cdcd60e8c0465924bf92ee4b9e04de1374d810f62ab5c650",
+          "compressedPath": "gradle.log.gz",
+          "compressedBytes": 1456,
+          "compressedSha256": "1511717867612462d32c5439740ce220c182b02b4c833b7906125c8624178711",
+          "compression": "gzip mtime=0; payload is lossless"
+        }
+      },
+      {
+        "id": "attempt-10-staging-green-final",
+        "sourceSha": "3015ebec721bb6f66a6d19cc57947ae442d37ed4",
+        "status": "GRADLE_PASS_OUTER_EXECUTOR_STATUS_DISCREPANCY",
+        "tests": 3,
+        "passed": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "gradleExitCode": 0,
+        "outerExecutorExitCode": 1,
+        "durationSeconds": 41,
+        "testBodySeconds": 5.423,
+        "executedGradleTasks": 3,
+        "upToDateGradleTasks": 60,
+        "xml": "attempt-10-staging-green-final/junit/TEST-com.localai.workspace.artifacts.ArtifactPatchRecoveryTest.xml",
+        "xmlSha256": "a79407a183e98c0ae22ebd0d9f7346680df2c83718ae4fab26b3243b655d980f",
+        "evidence": "attempt-10-staging-green-final/",
+        "gradleLog": "attempt-10-staging-green-final/gradle.log.gz",
+        "gradleLogPayload": {
+          "originalPath": "gradle.log",
+          "originalBytes": 4970,
+          "originalSha256": "6382dcbeed1d2e81b7d776eb4e11359521daea1fd7a2ab5dfe78b5fcf5102212",
+          "compressedPath": "gradle.log.gz",
+          "compressedBytes": 1127,
+          "compressedSha256": "e79c36c8a3d6e538831702fee8b366a395dc3572a94bcc287486b6177e29b90f",
+          "compression": "gzip mtime=0; payload is lossless"
+        }
+      }
+    ],
+    "finalRun": {
+      "sourceSha": "3015ebec721bb6f66a6d19cc57947ae442d37ed4",
+      "commandFile": "attempt-10-staging-green-final/command.txt",
+      "gradleLog": "attempt-10-staging-green-final/gradle.log.gz",
+      "gradleExitMarker": 0,
+      "gradleSummary": "BUILD SUCCESSFUL in 40s; 63 actionable tasks: 3 executed, 60 up-to-date",
+      "outerExecutionSessionExitCode": 1,
+      "outerDiscrepancy": "UNRESOLVED; preserve independently observed exit statuses",
+      "startedAtUtc": "2026-10-19T14:34:29Z",
+      "finishedAtUtc": "2026-10-19T14:35:10Z",
+      "wallSeconds": 41,
+      "junit": {
+        "tests": 3,
+        "passed": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "testcaseSeconds": 5.423,
+        "sha256": "a79407a183e98c0ae22ebd0d9f7346680df2c83718ae4fab26b3243b655d980f"
+      },
+      "environment": {
+        "gradle": "8.10.2",
+        "runtimeJdk": "OpenJDK 17.0.20.1 /workspace/.toolchain/jdk-17",
+        "workerToolchain": "OpenJDK 21.0.12.1 /workspace/.toolchain/jdk-21-temurin",
+        "androidSdk": "/workspace/.toolchain/android-sdk API 35",
+        "ndk": "27.0.12077973",
+        "gradleUserHome": "/workspace/.gradle existing cache, offline"
+      },
+      "gradleLogPayload": {
+        "originalPath": "gradle.log",
+        "originalBytes": 4970,
+        "originalSha256": "6382dcbeed1d2e81b7d776eb4e11359521daea1fd7a2ab5dfe78b5fcf5102212",
+        "compressedPath": "gradle.log.gz",
+        "compressedBytes": 1127,
+        "compressedSha256": "e79c36c8a3d6e538831702fee8b366a395dc3572a94bcc287486b6177e29b90f",
+        "compression": "gzip mtime=0; payload is lossless"
+      }
+    },
+    "notRun": [
+      "full app JVM suite",
+      "LiteRT compatibility suite",
+      "lint",
+      "assembleDebug",
+      "AndroidTest compilation or execution",
+      "emulator",
+      "physical device",
+      "APK"
+    ],
+    "evidenceManifests": [
+      "attempt-08-staging-red/SHA256SUMS",
+      "attempt-09-staging-green/SHA256SUMS",
+      "attempt-10-staging-green-final/SHA256SUMS"
+    ]
   },
-  "originalTask": {
-    "id": "M03-01",
-    "title": "Diseñar Artifact API y persistencia",
-    "sourceStatus": "TODO",
-    "dependsOn": ["M02-05"],
-    "dependencyStatus": "M02-05 remains TODO; no formal dependency closure",
-    "formalCompletion": false,
-    "preparatoryCoverage": "Focused tests for interrupted committed-revision recovery and user-selected SAF byte/hash readback; broader original task/milestone remains open."
-  },
-  "planSource": {
-    "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
-    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
-    "roadmap": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
-    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
-    "taskIds": 97,
-    "uniqueIds": 97,
-    "dependencies": 120,
-    "sourceStatuses": {"TODO": 97},
-    "sourceFilesModified": false
-  },
-  "validation": {
-    "HOST": "PASS_FOCUSED_2_OF_2",
-    "fullJvmSuite": "NOT_RUN",
-    "lint": "NOT_RUN",
-    "assembleDebug": "NOT_RUN",
-    "androidTestCompilation": "NOT_RUN",
-    "EMULATOR": "NOT_RUN_THIS_INCREMENT; historical global result remains Room-v1 FAIL plus six model-dependent skips",
-    "PHYSICAL_DEVICE": "NOT_RUN",
-    "apk": "NOT_GENERATED"
-  },
-  "nextPreparatoryAction": "Inspect the existing XLSX artifact adapter and tests against the authentic M03-02 DoD; pursue only a bounded host-verifiable gap and retain M03-02 requires_device=true/source TODO."
+  "workspaceRecoveryReadback": {
+    "status": "CHECKOUT_AND_REACHABLE_WORK_PRESERVED; LOST_LOCAL_COMMIT_NOT_RECOVERED",
+    "repositoryPath": "/workspace/local-ai-workspace",
+    "observedAtUtc": "2026-10-19",
+    "featureHead": "b8e75b4a688d9e1f441324a3a1ecccb369f99ebc",
+    "backupRef": "recovery/backup-b8e75b4",
+    "backupRefTarget": "b8e75b4a688d9e1f441324a3a1ecccb369f99ebc",
+    "backupRefReadBack": true,
+    "implementationBranch": "codex/master-program-20261019",
+    "implementationBranchRemoteBeforeFollowup": "1c252cce243b33e541f26755f35f51d0df806466",
+    "lostLocalCommit": "2f8b0d496db8973edf161c7703efc8f0c17d34fd",
+    "lostCommitChecks": [
+      "git cat-file: absent",
+      "refs/branches/tags: absent",
+      "reflog: absent",
+      "git fsck unreachable commit/tag: none",
+      "bounded /workspace filename search for exact SHA, patch, diff, backup: none"
+    ],
+    "sourceReconstructed": false,
+    "m03_07SurvivingWork": "Already present in the reachable implementation history and docs/validation/master-program-m03-07. Focused line-diff class was 2/2 PASS on fad7acb; lint did not reach :app:lintDebug after pinned KleidiAI source download returned HTTP/2 503. M03-07 remains TODO/device-required and depends on M03-01 TODO.",
+    "main": "de615b772cf37a99e7e08a647c59607b271de606",
+    "v0.4.2Peeled": "de615b772cf37a99e7e08a647c59607b271de606"
+  }
 }

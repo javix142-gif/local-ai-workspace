@@ -1,0 +1,37 @@
+{
+  "attempt": "attempt-08-staging-red",
+  "classification": "EXPECTED_RED_BASELINE",
+  "sourceSha": "c87228c3fd7d076f5116bed92c09efd2f468dfcc",
+  "command": "command.txt",
+  "environment": "environment.txt",
+  "startedAtUtc": "2026-10-19T14:26:53Z",
+  "finishedAtUtc": "2026-10-19T14:27:35Z",
+  "wallSeconds": 42.0,
+  "capturedGradleExitCode": 1,
+  "outerExecutorExitCode": null,
+  "junit": [
+    {
+      "path": "junit/TEST-com.localai.workspace.artifacts.ArtifactPatchRecoveryTest.xml",
+      "tests": 1,
+      "passed": 0,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": "2026-10-19T14:27:29",
+      "durationSeconds": 5.421,
+      "sha256": "73c60fbc636b470523c9135c289681e6616d66074b2006d23e0a029b1b2fcc2c"
+    }
+  ],
+  "taskOutcomes": "task-outcomes.txt",
+  "gradleLog": "gradle.log.gz",
+  "expectedFailure": "The assertion that the abandoned .pending-UUID directory is removed after ArtifactStore.list() failed at ArtifactPatchRecoveryTest.kt:37 on the test-only baseline.",
+  "gradleLogPayload": {
+    "originalPath": "gradle.log",
+    "originalBytes": 5507,
+    "originalSha256": "79659ad37466fbb88792187cb483c5c09f560a8b7b27df4f560de27c5fcf3af9",
+    "compressedPath": "gradle.log.gz",
+    "compressedBytes": 1395,
+    "compressedSha256": "60309099af1dbe44d68f06d6ffe68fa56515d1c567594e6a1d1df21fbabbc809",
+    "compression": "gzip mtime=0; payload is lossless"
+  }
+}

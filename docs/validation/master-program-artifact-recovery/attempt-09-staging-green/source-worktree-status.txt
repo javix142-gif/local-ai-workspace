@@ -1,0 +1,2 @@
+?? docs/validation/master-program-artifact-recovery/attempt-08-staging-red/
+?? docs/validation/master-program-artifact-recovery/attempt-09-staging-green/

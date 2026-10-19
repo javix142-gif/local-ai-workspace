@@ -1,0 +1,37 @@
+{
+  "attempt": "attempt-10-staging-green-final",
+  "classification": "FOCUSED_PASS_WITH_EXECUTOR_STATUS_DISCREPANCY",
+  "sourceSha": "3015ebec721bb6f66a6d19cc57947ae442d37ed4",
+  "command": "command.txt",
+  "environment": "environment.txt",
+  "startedAtUtc": "2026-10-19T14:34:29Z",
+  "finishedAtUtc": "2026-10-19T14:35:10Z",
+  "wallSeconds": 41.0,
+  "capturedGradleExitCode": 0,
+  "outerExecutorExitCode": 1,
+  "junit": [
+    {
+      "path": "junit/TEST-com.localai.workspace.artifacts.ArtifactPatchRecoveryTest.xml",
+      "tests": 3,
+      "passed": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": "2026-10-19T14:35:04",
+      "durationSeconds": 5.423,
+      "sha256": "a79407a183e98c0ae22ebd0d9f7346680df2c83718ae4fab26b3243b655d980f"
+    }
+  ],
+  "taskOutcomes": "task-outcomes.txt",
+  "gradleLog": "gradle.log.gz",
+  "gradleSummary": "BUILD SUCCESSFUL in 40s; 63 actionable tasks: 3 executed, 60 up-to-date.",
+  "gradleLogPayload": {
+    "originalPath": "gradle.log",
+    "originalBytes": 4970,
+    "originalSha256": "6382dcbeed1d2e81b7d776eb4e11359521daea1fd7a2ab5dfe78b5fcf5102212",
+    "compressedPath": "gradle.log.gz",
+    "compressedBytes": 1127,
+    "compressedSha256": "e79c36c8a3d6e538831702fee8b366a395dc3572a94bcc287486b6177e29b90f",
+    "compression": "gzip mtime=0; payload is lossless"
+  }
+}

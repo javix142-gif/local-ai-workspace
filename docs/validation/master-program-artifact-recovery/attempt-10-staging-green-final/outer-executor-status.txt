@@ -1,0 +1,3 @@
+functions.exec_command returned session_id and functions.write_stdin later reported exit_code=1.
+The shell-captured timeout/Gradle exit marker is 0; Gradle log outcome is BUILD SUCCESSFUL.
+Cause of the outer tool-session status discrepancy: NOT_DETERMINED. The discrepancy is preserved, not normalized.

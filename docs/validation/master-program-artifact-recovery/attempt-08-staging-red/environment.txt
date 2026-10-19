@@ -1,0 +1,1 @@
+Gradle 8.10.2; Temurin 17.0.20.1 runtime; Temurin 21.0.12.1 test worker available through Gradle toolchain discovery; Android SDK API 35; NDK 27.0.12077973; existing GRADLE_USER_HOME=/workspace/.gradle; offline; no install, cleanup, or cache copy.

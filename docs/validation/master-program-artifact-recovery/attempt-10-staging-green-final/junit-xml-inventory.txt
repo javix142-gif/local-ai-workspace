@@ -1,0 +1,1 @@
+docs/validation/master-program-artifact-recovery/attempt-10-staging-green-final/junit/TEST-com.localai.workspace.artifacts.ArtifactPatchRecoveryTest.xml

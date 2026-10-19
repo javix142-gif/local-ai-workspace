@@ -1,4 +1,18 @@
-# Current continuation checkpoint — M03-05 approximate PPTX slide schematic (2026-10-19)
+# Current continuation checkpoint — workspace recovery and ArtifactStore staging (2026-10-19)
+
+The current checkout exists at `/workspace/local-ai-workspace` on the persistent implementation branch `codex/master-program-20261019`; it was fetched and inspected without a destructive reset. The exact feature baseline `b8e75b4a688d9e1f441324a3a1ecccb369f99ebc` is preserved by the already-published and read-back `recovery/backup-b8e75b4` ref. The implementation branch's remote checkpoint before this follow-up was `1c252cce243b33e541f26755f35f51d0df806466`. No additional branch was needed.
+
+The reported local commit `2f8b0d496db8973edf161c7703efc8f0c17d34fd` was not recovered: it is absent from local refs/reflogs/object lookup and no unreachable commit/tag or matching patch/diff/backup filename was found in the bounded `/workspace` search. No lost source was reconstructed. Existing M03-07 code/evidence already survives in this branch: the latest bounded line-diff UI class passed 2/2 on `fad7acb`; its lint invocation failed before `:app:lintDebug` because the pinned KleidiAI source download returned proxy HTTP/2 503. Do not report lint PASS or M03-07 completion. It remains source TODO, device-required, and depends on M03-01 TODO. See [`M03-07 recovery/results`](../validation/master-program-m03-07/RESULTS.md).
+
+The current M03-01 focused follow-up is source-preparatory only. Baseline test commit `c87228c3fd7d076f5116bed92c09efd2f468dfcc` reproduced stale crash-leftover `.pending-UUID` storage (1 expected failure). Production commit `26ff528e02be5e9cdcc17ebb776232a78556dae6` cleans only matching app-owned staging directories while holding the project write lock; test commit `3015ebec721bb6f66a6d19cc57947ae442d37ed4` also proves `list()` preserves a live writer's staging until lock release. The final focused class at exact SHA `3015ebec721bb6f66a6d19cc57947ae442d37ed4` has fresh XML **3/3 PASS**, zero failures/errors/skips; captured Gradle exit marker is 0 and the log says `BUILD SUCCESSFUL` in 40s (3 tasks executed/60 up-to-date). The outer `write_stdin` session reported exit 1; that discrepancy is explicitly unresolved and is not hidden. Logs, commands, timestamps, XML, environment, task outcomes and hashes are in [`M03-01 staging recovery evidence`](../validation/master-program-artifact-recovery/RESULTS.md).
+
+JDK 17 ran Gradle 8.10.2; JDK 21 was available for test-worker toolchain discovery; existing API 35 SDK/NDK 27.0.12077973 and `/workspace/.gradle` cache were used offline. No full JVM/LiteRT gate, lint, APK, AndroidTest, emulator or device test was run for this increment. The catalog remains the preserved original 97 unique IDs/120 dependencies, all source statuses TODO; M03-01 remains TODO due M02-05, M03-07 remains TODO/device-gated, M01-06 remains PENDING_REQUIRES_DEVICE, and Motorola is NOT_RUN. `main` and peeled `v0.4.2` remain at `de615b772cf37a99e7e08a647c59607b271de606`.
+
+Next: continue one bounded, source-backed preparatory artifact increment on this same branch. Do not recreate lost source, infer task closure, or rerun M03-07 lint without a new cause.
+
+---
+
+## Prior checkpoint — M03-05 approximate PPTX slide schematic (2026-10-19)
 
 The exact code tested is `375e45035f63576b17c1111ce738720373100b99`. It adds a read-only 16:9 Compose schematic from existing slide title/body plus a labeled image region; the validated caller-supplied PNG remains separately visible with accessible alt text and source dimensions. The UI explicitly says this is approximate and not a rendered PowerPoint page; text areas scroll and the exact text preview remains selectable.
 
