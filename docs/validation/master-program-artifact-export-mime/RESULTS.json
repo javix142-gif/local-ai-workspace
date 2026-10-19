@@ -1,0 +1,107 @@
+{
+  "name": "M03-01 format-aware SAF export MIME preparation",
+  "status": "FOCUSED_HOST_PASS_PREPARATORY_NOT_FORMAL",
+  "branch": "feat/0.5.0-skills-agents",
+  "implementationBranch": "codex/master-program-20261019",
+  "basePublishedHead": "6ae10ed24a6b4055c5304c9eacb285b453527488",
+  "redTestCommit": "fd6ea2055c432da7b2a1d464d09158f6598a7820",
+  "testedCodeSha": "0551915039efdd17557271a793163290f30be8d2",
+  "productionFiles": [
+    "app/src/main/java/com/localai/workspace/artifacts/ArtifactSafContract.kt",
+    "app/src/main/java/com/localai/workspace/ui/ArtifactsUi.kt"
+  ],
+  "testFiles": [
+    "app/src/test/java/com/localai/workspace/ui/ArtifactSafExportUiTest.kt"
+  ],
+  "finding": "The existing CreateDocument launcher always requested application/octet-stream despite each ArtifactFormat exposing its own MIME. The red integration assertion observed expected text/plain and actual application/octet-stream; exported bytes and readback were otherwise intact.",
+  "fix": "The SAF request now carries the validated file name and ArtifactFormat MIME. The test covers ACTION_CREATE_DOCUMENT, OPENABLE, local-only, suggested filename and MIME for all five supported artifact formats, plus the actual CODE byte/hash readback path.",
+  "red": {
+    "sourceSha": "fd6ea2055c432da7b2a1d464d09158f6598a7820",
+    "tests": 1,
+    "passed": 0,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0,
+    "gradleExitCode": 1,
+    "durationSeconds": 203,
+    "expectedFailure": "text/plain expected; application/octet-stream actual",
+    "xml": "red-existing-gradle-home/TEST-com.localai.workspace.ui.ArtifactSafExportUiTest.xml"
+  },
+  "wrapperAttempt": {
+    "sourceSha": "fd6ea2055c432da7b2a1d464d09158f6598a7820",
+    "status": "NOT_REACHED_GRADLE",
+    "exitCode": 1,
+    "durationSeconds": 6,
+    "cause": "Wrapper tried downloading Gradle 8.10.2 from services.gradle.org and received Connection refused; no test result."
+  },
+  "green": {
+    "sourceSha": "0551915039efdd17557271a793163290f30be8d2",
+    "testClass": "com.localai.workspace.ui.ArtifactSafExportUiTest",
+    "tests": 2,
+    "passed": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "gradleExitCode": 0,
+    "durationSeconds": 201,
+    "actionableTasks": 63,
+    "executedTasks": 63,
+    "xml": "green-0551915/TEST-com.localai.workspace.ui.ArtifactSafExportUiTest.xml",
+    "command": "green-0551915/command.txt",
+    "log": "green-0551915/gradle.log.gz"
+  },
+  "environment": {
+    "gradle": "8.10.2",
+    "runtimeJdk": "Temurin 17.0.20.1",
+    "workerJdk": "Temurin 21.0.12.1",
+    "androidSdk": "API 35 at /workspace/.toolchain/android-sdk",
+    "ndk": "27.0.12077973",
+    "gradleUserHome": "/workspace/.gradle",
+    "mode": "offline; --rerun-tasks; timeout 300s"
+  },
+  "otherGates": {
+    "fullJvm": "NOT_RUN",
+    "liteRtCompat": "NOT_RUN",
+    "lintDebug": "NOT_RUN_THIS_INCREMENT; prior missing cached lint-gradle dependency remains documented",
+    "androidTestCompile": "NOT_RUN_THIS_INCREMENT; prior attempts blocked on uncached dependencies/network",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED; compatible previous Debug signing key unavailable in checked standard locations"
+  },
+  "sourceTask": {
+    "id": "M03-01",
+    "title": "Diseñar Artifact API y persistencia",
+    "sourceStatus": "TODO",
+    "dependsOn": [
+      "M02-05"
+    ],
+    "dependencyStatus": "M02-05 remains TODO",
+    "formalCompletion": false,
+    "preparatoryScope": "Format-specific SAF create MIME only"
+  },
+  "sourcePlan": {
+    "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmap": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "tasks": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "sourceStates": {
+      "TODO": 97
+    },
+    "edited": false
+  },
+  "emulatorContext": "Historical global emulator result remains Room v1 fixture FAIL plus six model-dependent skips; this increment did not rerun instrumentation.",
+  "evidenceManifest": {
+    "path": "docs/validation/master-program-artifact-export-mime/SHA256SUMS",
+    "entries": 25,
+    "sha256": "2639758d52129b2b424b03e61d5e47d46f32bdd8093377eb8a5494ff8d4538b5",
+    "selfExclusions": [
+      "RESULTS.json",
+      "SHA256SUMS"
+    ],
+    "localVerification": "25/25 payloads PASS; RESULTS.json and SHA256SUMS self-excluded"
+  },
+  "logPayloadHashes": "docs/validation/master-program-artifact-export-mime/log-payload-hashes.json"
+}

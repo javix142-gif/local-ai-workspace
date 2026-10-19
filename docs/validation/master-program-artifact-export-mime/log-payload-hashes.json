@@ -1,0 +1,32 @@
+[
+  {
+    "attempt": "red-fd6ea20",
+    "rawPath": "docs/validation/master-program-artifact-export-mime/red-fd6ea20/gradle.log",
+    "rawBytes": 2050,
+    "rawSha256": "bb85c8a579c297e974ca8504a95c1ba4e87732d5487b3767af5d12db6fd3e92c",
+    "compressedPath": "docs/validation/master-program-artifact-export-mime/red-fd6ea20/gradle.log.gz",
+    "compressedBytes": 561,
+    "compressedSha256": "ebf61d661c3372ecce6b736ede47a8e7b65c80a44dd4e49e9116a8131b27b4d5",
+    "compression": "gzip, lossless"
+  },
+  {
+    "attempt": "red-existing-gradle-home",
+    "rawPath": "docs/validation/master-program-artifact-export-mime/red-existing-gradle-home/gradle.log",
+    "rawBytes": 525054,
+    "rawSha256": "7223c6e2c9fe977834a3cb074867d10756ffd0576c2408488468ba7106b538a4",
+    "compressedPath": "docs/validation/master-program-artifact-export-mime/red-existing-gradle-home/gradle.log.gz",
+    "compressedBytes": 45742,
+    "compressedSha256": "cff83457dd82990f14021f19b07811520d0ef32ff1bba3871de409845f1ea51a",
+    "compression": "gzip, lossless"
+  },
+  {
+    "attempt": "green-0551915",
+    "rawPath": "docs/validation/master-program-artifact-export-mime/green-0551915/gradle.log",
+    "rawBytes": 524544,
+    "rawSha256": "087e78f1a4c0471383d645a444ea7f3d0b2494b806c1598c4144392c3d541da3",
+    "compressedPath": "docs/validation/master-program-artifact-export-mime/green-0551915/gradle.log.gz",
+    "compressedBytes": 45437,
+    "compressedSha256": "4c716e91daf9bd9e0d1394fef4478640ca4a4088c4b3dae18c6ce7d5772e336c",
+    "compression": "gzip, lossless"
+  }
+]

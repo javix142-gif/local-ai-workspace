@@ -1,0 +1,12 @@
+source_sha=fd6ea2055c432da7b2a1d464d09158f6598a7820
+start_utc=2026-10-19T17:43:40Z
+openjdk version "17.0.20.1" 2026-08-18
+OpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)
+OpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)
+openjdk version "21.0.12.1" 2026-08-18 LTS
+OpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)
+OpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)
+ndk_source_properties=present
+exit_code=1
+duration_seconds=6
+end_utc=2026-10-19T17:43:46Z

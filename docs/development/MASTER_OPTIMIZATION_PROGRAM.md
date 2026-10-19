@@ -1,5 +1,15 @@
 # Master optimization program — first implementation delivery
 
+## 2026-10-19 — M03-01 format-aware SAF create request (preparatory)
+
+At test-first baseline `fd6ea2055c432da7b2a1d464d09158f6598a7820`, the actual Compose export test showed that `CreateDocument` requested `application/octet-stream` for a CODE artifact even though `ArtifactFormat.CODE.mime` is `text/plain`. Production now passes the artifact name/format through `ArtifactCreateDocumentContract`; the system document request uses each format's declared MIME. The explicit SAF choice, immutable revision lookup, exact byte write and SHA-256 readback are unchanged.
+
+At exact final code SHA `0551915039efdd17557271a793163290f30be8d2`, `ArtifactSafExportUiTest` passed **2/2** (0 failures/errors/skips), Gradle exit 0, 201 seconds, 63 tasks executed. Coverage checks MIME/name/action/openable/local-only for XLSX, DOCX, PDF, PPTX and CODE and exercises CODE export through byte/hash readback. The initial wrapper call did not start Gradle (`Connection refused` downloading the pinned distribution); the focused red and green runs used the already-cached `/workspace/.gradle` distribution offline. Exact commands, timestamps, red/green XML, gzip logs, and hashes are in `../validation/master-program-artifact-export-mime/RESULTS.md` (25 payloads; manifest SHA-256 `2639758d52129b2b424b03e61d5e47d46f32bdd8093377eb8a5494ff8d4538b5`).
+
+No full JVM/LiteRT gate, lint, AndroidTest compilation, assembly, emulator, physical device or APK was run. The local prior Debug signing key remains unavailable and no replacement key was generated. M03-01 stays source `TODO` because M02-05 remains `TODO`; this increment closes only the format-MIME subgap. The canonical source backlog/roadmap remain unchanged: 97 IDs, 120 edges, all 97 source statuses `TODO`; `PHYSICAL_DEVICE=NOT_RUN`, M01-06 remains `PENDING_REQUIRES_DEVICE`.
+
+---
+
 ## 2026-10-19 — M00-06 exact-run metrics correlation (preparatory)
 
 Code SHA `9f99beba0d38787a62e83bbfa457cc39b9e9d0ab` adds exact opaque-run-ID correlation between a normal-chat trace and its available runtime metrics, and a measured document import timeline that includes asynchronous EG1 indexing only when the index run ID matches the import. Stale metrics are not joined; absent native TTFT/decode values remain absent. The focused HOST suite passed 10/10 in 120 seconds, exit 0. Exact command, JDK/SDK, event stream, XML, full Gradle log and checksums are in `../validation/master-program-recovery-20261019/m00-06-correlated-timeline-9f99beb/` and the enclosing recovery report.

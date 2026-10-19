@@ -1,0 +1,19 @@
+{
+  "xmlFiles": 1,
+  "tests": 2,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "cases": [
+    {
+      "class": "com.localai.workspace.ui.ArtifactSafExportUiTest",
+      "name": "createDocumentRequestCarriesEachArtifactMimeAndFilename",
+      "result": "PASS"
+    },
+    {
+      "class": "com.localai.workspace.ui.ArtifactSafExportUiTest",
+      "name": "explicitCreateDocumentChoiceExportsExactVerifiedBytesAndReadsThemBack",
+      "result": "PASS"
+    }
+  ]
+}
