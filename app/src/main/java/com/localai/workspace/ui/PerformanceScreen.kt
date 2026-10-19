@@ -231,8 +231,11 @@ fun PerformanceScreen(graph: AppGraph, back: () -> Unit) {
                 "Request TTFT p50/p95: ${summary.requestTtftMs.p50 ?: "unavailable"} / ${summary.requestTtftMs.p95 ?: "unavailable"} ms\n" +
                 "Decode p50/p95: ${summary.decodeTokensPerSecond.p50 ?: "unavailable"} / ${summary.decodeTokensPerSecond.p95 ?: "unavailable"} tokens/s\n" +
                 "Quality checked/pass: ${summary.qualityChecked}/${summary.qualityPassed}; rejected ${summary.rejectedQuality}",style=MaterialTheme.typography.bodySmall)
+            BenchmarkSummaryPresentation.additionalMetricRows(summary).forEach { (label,value) ->
+                Text("$label · $value",style=MaterialTheme.typography.bodySmall)
+            }
         }
-        Text("p95 uses nearest rank; fewer than 20 measured samples is exploratory. Unknown metrics remain unavailable. Quality-rejected runs are excluded from speed summaries.",style=MaterialTheme.typography.bodySmall)
+        Text("p95 uses nearest rank; fewer than 20 measured samples is exploratory. PSS is the maximum of before/after endpoint samples, not peak memory during generation. Unknown metrics remain unavailable. Quality-rejected runs are excluded from speed summaries.",style=MaterialTheme.typography.bodySmall)
         TextButton(onClick={val json=com.google.gson.GsonBuilder().serializeNulls().setPrettyPrinting().create().toJson(BenchmarkSummaries.groups(matching.takeLast(50)));context.getSystemService(ClipboardManager::class.java).setPrimaryClip(ClipData.newPlainText("Comparable benchmark cohorts",json))}){Text("Copy cohort summary")}
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             OutlinedButton(onClick = {

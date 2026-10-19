@@ -8,7 +8,9 @@ data class BenchmarkCohort(val modelIdentity:String,val device:String,val androi
 data class MetricDistribution(val measuredSamples:Int,val p50:Double?,val p95:Double?)
 data class BenchmarkSummary(val cohort:BenchmarkCohort,val records:Int,val successful:Int,val rejectedQuality:Int,
     val qualityChecked:Int,val qualityPassed:Int,val nativeTtftMs:MetricDistribution,val requestTtftMs:MetricDistribution,
-    val decodeTokensPerSecond:MetricDistribution,val totalMs:MetricDistribution,val observedWorkerPssBytes:MetricDistribution)
+    val decodeTokensPerSecond:MetricDistribution,val totalMs:MetricDistribution,
+    val modelLoadMs:MetricDistribution,val modelPreparationMs:MetricDistribution,val prefillTokensPerSecond:MetricDistribution,
+    val observedAppPssBytes:MetricDistribution,val observedWorkerPssBytes:MetricDistribution,val availableRamAfterBytes:MetricDistribution)
 
 /** Same-device/model/task/config cohorts only. Missing measurements are not zeros.
  * Median interpolates the middle pair; p95 uses nearest rank (exploratory with n<20).
@@ -30,6 +32,33 @@ object BenchmarkSummaries {
         BenchmarkSummary(key,rows.size,valid.size,rows.count{it.result==BenchmarkResult.SUCCESS&&it.validationPassed==false},
             rows.count{it.result==BenchmarkResult.SUCCESS&&it.validationPassed!=null},rows.count{it.result==BenchmarkResult.SUCCESS&&it.validationPassed==true},
             longs{it.metrics.timeToFirstTokenMs},longs{it.metrics.requestTimeToFirstTokenMs},distribution(valid.map{it.metrics.decodeTokensPerSecond}),
-            longs{it.metrics.endToEndTotalMs},longs{listOfNotNull(it.metrics.workerPssBeforeBytes,it.metrics.workerPssAfterBytes).maxOrNull()})
+            longs{it.metrics.endToEndTotalMs},longs{it.metrics.modelLoadDurationMs},longs{it.metrics.modelPreparationDurationMs},
+            distribution(valid.map{it.metrics.prefillTokensPerSecond}),
+            longs{listOfNotNull(it.metrics.appPssBeforeBytes,it.metrics.appPssAfterBytes).maxOrNull()},
+            longs{listOfNotNull(it.metrics.workerPssBeforeBytes,it.metrics.workerPssAfterBytes).maxOrNull()},
+            longs{it.metrics.availableRamAfterBytes})
+    }
+}
+
+/** Stable UI text for comparable performance distributions; null metrics stay visible as unavailable. */
+object BenchmarkSummaryPresentation {
+    fun additionalMetricRows(summary:BenchmarkSummary):List<Pair<String,String>> = listOf(
+        "Model load p50/p95" to format(summary.modelLoadMs,"ms"),
+        "Model preparation p50/p95" to format(summary.modelPreparationMs,"ms"),
+        "Prefill p50/p95" to format(summary.prefillTokensPerSecond,"tokens/s"),
+        "Observed app PSS max(before, after) p50/p95" to format(summary.observedAppPssBytes,"bytes"),
+        "Observed worker PSS max(before, after) p50/p95" to format(summary.observedWorkerPssBytes,"bytes"),
+        "Available RAM after p50/p95" to format(summary.availableRamAfterBytes,"bytes"),
+    )
+
+    private fun format(distribution:MetricDistribution,unit:String):String {
+        if(distribution.measuredSamples==0)return "unavailable (0 measured)"
+        return "${number(distribution.p50)} / ${number(distribution.p95)} $unit (n=${distribution.measuredSamples})"
+    }
+
+    private fun number(value:Double?):String = when {
+        value==null -> "unavailable"
+        value%1.0==0.0 -> value.toLong().toString()
+        else -> java.math.BigDecimal.valueOf(value).stripTrailingZeros().toPlainString()
     }
 }
