@@ -289,7 +289,7 @@ class ArtifactRenderer(private val context:Context) {
                 val pageContentHeight=PDPage().mediaBox.height-bottom*2
                 // A very tall first row cannot be repeated without consuming the full page.
                 val repeatHeaderOnContinuation=headerHeight+lineHeight+padding*2+4f<=pageContentHeight
-                fun drawChunk(cells:List<List<String>>,font:PDType1Font,offset:Int,chunkLines:Int,rowHeight:Float,headerBackground:Boolean) {
+                fun drawChunk(cells:List<List<String>>,font:PDFont,offset:Int,chunkLines:Int,rowHeight:Float,headerBackground:Boolean) {
                     val rowTop=y;val rowBottom=rowTop-rowHeight
                     stream!!.saveGraphicsState()
                     if(headerBackground) {
