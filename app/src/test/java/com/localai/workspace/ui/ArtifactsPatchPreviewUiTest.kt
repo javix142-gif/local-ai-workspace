@@ -54,9 +54,10 @@ class ArtifactsPatchPreviewUiTest {
         assertEquals("Before explicit review action there is only the original revision",1,store.history(project,revision.id).size)
         assertEquals(body,store.verifiedFile(project,revision).readText())
 
-        compose.onNodeWithTag("artifact-patch-apply").performClick()
+        compose.onNodeWithTag("artifact-patch-apply").performScrollTo().performClick()
+        compose.waitUntil(10_000) { compose.onAllNodesWithTag("artifact-status").fetchSemanticsNodes().isNotEmpty() }
+        compose.onNodeWithTag("artifact-status").assertTextContains("Patch verified as immutable private draft v2")
         compose.waitUntil(10_000) { store.history(project,revision.id).size==2 }
-        compose.onNodeWithTag("artifact-status").assertTextContains("new immutable private draft v2")
         assertEquals("fun answer() = 43\n",store.verifiedFile(project,store.history(project,revision.id).first()).readText())
         assertEquals(body,store.verifiedFile(project,revision).readText())
     }
@@ -68,6 +69,8 @@ class ArtifactsPatchPreviewUiTest {
         compose.waitUntil(10_000) { compose.onAllNodesWithTag(previewTag).fetchSemanticsNodes().isNotEmpty() }
         compose.onNodeWithTag(previewTag).performScrollTo().performClick()
         compose.onNodeWithTag("artifact-patch-discard").performScrollTo().performClick()
+        compose.waitUntil(10_000) { compose.onAllNodesWithTag("artifact-status").fetchSemanticsNodes().isNotEmpty() }
+        compose.onNodeWithTag("artifact-status").assertTextContains("Patch preview discarded; no artifact bytes changed.")
         compose.waitUntil(10_000) { store.codePatchPreviews(project).isEmpty() }
         assertEquals(1,store.history(project,revision.id).size)
         assertEquals(body,store.verifiedFile(project,revision).readText())
