@@ -124,6 +124,83 @@ class PptxImageArtifactTest {
     }
 
     @Test
+    fun multiSlidePptxKeepsDistinctImagesAndRelationshipsAcrossImmutableRevision() = runBlocking {
+        val root = File(context.cacheDir, "pptx-multislide-${UUID.randomUUID()}")
+        val store = ArtifactStore(context, root)
+        val outputDir = File("build/pptx-image/multi-slide").apply { mkdirs() }
+        val project = "pptx-multislide-project"
+        val firstPng = solidPngBase64(Color.RED)
+        val secondPng = solidPngBase64(Color.BLUE)
+        val input = JSONObject().put("format", "PPTX").put("name", "visual.pptx")
+            .put("slides", org.json.JSONArray()
+                .put(JSONObject().put("title", "Primera").put("body", "Mapa rojo")
+                    .put("imagePngBase64", firstPng).put("imageAltText", "Mapa rojo"))
+                .put(JSONObject().put("title", "Segunda").put("body", "Mapa azul")
+                    .put("imagePngBase64", secondPng).put("imageAltText", "Mapa azul")))
+        try {
+            val first = store.create(project, ArtifactSpec.parse(input))
+            val firstBytes = store.verifiedFile(project, first).readBytes()
+            val firstFile = File(outputDir, "multi-slide-v1.pptx").apply { writeBytes(firstBytes) }
+            ZipFile(firstFile).use { zip ->
+                val presentation = xml(zip, "ppt/presentation.xml")
+                assertEquals("The package must expose both slides in order", 2,
+                    presentation.getElementsByTagNameNS("http://schemas.openxmlformats.org/presentationml/2006/main", "sldId").length)
+                val expectedImages = listOf(firstPng, secondPng).map { java.util.Base64.getDecoder().decode(it) }
+                val expectedAlt = listOf("Mapa rojo", "Mapa azul")
+                expectedImages.forEachIndexed { index, expectedBytes ->
+                    val slideNumber = index + 1
+                    val slide = xml(zip, "ppt/slides/slide$slideNumber.xml")
+                    val pictures = slide.getElementsByTagNameNS("http://schemas.openxmlformats.org/presentationml/2006/main", "pic")
+                    assertEquals("Each slide must contain its own image", 1, pictures.length)
+                    val nonVisual = pictures.item(0) as org.w3c.dom.Element
+                    val pictureProperties = nonVisual.getElementsByTagNameNS(
+                        "http://schemas.openxmlformats.org/presentationml/2006/main", "cNvPr")
+                    assertEquals(expectedAlt[index], pictureProperties.item(0).attributes.getNamedItem("descr").nodeValue)
+
+                    val rels = xml(zip, "ppt/slides/_rels/slide$slideNumber.xml.rels")
+                        .getElementsByTagName("Relationship")
+                    val imageRelation = (0 until rels.length).map { rels.item(it) as org.w3c.dom.Element }
+                        .single { it.attributes.getNamedItem("Type").nodeValue.endsWith("/image") }
+                    assertEquals("rIdImage", imageRelation.attributes.getNamedItem("Id").nodeValue)
+                    assertEquals("../media/image$slideNumber.png", imageRelation.attributes.getNamedItem("Target").nodeValue)
+                    assertArrayEquals(expectedBytes, zip.getInputStream(zip.getEntry("ppt/media/image$slideNumber.png")).use { it.readBytes() })
+                }
+                zip.entries().asSequence().filter { it.name.endsWith(".xml") || it.name.endsWith(".rels") }.forEach { entry ->
+                    zip.getInputStream(entry).use { DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(it) }
+                }
+            }
+
+            val parsedFirst = DocumentParser(context).parse(firstFile, first.format.mime, first.name)
+            assertEquals(listOf(1, 2), parsedFirst.pages.map { it.pageNumber })
+            assertTrue(parsedFirst.pages[0].text.contains("Primera"))
+            assertTrue(parsedFirst.pages[1].text.contains("Segunda"))
+
+            val revisedSpec = store.spec(project, first).json().apply {
+                getJSONArray("slides").getJSONObject(1).put("title", "Segunda revisada")
+            }
+            val revised = store.revise(project, first.id, first.version, ArtifactSpec.parse(revisedSpec))
+            val revisedBytes = store.verifiedFile(project, revised).readBytes()
+            val revisedFile = File(outputDir, "multi-slide-v2.pptx").apply { writeBytes(revisedBytes) }
+            assertNotEquals(first.sha256, revised.sha256)
+            assertArrayEquals("The first immutable revision remains intact", firstBytes, store.verifiedFile(project, first).readBytes())
+            ZipFile(revisedFile).use { zip ->
+                assertEquals(2, xml(zip, "ppt/presentation.xml")
+                    .getElementsByTagNameNS("http://schemas.openxmlformats.org/presentationml/2006/main", "sldId").length)
+                assertArrayEquals(firstPng.let { java.util.Base64.getDecoder().decode(it) },
+                    zip.getInputStream(zip.getEntry("ppt/media/image1.png")).use { it.readBytes() })
+                assertArrayEquals(secondPng.let { java.util.Base64.getDecoder().decode(it) },
+                    zip.getInputStream(zip.getEntry("ppt/media/image2.png")).use { it.readBytes() })
+            }
+            val parsedRevised = DocumentParser(context).parse(revisedFile, revised.format.mime, revised.name)
+            assertEquals(listOf(1, 2), parsedRevised.pages.map { it.pageNumber })
+            assertTrue(parsedRevised.pages[0].text.contains("Primera"))
+            assertTrue(parsedRevised.pages[1].text.contains("Segunda revisada"))
+        } finally {
+            root.deleteRecursively()
+        }
+    }
+
+    @Test
     fun rejectsMalformedOversizedOrUnlabelledPptxImages() {
         val tooLarge = java.util.Base64.getEncoder().encodeToString(ByteArray(PptxImagePayloadValidator.MAX_IMAGE_BYTES + 1))
         val oversizedDimensions = pngBytes.copyOf()
