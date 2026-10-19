@@ -15,8 +15,9 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk=[29],application=Application::class)
 class SemanticStorageTest {
-    @Test fun additiveSidecarLeavesVersion8WorkspaceAndEg1VectorsIntact()=runBlocking {
+    @Test fun additiveSidecarLeavesCurrentWorkspaceVersionAndEg1VectorsIntact()=runBlocking {
         val context=RuntimeEnvironment.getApplication();val old=Room.inMemoryDatabaseBuilder(context,WorkspaceDatabase::class.java).build()
+        val workspaceVersionBeforeSidecar = old.openHelper.readableDatabase.version
         val project=ProjectEntity("p","Saved project",1,2);val chat=ConversationEntity("chat","p","Saved chat",1,2);val message=MessageEntity("msg","chat","USER","saved",3)
         val model=ModelEntity("model","Gemma","private",fileHash="a".repeat(64),fileSize=42,format="LITERT_LM",runtimeId="litert-lm-android",compatibilityStatus="COMPATIBLE",importedAt=1)
         val memory=MemoryItemEntity("memory","GLOBAL",content="Approved preference",sourceType="USER",createdAt=1,updatedAt=2)
@@ -25,7 +26,7 @@ class SemanticStorageTest {
         old.projectDao().upsert(project);old.conversationDao().upsert(chat);old.messageDao().insert(message);old.modelDao().insert(model);old.semanticVectorDao().put(vector)
         val newer=Room.inMemoryDatabaseBuilder(context,SemanticDatabase::class.java).build()
         try { newer.openHelper.writableDatabase
-            assertEquals(8,old.openHelper.readableDatabase.version)
+            assertEquals(workspaceVersionBeforeSidecar,old.openHelper.readableDatabase.version)
             assertEquals(memory,old.memoryDao().get("memory"));assertEquals(project,old.projectDao().get("p"));assertEquals(chat,old.conversationDao().get("chat"));assertEquals(message,old.messageDao().recent("chat",10).single());assertEquals(model,old.modelDao().get("model"));assertArrayEquals(vector.vector,old.semanticVectorDao().get("D:1","eg1")!!.vector)
         } finally { newer.close();old.close() }
     }
