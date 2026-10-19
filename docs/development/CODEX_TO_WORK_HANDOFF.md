@@ -6,9 +6,11 @@ At exact source SHA `4638199`, `DocxArtifactStructureTest` passed **2/2**, 0 fai
 
 The proportional Gradle command `:app:lintDebug :app:compileDebugAndroidTestKotlin` exited 1 after 12m13s in offline mode because `:llama-runtime:extractDebugAnnotations` could not resolve uncached `com.android.tools.lint:lint-gradle:31.7.3`; CMake/Ninja release builds for arm64-v8a and x86_64 finished, but `:app:lintDebug` was not reached. A separate `:app:compileDebugAndroidTestKotlin` attempt exited 1 in 23s while resolving AndroidX/Roombased Android test dependencies at `:app:processDebugAndroidTestManifest`; Kotlin compilation was not reached. No network retry or package install was made. Both complete logs/commands are in the evidence directory. This is an offline-cache blocker, not a product pass or demonstrated product failure.
 
-M03-03 remains source `TODO`, `requires_device=true`, with M03-01 and M02-03 dependencies still `TODO`. The original 97 task IDs, 120 edges/order and all source statuses are unchanged. This tests synthetic generated DOCX only; imported DOCX preservation, Android SAF/Office viewer behavior, emulator and Motorola remain unverified. No full JVM/LiteRT suite or APK was run. Next bounded review: M03-04 PDF against its authentic source DoD. Do not alter source task states.
+M03-03 remains source `TODO`, `requires_device=true`, with M03-01 and M02-03 dependencies still `TODO`. The original 97 task IDs, 120 edges/order and all source statuses are unchanged. This tests synthetic generated DOCX only; imported DOCX preservation, Android SAF/Office viewer behavior, emulator and Motorola remain unverified. No full JVM/LiteRT suite or APK was run. M03-04 PDF already has separate preparatory evidence; the cross-format test above confirms its layout path on the current code. The next uncovered M03-03 DoD aspect is a bounded, deterministic built-in DOCX template selector. Do not alter source task states.
 
-Evidence manifest: `docs/validation/master-program-docx-ordered-blocks/SHA256SUMS`.
+A shared-renderer regression on the same product code, recorded by documentation commit `1f5ff6c552c5c19c322fbc4c5f324a37d366f672`, reran `PdfArtifactLayoutTest` and passed 1/1 (32s; PDF production code unchanged). XML/log are in the same evidence package. This confirms the DOCX change did not regress the existing PDF word-wrap/page/revision behavior.
+
+Evidence manifest: `docs/validation/master-program-docx-ordered-blocks/SHA256SUMS` (22 entries, SHA-256 `6d5eae812f10de5d8bce3bc45302480024b56c1121b4799f34aea790534d9a98`).
 
 ---
 
