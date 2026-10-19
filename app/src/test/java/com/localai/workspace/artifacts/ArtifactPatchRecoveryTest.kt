@@ -12,6 +12,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.io.File
+import java.io.RandomAccessFile
 import java.util.UUID
 
 @RunWith(RobolectricTestRunner::class)
@@ -38,6 +39,29 @@ class ArtifactPatchRecoveryTest {
             assertTrue(unrelated.isFile)
             assertEquals(1,store.history(project,revision.id).size)
             assertEquals(body,store.verifiedFile(project,revision).readText())
+        } finally {
+            root.deleteRecursively()
+        }
+    }
+
+    @Test fun listingLeavesStagingAloneWhileAnotherWriterHoldsProjectLock() {
+        val root=File(context.cacheDir,"artifact-live-stage-${UUID.randomUUID()}")
+        val project="live-stage-${UUID.randomUUID()}"
+        try {
+            val store=ArtifactStore(context,root)
+            val revision=store.create(project,ArtifactSpec.parse(JSONObject()
+                .put("format","CODE").put("name","answer.kt").put("body","fun answer() = 42\n")))
+            val owner=File(root,"artifacts-${ArtifactStore.hash(project.toByteArray(Charsets.UTF_8))}")
+            val pending=File(File(owner,revision.id),".pending-${UUID.randomUUID()}").apply { check(mkdir()) }
+
+            RandomAccessFile(File(owner,".write.lock"),"rw").channel.use { channel->
+                channel.lock().use {
+                    assertEquals(listOf(revision),store.list(project))
+                    assertTrue(pending.isDirectory)
+                }
+            }
+            assertEquals(listOf(revision),store.list(project))
+            assertFalse(pending.exists())
         } finally {
             root.deleteRecursively()
         }
