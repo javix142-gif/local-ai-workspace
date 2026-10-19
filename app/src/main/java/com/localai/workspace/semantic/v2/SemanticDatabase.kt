@@ -91,7 +91,7 @@ data class IndexedSegmentPageRow(
     @Query("SELECT s.*, o.displayName AS sourceName, p.vector AS vector, e.dimension AS dimension, e.embeddingSpaceKey AS spaceKey, e.modelHash AS modelHash, e.modelId AS modelId, e.taskType AS cursorTaskType, e.contentHash AS cursorContentHash FROM semantic_segments s JOIN semantic_sources o ON o.id=s.sourceId JOIN semantic_embeddings_v2 e ON e.segmentId=s.id JOIN semantic_vector_payloads_v2 p ON p.embeddingSpaceKey=e.embeddingSpaceKey AND p.taskType=e.taskType AND p.contentHash=e.contentHash WHERE e.indexId=:indexId AND o.scopeKey=:scope AND e.embeddingSpaceKey=:space AND (:afterSegmentId IS NULL OR s.id>:afterSegmentId OR (s.id=:afterSegmentId AND e.taskType>:afterTaskType) OR (s.id=:afterSegmentId AND e.taskType=:afterTaskType AND e.contentHash>:afterContentHash)) ORDER BY s.id,e.taskType,e.contentHash LIMIT :limit")
     suspend fun corpusPage(indexId:String,scope:String,space:String,afterSegmentId:String?,afterTaskType:String?,afterContentHash:String?,limit:Int):List<IndexedSegmentPageRow>
 }
-/** Sidecar DB is additive: the complete version-8 workspace, including EG1 vectors, is untouched. */
+/** Semantic V2 is an additive sidecar; WorkspaceDatabase and its EG1 vectors remain untouched. */
 @Database(entities = [SemanticModelRecord::class, SemanticSourceRecord::class, SemanticSegmentRecord::class, SemanticEmbeddingLink::class, SemanticVectorPayload::class, SemanticIndexJob::class, SemanticActiveIndex::class], version = 1, exportSchema = true)
 abstract class SemanticDatabase : RoomDatabase() {
     abstract fun dao(): SemanticDao
