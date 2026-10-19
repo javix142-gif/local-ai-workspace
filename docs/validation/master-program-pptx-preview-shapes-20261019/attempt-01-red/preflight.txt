@@ -1,0 +1,12 @@
+Preflight UTC: 2026-10-19
+Repository: /workspace/aws-master-resume-20261019
+Branch: codex/aws-master-resume-20261019
+Code base: 7330112865450a0b1b6db7997cb10d43506b3aac
+Remote codex branch at preflight: 7330112865450a0b1b6db7997cb10d43506b3aac
+Working tree before adding regression: clean.
+Product state: committed PPTX native shapes; current schematic preview has title/body/supplied image region but does not render the new shapes.
+Gradle runtime: Eclipse Temurin 17.0.20.1 at /workspace/.toolchain/jdk-17.
+Test worker: Eclipse Temurin 21.0.12.1 at /workspace/.toolchain/jdk-21-temurin.
+Android SDK: /workspace/.toolchain/android-sdk, API 35.
+NDK: /workspace/.toolchain/android-sdk/ndk/27.0.12077973.
+No installation, cache cleanup, emulator/device, or APK.
