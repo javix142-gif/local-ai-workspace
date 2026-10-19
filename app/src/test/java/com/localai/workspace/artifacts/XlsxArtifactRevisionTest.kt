@@ -298,4 +298,33 @@ class XlsxArtifactRevisionTest {
             root.deleteRecursively()
         }
     }
+
+    @Test fun formulaCachedValuesKeepTheirDeclaredSpreadsheetResultTypes() = runBlocking {
+        val project = "xlsx-formula-cache-type-${UUID.randomUUID()}"
+        val store = ArtifactStore(context)
+        val spec = ArtifactSpec.parse(JSONObject().put("format", "XLSX").put("name", "formula-types.xlsx")
+            .put("sheets", JSONArray().put(JSONObject().put("name", "Data").put("cells", JSONArray()
+                .put(JSONObject().put("address", "A1").put("formula", "1+1").put("value", "2").put("type", "number"))
+                .put(JSONObject().put("address", "A2").put("formula", "\"cached text\"").put("value", "cached text").put("type", "string"))
+                .put(JSONObject().put("address", "A3").put("formula", "1=1").put("value", "1").put("type", "boolean"))))))
+        try {
+            val revision = store.create(project, spec)
+            val file = store.verifiedFile(project, revision)
+            val worksheet = ZipFile(file).use { zip ->
+                zip.getInputStream(zip.getEntry("xl/worksheets/sheet1.xml")).bufferedReader().use { it.readText() }
+            }
+            assertTrue("A numeric formula cache must be serialized as numeric, not text",
+                Regex("<c r=\"A1\"[^>]*\\bt=\"n\"[^>]*>").containsMatchIn(worksheet))
+            assertTrue("A string formula cache must keep the string result type",
+                Regex("<c r=\"A2\"[^>]*\\bt=\"str\"[^>]*>").containsMatchIn(worksheet))
+            assertTrue("A boolean formula cache must keep the boolean result type",
+                Regex("<c r=\"A3\"[^>]*\\bt=\"b\"[^>]*>").containsMatchIn(worksheet))
+            assertTrue(worksheet.contains("<f>1+1</f><v>2</v>"))
+            assertTrue(worksheet.contains("<f>&quot;cached text&quot;</f><v>cached text</v>"))
+            assertTrue(worksheet.contains("<f>1=1</f><v>1</v>"))
+            exportInteropFixture("formula-cache-types.xlsx", file)
+        } finally {
+            File(File(context.filesDir, "tool-workspaces"), "artifacts-${ArtifactStore.hash(project.toByteArray(Charsets.UTF_8))}").deleteRecursively()
+        }
+    }
 }
