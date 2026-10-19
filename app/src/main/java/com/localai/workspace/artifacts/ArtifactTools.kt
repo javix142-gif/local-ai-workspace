@@ -72,7 +72,7 @@ class ArtifactTool(context:Context,private val operation:String):LocalTool {
             val revision=store.applyXlsxCellEdits(context.projectId,arguments.getString("id"),arguments.getInt("expectedVersion"),edits)
             store.verifiedFile(context.projectId,revision)
             JSONObject().put("artifact",revision.json()).put("state","PRIVATE_DRAFT_VERIFIED")
-                .put("note","The selected cells were saved as a new immutable XLSX version. Formula edits remove old cached results and request recalculation by a compatible spreadsheet reader; this app does not evaluate formulas. Re-read this version before another update; imported originals remain unchanged.").toString()
+                .put("note","The selected cells were saved as a new immutable XLSX version. Formula edits remove old cached results and request recalculation by a compatible spreadsheet reader; formulas are not recalculated by this app. Re-read this version before another update; imported originals remain unchanged.").toString()
         } else {
             val spec=ArtifactSpec.parse(arguments.getJSONObject("spec"))
             val revision=if(operation=="artifacts.create")store.create(context.projectId,spec)else store.revise(context.projectId,arguments.getString("id"),arguments.getInt("expectedVersion"),spec)
