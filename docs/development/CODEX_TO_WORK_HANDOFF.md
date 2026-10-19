@@ -1,4 +1,14 @@
-# Latest focused M00-04 HOST attempt — 2026-10-17
+# Current master-program checkpoint — M03-02 formula-edit preparation (2026-10-19)
+
+Code SHA `de7445114ad90c0a11453663971286feb2c5fdef` extends the app-private generated-XLSX `artifacts.xlsxSetCells` operation to accept a bounded formula edit. It creates an immutable revision, preserves the original file/hash and cached result, removes the now-stale cached result from the edited formula cell, and requests recalculation when opened by a compatible spreadsheet reader. The app does not evaluate formulas; explicit formula-edit requests route to the tool, while recalculation-only requests do not. Unsupported external formula input is rejected without a new revision. Imported workbooks are not changed.
+
+The exact-SHA focused HOST run passed `XlsxArtifactRevisionTest` 5/5 (0 failures/errors/skips), Gradle exit 0, 51 seconds wall time. Gradle 8.10.2/JDK 17 runtime, JDK 21 app test launcher, SDK API 35 and existing offline cache are recorded with the command, raw log, fresh XML and hashes in [`M03-02 formula-edit results`](../validation/master-program-m03-02-xlsx-formulas/RESULTS.md). This reused existing Gradle/build outputs; it was not a clean-checkout build or the full JVM/LiteRT/lint/AndroidTest gate. No APK, emulator, or device was run.
+
+Original M03-02 remains `TODO`, `requires_device=true`, and depends on M03-01 and M02-02; both remain source `TODO`. This is a preparatory formula-edit slice, not full XLSX editor completion and not independent Excel/LibreOffice validation. The original backlog/roadmap remain unchanged at 97 unique task IDs, 120 dependencies and all source statuses `TODO`. `main` and peeled `v0.4.2` were not modified. Next preparatory review: inspect the authentic M03-02 remainder/compatibility needs after this formula edit; keep all formal task states and device gates open.
+
+---
+
+# Historical focused M00-04 HOST attempt — 2026-10-17
 
 The single authorized offline invocation used code `fdd80c0971b5ae1637ad7e616bdb4aa8f5de8700` (tree `8f2a1bafc41f2a32181ef48dc8259efbe7ed7ef5`), JDK 17 for Gradle and JDK 21 for the test worker. It ended in 47 seconds, exit 1: XML reports 2 cases, 0 PASS, 2 FAIL, 0 errors/skips. One failed before its assertion because Robolectric attempted an uncached `android-all-instrumented` fetch and the connection was refused. The Inspector case failed in Room's multi-instance service callback invoked by Robolectric `ShadowInstrumentation` with a null component name during Compose/Espresso idle draining. The relevant assertions are not established as passing; product failure is **not demonstrated**. No `ENOSPC`, hang, thread dump, emulator/device, APK, or full host gate. M00-04 remains source `TODO`, partial and not accepted. Do not rerun the same setup. Raw logs, XML and hashes: [`M00-04 results`](../validation/m00-04-context-omission-20261017/RESULTS.md), manifest SHA-256 `0cf3a6e21cf4c6d9a22563bc77d312f242580a29aa09e4ab3035514c127f278a` (18/18 local entries verified).
 

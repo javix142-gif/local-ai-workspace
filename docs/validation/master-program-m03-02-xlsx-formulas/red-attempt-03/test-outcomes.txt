@@ -1,0 +1,10 @@
+source_sha=0aca92ac7f1faf680c2f3e020191fa4d569643b7
+class=com.localai.workspace.artifacts.XlsxArtifactRevisionTest
+tests=2
+failures=2
+errors=0
+skipped=0
+failures:
+- formulaEditIntentRoutesToBoundedXlsxEditTool: AssistantRouting returned no tool for explicit formula-edit request.
+- formulaCellEditCreatesVersionWithoutStaleCacheAndRequestsReaderRecalculation: formula edit was rejected; no immutable revision was created.
+classification=expected_red_for_missing_behavior

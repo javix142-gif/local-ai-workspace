@@ -1,0 +1,4 @@
+app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.artifacts.XlsxArtifactRevisionTest.xml 4918 2026-10-19T13:09:33.3843873410Z
+app/build/test-results/testDebugUnitTest/binary/output.bin 0 2026-10-19T13:09:24.8649595620Z
+app/build/test-results/testDebugUnitTest/binary/output.bin.idx 1 2026-10-19T13:09:33.3637634280Z
+app/build/test-results/testDebugUnitTest/binary/results.bin 4523 2026-10-19T13:09:33.3641221750Z

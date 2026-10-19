@@ -1,0 +1,4 @@
+source_sha=00429818a4b9c5b5bce13b6fb45ec65b54d4cc02
+started_utc=2026-10-19T13:10:54Z
+finished_utc=2026-10-19T13:12:05Z
+exit_code=1

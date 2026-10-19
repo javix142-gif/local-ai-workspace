@@ -1,0 +1,54 @@
+{
+  "logs": [
+    {
+      "attempt": "green-attempt-01",
+      "sourceSha": "00429818a4b9c5b5bce13b6fb45ec65b54d4cc02",
+      "archive": "green-attempt-01/gradle.log.gz",
+      "archiveBytes": 1533,
+      "archiveSha256": "fc1ff36a6904899ceccc62e468a168607ea96574eaefd11d2771f3453acb840f",
+      "decompressedRawBytes": 5993,
+      "decompressedRawSha256": "acb3866fcf8fed2efa628a1c5cd7fee4d2ed0566a784ba6b7e61674ea3a4c2a8",
+      "roundTripVerified": true
+    },
+    {
+      "attempt": "green-attempt-02",
+      "sourceSha": "de7445114ad90c0a11453663971286feb2c5fdef",
+      "archive": "green-attempt-02/gradle.log.gz",
+      "archiveBytes": 1226,
+      "archiveSha256": "93d25925ed06bdd5f497eb3d98a596e0e15d7729e70a3c6785f1e42b3246c931",
+      "decompressedRawBytes": 5290,
+      "decompressedRawSha256": "521c07aa5b7d6e599a995c800e17ed1fd26572f409e3f05a454fae72ed2ba3d5",
+      "roundTripVerified": true
+    },
+    {
+      "attempt": "red-attempt-01",
+      "sourceSha": "aebd4edbfd0bd9ec7dba50672df30da523d9fdcd",
+      "archive": "red-attempt-01/gradle.log.gz",
+      "archiveBytes": 1389,
+      "archiveSha256": "e793a8e330a1dc543a7a84be39324ef44e483c0ce99c00dc1f02a7ffa393953b",
+      "decompressedRawBytes": 4709,
+      "decompressedRawSha256": "ae2298c9ce0be919ee4ac76a0d7842232d59e6a3659737faa7b1027302894a9c",
+      "roundTripVerified": true
+    },
+    {
+      "attempt": "red-attempt-02",
+      "sourceSha": "c65c772e5c29a373882476a8abba46a05f36eae0",
+      "archive": "red-attempt-02/gradle.log.gz",
+      "archiveBytes": 1416,
+      "archiveSha256": "e739553c62870733fec17f90aef45e211674324fb58451823cbd584746646cd9",
+      "decompressedRawBytes": 4687,
+      "decompressedRawSha256": "70d43df77247003a7efbc3d014a73a777b66766487a24836da40be33dbeef566",
+      "roundTripVerified": true
+    },
+    {
+      "attempt": "red-attempt-03",
+      "sourceSha": "0aca92ac7f1faf680c2f3e020191fa4d569643b7",
+      "archive": "red-attempt-03/gradle.log.gz",
+      "archiveBytes": 1517,
+      "archiveSha256": "fd9071cb3f7c90368ac2d176d867fe6b00a09500682f7b6d61ba0a767358b04f",
+      "decompressedRawBytes": 6003,
+      "decompressedRawSha256": "a5095f813dd46b7c24eaf9ac41b08de1959717d2d6a6eb762443a7dcedd3abc8",
+      "roundTripVerified": true
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.ui.ArtifactsPatchPreviewUiTest.xml 480 2026-10-19T13:00:17.8150903420Z
+app/build/test-results/testDebugUnitTest/binary/output.bin 0 2026-10-19T13:00:09.7210053620Z
+app/build/test-results/testDebugUnitTest/binary/output.bin.idx 1 2026-10-19T13:00:17.8045241790Z
+app/build/test-results/testDebugUnitTest/binary/results.bin 223 2026-10-19T13:00:17.8048714650Z

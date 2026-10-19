@@ -1,0 +1,114 @@
+{
+  "name": "M03-02 generated XLSX formula edit preparation",
+  "date": "2026-10-19",
+  "workingBranch": "codex/master-program-20261019",
+  "testedCodeSha": "de7445114ad90c0a11453663971286feb2c5fdef",
+  "codeCommits": [
+    "dea9fe0",
+    "aebd4ed",
+    "c65c772",
+    "0aca92a",
+    "00429818a4b9c5b5bce13b6fb45ec65b54d4cc02",
+    "de7445114ad90c0a11453663971286feb2c5fdef"
+  ],
+  "scope": "App-private generated XLSX artifact formula edits through existing artifacts.xlsxSetCells; imported workbooks are unchanged.",
+  "implementation": {
+    "immutableRevision": true,
+    "preservesOriginalFormulaAndCachedValue": true,
+    "removesStaleCachedValueForChangedFormula": true,
+    "requestsRecalculationWhenOpened": true,
+    "formulaEvaluationByApp": false,
+    "externalFormulaRejected": true,
+    "formulaEditIntentRouted": true,
+    "recalculateIntentRouted": false,
+    "newDependencies": false,
+    "roomOrSchemaChanged": false
+  },
+  "finalFocusedRun": {
+    "status": "PASS_FOCUSED_CLASS",
+    "sourceSha": "de7445114ad90c0a11453663971286feb2c5fdef",
+    "commandFile": "green-attempt-02/command.txt",
+    "startedAtUtc": "2026-10-19T13:12:27Z",
+    "finishedAtUtc": "2026-10-19T13:13:18Z",
+    "durationSeconds": 51,
+    "gradleVersion": "8.10.2",
+    "gradleRuntimeJdk": "Temurin 17.0.20.1",
+    "testLauncherConfiguredJdk": "Temurin 21.0.12.1",
+    "workerPidCaptured": false,
+    "offline": true,
+    "existingGradleCacheAndBuildOutputsReused": true,
+    "exitCode": 0,
+    "gradleSummary": "BUILD SUCCESSFUL in 49s; 63 actionable tasks: 6 executed, 57 up-to-date",
+    "junit": {
+      "class": "com.localai.workspace.artifacts.XlsxArtifactRevisionTest",
+      "tests": 5,
+      "passed": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml": "green-attempt-02/junit-xml/TEST-com.localai.workspace.artifacts.XlsxArtifactRevisionTest.xml",
+      "xmlSha256": "25284ade2e59239aa0c94d2931163e0a37c6776525b08539eaf2aa7bf05cb342",
+      "logArchive": "green-attempt-02/gradle.log.gz",
+      "logArchiveSha256": "93d25925ed06bdd5f497eb3d98a596e0e15d7729e70a3c6785f1e42b3246c931",
+      "decompressedRawLogSha256": "521c07aa5b7d6e599a995c800e17ed1fd26572f409e3f05a454fae72ed2ba3d5"
+    }
+  },
+  "earlierAttempts": {
+    "redAttempt01": "TEST_SOURCE_COMPILE_FAILURE; no tests executed",
+    "redAttempt02": "TEST_SOURCE_TYPE_FAILURE; no tests executed",
+    "redAttempt03": {
+      "sourceSha": "0aca92ac7f1faf680c2f3e020191fa4d569643b7",
+      "tests": 2,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0,
+      "classification": "EXPECTED_RED_FOR_MISSING_FORMULA_ROUTING_AND_FORMULA_TOOL_SUPPORT"
+    },
+    "greenAttempt01": {
+      "sourceSha": "00429818a4b9c5b5bce13b6fb45ec65b54d4cc02",
+      "tests": 5,
+      "passed": 3,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0,
+      "classification": "RESPONSE_MICROCOPY_ASSERTION_MISMATCH; IMPLEMENTATION_OPERATION_SUCCEEDED"
+    }
+  },
+  "notRun": [
+    "full app JVM suite",
+    "LiteRT compatibility suite",
+    "lint",
+    "AndroidTest compile and instrumentation",
+    "APK build",
+    "emulator",
+    "physical device",
+    "independent spreadsheet reader"
+  ],
+  "formalOriginalTask": {
+    "id": "M03-02",
+    "title": "Exportador XLSX editable",
+    "sourceStatus": "TODO",
+    "requiresDevice": true,
+    "dependsOn": [
+      "M03-01",
+      "M02-02"
+    ],
+    "formalCompletion": false
+  },
+  "sourcePlan": {
+    "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmapPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskCount": 97,
+    "uniqueIds": 97,
+    "dependencies": 120,
+    "sourceStatuses": {
+      "TODO": 97
+    },
+    "sourceFilesModified": false
+  },
+  "emulator": "NOT_RUN",
+  "physicalDevice": "NOT_RUN",
+  "apk": "NOT_GENERATED"
+}

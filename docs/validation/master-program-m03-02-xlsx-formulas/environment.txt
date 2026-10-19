@@ -1,0 +1,14 @@
+Implementation branch: codex/master-program-20261019
+Tested code HEAD: de7445114ad90c0a11453663971286feb2c5fdef
+Repository baseline for this program branch: b8e75b4a688d9e1f441324a3a1ecccb369f99ebc
+Host: Linux 6.18.55 x86_64
+Gradle wrapper: 8.10.2 (gradle-wrapper.properties pins services.gradle.org/distributions/gradle-8.10.2-bin.zip; local installed distribution reports 8.10.2)
+Gradle runtime: Temurin OpenJDK 17.0.20.1 at /workspace/.toolchain/jdk-17
+App JVM test launcher: build.gradle.kts configures JavaLanguageVersion 21; Temurin OpenJDK 21.0.12.1 is available at /workspace/.toolchain/jdk-21-temurin and both JDK paths were passed to Gradle toolchain discovery. A worker PID/runtime was not captured independently in this invocation.
+Android SDK: /workspace/.toolchain/android-sdk; API 35 already installed
+Android NDK: /workspace/.toolchain/android-sdk/ndk/27.0.12077973 (already present; this JVM test did not execute a native build task)
+Gradle user home: /workspace/.gradle (existing cache; offline)
+Build outputs: existing app/build and module build outputs were present; this was not a clean-checkout or clean-build reproducibility test. Gradle reported 57 tasks UP-TO-DATE and 6 executed. The Gradle logs in Git are losslessly gzipped because raw Gradle output contains trailing spaces; `LOG_HASHES.json` verifies decompressed bytes against raw-log SHA-256 values.
+Network/dependency changes: none; no tools, packages, dependencies, SDK components, or caches were installed or cleared.
+
+The test invocation itself completed successfully. A separate `./gradlew --version` inspection attempted the wrapper's network distribution path and received Connection refused before Gradle startup; it was not used as test evidence. The pinned wrapper properties and the already-installed local Gradle 8.10.2 binary establish the version without changing the project.

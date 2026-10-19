@@ -1,0 +1,10 @@
+Exact tested code: de7445114ad90c0a11453663971286feb2c5fdef
+Focused Gradle invocation: :app:testDebugUnitTest --tests com.localai.workspace.artifacts.XlsxArtifactRevisionTest
+Started: 2026-10-19T13:12:27Z
+Finished: 2026-10-19T13:13:18Z
+Wall time: 51 seconds; Gradle log reports BUILD SUCCESSFUL in 49s
+Gradle exit code: 0
+JUnit XML: tests=5, failures=0, errors=0, skipped=0; all 5 passed
+Gradle task summary: 63 actionable; 6 executed, 57 up-to-date
+Log archive: green-attempt-02/gradle.log.gz; decompressed raw log SHA-256 is 521c07aa5b7d6e599a995c800e17ed1fd26572f409e3f05a454fae72ed2ba3d5
+The invocation used an existing offline Gradle cache and existing project build outputs. It is not a clean checkout/build and is not the full app JVM suite.
