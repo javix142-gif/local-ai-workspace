@@ -87,7 +87,7 @@ class XlsxArtifactRevisionTest {
                 assertFalse("No stale cached <v> value may follow a changed formula",a3.contains("<v>"))
             }
 
-            args.getJSONObject("edits").getJSONObject(0).put("formula","WEBSERVICE(\"https://invalid.example\")")
+            args.getJSONArray("edits").getJSONObject(0).put("formula","WEBSERVICE(\"https://invalid.example\")")
             val rejected=registry.execute(ToolRequest("artifacts.xlsxSetCells",args.toString(),TrustOrigin.MODEL),ArtifactTool.IDS,toolContext,ToolRegistry.ToolLoopState())
             assertFalse("External/active formulas must remain rejected",rejected is ToolExecutionResult.Success)
             assertEquals("Rejected formula input must not create another version",2,store.history(project,first.id).size)
