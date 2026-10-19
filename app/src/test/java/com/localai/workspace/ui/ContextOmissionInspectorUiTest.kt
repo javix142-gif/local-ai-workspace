@@ -40,9 +40,11 @@ class ContextOmissionInspectorUiTest {
             compose.onNodeWithText("Build context · no generation").performClick()
 
             compose.waitUntil(25_000) {
-                compose.onAllNodesWithText("M1 · TOKEN_BUDGET").fetchSemanticsNodes().isNotEmpty()
+                compose.onAllNodesWithText("M1", substring = false).fetchSemanticsNodes().isNotEmpty() &&
+                    compose.onAllNodesWithText("TOKEN_BUDGET", substring = false).fetchSemanticsNodes().isNotEmpty()
             }
-            compose.onNodeWithText("M1 · TOKEN_BUDGET").performScrollTo().assertIsDisplayed()
+            compose.onNodeWithText("M1", substring = false).performScrollTo().assertIsDisplayed()
+            compose.onNodeWithText("TOKEN_BUDGET", substring = false).performScrollTo().assertIsDisplayed()
             compose.onNodeWithText(privateFixtureSentinel).assertDoesNotExist()
         } finally {
             runBlocking { foundation.memory.delete(memory.id) }
