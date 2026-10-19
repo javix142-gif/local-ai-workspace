@@ -6,6 +6,8 @@ At this exact code SHA, the focused HOST command covering `MemoryRelevanceTest` 
 
 This preparatory optimization does **not** complete original M00-06: the full import/parse/index/memory/retrieval/context/model timeline and real-model/device metrics remain absent. The original backlog/roadmap are byte-identical: 97 IDs, 120 dependency edges and all source statuses `TODO`. The separate emulator suite remains historically blocked by the unavailable authentic Room v1 fixture with six model-dependent tests skipped; that was not run or changed here. `EMULATOR=NOT_RUN` for this increment and `PHYSICAL_DEVICE=NOT_RUN`; no APK was built.
 
+Published readback: source commit c0545e8c40a7f8a394314e30d583260197eba1df and evidence commit 801fd1a2e01804b2457588e8bc81904733ee46fb are on codex/aws-master-resume-20261019; the remote ref readback matched 801fd1a. Main and peeled v0.4.2 stayed at de615b772cf37a99e7e08a647c59607b271de606; the original feature ref stayed at e6f16ac30914fe32f7140241e81e5976660c03d2.
+
 The red test was captured before implementation while the regression test was uncommitted, against production baseline `2d1deafe491638543d36d6351e98307ef7bdd423`; its working-tree tree SHA was not captured. An earlier fixture assertion incorrectly expected 25 selected rows despite the existing result cap of six and is not counted as a product failure.
 
 Continue the authorized master program sequentially with another concrete, source-backed implementation; do not close source tasks from partial evidence, repeat unrelated audit-only work, or claim Motorola/model performance without the actual device and model.

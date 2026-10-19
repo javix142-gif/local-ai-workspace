@@ -8570,7 +8570,17 @@
       "Focused app JVM tests only; no full JVM/LiteRT suite, lint, assembly or AndroidTest run for this increment.",
       "No emulator, physical device, Moto G86, model weights or APK used.",
       "The separate global emulator failure involving the historical Room v1 fixture and six model-dependent skips is not changed by this increment."
-    ]
+    ],
+    "evidenceCommit": "801fd1a2e01804b2457588e8bc81904733ee46fb",
+    "publication": {
+      "branch": "codex/aws-master-resume-20261019",
+      "remoteReadbackSha": "801fd1a2e01804b2457588e8bc81904733ee46fb",
+      "method": "Fast-forward push",
+      "main": "de615b772cf37a99e7e08a647c59607b271de606",
+      "v0.4.2Peeled": "de615b772cf37a99e7e08a647c59607b271de606",
+      "featureBranch": "e6f16ac30914fe32f7140241e81e5976660c03d2",
+      "noMergeTagReleaseOrForcePush": true
+    }
   },
   "previousMasterProgramIncrement": {
     "name": "M03-01 preparatory ArtifactStore staging symlink boundary regression",
@@ -17947,13 +17957,13 @@
   },
   "previousNextRecommendedTaskBeforeRecovery": "Continue the next bounded source-backed preparatory implementation in the authorized master program. Keep M03-06, M00-06 and device-dependent work incomplete; preserve every original source task state and dependency.",
   "recovery": {
-    "status": "RECOVERED_CONTINUATION_ACTIVE_CURRENT_CODE_TESTED_EVIDENCE_PREPARED",
+    "status": "IMPLEMENTATION_AND_EVIDENCE_PUBLISHED_FAST_FORWARD",
     "requestedCheckpoint": "b8e75b4a688d9e1f441324a3a1ecccb369f99ebc",
     "branchBase": "e6f16ac30914fe32f7140241e81e5976660c03d2",
     "branch": "codex/aws-master-resume-20261019",
-    "localHead": "c0545e8c40a7f8a394314e30d583260197eba1df",
+    "localHead": "801fd1a2e01804b2457588e8bc81904733ee46fb",
     "missingCommit": "2f8b0d496db8973edf161c7703efc8f0c17d34fd NOT_RECOVERED; not reconstructed",
-    "publication": "Current code and focused evidence are prepared on the authorized continuation branch; publication/readback follows. No feature/main/tag mutation."
+    "publication": "Code commit c0545e8 and evidence commit 801fd1a were pushed fast-forward to codex/aws-master-resume-20261019; readback verified. Feature/main/tag refs were not changed."
   },
   "latestArtifactRecoverySymlinkSafety": {
     "name": "M03-01 preparatory ArtifactStore staging symlink boundary regression",
