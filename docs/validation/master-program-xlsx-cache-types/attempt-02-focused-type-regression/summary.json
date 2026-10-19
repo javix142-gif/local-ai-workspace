@@ -1,0 +1,27 @@
+{
+  "sourceSha": "b08d438b8bfe2b1b7b17e16a3141998a41760df3",
+  "status": "FOCUSED_HOST_PASS_TEST_COVERAGE_ONLY",
+  "startedUtc": "2026-10-19T14:43:17Z",
+  "finishedUtc": "2026-10-19T14:46:48Z",
+  "durationSeconds": 211,
+  "gradleReportedDuration": "3m 30s",
+  "gradleExitCode": 0,
+  "actionableTasksExecuted": 63,
+  "junit": {
+    "class": "com.localai.workspace.artifacts.XlsxArtifactRevisionTest",
+    "method": "formulaCachedValuesKeepTheirDeclaredSpreadsheetResultTypes",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "testSeconds": 5.752,
+    "xml": "junit-xml/TEST-com.localai.workspace.artifacts.XlsxArtifactRevisionTest.xml",
+    "xmlSha256": "fa3d14607d77c4c105f4844b74856e03392172dd8ce738ae5efdd087f741f3c3"
+  },
+  "hypothesis": "Not reproduced: ArtifactRenderer already emits t=n for numeric formula caches and t=b for boolean caches; only formula string cache is t=str. The added test records these existing semantics. No production file changed.",
+  "limitations": [
+    "One filtered Robolectric test only.",
+    "No full JVM/LiteRT suite, lint, AndroidTest, emulator, device, Excel/LibreOffice, APK or performance benchmark.",
+    "Gradle cache and build outputs were pre-existing; this was not a clean-checkout build."
+  ]
+}

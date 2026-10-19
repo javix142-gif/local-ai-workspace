@@ -2,6 +2,13 @@
 
 User authorization permits sequential preparatory M01/M02/M03 work despite unfinished physical M00 gates, and feature-only fast-forward publication. The archived original 97 IDs/120 dependencies/order/TODO baseline are immutable. This document is an implementation crosswalk, not a replacement backlog or formal milestone closure.
 
+## 2026-10-19 — M03-02 cached formula result-type regression coverage
+
+At test-source SHA `b08d438b8bfe2b1b7b17e16a3141998a41760df3`, a new focused test serializes number, boolean and string formula caches through the production ArtifactStore/Renderer path and asserts OOXML result types. The suspected defect was not reproduced; production already maps caches to `n`, `b` and `str` correctly. The exact filtered JUnit passed 1/1 with Gradle exit 0 in 3m30s. The first attempt failed before Gradle because the default wrapper cache was absent and network access refused the pinned distribution; the rerun used the existing Gradle cache offline. Evidence and limits: `../validation/master-program-xlsx-cache-types/RESULTS.md`.
+
+This is test coverage only: no production file changed, no full host gate or Android/device run occurred, and M03-02 remains source TODO with its original dependencies/device requirement. The 97 IDs, 120 dependencies and 97 TODO statuses are unchanged.
+
+
 ## 2026-10-17 — present recorded normal-chat generation checkpoints; exact-SHA gate readback
 
 Code SHA `fdd80c0971b5ae1637ad7e616bdb4aa8f5de8700` (tree `8f2a1bafc41f2a32181ef48dc8259efbe7ed7ef5`) exposes the existing `NormalGenerationTrace` events on the Performance screen as `t+` elapsed time and delta from the preceding event. The UI warns that checkpoint gaps can include nested work and are not additive. A backwards monotonic timestamp makes subsequent durations unavailable. The implementation presents existing trace data; it does not add timing claims, change instrumentation or optimize inference.

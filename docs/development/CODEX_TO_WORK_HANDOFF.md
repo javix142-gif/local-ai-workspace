@@ -1,3 +1,11 @@
+# Current checkpoint — M03-02 cached formula result-type coverage (2026-10-19)
+
+Current source/test SHA: `b08d438b8bfe2b1b7b17e16a3141998a41760df3`; this branch adds a focused regression test only. A proposed serialization defect was checked and **not reproduced**: production `ArtifactRenderer.xlsx` already emits numeric formula caches as OOXML `n`, boolean caches as `b`, and string caches as `str`. The new filtered test passed 1/1, zero failures/errors/skips, captured Gradle exit 0, 3m30s; source/log/XML/task outcome and hashes are in [`M03-02 cache-type results`](../validation/master-program-xlsx-cache-types/RESULTS.md). A first wrapper attempt did not start Gradle because the default `/home/agent/.gradle` lacked Gradle 8.10.2 and the network refused the distribution request; the successful run used the existing `/workspace/.gradle` cache offline. The independent openpyxl control demonstrates why the type distinction matters, but this run did not independently reopen its emitted workbook with openpyxl.
+
+No app production file changed. No full JVM/LiteRT gate, lint, AndroidTest, emulator, Motorola, APK, or Office application test was run. M03-02 remains source `TODO`, requires device, and depends on M03-01 and M02-02; both dependencies remain TODO. The original plan is unchanged: 97 IDs, 120 edges, all source statuses TODO. `main` and `v0.4.2` were not targeted. Next: inspect M03-03 against its authentic source DoD and surviving DOCX code, then continue only with a concrete bounded gap.
+
+---
+
 # Current continuation checkpoint — workspace recovery and ArtifactStore staging (2026-10-19)
 
 The current checkout exists at `/workspace/local-ai-workspace` on the persistent implementation branch `codex/master-program-20261019`; it was fetched and inspected without a destructive reset. The exact feature baseline `b8e75b4a688d9e1f441324a3a1ecccb369f99ebc` is preserved by the already-published and read-back `recovery/backup-b8e75b4` ref. The implementation branch's remote checkpoint before this follow-up was `1c252cce243b33e541f26755f35f51d0df806466`. No additional branch was needed.

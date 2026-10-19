@@ -1,0 +1,6 @@
+Gradle 8.10.2: BUILD SUCCESSFUL in 3m 30s
+Captured Gradle exit code: 0
+:app:testDebugUnitTest: executed; filter selected only formulaCachedValuesKeepTheirDeclaredSpreadsheetResultTypes
+Actionable tasks: 63 executed
+JUnit: 1 test, 0 skipped, 0 failures, 0 errors; testcase time 5.752s
+Classification: focused HOST PASS for test-source SHA b08d438b8bfe2b1b7b17e16a3141998a41760df3; not a full host gate.

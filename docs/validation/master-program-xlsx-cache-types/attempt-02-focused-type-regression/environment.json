@@ -1,0 +1,11 @@
+{
+  "sourceSha": "b08d438b8bfe2b1b7b17e16a3141998a41760df3",
+  "branch": "codex/master-program-20261019",
+  "gradle": "8.10.2",
+  "runtimeJdk": "Temurin 17.0.20.1 (/workspace/.toolchain/jdk-17)",
+  "workerToolchain": "Temurin 21.0.12.1 (/workspace/.toolchain/jdk-21-temurin)",
+  "androidSdk": "/workspace/.toolchain/android-sdk (API 35)",
+  "ndk": "27.0.12077973; source.properties present",
+  "gradleUserHome": "/workspace/.gradle, pre-existing cache, offline",
+  "rerunTasks": true
+}

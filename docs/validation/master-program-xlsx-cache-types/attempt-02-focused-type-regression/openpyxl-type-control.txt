@@ -1,0 +1,5 @@
+python=3.12.14
+openpyxl=3.1.5
+str: value='2'; python_type=str; openpyxl_data_type=s
+n: value=2; python_type=int; openpyxl_data_type=n
+omitted: value=2; python_type=int; openpyxl_data_type=n

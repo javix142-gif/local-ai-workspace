@@ -1,0 +1,11 @@
+{
+  "sourceSha": "b08d438b8bfe2b1b7b17e16a3141998a41760df3",
+  "startedUtc": "2026-10-19T14:42:59Z",
+  "finishedUtc": "2026-10-19T14:43:06Z",
+  "durationSeconds": 6,
+  "status": "INFRASTRUCTURE_FAILURE_BEFORE_GRADLE_START",
+  "gradleStarted": false,
+  "gradleExitCode": 1,
+  "gradleUserHome": "/home/agent/.gradle (wrapper distribution absent)",
+  "observed": "Gradle Wrapper attempted to fetch Gradle 8.10.2; Connection refused. No JUnit XML and no test execution."
+}
