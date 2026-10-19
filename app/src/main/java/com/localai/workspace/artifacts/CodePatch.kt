@@ -52,6 +52,7 @@ object CodePatchPlanner {
 
     fun apply(source: String, expectedSha256: String, edits: List<CodePatchEdit>): String {
         require(Regex("[0-9a-f]{64}").matches(expectedSha256)) { "CODE_PATCH_HASH_INVALID" }
+        require(hasWellFormedUtf16(source)) { "CODE_PATCH_INVALID_UTF16" }
         require(hash(source) == expectedSha256) { "CODE_PATCH_BASE_HASH_MISMATCH" }
         validateEdits(edits)
         require(bytes(source).size <= MAX_BODY_BYTES) { "CODE_PATCH_BODY_TOO_LARGE" }
@@ -87,6 +88,7 @@ object CodePatchPlanner {
         require(edits.size in 1..MAX_EDITS) { "CODE_PATCH_EDIT_COUNT_INVALID" }
         edits.forEach { edit ->
             require(edit.before.isNotEmpty()) { "CODE_PATCH_EMPTY_MATCH" }
+            require(hasWellFormedUtf16(edit.before) && hasWellFormedUtf16(edit.after)) { "CODE_PATCH_INVALID_UTF16" }
             require(bytes(edit.before).size <= MAX_SNIPPET_BYTES && bytes(edit.after).size <= MAX_SNIPPET_BYTES) { "CODE_PATCH_SNIPPET_TOO_LARGE" }
             require(edit.before != edit.after) { "CODE_PATCH_NO_CHANGE" }
         }
@@ -106,4 +108,19 @@ object CodePatchPlanner {
     fun newPreviewId() = UUID.randomUUID().toString()
     fun hash(value: String) = MessageDigest.getInstance("SHA-256").digest(bytes(value)).joinToString("") { "%02x".format(it) }
     private fun bytes(value: String) = value.toByteArray(Charsets.UTF_8)
+
+    private fun hasWellFormedUtf16(value: String): Boolean {
+        var index = 0
+        while (index < value.length) {
+            when {
+                Character.isHighSurrogate(value[index]) -> {
+                    if (index + 1 >= value.length || !Character.isLowSurrogate(value[index + 1])) return false
+                    index += 2
+                }
+                Character.isLowSurrogate(value[index]) -> return false
+                else -> index++
+            }
+        }
+        return true
+    }
 }
