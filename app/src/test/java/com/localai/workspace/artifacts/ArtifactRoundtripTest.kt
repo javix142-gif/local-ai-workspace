@@ -133,6 +133,38 @@ class ArtifactRoundtripTest {
             assertEquals(originalBody,store.verifiedFile(project,restored).readText())
         }finally{dir.deleteRecursively()}
     }
+    @Test fun multiEditPatchSurvivesPreviewReopenAndCreatesAnImmutableRevision() {
+        val dir=root();val project="multi-patch-${UUID.randomUUID()}"
+        val originalBody="alpha beta"
+        try {
+            val store=ArtifactStore(context,dir)
+            val first=store.create(project,ArtifactSpec.parse(JSONObject()
+                .put("format","CODE").put("name","sequence.kt").put("body",originalBody)))
+            val edits=listOf(CodePatchEdit("alpha","beta"),CodePatchEdit("beta","gamma"))
+            val preview=store.stageCodePatch(project,first.id,first.version,first.sha256,edits)
+
+            assertEquals(originalBody,preview.before)
+            assertEquals("beta gamma",preview.after)
+            assertEquals(edits,preview.edits)
+            assertEquals(1,store.history(project,first.id).size)
+            assertEquals(originalBody,store.verifiedFile(project,first).readText())
+
+            val reopened=ArtifactStore(context,dir)
+            val persisted=reopened.codePatchPreview(project,preview.id)
+            assertEquals(preview.id,persisted.id)
+            assertEquals(preview.before,persisted.before)
+            assertEquals(preview.after,persisted.after)
+            assertEquals(preview.edits,persisted.edits)
+            assertEquals(preview.proposedSha256,persisted.proposedSha256)
+            val applied=reopened.applyCodePatchPreview(project,preview.id)
+
+            assertEquals(2,applied.version)
+            assertEquals(preview.proposedSha256,applied.sha256)
+            assertEquals(originalBody,store.verifiedFile(project,first).readText())
+            assertEquals("beta gamma",reopened.verifiedFile(project,applied).readText())
+            assertTrue(reopened.codePatchPreviews(project).isEmpty())
+        }finally{dir.deleteRecursively()}
+    }
     @Test fun codePatchRejectsStaleOrAmbiguousInputWithoutChangingTheDraft() {
         val dir=root();val store=ArtifactStore(context,dir);val project="patch-invalid-${UUID.randomUUID()}"
         try {
