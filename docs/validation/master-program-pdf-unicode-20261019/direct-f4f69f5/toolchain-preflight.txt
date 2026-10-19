@@ -1,0 +1,25 @@
+Command: env JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH GRADLE_USER_HOME=/workspace/.gradle ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --version
+
+------------------------------------------------------------
+Gradle 8.10.2
+------------------------------------------------------------
+
+Build time:    2024-09-23 21:28:39 UTC
+Revision:      415adb9e06a516c44b391edff552fd42139443f7
+
+Kotlin:        1.9.24
+Groovy:        3.0.22
+Ant:           Apache Ant(TM) version 1.10.14 compiled on August 16 2023
+Launcher JVM:  17.0.20.1 (Eclipse Adoptium 17.0.20.1+1)
+Daemon JVM:    /workspace/.toolchain/jdk-17 (no JDK specified, using current Java home)
+OS:            Linux 6.18.55 amd64
+
+Worker toolchain path: /workspace/.toolchain/jdk-21-temurin (as resolved in Gradle --info test executor command)
+openjdk version "21.0.12.1" 2026-08-18 LTS
+OpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)
+OpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)
+Android NDK:
+Pkg.Desc = Android NDK
+Pkg.Revision = 27.0.12077973
+Pkg.BaseRevision = 27.0.12077973
+Pkg.ReleaseName = r27

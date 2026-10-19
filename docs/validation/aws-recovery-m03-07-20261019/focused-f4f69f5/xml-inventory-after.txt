@@ -1,0 +1,3 @@
+app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.artifacts.PdfArtifactLayoutTest.xml
+app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml
+app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.ui.ArtifactSafExportUiTest.xml

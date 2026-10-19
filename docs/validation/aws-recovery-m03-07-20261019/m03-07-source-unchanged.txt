@@ -1,0 +1,12 @@
+M03-07 relevant-source continuity check
+
+Base source: e6f16ac30914fe32f7140241e81e5976660c03d2
+Recovered source: f4f69f5980401bc6ae87bab65119134f8b57fc92
+
+Command:
+  git diff --quiet e6f16ac30914fe32f7140241e81e5976660c03d2 f4f69f5980401bc6ae87bab65119134f8b57fc92 -- app/src/main/java/com/localai/workspace/ui/ArtifactsUi.kt app/src/test/java/com/localai/workspace/ui/ArtifactRevisionPreviewUiTest.kt
+Exit: 0 (both files are unchanged across the recovered range).
+
+The UI exposes the saved revision and proposed before/after previews, bounded added/removed/unchanged line entries with an oversized-input fallback, a saved-version export action, and a normal dismiss action. The focused UI test asserts the diff, export association, dismiss callback, unchanged original bytes/hash and unchanged revision history. A separate SAF test verifies explicit destination choice and exact-byte readback.
+
+The original source task still requires device validation and a TODO dependency. This source check and HOST tests do not close M03-07.

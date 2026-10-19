@@ -1,0 +1,8 @@
+Repository: fresh clone branch codex/aws-master-resume-20261019
+Source HEAD: f4f69f5980401bc6ae87bab65119134f8b57fc92
+Gradle: 8.10.2
+Gradle runtime: Temurin JDK 17 at /workspace/.toolchain/jdk-17
+Test worker/toolchain discovery: Temurin JDK 21 at /workspace/.toolchain/jdk-21-temurin
+Android SDK: /workspace/.toolchain/android-sdk API 35
+NDK: /workspace/.toolchain/android-sdk/ndk/27.0.12077973
+Gradle user home: pre-existing /workspace/.gradle, offline; no cache install/cleanup

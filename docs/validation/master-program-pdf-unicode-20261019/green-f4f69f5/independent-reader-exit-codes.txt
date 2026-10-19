@@ -1,0 +1,3 @@
+pdftotextExit=0
+pdffontsExit=0
+pdftoppmExit=0

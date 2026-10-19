@@ -1,0 +1,191 @@
+{
+  "name": "Preparatory M03-04 embedded Unicode fonts for generated PDF",
+  "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO",
+  "branch": "codex/master-program-recovery-20261019",
+  "baselineSourceSha": "aed43ee39be887c0a92144dd1a70bc59fe6b7eed",
+  "redTestCommit": "9ac966bfdd35dc98c2dd55023bf1580d58b31e3c",
+  "implementationCommits": [
+    "f8a171d51aed28ee929115d4fa7df41976c001e0",
+    "f4f69f5980401bc6ae87bab65119134f8b57fc92"
+  ],
+  "testedCodeSha": "f4f69f5980401bc6ae87bab65119134f8b57fc92",
+  "formalTask": {
+    "id": "M03-04",
+    "sourceStatus": "TODO",
+    "requiresDevice": true,
+    "dependsOn": [
+      "M03-01"
+    ],
+    "dependencyStatus": "M03-01 remains source TODO",
+    "formalCompletion": false
+  },
+  "finding": {
+    "failure": "Helvetica / WinAnsiEncoding rejects Greek U+0395 during PDF paragraph width measurement, before save. The same Standard 14 font path was used for tables.",
+    "red": {
+      "sourceSha": "9ac966bfdd35dc98c2dd55023bf1580d58b31e3c",
+      "test": "generatedPdfPreservesExtendedUnicodeText",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 1,
+      "durationMs": 185059,
+      "exception": "U+0395 ('Epsilon') is not available in the font Helvetica, encoding: WinAnsiEncoding",
+      "evidence": "red-9ac966b-existing-gradle-home/"
+    }
+  },
+  "implementation": {
+    "summary": "Paragraph and table layout now measure/draw with embedded, subset Noto Sans Regular/Bold Type0 fonts. Existing PDFBox dependency is reused. Unsupported code points still fail explicitly; no lossy substitution is performed.",
+    "files": [
+      "app/src/main/java/com/localai/workspace/artifacts/ArtifactRenderer.kt",
+      "app/src/test/java/com/localai/workspace/artifacts/PdfArtifactLayoutTest.kt",
+      "app/src/main/assets/fonts/NotoSans-Regular.ttf",
+      "app/src/main/assets/fonts/NotoSans-Bold.ttf",
+      "app/src/main/assets/fonts/OFL.txt",
+      "app/src/main/assets/fonts/README.md"
+    ],
+    "fonts": {
+      "upstream": "https://github.com/notofonts/noto-fonts",
+      "upstreamCommit": "ffebf8c1ee449e544955a7e813c54f9b73848eac",
+      "license": "SIL Open Font License 1.1",
+      "regular": {
+        "bytes": 569208,
+        "sha256": "b85c38ecea8a7cfb39c24e395a4007474fa5a4fc864f6ee33309eb4948d232d5",
+        "checkedCodepoints": 2840
+      },
+      "bold": {
+        "bytes": 575740,
+        "sha256": "c976e4b1b99edc88775377fcc21692ca4bfa46b6d6ca6522bfda505b28ff9d6a",
+        "checkedCodepoints": 2840
+      },
+      "testedScripts": [
+        "Spanish",
+        "Polish",
+        "Greek",
+        "Vietnamese",
+        "Euro symbol"
+      ],
+      "knownMissing": [
+        "CJK",
+        "emoji"
+      ]
+    }
+  },
+  "focusedRuns": [
+    {
+      "name": "implementation-with-residual-table-type",
+      "sourceSha": "f8a171d51aed28ee929115d4fa7df41976c001e0",
+      "status": "COMPILE_FAIL_TEST_NOT_REACHED",
+      "exitCode": 1,
+      "failure": "Unresolved reference PDType1Font at ArtifactRenderer.kt:292; fixed by using PDFont in the table draw helper.",
+      "freshXml": false,
+      "evidence": "green-f8a171d/"
+    },
+    {
+      "name": "focused-class-first-green",
+      "sourceSha": "f4f69f5980401bc6ae87bab65119134f8b57fc92",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "gradleExitCode": 0,
+      "outerExecutionSessionExitCode": 1,
+      "durationMs": 181333,
+      "actionableTasks": {
+        "executed": 63,
+        "upToDate": 0
+      },
+      "evidence": "green-f4f69f5/",
+      "reconciliation": "BUILD SUCCESSFUL, internal Gradle marker 0 and XML all agree; the outer execution session status differs and is retained. A direct repeat at the same SHA follows."
+    },
+    {
+      "name": "focused-class-direct-confirmation",
+      "sourceSha": "f4f69f5980401bc6ae87bab65119134f8b57fc92",
+      "command": "./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --info --rerun-tasks -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.artifacts.PdfArtifactLayoutTest",
+      "startedAtUtc": "2026-10-19T20:59:48Z",
+      "finishedAtUtc": "2026-10-19T21:03:04Z",
+      "durationMs": 195576,
+      "toolSessionExitCode": 0,
+      "gradleExitCode": 0,
+      "gradleResult": "BUILD SUCCESSFUL in 3m 15s; 63 actionable tasks executed",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "junitXml": "direct-f4f69f5/TEST-com.localai.workspace.artifacts.PdfArtifactLayoutTest.xml",
+      "junitXmlSha256": "3903ba37dac6fc10aa5cbfa6f515f6ebc5ec4ac91e1597673db819880b1d0d37",
+      "logSha256": "179cfb038ee10ebf2f129f151d4b77dc5cd5bde66b3ffc213beb4283eedc437c",
+      "evidence": "direct-f4f69f5/"
+    }
+  ],
+  "independentPdfValidation": {
+    "pdf": {
+      "path": "direct-f4f69f5/unicode-v1.pdf",
+      "bytes": 16241,
+      "sha256": "06605453e3cdd93e5f4f12603659ac0a9b4e43fa8d8731e2bd1b5417ce3dbf20",
+      "pages": 1
+    },
+    "readers": {
+      "popplerPdftotext": "25.03.0",
+      "pythonPypdf": "6.10.0",
+      "allFixtureStringsExtracted": true,
+      "embeddedFonts": [
+        "NotoSans-Bold (subset, Unicode map)",
+        "NotoSans-Regular (subset, Unicode map)"
+      ],
+      "preview": {
+        "path": "direct-f4f69f5/unicode-v1-preview.png",
+        "dimensions": "1020x1320",
+        "sha256": "d2fcca50e73e80880b3d42d538f5bcfcc3ecae9be296389b158a59bd24e5226c",
+        "visuallyInspected": true
+      }
+    }
+  },
+  "environment": {
+    "gradle": "8.10.2",
+    "runtimeJdk": "Temurin 17.0.20.1+1",
+    "testWorkerJdk": "Temurin 21.0.12.1+1",
+    "androidSdk": "/workspace/.toolchain/android-sdk, API 35",
+    "ndk": "27.0.12077973",
+    "gradleUserHome": "/workspace/.gradle (pre-existing cache; not cleaned)",
+    "offline": true
+  },
+  "notRun": {
+    "fullAppJvmSuite": true,
+    "litertCompatSuite": true,
+    "lint": true,
+    "assembleDebugApk": true,
+    "androidTestCompileOrExecution": true,
+    "emulator": true,
+    "physicalDevice": true,
+    "apkDriveDelivery": true
+  },
+  "artifactDelivery": {
+    "status": "NOT_BUILT_OR_UPLOADED",
+    "reason": "No local debug keystore was found in the inspected executor locations. The previous personal QA certificate digest is known from state, but its private keystore is unavailable; a new standard debug key would not be verified update-compatible.",
+    "previousPersonalQaCertificateSha256": "635bc83888b30d6cdc1fcd62b2984e94fbae04db5619c2baf061b53a2656977b"
+  },
+  "sourcePlanUnchanged": {
+    "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmapPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskCount": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": {
+      "TODO": 97
+    }
+  },
+  "device": {
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "M01_06": "PENDING_REQUIRES_DEVICE"
+  },
+  "evidenceManifest": {
+    "path": "docs/validation/master-program-pdf-unicode-20261019/SHA256SUMS",
+    "entries": 53,
+    "sha256": "711f93953f206bef04820742fe00979df00e42e9f7c367a7c590b5adc6e2efff",
+    "localVerification": "53/53"
+  }
+}

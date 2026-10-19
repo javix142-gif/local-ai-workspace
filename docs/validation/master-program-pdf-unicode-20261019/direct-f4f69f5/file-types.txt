@@ -1,0 +1,2 @@
+docs/validation/master-program-pdf-unicode-20261019/direct-f4f69f5/unicode-v1.pdf:         PDF document, version 1.4, 1 page(s)
+docs/validation/master-program-pdf-unicode-20261019/direct-f4f69f5/unicode-v1-preview.png: PNG image data, 1020 x 1320, 8-bit/color RGB, non-interlaced

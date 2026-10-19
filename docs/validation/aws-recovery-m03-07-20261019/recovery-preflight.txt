@@ -1,0 +1,32 @@
+AWS recovery preflight — 2026-10-19 UTC
+
+Requested checkpoint: b8e75b4a688d9e1f441324a3a1ecccb369f99ebc.
+Observed GitHub refs before implementing on the recovery branch:
+  feat/0.5.0-skills-agents = e6f16ac30914fe32f7140241e81e5976660c03d2
+  recovery/backup-b8e75b4 = b8e75b4a688d9e1f441324a3a1ecccb369f99ebc
+  main = de615b772cf37a99e7e08a647c59607b271de606
+  peeled v0.4.2 = de615b772cf37a99e7e08a647c59607b271de606
+The feature had advanced 81 commits beyond b8e75b4. The comparison was inspected before continuing; the current remote SHA e6f16ac was used as the branch base.
+
+Recovery branch:
+  codex/aws-master-resume-20261019
+  published base SHA = e6f16ac30914fe32f7140241e81e5976660c03d2
+  recovered local tip = f4f69f5980401bc6ae87bab65119134f8b57fc92
+  recovered local range = 32 commits ahead, 0 behind; merge-base is exactly e6f16ac.
+The local range was fast-forwarded after reviewing its commit sequence, changed-path summary and diff --check. It contains 32 existing commits, not a reconstructed replacement for the missing commit.
+
+Persistent backup:
+  The remote ref recovery/backup-b8e75b4 already existed and read back at the exact requested b8e75b4 SHA. It was preserved unchanged; no new backup rewrite was necessary.
+
+Missing commit:
+  2f8b0d496db8973edf161c7703efc8f0c17d34fd was not present in the available Git object databases or refs of /workspace/local-ai-workspace and /workspace/aws-recovery-clone-20261019. The available bundles list no ref at that SHA. No source was recreated from a description. The exact prior workspace volume was not separately mounted; /workspace is on the current container overlay. The checkouts, bundles and existing evidence found here were preserved.
+
+M03-07:
+  The source UI implementation and tests already exist in the surviving feature history. The recovered 32-commit range does not change ArtifactsUi.kt or ArtifactRevisionPreviewUiTest.kt. Current-SHA focused tests are recorded in this package. The original task remains TODO, requires_device=true, and depends on M03-01, which remains TODO.
+
+Source plan integrity:
+  Backlog SHA-256 bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235
+  Roadmap SHA-256 260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5
+  97 unique task IDs; 120 dependencies; all 97 source statuses TODO.
+
+No changes were made to main, the v0.4.2 tag, the original feature branch, user data, model assets or signing keys.

@@ -1,0 +1,7 @@
+JAVA_HOME=/workspace/.toolchain/jdk-17
+Gradle runtime: Temurin JDK 17
+Gradle test launcher/toolchain: /workspace/.toolchain/jdk-21-temurin
+Gradle user home: /workspace/.gradle (pre-existing cache; no cache copying or clearing)
+Android SDK: /workspace/.toolchain/android-sdk, API 35
+NDK: /workspace/.toolchain/android-sdk/ndk/27.0.12077973
+Repository: fresh clone from remote feature SHA e6f16ac30914fe32f7140241e81e5976660c03d2

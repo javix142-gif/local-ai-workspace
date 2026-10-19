@@ -1,0 +1,6 @@
+command.txt 510 bytes
+environment.txt 2602 bytes
+exit-time.txt 59 bytes
+file-inventory.txt 0 bytes
+gradle.log 2050 bytes
+run-meta-start.txt 85 bytes

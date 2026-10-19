@@ -1,0 +1,7 @@
+TEST-com.localai.workspace.artifacts.PdfArtifactLayoutTest.xml 2887 bytes
+command.txt 546 bytes
+environment.txt 1114 bytes
+exit-time.txt 61 bytes
+file-inventory.txt 0 bytes
+gradle.log 535345 bytes
+run-meta-start.txt 85 bytes

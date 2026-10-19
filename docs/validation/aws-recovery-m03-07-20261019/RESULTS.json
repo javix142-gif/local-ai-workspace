@@ -1,0 +1,119 @@
+{
+  "name": "AWS workspace recovery and focused M03-07 revalidation",
+  "observedAtUtc": "2026-10-19",
+  "requestedCheckpoint": "b8e75b4a688d9e1f441324a3a1ecccb369f99ebc",
+  "actualFeatureHeadAtRecovery": "e6f16ac30914fe32f7140241e81e5976660c03d2",
+  "backupRef": {
+    "name": "recovery/backup-b8e75b4",
+    "sha": "b8e75b4a688d9e1f441324a3a1ecccb369f99ebc",
+    "readBack": true
+  },
+  "continuationBranch": "codex/aws-master-resume-20261019",
+  "branchBase": "e6f16ac30914fe32f7140241e81e5976660c03d2",
+  "recoveredTip": "f4f69f5980401bc6ae87bab65119134f8b57fc92",
+  "recoveredCommits": 32,
+  "recoveredCommitMethod": "Fast-forward from an existing local branch; no rewrite, cherry-pick, or source reconstruction.",
+  "missingCommit": {
+    "sha": "2f8b0d496db8973edf161c7703efc8f0c17d34fd",
+    "status": "NOT_RECOVERED",
+    "sourceReconstructed": false,
+    "scopeOfSearch": "Available Git objects, refs, reflogs and bundles in the two available checkouts; prior volume was not separately mounted."
+  },
+  "m03_07": {
+    "sourceStatus": "TODO",
+    "requiresDevice": true,
+    "dependsOn": [
+      "M03-01"
+    ],
+    "dependencyStatus": "M03-01 TODO",
+    "formalCompletion": false,
+    "sourceFilesUnchangedAcrossRecoveredRange": true,
+    "focusedRuns": [
+      {
+        "codeSha": "e6f16ac30914fe32f7140241e81e5976660c03d2",
+        "classes": [
+          "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+          "com.localai.workspace.ui.ArtifactSafExportUiTest"
+        ],
+        "tests": 4,
+        "passed": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "gradleExitCode": 0,
+        "gradleBuildSuccessful": true,
+        "outerExecutionToolExitCode": 1,
+        "outerExitDiscrepancy": "UNRESOLVED",
+        "evidence": "focused-e6f16ac/"
+      },
+      {
+        "codeSha": "f4f69f5980401bc6ae87bab65119134f8b57fc92",
+        "classes": [
+          "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+          "com.localai.workspace.ui.ArtifactSafExportUiTest",
+          "com.localai.workspace.artifacts.PdfArtifactLayoutTest"
+        ],
+        "tests": 7,
+        "passed": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "gradleExitCode": 0,
+        "gradleBuildSuccessful": true,
+        "actionableTasks": 63,
+        "executedTasks": 63,
+        "outerExecutionToolExitCode": 1,
+        "outerExitDiscrepancy": "UNRESOLVED",
+        "startedAtUtc": "2026-10-19T21:16:32Z",
+        "finishedAtUtc": "2026-10-19T21:19:40Z",
+        "wallMilliseconds": 187220,
+        "environment": {
+          "gradle": "8.10.2",
+          "runtimeJdk": "Temurin 17 (/workspace/.toolchain/jdk-17)",
+          "workerJdk": "Temurin 21 (/workspace/.toolchain/jdk-21-temurin)",
+          "androidSdk": "/workspace/.toolchain/android-sdk (API 35)",
+          "ndk": "27.0.12077973",
+          "gradleUserHome": "/workspace/.gradle existing cache, offline"
+        },
+        "evidence": "focused-f4f69f5/"
+      }
+    ],
+    "otherValidation": {
+      "fullAppJvm": "NOT_RUN",
+      "litertCompat": "NOT_RUN",
+      "lint": "NOT_RUN",
+      "androidTest": "NOT_RUN",
+      "apk": "NOT_GENERATED",
+      "emulator": "NOT_RUN",
+      "physicalDevice": "NOT_RUN"
+    }
+  },
+  "protectedRefs": {
+    "main": "de615b772cf37a99e7e08a647c59607b271de606",
+    "v0.4.2Peeled": "de615b772cf37a99e7e08a647c59607b271de606",
+    "featureAtRecovery": "e6f16ac30914fe32f7140241e81e5976660c03d2"
+  },
+  "sourcePlan": {
+    "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmap": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "tasks": 97,
+    "uniqueIds": 97,
+    "dependencies": 120,
+    "sourceStatusCounts": {
+      "TODO": 97
+    },
+    "sourceFilesModified": false
+  },
+  "device": {
+    "m01_06": "PENDING_REQUIRES_DEVICE",
+    "physicalDevice": "NOT_RUN"
+  },
+  "evidenceManifest": {
+    "path": "docs/validation/aws-recovery-m03-07-20261019/SHA256SUMS",
+    "entries": 28,
+    "sha256": "383dde9eacf1e1f8f8da149b9262213ff47df03a6c85786abe3974d6077de39e",
+    "localVerification": "28/28"
+  }
+}

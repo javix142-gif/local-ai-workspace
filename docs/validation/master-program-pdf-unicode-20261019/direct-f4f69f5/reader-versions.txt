@@ -1,0 +1,8 @@
+pdftotext:
+pdftotext version 25.03.0
+pdffonts:
+pdffonts version 25.03.0
+pdftoppm:
+pdftoppm version 26.05.0
+pypdf:
+6.10.0

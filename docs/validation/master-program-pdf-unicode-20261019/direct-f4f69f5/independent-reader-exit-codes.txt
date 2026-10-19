@@ -1,0 +1,4 @@
+pdftotextExit=0
+pdffontsExit=0
+pdftoppmExit=0
+pypdfExit=0

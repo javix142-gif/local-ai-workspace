@@ -1,0 +1,5 @@
+06605453e3cdd93e5f4f12603659ac0a9b4e43fa8d8731e2bd1b5417ce3dbf20  docs/validation/master-program-pdf-unicode-20261019/direct-f4f69f5/unicode-v1.pdf
+d2fcca50e73e80880b3d42d538f5bcfcc3ecae9be296389b158a59bd24e5226c  docs/validation/master-program-pdf-unicode-20261019/direct-f4f69f5/unicode-v1-preview.png
+7b2d3c319e01adb82ce6f66cb3c24ce9405db3b5c9be3ec601998211bb23dbc9  docs/validation/master-program-pdf-unicode-20261019/direct-f4f69f5/pdftotext.txt
+94df093bf2481f5ca9ba718e1e99ce7b4d8d726d4625c41836b7624f1934dc68  docs/validation/master-program-pdf-unicode-20261019/direct-f4f69f5/pdffonts.txt
+04c0f65183bee3165b0fa06ace3e60631a2405860829cb86fa54090fdcee70db  docs/validation/master-program-pdf-unicode-20261019/direct-f4f69f5/pypdf-reader.txt
