@@ -1,0 +1,48 @@
+{
+  "sourceCheckoutSha": "95199cd3f7f5703bf436de4214cb42e4721e2787",
+  "productCodeSha": "9f99beba0d38787a62e83bbfa457cc39b9e9d0ab",
+  "command": "JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk GRADLE_USER_HOME=/workspace/.gradle ./gradlew --offline --no-daemon --no-parallel --max-workers=1 --console=plain --info --rerun-tasks -I docs/validation/master-program-pptx/roundtrip-v2-current-sha-95199cd/test-events.init.gradle -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+  "startedUtc": "2026-10-19T16:55:44Z",
+  "finishedUtc": "2026-10-19T16:59:13Z",
+  "wallSeconds": 209,
+  "exitCode": 0,
+  "gradle": "8.10.2",
+  "runtimeJdk": "Temurin 17.0.20.1",
+  "workerJdk": "Temurin 21.0.12.1",
+  "offline": true,
+  "result": "PASS",
+  "junit": {
+    "suite": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 2,
+    "cases": [
+      {
+        "name": "oversizedLineDiffFallsBackWithoutTruncatingBeforeOrAfterPreview",
+        "seconds": 9.438,
+        "status": "PASS"
+      },
+      {
+        "name": "reviewShowsExactBeforeAndAfterAndClosingKeepsSavedRevisionUnchanged",
+        "seconds": 0.608,
+        "status": "PASS"
+      }
+    ]
+  },
+  "testEvents": {
+    "starts": 2,
+    "ends": 2,
+    "allEndsSuccess": true
+  },
+  "gradleTasks": {
+    "actionable": 63,
+    "executed": 63,
+    "taskOutcomeEntries": 17
+  },
+  "limitations": [
+    "Focused HOST evidence only; no full JVM/LiteRT gate, lint, AndroidTest compile/execution, emulator, Motorola or APK.",
+    "M03-07 remains source TODO, requires device and depends on M03-01 TODO."
+  ]
+}

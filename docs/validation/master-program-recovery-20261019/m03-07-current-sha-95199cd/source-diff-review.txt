@@ -1,0 +1,4 @@
+Compared source checkout bceb60ade0e6e3697d4f9a7d4d731869d9c8978a to 95199cd3f7f5703bf436de4214cb42e4721e2787 for:
+- app/src/main/java/com/localai/workspace/ui/ArtifactsUi.kt
+- app/src/test/java/com/localai/workspace/ui/ArtifactRevisionPreviewUiTest.kt
+Result: no diff in either relevant file. The exact current-SHA focused test was nevertheless executed.

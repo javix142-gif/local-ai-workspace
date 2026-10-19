@@ -1,0 +1,15 @@
+import org.gradle.api.tasks.testing.Test
+import java.time.Instant
+allprojects {
+    tasks.withType(Test).configureEach {
+        beforeTest { descriptor -> logger.lifecycle("M03_TEST_START\\t${descriptor.className}\\t${descriptor.name}\\t${Instant.now()}") }
+        afterTest { descriptor, result -> logger.lifecycle("M03_TEST_END\\t${descriptor.className}\\t${descriptor.name}\\t${result.resultType}\\t${Instant.now()}") }
+    }
+}
+gradle.taskGraph.whenReady {
+    gradle.rootProject.allprojects { project ->
+        project.tasks.matching { it.path == ':app:testDebugUnitTest' }.configureEach {
+            outputs.upToDateWhen { false }
+        }
+    }
+}

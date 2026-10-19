@@ -1,0 +1,5 @@
+No product/test source changes in this validation increment.
+Exact tested checkout SHA is in source-sha.txt.
+Product code SHA is 9f99beba0d38787a62e83bbfa457cc39b9e9d0ab; code files are unchanged from that source commit.
+Validation creates two synthetic revisions through the existing PptxImageArtifactTest and reopens both with python-pptx 1.0.2.
+M03-05 and its device/dependency gates remain source TODO; this evidence is HOST preparation only.

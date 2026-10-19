@@ -1,0 +1,7 @@
+OS=Linux x86_64
+Gradle=8.10.2
+Gradle runtime JDK=Temurin 17.0.20.1 (/workspace/.toolchain/jdk-17)
+Test worker JDK=Temurin 21.0.12.1 (/workspace/.toolchain/jdk-21-temurin)
+Android SDK=API 35 (/workspace/.toolchain/android-sdk)
+NDK=27.0.12077973
+GRADLE_USER_HOME=/workspace/.gradle (existing cache; offline; not cleared)

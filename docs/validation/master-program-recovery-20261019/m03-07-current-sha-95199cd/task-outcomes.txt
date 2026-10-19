@@ -1,0 +1,18 @@
+Gradle summary: 63 actionable tasks, 63 executed. The following 17 unique task markers were directly present in the retained --info log; the complete log is authoritative for the full task graph.
+:app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+:app:preBuild UP-TO-DATE
+:app:preDebugBuild UP-TO-DATE
+:llama-runtime:preBuild UP-TO-DATE
+:llama-runtime:preDebugBuild UP-TO-DATE
+:litert-compat:checkKotlinGradlePluginConfigurationErrors SKIPPED
+:litert-compat:compileDebugJavaWithJavac NO-SOURCE
+:llama-runtime:checkKotlinGradlePluginConfigurationErrors SKIPPED
+:llama-runtime:compileDebugJavaWithJavac NO-SOURCE
+:app:preDebugUnitTestBuild UP-TO-DATE
+:app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+:app:compileDebugShaders NO-SOURCE
+:app:generateDebugAssets UP-TO-DATE
+:litert-compat:compileDebugShaders NO-SOURCE
+:litert-compat:generateDebugAssets UP-TO-DATE
+:llama-runtime:compileDebugShaders NO-SOURCE
+:llama-runtime:generateDebugAssets UP-TO-DATE

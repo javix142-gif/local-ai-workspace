@@ -1,0 +1,1 @@
+python-pptx reopened both immutable generated PPTX revisions; see independent-reader.json

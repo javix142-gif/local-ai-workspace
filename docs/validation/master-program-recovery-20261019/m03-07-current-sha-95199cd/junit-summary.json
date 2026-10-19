@@ -1,0 +1,20 @@
+{
+  "suite": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+  "tests": 2,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "passed": 2,
+  "cases": [
+    {
+      "name": "oversizedLineDiffFallsBackWithoutTruncatingBeforeOrAfterPreview",
+      "seconds": 9.438,
+      "status": "PASS"
+    },
+    {
+      "name": "reviewShowsExactBeforeAndAfterAndClosingKeepsSavedRevisionUnchanged",
+      "seconds": 0.608,
+      "status": "PASS"
+    }
+  ]
+}

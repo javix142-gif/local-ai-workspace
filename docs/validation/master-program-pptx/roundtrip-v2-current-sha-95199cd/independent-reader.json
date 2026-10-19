@@ -1,0 +1,37 @@
+{
+  "reader": "python-pptx",
+  "version": "1.0.2",
+  "roundtrip": "PASS",
+  "versions": [
+    {
+      "file": "fixture-v1.pptx",
+      "bytes": 5464,
+      "sha256": "794ffc02dd8acfa650bbf660e2fd44b0580bcb6ae384c2463d838cacc04ca4c5",
+      "zipCrc": "PASS",
+      "slides": 1,
+      "layout": "Blank",
+      "masters": 1,
+      "themePartPresent": true,
+      "title": "Informe visual",
+      "body": "España y una imagen local.",
+      "pictures": 1,
+      "altText": "Mapa & datos",
+      "embeddedImageSha256": "3431e53e66db1ed7740699afa02201bdf19354227ef76a560eb6df149df95a1b"
+    },
+    {
+      "file": "fixture-v2.pptx",
+      "bytes": 5465,
+      "sha256": "bb8dc252235b17c08a1ff7cae8288d76f9c36a01e5ac486b84360a66da9764f2",
+      "zipCrc": "PASS",
+      "slides": 1,
+      "layout": "Blank",
+      "masters": 1,
+      "themePartPresent": true,
+      "title": "Informe revisado",
+      "body": "España y una imagen local.",
+      "pictures": 1,
+      "altText": "Mapa & datos",
+      "embeddedImageSha256": "3431e53e66db1ed7740699afa02201bdf19354227ef76a560eb6df149df95a1b"
+    }
+  ]
+}

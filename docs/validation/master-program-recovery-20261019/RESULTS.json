@@ -225,14 +225,14 @@
   "manifest": "SHA256SUMS",
   "evidenceManifest": {
     "path": "SHA256SUMS",
-    "entries": 113,
-    "sha256": "af7fe8f41abae15e4664a4b83f516bed4f25d68bbb33edd7809136baa71d92c0",
+    "entries": 130,
+    "sha256": "3c0b8f35cee8c2032eece392a51afa116b90c6c5cb235e4f44290bff341fd18c",
     "excludes": [
       "RESULTS.md",
       "RESULTS.json",
       "SHA256SUMS"
     ],
-    "verification": "113/113 payloads verified locally"
+    "verification": "Historical listed paths rehashed; new M03-07 exact-source bundle added; all 130 entries verified locally."
   },
   "nextOriginalTask": {
     "id": "M00-06",
@@ -244,7 +244,8 @@
     "device": "Motorola Moto G86 Power 5G"
   },
   "M03_07CurrentHeadRevalidation": {
-    "sourceSha": "bceb60ade0e6e3697d4f9a7d4d731869d9c8978a",
+    "sourceSha": "95199cd3f7f5703bf436de4214cb42e4721e2787",
+    "productCodeSha": "9f99beba0d38787a62e83bbfa457cc39b9e9d0ab",
     "status": "HOST_FOCUSED_PASS_PREPARATORY_ONLY",
     "class": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
     "tests": 2,
@@ -257,12 +258,15 @@
       "reviewShowsExactBeforeAndAfterAndClosingKeepsSavedRevisionUnchanged"
     ],
     "exitCode": 0,
-    "wallSeconds": 212,
-    "gradle": "8.10.2",
+    "wallSeconds": 209,
+    "gradleReported": "3m27s; BUILD SUCCESSFUL; 63 actionable tasks, 63 executed",
     "runtimeJdk": "Temurin 17.0.20.1",
     "workerJdk": "Temurin 21.0.12.1",
     "offline": true,
-    "evidence": "m03-07-current-sha-bceb/",
+    "evidence": "m03-07-current-sha-95199cd/",
+    "childManifestEntries": 16,
+    "childManifestSha256": "80c0dbd0e4923070d79d2ed2e0d907ba9230038ff2ca7a08b78ddebdf7a2954c",
+    "relevantFilesUnchangedSince": "bceb60ade0e6e3697d4f9a7d4d731869d9c8978a",
     "originalTask": {
       "id": "M03-07",
       "sourceStatus": "TODO",
@@ -272,10 +276,18 @@
       ],
       "dependencyStatus": "M03-01 TODO",
       "formalCompletion": false
-    }
+    },
+    "notRun": [
+      "full JVM/LiteRT gate",
+      "lint",
+      "AndroidTest compile/execution",
+      "emulator",
+      "physical device",
+      "APK"
+    ]
   },
-  "evidenceManifestSha256": "af7fe8f41abae15e4664a4b83f516bed4f25d68bbb33edd7809136baa71d92c0",
-  "evidenceManifestEntries": 113,
+  "evidenceManifestSha256": "3c0b8f35cee8c2032eece392a51afa116b90c6c5cb235e4f44290bff341fd18c",
+  "evidenceManifestEntries": 130,
   "latestIncrement": {
     "name": "M00-06 exact-run metric correlation and document timeline presentation",
     "codeSha": "9f99beba0d38787a62e83bbfa457cc39b9e9d0ab",
@@ -329,6 +341,48 @@
       "entries": 113,
       "sha256": "af7fe8f41abae15e4664a4b83f516bed4f25d68bbb33edd7809136baa71d92c0",
       "verified": "113/113"
+    }
+  },
+  "previousM03_07CurrentHeadRevalidationBceb": {
+    "sourceSha": "bceb60ade0e6e3697d4f9a7d4d731869d9c8978a",
+    "status": "HOST_FOCUSED_PASS_PREPARATORY_ONLY",
+    "class": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+    "tests": 2,
+    "passed": 2,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "methods": [
+      "oversizedLineDiffFallsBackWithoutTruncatingBeforeOrAfterPreview",
+      "reviewShowsExactBeforeAndAfterAndClosingKeepsSavedRevisionUnchanged"
+    ],
+    "exitCode": 0,
+    "wallSeconds": 212,
+    "gradle": "8.10.2",
+    "runtimeJdk": "Temurin 17.0.20.1",
+    "workerJdk": "Temurin 21.0.12.1",
+    "offline": true,
+    "evidence": "m03-07-current-sha-bceb/",
+    "originalTask": {
+      "id": "M03-07",
+      "sourceStatus": "TODO",
+      "requiresDevice": true,
+      "dependsOn": [
+        "M03-01"
+      ],
+      "dependencyStatus": "M03-01 TODO",
+      "formalCompletion": false
+    }
+  },
+  "continuityResume": {
+    "promptReferenceHead": "b8e75b4a688d9e1f441324a3a1ecccb369f99ebc",
+    "actualFetchedFeatureAndWorkHead": "95199cd3f7f5703bf436de4214cb42e4721e2787",
+    "existingBackup": "recovery/backup-b8e75b4 at b8e75b4a688d9e1f441324a3a1ecccb369f99ebc",
+    "currentHeadBackup": "recovery/backup-aws-20261019-95199cd at 95199cd3f7f5703bf436de4214cb42e4721e2787",
+    "lostCommit": "2f8b0d496db8973edf161c7703efc8f0c17d34fd NOT_RECOVERED; no source reconstructed",
+    "untrackedEvidenceArchive": {
+      "path": "/workspace/recovery-backups/m03-05-roundtrip-untracked-95199cd.tar.gz",
+      "sha256": "3337fcfaa8e3dbdf12eeb840e7caccb01dc25d708c8cff29ad2492c82c374e3c"
     }
   }
 }

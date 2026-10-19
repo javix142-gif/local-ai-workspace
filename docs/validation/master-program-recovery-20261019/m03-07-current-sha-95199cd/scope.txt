@@ -1,0 +1,1 @@
+Retesteo focal M03-07 en HEAD actual. Solo ArtifactsUi.kt y ArtifactRevisionPreviewUiTest.kt cubiertos por el test; no hay diff de esos archivos desde el checkout bceb60a. No se modifica producción en esta ejecución.

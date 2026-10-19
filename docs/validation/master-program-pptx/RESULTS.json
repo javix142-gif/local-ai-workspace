@@ -361,5 +361,44 @@
       "sourceFilesModified": false
     }
   },
-  "historicalPreviewLimitationSupersededBy": "slideLayoutPreviewFollowUp (code 375e45035f63576b17c1111ce738720373100b99); older implementation/limitations above retain their original SHA attribution."
+  "historicalPreviewLimitationSupersededBy": "slideLayoutPreviewFollowUp (code 375e45035f63576b17c1111ce738720373100b99); older implementation/limitations above retain their original SHA attribution.",
+  "currentSourceRoundtripFollowUp": {
+    "name": "PPTX image immutable-revision roundtrip on current checkout plus independent reader",
+    "sourceCheckoutSha": "95199cd3f7f5703bf436de4214cb42e4721e2787",
+    "productCodeSha": "9f99beba0d38787a62e83bbfa457cc39b9e9d0ab",
+    "status": "FOCUSED_HOST_PASS_PREPARATORY_NOT_FORMAL",
+    "gradle": {
+      "exitCode": 0,
+      "wallSeconds": 29,
+      "tasksActionable": 63,
+      "tasksExecuted": 63,
+      "tests": 3,
+      "passed": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "evidence": "roundtrip-v2-current-sha-95199cd/"
+    },
+    "independentReader": {
+      "name": "python-pptx",
+      "version": "1.0.2",
+      "status": "PASS",
+      "revisions": [
+        "fixture-v1.pptx",
+        "fixture-v2.pptx"
+      ],
+      "zipCrc": "PASS",
+      "layout": "Blank",
+      "masterCount": 1,
+      "themePartPresent": true,
+      "embeddedImageSha256": "3431e53e66db1ed7740699afa02201bdf19354227ef76a560eb6df149df95a1b"
+    },
+    "limitations": [
+      "Synthetic single-slide images only; no Office GUI, Android viewer, emulator or physical-device validation.",
+      "M03-05 remains TODO, requires device and depends on M03-01 TODO."
+    ],
+    "childManifestEntries": 22,
+    "childManifestSha256": "a3bc59ab7dfda994ee451adc2e48852f5e794b3d88ef08c8e2c362b7646bf62c",
+    "enclosingEvidenceManifestEntries": 178
+  }
 }

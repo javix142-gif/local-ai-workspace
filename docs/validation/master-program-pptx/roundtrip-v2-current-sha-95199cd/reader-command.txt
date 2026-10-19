@@ -1,0 +1,1 @@
+python3 docs/validation/master-program-pptx/roundtrip-v2-current-sha-95199cd/independent_reader.py

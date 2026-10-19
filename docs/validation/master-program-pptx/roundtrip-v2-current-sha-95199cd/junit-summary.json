@@ -1,0 +1,34 @@
+{
+  "suite": "com.localai.workspace.artifacts.PptxImageArtifactTest",
+  "tests": 3,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "passed": 3,
+  "cases": [
+    {
+      "class": "com.localai.workspace.artifacts.PptxImageArtifactTest",
+      "name": "rejectsMalformedOversizedOrUnlabelledPptxImages",
+      "seconds": 5.591,
+      "failed": false,
+      "error": false,
+      "skipped": false
+    },
+    {
+      "class": "com.localai.workspace.artifacts.PptxImageArtifactTest",
+      "name": "generatedPptxEmbedsAccessiblePngAndKeepsImageAcrossImmutableRevision",
+      "seconds": 0.425,
+      "failed": false,
+      "error": false,
+      "skipped": false
+    },
+    {
+      "class": "com.localai.workspace.artifacts.PptxImageArtifactTest",
+      "name": "textualPreviewDistinguishesImageRevisionWithoutExposingPngPayload",
+      "seconds": 0.102,
+      "failed": false,
+      "error": false,
+      "skipped": false
+    }
+  ]
+}
