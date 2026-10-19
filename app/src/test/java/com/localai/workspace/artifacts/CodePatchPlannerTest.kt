@@ -5,6 +5,17 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class CodePatchPlannerTest {
+    @Test fun multiEditsAreResolvedFromOriginalSourceRegardlessOfOrder() {
+        val source = "alpha beta"
+        val edits = listOf(
+            CodePatchEdit("alpha", "beta"),
+            CodePatchEdit("beta", "gamma"),
+        )
+
+        assertEquals("beta gamma", CodePatchPlanner.apply(source, CodePatchPlanner.hash(source), edits))
+        assertEquals("beta gamma", CodePatchPlanner.apply(source, CodePatchPlanner.hash(source), edits.reversed()))
+    }
+
     @Test fun exactMultiEditPreservesUnicodeAndLineEndings() {
         val source="// España 界\r\nfun first() = 1\r\nfun second() = 2\r\n"
         val result=CodePatchPlanner.apply(source,CodePatchPlanner.hash(source),listOf(
@@ -22,6 +33,16 @@ class CodePatchPlannerTest {
         assertRejected("CODE_PATCH_MATCH_AMBIGUOUS") { CodePatchPlanner.apply(source,hash,listOf(CodePatchEdit("two","TWO"))) }
         assertRejected("CODE_PATCH_EMPTY_MATCH") { CodePatchPlanner.apply(source,hash,listOf(CodePatchEdit("","insert"))) }
         assertRejected("CODE_PATCH_NO_CHANGE") { CodePatchPlanner.apply(source,hash,listOf(CodePatchEdit("one","one"))) }
+    }
+
+    @Test fun overlappingEditsAreRejectedAgainstTheSameBaseBody() {
+        val source = "abcdef"
+        assertRejected("CODE_PATCH_MATCH_OVERLAP") {
+            CodePatchPlanner.apply(source, CodePatchPlanner.hash(source), listOf(
+                CodePatchEdit("abc", "ABC"),
+                CodePatchEdit("cde", "CDE"),
+            ))
+        }
     }
 
     @Test fun editAndBodyBoundsAreEnforced() {

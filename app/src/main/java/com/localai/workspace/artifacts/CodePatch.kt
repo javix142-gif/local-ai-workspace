@@ -55,16 +55,24 @@ object CodePatchPlanner {
         require(hash(source) == expectedSha256) { "CODE_PATCH_BASE_HASH_MISMATCH" }
         validateEdits(edits)
         require(bytes(source).size <= MAX_BODY_BYTES) { "CODE_PATCH_BODY_TOO_LARGE" }
-        var result = source
-        edits.forEach { edit ->
-            val first = result.indexOf(edit.before)
+        val located = edits.map { edit ->
+            val first = source.indexOf(edit.before)
             require(first >= 0) { "CODE_PATCH_MATCH_NOT_FOUND" }
-            require(result.indexOf(edit.before, first + 1) < 0) { "CODE_PATCH_MATCH_AMBIGUOUS" }
-            result = result.replaceRange(first, first + edit.before.length, edit.after)
+            require(source.indexOf(edit.before, first + 1) < 0) { "CODE_PATCH_MATCH_AMBIGUOUS" }
+            LocatedEdit(first, first + edit.before.length, edit.after)
+        }.sortedBy { it.start }
+        located.zipWithNext().forEach { (left, right) ->
+            require(left.end <= right.start) { "CODE_PATCH_MATCH_OVERLAP" }
+        }
+        var result = source
+        located.asReversed().forEach { edit ->
+            result = result.replaceRange(edit.start, edit.end, edit.after)
             require(bytes(result).size <= MAX_BODY_BYTES) { "CODE_PATCH_BODY_TOO_LARGE" }
         }
         return result
     }
+
+    private data class LocatedEdit(val start: Int, val end: Int, val replacement: String)
 
     fun parseEdits(array: JSONArray): List<CodePatchEdit> {
         require(array.length() in 1..MAX_EDITS) { "CODE_PATCH_EDIT_COUNT_INVALID" }
