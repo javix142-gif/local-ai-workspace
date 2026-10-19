@@ -4,9 +4,12 @@ import android.app.Application
 import com.tom_roush.pdfbox.android.PDFBoxResourceLoader
 import com.tom_roush.pdfbox.pdmodel.PDDocument
 import com.tom_roush.pdfbox.pdmodel.font.PDType1Font
+import com.tom_roush.pdfbox.contentstream.operator.Operator
+import com.tom_roush.pdfbox.pdfparser.PDFStreamParser
 import com.tom_roush.pdfbox.text.PDFTextStripper
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -85,6 +88,48 @@ class PdfArtifactLayoutTest {
             PDDocument.load(secondFile).use { document ->
                 assertEquals(2, document.numberOfPages)
                 assertTrue(PDFTextStripper().getText(document).contains("Informe revisado"))
+            }
+        } finally {
+            root.deleteRecursively()
+        }
+    }
+
+    @Test
+    fun generatedPdfTablesUseGridAndPaginateLongCellsWithoutLosingText() {
+        val longCell = "INICIO " + "dato ".repeat(300) + " FINAL"
+        val source = JSONObject("""
+            {
+              "format":"PDF","name":"tabla.pdf",
+              "paragraphs":[{"text":"Resumen de tabla","style":"heading"}],
+              "tables":[{"rows":[
+                ["ID","Descripción","Estado","D","E","F","G","H"],
+                ["registro-1","$longCell","Activo","d","e","f","g","h"],
+                ["registro-2","Cierre visible","Completo","d2","e2","f2","g2","h2"]
+              ]}]
+            }
+        """.trimIndent())
+        val spec = ArtifactSpec.parse(source)
+        val root = File(context.cacheDir, "pdf-table-${UUID.randomUUID()}")
+        val store = ArtifactStore(context, root)
+        try {
+            val revision = store.create("pdf-table-project", spec)
+            val output = File("build/pdf-layout/table-v1.pdf").apply {
+                parentFile?.mkdirs()
+                writeBytes(store.verifiedFile("pdf-table-project", revision).readBytes())
+            }
+            PDDocument.load(output).use { document ->
+                val extracted = PDFTextStripper().getText(document)
+                assertTrue(extracted.contains("INICIO"))
+                assertTrue(extracted.contains("FINAL"))
+                assertTrue(extracted.contains("Cierre visible"))
+                assertFalse("PDF table cells must be laid out as cells, not pipe-delimited prose", extracted.contains('|'))
+                assertTrue("Long cell should continue onto later pages", document.numberOfPages > 1)
+
+                val operators = document.pages.flatMap { page ->
+                    PDFStreamParser(page).apply { parse() }.tokens.filterIsInstance<Operator>().map { it.name }
+                }
+                assertTrue("Table must draw cell rectangles", "re" in operators)
+                assertTrue("Table cell rectangles must be stroked", "S" in operators)
             }
         } finally {
             root.deleteRecursively()
