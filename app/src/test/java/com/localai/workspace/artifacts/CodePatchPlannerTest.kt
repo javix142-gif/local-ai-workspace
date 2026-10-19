@@ -25,6 +25,20 @@ class CodePatchPlannerTest {
         assertEquals("// España 界\r\nfun first() = 10\r\nfun second() = 20\r\n",result)
     }
 
+    @Test fun malformedUtf16SourceAndEditFragmentsAreRejected() {
+        val source="A\uD83D\uDE00B"
+        assertRejected("CODE_PATCH_INVALID_UTF16") {
+            CodePatchPlanner.apply(source,CodePatchPlanner.hash(source),listOf(CodePatchEdit("\uD83D","x")))
+        }
+        assertRejected("CODE_PATCH_INVALID_UTF16") {
+            CodePatchPlanner.apply(source,CodePatchPlanner.hash(source),listOf(CodePatchEdit("A","A\uD83D")))
+        }
+        val malformedSource="A\uD83DB"
+        assertRejected("CODE_PATCH_INVALID_UTF16") {
+            CodePatchPlanner.apply(malformedSource,CodePatchPlanner.hash(malformedSource),listOf(CodePatchEdit("A","B")))
+        }
+    }
+
     @Test fun staleMissingAmbiguousEmptyAndNoOpEditsAreRejected() {
         val source="one\ntwo\ntwo\n"
         val hash=CodePatchPlanner.hash(source)
