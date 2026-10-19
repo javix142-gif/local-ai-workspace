@@ -1,0 +1,118 @@
+{
+  "tests": 10,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "suites": [
+    {
+      "file": "TEST-com.localai.workspace.data.GenerationMetricsPresentationTest.xml",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-com.localai.workspace.performance.DocumentPipelineTimelinePresentationTest.xml",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-com.localai.workspace.performance.GenerationTimelinePresentationTest.xml",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-com.localai.workspace.ui.ChatSessionPipelineTest.xml",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "testcases": [
+    {
+      "classname": "com.localai.workspace.data.GenerationMetricsPresentationTest",
+      "name": "actualPhoneLocaleCommaMetricsKeepCorrectTimingsAndSpeedInsideDetails",
+      "timeSeconds": 0.101,
+      "failed": false,
+      "error": false,
+      "skipped": false
+    },
+    {
+      "classname": "com.localai.workspace.data.GenerationMetricsPresentationTest",
+      "name": "newEncodingsUseStableNumbersRegardlessOfPhoneLocaleAndKeepRealFinishFlags",
+      "timeSeconds": 0.015,
+      "failed": false,
+      "error": false,
+      "skipped": false
+    },
+    {
+      "classname": "com.localai.workspace.data.GenerationMetricsPresentationTest",
+      "name": "outputCapNeedsExplicitNativeMetricRatherThanOnDoneOrTextThatLooksIncomplete",
+      "timeSeconds": 0.003,
+      "failed": false,
+      "error": false,
+      "skipped": false
+    },
+    {
+      "classname": "com.localai.workspace.data.GenerationMetricsPresentationTest",
+      "name": "absentInvalidOrDiagnosticValuesDoNotBecomeInventedBenchmarkRows",
+      "timeSeconds": 0.002,
+      "failed": false,
+      "error": false,
+      "skipped": false
+    },
+    {
+      "classname": "com.localai.workspace.performance.DocumentPipelineTimelinePresentationTest",
+      "name": "ordersMeasuredImportStagesAndIncludesOnlyTheCorrelatedBackgroundIndex",
+      "timeSeconds": 0.002,
+      "failed": false,
+      "error": false,
+      "skipped": false
+    },
+    {
+      "classname": "com.localai.workspace.performance.DocumentPipelineTimelinePresentationTest",
+      "name": "doesNotJoinAStaleOrUnidentifiedIndexRunToTheImport",
+      "timeSeconds": 0.001,
+      "failed": false,
+      "error": false,
+      "skipped": false
+    },
+    {
+      "classname": "com.localai.workspace.performance.GenerationTimelinePresentationTest",
+      "name": "reportsElapsedAndAdjacentIntervalsInRecordedOrder",
+      "timeSeconds": 0.002,
+      "failed": false,
+      "error": false,
+      "skipped": false
+    },
+    {
+      "classname": "com.localai.workspace.performance.GenerationTimelinePresentationTest",
+      "name": "onlyJoinsRuntimeMetricsToTheExactNormalChatRun",
+      "timeSeconds": 0.003,
+      "failed": false,
+      "error": false,
+      "skipped": false
+    },
+    {
+      "classname": "com.localai.workspace.performance.GenerationTimelinePresentationTest",
+      "name": "marksElapsedValuesUnavailableAfterMonotonicClockReset",
+      "timeSeconds": 0.0,
+      "failed": false,
+      "error": false,
+      "skipped": false
+    },
+    {
+      "classname": "com.localai.workspace.ui.ChatSessionPipelineTest",
+      "name": "normalChatTraceOrdersContextBeforeGateAndVisibleContentWithoutPersistingText",
+      "timeSeconds": 5.879,
+      "failed": false,
+      "error": false,
+      "skipped": false
+    }
+  ]
+}

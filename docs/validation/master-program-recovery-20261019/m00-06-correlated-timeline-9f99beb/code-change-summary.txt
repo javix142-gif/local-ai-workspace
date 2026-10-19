@@ -1,0 +1,19 @@
+Code change evidence
+source_commit=9f99beba0d38787a62e83bbfa457cc39b9e9d0ab
+base_commit=acb3e71a46da3af6927de631a971cea1fff29291
+source_branch=codex/master-program-20261019
+exact_source_diff=git diff acb3e71a46da3af6927de631a971cea1fff29291..9f99beba0d38787a62e83bbfa457cc39b9e9d0ab -- app/
+
+The exact source diff is stored in Git between the commits above. This text file is a path/summary pointer, not a substitute or reconstructed patch.
+
+Files changed:
+app/src/main/java/com/localai/workspace/data/GenerationMetricsPresentation.kt
+app/src/main/java/com/localai/workspace/domain/model/WorkspaceModels.kt
+app/src/main/java/com/localai/workspace/performance/DocumentPipelineTimelinePresentation.kt
+app/src/main/java/com/localai/workspace/performance/GenerationTimelinePresentation.kt
+app/src/main/java/com/localai/workspace/ui/PerformanceScreen.kt
+app/src/main/java/com/localai/workspace/ui/ViewModels.kt
+app/src/test/java/com/localai/workspace/data/GenerationMetricsPresentationTest.kt
+app/src/test/java/com/localai/workspace/performance/DocumentPipelineTimelinePresentationTest.kt
+app/src/test/java/com/localai/workspace/performance/GenerationTimelinePresentationTest.kt
+app/src/test/java/com/localai/workspace/ui/ChatSessionPipelineTest.kt

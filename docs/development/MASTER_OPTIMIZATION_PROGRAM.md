@@ -1,5 +1,11 @@
 # Master optimization program — first implementation delivery
 
+## 2026-10-19 — M00-06 exact-run metrics correlation (preparatory)
+
+Code SHA `9f99beba0d38787a62e83bbfa457cc39b9e9d0ab` adds exact opaque-run-ID correlation between a normal-chat trace and its available runtime metrics, and a measured document import timeline that includes asynchronous EG1 indexing only when the index run ID matches the import. Stale metrics are not joined; absent native TTFT/decode values remain absent. The focused HOST suite passed 10/10 in 120 seconds, exit 0. Exact command, JDK/SDK, event stream, XML, full Gradle log and checksums are in `../validation/master-program-recovery-20261019/m00-06-correlated-timeline-9f99beb/` and the enclosing recovery report.
+
+This does not demonstrate a single causal import-to-chat trace or actual model/device TTFT, decode, RAM, quality, energy or thermal measurements. M00-06 remains source `TODO`; the original 97 task IDs, order, 120 dependencies and source statuses are unchanged. Full host gates, emulator, Motorola and APK were not run for this increment.
+
 ## 2026-10-19 — M03-03 built-in DOCX style templates (preparatory)
 
 At tested HEAD `56090d0e4d5c686a9346a5359dfd18d86e7c5d78` (production commit `1cdcddb471eb795b526e16b4cd43997176958ba1`), generated DOCX descriptors accept the bounded style presets `standard`, `report`, and `meeting_minutes`. The default/legacy style part remains byte-identical when `template` is omitted or set to `standard`. Report uses Calibri and brand color #3E746D; meeting minutes uses Arial and #1D2522. The UI exposes all three selectors, the descriptor remains versioned by the existing ArtifactStore, and the tool schema documents the names. Unknown values and non-DOCX use fail explicitly.

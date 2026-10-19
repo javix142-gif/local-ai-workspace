@@ -6,7 +6,8 @@
     "otherFocusedSource": "efab48751ae0da97b7d29782b8fc425f39c894c2",
     "m00_05": "78b5309f5ea7388a2ab780c8902156b7b196512f",
     "m00_04AndM03_07": "bbcd5517f567910170a6a6d7c9f98b6ebbb82098",
-    "latestCurrentCodeRevalidation": "bceb60ade0e6e3697d4f9a7d4d731869d9c8978a"
+    "latestCurrentCodeRevalidation": "bceb60ade0e6e3697d4f9a7d4d731869d9c8978a",
+    "latestCode": "9f99beba0d38787a62e83bbfa457cc39b9e9d0ab"
   },
   "changes": {
     "production": false,
@@ -169,6 +170,25 @@
       "requiresDevice": true,
       "dependencyM03_01RemainsTodo": true,
       "evidence": "m03-07"
+    },
+    {
+      "task": "M00-06_CORRELATED_TIMELINE_PRESENTATION",
+      "sourceSha": "9f99beba0d38787a62e83bbfa457cc39b9e9d0ab",
+      "status": "HOST_FOCUSED_PASS_PREPARATORY_ONLY",
+      "tests": 10,
+      "passed": 10,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "durationSeconds": 120,
+      "testClasses": {
+        "GenerationMetricsPresentationTest": "4/4",
+        "DocumentPipelineTimelinePresentationTest": "2/2",
+        "GenerationTimelinePresentationTest": "3/3",
+        "ChatSessionPipelineTest.normalChatTraceOrdersContextBeforeGateAndVisibleContentWithoutPersistingText": "1/1"
+      },
+      "evidence": "m00-06-correlated-timeline-9f99beb/"
     }
   ],
   "environment": {
@@ -194,7 +214,7 @@
   "formalTaskStates": {
     "M00-04": "SOURCE_TODO; focused synthetic HOST evidence only",
     "M00-05": "SOURCE_TODO; host layout/Shadow IME only",
-    "M00-06": "SOURCE_TODO; split synthetic document/index and fake-runtime chat evidence; native metrics and a unified cross-stage trace are not demonstrated",
+    "M00-06": "SOURCE_TODO; exact-run metric correlation and import/index timeline presentation host-tested 10/10 at 9f99beb; no single causal import-to-chat timeline or real native/device performance values demonstrated",
     "M02-08": "SOURCE_TODO; existing code and focused host tests, but M02-05 dependency is source TODO",
     "M03-07": "SOURCE_TODO; requires device and depends on source TODO M03-01",
     "M01-06": "PENDING_REQUIRES_DEVICE"
@@ -205,13 +225,14 @@
   "manifest": "SHA256SUMS",
   "evidenceManifest": {
     "path": "SHA256SUMS",
-    "entries": 84,
-    "sha256": "44dc30bf69d95ccc708f418a7e4188aa6c3436f8b2a6618087251dfe131727bb",
+    "entries": 113,
+    "sha256": "af7fe8f41abae15e4664a4b83f516bed4f25d68bbb33edd7809136baa71d92c0",
     "excludes": [
       "RESULTS.md",
       "RESULTS.json",
       "SHA256SUMS"
-    ]
+    ],
+    "verification": "113/113 payloads verified locally"
   },
   "nextOriginalTask": {
     "id": "M00-06",
@@ -253,6 +274,61 @@
       "formalCompletion": false
     }
   },
-  "evidenceManifestSha256": "df07e3b850293109ce61c17967b1e70fc53896149d50edd3bb0f4ff03f60e758",
-  "evidenceManifestEntries": 95
+  "evidenceManifestSha256": "af7fe8f41abae15e4664a4b83f516bed4f25d68bbb33edd7809136baa71d92c0",
+  "evidenceManifestEntries": 113,
+  "latestIncrement": {
+    "name": "M00-06 exact-run metric correlation and document timeline presentation",
+    "codeSha": "9f99beba0d38787a62e83bbfa457cc39b9e9d0ab",
+    "productionChanged": true,
+    "testFiles": [
+      "app/src/test/java/com/localai/workspace/performance/DocumentPipelineTimelinePresentationTest.kt",
+      "app/src/test/java/com/localai/workspace/performance/GenerationTimelinePresentationTest.kt",
+      "app/src/test/java/com/localai/workspace/data/GenerationMetricsPresentationTest.kt",
+      "app/src/test/java/com/localai/workspace/ui/ChatSessionPipelineTest.kt"
+    ],
+    "host": {
+      "sourceSha": "9f99beba0d38787a62e83bbfa457cc39b9e9d0ab",
+      "gradle": "8.10.2",
+      "runtimeJdk": "Temurin 17.0.20.1 (/workspace/.toolchain/jdk-17)",
+      "workerJdk": "Temurin 21.0.12.1 (/workspace/.toolchain/jdk-21-temurin)",
+      "androidSdk": "API 35 (/workspace/.toolchain/android-sdk)",
+      "ndk": "27.0.12077973",
+      "gradleUserHome": "/workspace/.gradle (existing cache; offline)",
+      "startedAtUtc": "2026-10-19T16:40:35Z",
+      "finishedAtUtc": "2026-10-19T16:42:35Z",
+      "wallSeconds": 120,
+      "exitCode": 0,
+      "tests": 10,
+      "passed": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "starts": 10,
+      "ends": 10,
+      "commandFile": "m00-06-correlated-timeline-9f99beb/command.txt",
+      "fullLog": "m00-06-correlated-timeline-9f99beb/gradle.log",
+      "junitSummary": "m00-06-correlated-timeline-9f99beb/junit-summary.json",
+      "testEvents": "m00-06-correlated-timeline-9f99beb/test-events.tsv",
+      "limitations": [
+        "Focused HOST tests only; full app/LiteRT suites, lint, assembly and AndroidTest compilation were not run.",
+        "Import/index and later normal chat are separate operations; no single causal import-to-inference trace is claimed.",
+        "Fake backend has no native TTFT/decode values; those fields were asserted absent, not fabricated.",
+        "No emulator, physical device, APK or real-model performance benchmark was run."
+      ]
+    },
+    "formalOriginalTaskCompletion": false,
+    "sourceTaskStatus": "M00-06 remains source TODO; original DoD not fully demonstrated",
+    "childManifest": {
+      "path": "m00-06-correlated-timeline-9f99beb/SHA256SUMS",
+      "entries": 17,
+      "sha256": "3c0e8ad114e22f30b9b47bce4844206e2931fc6eb0d3636364f634c6b8291a4f",
+      "verified": "17/17"
+    },
+    "parentManifest": {
+      "path": "SHA256SUMS",
+      "entries": 113,
+      "sha256": "af7fe8f41abae15e4664a4b83f516bed4f25d68bbb33edd7809136baa71d92c0",
+      "verified": "113/113"
+    }
+  }
 }

@@ -1,0 +1,14 @@
+import org.gradle.api.tasks.testing.Test
+import org.gradle.api.tasks.testing.TestDescriptor
+import org.gradle.api.tasks.testing.TestResult
+
+allprojects {
+    tasks.withType(Test).configureEach {
+        addTestListener(new org.gradle.api.tasks.testing.TestListener() {
+            void beforeSuite(TestDescriptor d) {}
+            void afterSuite(TestDescriptor d, TestResult r) {}
+            void beforeTest(TestDescriptor d) { println("M00_TEST_START\\t${d.className}\\t${d.name}") }
+            void afterTest(TestDescriptor d, TestResult r) { println("M00_TEST_END\\t${d.className}\\t${d.name}\\t${r.resultType}\\t${r.endTime - r.startTime}") }
+        })
+    }
+}
