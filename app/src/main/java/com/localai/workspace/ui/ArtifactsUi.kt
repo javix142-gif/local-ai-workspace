@@ -1,7 +1,6 @@
 package com.localai.workspace.ui
 
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -62,7 +61,7 @@ import org.json.JSONObject
         onDispose { imagePreviews.forEach { if(!it.bitmap.isRecycled)it.bitmap.recycle() } }
     }
     LaunchedEffect(projectId){try{refresh()}catch(e:Exception){notice=e.message.orEmpty()}}
-    val export=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")){uri->
+    val export=rememberLauncherForActivityResult(ArtifactCreateDocumentContract()){uri->
         val identity=exportIdentity;exportIdentity=null
         if(uri!=null&&identity!=null)work {
             val revision=withContext(Dispatchers.IO){val parts=identity.split(':');store.history(projectId,parts[0]).single{it.version==parts[1].toInt()}}
@@ -168,7 +167,7 @@ import org.json.JSONObject
                         selected=result;savedPreview=previewText;refresh();versions=withContext(Dispatchers.IO){store.history(projectId,result.id)};notice="Saved and verified v${result.version}; earlier versions unchanged"
                     }}){Text(if(selected==null)"Save new draft"else "Save new version")}
                 }
-                selected?.let{revision->TextButton(enabled=!busy&&preview!=null,onClick={exportIdentity="${revision.id}:${revision.version}";export.launch(revision.name)}){Text("Export saved v${revision.version}")}}
+                selected?.let{revision->TextButton(enabled=!busy&&preview!=null,onClick={exportIdentity="${revision.id}:${revision.version}";export.launch(ArtifactExportRequest(revision.name,revision.format))}){Text("Export saved v${revision.version}")}}
                 versions.forEach{revision->TextButton(enabled=!busy,onClick={load(revision)}){Text("Inspect/restore v${revision.version} (save creates a new version)")}}
             }
         }
