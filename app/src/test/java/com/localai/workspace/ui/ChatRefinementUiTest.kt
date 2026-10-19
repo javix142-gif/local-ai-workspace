@@ -3,6 +3,8 @@ package com.localai.workspace.ui
 import android.app.Application
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,6 +24,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import java.io.File
@@ -86,6 +89,9 @@ class ChatRefinementUiTest {
             val composer = compose.onNodeWithTag("chat-composer-surface").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
             assertTrue("First message starts below the header", first.top >= header.bottom)
             assertTrue("First message is not hidden by composer", first.bottom <= composer.top)
+            compose.onNodeWithTag("chat-header-conversation", useUnmergedTree = true)
+                .assertIsDisplayed()
+                .assertTextContains("Conversation title that wraps without hiding the first message")
             compose.onNodeWithTag("chat-header-model", useUnmergedTree = true).assertIsDisplayed()
             compose.onNodeWithTag("chat-header-agent", useUnmergedTree = true).assertIsDisplayed()
             compose.onNodeWithTag("chat-composer-input").assertIsDisplayed().assertHasClickAction()
@@ -98,6 +104,14 @@ class ChatRefinementUiTest {
             capture("chat-${width}dp-scale-$scale-${if (dark) "dark" else "light"}.png")
         }
         compose.runOnIdle { configure!!(360, 1f, false, false) }
+        compose.onNodeWithTag("chat-composer-input").performClick()
+        compose.onNodeWithTag("chat-composer-input").assertIsFocused()
+        compose.waitForIdle()
+        val inputMethodManager = compose.activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        assertTrue("Focusing the composer should show the Robolectric soft keyboard", shadowOf(inputMethodManager).isSoftInputVisible)
+        compose.onNodeWithTag("chat-header-agent", useUnmergedTree = true).assertIsDisplayed()
+        compose.onNodeWithTag("chat-header-conversation", useUnmergedTree = true).assertIsDisplayed()
+        compose.onNodeWithTag("chat-header-model", useUnmergedTree = true).assertIsDisplayed()
         // Editable fields/popups use explicit settled frames on the host. Keep
         // all visibility and callback assertions while controlling animation time.
         compose.mainClock.autoAdvance = false
