@@ -209,6 +209,37 @@ class ArtifactStore(context:Context,private val root:File=File(context.filesDir,
         // ArtifactSpec revalidates name syntax/uniqueness and the complete preserved descriptor.
         return revise(projectId,id,expectedVersion,ArtifactSpec.parse(updated))
     }
+    /** Add or resize a named table in an app-generated workbook as a new immutable revision. */
+    fun setXlsxTable(projectId:String,id:String,expectedVersion:Int,sheetName:String,tableName:String,range:String):ArtifactRevision {
+        require(expectedVersion in 1..1000) { "XLSX_REVISION_INVALID" }
+        ArtifactSpec.tableName(tableName)
+        ArtifactSpec.cellRange(range)
+        val versions=history(projectId,id)
+        val revision=versions.singleOrNull{it.version==expectedVersion} ?: error("ARTIFACT_VERSION_NOT_FOUND")
+        require(versions.firstOrNull()?.version==expectedVersion) { "ARTIFACT_REVISION_NOT_CURRENT" }
+        require(revision.format==ArtifactFormat.XLSX) { "XLSX_ARTIFACT_REQUIRED" }
+        val updated=spec(projectId,revision).json()
+        val sheets=updated.getJSONArray("sheets")
+        val targetIndex=(0 until sheets.length()).firstOrNull{ sheets.getJSONObject(it).getString("name").equals(sheetName,ignoreCase=true) }
+            ?: error("XLSX_SHEET_NOT_FOUND")
+        val sheet=sheets.getJSONObject(targetIndex)
+        val tables=sheet.optJSONArray("tables") ?: org.json.JSONArray().also{sheet.put("tables",it)}
+        var existingIndex=-1
+        for(sheetIndex in 0 until sheets.length()) {
+            val candidateTables=sheets.getJSONObject(sheetIndex).optJSONArray("tables") ?: continue
+            for(index in 0 until candidateTables.length()) {
+                val existing=candidateTables.getJSONObject(index)
+                if(existing.getString("name").equals(tableName,ignoreCase=true)) {
+                    require(sheetIndex==targetIndex) { "XLSX_TABLE_NAME_DUPLICATE" }
+                    existingIndex=index
+                }
+            }
+        }
+        val canonicalName=if(existingIndex>=0)tables.getJSONObject(existingIndex).getString("name")else tableName
+        val definition=JSONObject().put("name",canonicalName).put("range",range)
+        if(existingIndex>=0)tables.put(existingIndex,definition)else tables.put(definition)
+        return revise(projectId,id,expectedVersion,ArtifactSpec.parse(updated))
+    }
     private fun commit(projectId:String,id:String,expectedVersion:Int,spec:ArtifactSpec):ArtifactRevision {
         val owner=project(projectId)
         RandomAccessFile(File(owner,".write.lock"),"rw").channel.use { channel->

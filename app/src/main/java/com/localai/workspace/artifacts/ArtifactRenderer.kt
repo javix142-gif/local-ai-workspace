@@ -44,9 +44,16 @@ class ArtifactRenderer(private val context:Context) {
     private fun Map<String,String>.utf8Parts()=mapValues{it.value.toByteArray(Charsets.UTF_8)}
 
     private fun xlsx(spec:ArtifactSpec):Map<String,String> {
-        val sheets=spec.json().getJSONArray("sheets").objects();val ns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+        val descriptor=spec.json()
+        val sheets=descriptor.getJSONArray("sheets").objects();val ns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+        val tables=ArtifactSpec.tables(descriptor).mapIndexed{index,table->table.copy(id=index+1)}
+        val tablesBySheet=tables.groupBy{it.sheetIndex}
+        val contentTypes=(sheets.indices.map{"xl/worksheets/sheet${it+1}.xml" to "application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"}+
+            listOf("xl/workbook.xml" to "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml",
+                "xl/styles.xml" to "application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml")+
+            tables.map{"xl/tables/table${it.id}.xml" to "application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml"})
         val out=linkedMapOf(
-            "[Content_Types].xml" to types("xl/workbook.xml" to "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml","xl/styles.xml" to "application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml",*sheets.indices.map{"xl/worksheets/sheet${it+1}.xml" to "application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"}.toTypedArray()),
+            "[Content_Types].xml" to types(*contentTypes.toTypedArray()),
             "_rels/.rels" to rels(Triple("rId1","officeDocument","xl/workbook.xml")),
             "xl/workbook.xml" to declaration("<workbook xmlns=\"$ns\" xmlns:r=\"$officeRel\"><sheets>"+sheets.mapIndexed{i,s->"<sheet name=\"${xml(s.getString("name"))}\" sheetId=\"${i+1}\" r:id=\"rId${i+1}\"/>"}.joinToString("")+"</sheets><calcPr calcId=\"0\" fullCalcOnLoad=\"1\"/></workbook>"),
             "xl/_rels/workbook.xml.rels" to rels(*(sheets.indices.map{Triple("rId${it+1}","worksheet","worksheets/sheet${it+1}.xml")}+Triple("styles","styles","styles.xml")).toTypedArray()),
@@ -54,7 +61,9 @@ class ArtifactRenderer(private val context:Context) {
         )
         sheets.forEachIndexed{i,sheet->
             val rows=sheet.getJSONArray("cells").objects().sortedWith(compareBy<JSONObject>{ArtifactSpec.address(it.getString("address")).first}.thenBy{ArtifactSpec.address(it.getString("address")).second}).groupBy{ArtifactSpec.address(it.getString("address")).first}
-            out["xl/worksheets/sheet${i+1}.xml"]=declaration("<worksheet xmlns=\"$ns\"><sheetData>"+rows.entries.joinToString(""){(row,cells)->"<row r=\"$row\">"+cells.joinToString(""){c->
+            val sheetTables=tablesBySheet[i].orEmpty()
+            val tableParts=if(sheetTables.isEmpty())"" else "<tableParts count=\"${sheetTables.size}\">"+sheetTables.joinToString(""){ "<tablePart r:id=\"rIdTable${it.id}\"/>" }+"</tableParts>"
+            out["xl/worksheets/sheet${i+1}.xml"]=declaration("<worksheet xmlns=\"$ns\" xmlns:r=\"$officeRel\"><sheetData>"+rows.entries.joinToString(""){(row,cells)->"<row r=\"$row\">"+cells.joinToString(""){c->
                 val type=c.optString("type","string");val formula=c.optString("formula","");val value=c.optString("value","");val style=if(c.optString("style")=="header")1 else 0
                 val body=if(formula.isNotBlank())"<f>${xml(formula)}</f>"+(if(c.has("value"))"<v>${xml(value)}</v>"else "")else if(type=="string")"<is><t xml:space=\"preserve\">${xml(value)}</t></is>"else "<v>${xml(value)}</v>"
                 val t=when {
@@ -66,8 +75,16 @@ class ArtifactRenderer(private val context:Context) {
                 }
                 val typeAttribute=if(t.isBlank())""else " t=\"$t\""
                 "<c r=\"${c.getString("address")}\" s=\"$style\"$typeAttribute>$body</c>"
-            }+"</row>"}+"</sheetData></worksheet>")
-        };return out
+            }+"</row>"}+"</sheetData>"+tableParts+"</worksheet>")
+            if(sheetTables.isNotEmpty()) {
+                out["xl/worksheets/_rels/sheet${i+1}.xml.rels"]=rels(*sheetTables.map{Triple("rIdTable${it.id}","table","../tables/table${it.id}.xml")}.toTypedArray())
+            }
+        }
+        tables.forEach{table->
+            val columns=table.headers.mapIndexed{index,header->"<tableColumn id=\"${index+1}\" name=\"${xml(header)}\"/>"}.joinToString("")
+            out["xl/tables/table${table.id}.xml"]=declaration("<table xmlns=\"$ns\" id=\"${table.id}\" name=\"${xml(table.name)}\" displayName=\"${xml(table.name)}\" ref=\"${xml(table.range.ref)}\" totalsRowShown=\"0\"><autoFilter ref=\"${xml(table.range.ref)}\"/><tableColumns count=\"${table.headers.size}\">$columns</tableColumns><tableStyleInfo name=\"TableStyleMedium2\" showFirstColumn=\"0\" showLastColumn=\"0\" showRowStripes=\"1\" showColumnStripes=\"0\"/></table>")
+        }
+        return out
     }
     private fun docx(spec:ArtifactSpec):Map<String,String> {
         val ns="http://schemas.openxmlformats.org/wordprocessingml/2006/main"

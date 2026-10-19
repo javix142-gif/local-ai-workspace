@@ -18,16 +18,20 @@ object AssistantRouting {
         val xlsxAddSheetIntent = Regex("agrega|añade|anade|inserta|add|insert").containsMatchIn(p) &&
             Regex("hoja|sheet|pestaña|pestana|tab").containsMatchIn(p) &&
             Regex("excel|xlsx|planilla|libro|workbook|spreadsheet").containsMatchIn(p)
+        val xlsxSetTableIntent = Regex("agrega|añade|anade|inserta|actualiza|modifica|cambia|resize|set|update").containsMatchIn(p) &&
+            Regex("tabla|table").containsMatchIn(p) &&
+            Regex("excel|xlsx|planilla|libro|workbook|spreadsheet").containsMatchIn(p)
         return enabled.filter { id -> when(id) {
             "calculator.evaluate" -> Regex("[0-9]\\s*[+*/%()-]|calcula|calculate|aritm|cuánto es|cuanto es").containsMatchIn(p)
             "files.list" -> documents || Regex("archivo|file|documento|document|hoja|sheet|columna|column").containsMatchIn(p)
             "files.read" -> documents || Regex("archivo|file|documento|document|hoja|sheet|columna|column").containsMatchIn(p)
             "python.execute" -> Regex("python|desviación|desviacion|standard deviation|estadíst|statistics|promedio|average").containsMatchIn(p)
-            "artifacts.create","artifacts.revise" -> !codePatchIntent && !xlsxCellEditIntent && Regex("crea|genera|redacta|modifica|edita|actualiza|create|generate|write|edit|update").containsMatchIn(p) && Regex("word|docx|excel|xlsx|planilla|presupuesto|pdf|pptx|powerpoint|presentaci|archivo|file|código|codigo|code").containsMatchIn(p)
-            "artifacts.xlsxSetCells" -> xlsxCellEditIntent
+            "artifacts.create","artifacts.revise" -> !codePatchIntent && !xlsxCellEditIntent && !xlsxSetTableIntent && Regex("crea|genera|redacta|modifica|edita|actualiza|create|generate|write|edit|update").containsMatchIn(p) && Regex("word|docx|excel|xlsx|planilla|presupuesto|pdf|pptx|powerpoint|presentaci|archivo|file|código|codigo|code").containsMatchIn(p)
+            "artifacts.xlsxSetCells" -> xlsxCellEditIntent && !xlsxSetTableIntent
             "artifacts.xlsxAddSheet" -> xlsxAddSheetIntent
+            "artifacts.xlsxSetTable" -> xlsxSetTableIntent
             "artifacts.patchPreview" -> codePatchIntent && Regex("corrige|modifica|edita|actualiza|fix|edit|prepara|prepare|aplica|apply").containsMatchIn(p)
-            "artifacts.list","artifacts.read" -> Regex("artefact|artifact|versi[oó]n|version|borrador|draft|modifica|edita|actualiza|edit|update").containsMatchIn(p)
+            "artifacts.list","artifacts.read" -> xlsxSetTableIntent || Regex("artefact|artifact|versi[oó]n|version|borrador|draft|modifica|edita|actualiza|edit|update").containsMatchIn(p)
             else -> false
         } }.toSet()
     }

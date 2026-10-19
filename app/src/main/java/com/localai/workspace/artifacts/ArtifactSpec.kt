@@ -12,6 +12,15 @@ enum class ArtifactFormat(val extension:String,val mime:String) {
     CODE("txt","text/plain")
 }
 
+internal data class XlsxCellRange(val firstRow:Int,val firstColumn:Int,val lastRow:Int,val lastColumn:Int) {
+    val cellCount:Long get()=(lastRow-firstRow+1).toLong()*(lastColumn-firstColumn+1)
+    val ref:String get()="${ArtifactSpec.address(firstRow,firstColumn)}:${ArtifactSpec.address(lastRow,lastColumn)}"
+    fun overlaps(other:XlsxCellRange)=firstRow<=other.lastRow&&lastRow>=other.firstRow&&firstColumn<=other.lastColumn&&lastColumn>=other.firstColumn
+}
+internal data class XlsxTableDefinition(
+    val sheetIndex:Int,val sheetName:String,val name:String,val range:XlsxCellRange,val headers:List<String>,val id:Int=0
+)
+
 /** Versioned, bounded data contract; no paths, raw XML, macros, scripts or executable hooks. */
 class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String,private val payload:String) {
     fun json()=JSONObject(payload)
@@ -22,7 +31,9 @@ class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String
                 val formula=c.optString("formula","")
                 val displayedValue=if(formula.isNotBlank()&&!c.has("value"))"[cached result unavailable]"else c.optString("value","")
                 c.getString("address")+" = "+displayedValue+if(formula.isBlank())"" else " [formula: $formula; not recalculated]"
-            }
+            }+(s.optJSONArray("tables")?.objects().orEmpty().joinToString("\n",prefix="\n") { table ->
+                "Table ${table.getString("name")} · ${table.getString("range")}"
+            })
         }
         ArtifactFormat.PPTX->json().getJSONArray("slides").objects().mapIndexed { index, slide ->
             buildString {
@@ -55,6 +66,9 @@ class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String
     }
     companion object {
         const val MAX_SPEC_BYTES=256*1024
+        const val MAX_XLSX_TABLES=16
+        const val MAX_XLSX_TABLE_CELLS=10_000L
+        const val MAX_XLSX_TABLE_CELLS_TOTAL=10_000L
         fun parse(input:JSONObject):ArtifactSpec {
             require(input.toString().toByteArray(Charsets.UTF_8).size<=MAX_SPEC_BYTES){"ARTIFACT_SPEC_TOO_LARGE"}
             val format=ArtifactFormat.valueOf(input.getString("format"))
@@ -70,7 +84,7 @@ class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String
                     val sheets=input.getJSONArray("sheets");require(sheets.length() in 1..16){"SHEET_LIMIT"}
                     val names=mutableSetOf<String>();var count=0
                     for(sheet in sheets.objects()) {
-                        fields(sheet,setOf("name","cells"));val title=sheet.getString("name");text(title,31)
+                        fields(sheet,setOf("name","cells","tables"));val title=sheet.getString("name");text(title,31)
                         require(title.isNotBlank() && title.none{it in "[]:*?/\\"} && !title.startsWith("'") && !title.endsWith("'") && names.add(title.lowercase(Locale.ROOT))){"SHEET_NAME_INVALID_OR_DUPLICATE"}
                         val addresses=mutableSetOf<String>()
                         for(cell in sheet.getJSONArray("cells").objects()) {
@@ -88,6 +102,7 @@ class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String
                             require(cell.optString("style","plain") in setOf("plain","header")){"CELL_STYLE_UNSUPPORTED"}
                         }
                     }
+                    tables(input)
                 }
                 ArtifactFormat.PPTX->{
                     val slides=input.getJSONArray("slides");require(slides.length() in 1..30){"SLIDE_LIMIT"}
@@ -131,6 +146,63 @@ class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String
             val match=Regex("([A-Z]{1,3})([1-9][0-9]{0,6})").matchEntire(value) ?: error("A1_ADDRESS_REQUIRED")
             val col=match.groupValues[1].fold(0){n,c->n*26+c.code-'A'.code+1};val row=match.groupValues[2].toInt()
             require(col<=16384 && row<=1048576){"ADDRESS_OUT_OF_EXCEL_BOUNDS"};return row to col
+        }
+        internal fun address(row:Int,column:Int):String {
+            require(row in 1..1_048_576&&column in 1..16_384){"ADDRESS_OUT_OF_EXCEL_BOUNDS"}
+            var remaining=column
+            val letters=StringBuilder()
+            while(remaining>0){val digit=(remaining-1)%26;letters.append(('A'.code+digit).toChar());remaining=(remaining-1)/26}
+            return letters.reverse().append(row).toString()
+        }
+        internal fun tableName(value:String):String {
+            val identifier=value.uppercase(Locale.ROOT)
+            require(value.length in 1..255&&Regex("[A-Za-z_][A-Za-z0-9_.]{0,254}").matches(value)&&
+                !Regex("[A-Z]{1,3}[1-9][0-9]{0,6}").matches(identifier)&&
+                !Regex("R[1-9][0-9]*C[1-9][0-9]*").matches(identifier)&&identifier !in setOf("R","C")){"XLSX_TABLE_NAME_INVALID"}
+            text(value,255)
+            return value
+        }
+        internal fun cellRange(value:String):XlsxCellRange {
+            val parts=value.split(':')
+            require(parts.size==2){"XLSX_TABLE_RANGE_REQUIRED"}
+            val first=address(parts[0]);val last=address(parts[1])
+            require(first.first<=last.first&&first.second<=last.second){"XLSX_TABLE_RANGE_ORDER_INVALID"}
+            val range=XlsxCellRange(first.first,first.second,last.first,last.second)
+            require(range.cellCount in 1..MAX_XLSX_TABLE_CELLS){"XLSX_TABLE_RANGE_LIMIT"}
+            return range
+        }
+        internal fun tables(descriptor:JSONObject):List<XlsxTableDefinition> {
+            val sheets=descriptor.getJSONArray("sheets")
+            val names=mutableSetOf<String>()
+            val definitions=mutableListOf<XlsxTableDefinition>()
+            for(sheetIndex in 0 until sheets.length()) {
+                val sheet=sheets.getJSONObject(sheetIndex)
+                val cellsByAddress=sheet.getJSONArray("cells").objects().associateBy{it.getString("address")}
+                val ranges=mutableListOf<XlsxCellRange>()
+                val tables=sheet.optJSONArray("tables") ?: JSONArray()
+                require(tables.length()<=MAX_XLSX_TABLES-definitions.size){"XLSX_TABLE_LIMIT"}
+                for(table in tables.objects()) {
+                    fields(table,setOf("name","range"))
+                    val name=tableName(table.getString("name"))
+                    require(names.add(name.lowercase(Locale.ROOT))){"XLSX_TABLE_NAME_DUPLICATE"}
+                    val range=cellRange(table.getString("range"))
+                    require(ranges.none{it.overlaps(range)}){"XLSX_TABLE_RANGE_OVERLAP"}
+                    ranges+=range
+                    val headerNames=(range.firstColumn..range.lastColumn).map{column->
+                        val cell=cellsByAddress[address(range.firstRow,column)] ?: error("XLSX_TABLE_HEADER_CELL_MISSING")
+                        require(cell.has("value")&&!cell.has("formula")&&cell.optString("type","string")=="string"){"XLSX_TABLE_HEADER_MUST_BE_STATIC_TEXT"}
+                        val header=cell.getString("value")
+                        text(header,255)
+                        require(header.isNotBlank()){"XLSX_TABLE_HEADER_EMPTY"}
+                        header
+                    }
+                    require(headerNames.map{it.lowercase(Locale.ROOT)}.toSet().size==headerNames.size){"XLSX_TABLE_HEADER_DUPLICATE"}
+                    definitions+=XlsxTableDefinition(sheetIndex,sheet.getString("name"),name,range,headerNames)
+                }
+            }
+            require(definitions.size<=MAX_XLSX_TABLES){"XLSX_TABLE_LIMIT"}
+            require(definitions.sumOf{it.range.cellCount}<=MAX_XLSX_TABLE_CELLS_TOTAL){"XLSX_TABLE_CELLS_LIMIT"}
+            return definitions
         }
         private fun number(v:String) {val n=v.toBigDecimalOrNull() ?: error("NUMBER_INVALID");require(n.precision()<=128 && kotlin.math.abs(n.scale().toLong())<=128){"NUMBER_PRECISION_LIMIT"}}
         private fun validateLegacyParagraphsAndTables(input:JSONObject) {

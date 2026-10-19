@@ -31,18 +31,116 @@ import java.util.zip.ZipFile
 class XlsxArtifactRevisionTest {
     private val context:Context get()=ApplicationProvider.getApplicationContext()
 
-    @Test fun xlsxDescriptorAcceptsBoundedStructuredTableSpec() {
-        val descriptor=JSONObject().put("format","XLSX").put("name","sales.xlsx").put("sheets",JSONArray()
+    private fun tableDescriptor(name:String="TablaVentas",range:String="A1:B2",headerA:String="Producto",headerB:String="Cantidad")=
+        JSONObject().put("format","XLSX").put("name","sales.xlsx").put("sheets",JSONArray()
+            .put(JSONObject().put("name","Ventas").put("cells",JSONArray()
+                .put(JSONObject().put("address","A1").put("value",headerA))
+                .put(JSONObject().put("address","B1").put("value",headerB))
+                .put(JSONObject().put("address","A2").put("value","Cuaderno"))
+                .put(JSONObject().put("address","B2").put("value","3").put("type","number")))
+                .put("tables",JSONArray().put(JSONObject().put("name",name).put("range",range)))))
+
+    @Test fun xlsxStructuredTableSpecRendersNativeOoxmlPartsAndReadPreview()=runBlocking {
+        val parsed=runCatching { ArtifactSpec.parse(tableDescriptor(headerA="Producto & código")) }
+        assertTrue("XLSX generation must accept a bounded structured table definition",parsed.isSuccess)
+        val spec=parsed.getOrThrow()
+        assertTrue(spec.preview().contains("Table TablaVentas · A1:B2"))
+        val root=File(context.cacheDir,"xlsx-table-package-${UUID.randomUUID()}")
+        val project="xlsx-table-package-${UUID.randomUUID()}"
+        try {
+            val store=ArtifactStore(context,root)
+            val revision=store.create(project,spec)
+            val file=store.verifiedFile(project,revision)
+            ZipFile(file).use{zip->
+                val contentTypes=zip.getInputStream(zip.getEntry("[Content_Types].xml")).bufferedReader().use{it.readText()}
+                val worksheet=zip.getInputStream(zip.getEntry("xl/worksheets/sheet1.xml")).bufferedReader().use{it.readText()}
+                val relationships=zip.getInputStream(zip.getEntry("xl/worksheets/_rels/sheet1.xml.rels")).bufferedReader().use{it.readText()}
+                val table=zip.getInputStream(zip.getEntry("xl/tables/table1.xml")).bufferedReader().use{it.readText()}
+                assertTrue(contentTypes.contains("/xl/tables/table1.xml"))
+                assertTrue(contentTypes.contains("application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml"))
+                assertTrue(worksheet.contains("<tableParts count=\"1\"><tablePart r:id=\"rIdTable1\"/></tableParts>"))
+                assertTrue(relationships.contains("Target=\"../tables/table1.xml\""))
+                assertTrue(relationships.contains("/relationships/table\""))
+                assertTrue(table.contains("name=\"TablaVentas\" displayName=\"TablaVentas\" ref=\"A1:B2\""))
+                assertTrue(table.contains("name=\"Producto &amp; código\""))
+                assertTrue(table.contains("name=\"Cantidad\""))
+            }
+            val reopened=ArtifactStore(context,root).spec(project,ArtifactStore(context,root).history(project,revision.id).single())
+            assertTrue(reopened.preview().contains("Table TablaVentas · A1:B2"))
+            exportInteropFixture("structured-table.xlsx",file)
+        } finally { root.deleteRecursively() }
+    }
+
+    @Test fun xlsxStructuredTablesRejectMissingDuplicateAndOverlappingHeaders() {
+        val duplicate=runCatching { ArtifactSpec.parse(tableDescriptor(headerA="Producto",headerB="producto")) }.exceptionOrNull()
+        assertEquals("XLSX_TABLE_HEADER_DUPLICATE",duplicate?.message)
+        val missingHeader=tableDescriptor().also{it.getJSONArray("sheets").getJSONObject(0).getJSONArray("cells").remove(0)}
+        assertEquals("XLSX_TABLE_HEADER_CELL_MISSING",runCatching{ArtifactSpec.parse(missingHeader)}.exceptionOrNull()?.message)
+        val overlap=tableDescriptor().also{sheet->
+            sheet.getJSONArray("sheets").getJSONObject(0).getJSONArray("tables").put(JSONObject().put("name","OtraTabla").put("range","A1:B2"))
+        }
+        assertEquals("XLSX_TABLE_RANGE_OVERLAP",runCatching{ArtifactSpec.parse(overlap)}.exceptionOrNull()?.message)
+        assertTrue(runCatching{ArtifactSpec.cellRange("A1:ZZ100")}.isFailure)
+        assertTrue(runCatching{ArtifactSpec.tableName("A1")}.isFailure)
+        assertTrue(runCatching{ArtifactSpec.tableName("R1C1")}.isFailure)
+    }
+
+    @Test fun setTableToolAddsAndResizesImmutableWorkbookTable()=runBlocking {
+        val project="xlsx-table-edit-${UUID.randomUUID()}"
+        val spec=ArtifactSpec.parse(JSONObject().put("format","XLSX").put("name","sales.xlsx").put("sheets",JSONArray()
             .put(JSONObject().put("name","Ventas").put("cells",JSONArray()
                 .put(JSONObject().put("address","A1").put("value","Producto"))
                 .put(JSONObject().put("address","B1").put("value","Cantidad"))
+                .put(JSONObject().put("address","C1").put("value","Importe"))
                 .put(JSONObject().put("address","A2").put("value","Cuaderno"))
-                .put(JSONObject().put("address","B2").put("value","3").put("type","number")))
-                .put("tables",JSONArray().put(JSONObject().put("name","TablaVentas").put("range","A1:B2")))))
-        val parsed=runCatching { ArtifactSpec.parse(descriptor) }
-        assertTrue("XLSX generation must accept a bounded structured table definition",parsed.isSuccess)
-        assertTrue(parsed.getOrThrow().preview().contains("TablaVentas"))
-        assertTrue(parsed.getOrThrow().preview().contains("A1:B2"))
+                .put(JSONObject().put("address","B2").put("formula","1+2").put("value","3").put("type","number"))
+                .put(JSONObject().put("address","C2").put("value","9").put("type","number"))))))
+        val toolId="artifacts.xlsxSetTable"
+        try {
+            val store=ArtifactStore(context)
+            val original=store.create(project,spec)
+            val originalHash=original.sha256
+            val enabled=setOf(toolId)
+            val routeTools=enabled+setOf("artifacts.list","artifacts.read")
+            assertEquals(routeTools,AssistantRouting.tools(routeTools,"Agrega la tabla Ventas al libro Excel en A1:B2",documents=false))
+            assertEquals(setOf(com.localai.workspace.capabilities.Capability.LOCAL_WRITE),
+                com.localai.workspace.capabilities.CapabilityPolicy.requirements(toolId))
+            assertTrue(com.localai.workspace.domain.tools.ChatToolSchemas.available.contains(toolId))
+            val schema=JSONObject(com.localai.workspace.domain.tools.ChatToolSchemas.schema(toolId))
+            assertEquals(setOf("id","expectedVersion","sheet","name","range"),schema.getJSONObject("parameters").getJSONArray("required").let{a->(0 until a.length()).map{a.getString(it)}.toSet()})
+
+            val registry=ToolRegistry(listOf(ArtifactTool(context,toolId)))
+            val toolContext=ToolContext(project,"chat",File(context.cacheDir,"xlsx-table-tool-work"))
+            fun request(version:Int,range:String)=JSONObject().put("id",original.id).put("expectedVersion",version)
+                .put("sheet","Ventas").put("name","TablaVentas").put("range",range).toString()
+            val added=registry.execute(ToolRequest(toolId,request(1,"A1:B2"),TrustOrigin.MODEL),enabled,toolContext,ToolRegistry.ToolLoopState())
+            assertTrue("A valid table should create a verified immutable workbook revision",added is ToolExecutionResult.Success)
+            assertEquals(originalHash,ArtifactStore.fileHash(store.verifiedFile(project,original)))
+            val second=store.history(project,original.id).single{it.version==2}
+            assertTrue(store.spec(project,second).preview().contains("Table TablaVentas · A1:B2"))
+
+            val resized=registry.execute(ToolRequest(toolId,request(2,"A1:C2"),TrustOrigin.MODEL),enabled,toolContext,ToolRegistry.ToolLoopState())
+            assertTrue("Resizing a named table should create another verified immutable version",resized is ToolExecutionResult.Success)
+            val latest=store.history(project,original.id).single{it.version==3}
+            val zipFile=store.verifiedFile(project,latest)
+            ZipFile(zipFile).use{zip->
+                val table=zip.getInputStream(zip.getEntry("xl/tables/table1.xml")).bufferedReader().use{it.readText()}
+                assertTrue(table.contains("ref=\"A1:C2\""))
+            }
+            val structured=StructuredDocuments.xlsx(zipFile)
+            assertEquals("9",structured.cells.single{it.sheet=="Ventas"&&it.address=="C2"}.value)
+            assertEquals("1+2",structured.cells.single{it.sheet=="Ventas"&&it.address=="B2"}.formula)
+            assertEquals("3",structured.cells.single{it.sheet=="Ventas"&&it.address=="B2"}.value)
+            assertEquals(3,store.history(project,original.id).size)
+            assertEquals(originalHash,ArtifactStore.fileHash(store.verifiedFile(project,original)))
+            exportInteropFixture("table-resized.xlsx",zipFile)
+
+            val invalid=registry.execute(ToolRequest(toolId,request(3,"A1:D2"),TrustOrigin.MODEL),enabled,toolContext,ToolRegistry.ToolLoopState())
+            assertTrue(invalid is ToolExecutionResult.Failed)
+            assertEquals(3,store.history(project,original.id).size)
+        } finally {
+            File(File(context.filesDir,"tool-workspaces"),"artifacts-${ArtifactStore.hash(project.toByteArray(Charsets.UTF_8))}").deleteRecursively()
+        }
     }
 
     private fun exportInteropFixture(name:String,file:File) {
