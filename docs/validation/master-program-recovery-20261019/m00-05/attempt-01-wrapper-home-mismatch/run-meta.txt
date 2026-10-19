@@ -1,0 +1,3 @@
+startedAtUtc=2026-10-19T16:06:33Z
+finishedAtUtc=2026-10-19T16:06:34Z
+exitCode=1

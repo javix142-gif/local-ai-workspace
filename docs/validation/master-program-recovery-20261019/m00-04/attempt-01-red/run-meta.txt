@@ -1,0 +1,7 @@
+START_UTC=2026-10-19T16:00:00Z
+SOURCE_HEAD=617082eb9f9ce3eaa28c313b2e8719aa934fdbaa
+GRADLE_RUNTIME=openjdk version "17.0.20.1" 2026-08-18
+TEST_WORKER_EXPECTED=/workspace/.toolchain/jdk-21-temurin
+SDK=/workspace/.toolchain/android-sdk
+EXIT_CODE=1
+END_UTC=2026-10-19T16:01:19Z

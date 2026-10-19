@@ -1,0 +1,7 @@
+SOURCE_SHA=78b5309f5ea7388a2ab780c8902156b7b196512f
+JAVA_HOME=/workspace/.toolchain/jdk-17
+PATH=/workspace/.toolchain/jdk-17/bin:$PATH
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk
+GRADLE_USER_HOME=/workspace/.gradle
+Gradle 8.10.2; runtime Temurin 17.0.20.1; test worker Temurin 21.0.12.1; API 35; NDK 27.0.12077973; offline; no install/cleanup

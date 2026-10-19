@@ -1,3 +1,19 @@
+# Master program — current recovery checkpoint (2026-10-19)
+
+Current isolated work branch: `codex/master-program-20261019`; latest tested test-only source SHA `98665c064f08389c46f4e4fe13545f1b27088751`. No product/runtime, database, dependency, workflow, inference, or permission code changed in this checkpoint. The original backlog and roadmap files remain byte-identical: 97 unique task IDs, 120 dependency edges, all 97 source statuses `TODO`.
+
+- **M00-04:** focused synthetic HOST checks pass 2/2 at `bbcd551`. The earlier 1/2 attempt at `617082e` failed because the test queried title and detail as one Compose node; the correction is test-only. No product failure was shown.
+- **M00-05:** host Compose test passes 1/1 at `78b5309`, across compact widths and font scales, with Robolectric shadow-IME visibility and four captures. A shadow IME/inset is not physical keyboard or Moto evidence.
+- **M00-06:** synthetic XLSX import/parse/chunk/commit and EG1 indexing test passes 1/1 at `efab487`; normal-chat trace test passes 1/1 at `98665c0` and checks persisted host memory/source/history/context/gate timings, model-preparation/context ordering, first visible content, completion, and privacy. The fake runtime's native TTFT/decode remain absent. These are separate runs, not one unified document-to-neural timeline; M00-06 remains source `TODO`, and no real model speed or device metric is claimed. A preceding test-only compile error at `b055665` was corrected by reading the actual serialized metric keys; its log is retained.
+- **M02-08:** the existing code-archive implementation passes four focused HOST tests at `efab487` for EG2 path/line citation, lexical fallback, `.gitignore` exclusions, and project isolation. No redundant production change was made. M02-08 stays source `TODO`; M02-05 dependency remains `TODO`.
+- **M03-07:** existing preview/revision tests pass 4/4 at `bbcd551`, host only. It remains source `TODO`, requires device, and depends on M03-01 `TODO`.
+
+No full JVM/LiteRT suite, lint, assembly, AndroidTest compilation, emulator, Motorola, or APK was run in this checkpoint. `PHYSICAL_DEVICE=NOT_RUN`; M01-06 remains `PENDING_REQUIRES_DEVICE`. M00-06 is still the next task to reconcile with its full timeline DoD; inspect its actual Performance screen and stage boundaries before choosing further implementation. M00-07 after it requires the Moto G86 Power. Continue only user-authorized preparatory work and preserve dependency states. Do not alter the plan source or mark any original ID complete from these focused checks.
+
+Exact commands, environment, run times, complete gzip logs, listener events, task outcomes, JUnit XML, captures and checksums: [master-program recovery results](../validation/master-program-recovery-20261019/RESULTS.md).
+
+---
+
 # Current checkpoint — M03-03 ordered DOCX content blocks (2026-10-19)
 
 The code is on `codex/master-program-20261019`; tested source SHA `463819926bf61523c59cab96ccc083513e19d8f4`. The red regression at `a0a71455f9bdf1305097dd0cb987e0b3b92fb0f5` demonstrated that a generated document could not represent paragraph → table → paragraph: `ArtifactSpec.parse` rejected the ordered `blocks` field with `ARTIFACT_FIELD_UNSUPPORTED`. Production commit `d5d49ba9fba4cfaf9869c8118142bc3abe213ad3` adds a bounded ordered-block descriptor and renders paragraphs/tables in sequence; the old `paragraphs`/`tables` descriptor remains supported. The editor and project-tool description now use the ordered DOCX form. Test commit `4638199` checks ordered preview/OOXML content and two immutable revisions. The red log is retained, but its JUnit XML was overwritten by the final green run and is not available.

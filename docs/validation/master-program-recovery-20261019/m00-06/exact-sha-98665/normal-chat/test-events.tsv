@@ -1,0 +1,3 @@
+event	epochMs	class	method	result	durationMs
+TEST_START	1792427099114	com.localai.workspace.ui.ChatSessionPipelineTest	normalChatTraceOrdersContextBeforeGateAndVisibleContentWithoutPersistingText	-	-
+TEST_END	1792427105772	com.localai.workspace.ui.ChatSessionPipelineTest	normalChatTraceOrdersContextBeforeGateAndVisibleContentWithoutPersistingText	SUCCESS	6681

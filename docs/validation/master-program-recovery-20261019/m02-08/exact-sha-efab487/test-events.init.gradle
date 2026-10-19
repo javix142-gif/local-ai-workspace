@@ -1,0 +1,16 @@
+gradle.projectsEvaluated {
+    allprojects {
+        tasks.withType(org.gradle.api.tasks.testing.Test).configureEach {
+            addTestListener(new org.gradle.api.tasks.testing.TestListener() {
+                void beforeSuite(org.gradle.api.tasks.testing.TestDescriptor d) { }
+                void afterSuite(org.gradle.api.tasks.testing.TestDescriptor d, org.gradle.api.tasks.testing.TestResult r) { }
+                void beforeTest(org.gradle.api.tasks.testing.TestDescriptor d) {
+                    println("AWS_TEST_START|${System.currentTimeMillis()}|${d.className}|${d.name}")
+                }
+                void afterTest(org.gradle.api.tasks.testing.TestDescriptor d, org.gradle.api.tasks.testing.TestResult r) {
+                    println("AWS_TEST_END|${System.currentTimeMillis()}|${d.className}|${d.name}|${r.resultType}|${r.endTime-r.startTime}")
+                }
+            })
+        }
+    }
+}

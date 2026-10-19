@@ -1,0 +1,6 @@
+JAVA_HOME=/workspace/.toolchain/jdk-17
+PATH=/workspace/.toolchain/jdk-17/bin:$PATH
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk
+GRADLE_USER_HOME=/workspace/.gradle (pre-existing; Gradle 8.10.2 already present; no install/download/cache cleanup)
+Gradle runtime JDK 17.0.20.1; app test worker JDK 21.0.12.1; SDK API 35; NDK 27.0.12077973

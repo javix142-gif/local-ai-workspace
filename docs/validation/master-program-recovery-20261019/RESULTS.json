@@ -1,0 +1,224 @@
+{
+  "checkpoint": "MASTER_PROGRAM_RECOVERY_20261019",
+  "workBranch": "codex/master-program-20261019",
+  "testedSourceTips": {
+    "latestTestOnlyCode": "98665c064f08389c46f4e4fe13545f1b27088751",
+    "otherFocusedSource": "efab48751ae0da97b7d29782b8fc425f39c894c2",
+    "m00_05": "78b5309f5ea7388a2ab780c8902156b7b196512f",
+    "m00_04AndM03_07": "bbcd5517f567910170a6a6d7c9f98b6ebbb82098"
+  },
+  "changes": {
+    "production": false,
+    "testFiles": [
+      "app/src/test/java/com/localai/workspace/ui/ContextOmissionInspectorUiTest.kt",
+      "app/src/test/java/com/localai/workspace/ui/ChatRefinementUiTest.kt",
+      "app/src/test/java/com/localai/workspace/ui/ChatSessionPipelineTest.kt"
+    ],
+    "databaseSchema": false,
+    "dependencies": false,
+    "runtimeOrModel": false,
+    "workflow": false
+  },
+  "canonicalPlan": {
+    "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmap": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskCount": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": {
+      "TODO": 97
+    },
+    "sourceFilesChanged": false
+  },
+  "focusedValidation": [
+    {
+      "task": "M00-04",
+      "sourceSha": "617082eb9f9ce3eaa28c313b2e8719aa934fdbaa",
+      "status": "EXPECTED_TEST_HARNESS_RED",
+      "tests": 2,
+      "passed": 1,
+      "failed": 1,
+      "reason": "Inspector test queried a combined semantic text node; title and drop reason are separate rendered nodes. No product failure demonstrated.",
+      "evidence": "m00-04/attempt-01-red"
+    },
+    {
+      "task": "M00-04",
+      "sourceSha": "bbcd5517f567910170a6a6d7c9f98b6ebbb82098",
+      "status": "HOST_FOCUSED_PASS",
+      "tests": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "evidence": "m00-04/attempt-02-green"
+    },
+    {
+      "task": "M00-05",
+      "sourceSha": "78b5309f5ea7388a2ab780c8902156b7b196512f",
+      "status": "HOST_FOCUSED_PASS_SHADOW_IME_ONLY",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "cases": [
+        "360/393/411dp",
+        "fontScale 1.0/1.3/1.6/2.0"
+      ],
+      "captures": 4,
+      "captureResolution": "411x900 PNG Robolectric captures",
+      "evidence": "m00-05/exact-sha-78b5309"
+    },
+    {
+      "task": "M00-06",
+      "sourceSha": "b0556656652f774df53f8722e08912c49591b7ab",
+      "status": "TEST_COMPILE_FAILED_BEFORE_TEST_START",
+      "exitCode": 1,
+      "reason": "The new test used nonexistent presentation-model properties; no test event was emitted. Corrected in a later test-only commit.",
+      "evidence": "m00-06/compile-failure-sha-b055665"
+    },
+    {
+      "task": "M00-06_DOCUMENT_AND_EG1_INDEX",
+      "sourceSha": "efab48751ae0da97b7d29782b8fc425f39c894c2",
+      "status": "HOST_FOCUSED_PASS",
+      "tests": 1,
+      "passed": 1,
+      "test": "DocumentPipelineTimingTest.xlsxImportAndBackgroundIndexShareOnlyOpaqueTimingRunId",
+      "exitCode": 0,
+      "durationSeconds": 31,
+      "evidence": "m00-06/exact-sha-efab487/document-pipeline"
+    },
+    {
+      "task": "M00-06_NORMAL_CHAT_TIMELINE_SUPPLEMENTAL",
+      "sourceSha": "efab48751ae0da97b7d29782b8fc425f39c894c2",
+      "status": "HOST_FOCUSED_PASS_SUPERSEDED_BY_STRONGER_ASSERTIONS",
+      "tests": 1,
+      "passed": 1,
+      "exitCode": 0,
+      "evidence": "m00-06/exact-sha-efab487/normal-chat"
+    },
+    {
+      "task": "M00-06_NORMAL_CHAT_TIMELINE_FINAL",
+      "sourceSha": "98665c064f08389c46f4e4fe13545f1b27088751",
+      "status": "HOST_FOCUSED_PASS",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "assertedHostTimings": [
+        "queueMs",
+        "contextMs",
+        "memoryRetrievalMs",
+        "sourceRetrievalMs",
+        "conversationRetrievalMs",
+        "requestTtftMs",
+        "requestTotalMs"
+      ],
+      "assertedTracePhases": [
+        "MODEL_PREPARATION_WAIT",
+        "MODEL_READY",
+        "MEMORY_COMPLETE",
+        "CONTEXT_V1_BUILD_COMPLETE",
+        "CONVERSATION_GATE_ACQUIRED",
+        "GENERATION_START",
+        "UI_FIRST_CONTENT",
+        "REQUEST_COMPLETE",
+        "REQUEST_SETTLED"
+      ],
+      "nativeTtftAndDecode": "NOT_REPORTED_BY_TEST_FAKE; ASSERTED_ABSENT",
+      "exitCode": 0,
+      "durationSeconds": 54,
+      "evidence": "m00-06/exact-sha-98665/normal-chat"
+    },
+    {
+      "task": "M02-08_PREPARATORY_CODE_ARCHIVE_AUDIT",
+      "sourceSha": "efab48751ae0da97b7d29782b8fc425f39c894c2",
+      "status": "EXISTING_IMPLEMENTATION_HOST_FOCUSED_PASS_PREPARATORY_ONLY",
+      "tests": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "coverage": [
+        "EG2 path/line and citable evidence",
+        "lexical path/line fallback",
+        "nested .gitignore exclusions",
+        "project isolation"
+      ],
+      "productionChange": false,
+      "sourceTaskRemainsTodo": true,
+      "dependencyM02_05RemainsTodo": true,
+      "exitCode": 0,
+      "durationSeconds": 31,
+      "evidence": "m02-08/exact-sha-efab487"
+    },
+    {
+      "task": "M03-07_PREVIOUS_PREVIEW_TESTS",
+      "sourceSha": "bbcd5517f567910170a6a6d7c9f98b6ebbb82098",
+      "status": "HOST_FOCUSED_PASS_PREPARATORY_ONLY",
+      "tests": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sourceTaskRemainsTodo": true,
+      "requiresDevice": true,
+      "dependencyM03_01RemainsTodo": true,
+      "evidence": "m03-07"
+    }
+  ],
+  "environment": {
+    "os": "Linux host",
+    "gradle": "8.10.2",
+    "gradleRuntimeJdk": "Temurin 17.0.20.1",
+    "testWorkerJdk": "Temurin 21.0.12.1",
+    "androidSdk": "API 35 at /workspace/.toolchain/android-sdk",
+    "ndk": "27.0.12077973",
+    "gradleUserHome": "/workspace/.gradle",
+    "dependencyResolution": "offline existing cache"
+  },
+  "gates": {
+    "fullAppJvm": "NOT_RUN",
+    "litertCompatJvm": "NOT_RUN",
+    "lint": "NOT_RUN",
+    "assemble": "NOT_RUN",
+    "androidTestCompilation": "NOT_RUN",
+    "emulator": "NOT_RUN_THIS_CHECKPOINT",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  },
+  "formalTaskStates": {
+    "M00-04": "SOURCE_TODO; focused synthetic HOST evidence only",
+    "M00-05": "SOURCE_TODO; host layout/Shadow IME only",
+    "M00-06": "SOURCE_TODO; split synthetic document/index and fake-runtime chat evidence; native metrics and a unified cross-stage trace are not demonstrated",
+    "M02-08": "SOURCE_TODO; existing code and focused host tests, but M02-05 dependency is source TODO",
+    "M03-07": "SOURCE_TODO; requires device and depends on source TODO M03-01",
+    "M01-06": "PENDING_REQUIRES_DEVICE"
+  },
+  "physicalPerformance": "NOT_MEASURED",
+  "sourcePlanStatusesModified": false,
+  "mainAndV042Touched": false,
+  "manifest": "SHA256SUMS",
+  "evidenceManifest": {
+    "path": "SHA256SUMS",
+    "entries": 84,
+    "sha256": "44dc30bf69d95ccc708f418a7e4188aa6c3436f8b2a6618087251dfe131727bb",
+    "excludes": [
+      "RESULTS.md",
+      "RESULTS.json",
+      "SHA256SUMS"
+    ]
+  },
+  "nextOriginalTask": {
+    "id": "M00-06",
+    "state": "SOURCE_TODO; focused host evidence exists; full timing DoD not demonstrated"
+  },
+  "nextDeviceTask": {
+    "id": "M00-07",
+    "state": "PENDING_REQUIRES_DEVICE",
+    "device": "Motorola Moto G86 Power 5G"
+  }
+}

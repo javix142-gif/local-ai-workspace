@@ -1,0 +1,3 @@
+event	epochMs	class	method	result	durationMs
+TEST_START	1792426797365	com.localai.workspace.data.DocumentPipelineTimingTest	xlsxImportAndBackgroundIndexShareOnlyOpaqueTimingRunId	-	-
+TEST_END	1792426804617	com.localai.workspace.data.DocumentPipelineTimingTest	xlsxImportAndBackgroundIndexShareOnlyOpaqueTimingRunId	SUCCESS	7286

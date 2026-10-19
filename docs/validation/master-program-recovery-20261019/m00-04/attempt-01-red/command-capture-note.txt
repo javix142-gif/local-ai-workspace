@@ -1,0 +1,1 @@
+The original run did not persist a literal command.txt. This evidence does not reconstruct one. The selected tests and Gradle task are identified by the JUnit XML and raw Gradle log; metadata retains start/end, source SHA and exit code.

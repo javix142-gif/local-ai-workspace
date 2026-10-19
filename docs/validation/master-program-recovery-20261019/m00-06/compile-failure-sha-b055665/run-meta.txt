@@ -1,0 +1,4 @@
+sourceSha=b0556656652f774df53f8722e08912c49591b7ab
+startedAtUtc=2026-10-19T16:16:10Z
+finishedAtUtc=2026-10-19T16:16:48Z
+exitCode=1

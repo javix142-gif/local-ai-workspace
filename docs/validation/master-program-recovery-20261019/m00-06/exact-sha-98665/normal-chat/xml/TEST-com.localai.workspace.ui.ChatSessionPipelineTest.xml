@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.ChatSessionPipelineTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-19T16:24:59" hostname="42c4f375d730" time="6.681">
+  <properties/>
+  <testcase name="normalChatTraceOrdersContextBeforeGateAndVisibleContentWithoutPersistingText" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="6.681"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
