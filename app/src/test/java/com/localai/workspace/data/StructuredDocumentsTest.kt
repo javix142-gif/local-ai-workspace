@@ -7,6 +7,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.io.File
+import java.io.OutputStream
 import java.util.zip.*
 @RunWith(RobolectricTestRunner::class) @Config(sdk=[29], application=android.app.Application::class)
 class StructuredDocumentsTest {
@@ -16,19 +17,26 @@ class StructuredDocumentsTest {
  @Test fun zipSlipAndBombRejected() { val f=zip(mapOf("../secret" to "x"));try { ZipFile(f).use { assertThrows(Exception::class.java) { S.inspect(it) } } } finally { f.delete() };assertFalse(S.safePath("C:/a"));assertFalse(S.safePath("a\\b"));assertTrue(S.safePath("folder/a.csv")) }
  @Test fun xlsxPreservesSheetAddressCachedValueFormula() { val f=zip(mapOf("xl/workbook.xml" to "<workbook xmlns:r='http://schemas.openxmlformats.org/officeDocument/2006/relationships'><sheets><sheet name='Sales' r:id='r1'/></sheets></workbook>", "xl/_rels/workbook.xml.rels" to "<Relationships><Relationship Id='r1' Target='worksheets/sheet1.xml'/></Relationships>", "xl/worksheets/sheet1.xml" to "<worksheet><sheetData><row r='1'><c r='B1'><f>SUM(A1:A2)</f><v>12</v></c></row></sheetData></worksheet>"));try { val c=S.xlsx(f).cells.single();assertEquals("Sales",c.sheet);assertEquals(2,c.column);assertEquals("12",c.value);assertEquals("SUM(A1:A2)",c.formula) } finally { f.delete() } }
  @Test fun xlsxPreservesRawStyleNumberFormatsAndCellTypesWithoutConvertingCachedValues() {
-  val f=zip(mapOf(
-   "xl/workbook.xml" to "<workbook xmlns:r='http://schemas.openxmlformats.org/officeDocument/2006/relationships'><sheets><sheet name='Ventas' r:id='r1'/></sheets></workbook>",
-   "xl/_rels/workbook.xml.rels" to "<Relationships><Relationship Id='r1' Target='worksheets/sheet1.xml'/></Relationships>",
-   "xl/styles.xml" to "<styleSheet><numFmts count='1'><numFmt numFmtId='164' formatCode='yyyy-mm-dd'/></numFmts><cellXfs count='3'><xf numFmtId='0'/><xf numFmtId='14'/><xf numFmtId='164'/></cellXfs></styleSheet>",
-   "xl/sharedStrings.xml" to "<sst><si><t>Shared label</t></si></sst>",
-   "xl/worksheets/sheet1.xml" to "<worksheet><sheetData><row r='1'><c r='A1' s='1'><v>45292</v></c><c r='B1' s='2'><v>1234.5</v></c><c r='C1' t='b'><v>1</v></c><c r='D1' t='s'><v>0</v></c><c r='E1' t='inlineStr'><is><t>Inline label</t></is></c><c r='F1' s='1'><f>A1+1</f><v>45293</v></c></row></sheetData></worksheet>"
-  ))
+  val resource=checkNotNull(javaClass.getResourceAsStream("/fixtures/xlsx-style-metadata-valid.xlsx"))
+  val f=File.createTempFile("xlsx-style-metadata", ".xlsx")
+  resource.use { input -> f.outputStream().use { output -> input.copyTo(output) } }
   try {
+   ZipFile(f).use { packageZip ->
+    val requiredParts=setOf("[Content_Types].xml","_rels/.rels","xl/workbook.xml","xl/_rels/workbook.xml.rels","xl/worksheets/sheet1.xml","xl/styles.xml","xl/sharedStrings.xml")
+    assertTrue("Fixture must contain the core OPC/XLSX relationships", packageZip.entries().asSequence().map { it.name }.toSet().containsAll(requiredParts))
+    val contentTypes=packageZip.getInputStream(packageZip.getEntry("[Content_Types].xml")).bufferedReader().use { it.readText() }
+    assertTrue(contentTypes.contains("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"))
+    assertTrue(contentTypes.contains("application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"))
+   }
+   ZipInputStream(f.inputStream()).use { entries ->
+    while (entries.nextEntry != null) entries.copyTo(OutputStream.nullOutputStream())
+   }
    val table=S.xlsx(f)
    val cells=table.cells.associateBy{it.address}
    assertEquals("45292",cells.getValue("A1").value)
    assertEquals("n",cells.getValue("A1").type)
    assertEquals("1234.5",cells.getValue("B1").value)
+   assertEquals(2,cells.getValue("B1").styleIndex)
    assertEquals("b",cells.getValue("C1").type)
    assertEquals("Shared label",cells.getValue("D1").value)
    assertEquals("s",cells.getValue("D1").type)
@@ -39,7 +47,7 @@ class StructuredDocumentsTest {
    val representation=table.document().pages.single().text
    assertTrue("The style index must be linked to its raw number format",representation.contains("\"styleIndex\":1"))
    assertTrue("Built-in number format id is preserved without date conversion",representation.contains("\"numberFormatId\":14"))
-   assertTrue("Custom number format code is preserved as metadata",representation.contains("\"numberFormatCode\":\"yyyy-mm-dd\""))
+   assertTrue("Custom number format code is preserved as metadata",representation.contains("\"numberFormatCode\":\"0.0000;[Red]-0.0000\""))
    assertTrue("Raw cached formula value remains visible",representation.contains("\"formula\":\"A1+1\"" ) && representation.contains("\"value\":\"45293\""))
    File("build/reports/xlsx-style-metadata").mkdirs()
    f.copyTo(File("build/reports/xlsx-style-metadata/fixture.xlsx"),overwrite=true)
