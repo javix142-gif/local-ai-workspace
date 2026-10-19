@@ -210,6 +210,7 @@ class DocxArtifactStructureTest {
             listOf("meeting_minutes", "Arial", "1D2522", "36", "28")
         )
         val exported = File("build/docx-templates").apply { mkdirs() }
+        var reportRevision:ArtifactRevision? = null
         try {
             for ((template, expectedFont, expectedTitleColor, expectedTitleSize, expectedHeadingSize) in templates) {
                 val source = JSONObject("""
@@ -224,6 +225,7 @@ class DocxArtifactStructureTest {
                     }
                 """.trimIndent())
                 val revision = store.create("docx-templates-project", ArtifactSpec.parse(source))
+                if(template == "report") reportRevision=revision
                 val file = store.verifiedFile("docx-templates-project", revision)
                 assertEquals(template, store.spec("docx-templates-project", revision).json().getString("template"))
                 val output = File(exported, "$template.docx").apply { writeBytes(file.readBytes()) }
@@ -276,6 +278,18 @@ class DocxArtifactStructureTest {
                 assertTrue(extracted.contains("Contenido conservado"))
                 assertTrue(extracted.contains("Aprobado"))
             }
+
+            val report=checkNotNull(reportRevision)
+            val originalBytes=store.verifiedFile("docx-templates-project",report).readBytes()
+            val revisedSpec=store.spec("docx-templates-project",report).json()
+            revisedSpec.getJSONArray("blocks").getJSONObject(2).put("text","Contenido revisado")
+            val revised=store.revise("docx-templates-project",report.id,report.version,ArtifactSpec.parse(revisedSpec))
+            assertEquals(2,store.history("docx-templates-project",report.id).size)
+            assertEquals("report",store.spec("docx-templates-project",report).json().getString("template"))
+            assertEquals("report",store.spec("docx-templates-project",revised).json().getString("template"))
+            assertEquals(report.sha256,ArtifactStore.fileHash(store.verifiedFile("docx-templates-project",report)))
+            assertTrue(store.spec("docx-templates-project",revised).preview().contains("Contenido revisado"))
+            assertTrue(originalBytes.contentEquals(store.verifiedFile("docx-templates-project",report).readBytes()))
 
             val omittedTemplate = JSONObject("""{"format":"DOCX","name":"omitted.docx","paragraphs":[{"text":"Legacy","style":"title"}]}""")
             val explicitStandard = JSONObject(omittedTemplate.toString()).put("template", "standard")
