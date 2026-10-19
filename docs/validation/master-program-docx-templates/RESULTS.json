@@ -1,0 +1,228 @@
+{
+  "name": "M03-03 built-in DOCX templates preparation",
+  "kind": "PREPARATORY_M03_03_DOCX_TEMPLATES",
+  "baseProductionSha": "fad9dae641263157c72f2cbcf308658c553e617c",
+  "testFirstCommit": "90cf6cb0e81c7d378cdc774799c981f15636247c",
+  "productionCommit": "1cdcddb471eb795b526e16b4cd43997176958ba1",
+  "testedHead": "56090d0e4d5c686a9346a5359dfd18d86e7c5d78",
+  "testedTree": "5e11605f1a9c3cdb1f06d72174a254d8717d3ba0",
+  "branch": "codex/master-program-20261019",
+  "formalOriginalTask": {
+    "id": "M03-03",
+    "title": "Generador y editor basico DOCX",
+    "status": "TODO",
+    "requires_device": true,
+    "depends_on": [
+      "M03-01",
+      "M02-03"
+    ],
+    "formalCompletion": false,
+    "dependsOnStatus": {
+      "M03-01": "TODO",
+      "M02-03": "TODO"
+    },
+    "sourceDefinitionOfDone": "DOCX con estilos tablas y plantillas abre en lectores comunes; conserva original/versiones"
+  },
+  "baselineRed": {
+    "status": "EXPECTED_FAILURE_REPRODUCED",
+    "startedAtUtc": "2026-10-19T15:24:48Z",
+    "finishedAtUtc": "2026-10-19T15:25:58Z",
+    "wallSeconds": 70,
+    "exitCode": 1,
+    "xml": "red-baseline/DocxArtifactStructureTest.xml",
+    "xmlSha256": "f9e1b3c8bdb977d432fa6eb25e85c03d4dac673a882446c6ec4dff7c438b8b69",
+    "junit": {
+      "tests": 3,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "failure": "java.lang.IllegalArgumentException: ARTIFACT_FIELD_UNSUPPORTED",
+    "logGzip": "red-baseline/gradle.log.gz",
+    "logGzipSha256": "349d6e72902b2e8cab295114fff8d467403ddc8680b55ce704d155b686c39ea2",
+    "logRawSha256": "47e75fb09ce1cbbe862256d9c9ab76bf1e232d0143538bf6a73195b78aca2182",
+    "baselineProductionFiles": {
+      "ArtifactSpec.kt": "81ed67c00221c32431cef7d21cc9cd73a2331f5d2e6f2cbc91976ab9640cdcca",
+      "ArtifactRenderer.kt": "ef7b17b78b0ef21a17c8124c70c713dc046cb74010f5b7e46656232b5e683c9d"
+    },
+    "workingTreeScope": "Focused baseline reproduction, not a clean checkout: only the relevant ArtifactSpec/ArtifactRenderer files were restored to the exact base blobs; unrelated in-progress UI/tool edits were present. The expected ARTIFACT_FIELD_UNSUPPORTED failure occurs in ArtifactSpec.parse before renderer execution."
+  },
+  "focusedHost": {
+    "status": "PASS",
+    "startedAtUtc": "2026-10-19T15:33:34Z",
+    "finishedAtUtc": "2026-10-19T15:34:23Z",
+    "wallSeconds": 49,
+    "gradleReported": "48 seconds",
+    "exitCode": 0,
+    "gradle": "8.10.2",
+    "junit": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "xml": [
+      {
+        "path": "final-focused/DocxArtifactStructureTest.xml",
+        "sha256": "8d1b5d5a1817567ef454bc89cbcf40235f22ed409be7888ac3588a525952c07b",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "path": "final-focused/ArtifactsDocxTemplateUiTest.xml",
+        "sha256": "42d5df05be9bec824858808a0b6eb68e61c8f5909c6039ddf870405f40a3a0cf",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "actionableTaskSummary": "63 actionable tasks: 3 executed, 60 up-to-date",
+    "logGzip": "final-focused/gradle.log.gz",
+    "logGzipSha256": "615a7b7f4b2ab4e0076937496d779bf33fadc4e4dcaf732ca3157ec9da8d533a",
+    "logRawSha256": "66413321dd90dcc217550d14ea53fce0d88f44ca0aa5696af5b0f9297595a9dc"
+  },
+  "independentReader": {
+    "python": "3.12.14",
+    "python_docx": "1.2.0",
+    "documents": [
+      {
+        "name": "report.docx",
+        "bytes": 2671,
+        "sha256": "f8e65a0f54af9e40214cd7f58d4617db5fa8f35055aef90b8b59d8ac2af6ab66",
+        "zip_crc": "PASS",
+        "required_parts_present": true,
+        "direct_body_order": [
+          "p",
+          "p",
+          "p",
+          "tbl",
+          "sectPr"
+        ],
+        "paragraphs": [
+          "Título de plantilla",
+          "Acuerdos",
+          "Contenido conservado"
+        ],
+        "paragraph_styles": [
+          "Title",
+          "Heading 1",
+          "Normal"
+        ],
+        "table": [
+          [
+            "Campo",
+            "Valor"
+          ],
+          [
+            "Estado",
+            "Aprobado"
+          ]
+        ],
+        "title_font_color_size": [
+          "Calibri",
+          "3E746D",
+          20.0
+        ],
+        "heading1_font_color_size": [
+          "Calibri",
+          "3E746D",
+          16.0
+        ]
+      },
+      {
+        "name": "meeting_minutes.docx",
+        "bytes": 2668,
+        "sha256": "4aba43a1718b4c78ae797f8c08da0ce9646e848816d3a76b5c783060fc0893b5",
+        "zip_crc": "PASS",
+        "required_parts_present": true,
+        "direct_body_order": [
+          "p",
+          "p",
+          "p",
+          "tbl",
+          "sectPr"
+        ],
+        "paragraphs": [
+          "Título de plantilla",
+          "Acuerdos",
+          "Contenido conservado"
+        ],
+        "paragraph_styles": [
+          "Title",
+          "Heading 1",
+          "Normal"
+        ],
+        "table": [
+          [
+            "Campo",
+            "Valor"
+          ],
+          [
+            "Estado",
+            "Aprobado"
+          ]
+        ],
+        "title_font_color_size": [
+          "Arial",
+          "1D2522",
+          18.0
+        ],
+        "heading1_font_color_size": [
+          "Arial",
+          "1D2522",
+          14.0
+        ]
+      }
+    ]
+  },
+  "intermediateTestIteration": {
+    "status": "TEST_ASSERTION_FAILURE_NOT_PRODUCT_FAILURE",
+    "detail": "An earlier UI test assertion queried a field through the Text semantics API and failed although the semantics dump showed the selected JSON. The test was corrected to read EditableText; final focused run passes. Also retained initial offscreen-selector assertion failure as test iteration only.",
+    "logGzipSha256": "ec103c206316be02ae31cd0159e8c34323bdc83ba58251bb2d156d27d9157d6e",
+    "xmlSha256": "f25002fe6490d7ebf553da1d867fba0432eb2835e6f5c261b31c02790a6712cf"
+  },
+  "otherGates": {
+    "fullJvm": "NOT_RUN",
+    "litertCompat": "NOT_RUN",
+    "lintDebug": "NOT_RUN_IN_THIS_INCREMENT; prior proportional offline attempt is recorded as blocked by uncached lint-gradle 31.7.3",
+    "compileDebugAndroidTestKotlin": "NOT_RUN_IN_THIS_INCREMENT; prior offline attempt is recorded as blocked by uncached AndroidX/Room test dependencies",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  },
+  "sourceCatalog": {
+    "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmap": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskIds": 97,
+    "uniqueTaskIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": "97 TODO; unchanged"
+  },
+  "finalTestCommits": [
+    "90cf6cb0e81c7d378cdc774799c981f15636247c",
+    "52830932a357edd784d71d8f119488a948b5f191",
+    "e624127531f3446cb7f0e4246e31f1c5d84910ec",
+    "56090d0e4d5c686a9346a5359dfd18d86e7c5d78"
+  ],
+  "changedFiles": [
+    "app/src/main/java/com/localai/workspace/artifacts/ArtifactSpec.kt",
+    "app/src/main/java/com/localai/workspace/artifacts/ArtifactRenderer.kt",
+    "app/src/main/java/com/localai/workspace/domain/tools/ProjectTools.kt",
+    "app/src/main/java/com/localai/workspace/ui/ArtifactsUi.kt",
+    "app/src/test/java/com/localai/workspace/artifacts/DocxArtifactStructureTest.kt",
+    "app/src/test/java/com/localai/workspace/ui/ArtifactsDocxTemplateUiTest.kt"
+  ],
+  "originalPlanPreserved": true,
+  "deviceValidation": "NOT_RUN",
+  "lintAndAndroidTest": "NOT_RUN in this increment; the preceding proportional offline attempts are retained in master-program-docx-ordered-blocks and remained blocked by uncached artifacts.",
+  "evidenceManifest": {
+    "path": "docs/validation/master-program-docx-templates/SHA256SUMS",
+    "entries": 16,
+    "verification": "All payload entries verified locally after generation."
+  }
+}

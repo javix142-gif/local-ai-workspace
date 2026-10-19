@@ -1,0 +1,12 @@
+{
+  "gradle": "8.10.2 wrapper",
+  "runtimeJdk": "Temurin 17.0.20.1",
+  "testWorkerToolchain": "Temurin 21.0.12.1",
+  "androidSdk": "/workspace/.toolchain/android-sdk; API 35",
+  "ndk": "27.0.12077973",
+  "gradleUserHome": "/workspace/.gradle (existing cache; offline; no install/cleanup)",
+  "python": "3.12.14",
+  "pythonDocx": "1.2.0",
+  "host": "Linux x86_64",
+  "notes": "Source shows the project uses JDK 17 for Gradle and JDK 21 for JVM test workers/toolchain discovery. No network resolution, Android emulator/device or APK build was performed in this increment."
+}

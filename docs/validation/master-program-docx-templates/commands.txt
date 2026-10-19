@@ -1,0 +1,8 @@
+RED baseline reproduction
+source test commit: 90cf6cb0e81c7d378cdc774799c981f15636247c
+production baseline: fad9dae641263157c72f2cbcf308658c553e617c
+JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH GRADLE_USER_HOME=/workspace/.gradle ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.artifacts.DocxArtifactStructureTest
+
+GREEN focused verification
+tested HEAD: 56090d0e4d5c686a9346a5359dfd18d86e7c5d78
+JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH GRADLE_USER_HOME=/workspace/.gradle ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.artifacts.DocxArtifactStructureTest --tests com.localai.workspace.ui.ArtifactsDocxTemplateUiTest

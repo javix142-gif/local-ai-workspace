@@ -1,0 +1,7 @@
+Final focused Gradle invocation
+exit_code=0
+BUILD SUCCESSFUL
+63 actionable tasks: 3 executed, 60 up-to-date
+Junit app artifacts: tests=3 failures=0 errors=0 skipped=0
+Junit UI selector: tests=1 failures=0 errors=0 skipped=0
+Total: tests=4 passed=4 failures=0 errors=0 skipped=0

@@ -1,0 +1,94 @@
+{
+  "python": "3.12.14",
+  "python_docx": "1.2.0",
+  "documents": [
+    {
+      "name": "report.docx",
+      "bytes": 2671,
+      "sha256": "f8e65a0f54af9e40214cd7f58d4617db5fa8f35055aef90b8b59d8ac2af6ab66",
+      "zip_crc": "PASS",
+      "required_parts_present": true,
+      "direct_body_order": [
+        "p",
+        "p",
+        "p",
+        "tbl",
+        "sectPr"
+      ],
+      "paragraphs": [
+        "Título de plantilla",
+        "Acuerdos",
+        "Contenido conservado"
+      ],
+      "paragraph_styles": [
+        "Title",
+        "Heading 1",
+        "Normal"
+      ],
+      "table": [
+        [
+          "Campo",
+          "Valor"
+        ],
+        [
+          "Estado",
+          "Aprobado"
+        ]
+      ],
+      "title_font_color_size": [
+        "Calibri",
+        "3E746D",
+        20.0
+      ],
+      "heading1_font_color_size": [
+        "Calibri",
+        "3E746D",
+        16.0
+      ]
+    },
+    {
+      "name": "meeting_minutes.docx",
+      "bytes": 2668,
+      "sha256": "4aba43a1718b4c78ae797f8c08da0ce9646e848816d3a76b5c783060fc0893b5",
+      "zip_crc": "PASS",
+      "required_parts_present": true,
+      "direct_body_order": [
+        "p",
+        "p",
+        "p",
+        "tbl",
+        "sectPr"
+      ],
+      "paragraphs": [
+        "Título de plantilla",
+        "Acuerdos",
+        "Contenido conservado"
+      ],
+      "paragraph_styles": [
+        "Title",
+        "Heading 1",
+        "Normal"
+      ],
+      "table": [
+        [
+          "Campo",
+          "Valor"
+        ],
+        [
+          "Estado",
+          "Aprobado"
+        ]
+      ],
+      "title_font_color_size": [
+        "Arial",
+        "1D2522",
+        18.0
+      ],
+      "heading1_font_color_size": [
+        "Arial",
+        "1D2522",
+        14.0
+      ]
+    }
+  ]
+}
