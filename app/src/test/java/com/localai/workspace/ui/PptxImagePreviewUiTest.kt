@@ -58,7 +58,7 @@ class PptxImagePreviewUiTest {
                     .put("imageAltText","Mapa & datos"))
                 .put(JSONObject()
                     .put("title","Resumen")
-                    .put("body","Segunda diapositiva con contenido completo.")))
+                    .put("body","Segunda diapositiva con contenido completo.")))))
         val revision=store.create(project,spec)
         val bytesBefore=store.verifiedFile(project,revision).readBytes()
         val imageHash=ArtifactStore.hash(Base64.getDecoder().decode(encoded))
