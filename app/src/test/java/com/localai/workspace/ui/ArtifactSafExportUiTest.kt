@@ -2,6 +2,7 @@ package com.localai.workspace.ui
 
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.LocalActivityResultRegistryOwner
 import androidx.activity.result.ActivityResultRegistry
@@ -44,6 +45,8 @@ class ArtifactSafExportUiTest {
 
     private class ExportRegistry(private val destination:Uri):ActivityResultRegistry() {
         var requestedName:String?=null
+        var requestedMimeType:String?=null
+        var requestedAction:String?=null
         override fun <I,O> onLaunch(
             requestCode:Int,
             contract:ActivityResultContract<I,O>,
@@ -51,6 +54,10 @@ class ArtifactSafExportUiTest {
             options:ActivityOptionsCompat?,
         ) {
             requestedName=input as? String
+            val intent=contract.createIntent(ApplicationProvider.getApplicationContext(),input)
+            requestedMimeType=intent.type
+            requestedAction=intent.action
+            if(requestedName==null)requestedName=intent.getStringExtra(Intent.EXTRA_TITLE)
             @Suppress("UNCHECKED_CAST")
             check(dispatchResult(requestCode,destination as O))
         }
@@ -84,6 +91,8 @@ class ArtifactSafExportUiTest {
         compose.waitUntil(10_000) { bytes.size() == expected.size }
 
         assertEquals("CreateDocument receives the artifact's suggested name",revision.name,registry.requestedName)
+        assertEquals("SAF must receive the artifact format MIME", "text/plain", registry.requestedMimeType)
+        assertEquals(Intent.ACTION_CREATE_DOCUMENT, registry.requestedAction)
         assertArrayEquals("SAF destination bytes match the immutable verified artifact",expected,bytes.toByteArray())
         compose.onNodeWithTag("artifact-status").assertTextContains("Exported and read back: ${revision.name} · v${revision.version}")
         assertEquals(revision.sha256,ArtifactStore.hash(bytes.toByteArray()))
