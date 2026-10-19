@@ -1,0 +1,6 @@
+Gradle wrapper: 8.10.2
+Gradle runtime: Temurin JDK 17 at /workspace/.toolchain/jdk-17
+Test executor: Temurin JDK 21 at /workspace/.toolchain/jdk-21-temurin (confirmed in raw Gradle log)
+Android SDK: /workspace/.toolchain/android-sdk, API 35
+Gradle user home: /workspace/.gradle (pre-existing cache, offline)
+No SDK/NDK/dependency installation; no APK, emulator or device

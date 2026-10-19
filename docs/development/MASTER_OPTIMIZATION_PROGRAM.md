@@ -287,3 +287,13 @@ This is a diagnostic presentation increment validated with synthetic unit data. 
 At code SHA `786f979ba50a1bd2d609712e297bec24909a0ac5`, the generated PDF table renderer repeats its first row as the header on continuation pages. Test-first evidence at `b2681a6` showed the regression (`[true, false, false]`); the exact final focused `PdfArtifactLayoutTest` passed 2/2, exit 0. Independent pypdf 6.10.0 and PyMuPDF 1.26.6 checks confirmed headers on three synthetic Letter pages, continuation order, all 300 data tokens and in-bounds text. See `docs/validation/master-program-pdf-table-header-20261019/RESULTS.md` and its 24-entry SHA256SUMS.
 
 A 4 pt reserve after the header ensures room for at least one body line. If an exceptionally tall header cannot satisfy that bound, continuation repetition is suppressed. This is focused HOST preparation only; full suites, lint, AndroidTest, emulator, office/mobile reader and Motorola remain NOT_RUN; no APK was built. M03-04 remains source TODO/device-required and depends on M03-01 TODO. The original catalog is unchanged: 97 IDs, 120 dependency edges, all source statuses TODO.
+
+## 2026-10-19 — XLSX style/number-format metadata preparation
+
+The recovery branch adds preparatory XLSX fidelity at code SHA `a72db3db5ad5e8ca7c6b178e723a9fc332d865ea`: `StructuredDocuments` retains raw cell style index, number-format ID, and custom format code in structured output without converting cached values or evaluating formulas. The test-first regression failed on the missing style association and the final focused class passed 11/11. Evidence is in `docs/validation/master-program-xlsx-style-metadata-20261019/`.
+
+The attempted openpyxl read is `NOT_VALIDATED`, because the minimal parser fixture is not a complete OPC workbook and lacks `[Content_Types].xml`; it is not a pass. M02-02 remains source `TODO` and depends on M02-01 (`TODO`). No source-plan ID or status was changed. Next is exact-source revalidation of the already present M03-07 preview/diff/cancel path; its original task remains `TODO`, device-required, and dependent on M03-01 (`TODO`).
+
+## 2026-10-19 — M03-07 current-source preview revalidation
+
+The recovered history already contains the bounded revision diff and cancel-preservation path. Exact code SHA `a72db3db5ad5e8ca7c6b178e723a9fc332d865ea` passed `ArtifactRevisionPreviewUiTest` 2/2, including full-body fallback for oversized diffs and unchanged saved bytes/hash after cancellation. This does not complete M03-07: the original task remains `TODO`, is device-required, and depends on M03-01 (`TODO`). See `docs/validation/master-program-m03-07-revalidation-20261019/RESULTS.md`. No original task status or dependency changed.

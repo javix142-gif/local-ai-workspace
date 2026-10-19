@@ -1,0 +1,33 @@
+source_commit=a72db3db5ad5e8ca7c6b178e723a9fc332d865ea
+source_tree=ba5405ebc164ab88ba12b4dfb2cd6d2b9e3df733
+branch=codex/master-program-recovery-20261019
+m03_07_product_test_diff_from_current_remote_base:
+worktree_status:
+M  docs/development/CODEX_TO_WORK_HANDOFF.md
+M  docs/development/EXECUTION_STATE.json
+M  docs/development/MASTER_OPTIMIZATION_PROGRAM.md
+A  docs/validation/master-program-xlsx-style-metadata-20261019/RESULTS.json
+A  docs/validation/master-program-xlsx-style-metadata-20261019/RESULTS.md
+A  docs/validation/master-program-xlsx-style-metadata-20261019/SHA256SUMS
+A  docs/validation/master-program-xlsx-style-metadata-20261019/green-a72db3d/TEST-com.localai.workspace.data.StructuredDocumentsTest.xml
+A  docs/validation/master-program-xlsx-style-metadata-20261019/green-a72db3d/command.txt
+A  docs/validation/master-program-xlsx-style-metadata-20261019/green-a72db3d/environment.txt
+A  docs/validation/master-program-xlsx-style-metadata-20261019/green-a72db3d/exit-code.txt
+A  docs/validation/master-program-xlsx-style-metadata-20261019/green-a72db3d/independent-reader-attempt.py
+A  docs/validation/master-program-xlsx-style-metadata-20261019/green-a72db3d/independent-reader-attempt.txt
+A  docs/validation/master-program-xlsx-style-metadata-20261019/green-a72db3d/independent-reader-result.json
+A  docs/validation/master-program-xlsx-style-metadata-20261019/green-a72db3d/production.patch
+A  docs/validation/master-program-xlsx-style-metadata-20261019/green-a72db3d/source-diff-review.txt
+A  docs/validation/master-program-xlsx-style-metadata-20261019/green-a72db3d/task-summary.txt
+A  docs/validation/master-program-xlsx-style-metadata-20261019/green-a72db3d/timing.txt
+A  docs/validation/master-program-xlsx-style-metadata-20261019/red-d3064ff/TEST-com.localai.workspace.data.StructuredDocumentsTest.xml
+A  docs/validation/master-program-xlsx-style-metadata-20261019/red-d3064ff/command.txt
+A  docs/validation/master-program-xlsx-style-metadata-20261019/red-d3064ff/environment.txt
+A  docs/validation/master-program-xlsx-style-metadata-20261019/red-d3064ff/exit-code.txt
+A  docs/validation/master-program-xlsx-style-metadata-20261019/red-d3064ff/source-commit.txt
+A  docs/validation/master-program-xlsx-style-metadata-20261019/red-d3064ff/task-summary.txt
+A  docs/validation/master-program-xlsx-style-metadata-20261019/red-d3064ff/test.patch.gz
+A  docs/validation/master-program-xlsx-style-metadata-20261019/red-d3064ff/timing.txt
+?? docs/validation/master-program-m03-07-revalidation-20261019/
+existing_output_before:
+stat: cannot statx 'app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml': No such file or directory

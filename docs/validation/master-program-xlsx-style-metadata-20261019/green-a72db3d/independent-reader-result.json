@@ -1,0 +1,6 @@
+{
+  "status": "NOT_VALIDATED",
+  "tool": "openpyxl 3.1.5",
+  "reason": "Input is a minimal parser XML/ZIP fixture lacking [Content_Types].xml; independent library stopped at package-manifest load before reading cells.",
+  "classification": "fixture package incomplete; not a product failure and not counted as PASS"
+}

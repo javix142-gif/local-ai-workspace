@@ -1,0 +1,4 @@
+Gradle exit=0
+BUILD SUCCESSFUL in 3m 15s
+63 actionable tasks: 63 executed
+JUnit: 2 tests, 2 pass, 0 failures, 0 errors, 0 skipped

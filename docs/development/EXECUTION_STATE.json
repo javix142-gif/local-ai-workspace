@@ -2,7 +2,7 @@
   "repository": "https://github.com/javix142-gif/local-ai-workspace.git",
   "branch": "feat/0.5.0-skills-agents",
   "startingHeadSha": "7da2cc71e57aed1d213ea03b01ba8b41be849939",
-  "testedCodeHeadSha": "786f979ba50a1bd2d609712e297bec24909a0ac5",
+  "testedCodeHeadSha": "a72db3db5ad5e8ca7c6b178e723a9fc332d865ea",
   "version": "0.5.0",
   "applicationId": "com.localai.workspace",
   "completedTasks": [
@@ -552,7 +552,7 @@
     "PPTXImageEmbedding": "IMPLEMENTED_HOST_TESTED_WITH_FOCUSED_APPROXIMATE_LAYOUT_PREVIEW; caller-supplied PNG only, no generated images or WYSIWYG/render fidelity claim; current preview evidence is not Android/device validation.",
     "latestMasterProgramRecoveryCheckpoint": "Latest focused M00/M02/M03 preparatory evidence on codex/master-program-20261019. It does not change source TODO states, task IDs, order, dependencies, or device gates."
   },
-  "currentSourceHeadSha": "786f979ba50a1bd2d609712e297bec24909a0ac5",
+  "currentSourceHeadSha": "a72db3db5ad5e8ca7c6b178e723a9fc332d865ea",
   "lastFullJvmTestCodeSha": "f54c1430cab4ea59a302b58dd2aa27deea579c49",
   "latestDelivery": {
     "name": "Clean-checkout model-source ignore matrix and release reproducibility follow-up",
@@ -7297,7 +7297,9 @@
       "GeneratedDOCXInterleavedParagraphTable": "IMPLEMENTED_FOCUSED_HOST_TESTED_AND_OPENED_BY_PYTHON_DOCX; synthetic generated paragraphs/tables preserve submitted order and immutable revisions; source M03-03 remains TODO/device-gated; lint/AndroidTest compile offline-blocked.",
       "GeneratedXLSXNativeTables": "IMPLEMENTED_FOCUSED_HOST_TESTED_PREPARATORY; bounded native OOXML tables for app-generated workbooks; immutable add/resize; no formula evaluation; Excel GUI/Android/device validation pending.",
       "BenchmarkCohortPreparationMemoryPresentation": "IMPLEMENTED_HOST_TESTED_FOCUSED_5_OF_5; aggregated existing records only; no runtime collection changes; device measurements pending.",
-      "GeneratedPdfRepeatedTableHeaders": "IMPLEMENTED_FOCUSED_HOST_TESTED_PREPARATORY; red regression reproduced missing continuation headers; green PdfArtifactLayoutTest 2/2; pypdf/PyMuPDF verified three synthetic pages and all 300 data tokens; exceptional too-tall header repetition suppressed; device/external-reader validation pending."
+      "GeneratedPdfRepeatedTableHeaders": "IMPLEMENTED_FOCUSED_HOST_TESTED_PREPARATORY; red regression reproduced missing continuation headers; green PdfArtifactLayoutTest 2/2; pypdf/PyMuPDF verified three synthetic pages and all 300 data tokens; exceptional too-tall header repetition suppressed; device/external-reader validation pending.",
+      "XLSXRawStyleAndNumberFormatMetadata": "IMPLEMENTED_FOCUSED_HOST_TESTED_PREPARATORY; retains style index, raw numFmtId and custom format code without converting values or recalculating formulas; external Office reader NOT_VALIDATED",
+      "M03_07RevisionPreviewDiff": "FOCUSED_HOST_TESTED_PREPARATORY; before/after, bounded diff, saved-version export affordance and cancel-preserves-original asserted; physical UI validation pending"
     },
     "latestDelivery": {
       "artifactType": "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
@@ -7384,86 +7386,75 @@
     ],
     "independentHumanAudit": "PENDING",
     "physicalDevice": "NOT_RUN",
-    "latestSourceCommit": "786f979ba50a1bd2d609712e297bec24909a0ac5",
-    "workingBranch": "codex/master-program-20261019",
+    "latestSourceCommit": "a72db3db5ad5e8ca7c6b178e723a9fc332d865ea",
+    "workingBranch": "codex/master-program-recovery-20261019",
     "latestIncrement": {
-      "name": "Generated PDF table continuation headers",
-      "kind": "PREPARATORY_M03_04_PDF_TABLE_HEADER_CONTINUATION",
+      "name": "M03-07 current-source preview/diff/cancel revalidation",
+      "kind": "PREPARATORY_M03_07_PREVIEW_DIFF_CANCEL_REVALIDATION",
       "status": "FOCUSED_HOST_PASS_PREPARATORY_NOT_FORMAL",
-      "codeSha": "786f979ba50a1bd2d609712e297bec24909a0ac5",
-      "testedCodeSha": "786f979ba50a1bd2d609712e297bec24909a0ac5",
-      "testedTreeSha": "b6415e4d3cacbcd4763de85375a1c5053fb77ec8",
+      "codeSha": "a72db3db5ad5e8ca7c6b178e723a9fc332d865ea",
+      "testedTreeSha": "ba5405ebc164ab88ba12b4dfb2cd6d2b9e3df733",
       "workingBranch": "codex/master-program-recovery-20261019",
-      "evidence": "docs/validation/master-program-pdf-table-header-20261019/RESULTS.md",
+      "evidence": "docs/validation/master-program-m03-07-revalidation-20261019/RESULTS.md",
       "evidenceManifest": {
-        "path": "docs/validation/master-program-pdf-table-header-20261019/SHA256SUMS",
-        "entries": 24,
-        "sha256": "c5cc22efc7f3f82fa3f5691e45aff3b0efacff87805ab690c6fab233ae4faac9",
-        "locallyVerified": "24/24"
+        "path": "docs/validation/master-program-m03-07-revalidation-20261019/SHA256SUMS",
+        "entries": 13,
+        "sha256": "bd76d6fd03ad57d6dfbedbb967b2e36d52d104e3c045986d84f3aeec2eeda1fd",
+        "locallyVerified": "13/13"
       },
       "host": {
-        "testClass": "com.localai.workspace.artifacts.PdfArtifactLayoutTest",
-        "redReproduction": {
-          "sourceSha": "b2681a631cd6e7a91bcc196e83c3524918c347a",
-          "tests": 2,
-          "failures": 1,
-          "errors": 0,
-          "skipped": 0,
-          "gradleExitCode": 1,
-          "durationSeconds": 42,
-          "assertion": "Each table page should repeat its header row: [true, false, false]"
-        },
-        "finalFocused": {
-          "tests": 2,
-          "passed": 2,
-          "failures": 0,
-          "errors": 0,
-          "skipped": 0,
-          "gradleExitCode": 0,
-          "gradleDurationSeconds": 53,
-          "capturedWallSeconds": 54,
-          "actionableTasks": 63,
-          "executedTasks": 7,
-          "upToDateTasks": 56,
-          "xml": "docs/validation/master-program-pdf-table-header-20261019/green-786f979/TEST-com.localai.workspace.artifacts.PdfArtifactLayoutTest.xml",
-          "log": "docs/validation/master-program-pdf-table-header-20261019/green-786f979/gradle.log"
-        },
-        "otherGates": {
-          "fullAppJvm": "NOT_RUN",
-          "liteRtCompatJvm": "NOT_RUN",
-          "lintDebug": "NOT_RUN",
-          "assemble": "NOT_RUN",
-          "androidTestCompile": "NOT_RUN",
-          "emulator": "NOT_RUN",
-          "physicalDevice": "NOT_RUN",
-          "apk": "NOT_GENERATED"
-        }
+        "class": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+        "tests": 2,
+        "passed": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "exitCode": 0,
+        "startedAtUtc": "2026-10-19T19:26:02Z",
+        "finishedAtUtc": "2026-10-19T19:29:18Z",
+        "wallSeconds": 196,
+        "gradleReportedDuration": "3m 15s",
+        "actionableTasks": 63,
+        "executedTasks": 63,
+        "workerJdk": "Temurin 21.0.12.1",
+        "runtimeJdk": "Temurin 17.0.20.1",
+        "xml": "docs/validation/master-program-m03-07-revalidation-20261019/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml",
+        "log": "docs/validation/master-program-m03-07-revalidation-20261019/gradle.log"
       },
-      "implementation": "ArtifactRenderer repeats the first table row as a header when starting continuation pages. It reserves 4 pt beyond one body line; if the header is exceptionally tall and cannot leave this room, repetition is suppressed.",
-      "independentValidation": {
-        "readers": [
-          "pypdf 6.10.0",
-          "PyMuPDF 1.26.6"
+      "coverage": [
+        "saved before and proposed after are visible",
+        "bounded changed-line additions/removals visible",
+        "saved-v1 export control remains visible",
+        "cancel does not create a version or modify original bytes/hash",
+        "oversized line diff retains complete before/after previews"
+      ],
+      "recovery": {
+        "existingImplementationCommits": [
+          "bddf6827c873e84708fc686ceed6655807187c12",
+          "fad7acb0663485e2bd6ec86cf76e36b85a9baf57"
         ],
-        "syntheticPdfPages": 3,
-        "headersOnAllPages": true,
-        "continuationHeadersPrecedeCellText": true,
-        "datoTokensPreserved": 300,
-        "outOfBoundsWords": 0,
-        "pdf": "docs/validation/master-program-pdf-table-header-20261019/green-786f979/synthetic-long-table.pdf"
+        "lostCommit": "2f8b0d496db8973edf161c7703efc8f0c17d34fd",
+        "lostCommitStatus": "NOT_RECOVERED; existing reachable implementation was reused; no code reconstructed"
       },
       "sourceTask": {
-        "id": "M03-04",
-        "title": "Generador local PDF",
-        "sourceStatus": "TODO",
+        "id": "M03-07",
+        "status": "TODO",
         "requiresDevice": true,
         "dependsOn": [
           "M03-01"
         ],
-        "dependencyStatuses": {
-          "M03-01": "TODO"
-        },
+        "dependencyStatus": "M03-01 source TODO",
         "formalCompletion": false
+      },
+      "otherGates": {
+        "fullAppJvm": "NOT_RUN",
+        "liteRtCompatJvm": "NOT_RUN",
+        "lint": "NOT_RUN",
+        "assembly": "NOT_RUN",
+        "androidTest": "NOT_RUN",
+        "emulator": "NOT_RUN",
+        "physicalDevice": "NOT_RUN",
+        "apk": "NOT_GENERATED"
       },
       "sourcePlanUnchanged": {
         "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
@@ -7475,11 +7466,7 @@
           "TODO": 97
         },
         "sourceFilesModified": false
-      },
-      "limitations": [
-        "Synthetic focused HOST evidence only; imported-PDF editing, mobile/office reader fidelity and Motorola remain unverified.",
-        "No full JVM/LiteRT, lint, assembly, AndroidTest, emulator or APK in this increment."
-      ]
+      }
     },
     "previousIncrement": {
       "name": "Preparatory M00-06: correlate XLSX import and EG1 indexing diagnostics",
@@ -8207,7 +8194,7 @@
         }
       }
     ],
-    "nextPreparatoryIncrement": "Continue sequentially with a bounded source-backed preparatory capability; retain M00-06 and M01-01 as TODO until their original end-to-end/device DoD is demonstrated.",
+    "nextPreparatoryIncrement": "Continue the source-backed master program sequentially; keep all original task states TODO and select work only against the authenticated backlog/dependency graph.",
     "latestPreparatoryIncrement": {
       "name": "M03-01 preparatory format-aware SAF export MIME",
       "kind": "PREPARATORY_M03_01_SAF_FORMAT_MIME",
@@ -8295,74 +8282,92 @@
         }
       }
     },
-    "currentSourceCommit": "786f979ba50a1bd2d609712e297bec24909a0ac5",
-    "latestSourceTreeSha": "b6415e4d3cacbcd4763de85375a1c5053fb77ec8",
+    "currentSourceCommit": "a72db3db5ad5e8ca7c6b178e723a9fc332d865ea",
+    "latestSourceTreeSha": "ba5405ebc164ab88ba12b4dfb2cd6d2b9e3df733",
     "latestM03_02FormulaEditFollowUp": "docs/validation/master-program-m03-02-xlsx-formulas/RESULTS.md",
-    "latestCodeSourceSha": "786f979ba50a1bd2d609712e297bec24909a0ac5",
-    "lastPreparatoryIncrement": "Generated PDF tables now repeat the first row on continuation pages when a bounded body-line reserve fits; exact focused HOST test 2/2 and independent pypdf/PyMuPDF checks, no device or full-gate validation.",
+    "latestCodeSourceSha": "a72db3db5ad5e8ca7c6b178e723a9fc332d865ea",
+    "lastPreparatoryIncrement": "M03-07 preview/diff/cancel exact-source HOST revalidation passed 2/2 at a72db3d; original task remains TODO due to M03-01 and device requirements. The preceding XLSX style metadata increment is separately recorded as preparatory M02-02 evidence.",
     "previousLatestSourceCommit": "0551915039efdd17557271a793163290f30be8d2",
     "latestSourceIncrement": {
-      "name": "Generated PDF table continuation headers",
-      "codeSha": "786f979ba50a1bd2d609712e297bec24909a0ac5",
-      "evidence": "docs/validation/master-program-pdf-table-header-20261019/RESULTS.md",
-      "status": "FOCUSED_HOST_PASS_PREPARATORY_NOT_FORMAL"
+      "name": "M03-07 current-source preview/diff/cancel revalidation",
+      "codeSha": "a72db3db5ad5e8ca7c6b178e723a9fc332d865ea",
+      "evidence": "docs/validation/master-program-m03-07-revalidation-20261019/RESULTS.md",
+      "status": "FOCUSED_HOST_PASS_PREPARATORY_NOT_FORMAL",
+      "evidenceManifest": {
+        "path": "docs/validation/master-program-m03-07-revalidation-20261019/SHA256SUMS",
+        "entries": 13,
+        "sha256": "bd76d6fd03ad57d6dfbedbb967b2e36d52d104e3c045986d84f3aeec2eeda1fd",
+        "locallyVerified": "13/13"
+      }
     }
   },
   "latestMasterProgramIncrement": {
-    "name": "Benchmark cohort preparation, prefill and memory presentation (preparatory)",
-    "kind": "PREPARATORY_PERFORMANCE_BENCHMARK_COHORT_METRICS",
+    "name": "M03-07 current-source preview/diff/cancel revalidation",
+    "kind": "PREPARATORY_M03_07_PREVIEW_DIFF_CANCEL_REVALIDATION",
     "status": "FOCUSED_HOST_PASS_PREPARATORY_NOT_FORMAL",
-    "codeSha": "f21939773735ff17f338d571cadc793484f0bd01",
-    "testedCodeSha": "f21939773735ff17f338d571cadc793484f0bd01",
-    "testedTreeSha": "80c7f97cfce709e1d50b7222e7b6db446e00dbe0",
+    "codeSha": "a72db3db5ad5e8ca7c6b178e723a9fc332d865ea",
+    "testedTreeSha": "ba5405ebc164ab88ba12b4dfb2cd6d2b9e3df733",
     "workingBranch": "codex/master-program-recovery-20261019",
-    "evidence": "docs/validation/master-program-benchmark-cohort-metrics-f219397/RESULTS.md",
+    "evidence": "docs/validation/master-program-m03-07-revalidation-20261019/RESULTS.md",
     "evidenceManifest": {
-      "path": "docs/validation/master-program-benchmark-cohort-metrics-f219397/SHA256SUMS",
-      "entries": 12,
-      "sha256": "f92f5e8c05c4c21d08dfacbb13012c55996f6d55ff299824c781e6e35615bbf3",
-      "locallyVerified": "12/12"
+      "path": "docs/validation/master-program-m03-07-revalidation-20261019/SHA256SUMS",
+      "entries": 13,
+      "sha256": "bd76d6fd03ad57d6dfbedbb967b2e36d52d104e3c045986d84f3aeec2eeda1fd",
+      "locallyVerified": "13/13"
     },
     "host": {
-      "testClass": "com.localai.workspace.performance.BenchmarkSummaryTest",
-      "tests": 5,
-      "passed": 5,
+      "class": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+      "tests": 2,
+      "passed": 2,
       "failures": 0,
       "errors": 0,
       "skipped": 0,
-      "gradleExitCode": 0,
-      "gradleDurationSeconds": 179,
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-19T19:26:02Z",
+      "finishedAtUtc": "2026-10-19T19:29:18Z",
+      "wallSeconds": 196,
+      "gradleReportedDuration": "3m 15s",
       "actionableTasks": 63,
       "executedTasks": 63,
-      "xml": "docs/validation/master-program-benchmark-cohort-metrics-f219397/junit/TEST-com.localai.workspace.performance.BenchmarkSummaryTest.xml",
-      "log": "docs/validation/master-program-benchmark-cohort-metrics-f219397/gradle.log",
-      "otherGates": {
-        "fullAppJvm": "NOT_RUN",
-        "liteRtCompatJvm": "NOT_RUN",
-        "lintDebug": "NOT_RUN",
-        "assembly": "NOT_RUN",
-        "androidTestCompile": "NOT_RUN",
-        "emulator": "NOT_RUN",
-        "physicalDevice": "NOT_RUN",
-        "apk": "NOT_GENERATED"
-      }
+      "workerJdk": "Temurin 21.0.12.1",
+      "runtimeJdk": "Temurin 17.0.20.1",
+      "xml": "docs/validation/master-program-m03-07-revalidation-20261019/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml",
+      "log": "docs/validation/master-program-m03-07-revalidation-20261019/gradle.log"
     },
-    "implementation": "The existing same-device/model/task/config/backend cohort aggregates now expose model-load/preparation, prefill, app/worker PSS endpoint maxima and available-RAM-after p50/p95 on the Performance screen. This is presentation over recorded metrics only; no collection/inference/runtime change.",
-    "measurementLimits": "Synthetic values validate aggregation and formatting. PSS is max(before,after) endpoint, not generation peak. No Moto/model performance measurement.",
+    "coverage": [
+      "saved before and proposed after are visible",
+      "bounded changed-line additions/removals visible",
+      "saved-v1 export control remains visible",
+      "cancel does not create a version or modify original bytes/hash",
+      "oversized line diff retains complete before/after previews"
+    ],
+    "recovery": {
+      "existingImplementationCommits": [
+        "bddf6827c873e84708fc686ceed6655807187c12",
+        "fad7acb0663485e2bd6ec86cf76e36b85a9baf57"
+      ],
+      "lostCommit": "2f8b0d496db8973edf161c7703efc8f0c17d34fd",
+      "lostCommitStatus": "NOT_RECOVERED; existing reachable implementation was reused; no code reconstructed"
+    },
     "sourceTask": {
-      "relatedTask": "M01-01",
-      "sourceStatus": "TODO",
+      "id": "M03-07",
+      "status": "TODO",
       "requiresDevice": true,
       "dependsOn": [
-        "M00-10"
+        "M03-01"
       ],
-      "dependencyStatus": "M00-10 remains TODO",
-      "formalCompletion": false,
-      "note": "This increment does not provide the Moto protocol, repeated sample or device result required by M01-01."
+      "dependencyStatus": "M03-01 source TODO",
+      "formalCompletion": false
     },
-    "M00-06": {
-      "sourceStatus": "TODO",
-      "note": "This display addition does not complete the original cross-stage timeline or model/device metric DoD."
+    "otherGates": {
+      "fullAppJvm": "NOT_RUN",
+      "liteRtCompatJvm": "NOT_RUN",
+      "lint": "NOT_RUN",
+      "assembly": "NOT_RUN",
+      "androidTest": "NOT_RUN",
+      "emulator": "NOT_RUN",
+      "physicalDevice": "NOT_RUN",
+      "apk": "NOT_GENERATED"
     },
     "sourcePlanUnchanged": {
       "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
@@ -10143,6 +10148,191 @@
         "Synthetic focused HOST evidence only; imported-PDF editing, mobile/office reader fidelity and Motorola remain unverified.",
         "No full JVM/LiteRT, lint, assembly, AndroidTest, emulator or APK in this increment."
       ]
+    },
+    {
+      "name": "XLSX raw style and number-format metadata (preparatory)",
+      "kind": "PREPARATORY_M02_02_XLSX_STYLE_METADATA",
+      "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO",
+      "testCommit": "d3064ffe729ae1be9ab1feb10dab340a2358d098",
+      "codeSha": "a72db3db5ad5e8ca7c6b178e723a9fc332d865ea",
+      "testedCodeSha": "a72db3db5ad5e8ca7c6b178e723a9fc332d865ea",
+      "testedTreeSha": "ba5405ebc164ab88ba12b4dfb2cd6d2b9e3df733",
+      "workingBranch": "codex/master-program-recovery-20261019",
+      "evidence": "docs/validation/master-program-xlsx-style-metadata-20261019/RESULTS.md",
+      "evidenceManifest": {
+        "path": "docs/validation/master-program-xlsx-style-metadata-20261019/SHA256SUMS",
+        "entries": 24,
+        "sha256": "b531ce978021cdef84eee493234e2f6d857c6bae1df3b15da0ef241b85e7d15b",
+        "locallyVerified": "24/24"
+      },
+      "host": {
+        "class": "com.localai.workspace.data.StructuredDocumentsTest",
+        "red": {
+          "sourceSha": "d3064ffe729ae1be9ab1feb10dab340a2358d098",
+          "tests": 11,
+          "passed": 10,
+          "failures": 1,
+          "errors": 0,
+          "skipped": 0,
+          "exitCode": 1,
+          "durationSeconds": 39,
+          "failure": "The style index must be linked to its raw number format"
+        },
+        "green": {
+          "tests": 11,
+          "passed": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "exitCode": 0,
+          "startedAtUtc": "2026-10-19T19:20:14Z",
+          "finishedAtUtc": "2026-10-19T19:21:23Z",
+          "durationSeconds": 69,
+          "gradleReportedDuration": "1m 8s",
+          "actionableTasks": 63,
+          "executedTasks": 7,
+          "upToDateTasks": 56,
+          "xml": "docs/validation/master-program-xlsx-style-metadata-20261019/green-a72db3d/TEST-com.localai.workspace.data.StructuredDocumentsTest.xml",
+          "log": "docs/validation/master-program-xlsx-style-metadata-20261019/green-a72db3d/gradle.log",
+          "command": "docs/validation/master-program-xlsx-style-metadata-20261019/green-a72db3d/command.txt"
+        },
+        "environment": {
+          "gradle": "8.10.2",
+          "runtimeJdk": "Temurin 17.0.20.1",
+          "workerJdk": "Temurin 21.0.12.1",
+          "androidSdk": "/workspace/.toolchain/android-sdk",
+          "gradleUserHome": "/workspace/.gradle (pre-existing cache, offline)",
+          "ndkInvoked": false
+        },
+        "independentReader": {
+          "status": "NOT_VALIDATED",
+          "tool": "openpyxl 3.1.5",
+          "reason": "The test fixture lacks [Content_Types].xml; package parsing stopped before cell read. Not counted as pass."
+        },
+        "otherGates": {
+          "fullAppJvm": "NOT_RUN",
+          "liteRtCompatJvm": "NOT_RUN",
+          "lintDebug": "NOT_RUN",
+          "assembly": "NOT_RUN",
+          "androidTest": "NOT_RUN",
+          "emulator": "NOT_RUN",
+          "physicalDevice": "NOT_RUN",
+          "apk": "NOT_GENERATED"
+        }
+      },
+      "implementation": "Bounded XLSX parsing now carries raw cell style index, number format ID, and custom format code into structured metadata. It does not convert values, recalculate formulas, or alter cached values.",
+      "sourceTask": {
+        "id": "M02-02",
+        "sourceStatus": "TODO",
+        "requiresDevice": false,
+        "dependsOn": [
+          "M02-01"
+        ],
+        "dependencyStatus": "M02-01 remains source TODO",
+        "formalCompletion": false
+      },
+      "sourcePlanUnchanged": {
+        "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+        "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+        "taskCount": 97,
+        "uniqueIds": 97,
+        "dependencyEdges": 120,
+        "sourceStatusCounts": {
+          "TODO": 97
+        },
+        "sourceFilesModified": false
+      },
+      "recoveryBoundary": {
+        "lostLocalCommit": "2f8b0d496db8973edf161c7703efc8f0c17d34fd",
+        "status": "NOT_RECOVERED_OBJECT_UNAVAILABLE",
+        "sourceNotReconstructed": true,
+        "namedBackupRef": "recovery/backup-b8e75b4",
+        "namedBackupSha": "b8e75b4a688d9e1f441324a3a1ecccb369f99ebc",
+        "currentFeatureHeadAtInspection": "e6f16ac30914fe32f7140241e81e5976660c03d2",
+        "implementationBranch": "codex/master-program-recovery-20261019",
+        "noProtectedRefChanged": true
+      },
+      "nextPreparatoryFocus": "Revalidate the surviving M03-07 preview/diff/cancel implementation against the exact current source and its focused UI test. Keep source M03-07 TODO because M03-01 remains TODO and M03-07 requires device validation."
+    },
+    {
+      "name": "M03-07 current-source preview/diff/cancel revalidation",
+      "kind": "PREPARATORY_M03_07_PREVIEW_DIFF_CANCEL_REVALIDATION",
+      "status": "FOCUSED_HOST_PASS_PREPARATORY_NOT_FORMAL",
+      "codeSha": "a72db3db5ad5e8ca7c6b178e723a9fc332d865ea",
+      "testedTreeSha": "ba5405ebc164ab88ba12b4dfb2cd6d2b9e3df733",
+      "workingBranch": "codex/master-program-recovery-20261019",
+      "evidence": "docs/validation/master-program-m03-07-revalidation-20261019/RESULTS.md",
+      "evidenceManifest": {
+        "path": "docs/validation/master-program-m03-07-revalidation-20261019/SHA256SUMS",
+        "entries": 13,
+        "sha256": "bd76d6fd03ad57d6dfbedbb967b2e36d52d104e3c045986d84f3aeec2eeda1fd",
+        "locallyVerified": "13/13"
+      },
+      "host": {
+        "class": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+        "tests": 2,
+        "passed": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "exitCode": 0,
+        "startedAtUtc": "2026-10-19T19:26:02Z",
+        "finishedAtUtc": "2026-10-19T19:29:18Z",
+        "wallSeconds": 196,
+        "gradleReportedDuration": "3m 15s",
+        "actionableTasks": 63,
+        "executedTasks": 63,
+        "workerJdk": "Temurin 21.0.12.1",
+        "runtimeJdk": "Temurin 17.0.20.1",
+        "xml": "docs/validation/master-program-m03-07-revalidation-20261019/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml",
+        "log": "docs/validation/master-program-m03-07-revalidation-20261019/gradle.log"
+      },
+      "coverage": [
+        "saved before and proposed after are visible",
+        "bounded changed-line additions/removals visible",
+        "saved-v1 export control remains visible",
+        "cancel does not create a version or modify original bytes/hash",
+        "oversized line diff retains complete before/after previews"
+      ],
+      "recovery": {
+        "existingImplementationCommits": [
+          "bddf6827c873e84708fc686ceed6655807187c12",
+          "fad7acb0663485e2bd6ec86cf76e36b85a9baf57"
+        ],
+        "lostCommit": "2f8b0d496db8973edf161c7703efc8f0c17d34fd",
+        "lostCommitStatus": "NOT_RECOVERED; existing reachable implementation was reused; no code reconstructed"
+      },
+      "sourceTask": {
+        "id": "M03-07",
+        "status": "TODO",
+        "requiresDevice": true,
+        "dependsOn": [
+          "M03-01"
+        ],
+        "dependencyStatus": "M03-01 source TODO",
+        "formalCompletion": false
+      },
+      "otherGates": {
+        "fullAppJvm": "NOT_RUN",
+        "liteRtCompatJvm": "NOT_RUN",
+        "lint": "NOT_RUN",
+        "assembly": "NOT_RUN",
+        "androidTest": "NOT_RUN",
+        "emulator": "NOT_RUN",
+        "physicalDevice": "NOT_RUN",
+        "apk": "NOT_GENERATED"
+      },
+      "sourcePlanUnchanged": {
+        "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+        "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+        "taskCount": 97,
+        "uniqueIds": 97,
+        "dependencyEdges": 120,
+        "sourceStatusCounts": {
+          "TODO": 97
+        },
+        "sourceFilesModified": false
+      }
     }
   ],
   "latestM02_01Preparation": {
@@ -13914,7 +14104,88 @@
       ],
       "parentManifestEntries": 130,
       "parentManifestSha256": "3c0b8f35cee8c2032eece392a51afa116b90c6c5cb235e4f44290bff341fd18c"
-    }
+    },
+    "exactCurrentSourceRevalidation": {
+      "name": "M03-07 current-source preview/diff/cancel revalidation",
+      "kind": "PREPARATORY_M03_07_PREVIEW_DIFF_CANCEL_REVALIDATION",
+      "status": "FOCUSED_HOST_PASS_PREPARATORY_NOT_FORMAL",
+      "codeSha": "a72db3db5ad5e8ca7c6b178e723a9fc332d865ea",
+      "testedTreeSha": "ba5405ebc164ab88ba12b4dfb2cd6d2b9e3df733",
+      "workingBranch": "codex/master-program-recovery-20261019",
+      "evidence": "docs/validation/master-program-m03-07-revalidation-20261019/RESULTS.md",
+      "evidenceManifest": {
+        "path": "docs/validation/master-program-m03-07-revalidation-20261019/SHA256SUMS",
+        "entries": 13,
+        "sha256": "bd76d6fd03ad57d6dfbedbb967b2e36d52d104e3c045986d84f3aeec2eeda1fd",
+        "locallyVerified": "13/13"
+      },
+      "host": {
+        "class": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+        "tests": 2,
+        "passed": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "exitCode": 0,
+        "startedAtUtc": "2026-10-19T19:26:02Z",
+        "finishedAtUtc": "2026-10-19T19:29:18Z",
+        "wallSeconds": 196,
+        "gradleReportedDuration": "3m 15s",
+        "actionableTasks": 63,
+        "executedTasks": 63,
+        "workerJdk": "Temurin 21.0.12.1",
+        "runtimeJdk": "Temurin 17.0.20.1",
+        "xml": "docs/validation/master-program-m03-07-revalidation-20261019/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml",
+        "log": "docs/validation/master-program-m03-07-revalidation-20261019/gradle.log"
+      },
+      "coverage": [
+        "saved before and proposed after are visible",
+        "bounded changed-line additions/removals visible",
+        "saved-v1 export control remains visible",
+        "cancel does not create a version or modify original bytes/hash",
+        "oversized line diff retains complete before/after previews"
+      ],
+      "recovery": {
+        "existingImplementationCommits": [
+          "bddf6827c873e84708fc686ceed6655807187c12",
+          "fad7acb0663485e2bd6ec86cf76e36b85a9baf57"
+        ],
+        "lostCommit": "2f8b0d496db8973edf161c7703efc8f0c17d34fd",
+        "lostCommitStatus": "NOT_RECOVERED; existing reachable implementation was reused; no code reconstructed"
+      },
+      "sourceTask": {
+        "id": "M03-07",
+        "status": "TODO",
+        "requiresDevice": true,
+        "dependsOn": [
+          "M03-01"
+        ],
+        "dependencyStatus": "M03-01 source TODO",
+        "formalCompletion": false
+      },
+      "otherGates": {
+        "fullAppJvm": "NOT_RUN",
+        "liteRtCompatJvm": "NOT_RUN",
+        "lint": "NOT_RUN",
+        "assembly": "NOT_RUN",
+        "androidTest": "NOT_RUN",
+        "emulator": "NOT_RUN",
+        "physicalDevice": "NOT_RUN",
+        "apk": "NOT_GENERATED"
+      },
+      "sourcePlanUnchanged": {
+        "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+        "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+        "taskCount": 97,
+        "uniqueIds": 97,
+        "dependencyEdges": 120,
+        "sourceStatusCounts": {
+          "TODO": 97
+        },
+        "sourceFilesModified": false
+      }
+    },
+    "originalTaskStatus": "TODO; physical-device validation required; M03-01 remains TODO"
   },
   "latestM03_07LineDiffPreparation": {
     "status": "FOCUSED_HOST_PASS; LINT_BLOCKED_BY_CMAKE_HTTP_503; PREPARATORY_ONLY_NOT_FORMAL",
@@ -15013,24 +15284,75 @@
     }
   },
   "latestM03_07CurrentSourceValidation": {
-    "sourceSha": "e6f16ac30914fe32f7140241e81e5976660c03d2",
-    "class": "ArtifactRevisionPreviewUiTest",
-    "status": "PASS_FOCUSED_HOST_ONLY",
-    "tests": 2,
-    "passed": 2,
-    "failures": 0,
-    "errors": 0,
-    "skipped": 0,
-    "exitCode": 0,
-    "durationSeconds": 202,
-    "evidence": "docs/validation/master-program-recovery-20261019/current-head-e6f16ac/m03-07/",
-    "formalTaskStatus": "TODO",
-    "requiresDevice": true,
-    "dependency": "M03-01 TODO",
+    "name": "M03-07 current-source preview/diff/cancel revalidation",
+    "kind": "PREPARATORY_M03_07_PREVIEW_DIFF_CANCEL_REVALIDATION",
+    "status": "FOCUSED_HOST_PASS_PREPARATORY_NOT_FORMAL",
+    "codeSha": "a72db3db5ad5e8ca7c6b178e723a9fc332d865ea",
+    "testedTreeSha": "ba5405ebc164ab88ba12b4dfb2cd6d2b9e3df733",
+    "workingBranch": "codex/master-program-recovery-20261019",
+    "evidence": "docs/validation/master-program-m03-07-revalidation-20261019/RESULTS.md",
+    "evidenceManifest": {
+      "path": "docs/validation/master-program-m03-07-revalidation-20261019/SHA256SUMS",
+      "entries": 13,
+      "sha256": "bd76d6fd03ad57d6dfbedbb967b2e36d52d104e3c045986d84f3aeec2eeda1fd",
+      "locallyVerified": "13/13"
+    },
+    "host": {
+      "class": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+      "tests": 2,
+      "passed": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-19T19:26:02Z",
+      "finishedAtUtc": "2026-10-19T19:29:18Z",
+      "wallSeconds": 196,
+      "gradleReportedDuration": "3m 15s",
+      "actionableTasks": 63,
+      "executedTasks": 63,
+      "workerJdk": "Temurin 21.0.12.1",
+      "runtimeJdk": "Temurin 17.0.20.1",
+      "xml": "docs/validation/master-program-m03-07-revalidation-20261019/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml",
+      "log": "docs/validation/master-program-m03-07-revalidation-20261019/gradle.log"
+    },
+    "coverage": [
+      "saved before and proposed after are visible",
+      "bounded changed-line additions/removals visible",
+      "saved-v1 export control remains visible",
+      "cancel does not create a version or modify original bytes/hash",
+      "oversized line diff retains complete before/after previews"
+    ],
+    "recovery": {
+      "existingImplementationCommits": [
+        "bddf6827c873e84708fc686ceed6655807187c12",
+        "fad7acb0663485e2bd6ec86cf76e36b85a9baf57"
+      ],
+      "lostCommit": "2f8b0d496db8973edf161c7703efc8f0c17d34fd",
+      "lostCommitStatus": "NOT_RECOVERED; existing reachable implementation was reused; no code reconstructed"
+    },
+    "sourceTask": {
+      "id": "M03-07",
+      "status": "TODO",
+      "requiresDevice": true,
+      "dependsOn": [
+        "M03-01"
+      ],
+      "dependencyStatus": "M03-01 source TODO",
+      "formalCompletion": false
+    },
+    "otherGates": {
+      "fullAppJvm": "NOT_RUN",
+      "liteRtCompatJvm": "NOT_RUN",
+      "lint": "NOT_RUN",
+      "assembly": "NOT_RUN",
+      "androidTest": "NOT_RUN",
+      "emulator": "NOT_RUN",
+      "physicalDevice": "NOT_RUN",
+      "apk": "NOT_GENERATED"
+    },
     "sourcePlanUnchanged": {
-      "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
       "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
-      "roadmapPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
       "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
       "taskCount": 97,
       "uniqueIds": 97,
@@ -15054,15 +15376,13 @@
   },
   "latestMasterProgramContinuation": {
     "status": "ACTIVE_PREPARATORY_IMPLEMENTATION",
-    "codeSha": "22014ed8a452836b7fd20de6d1f54db0a2a12f3c",
-    "currentIncrement": "M00-06 per-request context-composition metadata added to normal-generation trace and Performance screen; focused exact-SHA HOST 10/10.",
-    "evidence": "docs/validation/master-program-context-composition-22014ed/RESULTS.md",
-    "next": "Continue with the next source-backed preparatory capability authorized by the master prompt; keep M00-06 TODO until the full original timeline DoD is demonstrated. Preserve device/model measurements as pending.",
+    "codeSha": "a72db3db5ad5e8ca7c6b178e723a9fc332d865ea",
+    "currentIncrement": "M03-07 current-source preview/diff/cancel revalidation",
+    "evidence": "docs/validation/master-program-m03-07-revalidation-20261019/RESULTS.md",
+    "next": "Select and implement the next source-backed preparatory gap from the exact original backlog and dependency graph; no source task status is promoted without its full DoD.",
     "noFormalTasksClosed": true,
     "sourcePlan": {
-      "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
       "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
-      "roadmapPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
       "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
       "taskCount": 97,
       "uniqueIds": 97,
@@ -15627,5 +15947,190 @@
       "Synthetic focused HOST evidence only; imported-PDF editing, mobile/office reader fidelity and Motorola remain unverified.",
       "No full JVM/LiteRT, lint, assembly, AndroidTest, emulator or APK in this increment."
     ]
+  },
+  "latestXlsxStyleMetadataPreparation": {
+    "name": "XLSX raw style and number-format metadata (preparatory)",
+    "kind": "PREPARATORY_M02_02_XLSX_STYLE_METADATA",
+    "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO",
+    "testCommit": "d3064ffe729ae1be9ab1feb10dab340a2358d098",
+    "codeSha": "a72db3db5ad5e8ca7c6b178e723a9fc332d865ea",
+    "testedCodeSha": "a72db3db5ad5e8ca7c6b178e723a9fc332d865ea",
+    "testedTreeSha": "ba5405ebc164ab88ba12b4dfb2cd6d2b9e3df733",
+    "workingBranch": "codex/master-program-recovery-20261019",
+    "evidence": "docs/validation/master-program-xlsx-style-metadata-20261019/RESULTS.md",
+    "evidenceManifest": {
+      "path": "docs/validation/master-program-xlsx-style-metadata-20261019/SHA256SUMS",
+      "entries": 24,
+      "sha256": "b531ce978021cdef84eee493234e2f6d857c6bae1df3b15da0ef241b85e7d15b",
+      "locallyVerified": "24/24"
+    },
+    "host": {
+      "class": "com.localai.workspace.data.StructuredDocumentsTest",
+      "red": {
+        "sourceSha": "d3064ffe729ae1be9ab1feb10dab340a2358d098",
+        "tests": 11,
+        "passed": 10,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "exitCode": 1,
+        "durationSeconds": 39,
+        "failure": "The style index must be linked to its raw number format"
+      },
+      "green": {
+        "tests": 11,
+        "passed": 11,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "exitCode": 0,
+        "startedAtUtc": "2026-10-19T19:20:14Z",
+        "finishedAtUtc": "2026-10-19T19:21:23Z",
+        "durationSeconds": 69,
+        "gradleReportedDuration": "1m 8s",
+        "actionableTasks": 63,
+        "executedTasks": 7,
+        "upToDateTasks": 56,
+        "xml": "docs/validation/master-program-xlsx-style-metadata-20261019/green-a72db3d/TEST-com.localai.workspace.data.StructuredDocumentsTest.xml",
+        "log": "docs/validation/master-program-xlsx-style-metadata-20261019/green-a72db3d/gradle.log",
+        "command": "docs/validation/master-program-xlsx-style-metadata-20261019/green-a72db3d/command.txt"
+      },
+      "environment": {
+        "gradle": "8.10.2",
+        "runtimeJdk": "Temurin 17.0.20.1",
+        "workerJdk": "Temurin 21.0.12.1",
+        "androidSdk": "/workspace/.toolchain/android-sdk",
+        "gradleUserHome": "/workspace/.gradle (pre-existing cache, offline)",
+        "ndkInvoked": false
+      },
+      "independentReader": {
+        "status": "NOT_VALIDATED",
+        "tool": "openpyxl 3.1.5",
+        "reason": "The test fixture lacks [Content_Types].xml; package parsing stopped before cell read. Not counted as pass."
+      },
+      "otherGates": {
+        "fullAppJvm": "NOT_RUN",
+        "liteRtCompatJvm": "NOT_RUN",
+        "lintDebug": "NOT_RUN",
+        "assembly": "NOT_RUN",
+        "androidTest": "NOT_RUN",
+        "emulator": "NOT_RUN",
+        "physicalDevice": "NOT_RUN",
+        "apk": "NOT_GENERATED"
+      }
+    },
+    "implementation": "Bounded XLSX parsing now carries raw cell style index, number format ID, and custom format code into structured metadata. It does not convert values, recalculate formulas, or alter cached values.",
+    "sourceTask": {
+      "id": "M02-02",
+      "sourceStatus": "TODO",
+      "requiresDevice": false,
+      "dependsOn": [
+        "M02-01"
+      ],
+      "dependencyStatus": "M02-01 remains source TODO",
+      "formalCompletion": false
+    },
+    "sourcePlanUnchanged": {
+      "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+      "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+      "taskCount": 97,
+      "uniqueIds": 97,
+      "dependencyEdges": 120,
+      "sourceStatusCounts": {
+        "TODO": 97
+      },
+      "sourceFilesModified": false
+    },
+    "recoveryBoundary": {
+      "lostLocalCommit": "2f8b0d496db8973edf161c7703efc8f0c17d34fd",
+      "status": "NOT_RECOVERED_OBJECT_UNAVAILABLE",
+      "sourceNotReconstructed": true,
+      "namedBackupRef": "recovery/backup-b8e75b4",
+      "namedBackupSha": "b8e75b4a688d9e1f441324a3a1ecccb369f99ebc",
+      "currentFeatureHeadAtInspection": "e6f16ac30914fe32f7140241e81e5976660c03d2",
+      "implementationBranch": "codex/master-program-recovery-20261019",
+      "noProtectedRefChanged": true
+    },
+    "nextPreparatoryFocus": "Revalidate the surviving M03-07 preview/diff/cancel implementation against the exact current source and its focused UI test. Keep source M03-07 TODO because M03-01 remains TODO and M03-07 requires device validation."
+  },
+  "latestM03_07ExactSourceRevalidation": {
+    "name": "M03-07 current-source preview/diff/cancel revalidation",
+    "kind": "PREPARATORY_M03_07_PREVIEW_DIFF_CANCEL_REVALIDATION",
+    "status": "FOCUSED_HOST_PASS_PREPARATORY_NOT_FORMAL",
+    "codeSha": "a72db3db5ad5e8ca7c6b178e723a9fc332d865ea",
+    "testedTreeSha": "ba5405ebc164ab88ba12b4dfb2cd6d2b9e3df733",
+    "workingBranch": "codex/master-program-recovery-20261019",
+    "evidence": "docs/validation/master-program-m03-07-revalidation-20261019/RESULTS.md",
+    "evidenceManifest": {
+      "path": "docs/validation/master-program-m03-07-revalidation-20261019/SHA256SUMS",
+      "entries": 13,
+      "sha256": "bd76d6fd03ad57d6dfbedbb967b2e36d52d104e3c045986d84f3aeec2eeda1fd",
+      "locallyVerified": "13/13"
+    },
+    "host": {
+      "class": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+      "tests": 2,
+      "passed": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-19T19:26:02Z",
+      "finishedAtUtc": "2026-10-19T19:29:18Z",
+      "wallSeconds": 196,
+      "gradleReportedDuration": "3m 15s",
+      "actionableTasks": 63,
+      "executedTasks": 63,
+      "workerJdk": "Temurin 21.0.12.1",
+      "runtimeJdk": "Temurin 17.0.20.1",
+      "xml": "docs/validation/master-program-m03-07-revalidation-20261019/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml",
+      "log": "docs/validation/master-program-m03-07-revalidation-20261019/gradle.log"
+    },
+    "coverage": [
+      "saved before and proposed after are visible",
+      "bounded changed-line additions/removals visible",
+      "saved-v1 export control remains visible",
+      "cancel does not create a version or modify original bytes/hash",
+      "oversized line diff retains complete before/after previews"
+    ],
+    "recovery": {
+      "existingImplementationCommits": [
+        "bddf6827c873e84708fc686ceed6655807187c12",
+        "fad7acb0663485e2bd6ec86cf76e36b85a9baf57"
+      ],
+      "lostCommit": "2f8b0d496db8973edf161c7703efc8f0c17d34fd",
+      "lostCommitStatus": "NOT_RECOVERED; existing reachable implementation was reused; no code reconstructed"
+    },
+    "sourceTask": {
+      "id": "M03-07",
+      "status": "TODO",
+      "requiresDevice": true,
+      "dependsOn": [
+        "M03-01"
+      ],
+      "dependencyStatus": "M03-01 source TODO",
+      "formalCompletion": false
+    },
+    "otherGates": {
+      "fullAppJvm": "NOT_RUN",
+      "liteRtCompatJvm": "NOT_RUN",
+      "lint": "NOT_RUN",
+      "assembly": "NOT_RUN",
+      "androidTest": "NOT_RUN",
+      "emulator": "NOT_RUN",
+      "physicalDevice": "NOT_RUN",
+      "apk": "NOT_GENERATED"
+    },
+    "sourcePlanUnchanged": {
+      "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+      "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+      "taskCount": 97,
+      "uniqueIds": 97,
+      "dependencyEdges": 120,
+      "sourceStatusCounts": {
+        "TODO": 97
+      },
+      "sourceFilesModified": false
+    }
   }
 }

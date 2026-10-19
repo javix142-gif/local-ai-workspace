@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.ArtifactRevisionPreviewUiTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-19T19:29:07" hostname="42c4f375d730" time="10.034">
+  <properties/>
+  <testcase name="oversizedLineDiffFallsBackWithoutTruncatingBeforeOrAfterPreview" classname="com.localai.workspace.ui.ArtifactRevisionPreviewUiTest" time="9.507"/>
+  <testcase name="reviewShowsExactBeforeAndAfterAndClosingKeepsSavedRevisionUnchanged" classname="com.localai.workspace.ui.ArtifactRevisionPreviewUiTest" time="0.527"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

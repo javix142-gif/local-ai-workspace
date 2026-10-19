@@ -1,0 +1,10 @@
+source_sha=a72db3db5ad5e8ca7c6b178e723a9fc332d865ea
+branch=codex/master-program-recovery-20261019
+gradle_wrapper=8.10.2
+gradle_jdk=/workspace/.toolchain/jdk-17
+worker_jdk=/workspace/.toolchain/jdk-21-temurin
+android_sdk=/workspace/.toolchain/android-sdk
+ndk=
+gradle_user_home=/workspace/.gradle (pre-existing cache; offline)
+openjdk version "17.0.20.1" 2026-08-18
+openjdk version "21.0.12.1" 2026-08-18 LTS
