@@ -223,6 +223,10 @@ class ChatSessionPipelineTest {
         val assistant = graph.database.messageDao().recent(conversationId, 10)
             .single { it.role == MessageRole.ASSISTANT.name && it.status == MessageStatus.COMPLETE.name }
         val metrics = requireNotNull(GenerationMetricsPresentation.decode(assistant.generationMetrics))
+        assertEquals("Final metrics are linked to the trace that produced this request", completed.runId, metrics.normalTraceId)
+        assertNotNull(com.localai.workspace.performance.GenerationTimelinePresentation.correlatedMetrics(
+            completed, graph.performance.lastGeneration.value?.second))
+        assertFalse("Persisted metric metadata excludes the prompt", metrics.raw.contains(privatePrompt))
         fun persistedTiming(key: String): Long? =
             Regex("(?:^|,)${key}=(\\d+)(?:,|$)").find(metrics.raw)?.groupValues?.get(1)?.toLongOrNull()
         val requestTtftMs = persistedTiming("requestTtftMs")

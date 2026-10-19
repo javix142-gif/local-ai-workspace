@@ -2,6 +2,7 @@ package com.localai.workspace.performance
 
 import com.localai.workspace.diagnostics.GenerationCheckpoint
 import com.localai.workspace.diagnostics.NormalGenerationSnapshot
+import com.localai.workspace.domain.model.RuntimeMetrics
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
@@ -53,5 +54,30 @@ class GenerationTimelinePresentationTest {
         assertNull(rows[1].intervalSincePreviousMs)
         assertNull(rows[2].elapsedSinceRequestMs)
         assertNull(rows[2].intervalSincePreviousMs)
+    }
+
+    @Test
+    fun onlyJoinsRuntimeMetricsToTheExactNormalChatRun() {
+        val snapshot = NormalGenerationSnapshot(
+            runId = "request-a",
+            conversationId = null,
+            projectPresent = false,
+            startedAt = 1L,
+            startedElapsedMs = 1_000L,
+        )
+        val sameRequest = RuntimeMetrics(
+            normalGenerationTraceId = "request-a",
+            timeToFirstTokenMs = 125,
+            decodeTokensPerSecond = 4.5,
+            endToEndTotalMs = 900,
+        )
+        val stale = sameRequest.copy(normalGenerationTraceId = "request-b")
+
+        assertEquals(sameRequest, GenerationTimelinePresentation.correlatedMetrics(snapshot, sameRequest))
+        assertEquals(listOf("Native TTFT" to "125 ms", "Decode rate" to "4.50 tokens/s", "Request end-to-end" to "900 ms"),
+            GenerationTimelinePresentation.correlatedMetricRows(snapshot, sameRequest))
+        assertNull(GenerationTimelinePresentation.correlatedMetrics(snapshot, stale))
+        assertEquals(emptyList<Pair<String, String>>(), GenerationTimelinePresentation.correlatedMetricRows(snapshot, stale))
+        assertNull(GenerationTimelinePresentation.correlatedMetrics(snapshot, null))
     }
 }

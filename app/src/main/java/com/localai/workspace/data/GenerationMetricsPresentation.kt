@@ -6,6 +6,7 @@ import java.util.Locale
 /** Benchmarks stay separate from model text. Also reads the existing locale-comma records. */
 class GenerationMetricsPresentation private constructor(val raw: String, private val fields: Map<String, String>) {
     val outputLimitReached: Boolean get() = fields["outputLimitReached"] == "true"
+    val normalTraceId: String? get() = fields["normalTraceId"]?.takeIf { it.isNotBlank() && it.length <= 64 }
 
     fun rows(): List<Pair<String, String>> = buildList {
         fun timing(key: String, label: String) {
@@ -80,6 +81,7 @@ class GenerationMetricsPresentation private constructor(val raw: String, private
             speculativeSupported?.let { "speculativeSupported=$it" }, speculativeActive?.let { "speculativeActive=$it" },
             workerPssAfterBytes?.let { "workerPssBytes=$it" }, appPssAfterBytes?.let { "appPssBytes=$it" },
             availableRamAfterBytes?.let { "availableRamBytes=$it" }, thermalAfter?.let { "thermal=$it" },
+            normalGenerationTraceId?.let { "normalTraceId=$it" },
         ).joinToString(",") }
     }
 }

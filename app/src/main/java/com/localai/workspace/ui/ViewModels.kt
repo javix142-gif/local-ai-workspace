@@ -631,8 +631,9 @@ class ChatViewModel(
                     android.os.SystemClock.elapsedRealtime(), finish).copy(thinkingRequested = requestedThinking, thinkingPolicyDecision = effectiveThinking, uiObservedTimeToFirstContentMs = firstUiObservedMs,
                     appPssBeforeBytes = appMemoryBefore?.pssBytes,
                     appPssAfterBytes = withContext(Dispatchers.IO) { com.localai.workspace.performance.DeviceMeasurements.capture(graph.contextForMeasurements).pssBytes })
-                diagnosticModelId?.let { graph.performance.recordGeneration(it, measured) }
-                return measured
+                val correlated = measured.copy(normalGenerationTraceId = runId)
+                diagnosticModelId?.let { graph.performance.recordGeneration(it, correlated) }
+                return correlated
             }
             try {
                 trace("REQUEST_CREATED") { it.copy(contextBuilderEnabled = !diagnosticSmoke && (graph.validationOwner == null || graph.agentsSkillsValidationEnabled) && graph.contextForMeasurements.getSharedPreferences("context_foundation_v1", android.content.Context.MODE_PRIVATE).getBoolean("enabled", true)) }

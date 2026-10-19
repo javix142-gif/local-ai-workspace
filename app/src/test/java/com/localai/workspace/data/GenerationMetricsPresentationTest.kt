@@ -30,10 +30,14 @@ class GenerationMetricsPresentationTest {
         try {
             Locale.setDefault(Locale.GERMANY)
             val raw = GenerationMetricsPresentation.encode(RuntimeMetrics(outputTokens = 256, decodeTokensPerSecond = 3.55,
-                engineReused = true, sessionReused = true, nativeCompletionObserved = true, outputLimitReached = true))
+                engineReused = true, sessionReused = true, nativeCompletionObserved = true, outputLimitReached = true,
+                normalGenerationTraceId = "opaque-request-1"))
             assertTrue(raw.contains("decodeTps=3.55,"))
+            assertTrue(raw.contains("normalTraceId=opaque-request-1"))
             assertFalse(raw.contains("eos="))
-            assertTrue(GenerationMetricsPresentation.decode(raw)!!.outputLimitReached)
+            val decoded = GenerationMetricsPresentation.decode(raw)!!
+            assertTrue(decoded.outputLimitReached)
+            assertEquals("opaque-request-1", decoded.normalTraceId)
         } finally { Locale.setDefault(before) }
     }
 

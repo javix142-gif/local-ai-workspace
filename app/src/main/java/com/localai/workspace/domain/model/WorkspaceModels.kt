@@ -272,6 +272,8 @@ data class RuntimeMetrics(
     val thermalBefore: String? = null,
     val thermalAfter: String? = null,
     val finishState: String? = null,
+    /** Opaque local request correlation only; never contains prompt, answer or document identity. */
+    val normalGenerationTraceId: String? = null,
     val failedBackendInitializationMs: Long? = null,
     val failedBackendPreparationMs: Long? = null,
     val backendFailureDetail: String? = null,

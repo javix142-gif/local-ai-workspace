@@ -48,6 +48,7 @@ fun PerformanceScreen(graph: AppGraph, back: () -> Unit) {
     val model = models.firstOrNull { it.id == (selected ?: prepared.modelId) }
         ?: models.firstOrNull { ApplicationModelPreparation.isUsable(it) && it.toDescriptor().runtime == RuntimeType.LITERT_LM }
     val metrics = latest?.takeIf { it.first == model?.id }?.second ?: prepared.metrics?.takeIf { prepared.modelId == model?.id }
+    val modelRequestMetrics = latest?.takeIf { it.first == model?.id }?.second
     val engineMetrics = prepared.metrics?.takeIf { prepared.modelId == model?.id }
     val export = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
         if (uri != null) scope.launch {
@@ -115,18 +116,30 @@ fun PerformanceScreen(graph: AppGraph, back: () -> Unit) {
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
+            val correlatedRows = GenerationTimelinePresentation.correlatedMetricRows(trace, modelRequestMetrics)
+            if (correlatedRows.isEmpty()) {
+                Text("No final runtime metrics are correlated to this request trace yet. Native TTFT and decode are not inferred.", style = MaterialTheme.typography.bodySmall)
+            } else {
+                Text("Measured metrics from this exact chat run", style = MaterialTheme.typography.labelLarge)
+                correlatedRows.forEach { (label, value) -> Text("$label · $value", style = MaterialTheme.typography.bodySmall) }
+                val actual = GenerationTimelinePresentation.correlatedMetrics(trace, modelRequestMetrics)
+                if (actual?.timeToFirstTokenMs == null || actual.decodeTokensPerSecond == null) {
+                    Text("Native TTFT or decode rate unavailable from this runtime response.", style = MaterialTheme.typography.bodySmall)
+                }
+            }
             TextButton(onClick = { (context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(ClipData.newPlainText("Normal chat trace", graph.normalGenerationTrace.report())) }) { Text("Copy normal chat trace") }
         } ?: Text("No normal generation recorded")
         Text("LAST DOCUMENT PROCESSING", style = MaterialTheme.typography.titleMedium)
         importDiagnostics?.let { item ->
             Text(buildString {
                 append("Status: ${item.status} · Format: ${item.format} · Input: ${item.sourceBytes ?: "unavailable"} bytes\n")
-                append("Copy/hash: ${item.copyHashMs ?: "unavailable"} ms · Parse: ${item.parseMs ?: "unavailable"} ms · Chunk: ${item.chunkMs ?: "unavailable"} ms\n")
-                append("Database metadata/segments: ${item.metadataCommitMs ?: "unavailable"} / ${item.segmentCommitMs ?: "unavailable"} ms\n")
-                append("Post-import callback: ${item.postImportCallbackMs ?: "unavailable"} ms · Total: ${item.totalMs ?: "unavailable"} ms\n")
                 append("Pages: ${item.pageCount ?: "unavailable"} · Segments: ${item.segmentCount ?: "unavailable"}\n")
                 if(item.failureStage!=null) append("Failure stage/type: ${item.failureStage} / ${item.failureType ?: "unknown"}")
             }, style = MaterialTheme.typography.bodySmall)
+            DocumentPipelineTimelinePresentation.rows(item, retrievalIndexDiagnostics).forEach { row ->
+                Text("${row.stage} · ${row.durationMs?.let { "$it ms" } ?: "unavailable"}" +
+                    (row.outcome?.let { " · $it" } ?: ""), style = MaterialTheme.typography.bodySmall)
+            }
         } ?: Text("No document import measured")
         Text("Latest EG1 project indexing: ${retrievalIndexDiagnostics.status} · ${retrievalIndexDiagnostics.durationMs ?: "unavailable"} ms · " +
             "segments ${retrievalIndexDiagnostics.processedSegments}/${retrievalIndexDiagnostics.candidateSegments} · " +
