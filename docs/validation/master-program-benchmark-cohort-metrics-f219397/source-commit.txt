@@ -1,0 +1,12 @@
+commit f21939773735ff17f338d571cadc793484f0bd01
+Author:     JAVIER IGNACIO SAN MARTÍN <jsanmartinrebolledo@gmail.com>
+AuthorDate: Mon Oct 19 19:01:31 2026 +0000
+Commit:     JAVIER IGNACIO SAN MARTÍN <jsanmartinrebolledo@gmail.com>
+CommitDate: Mon Oct 19 19:01:31 2026 +0000
+
+    feat(performance): expose benchmark preparation and memory cohorts
+
+ .../workspace/performance/BenchmarkSummary.kt      | 33 ++++++++++++++++++++--
+ .../com/localai/workspace/ui/PerformanceScreen.kt  |  5 +++-
+ .../workspace/performance/BenchmarkSummaryTest.kt  | 29 +++++++++++++++++++
+ 3 files changed, 64 insertions(+), 3 deletions(-)

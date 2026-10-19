@@ -1,0 +1,44 @@
+{
+  "name": "Benchmark cohort preparation/prefill/memory presentation",
+  "sourceCommit": "f21939773735ff17f338d571cadc793484f0bd01",
+  "branch": "codex/master-program-recovery-20261019",
+  "testCommand": "./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --info --rerun-tasks -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.performance.BenchmarkSummaryTest",
+  "environment": {
+    "host": "Linux x86_64",
+    "gradle": "8.10.2",
+    "gradleRuntimeJdk": "Temurin 17.0.20.1",
+    "testWorkerJdk": "Temurin 21.0.12.1",
+    "androidSdk": "/workspace/.toolchain/android-sdk (API 35)",
+    "ndk": "27.0.12077973 (present, not used by this unit-test task)",
+    "gradleUserHome": "/workspace/.gradle (existing cache)",
+    "offline": true
+  },
+  "result": {
+    "gradleExitCode": 0,
+    "gradleDuration": "2m59s",
+    "actionableTasks": 63,
+    "executedTasks": 63,
+    "junitTests": 5,
+    "passed": 5,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "xmlDurationSeconds": 0.091,
+    "xmlTimestamp": "2026-10-19T19:04:43"
+  },
+  "otherChecks": {
+    "fullAppJvm": "NOT_RUN",
+    "litertCompatJvm": "NOT_RUN",
+    "lintDebug": "NOT_RUN",
+    "assembly": "NOT_RUN",
+    "androidTestCompile": "NOT_RUN",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_RUN"
+  },
+  "originalTaskStatus": {
+    "M00-06": "TODO; preparatory context composition and benchmark-cohort display do not meet its end-to-end DoD",
+    "M01-01": "TODO; requires_device=true and depends_on M00-10 (TODO); no Moto protocol or results claimed"
+  },
+  "interpretation": "Focused HOST test of existing cohort aggregation/presentation only. Test fixture values are synthetic. PSS summaries use the maximum of before/after endpoint samples and do not measure peak generation memory. No real device/model performance result is claimed."
+}
