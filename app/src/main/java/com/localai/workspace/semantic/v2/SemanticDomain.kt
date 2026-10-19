@@ -75,6 +75,27 @@ object SemanticVectors {
         if(a.vector.size!=a.space.dimension || b.vector.size!=b.space.dimension)throw SemanticFailure(SemanticError.DIMENSION_UNSUPPORTED)
         return a.vector.indices.sumOf { a.vector[it].toDouble() * b.vector[it] }
     }
+
+    /** Scores a persisted FLOAT32_LE_V1 vector without allocating a decoded FloatArray per corpus row. */
+    fun cosineEncoded(a: EmbeddingResult, encodedSpaceKey: String, bytes: ByteArray, dimension: Int): Double {
+        if (a.space.id != encodedSpaceKey) throw SemanticFailure(SemanticError.SPACE_MISMATCH)
+        if (dimension !in 1..8192 || a.space.dimension != dimension || a.vector.size != dimension) {
+            throw SemanticFailure(SemanticError.DIMENSION_UNSUPPORTED)
+        }
+        require(bytes.size == dimension * 4) { "Encoded semantic vector length does not match its dimension" }
+        var score = 0.0
+        for (index in 0 until dimension) {
+            val offset = index * 4
+            val bits = (bytes[offset].toInt() and 0xff) or
+                ((bytes[offset + 1].toInt() and 0xff) shl 8) or
+                ((bytes[offset + 2].toInt() and 0xff) shl 16) or
+                ((bytes[offset + 3].toInt() and 0xff) shl 24)
+            val stored = java.lang.Float.intBitsToFloat(bits)
+            if (!stored.isFinite()) throw SemanticFailure(SemanticError.NON_FINITE_VECTOR)
+            score += a.vector[index].toDouble() * stored.toDouble()
+        }
+        return score
+    }
 }
 data class EmbeddingModelDescriptor(val id: String, val family: String, val sha256: String, val nativeDimension: Int, val supportedDimensions: Set<Int>, val declaredModalities: Set<SemanticModality>)
 data class EmbeddingResult(val space: EmbeddingSpaceKey, val vector: FloatArray, val durationMs: Long)

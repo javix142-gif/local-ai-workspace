@@ -387,7 +387,7 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
         }
         queryEmbeddingReused.value=cached!=null
         if(queryVector.space!=space)throw SemanticFailure(SemanticError.SPACE_MISMATCH)
-        val ranked=corpus.map { c -> c to SemanticVectors.cosine(queryVector,EmbeddingResult(space,SemanticVectors.decode(c.vector,c.dimension),0)) }.sortedByDescending { it.second }.take(30)
+        val ranked=corpus.map { c -> c to SemanticVectors.cosineEncoded(queryVector,c.spaceKey,c.vector,c.dimension) }.sortedByDescending { it.second }.take(30)
         // Existing FTS remains the lexical source of truth. Fuse ranks, never raw scores from different spaces.
         val lexical=if(scope.type==ScopeType.PROJECT && query is SemanticInput.Text) {
             val terms=Regex("[\\p{L}\\p{N}_]{2,}").findAll(query.content).map { "\"${it.value}\"" }.take(18).joinToString(" OR ")

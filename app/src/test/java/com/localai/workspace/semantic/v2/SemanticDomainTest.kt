@@ -20,6 +20,22 @@ class SemanticDomainTest {
     @Test fun floatSerializationIsLittleEndian(){assertArrayEquals(byteArrayOf(0,0,128.toByte(),63),SemanticVectors.encode(floatArrayOf(1f)));assertArrayEquals(floatArrayOf(1f,-2f),SemanticVectors.decode(SemanticVectors.encode(floatArrayOf(1f,-2f)),2),0f)}
     @Test fun badVectorSizeRejected(){assertThrows(IllegalArgumentException::class.java){SemanticVectors.decode(ByteArray(8),768)}}
     @Test fun comparisonRefusesSpaceMixing(){assertCode(SemanticError.SPACE_MISMATCH){SemanticVectors.cosine(EmbeddingResult(space("EG1"),floatArrayOf(1f),0),EmbeddingResult(space("EG2"),floatArrayOf(1f),0))}}
+    @Test fun encodedCosineMatchesDecodedFloat32LittleEndianScore() {
+        val currentSpace=space(dimension=768)
+        val query=EmbeddingResult(currentSpace,FloatArray(768){index->(((index*37)%101)-50)/51f},0)
+        val stored=FloatArray(768){index->(((index*19+7)%97)-48)/49f}
+        val bytes=SemanticVectors.encode(stored)
+        val decoded=EmbeddingResult(currentSpace,SemanticVectors.decode(bytes,768),0)
+        assertEquals(SemanticVectors.cosine(query,decoded),SemanticVectors.cosineEncoded(query,currentSpace.id,bytes,768),0.0)
+    }
+    @Test fun encodedCosineRejectsWrongSpaceDimensionAndNonFinitePayload() {
+        val currentSpace=space(dimension=2)
+        val query=EmbeddingResult(currentSpace,floatArrayOf(1f,0f),0)
+        assertCode(SemanticError.SPACE_MISMATCH){SemanticVectors.cosineEncoded(query,"other-space",ByteArray(8),2)}
+        assertCode(SemanticError.DIMENSION_UNSUPPORTED){SemanticVectors.cosineEncoded(query,currentSpace.id,ByteArray(4),1)}
+        val nonFinite=byteArrayOf(0,0,0xc0.toByte(),0x7f,0,0,0,0)
+        assertCode(SemanticError.NON_FINITE_VECTOR){SemanticVectors.cosineEncoded(query,currentSpace.id,nonFinite,2)}
+    }
     @Test fun canonicalQueryPrefix(){assertEquals("task: search result | query: capital",TaskPromptProfile.format(EmbeddingTask.SEARCH,"capital"))}
     @Test fun documentIncludesTitle(){assertEquals("title: data.csv | text: row",TaskPromptProfile.format(EmbeddingTask.DOCUMENT,"row","data.csv"))}
     @Test fun codeTaskIsSpecialized(){assertEquals("task: code retrieval | query: session",TaskPromptProfile.format(EmbeddingTask.CODE_QUERY,"session"))}
