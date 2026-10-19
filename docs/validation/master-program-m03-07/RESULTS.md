@@ -29,4 +29,4 @@ Not run in this checkpoint: full app JVM suite, LiteRT compatibility suite, lint
 The original Gradle logs are retained losslessly as `.log.gz`; `log-payload-hashes.json` records the original and compressed byte counts and SHA-256. `SHA256SUMS` hashes the stored evidence payload; report files are excluded to avoid a self-referential digest.
 
 
-Payload manifest: `33` stored evidence files; SHA-256 `d21958ee66adbf1c92ca6db6ea900b814bdc4d0faf4bc7a1db1246eaafa55e08`. It covers commands, environment/meta records, losslessly compressed full Gradle logs, XML and pre-run inventories; it excludes this report, its JSON companion and the manifest itself.
+Payload manifest: `34` stored evidence files; SHA-256 `ad0a1589d993ed728a1f4a44d9ef56e924d402984d5434137b64808945997369`. It covers commands, environment/meta records, losslessly compressed full Gradle logs, XML, inventories and the remote readback after publishing commit `2d7e578`; it excludes this report, its JSON companion and the manifest itself.

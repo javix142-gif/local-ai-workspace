@@ -130,8 +130,8 @@
   },
   "payloadManifest": {
     "path": "SHA256SUMS",
-    "entries": 33,
-    "sha256": "d21958ee66adbf1c92ca6db6ea900b814bdc4d0faf4bc7a1db1246eaafa55e08",
+    "entries": 34,
+    "sha256": "ad0a1589d993ed728a1f4a44d9ef56e924d402984d5434137b64808945997369",
     "note": "Generated after raw evidence collection; covers evidence payload files, excludes RESULTS.md, RESULTS.json and itself."
   },
   "logPayloadHashes": [
