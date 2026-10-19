@@ -122,6 +122,7 @@ class PdfArtifactLayoutTest {
                 assertTrue(extracted.contains("INICIO"))
                 assertTrue(extracted.contains("FINAL"))
                 assertTrue(extracted.contains("Cierre visible"))
+                assertEquals("Long cell text must not be clipped between table pages", 300, Regex("\\bdato\\b").findAll(extracted).count())
                 assertFalse("PDF table cells must be laid out as cells, not pipe-delimited prose", extracted.contains('|'))
                 assertTrue("Long cell should continue onto later pages", document.numberOfPages > 1)
 
