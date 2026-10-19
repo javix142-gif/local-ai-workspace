@@ -1,0 +1,11 @@
+source_sha=e6f16ac30914fe32f7140241e81e5976660c03d2
+branch=codex/master-program-recovery-20261019
+checkout=full clone from GitHub; detached at exact feature SHA before creating recovery branch
+pre-build tracked/untracked status=clean
+Gradle=8.10.2
+Gradle runtime=Temurin 17.0.20.1
+test worker=Temurin 21.0.12.1
+Android SDK=/workspace/.toolchain/android-sdk API 35
+NDK=27.0.12077973
+Gradle user home=/workspace/.gradle existing cache, offline
+network/dependency installation=none

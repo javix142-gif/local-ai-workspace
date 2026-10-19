@@ -1,0 +1,17 @@
+e8c69f45901928957ce08c77cd3c24d598387f3e178f77ca3edca252ba81fc96  ./attempt-01-red/command.txt
+844d353bb0c1e6ee750f50238300c9d9b1cdb34cf591c1a5579dc2a4855af0e4  ./attempt-01-red/environment.txt
+4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865  ./attempt-01-red/exit-code.txt
+b432ce041e959c41952fac6169b23515ea3042e44eb0d54346ef98fad1478e5b  ./attempt-01-red/gradle.log.gz
+5ff940327537b943334eb3054b9ab42815b99e037a7a3377b4ca59aa82fa4693  ./attempt-01-red/timing.txt
+b912e5133c5c48a2754b80d0efb9bca118b6a55cf08795a6d1dd59911293b043  ./attempt-01-red/xml/TEST-com.localai.workspace.artifacts.XlsxArtifactRevisionTest.xml
+b060710714fb77f315b45b26180d6bfc2a53bb8eee9899bae128f4ef58308e66  ./attempt-02-green/command.txt
+0345e9250b7a3e2390dffe08dd83847e7973601aa1bb70c2c5f7c0886af52230  ./attempt-02-green/environment.txt
+9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./attempt-02-green/exit-code.txt
+2c1330917c29f1a3d361291720ad8ec9e2e431d76c0d1f3ba5b1332296bce118  ./attempt-02-green/gradle.log.gz
+66c1f34584487c068b27e6ba540fa3c9e48d45c29022831d54431c96c96dd497  ./attempt-02-green/independent-reader.json
+c474bf6dbfd8031d1fc048c1e5c3f4100dcc02c0afa6de0a32379d09ef8f6672  ./attempt-02-green/interop/table-cell-edited.xlsx
+3eaca78f6803d4cf106189a9994d805f7d90561864b30003e81290bc18ad8ffd  ./attempt-02-green/openpyxl-verify.py
+10a2bb238a79ce83a19464f4e84d6fff2ea32a71615cf51867f22c37cbda21f9  ./attempt-02-green/reader-attempt-01-error.txt
+53b9650b13a08bbe5810d328d774ad3422efe34e87df427756d093b2720817fa  ./attempt-02-green/source-sha.txt
+0fdbac3d26ab16354cdd20d70907b6eb19e0470d98153f6ee954a2d99337561f  ./attempt-02-green/timing.txt
+af76ff91341f69eec4a61495c831acbb93bd03ea7a12c11003990a511b213169  ./attempt-02-green/xml/TEST-com.localai.workspace.artifacts.XlsxArtifactRevisionTest.xml

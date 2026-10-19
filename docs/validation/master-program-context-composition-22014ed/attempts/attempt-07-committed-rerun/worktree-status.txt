@@ -1,0 +1,7 @@
+?? docs/validation/master-program-m03-02-xlsx-tables/cell-edit-follow-up-20261019/
+?? docs/validation/master-program-recovery-20261019/current-head-e6f16ac/
+!! .gradle/
+!! .kotlin/
+!! app/build/
+!! litert-compat/build/
+!! llama-runtime/build/

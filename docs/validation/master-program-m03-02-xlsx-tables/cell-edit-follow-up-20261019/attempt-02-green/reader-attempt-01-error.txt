@@ -1,0 +1,6 @@
+Independent reader attempt 1 (harness only; workbook unchanged): exit 1 because the generated Python regex was over-escaped and did not match cell B2.
+Traceback (most recent call last):
+  File "openpyxl-verify.py", line 13, in <module>
+    cell = re.search(r'<c\\b[^>]*\\br="B2"[^>]*>(.*?)</c>', xml).group(1)
+AttributeError: 'NoneType' object has no attribute 'group'
+The regex was corrected in the versioned openpyxl-verify.py, then the exact same emitted XLSX passed ZIP CRC, worksheet formula, no-cache and table checks. This first failure was in the validation script, not the product or generated file.

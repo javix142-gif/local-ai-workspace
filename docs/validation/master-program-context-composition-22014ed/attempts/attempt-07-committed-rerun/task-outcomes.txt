@@ -1,0 +1,85 @@
+:app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+:app:preBuild UP-TO-DATE
+:app:preDebugBuild UP-TO-DATE
+:app:generateDebugBuildConfig
+:litert-compat:copyNativeBackend
+:litert-compat:preBuild
+:litert-compat:preDebugBuild
+:litert-compat:writeDebugAarMetadata
+:llama-runtime:preBuild UP-TO-DATE
+:llama-runtime:preDebugBuild UP-TO-DATE
+:llama-runtime:writeDebugAarMetadata
+:app:checkDebugAarMetadata
+:app:generateDebugResValues
+:litert-compat:generateDebugResValues
+:litert-compat:generateDebugResources
+:litert-compat:packageDebugResources
+:llama-runtime:generateDebugResValues
+:llama-runtime:generateDebugResources
+:llama-runtime:packageDebugResources
+:app:mapDebugSourceSetPaths
+:app:generateDebugResources
+:app:mergeDebugResources
+:app:packageDebugResources
+:app:parseDebugLocalResources
+:app:createDebugCompatibleScreenManifests
+:app:extractDeepLinksDebug
+:litert-compat:extractDeepLinksDebug
+:litert-compat:processDebugManifest
+:llama-runtime:extractDeepLinksDebug
+:llama-runtime:processDebugManifest
+:app:processDebugMainManifest
+:app:processDebugManifest
+:app:processDebugManifestForPackage
+:litert-compat:compileDebugLibraryResources
+:litert-compat:parseDebugLocalResources
+:litert-compat:generateDebugRFile
+:llama-runtime:compileDebugLibraryResources
+:llama-runtime:parseDebugLocalResources
+:llama-runtime:generateDebugRFile
+:app:processDebugResources
+:litert-compat:checkKotlinGradlePluginConfigurationErrors SKIPPED
+:litert-compat:compileDebugKotlin
+:litert-compat:javaPreCompileDebug
+:litert-compat:compileDebugJavaWithJavac NO-SOURCE
+:litert-compat:bundleLibCompileToJarDebug
+:llama-runtime:checkKotlinGradlePluginConfigurationErrors SKIPPED
+:llama-runtime:compileDebugKotlin
+:llama-runtime:javaPreCompileDebug
+:llama-runtime:compileDebugJavaWithJavac NO-SOURCE
+:llama-runtime:bundleLibCompileToJarDebug
+:app:kspDebugKotlin
+:app:compileDebugKotlin
+:app:javaPreCompileDebug
+:app:compileDebugJavaWithJavac
+:app:bundleDebugClassesToRuntimeJar
+:app:bundleDebugClassesToCompileJar
+:app:kspDebugUnitTestKotlin
+:app:compileDebugUnitTestKotlin
+:app:preDebugUnitTestBuild UP-TO-DATE
+:app:javaPreCompileDebugUnitTest
+:app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+:app:mergeDebugShaders
+:app:compileDebugShaders NO-SOURCE
+:app:generateDebugAssets UP-TO-DATE
+:litert-compat:mergeDebugShaders
+:litert-compat:compileDebugShaders NO-SOURCE
+:litert-compat:generateDebugAssets UP-TO-DATE
+:litert-compat:packageDebugAssets
+:llama-runtime:mergeDebugShaders
+:llama-runtime:compileDebugShaders NO-SOURCE
+:llama-runtime:generateDebugAssets UP-TO-DATE
+:llama-runtime:packageDebugAssets
+:app:mergeDebugAssets
+:app:packageDebugUnitTestForUnitTest
+:app:generateDebugUnitTestConfig
+:app:processDebugJavaRes
+:app:processDebugUnitTestJavaRes
+:litert-compat:bundleLibRuntimeToJarDebug
+:litert-compat:processDebugJavaRes
+:llama-runtime:bundleLibRuntimeToJarDebug
+:llama-runtime:processDebugJavaRes
+:app:testDebugUnitTest
+:app:testDebugUnitTest
+
+Gradle summary: 63 actionable tasks: 63 executed

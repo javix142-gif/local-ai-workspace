@@ -1,0 +1,3 @@
+source_sha=36fa81fa0cfc4b6f5f9136d86f98e54951110b4a
+test_commit=bcec858 (same test-only change cherry-picked from local 1f80085 into recovery branch)
+product_code_sha=c991a4d6fd0240045a31515e5f30fec0309c37ac

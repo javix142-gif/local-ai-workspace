@@ -1,0 +1,18 @@
+file or directory '/workspace/aws-recovery-clone-20261019/app/build/generated/ksp/debugUnitTest/classes', not found
+file or directory '/workspace/aws-recovery-clone-20261019/app/build/generated/ksp/debugUnitTest/resources', not found
+file or directory '/workspace/aws-recovery-clone-20261019/app/build/intermediates/javac/debugUnitTest/compileDebugUnitTestJavaWithJavac/classes', not found
+Starting process 'Gradle Test Executor 1'. Working directory: /workspace/aws-recovery-clone-20261019/app Command: /workspace/.toolchain/jdk-21-temurin/bin/java -Djava.awt.headless=true -Djava.library.path=/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib:/workspace/aws-recovery-clone-20261019/app/src/testDebug/jniLibs:/workspace/aws-recovery-clone-20261019/app/src/test/jniLibs -Dorg.gradle.internal.worker.tmpdir=/workspace/aws-recovery-clone-20261019/app/build/tmp/testDebugUnitTest/work --add-opens=java.base/java.io=ALL-UNNAMED @/workspace/.gradle/.tmp/gradle-worker-classpath7597015657852365906txt -Xmx512m -Dfile.encoding=UTF-8 -Duser.country -Duser.language=en -Duser.variant -ea worker.org.gradle.process.internal.worker.GradleWorkerMain 'Gradle Test Executor 1'
+Successfully started process 'Gradle Test Executor 1'
+
+Gradle Test Executor 1 finished executing tests.
+
+> Task :app:testDebugUnitTest
+Finished generating test XML results (0.012 secs) into: /workspace/aws-recovery-clone-20261019/app/build/test-results/testDebugUnitTest
+Generating HTML test report...
+Finished generating test html results (0.017 secs) into: /workspace/aws-recovery-clone-20261019/app/build/reports/tests/testDebugUnitTest
+Stored cache entry for task ':app:testDebugUnitTest' with cache key 715aeab006d5624697a2a7447d9cdf11
+AAPT2 aapt2-8.7.3-12006047-linux Daemon #0: shutdown
+
+BUILD SUCCESSFUL in 3m 22s
+63 actionable tasks: 63 executed
+Some of the file system contents retained in the virtual file system are on file systems that Gradle doesn't support watching. The relevant state was discarded to ensure changes to these locations are properly detected. You can override this by explicitly enabling file system watching.

@@ -1,5 +1,14 @@
 # Master optimization program — first implementation delivery
 
+## 2026-10-19 — M00-06 normal-chat context-composition diagnostics (preparatory)
+
+Code commit `22014ed8a452836b7fd20de6d1f54db0a2a12f3c` connects estimator-specific context composition to the normal-generation trace and existing Performance screen. It records estimated/available units, included/omitted item counts, counts by kind/reason and the estimator identifier, with no prompt, answer, evidence text, filename, path or project/document identity. The legacy budget is labeled as the existing characters/4 heuristic; Context Builder uses its existing byte-based estimator. Neither is presented as native tokenizer output. Older persisted traces without the optional summary remain readable.
+
+The exact-code focused HOST run passed 10/10 across `ChatSessionPipelineTest`, `GenerationTimelinePresentationTest` and `NormalGenerationTraceTest`; Gradle 8.10.2/JDK 17 runtime/JDK 21 worker, offline, 201 seconds, exit 0, 63 tasks executed. Logs/XML and the 38-entry manifest (SHA-256 `1e2d8d676b2d5e309a4862ca65c127d5e63e47ebeaf8c69163a1a5c584ad161b`) are in `../validation/master-program-context-composition-22014ed/RESULTS.md`.
+
+This does not finish original M00-06. Import/index and a later chat remain distinct operations; a single causal end-to-end timeline and actual model/device TTFT, decode, memory, quality, energy and thermal measurements are not established. The task remains `TODO`. Full JVM/LiteRT, lint, assembly, AndroidTest, emulator, Motorola and APK were not run for this increment. The source catalog remains unchanged at 97 IDs, 120 dependencies and all 97 statuses `TODO`.
+
+
 ## 2026-10-19 — M03-01 format-aware SAF create request (preparatory)
 
 At test-first baseline `fd6ea2055c432da7b2a1d464d09158f6598a7820`, the actual Compose export test showed that `CreateDocument` requested `application/octet-stream` for a CODE artifact even though `ArtifactFormat.CODE.mime` is `text/plain`. Production now passes the artifact name/format through `ArtifactCreateDocumentContract`; the system document request uses each format's declared MIME. The explicit SAF choice, immutable revision lookup, exact byte write and SHA-256 readback are unchanged.

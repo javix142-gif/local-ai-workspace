@@ -1,0 +1,104 @@
+{
+  "requestedFeatureSha": "b8e75b4a688d9e1f441324a3a1ecccb369f99ebc",
+  "actualFeatureShaAtRecovery": "e6f16ac30914fe32f7140241e81e5976660c03d2",
+  "featureCommitsSinceRequestedSha": 81,
+  "lostLocalCommit": {
+    "sha": "2f8b0d496db8973edf161c7703efc8f0c17d34fd",
+    "status": "NOT_RECOVERED",
+    "sourceReconstructed": false,
+    "evidence": "Absent from available object database/refs; prior recovery record says direct GitHub SHA fetch was rejected and bounded workspace search found no patch/backup."
+  },
+  "preservedCurrentLocalCommit": {
+    "sha": "1f80085ea8a2bc564e28311141fd60e9601e8a6e",
+    "status": "PRESERVED_IN_LOCAL_BUNDLE_AND_CARRIED_TO_RECOVERY_BRANCH",
+    "bundle": "/workspace/backups/aws-recovery-20261019T182450Z/repository.bundle",
+    "bundleSha256": "e73281d475d239a897e18895a4cb75a8f6d6f8189a54b8ea309a39e6e2948a88",
+    "cherryPickedAs": "bcec858"
+  },
+  "remoteRefs": {
+    "backup": {
+      "name": "recovery/backup-e6f16ac-20261019",
+      "sha": "e6f16ac30914fe32f7140241e81e5976660c03d2",
+      "readbackVerified": true
+    },
+    "implementationBranch": {
+      "name": "codex/master-program-recovery-20261019",
+      "initialSha": "e6f16ac30914fe32f7140241e81e5976660c03d2",
+      "createdFromExactRemoteSha": true
+    },
+    "featureAtStart": "e6f16ac30914fe32f7140241e81e5976660c03d2",
+    "mainAtStart": "de615b772cf37a99e7e08a647c59607b271de606",
+    "v0.4.2PeeledAtStart": "de615b772cf37a99e7e08a647c59607b271de606"
+  },
+  "m03_07": {
+    "testedCodeSha": "e6f16ac30914fe32f7140241e81e5976660c03d2",
+    "class": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+    "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY",
+    "tests": 2,
+    "passed": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "durationSeconds": 202,
+    "gradle": "8.10.2",
+    "runtimeJdk": "Temurin 17.0.20.1",
+    "testWorkerJdk": "Temurin 21.0.12.1",
+    "evidence": "docs/validation/master-program-recovery-20261019/current-head-e6f16ac/m03-07/",
+    "sourceTask": {
+      "id": "M03-07",
+      "status": "TODO",
+      "requiresDevice": true,
+      "dependsOn": ["M03-01"],
+      "dependencyStatus": "M03-01 TODO",
+      "formalCompletion": false
+    }
+  },
+  "m03_02CellEditFollowUp": {
+    "productCodeSha": "c991a4d6fd0240045a31515e5f30fec0309c37ac",
+    "testedSourceSha": "36fa81fa0cfc4b6f5f9136d86f98e54951110b4a",
+    "status": "FOCUSED_HOST_PASS_TEST_ONLY_PREPARATION",
+    "redAttempt": {
+      "sourceSha": "1f80085ea8a2bc564e28311141fd60e9601e8a6e",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 1,
+      "classification": "TEST_ASSERTION_ASSUMPTION_MISMATCH"
+    },
+    "finalAttempt": {
+      "tests": 1,
+      "passed": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "wallSeconds": 46,
+      "gradleSuiteSeconds": 5.076,
+      "openpyxl": "3.1.5",
+      "zipCrc": "PASS",
+      "xlsxSha256": "c474bf6dbfd8031d1fc048c1e5c3f4100dcc02c0afa6de0a32379d09ef8f6672",
+      "evidence": "docs/validation/master-program-m03-02-xlsx-tables/cell-edit-follow-up-20261019/"
+    },
+    "productionChanged": false,
+    "sourceTaskStatus": "TODO"
+  },
+  "notRun": {
+    "fullHostGate": true,
+    "lint": true,
+    "androidTest": true,
+    "emulator": true,
+    "physicalDevice": true,
+    "apk": true,
+    "modelBenchmarks": true
+  },
+  "sourcePlan": {
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskCount": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": "97 TODO; unchanged"
+  }
+}

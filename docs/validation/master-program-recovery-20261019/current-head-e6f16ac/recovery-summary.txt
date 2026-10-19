@@ -1,0 +1,8 @@
+Requested remote SHA in the uploaded recovery request: b8e75b4a688d9e1f441324a3a1ecccb369f99ebc.
+Actual feature SHA fetched from GitHub before recovery: e6f16ac30914fe32f7140241e81e5976660c03d2. The feature had advanced by 81 commits since b8e75b4; no working files were reset or overwritten.
+Reported lost local commit: 2f8b0d496db8973edf161c7703efc8f0c17d34fd. It is absent from the current object database and refs. Earlier persisted search and direct GitHub SHA fetch recorded no matching patch/source; no code was reconstructed.
+The active prior workspace remained at /workspace/local-ai-workspace. Its local test-only commit 1f80085ea8a2bc564e28311141fd60e9601e8a6e was preserved in /workspace/backups/aws-recovery-20261019T182450Z/repository.bundle (SHA-256 e73281d475d239a897e18895a4cb75a8f6d6f8189a54b8ea309a39e6e2948a88).
+Fresh clone: /workspace/aws-recovery-clone-20261019, checked out exact e6f16ac with clean tracked/untracked status before creating the implementation branch.
+Persistent remote backup: recovery/backup-e6f16ac-20261019 -> e6f16ac30914fe32f7140241e81e5976660c03d2.
+Independent implementation branch: codex/master-program-recovery-20261019, created at e6f16ac. Its initial ref and backup ref were read back from GitHub.
+main and peeled v0.4.2 remained de615b772cf37a99e7e08a647c59607b271de606 at recovery start.

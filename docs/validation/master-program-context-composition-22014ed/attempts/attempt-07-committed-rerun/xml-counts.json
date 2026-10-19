@@ -1,0 +1,29 @@
+[
+  {
+    "file": "attempts/attempt-07-committed-rerun/xml/TEST-com.localai.workspace.diagnostics.NormalGenerationTraceTest.xml",
+    "tests": 5,
+    "passed": 5,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 4.877
+  },
+  {
+    "file": "attempts/attempt-07-committed-rerun/xml/TEST-com.localai.workspace.performance.GenerationTimelinePresentationTest.xml",
+    "tests": 4,
+    "passed": 4,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 0.02
+  },
+  {
+    "file": "attempts/attempt-07-committed-rerun/xml/TEST-com.localai.workspace.ui.ChatSessionPipelineTest.xml",
+    "tests": 1,
+    "passed": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 4.484
+  }
+]

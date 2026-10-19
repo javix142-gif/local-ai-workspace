@@ -1,0 +1,3 @@
+source_sha=1f80085ea8a2bc564e28311141fd60e9601e8a6e
+branch=codex/master-program-20261019 in original checkout; parent=e6f16ac30914fe32f7140241e81e5976660c03d2
+classification=TEST_ASSERTION_ASSUMPTION_MISMATCH; formula cell was parsed with empty-string value when no cached result was present; no product failure shown.

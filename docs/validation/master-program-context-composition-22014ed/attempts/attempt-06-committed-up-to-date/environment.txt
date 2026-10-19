@@ -1,0 +1,9 @@
+source_sha=22014ed8a452836b7fd20de6d1f54db0a2a12f3c
+branch=codex/master-program-recovery-20261019
+java_home=/workspace/.toolchain/jdk-17
+java17=openjdk version "17.0.20.1" 2026-08-18
+javac17=javac 17.0.20.1
+java21=openjdk version "21.0.12.1" 2026-08-18 LTS
+gradle_wrapper=https\://services.gradle.org/distributions/gradle-8.10.2-bin.zip
+android_sdk=/workspace/.toolchain/android-sdk
+gradle_user_home=/workspace/.gradle

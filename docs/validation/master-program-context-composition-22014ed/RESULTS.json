@@ -1,0 +1,134 @@
+{
+  "sourceCodeSha": "22014ed8a452836b7fd20de6d1f54db0a2a12f3c",
+  "branch": "codex/master-program-recovery-20261019",
+  "attempt": "attempt-07-committed-rerun",
+  "startedAtUtc": "2026-10-19T18:50:14Z",
+  "finishedAtUtc": "2026-10-19T18:53:35Z",
+  "durationSeconds": 201,
+  "commandExitCode": 0,
+  "gradle": "8.10.2",
+  "runtimeJdk": "OpenJDK 17.0.20.1",
+  "workerJdk": "OpenJDK 21.0.12.1",
+  "androidSdk": "/workspace/.toolchain/android-sdk (API 35)",
+  "ndk": "27.0.12077973",
+  "gradleUserHome": "/workspace/.gradle (existing cache, offline; no cache cleanup)",
+  "command": "attempts/attempt-07-committed-rerun/command.txt",
+  "log": "attempts/attempt-07-committed-rerun/gradle.log.gz",
+  "tests": 10,
+  "passed": 10,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "xmlSuites": [
+    {
+      "file": "attempts/attempt-07-committed-rerun/xml/TEST-com.localai.workspace.diagnostics.NormalGenerationTraceTest.xml",
+      "tests": 5,
+      "passed": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 4.877
+    },
+    {
+      "file": "attempts/attempt-07-committed-rerun/xml/TEST-com.localai.workspace.performance.GenerationTimelinePresentationTest.xml",
+      "tests": 4,
+      "passed": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.02
+    },
+    {
+      "file": "attempts/attempt-07-committed-rerun/xml/TEST-com.localai.workspace.ui.ChatSessionPipelineTest.xml",
+      "tests": 1,
+      "passed": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 4.484
+    }
+  ],
+  "gradleTasks": "63 actionable tasks executed; :app:testDebugUnitTest executed (not UP-TO-DATE)",
+  "priorExactShaUpToDateAttempt": {
+    "exitCode": 0,
+    "durationSeconds": 20,
+    "task": "UP-TO-DATE",
+    "testsExecuted": 0,
+    "countedAsPass": false
+  },
+  "limitations": [
+    "Focused JVM tests only; full app/LiteRT suites, lint, APK/assembly and AndroidTest compilation were not run.",
+    "No emulator, physical device, model, native TTFT/decode, RAM, energy or thermal measurements were run.",
+    "M00-06 original DoD remains TODO: import/index and chat traces are correlated only where IDs match; the cross-stage causal end-to-end timeline and device metrics are not demonstrated.",
+    "The initial red run log is retained but its XML was overwritten before evidence archival; it is not included as a JUnit artifact.",
+    "The exact-SHA non-rerun attempt was UP-TO-DATE and did not run tests; the final attempt-07 is the authoritative test execution."
+  ],
+  "attemptHistory": [
+    {
+      "attempt": "attempt-01-red",
+      "codeState": "base code SHA 36fa81fa0cfc4b6f5f9136d86f98e54951110b4a plus the newly added test-only assertion in the worktree; production change had not yet been applied.",
+      "result": "EXPECTED_RED",
+      "tests": 1,
+      "failures": 1,
+      "exitCode": 1,
+      "durationSeconds": 188,
+      "note": "New production-path assertion proved the normal-chat trace lacked contextComposition; JUnit XML was overwritten before archival, so only the raw Gradle log is retained."
+    },
+    {
+      "attempt": "attempt-02-invalid-empty-assumption",
+      "result": "TEST_ASSUMPTION_FAILURE",
+      "tests": 5,
+      "failures": 1,
+      "exitCode": 1,
+      "durationSeconds": 87,
+      "note": "Test incorrectly required at least one included context item in a no-source fixture; zero included items are valid, no product defect."
+    },
+    {
+      "attempt": "attempt-03-focused-pass",
+      "result": "PASS",
+      "tests": 5,
+      "failures": 0,
+      "exitCode": 0,
+      "durationSeconds": 49
+    },
+    {
+      "attempt": "attempt-04-legacy-trace-pass",
+      "result": "PASS",
+      "tests": 5,
+      "failures": 0,
+      "exitCode": 0,
+      "durationSeconds": 42
+    },
+    {
+      "attempt": "attempt-05-precommit-pass",
+      "result": "PASS_PRECOMMIT_TREE_CONTENT_EQUIVALENT",
+      "tests": 10,
+      "failures": 0,
+      "exitCode": 0,
+      "durationSeconds": 31,
+      "note": "Source contents matched the later code commit, but this run is not attributed to its commit SHA."
+    },
+    {
+      "attempt": "attempt-06-committed-up-to-date",
+      "result": "NO_TESTS_EXECUTED_UP_TO_DATE",
+      "tests": 0,
+      "exitCode": 0,
+      "durationSeconds": 20,
+      "note": "Not counted as test evidence; prompted exact SHA rerun."
+    },
+    {
+      "attempt": "attempt-07-committed-rerun",
+      "result": "PASS_EXACT_COMMIT_SHA",
+      "tests": 10,
+      "failures": 0,
+      "exitCode": 0,
+      "durationSeconds": 201
+    }
+  ],
+  "evidenceManifest": {
+    "path": "docs/validation/master-program-context-composition-22014ed/SHA256SUMS",
+    "entries": 38,
+    "sha256": "1e2d8d676b2d5e309a4862ca65c127d5e63e47ebeaf8c69163a1a5c584ad161b",
+    "payloadVerification": "38/38 locally verified with sha256sum -c"
+  }
+}

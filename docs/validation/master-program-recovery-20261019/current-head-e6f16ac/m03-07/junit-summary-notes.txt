@@ -1,0 +1,3 @@
+Exact fresh XML counts: tests=2, failures=0, errors=0, skipped=0.
+Methods: oversizedLineDiffFallsBackWithoutTruncatingBeforeOrAfterPreview; reviewShowsExactBeforeAndAfterAndClosingKeepsSavedRevisionUnchanged.
+Gradle: BUILD SUCCESSFUL; 63 actionable tasks, 63 executed.

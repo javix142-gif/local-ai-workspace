@@ -1,0 +1,2 @@
+Compared M03-07 production/test paths between prior exact focused source 95199cd3f7f5703bf436de4214cb42e4721e2787 and current remote e6f16ac30914fe32f7140241e81e5976660c03d2.
+The M03-07 test file is unchanged; ArtifactsUi.kt has 5 changed lines (2 additions, 3 deletions) in the broader artifact export path. This exact-current test run is therefore retained as fresh evidence.

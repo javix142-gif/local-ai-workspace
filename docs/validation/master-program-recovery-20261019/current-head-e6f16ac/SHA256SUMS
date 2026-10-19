@@ -1,0 +1,14 @@
+d5a767f17d6a86f1b228e1d03f629dc5c73da5efc81d1f5f4ce80f5c2e3f48a6  ./m03-07/command.txt
+5b8eea4089927eb696fe5573d29076af6ab2d4e6cdb6bb5f18f7f73461db4fb6  ./m03-07/environment.txt
+9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./m03-07/exit-code.txt
+53b3a68105aa5751a959fca780d8021e8ad214ffc23d1617e6dd87ae86a429f2  ./m03-07/gradle.log.gz
+e58029d28441575f092b243bb599dc31e6ba832ee88c997eee785c04018265cb  ./m03-07/junit-summary-notes.txt
+89d54173ebbdc1fdf2a428753c218446aac133813b995b0d1f5424df38d7186a  ./m03-07/junit-summary.json
+bfc86b84f87e69ff45bab3a18b73ab83dce7edc347184a1273a848a4e9df3455  ./m03-07/source-diff-review.txt
+9d67d4fdfda0aafc5504ccad0e1cb64456dea27b4befbc68d5d358e17f596c2a  ./m03-07/source-sha.txt
+fa92a05651467e743accad0a2a350daaae7504d481f1182d74b7d73e290121b8  ./m03-07/task-summary.txt
+b84897482212fb2ca493262364c8f23c48df4bafed38150b5952ff5d98d5a346  ./m03-07/timing.txt
+d2c6482e775c4a35c1cb9719cb566acffaa59f5a79ff08c52d941c6d139b943e  ./m03-07/xml-after.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./m03-07/xml-before.txt
+9f615c4efe08e131e5a17206f17c8b05f88508e8673635ff8c2ddebe1ed6185e  ./m03-07/xml/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml
+da3e11e4629d08afa9b9387874e0cb1c7966ed02e1d423721377d7ea4699ac73  ./recovery-summary.txt

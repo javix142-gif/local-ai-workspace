@@ -1,0 +1,66 @@
+{
+  "name": "M03-02 formula edit preserves native table",
+  "productCodeSha": "c991a4d6fd0240045a31515e5f30fec0309c37ac",
+  "finalTestSha": "36fa81fa0cfc4b6f5f9136d86f98e54951110b4a",
+  "productionChanged": false,
+  "testOnlyCommits": ["bcec858", "36fa81f"],
+  "attempts": [
+    {
+      "id": "attempt-01-red",
+      "testedSourceSha": "1f80085ea8a2bc564e28311141fd60e9601e8a6e",
+      "tests": 1,
+      "passed": 0,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 1,
+      "durationSeconds": 204,
+      "classification": "TEST_ASSERTION_ASSUMPTION_MISMATCH",
+      "failure": "Assertion expected null; current StructuredDocuments.xlsx returns empty string when formula <v> cache is absent."
+    },
+    {
+      "id": "attempt-02-green",
+      "testedSourceSha": "36fa81fa0cfc4b6f5f9136d86f98e54951110b4a",
+      "tests": 1,
+      "passed": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "durationSeconds": 46,
+      "gradleTestDurationSeconds": 5.076,
+      "checks": ["new immutable version", "original bytes and hash unchanged", "worksheet tableParts relationship retained", "native table range and headers retained", "formula XML retained", "stale <v> cache absent", "structured reader returns empty string for absent cache"]
+    }
+  ],
+  "independentReader": {
+    "name": "openpyxl",
+    "version": "3.1.5",
+    "status": "PASS",
+    "zipCrc": "PASS",
+    "sheet": "Ventas",
+    "table": "TablaVentas",
+    "range": "A1:B2",
+    "cell": "B2",
+    "formula": "=SUM(A2:A2)",
+    "cachedValue": "ABSENT",
+    "file": "attempt-02-green/interop/table-cell-edited.xlsx",
+    "bytes": 3148,
+    "sha256": "c474bf6dbfd8031d1fc048c1e5c3f4100dcc02c0afa6de0a32379d09ef8f6672"
+  },
+  "environment": {
+    "gradle": "8.10.2",
+    "runtimeJdk": "Temurin 17.0.20.1",
+    "testWorkerJdk": "Temurin 21.0.12.1",
+    "androidSdk": "API 35",
+    "ndk": "27.0.12077973",
+    "gradleUserHome": "/workspace/.gradle (existing cache, offline)"
+  },
+  "notRun": ["full JVM/LiteRT gate", "lint", "AndroidTest", "emulator", "physical device", "APK", "Excel/LibreOffice GUI"],
+  "formalSourceTask": {
+    "id": "M03-02",
+    "sourceStatus": "TODO",
+    "requiresDevice": true,
+    "dependsOn": ["M03-01", "M02-02"],
+    "formalCompletion": false
+  }
+}

@@ -1,0 +1,18 @@
+COMMAND=JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH GRADLE_USER_HOME=/workspace/.gradle ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk LOCALAI_XLSX_INTEROP_DIR=/workspace/evidence-raw-m03-02-xlsx-tables/cell-edit-followup/interoperability timeout 300s ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --info --rerun-tasks -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.artifacts.XlsxArtifactRevisionTest.formulaCellEditPreservesNativeTableAndPriorWorkbookRevision
+SOURCE_SHA=1f80085ea8a2bc564e28311141fd60e9601e8a6e
+
+------------------------------------------------------------
+Gradle 8.10.2
+------------------------------------------------------------
+
+Build time:    2024-09-23 21:28:39 UTC
+Revision:      415adb9e06a516c44b391edff552fd42139443f7
+
+openjdk version "17.0.20.1" 2026-08-18
+openjdk version "21.0.12.1" 2026-08-18 LTS
+ANDROID_SDK=/workspace/.toolchain/android-sdk
+NDK=27.0.12077973
+GRADLE_USER_HOME=/workspace/.gradle (existing cache, offline)
+START_UTC=2026-10-19T18:19:25Z
+END_UTC=2026-10-19T18:22:49Z
+EXIT_CODE=1
