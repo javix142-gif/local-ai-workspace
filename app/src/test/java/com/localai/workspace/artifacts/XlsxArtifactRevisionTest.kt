@@ -13,6 +13,8 @@ import com.localai.workspace.documents.StructuredDocuments
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -31,6 +33,67 @@ class XlsxArtifactRevisionTest {
     @Test fun explicitSpreadsheetCellChangeRoutesToBoundedCellEditTool() {
         val enabled=setOf("artifacts.xlsxSetCells")
         assertEquals(enabled,AssistantRouting.tools(enabled,"Actualiza la celda A2 del Excel",documents=false))
+    }
+
+    @Test fun formulaEditIntentRoutesToBoundedXlsxEditTool() {
+        val enabled=setOf("artifacts.xlsxSetCells")
+        assertEquals(enabled,AssistantRouting.tools(enabled,"Cambia la fórmula de A3 del Excel para sumar A1 y A2",documents=false))
+    }
+
+    @Test fun formulaCellEditCreatesVersionWithoutStaleCacheAndRequestsReaderRecalculation()=runBlocking {
+        val project="xlsx-formula-edit-${UUID.randomUUID()}"
+        val store=ArtifactStore(context)
+        val fixture=JSONObject().put("format","XLSX").put("name","budget.xlsx").put("sheets",JSONArray()
+            .put(JSONObject().put("name","Hoja1").put("cells",JSONArray()
+                .put(JSONObject().put("address","A1").put("value","1").put("type","number"))
+                .put(JSONObject().put("address","A2").put("value","5").put("type","number"))
+                .put(JSONObject().put("address","A3").put("formula","$A$2-$A$1").put("value","4").put("type","number"))))
+        try {
+            val first=store.create(project,ArtifactSpec.parse(fixture))
+            val originalHash=first.sha256
+            val tool=ArtifactTool(context,"artifacts.xlsxSetCells")
+            val registry=ToolRegistry(listOf(tool))
+            val toolContext=ToolContext(project,"chat",File(context.cacheDir,"xlsx-formula-edit-work"))
+            val args=JSONObject().put("id",first.id).put("expectedVersion",first.version)
+                .put("edits",JSONArray().put(JSONObject().put("sheet","Hoja1").put("address","A3").put("formula","SUM(A1:A2)")))
+            val request=ToolRequest("artifacts.xlsxSetCells",args.toString(),TrustOrigin.MODEL)
+            val result=registry.execute(request,ArtifactTool.IDS,toolContext,ToolRegistry.ToolLoopState())
+            assertTrue("A formula edit should create a verified immutable revision",result is ToolExecutionResult.Success)
+            val response=JSONObject((result as ToolExecutionResult.Success).output)
+            assertTrue(response.getString("note").contains("not recalculated"))
+
+            val versions=store.history(project,first.id)
+            assertEquals(2,versions.size)
+            val latest=versions.maxBy{it.version}
+            assertEquals(originalHash,ArtifactStore.fileHash(store.verifiedFile(project,first)))
+            val originalCell=StructuredDocuments.xlsx(store.verifiedFile(project,first)).cells.single{it.sheet=="Hoja1"&&it.address=="A3"}
+            assertEquals("\$A\$2-\$A\$1",originalCell.formula)
+            assertEquals("4",originalCell.value)
+
+            val latestSpec=store.spec(project,latest).json()
+            val formulaCell=latestSpec.getJSONArray("sheets").getJSONObject(0).getJSONArray("cells").getJSONObject(2)
+            assertEquals("SUM(A1:A2)",formulaCell.getString("formula"))
+            assertFalse("Do not keep the previous formula's cached result",formulaCell.has("value"))
+            assertTrue(store.spec(project,latest).preview().contains("cached result unavailable"))
+            assertTrue(store.spec(project,latest).preview().contains("formula: SUM(A1:A2); not recalculated"))
+
+            ZipFile(store.verifiedFile(project,latest)).use{zip->
+                val workbook=zip.getInputStream(zip.getEntry("xl/workbook.xml")).bufferedReader().use{it.readText()}
+                val sheet=zip.getInputStream(zip.getEntry("xl/worksheets/sheet1.xml")).bufferedReader().use{it.readText()}
+                assertTrue(workbook.contains("fullCalcOnLoad=\"1\""))
+                val a3=Regex("<c r=\"A3\"[^>]*>.*?</c>").find(sheet)?.value
+                assertNotNull("Expected the edited formula cell in worksheet XML",a3)
+                assertTrue(a3!!.contains("<f>SUM(A1:A2)</f>"))
+                assertFalse("No stale cached <v> value may follow a changed formula",a3.contains("<v>"))
+            }
+
+            args.getJSONObject("edits").getJSONObject(0).put("formula","WEBSERVICE(\"https://invalid.example\")")
+            val rejected=registry.execute(ToolRequest("artifacts.xlsxSetCells",args.toString(),TrustOrigin.MODEL),ArtifactTool.IDS,toolContext,ToolRegistry.ToolLoopState())
+            assertFalse("External/active formulas must remain rejected",rejected is ToolExecutionResult.Success)
+            assertEquals("Rejected formula input must not create another version",2,store.history(project,first.id).size)
+        } finally {
+            File(File(context.filesDir,"tool-workspaces"),"artifacts-${ArtifactStore.hash(project.toByteArray(Charsets.UTF_8))}").deleteRecursively()
+        }
     }
 
     @Test fun boundedCellEditToolCreatesImmutableVersionAndPreservesFormulaCacheAndScope()=runBlocking {
