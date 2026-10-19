@@ -2,6 +2,7 @@ package com.localai.workspace.context
 
 import android.app.Application
 import androidx.room.Room
+import androidx.room.withTransaction
 import com.localai.workspace.semantic.v2.*
 import kotlinx.coroutines.*
 import com.localai.workspace.AppGraph
@@ -12,6 +13,8 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
+import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.Executor
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk=[35],application=Application::class)
@@ -36,6 +39,71 @@ class MemoryRelevanceTest {
     @Test fun lexical_fallback_has_own_relevance_gate()=runBlocking {val m=memory.create(nebula,user);assertTrue(memory.select("editor astronomia planetas galaxias",access).included.isEmpty());assertEquals(m.id,memory.select("editor",access).included.single().record.id)}
     @Test fun many_memories_only_relevant_items_selected()=runBlocking {val m=memory.create(nebula,user);for(t in listOf("Mi lenguaje preferido es Kotlin","Prefiero reuniones cortas","Mi comida favorita es pasta","pantalla oscura","estilo sangria","ciudad Santiago","zona horaria Chile","formato PDF","musica jazz","deporte tenis","mascota gato","transporte tren","navegador Firefox","bebida cafe","vacaciones playa","presupuesto mensual","cumpleanos junio","trabajo remoto","telefono Motorola","base datos SQLite"))memory.create(t,user);assertEquals(21,memory.lookup(access).size);val s=memory.select("¿Cuál es mi editor preferido?",access);assertEquals(m.id,s.included.single().record.id);assertEquals(20,s.dropped.size)}
     @Test fun semantic_gate_is_independent_of_ranking_bonus()=runBlocking {val m=memory.create(nebula,user).copy(pinned=true,importance=99.0);assertFalse(MemoryRelevance.assess("base de datos",m,.619).accepted);assertTrue(MemoryRelevance.assess("different phrasing",m,.9).accepted)}
+    @Test fun vectorLookupBatchesRoomReadsForAllMemoryCandidates()=runBlocking {
+        val vectorSelects=AtomicInteger()
+        val isolated=Room.inMemoryDatabaseBuilder(RuntimeEnvironment.getApplication(),MemoryContextDatabase::class.java)
+            .setQueryCallback({sql,_->if(sql.trimStart().startsWith("SELECT",true)&&sql.contains("FROM context_vectors",true))vectorSelects.incrementAndGet()},Executor{it.run()})
+            .build()
+        val space=EmbeddingSpaceKey("memory-batch-test","EG2","b".repeat(64),"v1",768)
+        val manager=MemoryManager(isolated){_,_->error("a complete vector fixture must not embed")}
+        try {
+            repeat(25){index->
+                val record=manager.create("Language preference candidate $index",user)
+                isolated.dao().vector(ContextVector(record.id,space.id,record.contentHash,space.dimension,
+                    SemanticVectors.encode(FloatArray(space.dimension){if(it==0)1f else 0f}),System.currentTimeMillis()))
+            }
+            assertEquals(25,manager.lookup(access).size)
+            vectorSelects.set(0)
+            val query=EmbeddingResult(space,FloatArray(space.dimension){if(it==0)1f else 0f},0)
+            val result=manager.select("language preference",access,queryVector=query,allowEmbedding=false)
+            assertEquals(6,result.included.size)
+            assertEquals("one bounded batch read replaces one SQL read per candidate",1,vectorSelects.get())
+        } finally { isolated.close() }
+    }
+    @Test fun vectorLookupChunksCandidateIdsBelowSqliteBindLimit()=runBlocking {
+        val vectorSelects=AtomicInteger()
+        val isolated=Room.inMemoryDatabaseBuilder(RuntimeEnvironment.getApplication(),MemoryContextDatabase::class.java)
+            .setQueryCallback({sql,_->if(sql.trimStart().startsWith("SELECT",true)&&sql.contains("FROM context_vectors",true))vectorSelects.incrementAndGet()},Executor{it.run()})
+            .build()
+        val space=EmbeddingSpaceKey("memory-batch-boundary-test","EG2","c".repeat(64),"v1",768)
+        val manager=MemoryManager(isolated){_,_->error("a complete vector fixture must not embed")}
+        try {
+            val now=System.currentTimeMillis()
+            isolated.withTransaction {
+                repeat(401){index->
+                    val id="batch-$index";val text="Language preference candidate $index"
+                    val record=MemoryRecord(id,MemoryKind.FACT.name,"USER","local",null,text,createdAt=now,updatedAt=now,
+                        contentHash=MemoryContent.hash(text,MemoryKind.FACT))
+                    isolated.dao().put(record)
+                    isolated.dao().vector(ContextVector(id,space.id,record.contentHash,space.dimension,
+                        SemanticVectors.encode(FloatArray(space.dimension){if(it==0)1f else 0f}),now))
+                }
+            }
+            assertEquals(401,manager.lookup(access).size)
+            vectorSelects.set(0)
+            val query=EmbeddingResult(space,FloatArray(space.dimension){if(it==0)1f else 0f},0)
+            val result=manager.select("language preference",access,queryVector=query,allowEmbedding=false)
+            assertEquals(6,result.included.size)
+            assertEquals("401 candidates are read as two bounded vector batches",2,vectorSelects.get())
+        } finally { isolated.close() }
+    }
+    @Test fun batchedLookupRejectsStaleContentHashBeforeSemanticScoring()=runBlocking {
+        val isolated=Room.inMemoryDatabaseBuilder(RuntimeEnvironment.getApplication(),MemoryContextDatabase::class.java).build()
+        val space=EmbeddingSpaceKey("memory-stale-vector-test","EG2","d".repeat(64),"v1",768)
+        val vector=FloatArray(space.dimension){if(it==0)1f else 0f}
+        var embeddingCalls=0
+        val manager=MemoryManager(isolated){_,_->embeddingCalls++;EmbeddingResult(space,vector,1)}
+        try {
+            val record=manager.create("My preferred editor is Nebula",user,MemoryKind.PREFERENCE)
+            isolated.dao().vector(ContextVector(record.id,space.id,"0".repeat(64),space.dimension,
+                SemanticVectors.encode(FloatArray(space.dimension){if(it==1)1f else 0f}),System.currentTimeMillis()))
+            val selected=manager.select("Which editor do I prefer?",access,
+                queryVector=EmbeddingResult(space,vector,0),allowEmbedding=false)
+            assertEquals("a stale vector is treated as missing and rebuilt",1,embeddingCalls)
+            assertEquals(record.contentHash,isolated.dao().vector(record.id,space.id,record.contentHash)?.contentHash)
+            assertEquals(record.id,selected.included.single().record.id)
+        } finally { isolated.close() }
+    }
     @Test fun diagnostics_do_not_export_dropped_content()=runBlocking {val m=memory.create(nebula,user);val h=memory.select("base de datos",access).dropped.single();val item=ContextItem("MD1",ContextKind.MEMORY,m.text,user,ContextTrust.APPROVED_MEMORY,memoryRelevance=h.relevance);val bundle=ContextBuilder().build(ContextRequest("base de datos"),emptyList()).copy(dropped=listOf(DroppedContext(item,"BELOW_RELEVANCE_THRESHOLD")));val report=bundle.safeReport().toString();assertTrue(report.contains("BELOW_RELEVANCE_THRESHOLD"));assertFalse(report.contains("Nebula"));assertFalse(bundle.conversation().userMessage.contains("Nebula"))}
     @Test fun small_talk_foundation_avoids_embedding_gate_and_memory_budget()=runBlocking {
         val context=RuntimeEnvironment.getApplication()

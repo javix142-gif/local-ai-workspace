@@ -27,6 +27,7 @@ data class ProjectBrief(@PrimaryKey val projectId:String,val projectName:String,
     @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun put(value:MemoryRecord)
     @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun vector(value:ContextVector)
     @Query("SELECT * FROM context_vectors WHERE originId=:id AND spaceKey=:space AND contentHash=:hash") suspend fun vector(id:String,space:String,hash:String):ContextVector?
+    @Query("SELECT * FROM context_vectors WHERE spaceKey=:space AND originId IN (:ids)") suspend fun vectors(space:String,ids:List<String>):List<ContextVector>
     @Query("DELETE FROM context_vectors WHERE originId=:id") suspend fun deleteVectors(id:String)
     @Query("DELETE FROM context_vectors WHERE originId IN (SELECT id FROM memories WHERE status!='ACTIVE')") suspend fun cleanupVectors()
     @Insert(onConflict=OnConflictStrategy.REPLACE) suspend fun conversation(value:ConversationSource)

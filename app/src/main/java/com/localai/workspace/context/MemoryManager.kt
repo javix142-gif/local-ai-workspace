@@ -117,14 +117,39 @@ class MemoryManager(val database:MemoryContextDatabase,private val embed:suspend
         require(limit in 1..50)
         if(MemoryRelevance.smallTalk(query))return@withContext MemorySelection(emptyList(),emptyList(),true)
         val candidates=lookup(access);val vector=queryVector ?: if(allowEmbedding&&query.length>2)queryEmbedding(query)else null
-        var newEmbeddings=0
-        val hits=candidates.map{m->var stored=vector?.let{database.dao().vector(m.id,it.space.id,m.contentHash)}
-            if(vector!=null&&stored==null&&newEmbeddings<8){newEmbeddings++;index(m);stored=database.dao().vector(m.id,vector.space.id,m.contentHash)}
+        val storedVectors=if(vector==null) mutableMapOf() else loadVectors(candidates,vector.space.id)
+        if(vector!=null){
+            val attempted=mutableListOf<MemoryRecord>()
+            for(memory in candidates){
+                if(storedVectors[memory.id]==null&&attempted.size<MAX_INLINE_INDEX_ATTEMPTS){
+                    attempted+=memory
+                    index(memory)
+                }
+            }
+            if(attempted.isNotEmpty())storedVectors.putAll(loadVectors(attempted,vector.space.id))
+        }
+        val hits=candidates.map{m->val stored=storedVectors[m.id]?.takeIf{it.contentHash==m.contentHash}
             val semantic=if(stored!=null&&vector!=null)SemanticVectors.cosine(vector,EmbeddingResult(vector.space,SemanticVectors.decode(stored.bytes,stored.dimension),0))else null
             val relevance=MemoryRelevance.assess(query,m,semantic)
             MemoryHit(m,relevance.rankingScore,semantic,relevance)
         }.sortedWith(compareByDescending<MemoryHit>{it.score}.thenBy{it.record.id})
         MemorySelection(hits.filter{it.relevance!!.accepted}.take(limit),hits.filter{!it.relevance!!.accepted})
+    }
+    /** Read vectors in bounded SQL batches rather than issuing one Room roundtrip per memory. */
+    private suspend fun loadVectors(memories:List<MemoryRecord>,space:String):MutableMap<String,ContextVector>{
+        if(memories.isEmpty())return mutableMapOf()
+        val hashes=memories.associate{it.id to it.contentHash}
+        val result=mutableMapOf<String,ContextVector>()
+        memories.map{it.id}.distinct().chunked(VECTOR_LOOKUP_BATCH_SIZE).forEach{ids->
+            database.dao().vectors(space,ids).forEach{vector->
+                if(hashes[vector.originId]==vector.contentHash)result[vector.originId]=vector
+            }
+        }
+        return result
+    }
+    private companion object {
+        const val VECTOR_LOOKUP_BATCH_SIZE=400
+        const val MAX_INLINE_INDEX_ATTEMPTS=8
     }
     suspend fun exportJson(access:ScopeAccess)=GsonBuilder().serializeNulls().setPrettyPrinting().create().toJson(mapOf("schema" to "MEMORY_CONTEXT_V1","memories" to lookup(access),"vectorsIncluded" to false))
 }
