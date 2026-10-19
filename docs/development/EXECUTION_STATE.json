@@ -7292,7 +7292,7 @@
       "PPTXImageEmbedding": "IMPLEMENTED_HOST_FOCUSED_XML_2_OF_2_BUT_GRADLE_EXIT_UNOBSERVED; independent reader opens the recorded package hash; supplied bounded PNG only; no image generation, WYSIWYG preview or device viewer validation",
       "DocumentImportToEg1TimingCorrelation": "IMPLEMENTED_HOST_TESTED_SYNTHETIC_XLSX; 2/2 focused tests, lint and AndroidTest compilation pass; full M00-06 timeline incomplete.",
       "NormalGenerationCheckpointTimeline": "IMPLEMENTED_HOST_TESTED_PRESENTATION_ONLY; current recorded events shown as elapsed and adjacent delta; no new instrumentation or neural performance claim; device validation pending.",
-      "XLSXFormulaEditing": "IMPLEMENTED_FOCUSED_HOST_TESTED_PREPARATORY; app-private generated revisions only; app does not evaluate formulas; external reader and device validation pending"
+      "XLSXFormulaEditing": "IMPLEMENTED_FOCUSED_HOST_JUNIT_AND_OPENPYXL_TESTED_PREPARATORY; app-private generated revisions only; app does not evaluate formulas; Excel/LibreOffice GUI and device validation pending"
     },
     "latestDelivery": {
       "artifactType": "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
@@ -8214,15 +8214,17 @@
   "latestMasterProgramIncrement": {
     "name": "M03-02 generated XLSX formula-edit follow-up",
     "kind": "PREPARATORY_M03_02_XLSX_FORMULA_EDIT",
-    "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO_DEPENDENCIES_AND_DEVICE_GATES_OPEN",
-    "codeCommit": "de7445114ad90c0a11453663971286feb2c5fdef",
+    "status": "FOCUSED_HOST_JUNIT_AND_OPENPYXL_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO_DEPENDENCIES_AND_DEVICE_GATES_OPEN",
+    "codeCommit": "188047a188a9b03a493ebf1a6d26a42c7a81553a",
     "testedCodeSha": "de7445114ad90c0a11453663971286feb2c5fdef",
     "workingBranch": "codex/master-program-20261019",
     "publicationTarget": "codex/master-program-20261019",
     "originalTask": "M03-02 remains source TODO; preparatory formula-edit slice only",
     "evidencePath": "docs/validation/master-program-m03-02-xlsx-formulas/RESULTS.md",
-    "hostTests": "5/5 focused class; no full gates/device/APK",
-    "formalOriginalTaskCompletion": false
+    "hostTests": "XlsxArtifactRevisionTest 5/5; openpyxl 3.1.5 independently read both formula revisions; outer exec status discrepancy recorded; no full gates/device/APK",
+    "formalOriginalTaskCompletion": false,
+    "testedSourceSha": "188047a188a9b03a493ebf1a6d26a42c7a81553a",
+    "productionCodeSha": "de7445114ad90c0a11453663971286feb2c5fdef"
   },
   "previousMasterProgramIncrement": {
     "name": "Preparatory M00-06: correlate XLSX import and EG1 indexing diagnostics",
@@ -9426,15 +9428,18 @@
     {
       "name": "M03-02 generated XLSX formula-edit follow-up",
       "kind": "PREPARATORY_M03_02_XLSX_FORMULA_EDIT",
-      "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO_DEPENDENCIES_AND_DEVICE_GATES_OPEN",
-      "codeCommit": "de7445114ad90c0a11453663971286feb2c5fdef",
+      "status": "FOCUSED_HOST_JUNIT_AND_OPENPYXL_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO_DEPENDENCIES_AND_DEVICE_GATES_OPEN",
+      "codeCommit": "188047a188a9b03a493ebf1a6d26a42c7a81553a",
       "testedCodeSha": "de7445114ad90c0a11453663971286feb2c5fdef",
       "workingBranch": "codex/master-program-20261019",
       "publicationTarget": "codex/master-program-20261019",
       "originalTask": "M03-02 remains source TODO; preparatory formula-edit slice only",
       "evidencePath": "docs/validation/master-program-m03-02-xlsx-formulas/RESULTS.md",
       "hostTests": "5/5 focused class; no full gates/device/APK",
-      "formalOriginalTaskCompletion": false
+      "formalOriginalTaskCompletion": false,
+      "testedSourceSha": "188047a188a9b03a493ebf1a6d26a42c7a81553a",
+      "productionCodeSha": "de7445114ad90c0a11453663971286feb2c5fdef",
+      "independentReader": "openpyxl 3.1.5 PASS"
     }
   ],
   "latestM02_01Preparation": {
@@ -10923,11 +10928,13 @@
     "evidenceManifestSha256": "19b4c26f00797a785985852429bb000d7cd1f35e4a62afacea94ce9ade6d32ca",
     "apkDisposition": "No retained compatible Debug signing key was available/verified; historical QA artifacts have different certificate fingerprints and no Motorola install certificate can be inspected. No APK was produced to avoid risking a data-losing uninstall.",
     "formulaEditFollowUp": {
-      "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO_DEPENDENCIES_AND_DEVICE_GATES_OPEN",
-      "testedCodeSha": "de7445114ad90c0a11453663971286feb2c5fdef",
+      "status": "FOCUSED_HOST_JUNIT_AND_OPENPYXL_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO_DEPENDENCIES_AND_DEVICE_GATES_OPEN",
+      "testedCodeSha": "188047a188a9b03a493ebf1a6d26a42c7a81553a",
       "evidencePath": "docs/validation/master-program-m03-02-xlsx-formulas",
       "formalOriginalTaskCompletion": false,
-      "summary": "Bounded formula edit for app-private generated XLSX; no evaluation; see latestM03_02FormulaEditFollowUp for exact run and limits."
+      "summary": "Bounded formula edit for app-private generated XLSX; no evaluation; see latestM03_02FormulaEditFollowUp for exact run and limits.",
+      "productionCodeSha": "de7445114ad90c0a11453663971286feb2c5fdef",
+      "testHarnessCommit": "188047a188a9b03a493ebf1a6d26a42c7a81553a"
     }
   },
   "latestM03_03Preparation": {
@@ -12424,7 +12431,7 @@
   "latestM03_02FormulaEditFollowUp": {
     "name": "M03-02 generated XLSX formula-edit follow-up",
     "kind": "PREPARATORY_M03_02_XLSX_FORMULA_EDIT",
-    "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO_DEPENDENCIES_AND_DEVICE_GATES_OPEN",
+    "status": "FOCUSED_HOST_JUNIT_AND_OPENPYXL_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO_DEPENDENCIES_AND_DEVICE_GATES_OPEN",
     "codeCommit": "de7445114ad90c0a11453663971286feb2c5fdef",
     "codeCommits": [
       "dea9fe0",
@@ -12432,7 +12439,8 @@
       "c65c772",
       "0aca92a",
       "00429818a4b9c5b5bce13b6fb45ec65b54d4cc02",
-      "de7445114ad90c0a11453663971286feb2c5fdef"
+      "de7445114ad90c0a11453663971286feb2c5fdef",
+      "188047a188a9b03a493ebf1a6d26a42c7a81553a"
     ],
     "evidencePath": "docs/validation/master-program-m03-02-xlsx-formulas",
     "baseProgramBranchHead": "83a4a74508a94880ffb000b546efc7a362e4545d",
@@ -12492,7 +12500,34 @@
       "gradleLogArchive": "docs/validation/master-program-m03-02-xlsx-formulas/green-attempt-02/gradle.log.gz",
       "gradleLogArchiveSha256": "93d25925ed06bdd5f497eb3d98a596e0e15d7729e70a3c6785f1e42b3246c931",
       "decompressedRawGradleLogSha256": "521c07aa5b7d6e599a995c800e17ed1fd26572f409e3f05a454fae72ed2ba3d5",
-      "allAttemptLogHashRecords": "docs/validation/master-program-m03-02-xlsx-formulas/LOG_HASHES.json"
+      "allAttemptLogHashRecords": "docs/validation/master-program-m03-02-xlsx-formulas/LOG_HASHES.json",
+      "independentReaderFollowUp": {
+        "testHarnessCommit": "188047a188a9b03a493ebf1a6d26a42c7a81553a",
+        "productionCodeSha": "de7445114ad90c0a11453663971286feb2c5fdef",
+        "startedAtUtc": "2026-10-19T13:21:24Z",
+        "finishedAtUtc": "2026-10-19T13:22:09Z",
+        "durationSeconds": 45,
+        "gradleExitCode": 0,
+        "execSessionExitCode": 1,
+        "execSessionStatus": "OUTER_STATUS_DISCREPANCY_UNRESOLVED",
+        "junit": {
+          "tests": 5,
+          "passed": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "xml": "docs/validation/master-program-m03-02-xlsx-formulas/independent-reader-attempt-01/junit-xml/TEST-com.localai.workspace.artifacts.XlsxArtifactRevisionTest.xml",
+          "sha256": "2701328adea6a8e0348e81e31a10eacc2118e6baa94a61d6cb7b2f6d3d012713"
+        },
+        "openpyxl": {
+          "version": "3.1.5",
+          "python": "3.12.14",
+          "exitCode": 0,
+          "originalXlsxSha256": "b3df1bf522e7110a594dc62dd6d890cf8809c528a189acd881e8ce58fe8d586e",
+          "editedXlsxSha256": "8f7b716ec1ada057ca9107acbacb6936e31e5b70e590cbead6ca3c2aefaed626",
+          "report": "docs/validation/master-program-m03-02-xlsx-formulas/independent-reader-attempt-01/openpyxl-reader-output.json"
+        }
+      }
     },
     "earlierAttempts": {
       "redCompile01": {
@@ -12531,7 +12566,7 @@
       "apk": "NOT_GENERATED",
       "emulator": "NOT_RUN",
       "physicalDevice": "NOT_RUN",
-      "independentSpreadsheetReader": "NOT_RUN"
+      "independentSpreadsheetReader": "Excel/LibreOffice GUI or Android spreadsheet app NOT_RUN; openpyxl host read PASS"
     },
     "sourcePlan": {
       "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
@@ -12550,16 +12585,19 @@
       "results": "docs/validation/master-program-m03-02-xlsx-formulas/RESULTS.md",
       "resultsJson": "docs/validation/master-program-m03-02-xlsx-formulas/RESULTS.json",
       "manifest": "docs/validation/master-program-m03-02-xlsx-formulas/SHA256SUMS",
-      "manifestSha256": "3c4be9bbcb5a8c97222c6a0453ec941cb6d047ec9c9580a99d9248043c98704d",
-      "manifestEntries": 36,
-      "manifestVerified": "36/36 tracked evidence payloads via sha256sum -c; raw logs are represented by lossless .gz archives"
+      "manifestSha256": "ced2897bbe673aa86a4e417e2a9050612d043e41808833eae610c384844eac60",
+      "manifestEntries": 51,
+      "manifestVerified": "51/51 local payloads via sha256sum -c; five raw Gradle logs preserved as lossless gzip with raw/archive hashes"
     },
     "limitations": [
       "Focused class only; not a full app or compatibility suite.",
       "Existing Gradle cache/build outputs were reused; not a clean checkout/build.",
-      "No independent Office reader or Motorola validation.",
       "The app does not recalculate formulas; compatible reader behavior not independently verified.",
-      "M03-02 source task remains TODO; dependencies and physical-device DoD remain open."
-    ]
+      "M03-02 source task remains TODO; dependencies and physical-device DoD remain open.",
+      "No Excel/LibreOffice GUI or Android spreadsheet viewer validation."
+    ],
+    "testHarnessCommit": "188047a188a9b03a493ebf1a6d26a42c7a81553a",
+    "testedSourceSha": "188047a188a9b03a493ebf1a6d26a42c7a81553a",
+    "productionCodeSha": "de7445114ad90c0a11453663971286feb2c5fdef"
   }
 }

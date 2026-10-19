@@ -4,6 +4,8 @@ Code SHA `de7445114ad90c0a11453663971286feb2c5fdef` extends the app-private gene
 
 The exact-SHA focused HOST run passed `XlsxArtifactRevisionTest` 5/5 (0 failures/errors/skips), Gradle exit 0, 51 seconds wall time. Gradle 8.10.2/JDK 17 runtime, JDK 21 app test launcher, SDK API 35 and existing offline cache are recorded with the command, raw log, fresh XML and hashes in [`M03-02 formula-edit results`](../validation/master-program-m03-02-xlsx-formulas/RESULTS.md). This reused existing Gradle/build outputs; it was not a clean-checkout build or the full JVM/LiteRT/lint/AndroidTest gate. No APK, emulator, or device was run.
 
+Test-only commit `188047a188a9b03a493ebf1a6d26a42c7a81553a` adds opt-in export of two synthetic XLSX versions from the focused test. The class again passed 5/5, and openpyxl 3.1.5 independently read both packages, confirming the old formula/cache on v1 and the edited formula/no stale cache/recalculation flag on v2. The Gradle subprocess exit file is 0 and log/XML pass; the outer unified exec session reported 1, an unresolved wrapper-status discrepancy retained in the evidence. No Excel/LibreOffice GUI or device was tested.
+
 Original M03-02 remains `TODO`, `requires_device=true`, and depends on M03-01 and M02-02; both remain source `TODO`. This is a preparatory formula-edit slice, not full XLSX editor completion and not independent Excel/LibreOffice validation. The original backlog/roadmap remain unchanged at 97 unique task IDs, 120 dependencies and all source statuses `TODO`. `main` and peeled `v0.4.2` were not modified. Next preparatory review: inspect the authentic M03-02 remainder/compatibility needs after this formula edit; keep all formal task states and device gates open.
 
 ---

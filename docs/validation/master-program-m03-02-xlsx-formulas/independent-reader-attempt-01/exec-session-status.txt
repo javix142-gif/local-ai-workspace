@@ -1,0 +1,2 @@
+Gradle subprocess result captured by the command script: exit code 0 in exit-code.txt; the raw Gradle log ends with BUILD SUCCESSFUL and the fresh JUnit XML reports 5/5 passing.
+The unified exec session reported exit code 1 when the session was polled to completion. The discrepancy between that outer session status and the captured Gradle subprocess result is unresolved. It is not represented as a Gradle failure or silently discarded.

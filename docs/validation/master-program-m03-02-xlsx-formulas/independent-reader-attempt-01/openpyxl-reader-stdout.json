@@ -1,0 +1,35 @@
+{
+  "reader": "openpyxl",
+  "version": "3.1.5",
+  "checks": [
+    {
+      "name": "original.xlsx",
+      "bytes": 2255,
+      "sha256": "b3df1bf522e7110a594dc62dd6d890cf8809c528a189acd881e8ce58fe8d586e",
+      "zipCrc": "PASS",
+      "sheetNames": [
+        "Hoja1"
+      ],
+      "A1": 1,
+      "A2": 5,
+      "A3Formula": "=$A$2-$A$1",
+      "A3DataOnlyCachedValue": 4,
+      "fullCalcOnLoad": true
+    },
+    {
+      "name": "formula-edited.xlsx",
+      "bytes": 2259,
+      "sha256": "8f7b716ec1ada057ca9107acbacb6936e31e5b70e590cbead6ca3c2aefaed626",
+      "zipCrc": "PASS",
+      "sheetNames": [
+        "Hoja1"
+      ],
+      "A1": 1,
+      "A2": 5,
+      "A3Formula": "=SUM(A1:A2)",
+      "A3DataOnlyCachedValue": null,
+      "fullCalcOnLoad": true
+    }
+  ],
+  "conclusion": "Both real generated OOXML files opened independently; original formula/cache preserved and edited formula has no stale cache while requesting recalculation."
+}

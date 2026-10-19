@@ -49,6 +49,16 @@
       "decompressedRawBytes": 6003,
       "decompressedRawSha256": "a5095f813dd46b7c24eaf9ac41b08de1959717d2d6a6eb762443a7dcedd3abc8",
       "roundTripVerified": true
+    },
+    {
+      "attempt": "independent-reader-attempt-01",
+      "sourceSha": "188047a188a9b03a493ebf1a6d26a42c7a81553a",
+      "archive": "independent-reader-attempt-01/gradle.log.gz",
+      "archiveBytes": 1321,
+      "archiveSha256": "a31d6c04a46ede8fe3c38b4d5e6e815c257bf943618290042468441ec974f7fc",
+      "decompressedRawBytes": 5657,
+      "decompressedRawSha256": "02d2a7e941fff529778d4a87b3d505cf363e2fa9353be8d89651330c59dfe271",
+      "roundTripVerified": true
     }
   ]
 }

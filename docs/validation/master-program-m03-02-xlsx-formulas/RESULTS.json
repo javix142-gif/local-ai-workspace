@@ -9,7 +9,8 @@
     "c65c772",
     "0aca92a",
     "00429818a4b9c5b5bce13b6fb45ec65b54d4cc02",
-    "de7445114ad90c0a11453663971286feb2c5fdef"
+    "de7445114ad90c0a11453663971286feb2c5fdef",
+    "188047a188a9b03a493ebf1a6d26a42c7a81553a"
   ],
   "scope": "App-private generated XLSX artifact formula edits through existing artifacts.xlsxSetCells; imported workbooks are unchanged.",
   "implementation": {
@@ -82,7 +83,8 @@
     "APK build",
     "emulator",
     "physical device",
-    "independent spreadsheet reader"
+    "Excel/LibreOffice GUI or Android spreadsheet application",
+    "physical device"
   ],
   "formalOriginalTask": {
     "id": "M03-02",
@@ -110,5 +112,43 @@
   },
   "emulator": "NOT_RUN",
   "physicalDevice": "NOT_RUN",
-  "apk": "NOT_GENERATED"
+  "apk": "NOT_GENERATED",
+  "testedProductionCodeSha": "de7445114ad90c0a11453663971286feb2c5fdef",
+  "testedSourceSha": "188047a188a9b03a493ebf1a6d26a42c7a81553a",
+  "independentReaderFollowUp": {
+    "testHarnessCommit": "188047a188a9b03a493ebf1a6d26a42c7a81553a",
+    "productionCodeSha": "de7445114ad90c0a11453663971286feb2c5fdef",
+    "gradleInvocation": {
+      "startedAtUtc": "2026-10-19T13:21:24Z",
+      "finishedAtUtc": "2026-10-19T13:22:09Z",
+      "durationSeconds": 45,
+      "gradleExitCode": 0,
+      "execSessionExitCode": 1,
+      "execSessionDiscrepancy": "Outer unified-exec session returned 1 despite captured Gradle exit 0, BUILD SUCCESSFUL, and fresh 5/5 XML; cause unresolved.",
+      "tests": 5,
+      "passed": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml": "independent-reader-attempt-01/junit-xml/TEST-com.localai.workspace.artifacts.XlsxArtifactRevisionTest.xml",
+      "xmlSha256": "2701328adea6a8e0348e81e31a10eacc2118e6baa94a61d6cb7b2f6d3d012713",
+      "logArchive": "independent-reader-attempt-01/gradle.log.gz",
+      "logArchiveSha256": "a31d6c04a46ede8fe3c38b4d5e6e815c257bf943618290042468441ec974f7fc",
+      "decompressedRawLogSha256": "02d2a7e941fff529778d4a87b3d505cf363e2fa9353be8d89651330c59dfe271"
+    },
+    "reader": {
+      "name": "openpyxl",
+      "version": "3.1.5",
+      "python": "3.12.14",
+      "exitCode": 0,
+      "command": "python3 docs/validation/master-program-m03-02-xlsx-formulas/independent-reader-attempt-01/openpyxl_check.py",
+      "output": "independent-reader-attempt-01/openpyxl-reader-output.json",
+      "script": "independent-reader-attempt-01/openpyxl_check.py",
+      "originalXlsxSha256": "b3df1bf522e7110a594dc62dd6d890cf8809c528a189acd881e8ce58fe8d586e",
+      "editedXlsxSha256": "8f7b716ec1ada057ca9107acbacb6936e31e5b70e590cbead6ca3c2aefaed626",
+      "result": "Both OOXML packages opened; original formula/cache preserved; edited formula has no stale cache and requests recalculation."
+    },
+    "testHarnessOnly": true,
+    "productionChanged": false
+  }
 }
