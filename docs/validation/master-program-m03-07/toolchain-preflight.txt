@@ -1,0 +1,41 @@
+JDK 17 Gradle runtime:
+openjdk version "17.0.20.1" 2026-08-18
+OpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)
+OpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)
+javac 17.0.20.1
+jdk.compiler@17.0.20.1
+JDK 21 toolchain:
+openjdk version "21.0.12.1" 2026-08-18 LTS
+OpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)
+OpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)
+javac 21.0.12.1
+jdk.compiler@21.0.12.1
+Android SDK packages:
+[/workspace/.toolchain/android-sdk/platform-tools/source.properties]
+Pkg.UserSrc=false
+Pkg.Revision=37.0.1
+[/workspace/.toolchain/android-sdk/platforms/android-35/source.properties]
+Pkg.Desc=Android SDK Platform 15
+Pkg.UserSrc=false
+Platform.Version=15
+Platform.CodeName=
+Pkg.Revision=2
+AndroidVersion.ApiLevel=35
+AndroidVersion.ExtensionLevel=13
+AndroidVersion.IsBaseSdk=true
+Layoutlib.Api=15
+Layoutlib.Revision=1
+Platform.MinToolsRev=22
+[/workspace/.toolchain/android-sdk/build-tools/35.0.0/source.properties]
+Pkg.UserSrc=false
+Pkg.Revision=35.0.0
+#Pkg.Revision=35.0.0 rc4
+[/workspace/.toolchain/android-sdk/ndk/27.0.12077973/source.properties]
+Pkg.Desc = Android NDK
+Pkg.Revision = 27.0.12077973
+Pkg.BaseRevision = 27.0.12077973
+Pkg.ReleaseName = r27
+[/workspace/.toolchain/android-sdk/cmake/3.31.6/source.properties]
+Pkg.Revision = 3.31.6
+Pkg.Path = cmake;3.31.6
+Pkg.Desc = CMake 3.31.6

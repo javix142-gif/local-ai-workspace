@@ -1,0 +1,8 @@
+source_sha=0412f605ed090c2c5ced147d297d9a9fde0781db
+:app:compileDebugUnitTestKotlin=PASS
+:app:testDebugUnitTest=PASS
+focused_class=ArtifactRevisionPreviewUiTest
+executed=1 passed=1 failed=0 errors=0 skipped=0
+JUnit test duration=8.618 seconds; Gradle build duration=41 seconds
+Gradle tasks=63 actionable (3 executed, 60 UP-TO-DATE)
+BUILD SUCCESSFUL; exit_code=0

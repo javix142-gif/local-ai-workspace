@@ -1,0 +1,8 @@
+source_sha=0412f605ed090c2c5ced147d297d9a9fde0781db
+started_utc=2026-10-19T12:42:09Z
+java_home=/workspace/.toolchain/jdk-17
+worker_toolchain=/workspace/.toolchain/jdk-21-temurin
+android_sdk=/workspace/.toolchain/android-sdk
+gradle_user_home=/workspace/.gradle
+gradle_version=8.10.2
+finished_utc=2026-10-19T12:42:50Z

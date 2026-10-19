@@ -1,0 +1,14 @@
+source_sha=4d7014abe903f4a80e090777c9cfc3b7e78c6119
+branch=codex/master-program-20261019
+gradle_runtime=/workspace/.toolchain/jdk-17
+java17=openjdk version "17.0.20.1" 2026-08-18
+javac17=javac 17.0.20.1
+test_worker=/workspace/.toolchain/jdk-21-temurin
+java21=openjdk version "21.0.12.1" 2026-08-18 LTS
+javac21=javac 21.0.12.1
+android_home=/workspace/.toolchain/android-sdk
+sdk_platform=2
+ndk_revision= 27.0.12077973
+cmake_revision= 3.31.6
+gradle_user_home=/workspace/.gradle
+truststore=/etc/ssl/certs/java/cacerts

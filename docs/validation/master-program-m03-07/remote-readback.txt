@@ -1,0 +1,12 @@
+captured_utc=2026-10-19T12:45:02Z
+command=git ls-remote origin refs/heads/feat/0.5.0-skills-agents refs/heads/main refs/heads/recovery/backup-b8e75b4 refs/heads/codex/master-program-20261019 refs/tags/v0.4.2 refs/tags/v0.4.2^{}
+b8e75b4a688d9e1f441324a3a1ecccb369f99ebc	refs/heads/codex/master-program-20261019
+b8e75b4a688d9e1f441324a3a1ecccb369f99ebc	refs/heads/feat/0.5.0-skills-agents
+de615b772cf37a99e7e08a647c59607b271de606	refs/heads/main
+b8e75b4a688d9e1f441324a3a1ecccb369f99ebc	refs/heads/recovery/backup-b8e75b4
+b0ca65237aafeccf1f1c7198ad6945f8039206b5	refs/tags/v0.4.2
+de615b772cf37a99e7e08a647c59607b271de606	refs/tags/v0.4.2^{}
+
+local_branch=codex/master-program-20261019
+local_head=0412f605ed090c2c5ced147d297d9a9fde0781db
+backup_ancestor=yes

@@ -1,0 +1,44 @@
+{
+  "logs": [
+    {
+      "originalPath": "docs/validation/master-program-m03-07/recovery-attempt-01/gradle.log",
+      "gzipPath": "docs/validation/master-program-m03-07/recovery-attempt-01/gradle.log.gz",
+      "originalBytes": 2050,
+      "originalSha256": "bb85c8a579c297e974ca8504a95c1ba4e87732d5487b3767af5d12db6fd3e92c",
+      "gzipBytes": 555,
+      "gzipSha256": "bf8d2ef5508e5a2f6e4a2b96779af3be9d92774ce3bbe13bbd8a040c113a7d83"
+    },
+    {
+      "originalPath": "docs/validation/master-program-m03-07/recovery-attempt-02/gradle-wrapper-proxy-preflight.log",
+      "gzipPath": "docs/validation/master-program-m03-07/recovery-attempt-02/gradle-wrapper-proxy-preflight.log.gz",
+      "originalBytes": 1178,
+      "originalSha256": "e2e976bbfe214dd2acef6bd15fe235c6277af665ebcd6375ff47d939750e9c9d",
+      "gzipBytes": 610,
+      "gzipSha256": "c5c391a5890f3bbe1500c1cc468514d832e62ee99779bd45662c3d17feb3f580"
+    },
+    {
+      "originalPath": "docs/validation/master-program-m03-07/recovery-attempt-03/gradle.log",
+      "gzipPath": "docs/validation/master-program-m03-07/recovery-attempt-03/gradle.log.gz",
+      "originalBytes": 1116021,
+      "originalSha256": "e67d8f98f463ea54dcb97ee6a6186264bc7bf291840ad5fb12fe8ec5aea79927",
+      "gzipBytes": 124792,
+      "gzipSha256": "cf4942fb1e6b78a26457de73ae9a5c42a84be1ef1ad9f38375bf43ae2cfd34d0"
+    },
+    {
+      "originalPath": "docs/validation/master-program-m03-07/recovery-attempt-04/gradle.log",
+      "gzipPath": "docs/validation/master-program-m03-07/recovery-attempt-04/gradle.log.gz",
+      "originalBytes": 5947,
+      "originalSha256": "b2ed07d98e385095c74f59e30902348e6e57c4a85e84481361842e6ea0d0eb12",
+      "gzipBytes": 1603,
+      "gzipSha256": "86e3df7d820de6847d14620c836252900ba532524847142019901217281566a9"
+    },
+    {
+      "originalPath": "docs/validation/master-program-m03-07/recovery-attempt-05/gradle.log",
+      "gzipPath": "docs/validation/master-program-m03-07/recovery-attempt-05/gradle.log.gz",
+      "originalBytes": 5323,
+      "originalSha256": "5f83e67606c2256c24ef92f219617851fc2c63da220030103d66c558252cd81d",
+      "gzipBytes": 1226,
+      "gzipSha256": "75a35b60a638a8ce959323d0d49049a951a01bad789d4e881db86c1dd50ffea8"
+    }
+  ]
+}

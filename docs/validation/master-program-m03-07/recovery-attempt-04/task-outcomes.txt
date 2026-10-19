@@ -1,0 +1,9 @@
+source_sha=8feb93f3d5ad62c792bdb35b0124f72f2b5bd467
+:app:testDebugUnitTest=FAIL
+focused_class=ArtifactRevisionPreviewUiTest
+executed=1 failed=1 errors=0 skipped=0 (observed from the original XML before the next run overwrote Gradle's result path)
+failure=performScrollTo() on the AlertDialog Close action; Semantic Node has no parent layout with a Scroll SemanticsAction
+classification=incorrect test interaction; no product defect demonstrated
+original XML was inspected but not copied before it was overwritten; raw Gradle log and observed-failure.txt are retained
+wall_duration=112 seconds from run-meta timestamps; Gradle reports BUILD FAILED in 1m52s
+exit_code=1

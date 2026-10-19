@@ -1,0 +1,7 @@
+source_sha=4d7014abe903f4a80e090777c9cfc3b7e78c6119
+:app:testDebugUnitTest=NOT_REACHED; test source compilation failed first
+:app:compileDebugUnitTestKotlin=FAIL
+compiler_error=Unresolved reference 'onAllNodesWithText' in ArtifactRevisionPreviewUiTest.kt:61
+junit_xml=none; xml-before.txt was empty
+wall_duration=338 seconds from run-meta timestamps; Gradle reports BUILD FAILED in 5m37s
+exit_code=1

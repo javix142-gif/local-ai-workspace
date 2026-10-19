@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "recordType": "RECOVERY_AND_HOST_PREPARATORY_VALIDATION",
+  "recordedAtUtc": "2026-10-19",
+  "repository": "javix142-gif/local-ai-workspace",
+  "startingFeatureHead": "b8e75b4a688d9e1f441324a3a1ecccb369f99ebc",
+  "backupRef": {
+    "name": "recovery/backup-b8e75b4",
+    "target": "b8e75b4a688d9e1f441324a3a1ecccb369f99ebc",
+    "readBack": true
+  },
+  "implementationBranch": "codex/master-program-20261019",
+  "codeCommits": [
+    "4d7014abe903f4a80e090777c9cfc3b7e78c6119",
+    "8feb93f3d5ad62c792bdb35b0124f72f2b5bd467",
+    "0412f605ed090c2c5ced147d297d9a9fde0781db"
+  ],
+  "testedCodeSha": "0412f605ed090c2c5ced147d297d9a9fde0781db",
+  "productionFilesChanged": [],
+  "testFilesChanged": [
+    "app/src/test/java/com/localai/workspace/ui/ArtifactRevisionPreviewUiTest.kt"
+  ],
+  "recovery": {
+    "unrecoveredLocalCommit": "2f8b0d496db8973edf161c7703efc8f0c17d34fd",
+    "status": "NOT_RECOVERED",
+    "githubLookup": "HTTP 422: No commit found",
+    "noSourceWasReconstructed": true
+  },
+  "focusedTest": {
+    "class": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+    "method": "reviewShowsExactBeforeAndAfterAndClosingKeepsSavedRevisionUnchanged",
+    "command": "JAVA_TOOL_OPTIONS='-Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts' JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk GRADLE_USER_HOME=/workspace/.gradle timeout --signal=INT --kill-after=30s 720s ./gradlew --no-daemon --no-parallel --max-workers=1 --console=plain -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+    "status": "PASS",
+    "exitCode": 0,
+    "durationSeconds": 41,
+    "tests": 1,
+    "passed": 1,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "testDurationSeconds": 8.618,
+    "xml": "recovery-attempt-05/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml",
+    "log": "recovery-attempt-05/gradle.log.gz"
+  },
+  "attempts": [
+    {
+      "number": 3,
+      "sourceSha": "4d7014abe903f4a80e090777c9cfc3b7e78c6119",
+      "status": "FAIL_TEST_SOURCE_COMPILATION",
+      "exitCode": 1,
+      "durationSeconds": 338,
+      "testStarted": false,
+      "xml": null,
+      "cause": "missing Compose onAllNodesWithText import in the new test"
+    },
+    {
+      "number": 4,
+      "sourceSha": "8feb93f3d5ad62c792bdb35b0124f72f2b5bd467",
+      "status": "FAIL_TEST_INTERACTION",
+      "exitCode": 1,
+      "durationSeconds": 112,
+      "tests": 1,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 0,
+      "cause": "performScrollTo was incorrectly applied to the AlertDialog Close action outside the scrollable dialog body",
+      "originalXmlPreserved": false
+    },
+    {
+      "number": 5,
+      "sourceSha": "0412f605ed090c2c5ced147d297d9a9fde0781db",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationSeconds": 41,
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "environment": {
+    "gradle": "8.10.2",
+    "gradleRuntimeJdk": "Temurin 17.0.20.1",
+    "workerToolchainJdk": "Temurin 21.0.12.1",
+    "androidApi": 35,
+    "buildTools": "35.0.0",
+    "ndk": "27.0.12077973",
+    "cmake": "3.31.6"
+  },
+  "originalTask": {
+    "id": "M03-07",
+    "title": "UI de vista previa y comparación",
+    "sourceStatus": "TODO",
+    "requiresDevice": true,
+    "dependsOn": [
+      "M03-01"
+    ],
+    "dependencyStatus": "M03-01 TODO",
+    "checkpointStatus": "HOST_FOCUSED_PREPARATORY_ONLY_NOT_COMPLETE",
+    "verified": [
+      "saved before body and proposed after body are both surfaced",
+      "export action remains explicitly attached to saved v1",
+      "cancel/close does not add a version or alter the saved bytes/hash"
+    ],
+    "notEstablished": [
+      "full cross-format preview/diff/export workflow",
+      "line-by-line unified diff in the generic artifact revision UI",
+      "real SAF export in this run",
+      "physical-device usability"
+    ]
+  },
+  "planIntegrity": {
+    "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmapPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskIds": 97,
+    "uniqueTaskIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatusesChanged": false
+  },
+  "validationLayers": {
+    "hostFocused": "PASS 1/1 on testedCodeSha",
+    "hostFullJvm": "NOT_RUN",
+    "lintAndBuild": "NOT_RUN",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_RUN"
+  },
+  "payloadManifest": {
+    "path": "SHA256SUMS",
+    "entries": 33,
+    "sha256": "d21958ee66adbf1c92ca6db6ea900b814bdc4d0faf4bc7a1db1246eaafa55e08",
+    "note": "Generated after raw evidence collection; covers evidence payload files, excludes RESULTS.md, RESULTS.json and itself."
+  },
+  "logPayloadHashes": [
+    {
+      "originalPath": "docs/validation/master-program-m03-07/recovery-attempt-01/gradle.log",
+      "gzipPath": "docs/validation/master-program-m03-07/recovery-attempt-01/gradle.log.gz",
+      "originalBytes": 2050,
+      "originalSha256": "bb85c8a579c297e974ca8504a95c1ba4e87732d5487b3767af5d12db6fd3e92c",
+      "gzipBytes": 555,
+      "gzipSha256": "bf8d2ef5508e5a2f6e4a2b96779af3be9d92774ce3bbe13bbd8a040c113a7d83"
+    },
+    {
+      "originalPath": "docs/validation/master-program-m03-07/recovery-attempt-02/gradle-wrapper-proxy-preflight.log",
+      "gzipPath": "docs/validation/master-program-m03-07/recovery-attempt-02/gradle-wrapper-proxy-preflight.log.gz",
+      "originalBytes": 1178,
+      "originalSha256": "e2e976bbfe214dd2acef6bd15fe235c6277af665ebcd6375ff47d939750e9c9d",
+      "gzipBytes": 610,
+      "gzipSha256": "c5c391a5890f3bbe1500c1cc468514d832e62ee99779bd45662c3d17feb3f580"
+    },
+    {
+      "originalPath": "docs/validation/master-program-m03-07/recovery-attempt-03/gradle.log",
+      "gzipPath": "docs/validation/master-program-m03-07/recovery-attempt-03/gradle.log.gz",
+      "originalBytes": 1116021,
+      "originalSha256": "e67d8f98f463ea54dcb97ee6a6186264bc7bf291840ad5fb12fe8ec5aea79927",
+      "gzipBytes": 124792,
+      "gzipSha256": "cf4942fb1e6b78a26457de73ae9a5c42a84be1ef1ad9f38375bf43ae2cfd34d0"
+    },
+    {
+      "originalPath": "docs/validation/master-program-m03-07/recovery-attempt-04/gradle.log",
+      "gzipPath": "docs/validation/master-program-m03-07/recovery-attempt-04/gradle.log.gz",
+      "originalBytes": 5947,
+      "originalSha256": "b2ed07d98e385095c74f59e30902348e6e57c4a85e84481361842e6ea0d0eb12",
+      "gzipBytes": 1603,
+      "gzipSha256": "86e3df7d820de6847d14620c836252900ba532524847142019901217281566a9"
+    },
+    {
+      "originalPath": "docs/validation/master-program-m03-07/recovery-attempt-05/gradle.log",
+      "gzipPath": "docs/validation/master-program-m03-07/recovery-attempt-05/gradle.log.gz",
+      "originalBytes": 5323,
+      "originalSha256": "5f83e67606c2256c24ef92f219617851fc2c63da220030103d66c558252cd81d",
+      "gzipBytes": 1226,
+      "gzipSha256": "75a35b60a638a8ce959323d0d49049a951a01bad789d4e881db86c1dd50ffea8"
+    }
+  ]
+}

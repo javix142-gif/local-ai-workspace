@@ -12332,5 +12332,109 @@
     "officialQaStatus": "FAIL_CLOSED_NO_APK",
     "physicalDevice": "NOT_RUN",
     "evidence": "docs/validation/master-program-semantic-recovery/automatic-ci-38994652751/"
+  },
+  "latestWorkspaceRecovery": {
+    "observedAtUtc": "2026-10-19",
+    "startingFeatureHead": "b8e75b4a688d9e1f441324a3a1ecccb369f99ebc",
+    "publishedBackupRef": {
+      "name": "recovery/backup-b8e75b4",
+      "sha": "b8e75b4a688d9e1f441324a3a1ecccb369f99ebc",
+      "readBack": true
+    },
+    "implementationBranch": "codex/master-program-20261019",
+    "lostLocalCommit": {
+      "sha": "2f8b0d496db8973edf161c7703efc8f0c17d34fd",
+      "status": "NOT_RECOVERED",
+      "githubLookup": "HTTP 422 No commit found",
+      "sourceWasNotReconstructed": true
+    },
+    "latestIncrement": {
+      "taskId": "M03-07",
+      "status": "HOST_FOCUSED_PREPARATORY_ONLY_NOT_COMPLETE",
+      "sourceStatus": "TODO",
+      "testedCodeSha": "0412f605ed090c2c5ced147d297d9a9fde0781db",
+      "codeCommits": [
+        "4d7014abe903f4a80e090777c9cfc3b7e78c6119",
+        "8feb93f3d5ad62c792bdb35b0124f72f2b5bd467",
+        "0412f605ed090c2c5ced147d297d9a9fde0781db"
+      ],
+      "changedFiles": [
+        "app/src/test/java/com/localai/workspace/ui/ArtifactRevisionPreviewUiTest.kt"
+      ],
+      "productionFilesChanged": [],
+      "focusedTest": {
+        "status": "PASS",
+        "tests": 1,
+        "passed": 1,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "exitCode": 0,
+        "durationSeconds": 41,
+        "evidence": "docs/validation/master-program-m03-07/RESULTS.md"
+      },
+      "notEstablished": [
+        "full cross-format preview/diff/SAF workflow",
+        "line-by-line diff in generic revision preview",
+        "physical-device usability"
+      ],
+      "blockers": [
+        "M03-07 requires_device=true",
+        "M03-07 depends on M03-01, which remains TODO"
+      ]
+    },
+    "attemptHistory": [
+      {
+        "number": 3,
+        "sourceSha": "4d7014abe903f4a80e090777c9cfc3b7e78c6119",
+        "status": "FAIL_TEST_SOURCE_COMPILATION",
+        "exitCode": 1,
+        "durationSeconds": 338,
+        "testStarted": false,
+        "cause": "missing onAllNodesWithText import"
+      },
+      {
+        "number": 4,
+        "sourceSha": "8feb93f3d5ad62c792bdb35b0124f72f2b5bd467",
+        "status": "FAIL_TEST_INTERACTION",
+        "exitCode": 1,
+        "durationSeconds": 112,
+        "tests": 1,
+        "failed": 1,
+        "cause": "performScrollTo applied to AlertDialog Close outside scroll container",
+        "originalXmlPreserved": false
+      },
+      {
+        "number": 5,
+        "sourceSha": "0412f605ed090c2c5ced147d297d9a9fde0781db",
+        "status": "PASS",
+        "exitCode": 0,
+        "durationSeconds": 41,
+        "tests": 1,
+        "passed": 1,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "validationThisIncrement": {
+      "hostFocused": "PASS",
+      "fullHostJvm": "NOT_RUN",
+      "lintAndBuild": "NOT_RUN",
+      "emulator": "NOT_RUN",
+      "physicalDevice": "NOT_RUN",
+      "apk": "NOT_RUN"
+    },
+    "canonicalPlan": {
+      "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+      "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+      "roadmap": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+      "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+      "taskIds": 97,
+      "uniqueIds": 97,
+      "dependencyEdges": 120,
+      "statusesOrDependenciesChanged": false
+    },
+    "evidence": "docs/validation/master-program-m03-07/RESULTS.md"
   }
 }
