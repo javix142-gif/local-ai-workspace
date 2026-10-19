@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.context.MemoryBundleImportTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-19T23:06:56" hostname="42c4f375d730" time="5.791">
+  <properties/>
+  <testcase name="exactDuplicatesAndStructuredConflictsAreReportedWithoutOverwriting" classname="com.localai.workspace.context.MemoryBundleImportTest" time="5.222"/>
+  <testcase name="sensitiveCandidateAndUnknownSelectionCannotBeImported" classname="com.localai.workspace.context.MemoryBundleImportTest" time="0.078"/>
+  <testcase name="identicalProjectMemoryDoesNotSuppressPersonalImport" classname="com.localai.workspace.context.MemoryBundleImportTest" time="0.087"/>
+  <testcase name="exportIncludesOnlyApprovedMemoriesReadableInSelectedScope" classname="com.localai.workspace.context.MemoryBundleImportTest" time="0.132"/>
+  <testcase name="importIsPendingScopedIdempotentAndIndexedOnlyAfterApproval" classname="com.localai.workspace.context.MemoryBundleImportTest" time="0.12"/>
+  <testcase name="importedBundleRemainsPendingAndPreservesTitleAndOriginOnReexport" classname="com.localai.workspace.context.MemoryBundleImportTest" time="0.149"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

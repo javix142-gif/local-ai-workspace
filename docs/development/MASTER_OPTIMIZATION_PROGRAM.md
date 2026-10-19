@@ -1,3 +1,11 @@
+## 2026-10-19 — bounded semantic memory-vector database reads
+
+The exact code commit `c0545e8c40a7f8a394314e30d583260197eba1df` changes `MemoryManager.select()` from one stored-vector DAO query per candidate to bounded batches of 400 candidate IDs per embedding space. A focused regression observed 25 vector-table SELECTs for 25 candidates before the change; after it, the query-count tests assert one query for 25 and two for 401. The implementation preserves stale-hash rejection, the eight-item inline reindex bound, scope, scoring, candidate ordering and result limit.
+
+The exact-SHA HOST tests passed 25/25 across `MemoryRelevanceTest` and `MemoryBundleImportTest`; Gradle exit 0, 43 seconds. This is deterministic SQL roundtrip evidence, not measured model latency or phone performance. No full suite, lint, assemble, AndroidTest, emulator, device or APK ran. Evidence and raw logs are at `docs/validation/master-program-memory-vector-batch-20261019/source-c0545e8/RESULTS.md`.
+
+This does not close M00-06 or another source task. The complete causal import-to-model timeline and device metrics remain outstanding. The original 97 task IDs, 120 dependency edges and all-TODO statuses remain byte-identical.
+
 # Master optimization program — first implementation delivery
 
 ## 2026-10-19 — preparatory approximate PPTX figure-placement preview

@@ -1,3 +1,17 @@
+# Current master-program checkpoint — batched semantic memory vectors (2026-10-19)
+
+Code commit `c0545e8c40a7f8a394314e30d583260197eba1df` fixes an observed N+1 Room read in `MemoryManager.select()`: the test-first red fixture measured 25 `context_vectors` SELECTs for 25 candidates; the implementation now batches IDs in groups of 400 (one query for 25, two for 401). Stale content hashes are rejected before semantic scoring, and existing scope, ranking, result-limit and maximum-eight inline indexing behavior is retained.
+
+At this exact code SHA, the focused HOST command covering `MemoryRelevanceTest` and `MemoryBundleImportTest` passed 25/25 (0 failures/errors/skips), Gradle exit 0 in 43s. It used Gradle 8.10.2 offline, Temurin 17 as Gradle runtime, Temurin 21 as test worker, existing SDK API 35/NDK 27.0.12077973 and existing `/workspace/.gradle` cache. Logs, command, environment, XML, parsed count summary and checksums are in [`M00-06 memory-vector batching evidence`](../validation/master-program-memory-vector-batch-20261019/source-c0545e8/RESULTS.md). The measured improvement is SQL operation count only; no phone latency, TTFT, tokens/s, memory, energy or answer-quality result is claimed.
+
+This preparatory optimization does **not** complete original M00-06: the full import/parse/index/memory/retrieval/context/model timeline and real-model/device metrics remain absent. The original backlog/roadmap are byte-identical: 97 IDs, 120 dependency edges and all source statuses `TODO`. The separate emulator suite remains historically blocked by the unavailable authentic Room v1 fixture with six model-dependent tests skipped; that was not run or changed here. `EMULATOR=NOT_RUN` for this increment and `PHYSICAL_DEVICE=NOT_RUN`; no APK was built.
+
+The red test was captured before implementation while the regression test was uncommitted, against production baseline `2d1deafe491638543d36d6351e98307ef7bdd423`; its working-tree tree SHA was not captured. An earlier fixture assertion incorrectly expected 25 selected rows despite the existing result cap of six and is not counted as a product failure.
+
+Continue the authorized master program sequentially with another concrete, source-backed implementation; do not close source tasks from partial evidence, repeat unrelated audit-only work, or claim Motorola/model performance without the actual device and model.
+
+---
+
 # Current checkpoint — approximate preview of editable PPTX figures (2026-10-19)
 
 The current continuation is on `codex/aws-master-resume-20261019`. Before this increment, the tracked/untracked work state was preserved outside the repository at `/workspace/backup/aws-pre-integral-20261019-223922/`; its restore ref is `refs/backup/aws-pre-integral-20261019-223922`, and the patch/archive hashes are recorded in that backup's `restore-record.txt` and `SHA256SUMS`. The local red-test commit `79301a0` remains in history; implementation commit `67b66e0c287889a231d6497207f5883f611d29b9` adds the separate approximate placement canvas, and `45e4a79b32020b7cca5aa781e08c79d42f3b9f6d` corrects the Compose test API usage. No reset or checkout discard was used.

@@ -1,0 +1,59 @@
+{
+  "sourceCodeSha": "c0545e8c40a7f8a394314e30d583260197eba1df",
+  "focusedCommand": "./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --info -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.context.MemoryRelevanceTest --tests com.localai.workspace.context.MemoryBundleImportTest",
+  "exitCode": 0,
+  "startedAtUtc": "2026-10-19T23:06:21Z",
+  "finishedAtUtc": "2026-10-19T23:07:05Z",
+  "durationGradleSeconds": 43,
+  "gradleVersion": "8.10.2",
+  "runtimeJdk": "Temurin 17.0.20.1",
+  "testWorkerJdk": "Temurin 21.0.12.1",
+  "tests": 25,
+  "passed": 25,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "suites": {
+    "MemoryRelevanceTest": 19,
+    "MemoryBundleImportTest": 6
+  },
+  "tasks": {
+    "actionable": 63,
+    "executed": 3,
+    "upToDate": 60
+  },
+  "redReproduction": {
+    "test": "MemoryRelevanceTest.vectorLookupBatchesRoomReadsForAllMemoryCandidates",
+    "baselineProductionCommit": "2d1deafe491638543d36d6351e98307ef7bdd423",
+    "newTestWasUncommittedAtRun": true,
+    "observedVectorSelectQueries": 25,
+    "expectedAfterFix": 1,
+    "exitCode": 1,
+    "classification": "EXPECTED_RED_PRODUCT_REGRESSION"
+  },
+  "implementation": {
+    "candidateVectorReads": "ceil(candidateCount/400) SQL batches; 25 candidates => 1 query, 401 => 2 queries",
+    "inlineIndexAttemptsPreserved": 8,
+    "selectionLimitPreserved": 6,
+    "staleContentHash": "treated as missing; eligible for existing bounded inline reindex",
+    "schemaMigrationOrDependencyChange": false
+  },
+  "scope": {
+    "fullJvmSuite": "NOT_RUN",
+    "liteRtCompat": "NOT_RUN",
+    "lint": "NOT_RUN",
+    "assemble": "NOT_RUN",
+    "androidTest": "NOT_RUN",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_RUN",
+    "formalOriginalTaskCompletion": false,
+    "backlogChanged": false
+  },
+  "evidenceFiles": {
+    "redLogGzip": "red/gradle.log.gz",
+    "redLogRawSha256": "e2bbd5cc6c604d653b2a0ffb997b9772bebd6a2366f6d2f6d6a5abf6a480b7a8",
+    "exactLogGzip": "exact/gradle.log.gz",
+    "exactLogRawSha256": "0b4c0a9092a18e29a47d1b4b597eb041442e18e356893d8557d03c7e6d1ac6ff"
+  }
+}

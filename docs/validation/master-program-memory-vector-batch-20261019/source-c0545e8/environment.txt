@@ -1,0 +1,13 @@
+Source code SHA: c0545e8c40a7f8a394314e30d583260197eba1df
+Repository worktree: /workspace/aws-master-resume-20261019
+Gradle Wrapper: 8.10.2 (distribution observed in exact run log; wrapper URL: https://services.gradle.org/distributions/gradle-8.10.2-bin.zip)
+Gradle runtime: Eclipse Temurin 17.0.20.1, /workspace/.toolchain/jdk-17
+Test worker: Eclipse Temurin 21.0.12.1, /workspace/.toolchain/jdk-21-temurin (exact worker command recorded in Gradle log)
+Android SDK: /workspace/.toolchain/android-sdk, Android API 35 (Android 15, revision 2)
+Android NDK: /workspace/.toolchain/android-sdk/ndk/27.0.12077973, r27
+GRADLE_USER_HOME: /workspace/.gradle (existing cache; reused, not cleared)
+Network/dependency mode for validation: Gradle --offline
+Start: 2026-10-19T23:06:21Z; finish: 2026-10-19T23:07:05Z; Gradle reports 43 seconds.
+The exact test log identifies the Gradle daemon under JDK 17 and Gradle Test Executor 1 under JDK 21.
+No device/emulator/model was used. No benchmark measured phone TTFT, tokens/s, RAM, CPU/GPU or energy.
+A separate, non-test metadata probe after the focused run invoked ./gradlew --version without setting GRADLE_USER_HOME and got Connection refused while resolving the wrapper. It ran no Gradle task and is not counted as validation; the authoritative run above used the configured existing cache and offline mode.
