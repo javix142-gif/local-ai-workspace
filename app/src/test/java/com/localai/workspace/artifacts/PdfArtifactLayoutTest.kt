@@ -25,6 +25,24 @@ class PdfArtifactLayoutTest {
     private val context get() = RuntimeEnvironment.getApplication()
 
     @Test
+    fun generatedPdfPreservesExtendedUnicodeText() {
+        val expected = "Español: mañana, café · Ελληνικά · Tiếng Việt"
+        val spec = ArtifactSpec.parse(JSONObject("""
+            {"format":"PDF","name":"unicode.pdf","paragraphs":[{"text":"$expected","style":"body"}]}
+        """.trimIndent()))
+        val root = File(context.cacheDir, "pdf-unicode-${UUID.randomUUID()}")
+        try {
+            val revision = ArtifactStore(context, root).create("pdf-unicode-project", spec)
+            val generated = ArtifactStore(context, root).verifiedFile("pdf-unicode-project", revision)
+            PDDocument.load(generated).use { document ->
+                assertTrue(PDFTextStripper().getText(document).contains(expected))
+            }
+        } finally {
+            root.deleteRecursively()
+        }
+    }
+
+    @Test
     fun generatedPdfKeepsWordsTogetherAndPreservesPageLayoutAndVersions() {
         PDFBoxResourceLoader.init(context)
         val bodyFont = PDType1Font.HELVETICA
