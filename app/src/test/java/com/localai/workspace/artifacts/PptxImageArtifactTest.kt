@@ -248,6 +248,78 @@ class PptxImageArtifactTest {
         assertNotEquals("Different image bytes need a visible revision marker even when alt text is unchanged", first, revised)
     }
 
+    @Test
+    fun generatedPptxRendersBoundedAccessibleEditableFiguresAndKeepsRevisionImmutable() = runBlocking {
+        val root = File(context.cacheDir, "pptx-figures-${UUID.randomUUID()}")
+        val store = ArtifactStore(context, root)
+        val project = "pptx-figures-project"
+        val figures = org.json.JSONArray()
+            .put(JSONObject().put("kind", "rectangle").put("description", "Entrada & revisión")
+                .put("label", "Entrada").put("left", 100).put("top", 200)
+                .put("width", 300).put("height", 180).put("fillColor", "3E746D"))
+            .put(JSONObject().put("kind", "ellipse").put("description", "Resultado aprobado")
+                .put("label", "Aprobado").put("left", 600).put("top", 620)
+                .put("width", 250).put("height", 200).put("fillColor", "FFFFFF")
+                .put("lineColor", "1D2522"))
+        val descriptor = JSONObject().put("format", "PPTX").put("name", "figures.pptx")
+            .put("slides", org.json.JSONArray().put(JSONObject().put("title", "Flujo")
+                .put("body", "Entrada, revisión y resultado.").put("shapes", figures)))
+        try {
+            val firstSpec = ArtifactSpec.parse(descriptor)
+            val first = store.create(project, firstSpec)
+            val firstBytes = store.verifiedFile(project, first).readBytes()
+            assertTrue(firstSpec.preview().contains("Figure rectangle: Entrada & revisión"))
+            assertTrue(firstSpec.preview().contains("Figure ellipse: Resultado aprobado"))
+            ZipFile(store.verifiedFile(project, first)).use { zip ->
+                val slide = xml(zip, "ppt/slides/slide1.xml")
+                val presentationNs = "http://schemas.openxmlformats.org/presentationml/2006/main"
+                val drawingNs = "http://schemas.openxmlformats.org/drawingml/2006/main"
+                val shapes = slide.getElementsByTagNameNS(presentationNs, "sp")
+                val rectangle = (0 until shapes.length).map { shapes.item(it) as org.w3c.dom.Element }
+                    .single { shape -> shape.getElementsByTagNameNS(presentationNs, "cNvPr").let { it.length > 0 && it.item(0).attributes.getNamedItem("name").nodeValue == "Figure 1" } }
+                val ellipse = (0 until shapes.length).map { shapes.item(it) as org.w3c.dom.Element }
+                    .single { shape -> shape.getElementsByTagNameNS(presentationNs, "cNvPr").let { it.length > 0 && it.item(0).attributes.getNamedItem("name").nodeValue == "Figure 2" } }
+                assertEquals("Entrada & revisión", rectangle.getElementsByTagNameNS(presentationNs, "cNvPr").item(0)
+                    .attributes.getNamedItem("descr").nodeValue)
+                assertEquals("rect", rectangle.getElementsByTagNameNS(drawingNs, "prstGeom").item(0)
+                    .attributes.getNamedItem("prst").nodeValue)
+                assertEquals("ellipse", ellipse.getElementsByTagNameNS(drawingNs, "prstGeom").item(0)
+                    .attributes.getNamedItem("prst").nodeValue)
+                assertEquals("Entrada", rectangle.getElementsByTagNameNS(drawingNs, "t").item(0).textContent)
+                assertEquals("Aprobado", ellipse.getElementsByTagNameNS(drawingNs, "t").item(0).textContent)
+                val rectangleOffset = rectangle.getElementsByTagNameNS(drawingNs, "off").item(0) as org.w3c.dom.Element
+                val rectangleExtent = rectangle.getElementsByTagNameNS(drawingNs, "ext").item(0) as org.w3c.dom.Element
+                assertEquals("1219200", rectangleOffset.getAttribute("x"))
+                assertEquals("1371600", rectangleOffset.getAttribute("y"))
+                assertEquals("3657600", rectangleExtent.getAttribute("cx"))
+                assertEquals("1234440", rectangleExtent.getAttribute("cy"))
+                assertTrue(zip.getEntry("ppt/slideLayouts/slideLayout1.xml") != null)
+                assertTrue(zip.getEntry("ppt/slideMasters/slideMaster1.xml") != null)
+                assertTrue(zip.getEntry("ppt/theme/theme1.xml") != null)
+                zip.entries().asSequence().filter { it.name.endsWith(".xml") || it.name.endsWith(".rels") }.forEach { entry ->
+                    zip.getInputStream(entry).use { DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(it) }
+                }
+            }
+
+            val revisedDescriptor = store.spec(project, first).json().apply {
+                getJSONArray("slides").getJSONObject(0).getJSONArray("shapes").getJSONObject(0)
+                    .put("label", "Entrada validada")
+            }
+            val revised = store.revise(project, first.id, first.version, ArtifactSpec.parse(revisedDescriptor))
+            assertNotEquals(first.sha256, revised.sha256)
+            assertArrayEquals("The saved source revision remains unchanged", firstBytes,
+                store.verifiedFile(project, first).readBytes())
+            ZipFile(store.verifiedFile(project, revised)).use { zip ->
+                val slide = xml(zip, "ppt/slides/slide1.xml")
+                assertTrue((0 until slide.getElementsByTagNameNS("http://schemas.openxmlformats.org/drawingml/2006/main", "t").length)
+                    .map { slide.getElementsByTagNameNS("http://schemas.openxmlformats.org/drawingml/2006/main", "t").item(it).textContent }
+                    .contains("Entrada validada"))
+            }
+        } finally {
+            root.deleteRecursively()
+        }
+    }
+
     private fun xml(zip: ZipFile, path: String) =
         zip.getInputStream(zip.getEntry(path)).use {
             DocumentBuilderFactory.newInstance().apply { isNamespaceAware = true }.newDocumentBuilder().parse(it)

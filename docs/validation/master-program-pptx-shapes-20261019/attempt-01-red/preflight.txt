@@ -1,0 +1,12 @@
+Preflight UTC: 2026-10-19
+Repository: /workspace/aws-master-resume-20261019
+Branch: codex/aws-master-resume-20261019
+Parent/source before test commit: 1f955a8f4abac3d04a8a4b946e938f644e0e928d
+Remote Codex branch at preflight: 1f955a8f4abac3d04a8a4b946e938f644e0e928d
+Working tree before adding regression: clean; source/test changes only after that check.
+Gradle runtime: Temurin 17.0.20.1 at /workspace/.toolchain/jdk-17; java, javac, jdk.compiler present.
+Test/toolchain JDK: Temurin 21.0.12.1 at /workspace/.toolchain/jdk-21-temurin; java, javac, jdk.compiler present.
+Android SDK: /workspace/.toolchain/android-sdk; API 35 android.jar present.
+Android NDK: /workspace/.toolchain/android-sdk/ndk/27.0.12077973; source.properties reports revision 27.0.12077973 r27.
+Disk: /workspace filesystem 32G total, 8.7G used, 22G available.
+No SDK/JDK/dependency installation, cache cleanup, or file copying was performed.
