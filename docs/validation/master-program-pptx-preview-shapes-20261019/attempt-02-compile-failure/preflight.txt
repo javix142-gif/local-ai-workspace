@@ -1,0 +1,10 @@
+code_sha=67b66e0c287889a231d6497207f5883f611d29b9
+branch=codex/aws-master-resume-20261019
+tracked_tree_before_run=clean
+GRADLE_USER_HOME=/workspace/.gradle (existing; no cleanup)
+Gradle=8.10.2
+Gradle runtime JDK=Temurin 17.0.20.1 at /workspace/.toolchain/jdk-17
+JVM test worker=Temurin 21.0.12.1 at /workspace/.toolchain/jdk-21-temurin
+Android SDK=/workspace/.toolchain/android-sdk API 35
+NDK=/workspace/.toolchain/android-sdk/ndk/27.0.12077973
+No SDK installs, cache cleanup, emulator/device, or APK.

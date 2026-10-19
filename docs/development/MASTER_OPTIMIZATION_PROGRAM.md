@@ -1,5 +1,13 @@
 # Master optimization program — first implementation delivery
 
+## 2026-10-19 — preparatory approximate PPTX figure-placement preview
+
+The existing artifact dialog now includes a separate approximate 16:9 Compose canvas for native editable PPTX rectangle, ellipse, rounded-rectangle and triangle descriptors. It uses their normalized coordinates and colors, exposes the existing accessible descriptions and labels, and keeps preview read-only. It does not render the title/body/images together as PowerPoint would and is not a WYSIWYG or office-viewer validation.
+
+At tested code `45e4a79b32020b7cca5aa781e08c79d42f3b9f6d`, the focused UI method passed 1/1 on HOST; the test checks all four accessible figure entries, normalized rectangle geometry, the existing image/slide content and unchanged artifact bytes/history. A first implementation run only failed because the test used the wrong Compose API import; a test-only commit corrected it. The initial red run found the missing preview canvas, but the exact worktree SHA at that invocation was not captured. See `../validation/master-program-pptx-preview-shapes-20261019/RESULTS.md` for exact attempts, commands, raw logs/XML and checksums.
+
+This is preparatory M03-05 work only. M03-05 stays source `TODO`, requires device validation, and depends on M03-01 `TODO`; the original 97 IDs, 120 dependencies and source TODO statuses are unchanged. No full host/LiteRT gate, lint, build, AndroidTest, emulator, Motorola, APK or Office rendering was run for this follow-up.
+
 ## 2026-10-19 — M00-06 normal-chat context-composition diagnostics (preparatory)
 
 Code commit `22014ed8a452836b7fd20de6d1f54db0a2a12f3c` connects estimator-specific context composition to the normal-generation trace and existing Performance screen. It records estimated/available units, included/omitted item counts, counts by kind/reason and the estimator identifier, with no prompt, answer, evidence text, filename, path or project/document identity. The legacy budget is labeled as the existing characters/4 heuristic; Context Builder uses its existing byte-based estimator. Neither is presented as native tokenizer output. Older persisted traces without the optional summary remain readable.

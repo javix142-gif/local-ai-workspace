@@ -1,0 +1,1 @@
+Exact source worktree SHA at invocation was not captured. Product base from preflight: 7330112865450a0b1b6db7997cb10d43506b3aac. The test edit was subsequently committed as 79301a0cac6c7d99134d500d7d40abe3c75047c8.

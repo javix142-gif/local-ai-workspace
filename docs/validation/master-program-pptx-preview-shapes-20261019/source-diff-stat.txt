@@ -1,0 +1,7 @@
+ .../workspace/artifacts/ArtifactRenderer.kt        |  10 +-
+ .../workspace/artifacts/PptxFigureDescriptor.kt    |   9 ++
+ .../com/localai/workspace/ui/PptxImagePreview.kt   | 104 ++++++++++++++++++++-
+ .../localai/workspace/ui/PptxImagePreviewUiTest.kt |  52 +++++++++++
+ .../attempt-01-red/command.txt                     |   1 +
+ .../attempt-01-red/preflight.txt                   |  12 +++
+ 6 files changed, 178 insertions(+), 10 deletions(-)
