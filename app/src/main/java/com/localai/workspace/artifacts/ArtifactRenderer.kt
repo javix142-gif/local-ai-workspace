@@ -5,7 +5,8 @@ import com.tom_roush.pdfbox.android.PDFBoxResourceLoader
 import com.tom_roush.pdfbox.pdmodel.PDDocument
 import com.tom_roush.pdfbox.pdmodel.PDPage
 import com.tom_roush.pdfbox.pdmodel.PDPageContentStream
-import com.tom_roush.pdfbox.pdmodel.font.PDType1Font
+import com.tom_roush.pdfbox.pdmodel.font.PDFont
+import com.tom_roush.pdfbox.pdmodel.font.PDType0Font
 import org.json.JSONObject
 import java.io.File
 import java.util.zip.ZipEntry
@@ -205,11 +206,13 @@ class ArtifactRenderer(private val context:Context) {
     private fun pdf(spec:ArtifactSpec,target:File) {
         PDFBoxResourceLoader.init(context)
         PDDocument().use { doc->
+            val bodyFont=context.assets.open("fonts/NotoSans-Regular.ttf").use { PDType0Font.load(doc,it,true) }
+            val boldFont=context.assets.open("fonts/NotoSans-Bold.ttf").use { PDType0Font.load(doc,it,true) }
             var stream:PDPageContentStream?=null;var y=0f
             fun page(){stream?.close();require(doc.numberOfPages<100){"PDF_PAGE_LIMIT"};val p=PDPage();doc.addPage(p);stream=PDPageContentStream(doc,p);y=p.mediaBox.height-54}
-            fun line(value:String,font:PDType1Font,size:Float){checkInterrupted();if(stream==null||y<54)page();stream!!.beginText();stream!!.setFont(font,size);stream!!.newLineAtOffset(54f,y);stream!!.showText(value);stream!!.endText();y-=size*1.4f}
+            fun line(value:String,font:PDFont,size:Float){checkInterrupted();if(stream==null||y<54)page();stream!!.beginText();stream!!.setFont(font,size);stream!!.newLineAtOffset(54f,y);stream!!.showText(value);stream!!.endText();y-=size*1.4f}
             fun paragraph(text:String,bold:Boolean=false,size:Float=12f) {
-                val font=if(bold)PDType1Font.HELVETICA_BOLD else PDType1Font.HELVETICA
+                val font=if(bold)boldFont else bodyFont
                 fun width(value:String)=font.getStringWidth(value)/1000f*size
                 for(raw in text.split('\n')) {
                     var part=""
@@ -242,7 +245,7 @@ class ArtifactRenderer(private val context:Context) {
                     line(part,font,size)
                 };y-=6
             }
-            fun tableCellLines(text:String,font:PDType1Font,size:Float,maxWidth:Float):List<String> {
+            fun tableCellLines(text:String,font:PDFont,size:Float,maxWidth:Float):List<String> {
                 fun width(value:String)=font.getStringWidth(value)/1000f*size
                 val output=mutableListOf<String>()
                 for(raw in text.split('\n')) {
@@ -279,7 +282,7 @@ class ArtifactRenderer(private val context:Context) {
                 val columns=rows.first().length()
                 val left=54f;val tableWidth=504f;val columnWidth=tableWidth/columns
                 val fontSize=9f;val lineHeight=fontSize*1.25f;val padding=4f;val bottom=54f
-                val headerFont=PDType1Font.HELVETICA_BOLD
+                val headerFont=boldFont
                 val headerCells=(0 until columns).map{tableCellLines(rows.first().getString(it),headerFont,fontSize,columnWidth-padding*2)}
                 val headerLineCount=maxOf(1,headerCells.maxOf{it.size})
                 val headerHeight=headerLineCount*lineHeight+padding*2
@@ -325,7 +328,7 @@ class ArtifactRenderer(private val context:Context) {
                     }
                 }
                 for((rowIndex,row) in rows.withIndex()) {
-                    val font=if(rowIndex==0)PDType1Font.HELVETICA_BOLD else PDType1Font.HELVETICA
+                    val font=if(rowIndex==0)boldFont else bodyFont
                     val cells=if(rowIndex==0)headerCells else (0 until columns).map{tableCellLines(row.getString(it),font,fontSize,columnWidth-padding*2)}
                     val rowLineCount=maxOf(1,cells.maxOf{it.size})
                     var offset=0
