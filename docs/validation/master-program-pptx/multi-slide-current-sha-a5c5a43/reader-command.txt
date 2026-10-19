@@ -1,0 +1,1 @@
+python3 docs/validation/master-program-pptx/multi-slide-current-sha-a5c5a43/independent_reader.py > docs/validation/master-program-pptx/multi-slide-current-sha-a5c5a43/independent-reader.stdout 2> docs/validation/master-program-pptx/multi-slide-current-sha-a5c5a43/independent-reader.stderr

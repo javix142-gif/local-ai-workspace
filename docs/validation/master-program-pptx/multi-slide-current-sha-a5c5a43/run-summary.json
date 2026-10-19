@@ -1,0 +1,85 @@
+{
+  "sourceCheckoutSha": "a5c5a432666d0bc1ee4749d6f9d5a36840a797cb",
+  "productCodeSha": "9f99beba0d38787a62e83bbfa457cc39b9e9d0ab",
+  "command": "JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk GRADLE_USER_HOME=/workspace/.gradle ./gradlew --offline --no-daemon --no-parallel --max-workers=1 --console=plain --info -I docs/validation/master-program-pptx/multi-slide-current-sha-a5c5a43/test-events.init.gradle -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.artifacts.PptxImageArtifactTest",
+  "startedUtc": "2026-10-19T17:05:01Z",
+  "finishedUtc": "2026-10-19T17:05:51Z",
+  "wallSeconds": 50,
+  "exitCode": 0,
+  "gradle": "8.10.2",
+  "runtimeJdk": "Temurin 17.0.20.1",
+  "workerJdk": "Temurin 21.0.12.1",
+  "offline": true,
+  "result": "PASS",
+  "junit": {
+    "suite": "com.localai.workspace.artifacts.PptxImageArtifactTest",
+    "tests": 4,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 4,
+    "cases": [
+      {
+        "name": "rejectsMalformedOversizedOrUnlabelledPptxImages",
+        "seconds": 5.235
+      },
+      {
+        "name": "generatedPptxEmbedsAccessiblePngAndKeepsImageAcrossImmutableRevision",
+        "seconds": 0.391
+      },
+      {
+        "name": "multiSlidePptxKeepsDistinctImagesAndRelationshipsAcrossImmutableRevision",
+        "seconds": 0.172
+      },
+      {
+        "name": "textualPreviewDistinguishesImageRevisionWithoutExposingPngPayload",
+        "seconds": 0.064
+      }
+    ]
+  },
+  "testEvents": {
+    "starts": 4,
+    "ends": 4,
+    "endsSuccessful": true
+  },
+  "gradleTasks": {
+    "actionable": 63,
+    "executed": 3,
+    "upToDate": 60,
+    "capturedUniqueTaskMarkers": 79
+  },
+  "independentReader": {
+    "name": "python-pptx",
+    "version": "1.0.2",
+    "result": "PASS_SYNTHETIC_TWO_SLIDE_IMAGE_REVISION_ROUNDTRIP",
+    "zipCrc": "PASS",
+    "slideCountPerRevision": 2,
+    "masterCount": 1,
+    "layout": [
+      "Blank",
+      "Blank"
+    ],
+    "themePresent": true,
+    "picturesPerSlide": 1,
+    "altText": [
+      "Mapa rojo",
+      "Mapa azul"
+    ],
+    "imageSha256BySlide": [
+      "f65c9af35d1d7e6fbf79e5277da5dec5fd2fe7ad80e98c7d63923b15ec027f16",
+      "dfbc5ae24b335471343cc903a80aae94acabab394c8ae3201c85e1d68f2f24d8"
+    ],
+    "preservedAcrossRevision": [
+      "f65c9af35d1d7e6fbf79e5277da5dec5fd2fe7ad80e98c7d63923b15ec027f16",
+      "dfbc5ae24b335471343cc903a80aae94acabab394c8ae3201c85e1d68f2f24d8"
+    ]
+  },
+  "limitations": [
+    "Test-only addition; no production renderer change.",
+    "Synthetic fixtures and python-pptx reader only; no PowerPoint, LibreOffice, Android viewer, emulator or device validation.",
+    "M03-05 remains source TODO, requires device and depends on M03-01 TODO."
+  ],
+  "gradleLogContentSha256": "441fb72a06d23930ae7a21965344ac2ffa5acb6ef9e145ef8cae824b1b463067",
+  "gradleLogArchive": "gradle.log.gz",
+  "gradleLogArchiveSha256": "99e5d92bfc66fcc929bda20bd8bc69e84bfc7d33b8d6107004baebbd288df65a"
+}

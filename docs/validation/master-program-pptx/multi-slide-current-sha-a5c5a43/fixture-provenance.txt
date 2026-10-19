@@ -1,0 +1,1 @@
+Both PPTX files were generated only by the synthetic test from two tiny in-memory solid-color PNGs; no private document or user image was used. v1/v2 are copied from the test output in app/build/pptx-image/multi-slide/.

@@ -1,0 +1,1 @@
+M03-05 preparatory test-only coverage: two PPTX slides each contain distinct caller-supplied PNG bytes with slide-specific alt text. Exercises generated v1, immutable title edit to v2, media relationships, package parsing and ordered document extraction. No production file changed.

@@ -400,5 +400,89 @@
     "childManifestEntries": 22,
     "childManifestSha256": "a3bc59ab7dfda994ee451adc2e48852f5e794b3d88ef08c8e2c362b7646bf62c",
     "enclosingEvidenceManifestEntries": 178
+  },
+  "multiSlideCurrentSourceFollowUp": {
+    "sourceCheckoutSha": "a5c5a432666d0bc1ee4749d6d9f5d9a36840a797cb",
+    "productCodeSha": "9f99beba0d38787a62e83bbfa457cc39b9e9d0ab",
+    "change": "Test-only addition; production source unchanged.",
+    "host": {
+      "status": "FOCUSED_PASS",
+      "command": "see multi-slide-current-sha-a5c5a43/command.txt",
+      "exitCode": 0,
+      "durationSeconds": 50,
+      "tests": 4,
+      "passed": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "tasks": {
+        "actionable": 63,
+        "executed": 3,
+        "upToDate": 60
+      },
+      "xml": "multi-slide-current-sha-a5c5a43/xml/TEST-com.localai.workspace.artifacts.PptxImageArtifactTest.xml",
+      "xmlSha256": "b5f45187a35d079700674203af67dc06af86ba7569a68b4ecea6fb766ba88025",
+      "gradleLogSha256": "441fb72a06d23930ae7a21965344ac2ffa5acb6ef9e145ef8cae824b1b463067",
+      "methods": [
+        "rejectsMalformedOversizedOrUnlabelledPptxImages",
+        "generatedPptxEmbedsAccessiblePngAndKeepsImageAcrossImmutableRevision",
+        "multiSlidePptxKeepsDistinctImagesAndRelationshipsAcrossImmutableRevision",
+        "textualPreviewDistinguishesImageRevisionWithoutExposingPngPayload"
+      ],
+      "gradleLog": "multi-slide-current-sha-a5c5a43/gradle.log.gz",
+      "gradleLogContentSha256": "441fb72a06d23930ae7a21965344ac2ffa5acb6ef9e145ef8cae824b1b463067",
+      "gradleLogArchiveSha256": "99e5d92bfc66fcc929bda20bd8bc69e84bfc7d33b8d6107004baebbd288df65a"
+    },
+    "independentReader": {
+      "name": "python-pptx 1.0.2",
+      "status": "PASS_SYNTHETIC_TWO_SLIDE_IMAGE_REVISION_ROUNDTRIP",
+      "zipCrc": "PASS",
+      "slideCountPerRevision": 2,
+      "masterCount": 1,
+      "themePresent": true,
+      "layout": "Blank",
+      "picturesPerSlide": 1,
+      "altText": [
+        "Mapa rojo",
+        "Mapa azul"
+      ],
+      "distinctImageSha256": [
+        "f65c9af35d1d7e6fbf79e5277da5dec5fd2fe7ad80e98c7d63923b15ec027f16",
+        "dfbc5ae24b335471343cc903a80aae94acabab394c8ae3201c85e1d68f2f24d8"
+      ],
+      "bothImagesPreservedAcrossTitleRevision": true,
+      "details": "multi-slide-current-sha-a5c5a43/independent-reader.json"
+    },
+    "fixtures": {
+      "v1": {
+        "path": "multi-slide-current-sha-a5c5a43/fixture-v1.pptx",
+        "bytes": 6904,
+        "sha256": "7a2a85cbd0b0fc28c0ca4256a4f6efc4d8802c4af0c27d825f9c61c0c57b4b5f"
+      },
+      "v2": {
+        "path": "multi-slide-current-sha-a5c5a43/fixture-v2.pptx",
+        "bytes": 6910,
+        "sha256": "24db5f24c6c383e94ffe163b04003e41073005b2849579632f21a2497a70eefe"
+      }
+    },
+    "evidenceManifest": {
+      "path": "multi-slide-current-sha-a5c5a43/SHA256SUMS",
+      "entries": 26,
+      "sha256": "737c7dfef3a63fda1f4d8c46b094661dd6feb839aaddcde5146e412152365472"
+    },
+    "sourceTask": {
+      "id": "M03-05",
+      "status": "TODO",
+      "requiresDevice": true,
+      "dependsOn": [
+        "M03-01"
+      ],
+      "dependencyStatus": "TODO",
+      "formalCompletion": false
+    },
+    "limitations": [
+      "Synthetic fixtures; no PowerPoint/LibreOffice/Android viewer/device validation.",
+      "No full suite, lint, AndroidTest, emulator, physical device, APK or performance measurement."
+    ]
   }
 }

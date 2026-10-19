@@ -1,0 +1,84 @@
+{
+  "reader": "python-pptx",
+  "version": "1.0.2",
+  "result": "PASS_SYNTHETIC_TWO_SLIDE_IMAGE_REVISION_ROUNDTRIP",
+  "versions": [
+    {
+      "file": "fixture-v1.pptx",
+      "bytes": 6904,
+      "sha256": "7a2a85cbd0b0fc28c0ca4256a4f6efc4d8802c4af0c27d825f9c61c0c57b4b5f",
+      "zipCrc": "PASS",
+      "slideCount": 2,
+      "masterCount": 1,
+      "themePartPresent": true,
+      "slides": [
+        {
+          "slide": 1,
+          "layout": "Blank",
+          "title": "Primera",
+          "body": "Mapa rojo",
+          "pictureCount": 1,
+          "altText": "Mapa rojo",
+          "imageBytes": 77,
+          "imageSha256": "f65c9af35d1d7e6fbf79e5277da5dec5fd2fe7ad80e98c7d63923b15ec027f16",
+          "relationshipTarget": "/ppt/media/image1.png"
+        },
+        {
+          "slide": 2,
+          "layout": "Blank",
+          "title": "Segunda",
+          "body": "Mapa azul",
+          "pictureCount": 1,
+          "altText": "Mapa azul",
+          "imageBytes": 77,
+          "imageSha256": "dfbc5ae24b335471343cc903a80aae94acabab394c8ae3201c85e1d68f2f24d8",
+          "relationshipTarget": "/ppt/media/image2.png"
+        }
+      ]
+    },
+    {
+      "file": "fixture-v2.pptx",
+      "bytes": 6910,
+      "sha256": "24db5f24c6c383e94ffe163b04003e41073005b2849579632f21a2497a70eefe",
+      "zipCrc": "PASS",
+      "slideCount": 2,
+      "masterCount": 1,
+      "themePartPresent": true,
+      "slides": [
+        {
+          "slide": 1,
+          "layout": "Blank",
+          "title": "Primera",
+          "body": "Mapa rojo",
+          "pictureCount": 1,
+          "altText": "Mapa rojo",
+          "imageBytes": 77,
+          "imageSha256": "f65c9af35d1d7e6fbf79e5277da5dec5fd2fe7ad80e98c7d63923b15ec027f16",
+          "relationshipTarget": "/ppt/media/image1.png"
+        },
+        {
+          "slide": 2,
+          "layout": "Blank",
+          "title": "Segunda revisada",
+          "body": "Mapa azul",
+          "pictureCount": 1,
+          "altText": "Mapa azul",
+          "imageBytes": 77,
+          "imageSha256": "dfbc5ae24b335471343cc903a80aae94acabab394c8ae3201c85e1d68f2f24d8",
+          "relationshipTarget": "/ppt/media/image2.png"
+        }
+      ]
+    }
+  ],
+  "assertions": [
+    "both PPTX packages reopen with two ordered slides",
+    "each slide has one image relationship and one picture",
+    "slide-specific alt text is retained",
+    "two embedded PNG payloads are distinct",
+    "both PNG SHA-256 values are unchanged by the title revision",
+    "v1 and v2 have valid ZIP CRC, layout, master and theme parts"
+  ],
+  "limits": [
+    "No PowerPoint/LibreOffice/Android viewer or device validation."
+  ]
+}

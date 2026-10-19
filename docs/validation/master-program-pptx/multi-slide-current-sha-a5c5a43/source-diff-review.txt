@@ -1,0 +1,1 @@
+Tested commit: a5c5a432666d0bc1ee4749d6f9d5a36840a797cb. The sole product-tree delta from parent 060ef1ecb0043e4e4baa242bb116e3a6c2b9c380 is app/src/test/java/com/localai/workspace/artifacts/PptxImageArtifactTest.kt. No app/src/main file changed.

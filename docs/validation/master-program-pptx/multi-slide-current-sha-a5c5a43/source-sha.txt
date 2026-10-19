@@ -1,0 +1,3 @@
+sourceCheckoutSha=a5c5a432666d0bc1ee4749d6f9d5a36840a797cb
+productCodeSha=9f99beba0d38787a62e83bbfa457cc39b9e9d0ab
+change=tests-only

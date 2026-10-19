@@ -1,0 +1,26 @@
+{
+  "suite": "com.localai.workspace.artifacts.PptxImageArtifactTest",
+  "tests": 4,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "passed": 4,
+  "cases": [
+    {
+      "name": "rejectsMalformedOversizedOrUnlabelledPptxImages",
+      "seconds": 5.235
+    },
+    {
+      "name": "generatedPptxEmbedsAccessiblePngAndKeepsImageAcrossImmutableRevision",
+      "seconds": 0.391
+    },
+    {
+      "name": "multiSlidePptxKeepsDistinctImagesAndRelationshipsAcrossImmutableRevision",
+      "seconds": 0.172
+    },
+    {
+      "name": "textualPreviewDistinguishesImageRevisionWithoutExposingPngPayload",
+      "seconds": 0.064
+    }
+  ]
+}
