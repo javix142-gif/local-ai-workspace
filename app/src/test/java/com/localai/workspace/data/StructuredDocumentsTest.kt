@@ -15,6 +15,36 @@ class StructuredDocumentsTest {
  @Test fun invalidEncodingDoesNotBecomeGibberish() { assertThrows(Exception::class.java) { S.text(byteArrayOf(0xc3.toByte(),0x28)) };assertEquals("a",S.text(byteArrayOf(-1,-2,97,0)).first) }
  @Test fun zipSlipAndBombRejected() { val f=zip(mapOf("../secret" to "x"));try { ZipFile(f).use { assertThrows(Exception::class.java) { S.inspect(it) } } } finally { f.delete() };assertFalse(S.safePath("C:/a"));assertFalse(S.safePath("a\\b"));assertTrue(S.safePath("folder/a.csv")) }
  @Test fun xlsxPreservesSheetAddressCachedValueFormula() { val f=zip(mapOf("xl/workbook.xml" to "<workbook xmlns:r='http://schemas.openxmlformats.org/officeDocument/2006/relationships'><sheets><sheet name='Sales' r:id='r1'/></sheets></workbook>", "xl/_rels/workbook.xml.rels" to "<Relationships><Relationship Id='r1' Target='worksheets/sheet1.xml'/></Relationships>", "xl/worksheets/sheet1.xml" to "<worksheet><sheetData><row r='1'><c r='B1'><f>SUM(A1:A2)</f><v>12</v></c></row></sheetData></worksheet>"));try { val c=S.xlsx(f).cells.single();assertEquals("Sales",c.sheet);assertEquals(2,c.column);assertEquals("12",c.value);assertEquals("SUM(A1:A2)",c.formula) } finally { f.delete() } }
+ @Test fun xlsxPreservesRawStyleNumberFormatsAndCellTypesWithoutConvertingCachedValues() {
+  val f=zip(mapOf(
+   "xl/workbook.xml" to "<workbook xmlns:r='http://schemas.openxmlformats.org/officeDocument/2006/relationships'><sheets><sheet name='Ventas' r:id='r1'/></sheets></workbook>",
+   "xl/_rels/workbook.xml.rels" to "<Relationships><Relationship Id='r1' Target='worksheets/sheet1.xml'/></Relationships>",
+   "xl/styles.xml" to "<styleSheet><numFmts count='1'><numFmt numFmtId='164' formatCode='yyyy-mm-dd'/></numFmts><cellXfs count='3'><xf numFmtId='0'/><xf numFmtId='14'/><xf numFmtId='164'/></cellXfs></styleSheet>",
+   "xl/sharedStrings.xml" to "<sst><si><t>Shared label</t></si></sst>",
+   "xl/worksheets/sheet1.xml" to "<worksheet><sheetData><row r='1'><c r='A1' s='1'><v>45292</v></c><c r='B1' s='2'><v>1234.5</v></c><c r='C1' t='b'><v>1</v></c><c r='D1' t='s'><v>0</v></c><c r='E1' t='inlineStr'><is><t>Inline label</t></is></c><c r='F1' s='1'><f>A1+1</f><v>45293</v></c></row></sheetData></worksheet>"
+  ))
+  try {
+   val table=S.xlsx(f)
+   val cells=table.cells.associateBy{it.address}
+   assertEquals("45292",cells.getValue("A1").value)
+   assertEquals("n",cells.getValue("A1").type)
+   assertEquals("1234.5",cells.getValue("B1").value)
+   assertEquals("b",cells.getValue("C1").type)
+   assertEquals("Shared label",cells.getValue("D1").value)
+   assertEquals("s",cells.getValue("D1").type)
+   assertEquals("Inline label",cells.getValue("E1").value)
+   assertEquals("inlineStr",cells.getValue("E1").type)
+   assertEquals("A1+1",cells.getValue("F1").formula)
+   assertEquals("45293",cells.getValue("F1").value)
+   val representation=table.document().pages.single().text
+   assertTrue("The style index must be linked to its raw number format",representation.contains("\"styleIndex\":1"))
+   assertTrue("Built-in number format id is preserved without date conversion",representation.contains("\"numberFormatId\":14"))
+   assertTrue("Custom number format code is preserved as metadata",representation.contains("\"numberFormatCode\":\"yyyy-mm-dd\""))
+   assertTrue("Raw cached formula value remains visible",representation.contains("\"formula\":\"A1+1\"" ) && representation.contains("\"value\":\"45293\""))
+   File("build/reports/xlsx-style-metadata").mkdirs()
+   f.copyTo(File("build/reports/xlsx-style-metadata/fixture.xlsx"),overwrite=true)
+  } finally { f.delete() }
+ }
  @Test fun xlsxWorksheetOrderMetadataSurvivesIntoStructuredEvidence() {
   val f=zip(mapOf(
    "xl/workbook.xml" to "<workbook xmlns:r='http://schemas.openxmlformats.org/officeDocument/2006/relationships'><sheets><sheet name='Hoja1' r:id='r1'/><sheet name='Depto 2' r:id='r2'/><sheet name='Hoja3' r:id='r3'/></sheets></workbook>",
