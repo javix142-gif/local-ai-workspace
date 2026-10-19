@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "sourceSha": "1f5ff6c552c5c19c322fbc4c5f324a37d366f672",
+  "testClass": "com.localai.workspace.artifacts.PdfArtifactLayoutTest",
+  "testMethod": "generatedPdfKeepsWordsTogetherAndPreservesPageLayoutAndVersions",
+  "tests": 1,
+  "passed": 1,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "testSeconds": 6.285,
+  "gradleExitCode": 0,
+  "wallSeconds": 32,
+  "logRawBytes": 332027,
+  "logRawSha256": "9fa441d885c15b992ff82ae28e57ceaff6a3f86eb4586d53b103b50f16f27500",
+  "logGzipBytes": 24161,
+  "logGzipSha256": "80a653005ced1377f9b5c20bbcac68dba86fe154391b225db512aa96660db3db",
+  "xmlSha256": "692ffd1716e33468aab5fe9fbe3fc1063004ef9e07a043c338b3705e06a4ca59",
+  "purpose": "Cross-format regression after DOCX changes to the shared ArtifactRenderer; no PDF implementation changed."
+}

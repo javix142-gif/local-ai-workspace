@@ -122,6 +122,25 @@
         "rawBytes": 245544,
         "gzipBytes": 18411
       }
+    },
+    "pdfRendererRegression": {
+      "sourceSha": "1f5ff6c552c5c19c322fbc4c5f324a37d366f672",
+      "status": "PASS_CROSS_FORMAT_REGRESSION",
+      "command": "attempts/pdf-renderer-regression/command.txt",
+      "startedAtUtc": "2026-10-19T15:14:03Z",
+      "finishedAtUtc": "2026-10-19T15:14:35Z",
+      "wallSeconds": 32,
+      "gradleExitCode": 0,
+      "junit": {
+        "tests": 1,
+        "passed": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "xml": "attempts/pdf-renderer-regression/PdfArtifactLayoutTest.xml"
+      },
+      "log": "attempts/pdf-renderer-regression/gradle.log.gz",
+      "purpose": "Shared-renderer regression after ordered DOCX changes; PDF production code was unchanged."
     }
   },
   "sourceTask": {
@@ -140,7 +159,7 @@
     "formalCompletion": false
   },
   "validation": {
-    "HOST": "focused test PASS; independent-reader PASS; lint and AndroidTest compile blocked by existing offline-cache dependencies",
+    "HOST": "DOCX focused 2/2 PASS; python-docx reader PASS for both immutable revisions; PDF shared-renderer regression 1/1 PASS. Lint and AndroidTest compile remain blocked by uncached offline dependencies.",
     "EMULATOR": "NOT_RUN",
     "PHYSICAL_DEVICE": "NOT_RUN",
     "apk": "NOT_GENERATED"

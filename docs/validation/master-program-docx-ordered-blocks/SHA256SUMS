@@ -1,5 +1,5 @@
-9d392113eb783880d7916306de16a9a918cacf10a8afbd6dc70c1eed29079e68  docs/validation/master-program-docx-ordered-blocks/RESULTS.json
-a586925ac20e253f915a702f1a085bcdd70ff0bdedc25f7ecaa8ec1bf65ed3d2  docs/validation/master-program-docx-ordered-blocks/RESULTS.md
+7e981fa1d27636a064218eb07e2d224d7b170717787493fccbf0df044d77cbb6  docs/validation/master-program-docx-ordered-blocks/RESULTS.json
+4bafe763906c0b1de17c6a17c41f05ac2dc4397a3980ac452f7c19ae4c80cef1  docs/validation/master-program-docx-ordered-blocks/RESULTS.md
 da5f379f279158e7fcde747d4c7766e1ea47a5d7f5ecff7403308af86f052a06  docs/validation/master-program-docx-ordered-blocks/attempts/final-focused/DocxArtifactStructureTest.xml
 08b72a86f37d2c25e0694ba60da90460bcb7e83d2b42f9332d906a5098cb5d20  docs/validation/master-program-docx-ordered-blocks/attempts/final-focused/command.txt
 dc97ea15e24a0493b7158972da840925b26e7f9338f7d1504ad72bf1f2cd822b  docs/validation/master-program-docx-ordered-blocks/attempts/final-focused/environment.json
@@ -7,6 +7,11 @@ f774f6220b5486c3126cd86b114b7fe6b344fee1767000691af2f6b31778f3a9  docs/validatio
 f57e6f2c88c7dc8d211d0eb3f0ef3f0202a9da6f420d53aefb14210aa4f58e7d  docs/validation/master-program-docx-ordered-blocks/attempts/final-focused/gradle.log.gz
 451007876a61652de93f9ea1df227835ef7b18833728545e44dc7165844ae3db  docs/validation/master-program-docx-ordered-blocks/attempts/final-focused/ordered-blocks-v1.docx
 930adf39863732b7a4ca373ccda543333f293b96de4cee9b38f1ffd2450196ef  docs/validation/master-program-docx-ordered-blocks/attempts/final-focused/ordered-blocks-v2.docx
+692ffd1716e33468aab5fe9fbe3fc1063004ef9e07a043c338b3705e06a4ca59  docs/validation/master-program-docx-ordered-blocks/attempts/pdf-renderer-regression/PdfArtifactLayoutTest.xml
+b47ca7fa82b3784aa825203da1e9775c54c28161866c200574f6a5de1aa72d51  docs/validation/master-program-docx-ordered-blocks/attempts/pdf-renderer-regression/command.txt
+d533d362820d0cf14b2cfecb3b0f6cff73046f8ead8ebfe8455395ed310b38ec  docs/validation/master-program-docx-ordered-blocks/attempts/pdf-renderer-regression/environment.json
+80a653005ced1377f9b5c20bbcac68dba86fe154391b225db512aa96660db3db  docs/validation/master-program-docx-ordered-blocks/attempts/pdf-renderer-regression/gradle.log.gz
+f2075479c9bff2f99f0c4ea71d4b678eb94f101387bd73ea1a5744bb4bdf584e  docs/validation/master-program-docx-ordered-blocks/attempts/pdf-renderer-regression/result.json
 99a9fa45f98cccfe96a69b9cdcf34129ffe562b55691b85a1f793be24662a365  docs/validation/master-program-docx-ordered-blocks/attempts/proportional-host/androidtest-compile-command.txt
 83a67d11274ae4c876d6604ce3ea39a2a33160e79e15152f43a1a58507d79c1b  docs/validation/master-program-docx-ordered-blocks/attempts/proportional-host/androidtest-compile-invocation.log.gz
 dc97ea15e24a0493b7158972da840925b26e7f9338f7d1504ad72bf1f2cd822b  docs/validation/master-program-docx-ordered-blocks/attempts/proportional-host/environment.json
