@@ -1,0 +1,4 @@
+source_sha=1b82c05c65edfe173fe2d968c85dc38598f2f769
+:app:testDebugUnitTest=EXECUTED; 63 actionable tasks executed; Gradle log: BUILD SUCCESSFUL in 3m 8s; captured_command_exit=0; exit-code.txt=0.
+Focused method ArtifactsPatchPreviewUiTest.discardingPreviewDoesNotChangeArtifactHistory: JUnit 1 test, 1 passed, 0 failures/errors/skips; testcase 6.471s; XML timestamp 2026-10-19T13:00:11.
+The unified exec session/tool reported outer exit_code=1 despite the direct command marker, Gradle result, task outcomes and fresh XML all indicating exit 0. This wrapper-level discrepancy is unresolved; no further rerun was authorized.

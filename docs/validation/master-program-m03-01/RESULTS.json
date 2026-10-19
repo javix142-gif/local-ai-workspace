@@ -1,0 +1,91 @@
+{
+  "increment": "M03-01",
+  "classification": "HOST_FOCUSED_PREPARATORY_ONLY_NOT_COMPLETE",
+  "sourceTaskStatus": "TODO",
+  "testedCodeSha": "1b82c05c65edfe173fe2d968c85dc38598f2f769",
+  "productionFilesChanged": [],
+  "testFileChanged": "app/src/test/java/com/localai/workspace/ui/ArtifactsPatchPreviewUiTest.kt",
+  "toolchain": {
+    "os": "Linux",
+    "gradle": "8.10.2",
+    "gradleRuntime": "Temurin JDK 17 (/workspace/.toolchain/jdk-17)",
+    "testWorkerToolchain": "Temurin JDK 21 (/workspace/.toolchain/jdk-21-temurin)",
+    "androidApi": 35,
+    "buildTools": "35.0.0",
+    "ndk": "27.0.12077973",
+    "cmake": "3.31.6",
+    "gradleUserHome": "/workspace/.gradle (existing)"
+  },
+  "focusedM03_01Evidence": {
+    "status": "PASS_PREPARATORY_ONLY",
+    "testCases": 13,
+    "passed": 13,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "sourceSha": "5514d085bccf14948cb6efa019df52f009f8950c",
+    "evidenceRuns": ["attempt-01", "attempt-02"],
+    "suites": {
+      "ArtifactRoundtripTest": 10,
+      "ArtifactPatchRecoveryTest": 1,
+      "ArtifactRevisionPreviewUiTest": 1,
+      "ArtifactSafExportUiTest": 1
+    },
+    "scope": "Robolectric synthetic fixtures; not device, office-reader, or complete task validation"
+  },
+  "patchPreviewUiFollowup": {
+    "status": "PARTIAL",
+    "finalTestedSha": "1b82c05c65edfe173fe2d968c85dc38598f2f769",
+    "discardMethod": {
+      "status": "PASS",
+      "attempt": "attempt-06",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "gradleCapturedExitCode": 0,
+      "gradleBuildSuccessful": true,
+      "tasksExecuted": 63,
+      "testcaseSeconds": 6.471,
+      "xml": "attempt-06/TEST-com.localai.workspace.ui.ArtifactsPatchPreviewUiTest.xml",
+      "xmlSha256": "f6ea75125339469be026172099b4e3cd095c3e0bfa668915bd3114b210e90141"
+    },
+    "applyMethodAfterAssertionFix": "NOT_RUN",
+    "outerExecutionToolExitCode": 1,
+    "outerExitDiscrepancy": "Tool session returned 1 although fresh JUnit XML, Gradle BUILD SUCCESSFUL and captured command exit were all 0; cause NOT_DETERMINED."
+  },
+  "attempts": [
+    {"id":"attempt-01","sourceSha":"bb2c9829732b6c82c6d3cbdf01c65509925284ed","tests":15,"passed":13,"failed":2,"errors":0,"skipped":0,"exitCode":1,"classification":"FAIL_PATCH_PREVIEW_UI_TESTS"},
+    {"id":"attempt-02","sourceSha":"5514d085bccf14948cb6efa019df52f009f8950c","tests":15,"passed":13,"failed":2,"errors":0,"skipped":0,"exitCode":1,"classification":"FAIL_PATCH_PREVIEW_UI_TESTS"},
+    {"id":"attempt-03","sourceSha":"6d60bf6a8065309444e087b41f138c0d1633279f","tests":2,"passed":0,"failed":2,"errors":0,"skipped":0,"exitCode":1,"classification":"FAIL_TEST_EXPECTATION_AND_ASYNC_ROW_TIMEOUT"},
+    {"id":"attempt-04","sourceSha":"1b82c05c65edfe173fe2d968c85dc38598f2f769","tests":1,"passed":1,"failed":0,"errors":0,"skipped":0,"capturedExitCode":0,"outerToolExitCode":1,"classification":"PASS_WITH_OUTER_EXIT_DISCREPANCY"},
+    {"id":"attempt-05","sourceSha":"1b82c05c65edfe173fe2d968c85dc38598f2f769","tests":0,"executed":false,"taskOutcome":"UP-TO-DATE","capturedExitCode":0,"outerToolExitCode":1,"classification":"NOT_EXECUTED_UP_TO_DATE"},
+    {"id":"attempt-06","sourceSha":"1b82c05c65edfe173fe2d968c85dc38598f2f769","tests":1,"passed":1,"failed":0,"errors":0,"skipped":0,"capturedExitCode":0,"outerToolExitCode":1,"classification":"PASS_WITH_OUTER_EXIT_DISCREPANCY"}
+  ],
+  "gates": {
+    "fullAppJvm": "NOT_RUN",
+    "litertCompatJvm": "NOT_RUN",
+    "lint": "NOT_RUN",
+    "androidTestCompile": "NOT_RUN",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_RUN"
+  },
+  "dependencies": {
+    "M03-01": ["M02-05"],
+    "M02-05": ["M02-01", "M01-05"],
+    "M02-01": ["M00-10"],
+    "formalClosureAllowed": false,
+    "reason": "Source task dependencies remain TODO; this is preparatory evidence only."
+  },
+  "backlogIntegrity": {
+    "sourceFilesChanged": false,
+    "taskIds": 97,
+    "uniqueTaskIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": "all TODO, unchanged"
+  },
+  "physicalDevice": "NOT_RUN",
+  "evidenceRoot": "docs/validation/master-program-m03-01"
+}

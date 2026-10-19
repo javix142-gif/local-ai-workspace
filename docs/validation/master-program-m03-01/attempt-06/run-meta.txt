@@ -1,0 +1,14 @@
+source_sha=1b82c05c65edfe173fe2d968c85dc38598f2f769
+started_utc=2026-10-19T12:57:09Z
+gradle=8.10.2
+java_home=/workspace/.toolchain/jdk-17
+worker_toolchain=/workspace/.toolchain/jdk-21-temurin
+android_sdk=/workspace/.toolchain/android-sdk
+gradle_user_home=/workspace/.gradle
+finished_utc=2026-10-19T13:00:18Z
+elapsed_wall_seconds=189
+gradle_reported_duration_seconds=188
+method=ArtifactsPatchPreviewUiTest.discardingPreviewDoesNotChangeArtifactHistory
+junit_tests=1; passed=1; failed=0; errors=0; skipped=0
+gradle_captured_exit_code=0
+exec_session_reported_exit_code=1 (unresolved outer-wrapper discrepancy)

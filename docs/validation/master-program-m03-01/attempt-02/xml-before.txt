@@ -1,0 +1,5 @@
+app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.artifacts.ArtifactPatchRecoveryTest.xml
+app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.artifacts.ArtifactRoundtripTest.xml
+app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml
+app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.ui.ArtifactSafExportUiTest.xml
+app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.ui.ArtifactsPatchPreviewUiTest.xml

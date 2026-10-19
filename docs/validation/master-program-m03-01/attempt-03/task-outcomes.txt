@@ -1,0 +1,4 @@
+source_sha=6d60bf6a8065309444e087b41f138c0d1633279f
+:app:testDebugUnitTest=FAIL; 2 tests, 0 skipped, 2 failures, 0 errors
+The apply action reached UI status "Patch verified as immutable private draft v2. Earlier source version and external workspace files remain unchanged."; the test assertion used a phrase that assertTextContains treated as a complete expected value and failed. The discard test timed out waiting for the patch row despite the store fixture being staged before Compose content. Isolated diagnostic authorized next to test order/interference.
+Gradle duration=50 seconds; exit_code=1

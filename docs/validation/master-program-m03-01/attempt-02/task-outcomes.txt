@@ -1,0 +1,5 @@
+source_sha=5514d085bccf14948cb6efa019df52f009f8950c
+:app:testDebugUnitTest=FAIL; 15 tests completed, 13 passed, 2 failed, 0 errors, 0 skipped
+ArtifactRoundtripTest=10/10 PASS; ArtifactPatchRecoveryTest=1/1 PASS; ArtifactRevisionPreviewUiTest=1/1 PASS; ArtifactSafExportUiTest=1/1 PASS; ArtifactsPatchPreviewUiTest=0/2 PASS
+Both patch UI tests timed out: one waiting for saved revision v2 after apply; one waiting for the preview row after Compose content was set. Raw JUnit XMLs and full Gradle log retained. This does not yet establish a product API defect.
+Gradle duration=1m11s; exit_code=1

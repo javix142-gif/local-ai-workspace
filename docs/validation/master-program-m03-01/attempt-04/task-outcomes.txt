@@ -1,0 +1,5 @@
+source_sha=1b82c05c65edfe173fe2d968c85dc38598f2f769
+isolated_method=ArtifactsPatchPreviewUiTest.discardingPreviewDoesNotChangeArtifactHistory
+JUnit=1 test, 1 passed, 0 failed/errors/skipped; testcase duration 6.285s
+Gradle log=BUILD SUCCESSFUL in 38s; attempt exit-code.txt captured 0
+Execution tool outer session reported exit_code=1, inconsistent with Gradle output, JUnit XML and captured command exit 0. Preserve discrepancy; the forced direct-output rerun is preserved as attempt-06; the discrepancy remains unresolved.
