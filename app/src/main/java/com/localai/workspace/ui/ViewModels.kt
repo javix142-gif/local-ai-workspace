@@ -358,6 +358,7 @@ class ChatViewModel(
     private val projectId: String,
     private val graph: AppGraph,
     private val requestedConversationId: String? = null,
+    val skillAuthoringMode: Boolean = false,
 ) : ViewModel() {
     val selectedAgentId = MutableStateFlow<String?>(null)
     val explicitSkillIds = MutableStateFlow<Set<String>>(emptySet())
@@ -637,7 +638,7 @@ class ChatViewModel(
                 return correlated
             }
             try {
-                trace("REQUEST_CREATED") { it.copy(contextBuilderEnabled = !diagnosticSmoke && (graph.validationOwner == null || graph.agentsSkillsValidationEnabled) && graph.contextForMeasurements.getSharedPreferences("context_foundation_v1", android.content.Context.MODE_PRIVATE).getBoolean("enabled", true)) }
+                trace("REQUEST_CREATED") { it.copy(contextBuilderEnabled = !diagnosticSmoke && !skillAuthoringMode && (graph.validationOwner == null || graph.agentsSkillsValidationEnabled) && graph.contextForMeasurements.getSharedPreferences("context_foundation_v1", android.content.Context.MODE_PRIVATE).getBoolean("enabled", true)) }
                 appMemoryBefore = withContext(Dispatchers.IO) { com.localai.workspace.performance.DeviceMeasurements.capture(graph.contextForMeasurements) }
                 // Recovery must finish before inserting a new GENERATING row.
                 trace("CHAT_INITIALIZATION_WAIT")
@@ -689,7 +690,7 @@ class ChatViewModel(
                 trace("MODEL_READY") { it.copy(modelState = if (preparation.state.value.ready) "READY" else preparation.state.value.progress.stage.name, engineReused = preparation.state.value.metrics?.engineReused) }
                 if (stopRequested) throw CancellationException("Cancelled before inference")
                 _generationProgress.value = GenerationProgress(GenerationStage.PREPARING_PROMPT, detail = "Waiting for the active generation, if any")
-                val contextBuilderRequested = !diagnosticSmoke && (graph.validationOwner == null || graph.agentsSkillsValidationEnabled) &&
+                val contextBuilderRequested = !diagnosticSmoke && !skillAuthoringMode && (graph.validationOwner == null || graph.agentsSkillsValidationEnabled) &&
                     graph.contextForMeasurements.getSharedPreferences("context_foundation_v1", android.content.Context.MODE_PRIVATE).getBoolean("enabled", true)
                 // All embedding/retrieval/routing work must finish BEFORE the generation gate.
                 val activeProject = graph.workspace.observeProject(projectId).first() ?: error("Project no longer exists")
@@ -728,8 +729,8 @@ class ChatViewModel(
                 val contextStartedAt = android.os.SystemClock.elapsedRealtime()
                 val useContextV1 = contextBuilderRequested && submittedImage == null && submittedAudio == null && history.none { it.imagePath != null || it.audioPath != null } && model.toDescriptor().runtime == RuntimeType.LITERT_LM
 
-                trace("CONTEXT_BUILD_START") { it.copy(contextBuilderEnabled = useContextV1, thinkingRequested = graph.assistantSettings.forProject(projectId).thinking.name, toolsRequested = graph.assistantSettings.forProject(projectId).tools.isNotEmpty(), projectPresent = activeProject.workspaceKind == "PROJECT") }
-                val routingTrace = if (!diagnosticSmoke && (graph.validationOwner == null || graph.agentsSkillsValidationEnabled)) {
+                trace("CONTEXT_BUILD_START") { it.copy(contextBuilderEnabled = useContextV1, thinkingRequested = graph.assistantSettings.forProject(projectId).thinking.name, toolsRequested = !skillAuthoringMode && graph.assistantSettings.forProject(projectId).tools.isNotEmpty(), projectPresent = activeProject.workspaceKind == "PROJECT") }
+                val routingTrace = if (!diagnosticSmoke && !skillAuthoringMode && (graph.validationOwner == null || graph.agentsSkillsValidationEnabled)) {
                     val attachments = _selectedDocumentIds.value.mapNotNull { graph.database.documentDao().get(it) }
                         .map { com.localai.workspace.skills.RoutingAttachment(it.mimeType,it.displayName) }
                     val routingStartedAt=android.os.SystemClock.elapsedRealtime()
@@ -759,13 +760,13 @@ class ChatViewModel(
                 }
                 trace("RAG_COMPLETE")
                 trace("MEMORY_START")
-                val memories = if (!useContextV1 && !diagnosticSmoke && !smallTalk && activeProject.memoryEnabled && com.localai.workspace.sources.SourceType.STRUCTURED_MEMORY in allowedSources) {
+                val memories = if (!skillAuthoringMode && !useContextV1 && !diagnosticSmoke && !smallTalk && activeProject.memoryEnabled && com.localai.workspace.sources.SourceType.STRUCTURED_MEMORY in allowedSources) {
                     val memoryStartedAt=android.os.SystemClock.elapsedRealtime()
                     graph.retrieval.memories(projectId, trimmed, 4).filter{logicalAgent==null || it.scopeType in logicalAgent.memoryScopes.map{scope->scope.name}}
                         .also { contextMemoryMs=android.os.SystemClock.elapsedRealtime()-memoryStartedAt }
                 } else emptyList()
                 trace(if (useContextV1) "LEGACY_MEMORY_BYPASSED" else "MEMORY_COMPLETE")
-                val requestedTools = if (!diagnosticSmoke && model.toDescriptor().runtime == RuntimeType.LITERT_LM && com.localai.workspace.domain.model.ModelCapability.TOOL_CALLING in model.toDescriptor().capabilities)
+                val requestedTools = if (!skillAuthoringMode && !diagnosticSmoke && model.toDescriptor().runtime == RuntimeType.LITERT_LM && com.localai.workspace.domain.model.ModelCapability.TOOL_CALLING in model.toDescriptor().capabilities)
                     com.localai.workspace.data.AssistantRouting.tools(graph.assistantSettings.forProject(projectId).tools, trimmed, selectedFiles.isNotEmpty()) else emptySet()
                 val toolAvailability = com.localai.workspace.capabilities.CapabilityPolicy().tools(requestedTools,
                     logicalAgent?.allowedTools ?: com.localai.workspace.skills.SkillDefinition.STANDARD_TOOLS, activeSkills)
@@ -878,6 +879,19 @@ class ChatViewModel(
                         includedByKind = budget.included.groupingBy { it.kind.name }.eachCount().toSortedMap(),
                         omittedByReason = omittedByReason,
                     )
+                }
+                if (skillAuthoringMode) {
+                    conversation = conversation.copy(
+                        systemInstruction = listOfNotNull(
+                            conversation.systemInstruction?.takeIf { it.isNotBlank() },
+                            com.localai.workspace.skills.SkillDraftProposalParser.systemInstruction(),
+                        ).joinToString("\n\n"),
+                    )
+                    prompt = listOfNotNull(
+                        conversation.systemInstruction,
+                        conversation.history.joinToString("\n") { it.content }.takeIf { it.isNotBlank() },
+                        conversation.userMessage,
+                    ).joinToString("\n")
                 }
                 requestedThinking = graph.assistantSettings.forProject(projectId).thinking.name
                 effectiveThinking = if (conversation.enableThinking) "ON" else "OFF"
@@ -1354,7 +1368,8 @@ class HomeViewModelFactory(private val graph: AppGraph) : ViewModelProvider.Fact
     override fun <T : ViewModel> create(modelClass: Class<T>): T = HomeViewModel(graph) as T
 }
 
-class ChatViewModelFactory(private val projectId: String, private val graph: AppGraph, private val conversationId: String? = null) : ViewModelProvider.Factory {
+class ChatViewModelFactory(private val projectId: String, private val graph: AppGraph, private val conversationId: String? = null,
+    private val skillAuthoringMode: Boolean = false) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T = ChatViewModel(projectId, graph, conversationId) as T
+    override fun <T : ViewModel> create(modelClass: Class<T>): T = ChatViewModel(projectId, graph, conversationId, skillAuthoringMode) as T
 }

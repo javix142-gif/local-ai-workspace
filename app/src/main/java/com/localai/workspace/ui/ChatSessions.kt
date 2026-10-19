@@ -12,7 +12,7 @@ data class ChatActivity(val projectId: String, val conversationId: String?, val 
 
 /** Application owns chat controllers; navigation only attaches/detaches their UI. */
 class ChatSessions(private val graph: AppGraph, private val scope: CoroutineScope) {
-    private data class Entry(val projectId: String, val requestedId: String?, val store: ViewModelStore,
+    private data class Entry(val projectId: String, val requestedId: String?, val skillAuthoring: Boolean, val store: ViewModelStore,
         val model: ChatViewModel, var monitor: Job? = null, var expiry: Job? = null)
     private val entries = linkedMapOf<String, Entry>() // Main dispatcher only.
     private val mutableActivities = MutableStateFlow<List<ChatActivity>>(emptyList())
@@ -22,14 +22,15 @@ class ChatSessions(private val graph: AppGraph, private val scope: CoroutineScop
         entries.values.firstOrNull { it.projectId == projectId && it.requestedId == conversationId }?.model?.stop()
     }
 
-    fun get(projectId: String, conversationId: String?): ChatViewModel {
+    fun get(projectId: String, conversationId: String?, skillAuthoring: Boolean = false): ChatViewModel {
         entries.values.firstOrNull { it.projectId == projectId &&
+            it.skillAuthoring == skillAuthoring &&
             (it.requestedId == conversationId || (conversationId != null && it.model.currentConversationId.value == conversationId))
         }?.let { it.expiry?.cancel(); return it.model }
-        val key = "$projectId:${conversationId ?: "default"}"
+        val key = "$projectId:${conversationId ?: "default"}:${if (skillAuthoring) "skill-authoring" else "chat"}"
         val store = ViewModelStore()
-        val model = ViewModelProvider(store, ChatViewModelFactory(projectId, graph, conversationId))[ChatViewModel::class.java]
-        val entry = Entry(projectId, conversationId, store, model)
+        val model = ViewModelProvider(store, ChatViewModelFactory(projectId, graph, conversationId, skillAuthoring))[ChatViewModel::class.java]
+        val entry = Entry(projectId, conversationId, skillAuthoring, store, model)
         entries[key] = entry
         entry.monitor = scope.launch {
             combine(model.isGenerating, model.isImporting, model.generationProgress, model.conversation) { generating, importing, progress, chat ->

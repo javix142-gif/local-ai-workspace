@@ -3,6 +3,8 @@ package com.localai.workspace.ui
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -17,13 +19,118 @@ import com.localai.workspace.semantic.v2.ScopeType
 import kotlinx.coroutines.*
 import java.util.UUID
 
-@Composable fun SkillsAgentsEntry() {
+@Composable
+fun SkillProposalReviewDialog(
+    markdown: String,
+    saving: Boolean,
+    errorMessage: String?,
+    onDismiss: () -> Unit,
+    onSave: (SkillDefinition) -> Unit,
+) {
+    var editableMarkdown by remember(markdown) { mutableStateOf(markdown) }
+    var proposal by remember(markdown) { mutableStateOf(runCatching { SkillDraftProposalParser.parse(markdown) }.getOrNull()) }
+    var parseError by remember(markdown) { mutableStateOf<String?>(runCatching { SkillDraftProposalParser.parse(markdown) }.exceptionOrNull()?.message) }
+    var name by remember(markdown) { mutableStateOf(proposal?.definition?.name.orEmpty()) }
+    var description by remember(markdown) { mutableStateOf(proposal?.definition?.description.orEmpty()) }
+    var version by remember(markdown) { mutableStateOf(proposal?.definition?.version.orEmpty()) }
+    var tags by remember(markdown) { mutableStateOf(proposal?.definition?.tags.orEmpty().joinToString(", ")) }
+    var instructions by remember(markdown) { mutableStateOf(proposal?.definition?.instructions.orEmpty()) }
+    var activation by remember(markdown) { mutableStateOf(proposal?.activationConditions.orEmpty()) }
+    var responseFormat by remember(markdown) { mutableStateOf(proposal?.responseFormat.orEmpty()) }
+    var restrictions by remember(markdown) { mutableStateOf(proposal?.restrictions.orEmpty()) }
+    var useCases by remember(markdown) { mutableStateOf(proposal?.useCases.orEmpty()) }
+    var selectedTools by remember(markdown) { mutableStateOf(emptySet<String>()) }
+    var selectedCapabilities by remember(markdown) { mutableStateOf(emptySet<com.localai.workspace.capabilities.Capability>()) }
+    var selectedSources by remember(markdown) { mutableStateOf(emptySet<SourceType>()) }
+
+    AlertDialog(
+        onDismissRequest = { if (!saving) onDismiss() },
+        title = { Text(if (proposal == null) "Review SKILL.md draft" else "Review Skill proposal") },
+        text = {
+            Column(Modifier.heightIn(max = 560.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                if (proposal == null) {
+                    Text("The response is not valid SKILL.md yet. Edit the draft or ask Gemma to return the required frontmatter; nothing has been saved.")
+                    parseError?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
+                    OutlinedTextField(editableMarkdown, { editableMarkdown = it }, label = { Text("SKILL.md draft") }, modifier = Modifier.fillMaxWidth(), minLines = 8)
+                    errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                } else {
+                    val parsed = requireNotNull(proposal)
+                    Text("Review and edit the proposal. Tool, source and capability suggestions start unselected. Saving keeps the Skill disabled.", style = MaterialTheme.typography.bodySmall)
+                    OutlinedTextField(name, { name = it }, label = { Text("Name") }, modifier = Modifier.fillMaxWidth())
+                    OutlinedTextField(description, { description = it }, label = { Text("Description") }, modifier = Modifier.fillMaxWidth(), minLines = 2)
+                    OutlinedTextField(version, { version = it }, label = { Text("Version") }, modifier = Modifier.fillMaxWidth())
+                    OutlinedTextField(tags, { tags = it }, label = { Text("Tags · comma separated") }, modifier = Modifier.fillMaxWidth())
+                    OutlinedTextField(activation, { activation = it }, label = { Text("Activation conditions") }, modifier = Modifier.fillMaxWidth(), minLines = 2)
+                    OutlinedTextField(instructions, { instructions = it }, label = { Text("Procedural instructions") }, modifier = Modifier.fillMaxWidth(), minLines = 5)
+                    OutlinedTextField(responseFormat, { responseFormat = it }, label = { Text("Response format") }, modifier = Modifier.fillMaxWidth(), minLines = 2)
+                    OutlinedTextField(restrictions, { restrictions = it }, label = { Text("Restrictions") }, modifier = Modifier.fillMaxWidth(), minLines = 2)
+                    OutlinedTextField(useCases, { useCases = it }, label = { Text("Use cases") }, modifier = Modifier.fillMaxWidth(), minLines = 2)
+                    Text("Available tools · select explicitly", style = MaterialTheme.typography.titleSmall)
+                    Text(if (parsed.suggestedTools.isEmpty()) "Gemma suggested no available tools." else "Gemma suggested: ${parsed.suggestedTools.sorted().joinToString()}. Suggestions are not selected automatically.", style = MaterialTheme.typography.bodySmall)
+                    SkillDefinition.STANDARD_TOOLS.sorted().forEach { id -> Choice(id, id in selectedTools) { selectedTools = if (it) selectedTools + id else selectedTools - id } }
+                    Text("Capabilities · select requirements explicitly", style = MaterialTheme.typography.titleSmall)
+                    Text("Available locally: ${com.localai.workspace.capabilities.CapabilityPolicy.localCapabilities.map { it.name }.sorted().joinToString()}", style = MaterialTheme.typography.bodySmall)
+                    if (parsed.suggestedCapabilities.isNotEmpty()) Text("Gemma suggested: ${parsed.suggestedCapabilities.map { it.name }.sorted().joinToString()}. Suggestions are not selected automatically.", style = MaterialTheme.typography.bodySmall)
+                    com.localai.workspace.capabilities.Capability.entries.forEach { capability ->
+                        val availableLocally = capability in com.localai.workspace.capabilities.CapabilityPolicy.localCapabilities
+                        Choice(capability.name + if (availableLocally) "" else " · unavailable locally", capability in selectedCapabilities) {
+                            selectedCapabilities = if (it) selectedCapabilities + capability else selectedCapabilities - capability
+                        }
+                    }
+                    Text("Local sources · select explicitly", style = MaterialTheme.typography.titleSmall)
+                    if (parsed.suggestedSources.isNotEmpty()) Text("Gemma suggested: ${parsed.suggestedSources.map { it.name }.sorted().joinToString()}. Suggestions are not selected automatically.", style = MaterialTheme.typography.bodySmall)
+                    SourceType.local.sortedBy { it.name }.forEach { source ->
+                        Choice(source.name, source in selectedSources) { selectedSources = if (it) selectedSources + source else selectedSources - source }
+                    }
+                    val unavailable = buildList {
+                        parsed.unavailableTools.takeIf { it.isNotEmpty() }?.let { add("Tools not available: ${it.sorted().joinToString()}") }
+                        val unavailableCapabilities = parsed.unavailableCapabilities + selectedCapabilities
+                            .filter { it !in com.localai.workspace.capabilities.CapabilityPolicy.localCapabilities }
+                            .map { it.name }
+                        unavailableCapabilities.takeIf { it.isNotEmpty() }?.let { add("Capabilities not available in this local workspace: ${it.sorted().joinToString()}") }
+                        parsed.unavailableSources.takeIf { it.isNotEmpty() }?.let { add("Sources not available: ${it.sorted().joinToString()}") }
+                    }
+                    unavailable.forEach { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
+                    errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                }
+            }
+        },
+        confirmButton = {
+            if (proposal == null) TextButton(enabled = !saving, onClick = {
+                runCatching { SkillDraftProposalParser.parse(editableMarkdown) }
+                    .onSuccess { parsed ->
+                        proposal = parsed
+                        name = parsed.definition.name
+                        description = parsed.definition.description
+                        version = parsed.definition.version
+                        tags = parsed.definition.tags.joinToString(", ")
+                        instructions = parsed.definition.instructions
+                        activation = parsed.activationConditions
+                        responseFormat = parsed.responseFormat
+                        restrictions = parsed.restrictions
+                        useCases = parsed.useCases
+                        parseError = null
+                    }
+                    .onFailure { parseError = it.message ?: "SKILL_METADATA_INVALID" }
+            }) { Text("Validate SKILL.md") }
+            else TextButton(enabled = !saving && name.isNotBlank() && description.isNotBlank() && version.isNotBlank() && instructions.isNotBlank(), onClick = {
+                val parsed = requireNotNull(proposal)
+                onSave(parsed.configured(name, description, instructions, activation, responseFormat, restrictions, useCases,
+                    selectedTools, selectedCapabilities, selectedSources, version = version,
+                    tags = tags.split(',').map(String::trim).filter(String::isNotEmpty)))
+            }) { Text(if (saving) "Saving…" else "Save disabled Skill") }
+        },
+        dismissButton = { TextButton(enabled = !saving, onClick = onDismiss) { Text("Cancel") } },
+    )
+}
+
+@Composable fun SkillsAgentsEntry(onCreateSkill: () -> Unit = {}) {
     var panel by remember{mutableStateOf<String?>(null)}
     Row {TextButton(onClick={panel="skills"}){Text("Skills")};TextButton(onClick={panel="agents"}){Text("Logical Agents")}}
-    if(panel=="skills")SkillsManagement{panel=null}
+    if(panel=="skills")SkillsManagement(onCreateSkill){panel=null}
     if(panel=="agents")AgentsManagement{panel=null}
 }
-@Composable private fun SkillsManagement(close:()->Unit) {
+@Composable private fun SkillsManagement(onCreateSkill:()->Unit,close:()->Unit) {
     val context=LocalContext.current;val graph=(context.applicationContext as LocalAiApplication).graph
     val registry=graph.skillRegistry;val skills by registry.changes.collectAsState(initial=emptyList());val scope=rememberCoroutineScope()
     var editing by remember{mutableStateOf<SkillDefinition?>(null)};var error by remember{mutableStateOf<String?>(null)};var exportId by remember{mutableStateOf<String?>(null)}
@@ -39,7 +146,15 @@ import java.util.UUID
     }}
     val exporter=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/markdown")){uri->val id=exportId;if(uri!=null&&id!=null)run{context.contentResolver.openOutputStream(uri)?.bufferedWriter()?.use{it.write(registry.export(id))} ?: error("SKILL_EXPORT_FAILED")}}
     SemanticPanel("Skills",close) {
-        Row {TextButton(onClick={importer.launch(arrayOf("text/*","application/octet-stream"))}){Text("Import SKILL.md")};TextButton(onClick={error=null;editing=SkillDefinition("skill.user-${UUID.randomUUID()}","","",instructions="")}){Text("Create")}}
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Button(onClick=onCreateSkill,modifier=Modifier.fillMaxWidth()){Text("CREAR SKILL")}
+            Text("Start a local Gemma conversation and review its SKILL.md proposal before saving.", style=MaterialTheme.typography.bodySmall)
+            Row {
+                TextButton(onClick={importer.launch(arrayOf("text/*","application/octet-stream"))}){Text("Import SKILL.md")}
+                Spacer(Modifier.weight(1f))
+                TextButton(onClick={error=null;editing=SkillDefinition("skill.user-${UUID.randomUUID()}","","",instructions="")}){Text("Create manually")}
+            }
+        }
         skills.forEach{s->Card(Modifier.fillMaxWidth().clickable{error=null;editing=s}){Row(Modifier.padding(12.dp)){Column(Modifier.weight(1f)){Text(s.name);Text(s.description,style=MaterialTheme.typography.bodySmall);Text(s.origin.name.replace('_',' '),style=MaterialTheme.typography.labelSmall)};Switch(s.enabled,{run{registry.enable(s.id,it)}})}}}
         error?.let{Text(it,color=MaterialTheme.colorScheme.error)}
     }

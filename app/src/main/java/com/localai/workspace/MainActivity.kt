@@ -106,6 +106,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -147,7 +148,9 @@ import com.localai.workspace.ui.components.AppScreenContent
 import com.localai.workspace.ui.MemoryViewModel
 import com.localai.workspace.ui.MemoryViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import androidx.compose.runtime.DisposableEffect
+import kotlinx.coroutines.CancellationException
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -213,7 +216,13 @@ private fun LocalAiWorkspaceRoot() {
                 ModelDetailsScreen(homeViewModel, navController, entry.arguments?.getString("modelId").orEmpty())
             }
             composable("settings") {
-                SettingsScreen(openValidation={navController.navigate("device_validation")}) { navController.navigate("performance") }
+                SettingsScreen(
+                    openValidation = { navController.navigate("device_validation") },
+                    openPerformance = { navController.navigate("performance") },
+                    openSkillAuthoring = {
+                        homeViewModel.startChat { projectId, _ -> navController.navigate("skill-chat/$projectId") }
+                    },
+                )
             }
             composable("performance") {
                 com.localai.workspace.ui.PerformanceScreen(graph) { navController.popBackStack() }
@@ -230,6 +239,11 @@ private fun LocalAiWorkspaceRoot() {
                 val conversationId = entry.arguments?.getString("conversationId")
                 val chatViewModel = remember(projectId, conversationId) { graph.chatSessions.get(projectId, conversationId) }
                 ChatScreen(chatViewModel, navController)
+            }
+            composable("skill-chat/{projectId}") { entry ->
+                val projectId = entry.arguments?.getString("projectId").orEmpty()
+                val chatViewModel = remember(projectId) { graph.chatSessions.get(projectId, null, skillAuthoring = true) }
+                ChatScreen(chatViewModel, navController, skillAuthoringMode = true)
             }
             composable("memory/{projectId}") { entry ->
                 val projectId = entry.arguments?.getString("projectId").orEmpty()
@@ -860,7 +874,7 @@ private fun DetailSection(title: String, values: List<Pair<String, String?>>) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostController) {
+private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostController, skillAuthoringMode: Boolean = viewModel.skillAuthoringMode) {
     val project by viewModel.project.collectAsStateWithLifecycle()
     val conversation by viewModel.conversation.collectAsStateWithLifecycle()
     val standalone = project?.workspaceKind == com.localai.workspace.data.WorkspaceKind.CHAT
@@ -912,6 +926,11 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
     var showAgent by rememberSaveable { mutableStateOf(false) }
     var showSkills by rememberSaveable { mutableStateOf(false) }
     var showArtifacts by rememberSaveable { mutableStateOf(false) }
+    var skillProposalMessageId by rememberSaveable { mutableStateOf<String?>(null) }
+    var skillProposalError by remember { mutableStateOf<String?>(null) }
+    var skillProposalSaving by remember { mutableStateOf(false) }
+    val chatScope = rememberCoroutineScope()
+    val skillRegistry = (androidx.compose.ui.platform.LocalContext.current.applicationContext as LocalAiApplication).graph.skillRegistry
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let(viewModel::attachDocument) }
     val audioPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let(viewModel::attachAudio) }
     val imagePicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let(viewModel::attachImage) }
@@ -926,7 +945,7 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                 title = {
                     ChatHeaderTitle(
                         agentTitle = { com.localai.workspace.ui.ChatAgentLabel(viewModel) },
-                        conversationTitle = if (standalone) project?.name ?: "Chat" else "${conversation?.title ?: "Chat"} · ${project?.name ?: "Project"}",
+                        conversationTitle = if (skillAuthoringMode) "Create a Skill" else if (standalone) project?.name ?: "Chat" else "${conversation?.title ?: "Chat"} · ${project?.name ?: "Project"}",
                         modelStatus = selectedModel?.let { "${humanModelName(it.displayName)} · Local · ${when {
                             generating -> compactGenerationLabel(generationProgress.stage, generationProgress.cancellationRequested)
                             preparation.modelId == it.id && preparation.preparing -> compactGenerationLabel(preparation.progress.stage)
@@ -946,12 +965,16 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                         DropdownMenu(expanded = showChatMenu, onDismissRequest = { showChatMenu = false }) {
                             DropdownMenuItem(text = { Text("Model") }, enabled = !generating,
                                 onClick = { showChatMenu = false; showModelPicker = true })
-                            DropdownMenuItem(text = { Text("Agent") }, enabled = !generating, onClick = { showChatMenu = false; showAgent = true })
-                            DropdownMenuItem(text = { Text("Skills") }, enabled = !generating, onClick = { showChatMenu = false; showSkills = true })
+                            if (!skillAuthoringMode) {
+                                DropdownMenuItem(text = { Text("Agent") }, enabled = !generating, onClick = { showChatMenu = false; showAgent = true })
+                                DropdownMenuItem(text = { Text("Skills") }, enabled = !generating, onClick = { showChatMenu = false; showSkills = true })
+                            }
                             DropdownMenuItem(text = { Text("Files") }, onClick = { showChatMenu = false; showFiles = true })
-                            DropdownMenuItem(text = { Text("Artifacts") }, enabled=!generating&&!deletingChat, onClick = { showChatMenu=false;showArtifacts=true })
-                            DropdownMenuItem(text = { Text("Memory") }, onClick = { showChatMenu = false; navController.navigate("memory/${project?.id.orEmpty()}") })
-                            DropdownMenuItem(text = { Text("Diagnostics") }, onClick = { showChatMenu = false; showDiagnostics = true })
+                            if (!skillAuthoringMode) {
+                                DropdownMenuItem(text = { Text("Artifacts") }, enabled=!generating&&!deletingChat, onClick = { showChatMenu=false;showArtifacts=true })
+                                DropdownMenuItem(text = { Text("Memory") }, onClick = { showChatMenu = false; navController.navigate("memory/${project?.id.orEmpty()}") })
+                                DropdownMenuItem(text = { Text("Diagnostics") }, onClick = { showChatMenu = false; showDiagnostics = true })
+                            }
                             DropdownMenuItem(
                                 text = { Text("Delete chat") },
                                 leadingIcon = { Icon(Icons.Default.DeleteOutline, contentDescription = null) },
@@ -983,9 +1006,9 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                     onFiles = if (documents.isNotEmpty()) ({ showFiles = true }) else null,
                     onStop = viewModel::stop, onSend = { if (viewModel.send(input)) input = "" },
                     contextualControlsInline = true,
-                    contextualControls = { com.localai.workspace.ui.AssistantControls(assistantProfile,
+                    contextualControls = if (skillAuthoringMode) null else ({ com.localai.workspace.ui.AssistantControls(assistantProfile,
                         selectedModel?.toDescriptor()?.let { it.runtime == RuntimeType.LITERT_LM && ModelCapability.TOOL_CALLING in it.capabilities } == true,
-                        selectedModel?.toDescriptor()?.let { it.runtime == RuntimeType.LITERT_LM && ModelCapability.THINKING in it.capabilities } == true, !generating, compact = true, onChange = viewModel::setAssistantProfile) })
+                        selectedModel?.toDescriptor()?.let { it.runtime == RuntimeType.LITERT_LM && ModelCapability.THINKING in it.capabilities } == true, !generating, compact = true, onChange = viewModel::setAssistantProfile) }))
             }
         },
     ) { padding ->
@@ -1010,7 +1033,13 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                 }
             }
             if (messages.isEmpty()) {
-                EmptyState("How can I help?", "")
+                if (skillAuthoringMode) {
+                    Column(Modifier.fillMaxWidth().padding(24.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Text("¿Qué debiese hacer la Skill?", style = MaterialTheme.typography.titleLarge)
+                        Text("Describe el trabajo que quieres enseñar. Gemma preparará un borrador SKILL.md; nada se guarda hasta que lo revises y lo apruebes.", style = MaterialTheme.typography.bodyMedium)
+                        Text("La conversación usa el modelo local seleccionado. No ejecuta herramientas ni activa la Skill automáticamente.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                } else EmptyState("How can I help?", "")
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
@@ -1032,6 +1061,9 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                             onMetrics = { selectedMetrics = it },
                             onDiagnostic = { historicalDiagnostic = it; showTechnicalError = true },
                             onCitation = { id -> selectedEvidence = messageEvidence.singleOrNull { it.evidenceId == id } })
+                        if (skillAuthoringMode && message.role == "ASSISTANT" && message.status == "COMPLETE") {
+                            TextButton(onClick = { skillProposalMessageId = message.id }) { Text("Review Skill proposal") }
+                        }
                         }
                     }
                 }
@@ -1050,9 +1082,35 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                 } }
             }
         })
-    if (showAgent) AlertDialog(onDismissRequest = { showAgent = false }, title = { Text("Logical Agent") }, text = { com.localai.workspace.ui.ChatAgentSelector(viewModel, !generating) }, confirmButton = { TextButton(onClick = { showAgent = false }) { Text("Done") } })
-    if (showSkills) com.localai.workspace.ui.ChatSkillSelection(viewModel) { showSkills = false }
+    if (showAgent && !skillAuthoringMode) AlertDialog(onDismissRequest = { showAgent = false }, title = { Text("Logical Agent") }, text = { com.localai.workspace.ui.ChatAgentSelector(viewModel, !generating) }, confirmButton = { TextButton(onClick = { showAgent = false }) { Text("Done") } })
+    if (showSkills && !skillAuthoringMode) com.localai.workspace.ui.ChatSkillSelection(viewModel) { showSkills = false }
     if (showArtifacts && project!=null) com.localai.workspace.ui.ArtifactsDialog(project!!.id) { showArtifacts=false }
+    val skillProposalMessage = messages.firstOrNull { it.id == skillProposalMessageId }
+    if (skillAuthoringMode && skillProposalMessage != null) {
+        com.localai.workspace.ui.SkillProposalReviewDialog(
+            markdown = skillProposalMessage.content,
+            saving = skillProposalSaving,
+            errorMessage = skillProposalError,
+            onDismiss = { if (!skillProposalSaving) { skillProposalMessageId = null; skillProposalError = null } },
+            onSave = { definition ->
+                chatScope.launch {
+                    skillProposalSaving = true
+                    skillProposalError = null
+                    try {
+                        skillRegistry.update(definition)
+                        skillProposalMessageId = null
+                        snackbarHostState.showSnackbar("Skill saved disabled. Find it in Settings → Skills to enable or export its SKILL.md.")
+                    } catch (cancelled: CancellationException) {
+                        throw cancelled
+                    } catch (error: Exception) {
+                        skillProposalError = error.message ?: error.javaClass.simpleName
+                    } finally {
+                        skillProposalSaving = false
+                    }
+                }
+            },
+        )
+    }
     if (showDiagnostics) AlertDialog(onDismissRequest = { showDiagnostics = false }, title = { Text("Diagnostics") },
         confirmButton = { TextButton(onClick = { showDiagnostics = false }) { Text("Close") } }, text = {
             Column(Modifier.heightIn(max = 460.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -1307,7 +1365,7 @@ private fun ResponseDetailsDialog(metrics: GenerationMetricsPresentation, onDism
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SettingsScreen(openValidation: () -> Unit = {}, openPerformance: () -> Unit) {
+private fun SettingsScreen(openValidation: () -> Unit = {}, openPerformance: () -> Unit, openSkillAuthoring: () -> Unit = {}) {
     var developer by rememberSaveable { mutableStateOf(false) }
     var boundaries by remember { mutableStateOf(false) }
     AppScreenContent(columnModifier = Modifier.verticalScroll(rememberScrollState())) {
@@ -1315,7 +1373,7 @@ private fun SettingsScreen(openValidation: () -> Unit = {}, openPerformance: () 
         LocalModeCard()
         com.localai.workspace.ui.SemanticSettings()
         com.localai.workspace.ui.ContextMemoryEntry()
-        com.localai.workspace.ui.SkillsAgentsEntry()
+        com.localai.workspace.ui.SkillsAgentsEntry(onCreateSkill = openSkillAuthoring)
         Card(Modifier.fillMaxWidth().clickable { developer = !developer }) {
             Row(Modifier.fillMaxWidth().padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                 Text("Developer / Diagnostics", Modifier.weight(1f), style = MaterialTheme.typography.titleSmall)

@@ -88,13 +88,41 @@ class ChatSessionPipelineTest {
         java.security.MessageDigest.getInstance("SHA-256").digest(id.toByteArray()).joinToString("") { "%02x".format(it) },
         fileSize = 4096, format = "LITERT_LM", runtimeId = backend.runtimeId, compatibilityStatus = "COMPATIBLE",
         configuredContext = 4096, maxOutputTokens = 256, repeatPenalty = 1.1f, importedAt = 1)
-    private suspend fun chat(): Pair<String, ChatViewModel> {
+    private suspend fun chat(skillAuthoring: Boolean = false): Pair<String, ChatViewModel> {
         if (graph.workspace.getModel("model") == null) db.modelDao().insert(model("model"))
         val id = graph.workspace.createChat()
-        val vm = graph.chatSessions.get(id, null); controllers += vm; vm.enterScreen()
+        val vm = graph.chatSessions.get(id, null, skillAuthoring); controllers += vm; vm.enterScreen()
         vm.currentConversationId.first { it != null }
         graph.modelPreparation.state.first { it.ready }
         return id to vm
+    }
+
+    @Test fun skillAuthoringUsesSharedLocalChatButSkipsAgentMemoryAndToolExecution() = check {
+        graph.contextFoundation.enable(true)
+        db.modelDao().insert(model("model").copy(capabilities = "text-generation,tool-calling"))
+        val (projectId, vm) = chat(skillAuthoring = true)
+        val ordinaryChat = graph.chatSessions.get(projectId, null)
+        controllers += ordinaryChat
+        assertTrue(vm.skillAuthoringMode)
+        assertFalse(ordinaryChat.skillAuthoringMode)
+        assertNotSame("authoring and ordinary chats must not share mode-specific prompt state", vm, ordinaryChat)
+        val requestText = "Create a Skill for reviewing a synthetic maintenance checklist"
+        assertTrue(vm.send(requestText))
+        val turn = backend.turns.receive()
+
+        assertEquals(requestText, turn.request.conversation?.userMessage)
+        assertTrue(turn.request.conversation?.systemInstruction.orEmpty().contains("SKILL.md"))
+        assertTrue(turn.request.conversation?.systemInstruction.orEmpty().contains("¿Qué debiese hacer la Skill?"))
+        assertTrue(turn.request.prompt.contains("SKILL.md"))
+        assertTrue("authoring mode must not inherit model tool grants", backend.loads.last().enabledTools.isEmpty())
+        assertFalse("authoring does not add unrelated memory to the request", turn.request.conversation?.userMessage.orEmpty().contains("MEMORY_FIXTURE"))
+        val trace = requireNotNull(graph.normalGenerationTrace.state.value)
+        assertFalse(trace.contextBuilderEnabled)
+        assertEquals(0, trace.toolsEffectiveCount)
+
+        finish(vm, turn)
+        assertEquals(requestText, graph.workspace.recentMessages(vm.currentConversationId.value!!, 10)
+            .first { it.role == "USER" }.content)
     }
     private suspend fun finish(vm: ChatViewModel, turn: Turn) {
         turn.finish.complete(Unit); vm.isGenerating.first { !it }

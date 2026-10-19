@@ -43,6 +43,41 @@ class SkillAgentRegistryTest {
         val round=SkillPackageParser.parse(skills.export(s.id));assertEquals(s.instructions,round.instructions);assertEquals(s.externalMetadata,round.externalMetadata);assertEquals(s.tags,round.tags)
         skills.install(text.replace("1.0","2.0"));assertEquals("2.0",skills.get(s.id)!!.version);assertEquals(5,skills.list().size)
     }
+    @Test fun reviewedConversationDraftRegistersDisabledAndExportsAsSkillMarkdown()=runBlocking {
+        val proposal=SkillDraftProposalParser.parse("""---
+name: "Checklist Review"
+description: "Reviews a supplied checklist."
+version: "1.0"
+tags:
+  - "checklist"
+activation: "When explicitly selected."
+required-capabilities: "LOCAL_READ"
+allowed-tools: "files.read"
+allowed-sources: "PROJECT_DOCUMENT"
+response-format: "Numbered findings."
+restrictions: "Do not invent findings."
+use-cases: "Review a maintenance checklist."
+---
+## Instructions
+Report only findings supported by the supplied checklist.
+""").configured("Checklist Review","Reviews a supplied checklist.","Report only findings supported by the supplied checklist.",
+            "When explicitly selected.","Numbered findings.","Do not invent findings.","Review a maintenance checklist.",emptySet(),emptySet(),emptySet())
+
+        skills.update(proposal)
+
+        val registered=requireNotNull(skills.get(proposal.id))
+        assertEquals(SkillOrigin.USER_AUTHORED,registered.origin)
+        assertFalse(registered.enabled)
+        assertTrue(registered.allowedTools.isEmpty())
+        assertTrue(registered.requiredCapabilities.isEmpty())
+        assertTrue(registered.allowedSourceTypes.isEmpty())
+        val exported=SkillPackageParser.parse(skills.export(proposal.id))
+        assertEquals(registered.name,exported.name)
+        assertEquals(registered.description,exported.description)
+        assertEquals(registered.instructions,exported.instructions)
+        assertEquals("When explicitly selected.",exported.externalMetadata["activation"])
+        assertEquals("",exported.externalMetadata["allowed-tools"])
+    }
     @Test fun invalidMetadataAndOversizedInputAreRejected() {
         for(text in listOf("no metadata","---\nname: a\n---\nbody","---\ndescription: a\n---\nbody","---\nname: a\ndescription: b\nname: c\n---\nbody","x".repeat(70000))) {
             try{SkillPackageParser.parse(text);fail(text.take(20))}catch(_:IllegalArgumentException){}
