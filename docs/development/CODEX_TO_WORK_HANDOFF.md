@@ -1362,3 +1362,9 @@ At the same f4 SHA, `PdfArtifactLayoutTest` passed 3/3. The direct run exited 0;
 Plan-source integrity remains unchanged: backlog SHA `bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235`, roadmap SHA `260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5`, 97 unique IDs, 120 dependency edges and 97 TODO source statuses. M01-06 remains `PENDING_REQUIRES_DEVICE`; `PHYSICAL_DEVICE=NOT_RUN`. `main` and peeled `v0.4.2` remain at `de615b772cf37a99e7e08a647c59607b271de606`. No APK is included in this recovery.
 
 Next bounded preparation, under the master-program authorization: inspect the authentic M02-01 fixture-corpus DoD and existing test fixtures, then create a small versioned synthetic corpus only if it adds real reusable coverage. This preparation would not complete M02-01 because its source dependency M00-10 remains TODO. Do not change source task states or dependencies.
+
+## Current master-program increment — ArtifactStore symlink cleanup boundary
+
+The exact test/code SHA `96359377838e2dfe1670604a73354fbe09ec6b57` adds one regression to `ArtifactPatchRecoveryTest`; production code is unchanged. `listingNeverFollowsAbandonedStagingSymlinksOutsideArtifactItem` passed with the class: 4/4 JUnit, zero failures/errors/skips, Gradle exit 0 and outer exec exit 0. It checks nested-link cleanup, an escaped `.pending-UUID` link, external target bytes, and committed revision bytes. Full command, environment, log, fresh XML and checksums: [`attempt 11`](../validation/master-program-artifact-recovery/attempt-11-symlink-safety/RESULTS.md).
+
+This was a focused offline HOST run using existing ignored build/cache state, not a clean-checkout build. No full gates, AndroidTest, emulator, device or APK ran. M03-01 remains source `TODO` because M02-05 is `TODO`; no source task was closed. M02-01 synthetic corpus preparation is already evidenced and must not be repeated. Source plan remains 97 IDs and 120 edges unchanged.

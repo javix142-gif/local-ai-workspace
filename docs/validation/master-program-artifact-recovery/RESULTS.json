@@ -1,7 +1,7 @@
 {
   "name": "ArtifactStore recovery, SAF export, and crash-abandoned staging recovery",
-  "status": "FOCUSED_GRADLE_TESTS_PASS_WITH_OUTER_EXECUTOR_STATUS_DISCREPANCY; PREPARATORY_ONLY_NOT_FORMAL",
-  "finalTestedCodeSha": "3015ebec721bb6f66a6d19cc57947ae442d37ed4",
+  "status": "FOCUSED_GRADLE_TESTS_PASS_4_OF_4; PREPARATORY_ONLY_NOT_FORMAL",
+  "finalTestedCodeSha": "96359377838e2dfe1670604a73354fbe09ec6b57",
   "codeCommits": [
     "ddb4f798c6d4ee3407140fa0028742db246ca678",
     "908edd76e483efc55857d5a89f465c975ccadfbe",
@@ -9,7 +9,8 @@
     "dfff07ec9965d774af90b146156b45072063e4bf",
     "c87228c3fd7d076f5116bed92c09efd2f468dfcc",
     "26ff528e02be5e9cdcc17ebb776232a78556dae6",
-    "3015ebec721bb6f66a6d19cc57947ae442d37ed4"
+    "3015ebec721bb6f66a6d19cc57947ae442d37ed4",
+    "96359377838e2dfe1670604a73354fbe09ec6b57"
   ],
   "changedFiles": [
     "app/src/main/java/com/localai/workspace/artifacts/ArtifactStore.kt",
@@ -19,22 +20,23 @@
   "productionChanged": true,
   "schemaOrDependenciesChanged": false,
   "finalFocusedRun": {
-    "attempt": "attempt-10-staging-green-final",
-    "sourceSha": "3015ebec721bb6f66a6d19cc57947ae442d37ed4",
-    "commandFile": "attempt-10-staging-green-final/command.txt",
-    "logFile": "attempt-10-staging-green-final/gradle.log.gz",
+    "attempt": "attempt-11-symlink-safety",
+    "sourceSha": "96359377838e2dfe1670604a73354fbe09ec6b57",
+    "commandFile": "attempt-11-symlink-safety/command.txt",
+    "logFile": "attempt-11-symlink-safety/gradle.log",
     "exitCode": 0,
-    "outerExecutorExitCode": 1,
-    "outerStatus": "UNRESOLVED_DISCREPANCY; not normalized",
+    "outerExecutorExitCode": 0,
+    "outerStatus": "CONSISTENT_WITH_GRADLE_LOG_AND_JUNIT",
     "junit": [
       {
-        "path": "attempt-10-staging-green-final/junit/TEST-com.localai.workspace.artifacts.ArtifactPatchRecoveryTest.xml",
-        "tests": 3,
-        "passed": 3,
+        "path": "attempt-11-symlink-safety/xml/TEST-com.localai.workspace.artifacts.ArtifactPatchRecoveryTest.xml",
+        "tests": 4,
+        "passed": 4,
         "failures": 0,
         "errors": 0,
         "skipped": 0,
-        "sha256": "a79407a183e98c0ae22ebd0d9f7346680df2c83718ae4fab26b3243b655d980f"
+        "testBodySeconds": 5.388,
+        "sha256": "471faace696d694ac1a6966cab70eab1194242f362aa13ec0186f670013fd071"
       }
     ],
     "gradle": "8.10.2",
@@ -44,20 +46,11 @@
     "ndk": "27.0.12077973",
     "offline": true,
     "existingGradleUserHome": "/workspace/.gradle",
-    "durationSeconds": 41,
-    "executedGradleTasks": 3,
-    "upToDateGradleTasks": 60,
-    "gradleSummary": "BUILD SUCCESSFUL in 40s",
-    "hostGate": "FOCUSED_CLASS_ONLY",
-    "gradleLogPayload": {
-      "originalPath": "gradle.log",
-      "originalBytes": 4970,
-      "originalSha256": "6382dcbeed1d2e81b7d776eb4e11359521daea1fd7a2ab5dfe78b5fcf5102212",
-      "compressedPath": "gradle.log.gz",
-      "compressedBytes": 1127,
-      "compressedSha256": "e79c36c8a3d6e538831702fee8b366a395dc3572a94bcc287486b6177e29b90f",
-      "compression": "gzip mtime=0; payload is lossless"
-    }
+    "durationSeconds": 191,
+    "executedGradleTasks": 63,
+    "upToDateGradleTasks": 0,
+    "gradleSummary": "BUILD SUCCESSFUL in 3m 9s",
+    "hostGate": "FOCUSED_CLASS_ONLY"
   },
   "attemptInterpretation": {
     "recoveryAttempt01": "PASS 1/1 at ddb4f79; log retained; XML not retained in that attempt; final attempt 07 also covers this test with XML.",
@@ -68,7 +61,8 @@
     "attempt07": "PASS 2/2 on final tested source SHA.",
     "attempt08StagingRed": "Expected baseline failure: listing left a .pending-UUID folder behind.",
     "attempt09StagingGreen": "Gradle marker/log/XML pass 2/2 at 26ff528; outer executor session reported exit 1, cause NOT_DETERMINED.",
-    "attempt10StagingGreenFinal": "Gradle marker/log/XML pass 3/3 at 3015ebe; outer executor session reported exit 1, cause NOT_DETERMINED; no full host gate."
+    "attempt10StagingGreenFinal": "Gradle marker/log/XML pass 3/3 at 3015ebe; outer executor session reported exit 1, cause NOT_DETERMINED; no full host gate.",
+    "attempt11SymlinkSafety": "Exact code/test SHA 96359377838e2dfe1670604a73354fbe09ec6b57: ArtifactPatchRecoveryTest 4/4 PASS, Gradle exit 0 and outer exec exit 0. Test-only; pre-existing ignored build/cache state was reused; not a clean-checkout claim."
   },
   "originalTask": {
     "id": "M03-01",
@@ -79,7 +73,7 @@
     ],
     "dependencyStatus": "M02-05 remains TODO; no formal dependency closure",
     "formalCompletion": false,
-    "preparatoryCoverage": "Earlier attempt 07 covered immutable revision recovery and explicit SAF byte/hash readback; follow-up now also covers cleanup of crash-abandoned staging while preserving a live writer and committed revisions. Full task remains TODO."
+    "preparatoryCoverage": "Earlier attempt 07 covered immutable revision recovery and explicit SAF byte/hash readback; follow-up now also covers cleanup of crash-abandoned staging while preserving a live writer and committed revisions. Full task remains TODO. A later test-only follow-up also verifies cleanup does not follow a nested symlink and does not delete an escaped .pending symlink or its external target; this is safety regression coverage, not formal M03-01 closure."
   },
   "planSource": {
     "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
@@ -95,7 +89,7 @@
     "sourceFilesModified": false
   },
   "validation": {
-    "HOST": "FOCUSED_GRADLE_PASS_3_OF_3; OUTER_EXECUTOR_STATUS_DISCREPANCY_UNRESOLVED; PREPARATORY_ONLY",
+    "HOST": "FOCUSED_CLASS_PASS_4_OF_4; PREPARATORY_ONLY",
     "fullJvmSuite": "NOT_RUN",
     "litertCompat": "NOT_RUN",
     "lint": "NOT_RUN",
@@ -105,7 +99,7 @@
     "PHYSICAL_DEVICE": "NOT_RUN",
     "apk": "NOT_GENERATED"
   },
-  "nextPreparatoryAction": "Continue with the next source-backed bounded host-verifiable artifact capability. M03-01 remains source TODO due M02-05, and no original task status is promoted.",
+  "nextPreparatoryAction": "Continue with a source-backed bounded increment outside repetitive staging cleanup; retain original task statuses and dependencies.",
   "previousApiSafFocusedRun": {
     "attempt": "attempt-07-combined-focused",
     "sourceSha": "dfff07ec9965d774af90b146156b45072063e4bf",
@@ -336,5 +330,33 @@
     "m03_07SurvivingWork": "Already present in the reachable implementation history and docs/validation/master-program-m03-07. Focused line-diff class was 2/2 PASS on fad7acb; lint did not reach :app:lintDebug after pinned KleidiAI source download returned HTTP/2 503. M03-07 remains TODO/device-required and depends on M03-01 TODO.",
     "main": "de615b772cf37a99e7e08a647c59607b271de606",
     "v0.4.2Peeled": "de615b772cf37a99e7e08a647c59607b271de606"
+  },
+  "attempt11SymlinkSafety": {
+    "sourceSha": "96359377838e2dfe1670604a73354fbe09ec6b57",
+    "testClass": "com.localai.workspace.artifacts.ArtifactPatchRecoveryTest",
+    "testMethod": "listingNeverFollowsAbandonedStagingSymlinksOutsideArtifactItem",
+    "commandFile": "attempt-11-symlink-safety/command.txt",
+    "logFile": "attempt-11-symlink-safety/gradle.log",
+    "exitCode": 0,
+    "outerExecSessionExitCode": 0,
+    "startedAtUtc": "2026-10-19T21:26:51Z",
+    "finishedAtUtc": "2026-10-19T21:30:02Z",
+    "wallSeconds": 191,
+    "gradleDuration": "3m 9s",
+    "actionableTasks": 63,
+    "executedTasks": 63,
+    "junit": {
+      "path": "attempt-11-symlink-safety/xml/TEST-com.localai.workspace.artifacts.ArtifactPatchRecoveryTest.xml",
+      "tests": 4,
+      "passed": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "testBodySeconds": 5.388,
+      "sha256": "471faace696d694ac1a6966cab70eab1194242f362aa13ec0186f670013fd071"
+    },
+    "gradleLogSha256": "23cf21fb336c41d741dec8c050e4fb5029aff550508a4bb1013ae07255e51372",
+    "interpretation": "Test-only HOST verification that cleanup does not traverse a symlink inside an abandoned staging directory and refuses to remove an escaped .pending symlink; external bytes and committed revision remain unchanged. Existing ignored build/cache state was reused; this was not a clean-checkout test.",
+    "otherGates": "Full JVM, LiteRT, lint, AndroidTest, emulator, physical device and APK NOT_RUN."
   }
 }

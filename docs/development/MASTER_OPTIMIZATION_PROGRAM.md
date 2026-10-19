@@ -334,3 +334,9 @@ Recovery proceeds on `codex/aws-master-resume-20261019`, based on actual feature
 The exact f4 HOST-focused result is 7/7 across M03-07 preview/SAF and PDF layout tests, with Gradle exit 0; the outer execution session returned 1, which remains unresolved. A direct PDF layout run separately returned 0 and independent readers verified the synthetic Unicode PDF. These focused results do not close M03-07 or M03-04: both source tasks remain TODO, require device validation, and depend on M03-01 TODO. Full gates, APK and device checks were not run.
 
 The next proposed bounded preparation is M02-01's synthetic document fixture corpus, after inspecting existing test assets and exact source DoD. M02-01's formal source dependency M00-10 remains TODO, so this preparation cannot close the task. The original source backlog and roadmap retain their original hashes, all 97 TODO states, IDs and 120 dependency edges. M01-06 and physical-device validation remain pending.
+
+## 2026-10-19 — M03-01 staging cleanup symlink boundary test
+
+Test-only commit `96359377838e2dfe1670604a73354fbe09ec6b57` adds coverage that `ArtifactStore.list` does not traverse a symlink inside a crash-abandoned staging directory and does not remove a `.pending-UUID` symlink whose canonical target escapes the artifact item. The test also verifies the external target and committed revision bytes survive. `ArtifactPatchRecoveryTest` passed 4/4 on HOST, Gradle exit 0, 63 actionable tasks executed; see `docs/validation/master-program-artifact-recovery/attempt-11-symlink-safety/RESULTS.md` and its manifest.
+
+This reuses existing ignored build/cache state and is not a clean build. No production source changed; no full JVM/LiteRT, lint, AndroidTest, emulator, physical device or APK ran. M03-01 remains source `TODO`, dependent on M02-05 `TODO`; no plan IDs or dependency edges changed.

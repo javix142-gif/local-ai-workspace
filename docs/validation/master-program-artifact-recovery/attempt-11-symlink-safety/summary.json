@@ -1,0 +1,32 @@
+{
+  "sourceCodeSha": "96359377838e2dfe1670604a73354fbe09ec6b57",
+  "branch": "codex/aws-master-resume-20261019",
+  "commandExitCode": 0,
+  "outerExecSessionExitCode": 0,
+  "gradleResult": "BUILD_SUCCESSFUL",
+  "gradleReportedDuration": "3m 9s",
+  "wallStartUtc": "2026-10-19T21:26:51Z",
+  "wallFinishUtc": "2026-10-19T21:30:02Z",
+  "wallSeconds": 191,
+  "task": ":app:testDebugUnitTest --tests com.localai.workspace.artifacts.ArtifactPatchRecoveryTest",
+  "junit": {
+    "tests": 4,
+    "passed": 4,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "testBodySeconds": 5.388
+  },
+  "gradleTasks": {
+    "actionable": 63,
+    "executed": 63
+  },
+  "focusedOnly": true,
+  "fullHostGate": "NOT_RUN",
+  "lint": "NOT_RUN",
+  "androidTestCompilation": "NOT_RUN",
+  "emulator": "NOT_RUN",
+  "physicalDevice": "NOT_RUN",
+  "apk": "NOT_GENERATED",
+  "interpretation": "Test-only, synthetic HOST coverage of staging-cleanup symlink boundaries; no source-plan task is formally closed."
+}

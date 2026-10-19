@@ -1,0 +1,8 @@
+Source code/test SHA: 96359377838e2dfe1670604a73354fbe09ec6b57
+Command exit code: 0
+Gradle: BUILD SUCCESSFUL in 3m 9s
+Task: :app:testDebugUnitTest --tests com.localai.workspace.artifacts.ArtifactPatchRecoveryTest
+Result: PASS, 4 tests, 0 failures, 0 errors, 0 skipped
+Gradle actionable tasks: 63 total, 63 executed
+Outer unified exec session: completed exit_code=0
+No full JVM/LiteRT gate, lint, AndroidTest, emulator, device, or APK was run.

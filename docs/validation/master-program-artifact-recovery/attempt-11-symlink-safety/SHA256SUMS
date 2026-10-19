@@ -1,0 +1,12 @@
+b4ae143f36d04004152618c27fb2db5297bf37a183a794b4742a1874e6d1455d  docs/validation/master-program-artifact-recovery/attempt-11-symlink-safety/command.txt
+f09f2c8c218a480d2899e80fbba6cddff8769b8fed0f26295881748b554ba001  docs/validation/master-program-artifact-recovery/attempt-11-symlink-safety/environment.txt
+9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  docs/validation/master-program-artifact-recovery/attempt-11-symlink-safety/exit-code.txt
+e86f11a8fc89f1fe15958354af59130afd85ea8f35034d5803db2a738cdca01f  docs/validation/master-program-artifact-recovery/attempt-11-symlink-safety/finished-at-utc.txt
+23cf21fb336c41d741dec8c050e4fb5029aff550508a4bb1013ae07255e51372  docs/validation/master-program-artifact-recovery/attempt-11-symlink-safety/gradle.log
+824efe8f8e8c5043ea2a0064ae6b284f49e0e0d9b032448778076c7f38383ad9  docs/validation/master-program-artifact-recovery/attempt-11-symlink-safety/source-sha.txt
+9ebb34b737336c95f6925649e50a1712b1429c2f3f6417282c9e8b3fe6fb7716  docs/validation/master-program-artifact-recovery/attempt-11-symlink-safety/started-at-utc.txt
+9cf961619b3482b9a969fbc108181ac36e967cc85ccddb45eb73f91050c4b500  docs/validation/master-program-artifact-recovery/attempt-11-symlink-safety/summary.json
+2d6401eb632867d3731ca16a677acb1fdef6a24b657f87c555679886d9f931e0  docs/validation/master-program-artifact-recovery/attempt-11-symlink-safety/task-outcomes.txt
+d8fb80c104af078cb6fc210c7bf3271fff96eaf99013b40b3e73ef47b0bf483e  docs/validation/master-program-artifact-recovery/attempt-11-symlink-safety/worktree-status-before.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  docs/validation/master-program-artifact-recovery/attempt-11-symlink-safety/xml-inventory-before.txt
+471faace696d694ac1a6966cab70eab1194242f362aa13ec0186f670013fd071  docs/validation/master-program-artifact-recovery/attempt-11-symlink-safety/xml/TEST-com.localai.workspace.artifacts.ArtifactPatchRecoveryTest.xml
