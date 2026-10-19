@@ -210,6 +210,8 @@ class ChatSessionPipelineTest {
         val completed = requireNotNull(graph.normalGenerationTrace.state.value)
         assertTrue(completed.events.any { it.phase == "REQUEST_COMPLETE" })
         assertTrue(completed.events.any { it.phase == "REQUEST_SETTLED" })
+        listOf("MODEL_PREPARATION_WAIT", "MODEL_READY", "MEMORY_COMPLETE", "CONTEXT_V1_BUILD_COMPLETE")
+            .forEach { expected -> assertTrue("Expected $expected in trace", completed.events.any { it.phase == expected }) }
         val rows = com.localai.workspace.performance.GenerationTimelinePresentation.rows(completed)
         assertEquals(completed.events.size, rows.size)
         assertTrue(rows.zipWithNext().all { (a, b) ->
@@ -228,6 +230,8 @@ class ChatSessionPipelineTest {
         assertNotNull("Send-to-first-visible-token timing is retained", requestTtftMs)
         assertNotNull("End-to-end completion timing is retained", requestTotalMs)
         assertTrue(requestTotalMs!! >= requestTtftMs!!)
+        listOf("queueMs", "contextMs", "memoryRetrievalMs", "sourceRetrievalMs", "conversationRetrievalMs")
+            .forEach { key -> assertNotNull("Host stage timing $key is retained", persistedTiming(key)) }
         assertNull("Fake backend provides no native TTFT", persistedTiming("ttftMs"))
         assertNull("Fake backend provides no native decode rate", persistedTiming("decodeTps"))
     }
