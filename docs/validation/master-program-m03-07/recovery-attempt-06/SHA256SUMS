@@ -1,0 +1,12 @@
+a0f3b5c526d193275a56d3f8830831b8054608812058ded03bf071afa36a0dec  ./command.txt
+9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  ./exit-code.txt
+91386f736f926140ab538a6b816ad9fc9bfef094e7240bf59daa0b5bd501c6cf  ./finished-utc.txt
+26494be66a3eb4c5facd073be35eb8e816be8e2fcfc88040afabeec9446fdb0b  ./gradle.log
+225a73b8f01d1c0051f2afe965754a1d5233b6c626c4127c54d94a15744ffee3  ./jdk-preflight.txt
+689b1b7151bf172d723d265549c0ad9ec14a0b269525fb3f5d08fd7150ec6d63  ./junit/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml
+d916685066fec6ee83d3180ac8ae642739c76911ed2ebc1298712e8252395d4d  ./log-hash.json
+23d72c840cd4dacd8adb4c8547e5733a8b3f0f9725b56c55df2169bf0dc8b050  ./previous-xml-sha256.txt
+e5293d5c0f6fadd6bf31fbf3b541f280a064640d206e79ce1daeee0bb8b59a50  ./run-meta.txt
+ffd6e0e710ecd6eecccfd5bc496c9ae1b60402a7af506a29b0f98548654290f6  ./source-sha.txt
+c6f8edbbbf3a4111ee801d426b72316dcc823c17712a54cbe751670d733b26f2  ./started-utc.txt
+8917b32d28ca80279bb2c74f99dc5eb4dbf26de36259f8741d26e3f8da5dbe4b  ./task-outcomes.txt

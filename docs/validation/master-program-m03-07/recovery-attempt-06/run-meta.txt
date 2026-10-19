@@ -1,0 +1,13 @@
+source_sha=ac783b8cd65a0e8b7474c18333389ef8a36e2454
+latest_product_code_commit=0ea514c498af7bbc2b4e0f1326591b3b2173718d
+test=com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.reviewShowsExactBeforeAndAfterAndClosingKeepsSavedRevisionUnchanged
+gradle_wrapper=8.10.2
+started_utc=2026-10-19T13:44:55Z
+finished_utc=2026-10-19T13:48:38Z
+wall_seconds_utc=223
+gradle_reported_duration=3m41s
+exit_code=0
+tests=1 passed=1 failed=0 errors=0 skipped=0
+testcase_seconds=15.011
+actionable_tasks=63 executed=63 up_to_date=0
+emulator=NOT_RUN; physical_device=NOT_RUN; apk=NOT_GENERATED

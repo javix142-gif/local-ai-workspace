@@ -24,7 +24,9 @@
     "unrecoveredLocalCommit": "2f8b0d496db8973edf161c7703efc8f0c17d34fd",
     "status": "NOT_RECOVERED",
     "githubLookup": "HTTP 422: No commit found",
-    "noSourceWasReconstructed": true
+    "noSourceWasReconstructed": true,
+    "directFetchRecheck": "GitHub upload-pack rejected SHA 2f8b0d496db8973edf161c7703efc8f0c17d34fd as not our ref; no local object or reachable patch found in this checkout.",
+    "survivingM03_07Work": "The existing M03-07 test/code commits 4d7014a..0412f60 and their evidence were already reachable on the implementation branch; attempt 06 reruns that focused UI test against current source."
   },
   "focusedTest": {
     "class": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
@@ -77,6 +79,25 @@
       "failed": 0,
       "errors": 0,
       "skipped": 0
+    },
+    {
+      "number": 6,
+      "sourceSha": "ac783b8cd65a0e8b7474c18333389ef8a36e2454",
+      "scope": "ArtifactRevisionPreviewUiTest with --rerun-tasks after later ArtifactStore edits",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "wallSecondsByUtcTimestamps": 223,
+      "gradleReportedDurationSeconds": 221,
+      "testcaseSeconds": 15.011,
+      "actionableTasks": 63,
+      "executedTasks": 63,
+      "upToDateTasks": 0,
+      "classification": "PASS_FOCUSED_CURRENT_SOURCE; M03-07 remains preparatory and device/dependency gated",
+      "evidence": "recovery-attempt-06/"
     }
   ],
   "environment": {
@@ -130,9 +151,9 @@
   },
   "payloadManifest": {
     "path": "SHA256SUMS",
-    "entries": 34,
-    "sha256": "ad0a1589d993ed728a1f4a44d9ef56e924d402984d5434137b64808945997369",
-    "note": "Generated after raw evidence collection; covers evidence payload files, excludes RESULTS.md, RESULTS.json and itself."
+    "entries": 47,
+    "sha256": "24601978d7970018d42529e66ce9d85453d517ba3396b3d29f6bee6e30dcc0e5",
+    "note": "Covers 47 payload entries including recovery-attempt-06; excludes RESULTS.md, RESULTS.json and the root manifest itself."
   },
   "logPayloadHashes": [
     {
@@ -175,5 +196,34 @@
       "gzipBytes": 1226,
       "gzipSha256": "75a35b60a638a8ce959323d0d49049a951a01bad789d4e881db86c1dd50ffea8"
     }
-  ]
+  ],
+  "currentSourceRevalidation": {
+    "sourceSha": "ac783b8cd65a0e8b7474c18333389ef8a36e2454",
+    "lastProductCodeCommit": "0ea514c498af7bbc2b4e0f1326591b3b2173718d",
+    "branch": "codex/master-program-20261019",
+    "class": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+    "method": "reviewShowsExactBeforeAndAfterAndClosingKeepsSavedRevisionUnchanged",
+    "status": "PASS",
+    "command": "recovery-attempt-06/command.txt",
+    "exitCode": 0,
+    "wallSecondsByUtcTimestamps": 223,
+    "gradleReportedDurationSeconds": 221,
+    "tests": 1,
+    "passed": 1,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "testcaseSeconds": 15.011,
+    "actionableTasks": 63,
+    "executedTasks": 63,
+    "upToDateTasks": 0,
+    "xml": "recovery-attempt-06/junit/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml",
+    "log": "recovery-attempt-06/gradle.log",
+    "workerRuntimeProcessSample": "NOT_CAPTURED; app test launcher is configured to Java 21 in app/build.gradle.kts",
+    "evidenceManifest": {
+      "path": "recovery-attempt-06/SHA256SUMS",
+      "entries": 12,
+      "sha256": "57ec696f78ff698fba3be0239a6508d9ce9cd118c4ee3148dd77135d070c740e"
+    }
+  }
 }

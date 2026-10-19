@@ -1,0 +1,10 @@
+{
+  "gradle.log": {
+    "sha256": "26494be66a3eb4c5facd073be35eb8e816be8e2fcfc88040afabeec9446fdb0b",
+    "bytes": 5034
+  },
+  "junit/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml": {
+    "sha256": "689b1b7151bf172d723d265549c0ad9ec14a0b269525fb3f5d08fd7150ec6d63",
+    "bytes": 508
+  }
+}

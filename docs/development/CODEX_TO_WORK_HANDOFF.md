@@ -1,4 +1,14 @@
-# Current master-program checkpoint — M03-02 XLSX worksheet addition (2026-10-19)
+# Current recovery checkpoint — M03-07 revalidated on current code (2026-10-19)
+
+The exact prior local commit `2f8b0d496db8973edf161c7703efc8f0c17d34fd` remains unavailable: it is absent from this Git object database, and direct fetch from GitHub was rejected as `not our ref`. No source was reconstructed. The requested backup already exists and reads back as `recovery/backup-b8e75b4` → `b8e75b4a688d9e1f441324a3a1ecccb369f99ebc`. The active independent implementation branch `codex/master-program-20261019` descends from that exact feature baseline; it now publishes at `ac783b8cd65a0e8b7474c18333389ef8a36e2454`. `main` and peeled `v0.4.2` remain `de615b772cf37a99e7e08a647c59607b271de606`.
+
+M03-07 was not missing from the surviving branch: its UI/test commits `4d7014a`–`0412f60` and prior recovery evidence were already present. Since subsequent M03-02 commits changed `ArtifactStore`, I reran only `ArtifactRevisionPreviewUiTest.reviewShowsExactBeforeAndAfterAndClosingKeepsSavedRevisionUnchanged` against source commit `ac783b8`. HOST JUnit is 1/1 PASS, zero failures/errors/skips; captured Gradle exit 0, `BUILD SUCCESSFUL` in 3m41s, 63/63 tasks executed. The exact command, JDK/toolchain record, raw log, timestamps, fresh XML and 47-entry manifest are in [M03-07 recovery results](../validation/master-program-m03-07/RESULTS.md), with the new run under `../validation/master-program-m03-07/recovery-attempt-06/`.
+
+This does not complete original M03-07: it remains `TODO`, requires a device, and depends on M03-01 (`TODO`). Full host gates, lint, AndroidTest compilation, emulator, physical device and APK were not run. The original 97 IDs/120 dependencies and TODO statuses are unchanged. M01-06 remains `PENDING_REQUIRES_DEVICE`; physical validation is `NOT_RUN`. Next preparatory candidate remains M02-01 fixture-corpus review under its authentic DoD, while its M00-10 dependency is still open.
+
+---
+
+# Previous master-program checkpoint — M03-02 XLSX worksheet addition (2026-10-19)
 
 Code commit `0ea514c498af7bbc2b4e0f1326591b3b2173718d` adds the bounded `artifacts.xlsxAddSheet` operation to the existing app-private generated-XLSX path. It creates one empty worksheet in a new immutable revision, preserves existing sheets/cells/formulas/cached values, enforces the existing sheet-name rules and 16-sheet limit, uses the current-version check, and routes the request through the existing LOCAL_WRITE tool capability. The app still does not evaluate formulas; export remains an explicit SAF action; imported workbooks are unchanged.
 

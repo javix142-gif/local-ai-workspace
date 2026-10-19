@@ -1,0 +1,11 @@
+gradle_runtime_java_home=/workspace/.toolchain/jdk-17
+gradle_runtime_java_version=17.0.20.1
+gradle_runtime_javac_version=17.0.20.1
+configured_app_test_launcher_language_version=21 (app/build.gradle.kts:101-103)
+worker_toolchain_path=/workspace/.toolchain/jdk-21-temurin
+worker_toolchain_java_version=21.0.12.1
+worker_toolchain_javac_version=21.0.12.1
+worker_process_runtime_sample=NOT_CAPTURED
+Gradle=8.10.2; Android SDK API=35; NDK=27.0.12077973; CMake=3.31.6
+GRADLE_USER_HOME=/workspace/.gradle (existing cache; no clean/install)
+Network/offline=--offline
