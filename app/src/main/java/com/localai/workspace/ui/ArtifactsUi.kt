@@ -133,7 +133,10 @@ import org.json.JSONObject
                         ArtifactRevisionDiff(savedPreview,previewText)
                     }
                     SelectionContainer{Text(previewText,Modifier.testTag("artifact-preview"),style=MaterialTheme.typography.bodySmall)}
-                    if(spec.format==ArtifactFormat.PPTX) PptxSlideLayoutPreview(spec,imagePreviews)
+                    if(spec.format==ArtifactFormat.PPTX) {
+                        PptxSlideLayoutPreview(spec,imagePreviews)
+                        PptxImageVisualPreview(imagePreviews)
+                    }
                     TextButton(enabled=!busy,onClick={work {
                         val current=selected
                         val result=withContext(Dispatchers.IO){if(current==null)store.create(projectId,spec)else store.revise(projectId,current.id,versions.maxOf{it.version},spec)}

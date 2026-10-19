@@ -85,6 +85,8 @@ class PptxImagePreviewUiTest {
             .assertTextContains("Informe visual", substring=true)
         compose.onNodeWithTag("pptx-slide-body-1").performScrollTo()
             .assertTextContains("España y una imagen local.", substring=true)
+        compose.onNodeWithTag("pptx-slide-image-region-1").performScrollTo()
+            .assertTextContains("Mapa & datos", substring=true)
         compose.onNodeWithTag("pptx-slide-preview-note").performScrollTo()
             .assertTextContains("Approximate layout", substring=true)
         compose.onNodeWithTag("pptx-slide-preview-2").performScrollTo().assertIsDisplayed()
