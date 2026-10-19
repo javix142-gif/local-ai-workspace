@@ -8561,7 +8561,17 @@
       "Focused SemanticDomainTest and SemanticContextPostfixTest only.",
       "No full JVM/LiteRT, lint, assemble or AndroidTest.",
       "No emulator, Motorola, model latency, heap profile or APK."
-    ]
+    ],
+    "evidenceCommit": "bf708b7e2136bd9f5ea8a129ca09fd5e790c5664",
+    "publication": {
+      "branch": "codex/aws-master-resume-20261019",
+      "remoteReadbackSha": "bf708b7e2136bd9f5ea8a129ca09fd5e790c5664",
+      "method": "Fast-forward push",
+      "main": "de615b772cf37a99e7e08a647c59607b271de606",
+      "v0.4.2Peeled": "de615b772cf37a99e7e08a647c59607b271de606",
+      "featureBranch": "e6f16ac30914fe32f7140241e81e5976660c03d2",
+      "noMergeTagReleaseOrForcePush": true
+    }
   },
   "previousMasterProgramIncrement": {
     "name": "M03-01 preparatory ArtifactStore staging symlink boundary regression",
@@ -18051,9 +18061,9 @@
     "requestedCheckpoint": "b8e75b4a688d9e1f441324a3a1ecccb369f99ebc",
     "branchBase": "e6f16ac30914fe32f7140241e81e5976660c03d2",
     "branch": "codex/aws-master-resume-20261019",
-    "localHead": "801fd1a2e01804b2457588e8bc81904733ee46fb",
+    "localHead": "bf708b7e2136bd9f5ea8a129ca09fd5e790c5664",
     "missingCommit": "2f8b0d496db8973edf161c7703efc8f0c17d34fd NOT_RECOVERED; not reconstructed",
-    "publication": "Code commit c0545e8 and evidence commit 801fd1a were pushed fast-forward to codex/aws-master-resume-20261019; readback verified. Feature/main/tag refs were not changed."
+    "publication": "Semantic allocation optimization code aabca82 and evidence bf708b7 were pushed fast-forward to codex/aws-master-resume-20261019; remote readback verified. Feature/main/tag refs unchanged."
   },
   "latestArtifactRecoverySymlinkSafety": {
     "name": "M03-01 preparatory ArtifactStore staging symlink boundary regression",
