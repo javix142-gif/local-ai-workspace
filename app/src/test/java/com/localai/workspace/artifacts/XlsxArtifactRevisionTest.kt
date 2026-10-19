@@ -31,6 +31,20 @@ import java.util.zip.ZipFile
 class XlsxArtifactRevisionTest {
     private val context:Context get()=ApplicationProvider.getApplicationContext()
 
+    @Test fun xlsxDescriptorAcceptsBoundedStructuredTableSpec() {
+        val descriptor=JSONObject().put("format","XLSX").put("name","sales.xlsx").put("sheets",JSONArray()
+            .put(JSONObject().put("name","Ventas").put("cells",JSONArray()
+                .put(JSONObject().put("address","A1").put("value","Producto"))
+                .put(JSONObject().put("address","B1").put("value","Cantidad"))
+                .put(JSONObject().put("address","A2").put("value","Cuaderno"))
+                .put(JSONObject().put("address","B2").put("value","3").put("type","number")))
+                .put("tables",JSONArray().put(JSONObject().put("name","TablaVentas").put("range","A1:B2")))))
+        val parsed=runCatching { ArtifactSpec.parse(descriptor) }
+        assertTrue("XLSX generation must accept a bounded structured table definition",parsed.isSuccess)
+        assertTrue(parsed.getOrThrow().preview().contains("TablaVentas"))
+        assertTrue(parsed.getOrThrow().preview().contains("A1:B2"))
+    }
+
     private fun exportInteropFixture(name:String,file:File) {
         val configured=System.getenv("LOCALAI_XLSX_INTEROP_DIR")?.takeIf{it.isNotBlank()}?:return
         val directory=File(configured).canonicalFile
