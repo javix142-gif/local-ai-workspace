@@ -47,7 +47,7 @@ class XlsxArtifactRevisionTest {
             .put(JSONObject().put("name","Hoja1").put("cells",JSONArray()
                 .put(JSONObject().put("address","A1").put("value","1").put("type","number"))
                 .put(JSONObject().put("address","A2").put("value","5").put("type","number"))
-                .put(JSONObject().put("address","A3").put("formula","\$A\$2-\$A\$1").put("value","4").put("type","number"))))
+                .put(JSONObject().put("address","A3").put("formula","\$A\$2-\$A\$1").put("value","4").put("type","number")))))
         try {
             val first=store.create(project,ArtifactSpec.parse(fixture))
             val originalHash=first.sha256
