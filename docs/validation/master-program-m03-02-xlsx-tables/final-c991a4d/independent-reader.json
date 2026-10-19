@@ -1,0 +1,35 @@
+{
+  "reader": "openpyxl 3.1.5",
+  "syntheticOnly": true,
+  "workbooks": [
+    {
+      "file": "structured-table.xlsx",
+      "bytes": 3169,
+      "sha256": "e032ad55b42fa3cc26f89108f998c18676894bad3169a729622a1bb0e2513160",
+      "zipCrc": "PASS",
+      "tableName": "TablaVentas",
+      "tableRange": "A1:B2",
+      "headers": [
+        "Producto & código",
+        "Cantidad"
+      ],
+      "formulaB2": null,
+      "cachedB2": null
+    },
+    {
+      "file": "table-resized.xlsx",
+      "bytes": 3174,
+      "sha256": "d9a608c28edabc6fc0cf451d766ac16088f25242102d80f1145db4101e2825b4",
+      "zipCrc": "PASS",
+      "tableName": "TablaVentas",
+      "tableRange": "A1:C2",
+      "headers": [
+        "Producto",
+        "Cantidad",
+        "Importe"
+      ],
+      "formulaB2": "=1+2",
+      "cachedB2": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.tools.ChatToolSchemasTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-19T18:11:22" hostname="42c4f375d730" time="1.651">
+  <properties/>
+  <testcase name="disabledAndInvalidToolsNeverExecute" classname="com.localai.workspace.tools.ChatToolSchemasTest" time="1.548"/>
+  <testcase name="schemasAreRealTypedAndBounded" classname="com.localai.workspace.tools.ChatToolSchemasTest" time="0.044"/>
+  <testcase name="officialSdkToolAdapterReturnsActualCalculatorResult" classname="com.localai.workspace.tools.ChatToolSchemasTest" time="0.059"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

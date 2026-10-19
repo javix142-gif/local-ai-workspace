@@ -1,0 +1,3 @@
+COMMAND=python3 openpyxl-verify.py
+PYTHON=Python 3.12.14
+OPENPYXL=3.1.5

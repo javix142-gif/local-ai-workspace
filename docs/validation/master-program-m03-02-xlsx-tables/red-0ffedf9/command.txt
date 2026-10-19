@@ -1,0 +1,6 @@
+COMMAND=timeout 300s ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --info --rerun-tasks -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.artifacts.XlsxArtifactRevisionTest.xlsxDescriptorAcceptsBoundedStructuredTableSpec
+SOURCE_SHA=0ffedf9f60560cda7db7503967034d2ab7d771e9
+JAVA=openjdk version "17.0.20.1" 2026-08-18
+START_UTC=2026-10-19T17:57:19Z
+END_UTC=2026-10-19T18:00:34Z
+EXIT_CODE=1

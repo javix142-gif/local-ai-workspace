@@ -1,0 +1,57 @@
+{
+  "kind": "PREPARATORY_M03_02_NATIVE_XLSX_TABLES",
+  "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY",
+  "redTest": {
+    "sourceSha": "0ffedf9f60560cda7db7503967034d2ab7d771e9",
+    "test": "XlsxArtifactRevisionTest.xlsxDescriptorAcceptsBoundedStructuredTableSpec",
+    "tests": 1,
+    "passed": 0,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0,
+    "exitCode": 1,
+    "startedAtUtc": "2026-10-19T17:57:19Z",
+    "finishedAtUtc": "2026-10-19T18:00:34Z",
+    "durationSeconds": 195
+  },
+  "testedCodeSha": "c991a4d6fd0240045a31515e5f30fec0309c37ac",
+  "focusedHost": {
+    "tests": 16,
+    "passed": 16,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "startedAtUtc": "2026-10-19T18:10:17Z",
+    "finishedAtUtc": "2026-10-19T18:11:24Z",
+    "durationSeconds": 67,
+    "gradle": "8.10.2",
+    "runtimeJdk": "Temurin 17.0.20.1",
+    "workerJdk": "Temurin 21.0.12.1",
+    "androidSdk": "/workspace/.toolchain/android-sdk (API 35)",
+    "androidNdk": "27.0.12077973",
+    "gradleUserHome": "/workspace/.gradle (existing cache, offline)",
+    "actionableTasks": 63,
+    "executedTasks": 7,
+    "upToDateTasks": 56
+  },
+  "independentReader": {
+    "name": "openpyxl",
+    "version": "3.1.5",
+    "status": "PASS_SYNTHETIC_FIXTURES",
+    "workbookCount": 2,
+    "zipCrc": "PASS",
+    "formulaEvaluation": false
+  },
+  "sourceTask": {
+    "id": "M03-02",
+    "status": "TODO",
+    "requiresDevice": true,
+    "dependsOn": ["M03-01", "M02-02"],
+    "formalCompletion": false
+  },
+  "device": "NOT_RUN",
+  "emulator": "NOT_RUN",
+  "apk": "NOT_GENERATED",
+  "fullJvmLiteRtLintBuildAndroidTest": "NOT_RUN"
+}

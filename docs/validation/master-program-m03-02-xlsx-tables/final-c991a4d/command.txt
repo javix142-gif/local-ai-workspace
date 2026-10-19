@@ -1,0 +1,10 @@
+COMMAND=./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --info -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.artifacts.XlsxArtifactRevisionTest --tests com.localai.workspace.tools.ChatToolSchemasTest --tests com.localai.workspace.inference.Part2ThinkingTest
+SOURCE_SHA=c991a4d6fd0240045a31515e5f30fec0309c37ac
+GRADLE=./gradlew --version
+GRADLE_JAVA=openjdk version "17.0.20.1" 2026-08-18
+WORKER_JAVA=openjdk version "21.0.12.1" 2026-08-18 LTS
+ANDROID_SDK=/workspace/.toolchain/android-sdk
+START_UTC=2026-10-19T18:10:17Z
+END_UTC=2026-10-19T18:11:24Z
+DURATION_SECONDS=67
+EXIT_CODE=0
