@@ -28,13 +28,18 @@ class DocxStructureFidelityTest {
         error("Synthetic DOCX structure fixture not found")
     }
 
-    private fun parseDocumentXml(xml: String): ParsedDocument {
+    private fun parseDocumentXml(xml: String, numberingXml: String? = null): ParsedDocument {
         val file = File.createTempFile("docx-structure-", ".docx", RuntimeEnvironment.getApplication().cacheDir)
         try {
             ZipOutputStream(file.outputStream()).use { archive ->
                 archive.putNextEntry(ZipEntry("word/document.xml"))
                 archive.write(xml.toByteArray(Charsets.UTF_8))
                 archive.closeEntry()
+                numberingXml?.let {
+                    archive.putNextEntry(ZipEntry("word/numbering.xml"))
+                    archive.write(it.toByteArray(Charsets.UTF_8))
+                    archive.closeEntry()
+                }
             }
             return ZipFile(file).use(OfficeText::docx)
         } finally {
@@ -106,5 +111,33 @@ class DocxStructureFidelityTest {
         assertEquals(null, parsed.pages.single().pageNumber)
         assertTrue(parsed.pages.single().text.startsWith("contenido\n"))
         assertTrue(parsed.pages.single().text.contains("\t"))
+    }
+
+    @Test fun docxListNumberingAndNestingArePreservedInExtractedText() {
+        val numbering = """<w:numbering xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+            <w:abstractNum w:abstractNumId="0">
+                <w:lvl w:ilvl="0"><w:start w:val="1"/><w:numFmt w:val="bullet"/><w:lvlText w:val="•"/></w:lvl>
+                <w:lvl w:ilvl="1"><w:start w:val="1"/><w:numFmt w:val="bullet"/><w:lvlText w:val="o"/></w:lvl>
+            </w:abstractNum>
+            <w:abstractNum w:abstractNumId="1">
+                <w:lvl w:ilvl="0"><w:start w:val="1"/><w:numFmt w:val="decimal"/><w:lvlText w:val="%1."/></w:lvl>
+            </w:abstractNum>
+            <w:num w:numId="7"><w:abstractNumId w:val="0"/></w:num>
+            <w:num w:numId="8"><w:abstractNumId w:val="1"/></w:num>
+        </w:numbering>""".trimIndent()
+        val document = """<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>
+            <w:p><w:pPr><w:numPr><w:ilvl w:val="0"/><w:numId w:val="7"/></w:numPr></w:pPr><w:r><w:t>Primer elemento</w:t></w:r></w:p>
+            <w:p><w:pPr><w:numPr><w:ilvl w:val="0"/><w:numId w:val="7"/></w:numPr></w:pPr><w:r><w:t>Segundo elemento</w:t></w:r></w:p>
+            <w:p><w:pPr><w:numPr><w:ilvl w:val="1"/><w:numId w:val="7"/></w:numPr></w:pPr><w:r><w:t>Elemento anidado</w:t></w:r></w:p>
+            <w:p><w:pPr><w:numPr><w:ilvl w:val="0"/><w:numId w:val="8"/></w:numPr></w:pPr><w:r><w:t>Primero numerado</w:t></w:r></w:p>
+            <w:p><w:pPr><w:numPr><w:ilvl w:val="0"/><w:numId w:val="8"/></w:numPr></w:pPr><w:r><w:t>Segundo numerado</w:t></w:r></w:p>
+        </w:body></w:document>""".trimIndent()
+
+        val text = parseDocumentXml(document, numbering).pages.single().text
+        assertTrue("Bullet list semantics were lost: $text", text.contains("• Primer elemento"))
+        assertTrue("Bullet counter/marker should remain stable: $text", text.contains("• Segundo elemento"))
+        assertTrue("Nested list level should remain visible: $text", text.contains("  ◦ Elemento anidado"))
+        assertTrue("Numbering should resolve from numbering.xml: $text", text.contains("1. Primero numerado"))
+        assertTrue("The same numId should increment in document order: $text", text.contains("2. Segundo numerado"))
     }
 }
