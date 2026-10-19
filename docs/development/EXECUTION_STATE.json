@@ -552,7 +552,7 @@
     "PPTXImageEmbedding": "IMPLEMENTED_HOST_TESTED_WITH_FOCUSED_APPROXIMATE_LAYOUT_PREVIEW; caller-supplied PNG only, no generated images or WYSIWYG/render fidelity claim; current preview evidence is not Android/device validation.",
     "latestMasterProgramRecoveryCheckpoint": "Latest focused M00/M02/M03 preparatory evidence on codex/master-program-20261019. It does not change source TODO states, task IDs, order, dependencies, or device gates."
   },
-  "currentSourceHeadSha": "98665c064f08389c46f4e4fe13545f1b27088751",
+  "currentSourceHeadSha": "bceb60ade0e6e3697d4f9a7d4d731869d9c8978a",
   "lastFullJvmTestCodeSha": "f54c1430cab4ea59a302b58dd2aa27deea579c49",
   "latestDelivery": {
     "name": "Clean-checkout model-source ignore matrix and release reproducibility follow-up",
@@ -13102,6 +13102,31 @@
       "evidenceManifestSha256": "abadaa6dbd65f22034fe87e61ae18eb10d6c71988ee3bf93208b21f49931dfcd",
       "evidenceManifestEntries": 94,
       "sourceSha": "fad7acb0663485e2bd6ec86cf76e36b85a9baf57"
+    },
+    "currentHeadFocusedRevalidation": {
+      "sourceSha": "bceb60ade0e6e3697d4f9a7d4d731869d9c8978a",
+      "status": "HOST_FOCUSED_PASS_PREPARATORY_ONLY",
+      "class": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+      "methods": [
+        "oversizedLineDiffFallsBackWithoutTruncatingBeforeOrAfterPreview",
+        "reviewShowsExactBeforeAndAfterAndClosingKeepsSavedRevisionUnchanged"
+      ],
+      "tests": 2,
+      "passed": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "wallSeconds": 212,
+      "command": "See docs/validation/master-program-recovery-20261019/m03-07-current-sha-bceb/command.txt",
+      "evidence": "docs/validation/master-program-recovery-20261019/m03-07-current-sha-bceb/",
+      "childManifestSha256": "a7ce8ec9c0220caf465ba5b3dd70a83cdac6f032099f67eb223154616cbb11d5",
+      "parentManifestSha256": "df07e3b850293109ce61c17967b1e70fc53896149d50edd3bb0f4ff03f60e758",
+      "parentManifestEntries": 95,
+      "formalTaskCompletion": false,
+      "sourceStatus": "TODO",
+      "requiresDevice": true,
+      "dependencyM03_01": "TODO"
     }
   },
   "latestM03_07LineDiffPreparation": {
@@ -13945,6 +13970,8 @@
       "id": "M00-07",
       "status": "PENDING_REQUIRES_DEVICE",
       "requiredDevice": "Motorola Moto G86 Power 5G"
-    }
+    },
+    "latestFocusedTestSourceSha": "bceb60ade0e6e3697d4f9a7d4d731869d9c8978a",
+    "latestM03_07FocusedTest": "2/2 PASS, exit 0, 212 seconds; preparatory only; see current SHA evidence."
   }
 }

@@ -1,0 +1,7 @@
+source_sha=bceb60ade0e6e3697d4f9a7d4d731869d9c8978a
+branch=codex/master-program-20261019
+jdk17=openjdk version "17.0.20.1" 2026-08-18
+jdk21=openjdk version "21.0.12.1" 2026-08-18 LTS
+gradle_user_home=/workspace/.gradle
+sdk=/workspace/.toolchain/android-sdk
+ndk=27.0.12077973

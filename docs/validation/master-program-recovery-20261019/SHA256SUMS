@@ -82,3 +82,14 @@ bac23720213c4b1b9429a19b29b40c34dbcba1d8cda2ee51254c8322a6d132ac  m03-07/gradle.
 e56a554de0c079c6d84e87e3401cbc2a8914daad5ddbb6e1b46492e49de3586b  m03-07/run-meta.txt
 a15a2e857bf1aa2e1ea4e52bb7717ecb36586edf6c6e80bc2e98dbad04d524ef  m03-07/xml/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml
 e9e045c63a709deeedd3cfca7d3941ddcedfd46a27f5b30c28a03f80420307a3  m03-07/xml/TEST-com.localai.workspace.ui.ArtifactsPatchPreviewUiTest.xml
+ff12e7deddc83b2124307161e1ac68bd1b679e94b6119ad813d7d7c6b80f2622  m03-07-current-sha-bceb/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml
+92ef655acbc5a054b1ba8da248944148055c9afcd2d15fa09bb96a1a15c6b9ec  m03-07-current-sha-bceb/command.txt
+6a946b420d13dc58c12caace7e9332242c526995fb64a8c9ad805d41ac54ca18  m03-07-current-sha-bceb/environment.txt
+9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  m03-07-current-sha-bceb/exit-code.txt
+51c2ff7d3da9905abaa61c6fb00212b38fce2b30ef48eac93d9a0e23b80f41ab  m03-07-current-sha-bceb/finished-utc.txt
+06b823f4f1cc9e2bd854b4ae8a23aac6a83da0ac56eb69a3803d9e366512652f  m03-07-current-sha-bceb/gradle.log
+9191299ee3dfb76ed2b377d6de51225dc69e65194f7674ee561c68f54b8ad471  m03-07-current-sha-bceb/junit-summary.json
+8c7059dc75441e62a993a9b36589ac88855a1b0d6272c9e36f6396b28b28d26a  m03-07-current-sha-bceb/run-summary.json
+23e60a69237f6c140368e04e68aa01aaabd2d20710a082bd95c70f464c31f865  m03-07-current-sha-bceb/source-sha.txt
+93c424abf5b9b4a7e42313d78da730a0122269b19bbd4253cb858a3720119142  m03-07-current-sha-bceb/started-utc.txt
+24a3f1b650f08f15e5b3ef952448bbab8c549dcd6d72c910c44e00ee9d95dfba  m03-07-current-sha-bceb/task-outcomes.txt

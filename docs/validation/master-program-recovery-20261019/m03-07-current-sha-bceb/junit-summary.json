@@ -1,0 +1,18 @@
+{
+  "tests": 2,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "testcases": [
+    {
+      "name": "oversizedLineDiffFallsBackWithoutTruncatingBeforeOrAfterPreview",
+      "classname": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+      "timeSeconds": 10.596
+    },
+    {
+      "name": "reviewShowsExactBeforeAndAfterAndClosingKeepsSavedRevisionUnchanged",
+      "classname": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+      "timeSeconds": 0.647
+    }
+  ]
+}

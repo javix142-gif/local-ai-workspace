@@ -5,7 +5,8 @@
     "latestTestOnlyCode": "98665c064f08389c46f4e4fe13545f1b27088751",
     "otherFocusedSource": "efab48751ae0da97b7d29782b8fc425f39c894c2",
     "m00_05": "78b5309f5ea7388a2ab780c8902156b7b196512f",
-    "m00_04AndM03_07": "bbcd5517f567910170a6a6d7c9f98b6ebbb82098"
+    "m00_04AndM03_07": "bbcd5517f567910170a6a6d7c9f98b6ebbb82098",
+    "latestCurrentCodeRevalidation": "bceb60ade0e6e3697d4f9a7d4d731869d9c8978a"
   },
   "changes": {
     "production": false,
@@ -220,5 +221,38 @@
     "id": "M00-07",
     "state": "PENDING_REQUIRES_DEVICE",
     "device": "Motorola Moto G86 Power 5G"
-  }
+  },
+  "M03_07CurrentHeadRevalidation": {
+    "sourceSha": "bceb60ade0e6e3697d4f9a7d4d731869d9c8978a",
+    "status": "HOST_FOCUSED_PASS_PREPARATORY_ONLY",
+    "class": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+    "tests": 2,
+    "passed": 2,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "methods": [
+      "oversizedLineDiffFallsBackWithoutTruncatingBeforeOrAfterPreview",
+      "reviewShowsExactBeforeAndAfterAndClosingKeepsSavedRevisionUnchanged"
+    ],
+    "exitCode": 0,
+    "wallSeconds": 212,
+    "gradle": "8.10.2",
+    "runtimeJdk": "Temurin 17.0.20.1",
+    "workerJdk": "Temurin 21.0.12.1",
+    "offline": true,
+    "evidence": "m03-07-current-sha-bceb/",
+    "originalTask": {
+      "id": "M03-07",
+      "sourceStatus": "TODO",
+      "requiresDevice": true,
+      "dependsOn": [
+        "M03-01"
+      ],
+      "dependencyStatus": "M03-01 TODO",
+      "formalCompletion": false
+    }
+  },
+  "evidenceManifestSha256": "df07e3b850293109ce61c17967b1e70fc53896149d50edd3bb0f4ff03f60e758",
+  "evidenceManifestEntries": 95
 }

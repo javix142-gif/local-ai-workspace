@@ -43,6 +43,10 @@ No redundant product change was made. This is preparatory HOST evidence only: M0
 
 At `bbcd5517f567910170a6a6d7c9f98b6ebbb82098`, the focused preview/revision and patch-preview UI tests passed 4/4. This is historical host evidence only. M03-07 remains source `TODO`, requires a device and depends on M03-01, still source `TODO`. Evidence is under [`m03-07`](m03-07/).
 
+The same preview class was re-run against the current source HEAD `bceb60ade0e6e3697d4f9a7d4d731869d9c8978a` to check that later artifact UI additions had not regressed this path. `ArtifactRevisionPreviewUiTest` passed **2/2**, 0 failures/errors/skips, exit 0, with Gradle `BUILD SUCCESSFUL` in 212 seconds. It covers visible saved/proposed content and bounded line changes, export remaining attached to saved v1, cancel preserving bytes/hash, and the oversized-diff fallback preserving complete before/after bodies. Exact command, JDK/SDK, full log, task markers, XML and hashes are in [`current HEAD revalidation`](m03-07-current-sha-bceb/).
+
+This remains focused HOST evidence only. It does not establish full cross-format preview/SAF usability or physical-device behavior. M03-07 stays source `TODO`, `requires_device=true`, and depends on M03-01 `TODO`.
+
 ## Validation boundaries
 
 | Layer | Result in this checkpoint |
@@ -63,3 +67,5 @@ M00-06 remains the next task to reconcile against the full timeline DoD; the foc
 ## Reproduction
 
 All successful runs used Gradle Wrapper 8.10.2, JDK 17 runtime (`/workspace/.toolchain/jdk-17`), JDK 21 worker (`/workspace/.toolchain/jdk-21-temurin`), Android SDK API 35 and NDK 27.0.12077973, with the existing `/workspace/.gradle` cache and `--offline`. Exact commands, complete gzip-compressed logs, test-event extracts, task outcomes, JUnit XML, timestamps and exit codes are retained beside each run. `SHA256SUMS` covers evidence payloads; `RESULTS.md`, `RESULTS.json` and `SHA256SUMS` are excluded to avoid a checksum cycle. The independent count/hashes are generated from the working tree before commit.
+
+The added current-HEAD M03-07 bundle has 11 files; its child manifest SHA-256 is `a7ce8ec9c0220caf465ba5b3dd70a83cdac6f032099f67eb223154616cbb11d5`. The enclosing recovery payload manifest has 95 entries and SHA-256 `df07e3b850293109ce61c17967b1e70fc53896149d50edd3bb0f4ff03f60e758`; both manifests verify locally.
