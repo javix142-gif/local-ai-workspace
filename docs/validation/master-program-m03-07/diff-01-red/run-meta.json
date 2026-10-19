@@ -1,0 +1,43 @@
+{
+  "kind": "EXPECTED_RED_REGRESSION",
+  "sha": "54b37764fecf48681266c061ec2184b5a97b590c",
+  "started": "2026-10-19T13:53:11Z",
+  "finished": "2026-10-19T13:54:00Z",
+  "duration": 49,
+  "exit": 1,
+  "tests": 1,
+  "passed": 0,
+  "failed": 1,
+  "errors": 0,
+  "skipped": 0,
+  "gradle": "BUILD FAILED in 48s; 63 actionable tasks: 3 executed, 60 up-to-date",
+  "interpretation": "Expected red: the new assertion for the missing line-by-line diff was not satisfied before the production implementation. This is the regression baseline, not a post-fix failure.",
+  "class": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+  "method": "reviewShowsExactBeforeAndAfterAndClosingKeepsSavedRevisionUnchanged",
+  "testSeconds": 9.969,
+  "cause": "Assertion could not find text “Line-by-line changes” in the revision preview.",
+  "commandFile": "command.txt",
+  "sourceShaFile": "source-sha.txt",
+  "startedUtcFile": "started-utc.txt",
+  "finishedUtcFile": "finished-utc.txt",
+  "exitCodeFile": "exit-code.txt",
+  "taskOutcomesFile": "task-outcomes.txt",
+  "gradleLog": {
+    "path": "gradle.log",
+    "bytes": 5508,
+    "sha256": "e4c7a180541bc5cfd3bbbe77bca809f2658c48ac7a90258b11ea49a9da87ad6f"
+  },
+  "environmentFile": "environment.txt",
+  "junitXml": [
+    {
+      "path": "junit/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml",
+      "bytes": 5172,
+      "sha256": "9c02f339a21264eba55326c7565a2ac8d1936e6ff66a570902be1ec9ce5bf704",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 9.969
+    }
+  ]
+}

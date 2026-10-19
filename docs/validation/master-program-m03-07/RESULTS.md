@@ -1,5 +1,23 @@
 # M03-07 recovery checkpoint — preview comparison and cancel safety
 
+## Latest extension — bounded line-level revision diff (2026-10-19)
+
+This follow-up closes the concrete UI gap left by the earlier recovery checkpoint: the revision preview showed the complete saved and proposed bodies but did not identify changed lines. A regression was added first at test-only commit `54b37764fecf48681266c061ec2184b5a97b590c`; it failed because “Line-by-line changes” was absent. Production commit `bddf6827c873e84708fc686ceed6655807187c12` adds a bounded line comparison in `ArtifactsUi.kt`. The final test-source commit is `fad7acb0663485e2bd6ec86cf76e36b85a9baf57`.
+
+The preview labels removed, added and unchanged lines. The LCS work is capped at 256 lines (66,049 matrix cells); larger inputs show a clear fallback message and keep the full before/after bodies available. The saved revision remains unchanged until the existing explicit action; its content remains selectable. The change adds no dependency, persistence format, Room schema, routing, permission or runtime behavior.
+
+| Invocation | Source SHA | Result | Evidence |
+|---|---|---|---|
+| Red regression | `54b37764fecf48681266c061ec2184b5a97b590c` | Expected red: 1 test, 1 failure, 0 errors/skips; 49 s wall, exit 1. Failure was the missing “Line-by-line changes” row. | `diff-01-red/` |
+| Initial implementation check | `bddf6827c873e84708fc686ceed6655807187c12` | 1/1 PASS; 221 s wall, exit 0; Gradle `BUILD SUCCESSFUL`, 63/63 tasks executed. | `diff-02-green/` |
+| Final focused class | `fad7acb0663485e2bd6ec86cf76e36b85a9baf57` | 2/2 PASS, 0 failures/errors/skips; 76 s wall, exit 0; Gradle `BUILD SUCCESSFUL`, 7 executed/56 up-to-date. Cases cover changed-line visibility and the oversized-input fallback preserving the complete before/after bodies. | `diff-03-green-budget/` |
+| Proportional lint attempt | `fad7acb0663485e2bd6ec86cf76e36b85a9baf57` | Exit 1 after 21 s, before `:app:lintDebug`: `:llama-runtime:configureCMakeRelease[arm64-v8a]` failed downloading the pinned KleidiAI v1.24.0 source archive; the proxy returned HTTP/2 503. Classified as infrastructure/network failure; lint result is NOT_RUN, not PASS and not a lint finding. | `lint-01/` |
+
+The commands used Gradle 8.10.2, Temurin JDK 17 as Gradle runtime, JDK 21 as the configured app test launcher, Android SDK API 35, NDK 27.0.12077973, CMake 3.31.6, and the existing `/workspace/.gradle` cache in offline mode. The final run's contemporaneous process sample observed test worker PID 12915 from the JDK 21 installation; the raw process snapshot was not retained, so the record does not claim a preserved worker dump. Exact commands, timestamps, exit codes, complete Gradle logs, task outcomes, XML summaries and per-attempt manifests are retained in each attempt directory.
+
+No full JVM/LiteRT suite, complete lint/build gate, AndroidTest compilation/execution, emulator, Motorola, APK or model benchmark was run for this follow-up. The lint attempt is not a successful gate. M03-07 remains source `TODO`, requires a device and depends on M03-01 (`TODO`); this is preparatory UI coverage only. The original catalog is unchanged at 97 unique IDs, 120 dependency edges, all 97 source statuses `TODO`.
+
+
 Date: 2026-10-19 UTC. This is host-only preparatory evidence on the new independent recovery branch; it is not a formal M03-07 completion.
 
 ## Recovery and source identity
@@ -25,11 +43,11 @@ Recovery boundary: the exact local commit `2f8b0d496db8973edf161c7703efc8f0c17d3
 
 ## Task status and limits
 
-Canonical source entry `M03-07` remains `TODO`: `requires_device=true` and dependency `M03-01` remains `TODO`. This run verifies one host UI path, not the complete cross-format preview/diff/SAF workflow or on-device usability. The existing UI provides a before/after preview; this test does not claim a line-by-line unified diff. `M03-01` depends on `M02-05`; no dependency status was changed. The original catalog remains 97 unique IDs and 120 dependency edges, all source statuses `TODO`; its source files were not edited (backlog SHA-256 `bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235`; roadmap SHA-256 `260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5`).
+Canonical source entry `M03-07` remains `TODO`: `requires_device=true` and dependency `M03-01` remains `TODO`. The recovery-attempt-06 checkpoint above was historical and did not yet provide a line-level diff; the later focused extension documented at the top adds that bounded view and its oversized-input fallback. The full cross-format preview/diff/SAF workflow and on-device usability remain unestablished. `M03-01` depends on `M02-05`; no dependency status was changed. The original catalog remains 97 unique IDs and 120 dependency edges, all source statuses `TODO`; its source files were not edited (backlog SHA-256 `bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235`; roadmap SHA-256 `260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5`).
 
-Not run in this checkpoint: full app JVM suite, LiteRT compatibility suite, lint, full builds, instrumented/emulator tests, Motorola/device tests, APK creation/delivery, model benchmarks or performance measurements. Physical-device validation remains pending; no model or private user document was used. The fixture contains only synthetic app-private data.
+Not run in this follow-up: full app JVM suite, LiteRT compatibility suite, successful lint/full build, AndroidTest compilation or execution, emulator, Motorola/device tests, APK creation/delivery, model benchmarks or performance measurements. A lint invocation was attempted but failed before the lint task on an external CMake source download (HTTP/2 503). Physical-device validation remains pending; no model or private user document was used. The fixture contains only synthetic app-private data.
 
 The original Gradle logs are retained losslessly as `.log.gz`; `log-payload-hashes.json` records the original and compressed byte counts and SHA-256. `SHA256SUMS` hashes the stored evidence payload; report files are excluded to avoid a self-referential digest.
 
 
-Payload manifest: **47** stored evidence entries, SHA-256 `24601978d7970018d42529e66ce9d85453d517ba3396b3d29f6bee6e30dcc0e5`. It covers command/environment records, logs, XML, inventories, prior remote readbacks, and recovery attempt 06; it excludes this report, its JSON companion and the root manifest itself. The attempt-06 child manifest contains 12 entries and has SHA-256 `57ec696f78ff698fba3be0239a6508d9ce9cd118c4ee3148dd77135d070c740e`.
+Payload manifest: **94** stored evidence entries, SHA-256 `abadaa6dbd65f22034fe87e61ae18eb10d6c71988ee3bf93208b21f49931dfcd`. It includes the earlier recovery evidence and the four new diff/lint attempt bundles; it excludes this report, its JSON companion and the root manifest itself. Each new attempt folder has a child manifest; the green final child manifest contains 11 payload entries.

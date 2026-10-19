@@ -13,10 +13,15 @@
   "codeCommits": [
     "4d7014abe903f4a80e090777c9cfc3b7e78c6119",
     "8feb93f3d5ad62c792bdb35b0124f72f2b5bd467",
-    "0412f605ed090c2c5ced147d297d9a9fde0781db"
+    "0412f605ed090c2c5ced147d297d9a9fde0781db",
+    "54b37764fecf48681266c061ec2184b5a97b590c",
+    "bddf6827c873e84708fc686ceed6655807187c12",
+    "fad7acb0663485e2bd6ec86cf76e36b85a9baf57"
   ],
-  "testedCodeSha": "0412f605ed090c2c5ced147d297d9a9fde0781db",
-  "productionFilesChanged": [],
+  "testedCodeSha": "fad7acb0663485e2bd6ec86cf76e36b85a9baf57",
+  "productionFilesChanged": [
+    "app/src/main/java/com/localai/workspace/ui/ArtifactsUi.kt"
+  ],
   "testFilesChanged": [
     "app/src/test/java/com/localai/workspace/ui/ArtifactRevisionPreviewUiTest.kt"
   ],
@@ -122,11 +127,12 @@
     "verified": [
       "saved before body and proposed after body are both surfaced",
       "export action remains explicitly attached to saved v1",
-      "cancel/close does not add a version or alter the saved bytes/hash"
+      "cancel/close does not add a version or alter the saved bytes/hash",
+      "visible added/removed line rows in bounded generic revision diff",
+      "oversized diff reports its limit while complete before/after bodies remain available"
     ],
     "notEstablished": [
       "full cross-format preview/diff/export workflow",
-      "line-by-line unified diff in the generic artifact revision UI",
       "real SAF export in this run",
       "physical-device usability"
     ]
@@ -142,18 +148,20 @@
     "sourceStatusesChanged": false
   },
   "validationLayers": {
-    "hostFocused": "PASS 1/1 on testedCodeSha",
+    "hostFocused": "PASS 2/2 on testedCodeSha fad7acb0663485e2bd6ec86cf76e36b85a9baf57",
     "hostFullJvm": "NOT_RUN",
-    "lintAndBuild": "NOT_RUN",
+    "litertCompat": "NOT_RUN",
+    "lint": "NOT_REACHED; lintDebug blocked before task execution by KleidiAI CMake archive HTTP/2 503",
+    "androidTestCompile": "NOT_RUN",
     "emulator": "NOT_RUN",
     "physicalDevice": "NOT_RUN",
-    "apk": "NOT_RUN"
+    "apk": "NOT_GENERATED"
   },
   "payloadManifest": {
     "path": "SHA256SUMS",
-    "entries": 47,
-    "sha256": "24601978d7970018d42529e66ce9d85453d517ba3396b3d29f6bee6e30dcc0e5",
-    "note": "Covers 47 payload entries including recovery-attempt-06; excludes RESULTS.md, RESULTS.json and the root manifest itself."
+    "entries": 94,
+    "sha256": "abadaa6dbd65f22034fe87e61ae18eb10d6c71988ee3bf93208b21f49931dfcd",
+    "note": "Includes all validation evidence payloads under this folder, including each new attempt bundle and child manifest; excludes RESULTS.md, RESULTS.json and the root manifest itself."
   },
   "logPayloadHashes": [
     {
@@ -224,6 +232,119 @@
       "path": "recovery-attempt-06/SHA256SUMS",
       "entries": 12,
       "sha256": "57ec696f78ff698fba3be0239a6508d9ce9cd118c4ee3148dd77135d070c740e"
+    }
+  },
+  "lineDiffPreparation": {
+    "status": "FOCUSED_HOST_PASS; LINT_BLOCKED_BY_CMAKE_HTTP_503; PREPARATORY_ONLY_NOT_FORMAL",
+    "baseSourceSha": "ac783b8cd65a0e8b7474c18333389ef8a36e2454",
+    "redTestCommit": "54b37764fecf48681266c061ec2184b5a97b590c",
+    "implementationCommit": "bddf6827c873e84708fc686ceed6655807187c12",
+    "finalTestSourceSha": "fad7acb0663485e2bd6ec86cf76e36b85a9baf57",
+    "changedFiles": [
+      "app/src/main/java/com/localai/workspace/ui/ArtifactsUi.kt",
+      "app/src/test/java/com/localai/workspace/ui/ArtifactRevisionPreviewUiTest.kt"
+    ],
+    "behavior": "Shows removed/added/unchanged lines with a bounded LCS comparison (maximum 256 lines / 66,049 cells). Above the limit the UI explains that line diff is unavailable while retaining full selectable before/after content. Existing saved revision remains unchanged until the existing explicit action.",
+    "red": {
+      "sourceSha": "54b37764fecf48681266c061ec2184b5a97b590c",
+      "status": "EXPECTED_RED",
+      "tests": 1,
+      "passed": 0,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "durationSeconds": 49,
+      "exitCode": 1,
+      "gradleSummary": "BUILD FAILED in 48s; 63 actionable tasks: 3 executed, 60 up-to-date",
+      "xml": "diff-01-red/junit/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml",
+      "log": "diff-01-red/gradle.log",
+      "evidenceManifest": "diff-01-red/SHA256SUMS",
+      "evidenceManifestEntries": 11,
+      "evidenceManifestSha256": "57733a70789ab2a0074ec112e385e2f2e2df81963928e0691e688175ab1c9969"
+    },
+    "initialGreen": {
+      "sourceSha": "bddf6827c873e84708fc686ceed6655807187c12",
+      "status": "PASS_FOCUSED",
+      "tests": 1,
+      "passed": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "durationSeconds": 221,
+      "exitCode": 0,
+      "gradleSummary": "BUILD SUCCESSFUL in 3m 40s; 63 actionable tasks executed",
+      "xml": "diff-02-green/junit/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml",
+      "log": "diff-02-green/gradle.log",
+      "evidenceManifest": "diff-02-green/SHA256SUMS",
+      "evidenceManifestEntries": 11,
+      "evidenceManifestSha256": "d730f8ecccfd3ff49bbc7db00bce4a888de644e20c55428c03dbab72c13714e6"
+    },
+    "finalFocused": {
+      "sourceSha": "fad7acb0663485e2bd6ec86cf76e36b85a9baf57",
+      "status": "PASS_FOCUSED_CLASS",
+      "tests": 2,
+      "passed": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "durationSeconds": 76,
+      "exitCode": 0,
+      "gradleReportedDuration": "1m 15s",
+      "tasks": "63 actionable: 7 executed, 56 up-to-date",
+      "class": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+      "testCases": [
+        "oversizedLineDiffFallsBackWithoutTruncatingBeforeOrAfterPreview",
+        "reviewShowsExactBeforeAndAfterAndClosingKeepsSavedRevisionUnchanged"
+      ],
+      "xml": "diff-03-green-budget/junit/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml",
+      "log": "diff-03-green-budget/gradle.log",
+      "evidenceManifest": "diff-03-green-budget/SHA256SUMS",
+      "evidenceManifestEntries": 11,
+      "evidenceManifestSha256": "c736b3d8c3fb459215551f6e43a2bc8d1ad7b76c1cfafd8436c81b4e8585bdbe",
+      "workerRuntime": "JDK 21; contemporaneous process sample observed PID 12915 / Gradle Test Executor 1; raw process snapshot not retained"
+    },
+    "lintAttempt": {
+      "sourceSha": "fad7acb0663485e2bd6ec86cf76e36b85a9baf57",
+      "status": "INFRASTRUCTURE_FAILURE_BEFORE_LINT",
+      "exitCode": 1,
+      "durationSeconds": 21,
+      "failedTask": ":llama-runtime:configureCMakeRelease[arm64-v8a]",
+      "lintTask": ":app:lintDebug",
+      "lintTaskReached": false,
+      "cause": "CMake FetchContent request for pinned KleidiAI v1.24.0 GitHub source archive received HTTP/2 503 through the proxy; lint itself did not run.",
+      "log": "lint-01/gradle.log",
+      "evidenceManifest": "lint-01/SHA256SUMS",
+      "evidenceManifestEntries": 10,
+      "evidenceManifestSha256": "3354f35a0b4c74a8dc375df439547609efb1838a8ba6b66bedbe45d28f0bc3cb"
+    },
+    "environment": {
+      "gradle": "8.10.2",
+      "gradleRuntime": "Temurin JDK 17.0.20.1",
+      "configuredAppTestLauncher": "Temurin JDK 21.0.12.1",
+      "androidSdk": "API 35",
+      "ndk": "27.0.12077973",
+      "cmake": "3.31.6",
+      "gradleUserHome": "/workspace/.gradle (existing cache)",
+      "mode": "offline; no cache clean or dependency install"
+    },
+    "notRun": [
+      "full app JVM suite",
+      "LiteRT compatibility suite",
+      "AndroidTest compile/execution",
+      "emulator",
+      "physical device",
+      "APK",
+      "model performance benchmark"
+    ],
+    "originalTaskStatus": {
+      "id": "M03-07",
+      "sourceStatus": "TODO",
+      "requiresDevice": true,
+      "dependsOn": [
+        "M03-01"
+      ],
+      "dependencyStatus": "M03-01 TODO",
+      "formalCompletion": false
     }
   }
 }

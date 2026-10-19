@@ -1,0 +1,54 @@
+{
+  "kind": "FOCUSED_GREEN_FINAL",
+  "sha": "fad7acb0663485e2bd6ec86cf76e36b85a9baf57",
+  "started": "2026-10-19T13:59:34Z",
+  "finished": "2026-10-19T14:00:50Z",
+  "duration": 76,
+  "exit": 0,
+  "tests": 2,
+  "passed": 2,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 0,
+  "gradle": "BUILD SUCCESSFUL in 1m 15s; 63 actionable tasks: 7 executed, 56 up-to-date",
+  "interpretation": "Final focused class run on the code/test SHA; covers visible changed lines and oversized-diff fallback while verifying complete before/after content remains available.",
+  "testCases": [
+    {
+      "class": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+      "method": "oversizedLineDiffFallsBackWithoutTruncatingBeforeOrAfterPreview",
+      "seconds": 12.236,
+      "result": "PASS"
+    },
+    {
+      "class": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+      "method": "reviewShowsExactBeforeAndAfterAndClosingKeepsSavedRevisionUnchanged",
+      "seconds": 0.769,
+      "result": "PASS"
+    }
+  ],
+  "workerObservation": "A contemporaneous process sample observed PID 12915 running as Gradle Test Executor 1 from /workspace/.toolchain/jdk-21-temurin/bin/java. The raw process snapshot was not retained in this evidence directory; JDK 21 is also the configured app-test launcher.",
+  "commandFile": "command.txt",
+  "sourceShaFile": "source-sha.txt",
+  "startedUtcFile": "started-utc.txt",
+  "finishedUtcFile": "finished-utc.txt",
+  "exitCodeFile": "exit-code.txt",
+  "taskOutcomesFile": "task-outcomes.txt",
+  "gradleLog": {
+    "path": "gradle.log",
+    "bytes": 5080,
+    "sha256": "40587435d4d35080850c017b8fddd3889a480432c8b44abab3cf0a8c9d5e24db"
+  },
+  "environmentFile": "environment.txt",
+  "junitXml": [
+    {
+      "path": "junit/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml",
+      "bytes": 673,
+      "sha256": "480b35864bb09adf7c222b0c49c9eda04a8afe62e98df119808ccdc93f292682",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 13.008
+    }
+  ]
+}

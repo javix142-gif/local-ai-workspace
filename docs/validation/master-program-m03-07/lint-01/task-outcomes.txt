@@ -1,0 +1,6 @@
+> Task :llama-runtime:preBuild UP-TO-DATE
+> Task :llama-runtime:preDebugBuild UP-TO-DATE
+> Task :llama-runtime:preReleaseBuild UP-TO-DATE
+> Task :llama-runtime:configureCMakeRelease[arm64-v8a]
+> Task :llama-runtime:configureCMakeRelease[arm64-v8a] FAILED
+BUILD FAILED in 21s

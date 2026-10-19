@@ -1,0 +1,43 @@
+{
+  "kind": "FOCUSED_GREEN_INITIAL_IMPLEMENTATION",
+  "sha": "bddf6827c873e84708fc686ceed6655807187c12",
+  "started": "2026-10-19T13:54:47Z",
+  "finished": "2026-10-19T13:58:28Z",
+  "duration": 221,
+  "exit": 0,
+  "tests": 1,
+  "passed": 1,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 0,
+  "gradle": "BUILD SUCCESSFUL in 3m 40s; 63 actionable tasks: 63 executed",
+  "interpretation": "Focused UI regression passed after implementing the bounded line diff. Superseded by the final two-test run below.",
+  "class": "com.localai.workspace.ui.ArtifactRevisionPreviewUiTest",
+  "method": "reviewShowsExactBeforeAndAfterAndClosingKeepsSavedRevisionUnchanged",
+  "testSeconds": 9.41,
+  "workerObservation": "No process snapshot persisted for this invocation; JDK 21 is the configured app-test launcher.",
+  "commandFile": "command.txt",
+  "sourceShaFile": "source-sha.txt",
+  "startedUtcFile": "started-utc.txt",
+  "finishedUtcFile": "finished-utc.txt",
+  "exitCodeFile": "exit-code.txt",
+  "taskOutcomesFile": "task-outcomes.txt",
+  "gradleLog": {
+    "path": "gradle.log",
+    "bytes": 5035,
+    "sha256": "e690b554f2220312549c3dc79390d17a622693adaa9521d4e0846ba39ff967ff"
+  },
+  "environmentFile": "environment.txt",
+  "junitXml": [
+    {
+      "path": "junit/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml",
+      "bytes": 504,
+      "sha256": "bd47f0babf27eee2c7094042a1fa176522c894cc531f1f545d6127f8f7969260",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 9.41
+    }
+  ]
+}

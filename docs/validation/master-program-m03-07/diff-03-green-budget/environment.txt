@@ -1,0 +1,8 @@
+Gradle wrapper: 8.10.2
+Gradle runtime: Temurin JDK 17.0.20.1 at /workspace/.toolchain/jdk-17
+App test launcher/toolchain: Temurin JDK 21.0.12.1 at /workspace/.toolchain/jdk-21-temurin
+Android SDK: /workspace/.toolchain/android-sdk, API 35
+Android NDK: 27.0.12077973; CMake: 3.31.6
+GRADLE_USER_HOME: /workspace/.gradle (existing cache; not cleaned or copied)
+Gradle dependency mode: --offline
+Source checkout: current implementation branch; source SHA recorded per run. Build outputs/caches may be reused as indicated by task outcomes; not a fresh checkout.

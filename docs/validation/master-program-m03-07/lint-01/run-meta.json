@@ -1,0 +1,30 @@
+{
+  "kind": "LINT_BLOCKED_BY_NATIVE_DEPENDENCY_NETWORK",
+  "sha": "fad7acb0663485e2bd6ec86cf76e36b85a9baf57",
+  "started": "2026-10-19T14:01:02Z",
+  "finished": "2026-10-19T14:01:23Z",
+  "duration": 21,
+  "exit": 1,
+  "tests": null,
+  "passed": null,
+  "failed": null,
+  "errors": null,
+  "skipped": null,
+  "gradle": "BUILD FAILED in 21s; 1 actionable task executed (:llama-runtime:configureCMakeRelease[arm64-v8a] failed). :app:lintDebug was not reached.",
+  "interpretation": "Infrastructure/network block before lint execution. CMake FetchContent attempted the pinned ARM-software KleidiAI v1.24.0 source archive; proxy response was HTTP/2 503 and curl reported HTTP 503. This is not a lint finding or product failure.",
+  "dependencyUrl": "https://github.com/ARM-software/kleidiai/releases/download/v1.24.0/kleidiai-v1.24.0-src.tar.gz",
+  "workerObservation": "No test worker launched for this build invocation.",
+  "commandFile": "command.txt",
+  "sourceShaFile": "source-sha.txt",
+  "startedUtcFile": "started-utc.txt",
+  "finishedUtcFile": "finished-utc.txt",
+  "exitCodeFile": "exit-code.txt",
+  "taskOutcomesFile": "task-outcomes.txt",
+  "gradleLog": {
+    "path": "gradle.log",
+    "bytes": 113019,
+    "sha256": "8e787c9e19686f87809505dd8c5fd8376c731faa519f767614717fc185745e00"
+  },
+  "environmentFile": "environment.txt",
+  "junitXml": []
+}
