@@ -1,3 +1,11 @@
+## 2026-10-19 — score EG2 corpus vectors from persisted bytes
+
+Code SHA aabca8226634de6da08006dc255b0b5727360cdd changes the semantic search scoring loop to read FLOAT32_LE_V1 bytes directly and compute cosine in one pass. The previous code created a decoded FloatArray and then performed another pass per corpus row, up to the existing 10,000-row bound. Tests assert exact score equality against the previous path and reject incompatible space, dimension and non-finite payloads.
+
+The exact-SHA focused HOST run passed 63/63 across SemanticDomainTest and SemanticContextPostfixTest; Gradle exit 0, 1m12s. This establishes correctness and a reduced per-row allocation in code, not a measured wall-clock/heap or model inference improvement. Evidence is under docs/validation/master-program-semantic-vector-direct-cosine-20261019/source-aabca82/RESULTS.md. No full suite, lint, build, AndroidTest, emulator, physical device or APK was run.
+
+No original task was closed; M00-06 and all 97 source task statuses remain TODO.
+
 ## 2026-10-19 — bounded semantic memory-vector database reads
 
 The exact code commit `c0545e8c40a7f8a394314e30d583260197eba1df` changes `MemoryManager.select()` from one stored-vector DAO query per candidate to bounded batches of 400 candidate IDs per embedding space. A focused regression observed 25 vector-table SELECTs for 25 candidates before the change; after it, the query-count tests assert one query for 25 and two for 401. The implementation preserves stale-hash rejection, the eight-item inline reindex bound, scope, scoring, candidate ordering and result limit.

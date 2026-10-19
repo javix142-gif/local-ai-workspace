@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" tests="39" skipped="0" failures="0" errors="0" timestamp="2026-10-19T23:15:01" hostname="42c4f375d730" time="10.74">
+  <properties/>
+  <testcase name="lexicalFallbackReportsMissingQualifiedLog10WithoutUsingHomonym" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="5.942"/>
+  <testcase name="reindexPublishesReadyGenerationAndPreservesReadyRollback" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.211"/>
+  <testcase name="projectIsolationAndSelectedDocumentScopeArePreserved" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.244"/>
+  <testcase name="eg2CodeHitKeepsExactPathAndLineAsCitableEvidence" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.311"/>
+  <testcase name="changedDocumentCanBeReindexedIntoNewReadyGeneration" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.142"/>
+  <testcase name="v2FailureFallsBackToPrecomputedLegacyEvidence" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.147"/>
+  <testcase name="codeArchiveSearchKeepsRelativePathAndLineWithoutLeakingOtherProjects" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.194"/>
+  <testcase name="followUpCellQuestionSendsOnlyRelevantCellsWithCellProvenance" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.145"/>
+  <testcase name="lexicalCodeArchiveFallbackKeepsRelativePathAndLineInFinalContext" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.098"/>
+  <testcase name="deletingStandaloneChatAlsoPurgesItsSemanticScope" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.177"/>
+  <testcase name="eg2Log10CellDependencyReachesFinalContextAndProvenance" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.128"/>
+  <testcase name="lexicalFallbackSurfacesAmbiguousSheetValuesWithoutInjectingEitherCandidate" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.1"/>
+  <testcase name="documentRemovalWithoutCallbackFailsClosedThenLexicalFallbackUsesOnlyCurrentDocuments" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.166"/>
+  <testcase name="explicitLegacyAndDisabledRetrievalPoliciesRemainAvailable" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.096"/>
+  <testcase name="eg2MissingSpreadsheetDependencyReachesPromptWithMaterialDiagnostic" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.111"/>
+  <testcase name="generationInvalidatedDuringQueryIsRejectedAfterEmbedding" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.098"/>
+  <testcase name="eg2AmbiguousUnqualifiedCellProducesEmptyEvidenceAndMaterialDiagnostic" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.098"/>
+  <testcase name="staleGenerationIsRejectedAndLexicalFallbackRemainsUsable" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.122"/>
+  <testcase name="editDeleteReimportKeepsProjectGenerationsScopedAndNeverServesStaleHits" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.227"/>
+  <testcase name="appGraphDocumentDeletionPurgesOnlyItsGenerationSourcesAndRetainsSharedVectorPayload" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.125"/>
+  <testcase name="deletingWorkspacePurgesOnlyItsSemanticGenerationsAndKeepsSharedPayloads" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.114"/>
+  <testcase name="eg2SpreadsheetRangeKeepsInteriorCellInPromptAndProvenance" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.096"/>
+  <testcase name="lexicalFallbackReportsMissingQualifiedSheetInsteadOfUsingAnotherDocument" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.087"/>
+  <testcase name="selectedDocumentDoesNotResolveQualifiedDependencyFromAnotherDocument" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.075"/>
+  <testcase name="appGraphWorkspaceDeletionPurgesPersistedSemanticV2Rows" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.13"/>
+  <testcase name="lexicalFallbackSpreadsheetRangeKeepsInteriorCellInPromptAndProvenance" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.156"/>
+  <testcase name="eg2ExactPageQueryIncludesOnlyRequestedPageAndAbstainsWhenPageIsMissing" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.101"/>
+  <testcase name="repeatedContextQueryReusesEmbeddingButRejectsStaleIndexAndRechecksSelection" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.138"/>
+  <testcase name="configurationChangeDuringQueryMustNotPublishOrCacheOldDescriptor" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.059"/>
+  <testcase name="v2FailureWithEmptyLegacyEvidenceRunsProductionLexicalFallback" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.09"/>
+  <testcase name="eg2QualifiedCrossSheetDependencyKeepsCompositeIdentityInFinalPromptAndInspector" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.09"/>
+  <testcase name="equivalentLegacyAndV2EvidenceIsIncludedOnlyOnce" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.092"/>
+  <testcase name="retrievalFinishesBeforeTheGenerationGateCanBeAcquired" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.09"/>
+  <testcase name="indexingFailedAndCancelledGenerationsAreNeverSearchable" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.083"/>
+  <testcase name="realDocumentIngestionAwaitsStaleGenerationMark" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.123"/>
+  <testcase name="eg2ContextBuildRunsDespiteEmptyPrecomputedEvidenceAndReachesPrompt" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.124"/>
+  <testcase name="lexicalFallbackKeepsQualifiedCrossSheetReferencesAndMaterialNotice" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.105"/>
+  <testcase name="lexicalExactPageQueryIncludesOnlyRequestedPageAndAbstainsWhenPageIsMissing" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.057"/>
+  <testcase name="codeArchiveParserExcludesGitIgnoredDirectoryContent" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.037"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

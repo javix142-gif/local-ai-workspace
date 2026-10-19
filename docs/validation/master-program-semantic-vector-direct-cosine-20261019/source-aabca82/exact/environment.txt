@@ -1,0 +1,13 @@
+Source code SHA: aabca8226634de6da08006dc255b0b5727360cdd
+Repository worktree: /workspace/aws-master-resume-20261019
+Gradle: Wrapper 8.10.2, offline mode
+Gradle runtime: Temurin 17.0.20.1 (/workspace/.toolchain/jdk-17)
+Unit-test worker: Temurin 21.0.12.1 (/workspace/.toolchain/jdk-21-temurin; exact process command in log)
+Android SDK: API 35 at /workspace/.toolchain/android-sdk
+Android NDK: 27.0.12077973 at /workspace/.toolchain/android-sdk/ndk/27.0.12077973
+GRADLE_USER_HOME: existing /workspace/.gradle cache; no cache clearing or dependency installation
+Started: 2026-10-19T23:13:59Z
+Finished: 2026-10-19T23:15:12Z
+Timeout: 600 seconds; command finished before timeout; exit code 0
+Tests are deterministic host unit/Robolectric checks with existing synthetic data and a fake embedding driver; they do not measure native model latency or phone performance.
+No emulator, physical device, model weights, APK, full suite, lint or build task was run.

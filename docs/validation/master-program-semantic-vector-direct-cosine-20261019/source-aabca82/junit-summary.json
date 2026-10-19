@@ -1,0 +1,42 @@
+{
+  "codeSha": "aabca8226634de6da08006dc255b0b5727360cdd",
+  "command": "timeout --signal=TERM --kill-after=10s 600s ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --info -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.semantic.v2.SemanticDomainTest --tests com.localai.workspace.semantic.v2.SemanticContextPostfixTest",
+  "startedAtUtc": "2026-10-19T23:13:59Z",
+  "finishedAtUtc": "2026-10-19T23:15:12Z",
+  "wallSeconds": 73,
+  "gradleReportedDuration": "1m 12s",
+  "exitCode": 0,
+  "gradleVersion": "8.10.2",
+  "runtimeJdk": "Temurin 17.0.20.1",
+  "testWorkerJdk": "Temurin 21.0.12.1",
+  "tests": 63,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "suites": {
+    "com.localai.workspace.semantic.v2.SemanticContextPostfixTest": 39,
+    "com.localai.workspace.semantic.v2.SemanticDomainTest": 24
+  },
+  "tasks": {
+    "actionable": 63,
+    "executed": 7,
+    "upToDate": 56
+  },
+  "coverage": [
+    "stored FLOAT32_LE_V1 dot product exactly matches the existing decode+cosine result for dimension 768",
+    "rejects mismatched embedding space, unsupported dimension and non-finite stored payload",
+    "SemanticLayer project retrieval/context integration tests exercise the production encoded-scoring path"
+  ],
+  "implementationEvidence": "The prior path decoded each persisted vector into a new FloatArray and then made a second pass to score it. The new path reads and scores each float from little-endian bytes in one loop and does not allocate a per-corpus-row FloatArray. This allocation claim is from code-path inspection, not a measured heap/latency benchmark.",
+  "scope": {
+    "fullAppJvm": "NOT_RUN",
+    "liteRtCompat": "NOT_RUN",
+    "lint": "NOT_RUN",
+    "assemble": "NOT_RUN",
+    "androidTest": "NOT_RUN",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_RUN"
+  },
+  "passed": 63
+}

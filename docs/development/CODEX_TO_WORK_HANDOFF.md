@@ -1,3 +1,13 @@
+# Current master-program checkpoint — direct EG2 scoring from stored vectors (2026-10-19)
+
+Code commit aabca8226634de6da08006dc255b0b5727360cdd replaces the SemanticLayer corpus path's decode-to-FloatArray plus second scoring pass with a single pass over persisted FLOAT32_LE_V1 bytes. This avoids one decoded vector array per corpus row (the existing search bound is 10,000 rows). Space identity, dimensions, malformed vectors, non-finite values, project/selected-document scope, FTS fusion and result limits remain checked. No schema, dependency, runtime or model changed.
+
+The exact-SHA focused HOST run passed 63/63: SemanticDomainTest 24/24 and SemanticContextPostfixTest 39/39, zero failures/errors/skips, Gradle exit 0 in 1m12s. The numeric unit check matches the existing decoded score exactly on a 768-element synthetic vector; the context integration tests use the real SemanticLayer path with deterministic test embeddings. This demonstrates source-level allocation removal, not measured latency, heap usage, native model speed or Motorola behavior. Logs, exact command, XML, environment and manifest are in [direct EG2 vector scoring evidence](../validation/master-program-semantic-vector-direct-cosine-20261019/source-aabca82/RESULTS.md).
+
+This is preparatory work only. M00-06 remains source TODO because the end-to-end import/parse/index/retrieval/context/gate/native-TTFT/decode timeline and physical device measurements are incomplete. The preserved backlog remains 97 IDs, 120 dependency edges and all source statuses TODO. No full suite, lint, assemble, AndroidTest, emulator, Moto G86 or APK was run for this increment.
+
+---
+
 # Current master-program checkpoint — batched semantic memory vectors (2026-10-19)
 
 Code commit `c0545e8c40a7f8a394314e30d583260197eba1df` fixes an observed N+1 Room read in `MemoryManager.select()`: the test-first red fixture measured 25 `context_vectors` SELECTs for 25 candidates; the implementation now batches IDs in groups of 400 (one query for 25, two for 401). Stale content hashes are rejected before semantic scoring, and existing scope, ranking, result-limit and maximum-eight inline indexing behavior is retained.
