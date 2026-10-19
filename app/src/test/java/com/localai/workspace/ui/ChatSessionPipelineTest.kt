@@ -180,6 +180,54 @@ class ChatSessionPipelineTest {
         }
     }
 
+    @Test fun normalChatTraceOrdersContextBeforeGateAndVisibleContentWithoutPersistingText() = check {
+        context.getSharedPreferences("context_foundation_v1", 0).edit().putBoolean("enabled", true).commit()
+        val (_, vm) = chat()
+        val privatePrompt = "TRACE_PRIVATE_PROMPT_7D3A"
+        vm.send(privatePrompt)
+        val turn = backend.turns.receive()
+
+        val firstContent = requireNotNull(graph.normalGenerationTrace.state.value)
+        val phases = firstContent.events.map { it.phase }
+        fun phase(name: String) = phases.indexOf(name).also {
+            assertTrue("Expected $name in trace: $phases", it >= 0)
+        }
+        assertTrue("Context retrieval and composition finish before the generation gate",
+            phase("CONTEXT_V1_BUILD_COMPLETE") < phase("CONTEXT_BUILD_COMPLETE") &&
+                phase("CONTEXT_BUILD_COMPLETE") < phase("CONVERSATION_ACQUIRE_START") &&
+                phase("CONVERSATION_ACQUIRE_START") < phase("CONVERSATION_GATE_ACQUIRED"))
+        assertTrue("The runtime starts only after the gate is acquired",
+            phase("CONVERSATION_GATE_ACQUIRED") < phase("GENERATION_START") &&
+                phase("GENERATION_START") < phase("UI_FIRST_CONTENT"))
+        assertNotNull("The first visible host state is timed", firstContent.firstVisibleUiMs)
+        assertNull("A fake runtime must not fabricate a native callback metric", firstContent.firstCallbackMs)
+        val diagnosticJson = graph.normalGenerationTrace.report()
+        assertFalse(diagnosticJson.contains(privatePrompt))
+        assertFalse(diagnosticJson.contains("partial final"))
+        assertFalse(diagnosticJson.contains("/private/"))
+
+        finish(vm, turn)
+        val completed = requireNotNull(graph.normalGenerationTrace.state.value)
+        assertTrue(completed.events.any { it.phase == "REQUEST_COMPLETE" })
+        assertTrue(completed.events.any { it.phase == "REQUEST_SETTLED" })
+        val rows = com.localai.workspace.performance.GenerationTimelinePresentation.rows(completed)
+        assertEquals(completed.events.size, rows.size)
+        assertTrue(rows.zipWithNext().all { (a, b) ->
+            a.elapsedSinceRequestMs != null && b.elapsedSinceRequestMs != null &&
+                b.elapsedSinceRequestMs >= a.elapsedSinceRequestMs
+        })
+
+        val conversationId = requireNotNull(vm.currentConversationId.value)
+        val assistant = graph.database.messageDao().recent(conversationId, 10)
+            .single { it.role == MessageRole.ASSISTANT.name && it.status == MessageStatus.COMPLETE.name }
+        val metrics = requireNotNull(GenerationMetricsPresentation.decode(assistant.generationMetrics))
+        assertNotNull("Send-to-first-visible-token timing is retained", metrics.requestTimeToFirstTokenMs)
+        assertNotNull("End-to-end completion timing is retained", metrics.endToEndTotalMs)
+        assertTrue(metrics.endToEndTotalMs!! >= metrics.requestTimeToFirstTokenMs!!)
+        assertNull("Fake backend provides no native TTFT", metrics.timeToFirstTokenMs)
+        assertNull("Fake backend provides no native decode rate", metrics.decodeTokensPerSecond)
+    }
+
     @Test fun audioMovesToStoredTurnAndNextRequestNeverReattachesIt() = check {
         backend.audio = true; db.modelDao().insert(model("model").copy(capabilities = "text-generation,audio"))
         val (_, vm) = chat(); vm.models.first { it.isNotEmpty() }
