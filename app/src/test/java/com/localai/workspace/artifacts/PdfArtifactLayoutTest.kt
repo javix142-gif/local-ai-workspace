@@ -125,6 +125,19 @@ class PdfArtifactLayoutTest {
                 assertEquals("Long cell text must not be clipped between table pages", 300, Regex("\\bdato\\b").findAll(extracted).count())
                 assertFalse("PDF table cells must be laid out as cells, not pipe-delimited prose", extracted.contains('|'))
                 assertTrue("Long cell should continue onto later pages", document.numberOfPages > 1)
+                val pageTexts = (1..document.numberOfPages).map { pageNumber ->
+                    PDFTextStripper().apply {
+                        startPage = pageNumber
+                        endPage = pageNumber
+                    }.getText(document)
+                }
+                assertTrue("Each table page should repeat its header row: ${pageTexts.map { it.contains("Descripción") }}",
+                    pageTexts.all { it.contains("Descripción") })
+                assertTrue("Repeated header should precede continued row content", pageTexts.drop(1).all { pageText ->
+                    val header = pageText.indexOf("Descripción")
+                    val continuedCell = pageText.indexOf("dato")
+                    header >= 0 && continuedCell >= 0 && header < continuedCell
+                })
 
                 val operators = document.pages.flatMap { page ->
                     PDFStreamParser(page).apply { parse() }.tokens.filterIsInstance<Operator>().map { it.name }
