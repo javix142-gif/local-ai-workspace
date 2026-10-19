@@ -221,11 +221,15 @@ class ChatSessionPipelineTest {
         val assistant = graph.database.messageDao().recent(conversationId, 10)
             .single { it.role == MessageRole.ASSISTANT.name && it.status == MessageStatus.COMPLETE.name }
         val metrics = requireNotNull(GenerationMetricsPresentation.decode(assistant.generationMetrics))
-        assertNotNull("Send-to-first-visible-token timing is retained", metrics.requestTimeToFirstTokenMs)
-        assertNotNull("End-to-end completion timing is retained", metrics.endToEndTotalMs)
-        assertTrue(metrics.endToEndTotalMs!! >= metrics.requestTimeToFirstTokenMs!!)
-        assertNull("Fake backend provides no native TTFT", metrics.timeToFirstTokenMs)
-        assertNull("Fake backend provides no native decode rate", metrics.decodeTokensPerSecond)
+        fun persistedTiming(key: String): Long? =
+            Regex("(?:^|,)${key}=(\\d+)(?:,|$)").find(metrics.raw)?.groupValues?.get(1)?.toLongOrNull()
+        val requestTtftMs = persistedTiming("requestTtftMs")
+        val requestTotalMs = persistedTiming("requestTotalMs")
+        assertNotNull("Send-to-first-visible-token timing is retained", requestTtftMs)
+        assertNotNull("End-to-end completion timing is retained", requestTotalMs)
+        assertTrue(requestTotalMs!! >= requestTtftMs!!)
+        assertNull("Fake backend provides no native TTFT", persistedTiming("ttftMs"))
+        assertNull("Fake backend provides no native decode rate", persistedTiming("decodeTps"))
     }
 
     @Test fun audioMovesToStoredTurnAndNextRequestNeverReattachesIt() = check {
