@@ -167,6 +167,11 @@ class XlsxArtifactRevisionTest {
                 val worksheet=zip.getInputStream(zip.getEntry("xl/worksheets/sheet1.xml")).bufferedReader().use{it.readText()}
                 val relationships=zip.getInputStream(zip.getEntry("xl/worksheets/_rels/sheet1.xml.rels")).bufferedReader().use{it.readText()}
                 val table=zip.getInputStream(zip.getEntry("xl/tables/table1.xml")).bufferedReader().use{it.readText()}
+                val editedCell=requireNotNull(Regex("""<c\b[^>]*\br="B2"[^>]*>(.*?)</c>""").find(worksheet)?.groupValues?.get(1)) {
+                    "Edited formula cell must remain in worksheet XML"
+                }
+                assertTrue("Formula remains serialized",editedCell.contains("<f>SUM(A2:A2)</f>"))
+                assertFalse("Edited formula must not keep a stale cached result",editedCell.contains("<v>"))
                 assertTrue(worksheet.contains("<tableParts count=\"1\"><tablePart r:id=\"rIdTable1\"/></tableParts>"))
                 assertTrue(relationships.contains("Target=\"../tables/table1.xml\""))
                 assertTrue(table.contains("name=\"TablaVentas\" displayName=\"TablaVentas\" ref=\"A1:B2\""))
@@ -175,7 +180,7 @@ class XlsxArtifactRevisionTest {
             }
             val edited=StructuredDocuments.xlsx(editedFile).cells.single{it.sheet=="Ventas"&&it.address=="B2"}
             assertEquals("SUM(A2:A2)",edited.formula)
-            assertEquals(null,edited.value)
+            assertEquals("The current structured reader represents an absent formula cache as an empty string","",edited.value)
             exportInteropFixture("table-cell-edited.xlsx",editedFile)
         } finally {
             File(File(context.filesDir,"tool-workspaces"),"artifacts-${ArtifactStore.hash(project.toByteArray(Charsets.UTF_8))}").deleteRecursively()
