@@ -17,6 +17,7 @@ import org.w3c.dom.Document
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.util.UUID
+import java.util.zip.CRC32
 import java.util.zip.ZipFile
 import javax.xml.parsers.DocumentBuilderFactory
 
@@ -195,6 +196,114 @@ class DocxArtifactStructureTest {
             assertTrue(store.spec("docx-ordered-project", revision).preview().contains("After the table"))
             assertTrue(store.spec("docx-ordered-project", revised).preview().contains("After the revised table"))
             File("build/docx-independent-reader/ordered-blocks-v2.docx").writeBytes(revisedFile.readBytes())
+        } finally {
+            root.deleteRecursively()
+        }
+    }
+
+    @Test
+    fun generatedDocxBuiltInTemplatesResolveStylesAndKeepDocumentContent() = runBlocking {
+        val root = File(context.cacheDir, "docx-templates-${UUID.randomUUID()}")
+        val store = ArtifactStore(context, root)
+        val templates = listOf(
+            listOf("report", "Calibri", "3E746D", "40", "32"),
+            listOf("meeting_minutes", "Arial", "1D2522", "36", "28")
+        )
+        val exported = File("build/docx-templates").apply { mkdirs() }
+        try {
+            for ((template, expectedFont, expectedTitleColor, expectedTitleSize, expectedHeadingSize) in templates) {
+                val source = JSONObject("""
+                    {
+                      "format":"DOCX","name":"$template.docx","template":"$template",
+                      "blocks":[
+                        {"kind":"paragraph","text":"Título de plantilla","style":"title"},
+                        {"kind":"paragraph","text":"Acuerdos","style":"heading"},
+                        {"kind":"paragraph","text":"Contenido conservado","style":"body"},
+                        {"kind":"table","rows":[["Campo","Valor"],["Estado","Aprobado"]]}
+                      ]
+                    }
+                """.trimIndent())
+                val revision = store.create("docx-templates-project", ArtifactSpec.parse(source))
+                val file = store.verifiedFile("docx-templates-project", revision)
+                assertEquals(template, store.spec("docx-templates-project", revision).json().getString("template"))
+                val output = File(exported, "$template.docx").apply { writeBytes(file.readBytes()) }
+                ZipFile(file).use { zip ->
+                    zip.entries().asSequence().forEach { entry ->
+                        val crc = CRC32()
+                        zip.getInputStream(entry).use { stream ->
+                            val buffer = ByteArray(8192)
+                            while (true) {
+                                val count = stream.read(buffer)
+                                if (count < 0) break
+                                crc.update(buffer, 0, count)
+                            }
+                        }
+                        assertEquals("DOCX ZIP CRC mismatch in ${entry.name}", entry.crc, crc.value)
+                    }
+                    val styles = xml(zip, "word/styles.xml")
+                    val styleNodes = styles.getElementsByTagNameNS(word, "style")
+                    fun style(id:String):org.w3c.dom.Element = (0 until styleNodes.length)
+                        .map { styleNodes.item(it) }
+                        .single { it.attributes.getNamedItemNS(word, "styleId").nodeValue == id } as org.w3c.dom.Element
+                    for ((styleId, expectedSize) in listOf("Title" to expectedTitleSize, "Heading1" to expectedHeadingSize)) {
+                        val styled = style(styleId)
+                        val fonts = styled.getElementsByTagNameNS(word, "rFonts")
+                        assertTrue("Template $template did not define $styleId font", fonts.length > 0)
+                        assertEquals(expectedFont, fonts.item(0).attributes.getNamedItemNS(word, "ascii").nodeValue)
+                        val colors = styled.getElementsByTagNameNS(word, "color")
+                        assertTrue("Template $template did not define $styleId color", colors.length > 0)
+                        assertEquals(expectedTitleColor, colors.item(0).attributes.getNamedItemNS(word, "val").nodeValue)
+                        assertEquals(expectedSize, styled.getElementsByTagNameNS(word, "sz").item(0)
+                            .attributes.getNamedItemNS(word, "val").nodeValue)
+                    }
+
+                    val document = xml(zip, "word/document.xml")
+                    assertEquals(1, document.getElementsByTagNameNS(word, "tbl").length)
+                    assertEquals(2, document.getElementsByTagNameNS(word, "pStyle").length)
+                    val body = document.getElementsByTagNameNS(word, "body").item(0)
+                    val directChildren = (0 until body.childNodes.length).mapNotNull { index ->
+                        body.childNodes.item(index).takeIf { it.nodeType == org.w3c.dom.Node.ELEMENT_NODE }?.localName
+                    }
+                    assertEquals(listOf("p", "p", "p", "tbl", "sectPr"), directChildren)
+                }
+                val parsed = DocumentParser(context).parse(output, ArtifactFormat.DOCX.mime, output.name)
+                val extracted = parsed.pages.joinToString("\n") { it.text }
+                assertTrue(extracted.contains("Título de plantilla"))
+                assertTrue(extracted.contains("Acuerdos"))
+                assertTrue(extracted.contains("Contenido conservado"))
+                assertTrue(extracted.contains("Aprobado"))
+            }
+
+            val omittedTemplate = JSONObject("""{"format":"DOCX","name":"omitted.docx","paragraphs":[{"text":"Legacy","style":"title"}]}""")
+            val explicitStandard = JSONObject(omittedTemplate.toString()).put("template", "standard")
+            val omittedRevision = store.create("docx-standard-project", ArtifactSpec.parse(omittedTemplate))
+            val explicitRevision = store.create("docx-standard-project", ArtifactSpec.parse(explicitStandard))
+            fun stylesXml(revision:ArtifactRevision):String = ZipFile(store.verifiedFile("docx-standard-project",revision)).use { zip ->
+                zip.getInputStream(zip.getEntry("word/styles.xml") ?: error("Missing styles.xml")).bufferedReader().use { it.readText() }
+            }
+            assertEquals("Omitting template must preserve the legacy style part byte-for-byte", stylesXml(omittedRevision), stylesXml(explicitRevision))
+
+            val unsupported = JSONObject("""
+                {"format":"DOCX","name":"unknown.docx","template":"untrusted_template",
+                 "blocks":[{"kind":"paragraph","text":"Content"}]}
+            """.trimIndent())
+            val error = try {
+                ArtifactSpec.parse(unsupported)
+                null
+            } catch (failure: IllegalArgumentException) {
+                failure
+            }
+            assertNotNull("Unknown DOCX templates must be rejected", error)
+            assertEquals("DOCX_TEMPLATE_UNSUPPORTED", error?.message)
+
+            val wrongFormat = try {
+                ArtifactSpec.parse(JSONObject("""{"format":"XLSX","name":"book.xlsx","template":"report","sheets":[{"name":"Sheet1","cells":[]}]}"""))
+                null
+            } catch (failure: IllegalArgumentException) {
+                failure
+            }
+            assertNotNull("Template selection must remain DOCX-only", wrongFormat)
+            assertEquals("ARTIFACT_FIELD_UNSUPPORTED", wrongFormat?.message)
         } finally {
             root.deleteRecursively()
         }
