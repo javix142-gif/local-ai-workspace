@@ -25,11 +25,13 @@ class ArtifactTool(context:Context,private val operation:String):LocalTool {
             val seen=mutableSetOf<String>()
             for(index in 0 until edits.length()) {
                 val edit=edits.getJSONObject(index)
-                require(edit.keys().asSequence().toSet().all{it in setOf("sheet","address","value","type","style")} &&
-                    setOf("sheet","address","value").all(edit::has)){"XLSX_CELL_EDIT_FIELDS_INVALID"}
+                require(edit.keys().asSequence().toSet().all{it in setOf("sheet","address","value","formula","type","style")} &&
+                    setOf("sheet","address").all(edit::has) && (edit.has("value") xor edit.has("formula"))){"XLSX_CELL_EDIT_FIELDS_INVALID"}
                 val sheet=edit.getString("sheet");require(sheet.length in 1..31){"XLSX_SHEET_NAME_INVALID"}
                 val address=edit.getString("address");ArtifactSpec.address(address)
                 require(seen.add("${sheet.lowercase(java.util.Locale.ROOT)}!$address")){"XLSX_CELL_EDIT_DUPLICATE"}
+                if(edit.has("value"))edit.getString("value")
+                if(edit.has("formula"))edit.getString("formula")
                 if(edit.has("type"))require(edit.getString("type") in setOf("string","number","boolean")){"CELL_TYPE_UNSUPPORTED"}
                 if(edit.has("style"))require(edit.getString("style") in setOf("plain","header")){"CELL_STYLE_UNSUPPORTED"}
             }
@@ -63,12 +65,14 @@ class ArtifactTool(context:Context,private val operation:String):LocalTool {
         } else if(operation=="artifacts.xlsxSetCells") {
             val edits=arguments.getJSONArray("edits").let{array->(0 until array.length()).map{index->
                 val cell=array.getJSONObject(index)
-                XlsxLiteralCellEdit(cell.getString("sheet"),cell.getString("address"),cell.getString("value"),cell.optString("type").takeIf{cell.has("type")},cell.optString("style").takeIf{cell.has("style")})
+                XlsxCellEdit(cell.getString("sheet"),cell.getString("address"),
+                    cell.optString("value").takeIf{cell.has("value")},cell.optString("formula").takeIf{cell.has("formula")},
+                    cell.optString("type").takeIf{cell.has("type")},cell.optString("style").takeIf{cell.has("style")})
             }}
-            val revision=store.setXlsxCellValues(context.projectId,arguments.getString("id"),arguments.getInt("expectedVersion"),edits)
+            val revision=store.applyXlsxCellEdits(context.projectId,arguments.getString("id"),arguments.getInt("expectedVersion"),edits)
             store.verifiedFile(context.projectId,revision)
             JSONObject().put("artifact",revision.json()).put("state","PRIVATE_DRAFT_VERIFIED")
-                .put("note","Exact literal cells saved as a new immutable XLSX version. Formula cells were not edited; formulas and cached values were not recalculated. Re-read this version before another update; external imports remain unchanged.").toString()
+                .put("note","The selected cells were saved as a new immutable XLSX version. Formula edits remove old cached results and request recalculation by a compatible spreadsheet reader; this app does not evaluate formulas. Re-read this version before another update; imported originals remain unchanged.").toString()
         } else {
             val spec=ArtifactSpec.parse(arguments.getJSONObject("spec"))
             val revision=if(operation=="artifacts.create")store.create(context.projectId,spec)else store.revise(context.projectId,arguments.getString("id"),arguments.getInt("expectedVersion"),spec)

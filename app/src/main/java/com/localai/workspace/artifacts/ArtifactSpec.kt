@@ -19,7 +19,9 @@ class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String
         ArtifactFormat.CODE->json().getString("body")
         ArtifactFormat.XLSX->json().getJSONArray("sheets").objects().joinToString("\n\n") { s->
             s.getString("name")+"\n"+s.getJSONArray("cells").objects().joinToString("\n") { c->
-                c.getString("address")+" = "+c.optString("value","")+c.optString("formula","").takeIf{it.isNotBlank()}.let{if(it==null)"" else " [formula: $it; not recalculated]"}
+                val formula=c.optString("formula","")
+                val displayedValue=if(formula.isNotBlank()&&!c.has("value"))"[cached result unavailable]"else c.optString("value","")
+                c.getString("address")+" = "+displayedValue+if(formula.isBlank())"" else " [formula: $formula; not recalculated]"
             }
         }
         ArtifactFormat.PPTX->json().getJSONArray("slides").objects().mapIndexed { index, slide ->

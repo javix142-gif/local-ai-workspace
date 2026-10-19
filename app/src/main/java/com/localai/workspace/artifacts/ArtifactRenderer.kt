@@ -56,8 +56,15 @@ class ArtifactRenderer(private val context:Context) {
             out["xl/worksheets/sheet${i+1}.xml"]=declaration("<worksheet xmlns=\"$ns\"><sheetData>"+rows.entries.joinToString(""){(row,cells)->"<row r=\"$row\">"+cells.joinToString(""){c->
                 val type=c.optString("type","string");val formula=c.optString("formula","");val value=c.optString("value","");val style=if(c.optString("style")=="header")1 else 0
                 val body=if(formula.isNotBlank())"<f>${xml(formula)}</f>"+(if(c.has("value"))"<v>${xml(value)}</v>"else "")else if(type=="string")"<is><t xml:space=\"preserve\">${xml(value)}</t></is>"else "<v>${xml(value)}</v>"
-                val t=if(type=="boolean")"b"else if(type=="number")"n"else if(formula.isNotBlank())"str"else "inlineStr"
-                "<c r=\"${c.getString("address")}\" s=\"$style\" t=\"$t\">$body</c>"
+                val t=when {
+                    formula.isNotBlank()&&!c.has("value")->"" // No type or stale cached value; let a spreadsheet reader calculate it.
+                    type=="boolean"->"b"
+                    type=="number"->"n"
+                    formula.isNotBlank()->"str"
+                    else->"inlineStr"
+                }
+                val typeAttribute=if(t.isBlank())""else " t=\"$t\""
+                "<c r=\"${c.getString("address")}\" s=\"$style\"$typeAttribute>$body</c>"
             }+"</row>"}+"</sheetData></worksheet>")
         };return out
     }

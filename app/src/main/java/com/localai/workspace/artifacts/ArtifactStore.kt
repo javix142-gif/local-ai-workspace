@@ -15,8 +15,15 @@ data class ArtifactRevision(val id:String,val version:Int,val name:String,val fo
     fun json()=JSONObject().put("id",id).put("version",version).put("name",name).put("format",format.name).put("bytes",bytes).put("sha256",sha256).put("createdAt",createdAt).put("specSha256",specSha256)
 }
 
-/** One explicit literal-cell update. Formula cells are intentionally not accepted by this operation. */
-data class XlsxLiteralCellEdit(val sheet:String,val address:String,val value:String,val type:String?=null,val style:String?=null)
+/** One explicit cell update. Formula edits are stored without a cached result or local evaluation. */
+data class XlsxCellEdit(
+    val sheet:String,
+    val address:String,
+    val value:String?=null,
+    val formula:String?=null,
+    val type:String?=null,
+    val style:String?=null
+)
 
 /** App-private, immutable revisions. Commit is a same-filesystem directory rename after
  * validation/hash/fsync. Incomplete directories never become visible revisions. No Room change.
@@ -126,12 +133,11 @@ class ArtifactStore(context:Context,private val root:File=File(context.filesDir,
     }
     fun create(projectId:String,spec:ArtifactSpec)=commit(projectId,UUID.randomUUID().toString(),0,spec)
     fun revise(projectId:String,id:String,expectedVersion:Int,spec:ArtifactSpec)=commit(projectId,id,expectedVersion,spec)
-    /**
-     * Apply at most 64 exact literal-cell updates to the current private XLSX revision.
-     * Existing formulas/cached values are retained when their cells are not targeted; formula
-     * cells cannot be overwritten here. Every successful edit creates a new immutable revision.
+    /** Apply at most 64 exact cell edits to the current private XLSX revision.
+     * Formula edits remove the previous cached result; this app never evaluates formulas.
+     * Every successful edit creates a new immutable revision; untouched cells remain intact.
      */
-    fun setXlsxCellValues(projectId:String,id:String,expectedVersion:Int,edits:List<XlsxLiteralCellEdit>):ArtifactRevision {
+    fun applyXlsxCellEdits(projectId:String,id:String,expectedVersion:Int,edits:List<XlsxCellEdit>):ArtifactRevision {
         require(expectedVersion in 1..1000) { "XLSX_REVISION_INVALID" }
         require(edits.size in 1..64) { "XLSX_CELL_EDIT_LIMIT_64" }
         val versions=history(projectId,id)
@@ -142,6 +148,7 @@ class ArtifactStore(context:Context,private val root:File=File(context.filesDir,
         val sheets=updated.getJSONArray("sheets")
         val seen=mutableSetOf<String>()
         edits.forEach { edit ->
+            require((edit.value!=null) xor (edit.formula!=null)) { "XLSX_CELL_EDIT_VALUE_OR_FORMULA_REQUIRED" }
             require(edit.sheet.length in 1..31) { "XLSX_SHEET_NAME_INVALID" }
             ArtifactSpec.address(edit.address)
             val sheetKey=edit.sheet.lowercase(Locale.ROOT)
@@ -160,13 +167,20 @@ class ArtifactStore(context:Context,private val root:File=File(context.filesDir,
             }
             val existingCell=existing
             if(existingCell!=null) {
-                require(!existingCell.has("formula")) { "XLSX_FORMULA_CELL_REQUIRES_EXPLICIT_REVISION" }
-                existingCell.put("value",edit.value)
+                if(edit.formula!=null) {
+                    existingCell.put("formula",edit.formula)
+                    existingCell.remove("value") // A prior cached value is stale after formula replacement.
+                } else {
+                    require(!existingCell.has("formula")) { "XLSX_FORMULA_CELL_REQUIRES_EXPLICIT_REVISION" }
+                    existingCell.put("value",requireNotNull(edit.value))
+                }
                 edit.type?.let{existingCell.put("type",it)}
                 edit.style?.let{existingCell.put("style",it)}
             } else {
-                val cell=JSONObject().put("address",edit.address).put("value",edit.value)
-                    .put("type",edit.type ?: "string")
+                val cell=JSONObject().put("address",edit.address)
+                edit.value?.let{cell.put("value",it)}
+                edit.formula?.let{cell.put("formula",it)}
+                if(edit.value!=null)cell.put("type",edit.type ?: "string") else edit.type?.let{cell.put("type",it)}
                 edit.style?.let{cell.put("style",it)}
                 cells.put(cell)
             }

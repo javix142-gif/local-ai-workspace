@@ -38,6 +38,7 @@ class XlsxArtifactRevisionTest {
     @Test fun formulaEditIntentRoutesToBoundedXlsxEditTool() {
         val enabled=setOf("artifacts.xlsxSetCells")
         assertEquals(enabled,AssistantRouting.tools(enabled,"Cambia la fórmula de A3 del Excel para sumar A1 y A2",documents=false))
+        assertTrue(AssistantRouting.tools(enabled,"Recalcula la fórmula de A3 del Excel",documents=false).isEmpty())
     }
 
     @Test fun formulaCellEditCreatesVersionWithoutStaleCacheAndRequestsReaderRecalculation()=runBlocking {
@@ -54,6 +55,11 @@ class XlsxArtifactRevisionTest {
             val tool=ArtifactTool(context,"artifacts.xlsxSetCells")
             val registry=ToolRegistry(listOf(tool))
             val toolContext=ToolContext(project,"chat",File(context.cacheDir,"xlsx-formula-edit-work"))
+            val schema=JSONObject(com.localai.workspace.domain.tools.ChatToolSchemas.schema("artifacts.xlsxSetCells"))
+                .getJSONObject("parameters").getJSONObject("properties").getJSONObject("edits").getJSONObject("items")
+            assertTrue(schema.getJSONObject("properties").has("formula"))
+            val required=schema.getJSONArray("required").let{array->(0 until array.length()).map{array.getString(it)}.toSet()}
+            assertEquals(setOf("sheet","address"),required)
             val args=JSONObject().put("id",first.id).put("expectedVersion",first.version)
                 .put("edits",JSONArray().put(JSONObject().put("sheet","Hoja1").put("address","A3").put("formula","SUM(A1:A2)")))
             val request=ToolRequest("artifacts.xlsxSetCells",args.toString(),TrustOrigin.MODEL)
