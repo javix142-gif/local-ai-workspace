@@ -13,6 +13,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.io.File
 import java.io.RandomAccessFile
+import java.nio.file.Files
 import java.util.UUID
 
 @RunWith(RobolectricTestRunner::class)
@@ -64,6 +65,43 @@ class ArtifactPatchRecoveryTest {
             assertFalse(pending.exists())
         } finally {
             root.deleteRecursively()
+        }
+    }
+
+    @Test fun listingNeverFollowsAbandonedStagingSymlinksOutsideArtifactItem() {
+        val root=File(context.cacheDir,"artifact-stage-symlink-${UUID.randomUUID()}")
+        val external=File(context.cacheDir,"artifact-stage-external-${UUID.randomUUID()}").apply { check(mkdir()) }
+        val externalFile=File(external,"keep.txt").apply { writeText("outside staging must survive") }
+        val project="stage-symlink-${UUID.randomUUID()}"
+        var nestedLink:File?=null
+        var pendingLink:File?=null
+        try {
+            val store=ArtifactStore(context,root)
+            val body="fun answer() = 42\n"
+            val revision=store.create(project,ArtifactSpec.parse(JSONObject()
+                .put("format","CODE").put("name","answer.kt").put("body",body)))
+            val owner=File(root,"artifacts-${ArtifactStore.hash(project.toByteArray(Charsets.UTF_8))}")
+            val item=File(owner,revision.id)
+
+            val abandoned=File(item,".pending-${UUID.randomUUID()}").apply { check(mkdir()) }
+            nestedLink=File(abandoned,"external-link").apply {
+                Files.createSymbolicLink(toPath(),externalFile.toPath())
+            }
+            pendingLink=File(item,".pending-${UUID.randomUUID()}").apply {
+                Files.createSymbolicLink(toPath(),external.toPath())
+            }
+
+            assertEquals(listOf(revision),store.list(project))
+            assertFalse("eligible staging directory and its symlink are removed",abandoned.exists())
+            assertTrue("a staging symlink whose canonical target escapes the artifact item is left alone",Files.isSymbolicLink(pendingLink!!.toPath()))
+            assertTrue("the symlink target is never traversed or removed",externalFile.isFile)
+            assertEquals("outside staging must survive",externalFile.readText())
+            assertEquals("committed revision bytes remain unchanged",body,store.verifiedFile(project,revision).readText())
+        } finally {
+            nestedLink?.let { Files.deleteIfExists(it.toPath()) }
+            pendingLink?.let { Files.deleteIfExists(it.toPath()) }
+            root.deleteRecursively()
+            external.deleteRecursively()
         }
     }
 
