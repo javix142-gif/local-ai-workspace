@@ -552,7 +552,7 @@
     "PPTXImageEmbedding": "IMPLEMENTED_HOST_TESTED_WITH_FOCUSED_APPROXIMATE_LAYOUT_PREVIEW; caller-supplied PNG only, no generated images or WYSIWYG/render fidelity claim; current preview evidence is not Android/device validation.",
     "latestMasterProgramRecoveryCheckpoint": "Latest focused M00/M02/M03 preparatory evidence on codex/master-program-20261019. It does not change source TODO states, task IDs, order, dependencies, or device gates."
   },
-  "currentSourceHeadSha": "f235a2385d0f885291256ba7ed7299aceeee36a4",
+  "currentSourceHeadSha": "498519c696ee19bc53c734a110cabee46849fe9b",
   "lastFullJvmTestCodeSha": "f54c1430cab4ea59a302b58dd2aa27deea579c49",
   "latestDelivery": {
     "name": "Clean-checkout model-source ignore matrix and release reproducibility follow-up",
@@ -7386,46 +7386,32 @@
     ],
     "independentHumanAudit": "PENDING",
     "physicalDevice": "NOT_RUN",
-    "latestSourceCommit": "f235a2385d0f885291256ba7ed7299aceeee36a4",
+    "latestSourceCommit": "498519c696ee19bc53c734a110cabee46849fe9b",
     "workingBranch": "codex/master-program-recovery-20261019",
     "latestIncrement": {
-      "name": "M03-06 preparatory fix: resolve multi-edits against original source",
-      "kind": "PREPARATORY_M03_06_CODE_PATCH_ORDER_INDEPENDENCE",
+      "name": "M03-06 preparatory multi-edit patch planner and ArtifactStore integration",
+      "kind": "PREPARATORY_M03_06_CODE_PATCH_ORDER_AND_STORE_INTEGRATION",
       "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO",
       "baselineCodeSha": "efb5a089268be3b03238b97561b07733a44b071f",
       "codeCommits": [
         "aebd6bbe03d4f958cce526dd4d2f98d2883e0841",
-        "f235a2385d0f885291256ba7ed7299aceeee36a4"
+        "f235a2385d0f885291256ba7ed7299aceeee36a4",
+        "498519c696ee19bc53c734a110cabee46849fe9b"
       ],
-      "codeSha": "f235a2385d0f885291256ba7ed7299aceeee36a4",
-      "testedTreeSha": "404cc8e0fc179b80e2ee7b92e13f2db2a89fd201",
+      "codeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+      "testedTreeSha": "1be03b773cd51e8442469cc0c72b6c3374705480",
       "workingBranch": "codex/master-program-recovery-20261019",
       "evidence": "docs/validation/master-program-code-patch-order-20261019/RESULTS.md",
       "evidenceManifest": {
         "path": "docs/validation/master-program-code-patch-order-20261019/SHA256SUMS",
-        "entries": 29,
-        "sha256": "add1554e7549be6982dfb5211e888608cd63268c35ed28db0d5314848b7e43d6",
-        "locallyVerified": "29/29"
+        "entries": 36,
+        "sha256": "a1110892c32d730aca93709bfc2b7e7a262df190d811e14fb21c11ce9f3ee110",
+        "locallyVerified": "36/36"
       },
       "finding": "CodePatchPlanner.apply previously located and applied each edit on the already-mutated result. A first replacement could make the next original snippet ambiguous. The red regression reproduced CODE_PATCH_MATCH_AMBIGUOUS for alpha→beta followed by beta→gamma.",
       "implementation": "Locate each unique before-snippet in the immutable source, sort ranges, reject overlapping ranges, then apply replacements from the end of the source toward the beginning. Existing size, UTF-8 byte and stale-base hash guards remain.",
       "host": {
-        "class": "com.localai.workspace.artifacts.CodePatchPlannerTest",
-        "red": {
-          "sourceCodeSha": "efb5a089268be3b03238b97561b07733a44b071f",
-          "testWorkingTree": "only the regression test was added before the red run",
-          "counts": {
-            "tests": 4,
-            "failures": 1,
-            "errors": 0,
-            "skipped": 0
-          },
-          "expectedFailure": "multiEditsAreResolvedFromOriginalSourceRegardlessOfOrder: CODE_PATCH_MATCH_AMBIGUOUS",
-          "exitCode": 1,
-          "log": "02-red-offline-cache/gradle.log",
-          "xml": "02-red-offline-cache/xml/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml"
-        },
-        "green": {
+        "planner": {
           "testedCodeSha": "f235a2385d0f885291256ba7ed7299aceeee36a4",
           "counts": {
             "tests": 5,
@@ -7450,6 +7436,56 @@
           "xml": "04-green-current/xml/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml",
           "xmlSha256": "e37448d405b20806f955413cecf10ebb16ee9bbb20ba01c944215abf50a1ca9b",
           "command": "04-green-current/command.txt"
+        },
+        "storeIntegration": {
+          "testedCodeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+          "class": "com.localai.workspace.artifacts.ArtifactRoundtripTest",
+          "test": "multiEditPatchSurvivesPreviewReopenAndCreatesAnImmutableRevision",
+          "counts": {
+            "tests": 1,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "passed": 1,
+          "exitCode": 0,
+          "startedAtUtc": "2026-10-19T19:48:24Z",
+          "finishedAtUtc": "2026-10-19T19:51:35Z",
+          "wallSeconds": 191,
+          "gradleReportedDuration": "3m 10s",
+          "actionableTasks": 63,
+          "executedTasks": 63,
+          "runtimeJdk": "Temurin 17.0.20.1",
+          "workerJdk": "Temurin 21.0.12.1",
+          "gradle": "8.10.2",
+          "androidSdk": "/workspace/.toolchain/android-sdk",
+          "gradleUserHome": "/workspace/.gradle (pre-existing cache, offline)",
+          "ndk": "27.0.12077973 (not invoked)",
+          "xml": "05-store-integration/xml/TEST-com.localai.workspace.artifacts.ArtifactRoundtripTest.xml",
+          "xmlSha256": "64ffa04d8122a46dcfdfd544c0ef21a4733f755ff15a61d1f2793345fbbea3b7",
+          "log": "05-store-integration/gradle.log",
+          "command": "05-store-integration/command.txt",
+          "coverage": [
+            "staged two edits against one original code artifact",
+            "persisted preview is readable after constructing a new ArtifactStore instance",
+            "applying it creates immutable v2 with the expected body/hash",
+            "original v1 bytes/body remain unchanged",
+            "applied preview is removed"
+          ]
+        },
+        "red": {
+          "sourceCodeSha": "efb5a089268be3b03238b97561b07733a44b071f",
+          "testWorkingTree": "only the regression test was added before the red run",
+          "counts": {
+            "tests": 4,
+            "failures": 1,
+            "errors": 0,
+            "skipped": 0
+          },
+          "expectedFailure": "multiEditsAreResolvedFromOriginalSourceRegardlessOfOrder: CODE_PATCH_MATCH_AMBIGUOUS",
+          "exitCode": 1,
+          "log": "02-red-offline-cache/gradle.log",
+          "xml": "02-red-offline-cache/xml/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml"
         }
       },
       "attempts": [
@@ -7483,6 +7519,14 @@
           "exitCode": 0,
           "durationSeconds": 192,
           "detail": "Corrected implementation compiled and the focused class passed 5/5."
+        },
+        {
+          "id": "05-store-integration",
+          "classification": "FOCUSED_HOST_PASS",
+          "codeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+          "exitCode": 0,
+          "durationSeconds": 191,
+          "detail": "ArtifactStore multi-edit preview persisted/reopened/applied as an immutable revision; 1/1 test, no failures/errors/skips."
         }
       ],
       "otherGates": {
@@ -8372,47 +8416,207 @@
           },
           "sourceFilesModified": false
         }
+      },
+      {
+        "name": "M03-06 preparatory multi-edit patch planner and ArtifactStore integration",
+        "kind": "PREPARATORY_M03_06_CODE_PATCH_ORDER_AND_STORE_INTEGRATION",
+        "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO",
+        "baselineCodeSha": "efb5a089268be3b03238b97561b07733a44b071f",
+        "codeCommits": [
+          "aebd6bbe03d4f958cce526dd4d2f98d2883e0841",
+          "f235a2385d0f885291256ba7ed7299aceeee36a4",
+          "498519c696ee19bc53c734a110cabee46849fe9b"
+        ],
+        "codeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+        "testedTreeSha": "1be03b773cd51e8442469cc0c72b6c3374705480",
+        "workingBranch": "codex/master-program-recovery-20261019",
+        "evidence": "docs/validation/master-program-code-patch-order-20261019/RESULTS.md",
+        "evidenceManifest": {
+          "path": "docs/validation/master-program-code-patch-order-20261019/SHA256SUMS",
+          "entries": 36,
+          "sha256": "a1110892c32d730aca93709bfc2b7e7a262df190d811e14fb21c11ce9f3ee110",
+          "locallyVerified": "36/36"
+        },
+        "finding": "CodePatchPlanner.apply previously located and applied each edit on the already-mutated result. A first replacement could make the next original snippet ambiguous. The red regression reproduced CODE_PATCH_MATCH_AMBIGUOUS for alpha→beta followed by beta→gamma.",
+        "implementation": "Locate each unique before-snippet in the immutable source, sort ranges, reject overlapping ranges, then apply replacements from the end of the source toward the beginning. Existing size, UTF-8 byte and stale-base hash guards remain.",
+        "host": {
+          "planner": {
+            "testedCodeSha": "f235a2385d0f885291256ba7ed7299aceeee36a4",
+            "counts": {
+              "tests": 5,
+              "failures": 0,
+              "errors": 0,
+              "skipped": 0
+            },
+            "passed": 5,
+            "exitCode": 0,
+            "startedAtUtc": "2026-10-19T19:40:14Z",
+            "finishedAtUtc": "2026-10-19T19:43:26Z",
+            "wallSeconds": 192,
+            "gradleReportedDuration": "3m 10s",
+            "actionableTasks": 63,
+            "executedTasks": 63,
+            "runtimeJdk": "Temurin 17.0.20.1",
+            "workerJdk": "Temurin 21.0.12.1",
+            "gradle": "8.10.2",
+            "androidSdk": "/workspace/.toolchain/android-sdk",
+            "ndk": "27.0.12077973",
+            "log": "04-green-current/gradle.log",
+            "xml": "04-green-current/xml/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml",
+            "xmlSha256": "e37448d405b20806f955413cecf10ebb16ee9bbb20ba01c944215abf50a1ca9b",
+            "command": "04-green-current/command.txt"
+          },
+          "storeIntegration": {
+            "testedCodeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+            "class": "com.localai.workspace.artifacts.ArtifactRoundtripTest",
+            "test": "multiEditPatchSurvivesPreviewReopenAndCreatesAnImmutableRevision",
+            "counts": {
+              "tests": 1,
+              "failures": 0,
+              "errors": 0,
+              "skipped": 0
+            },
+            "passed": 1,
+            "exitCode": 0,
+            "startedAtUtc": "2026-10-19T19:48:24Z",
+            "finishedAtUtc": "2026-10-19T19:51:35Z",
+            "wallSeconds": 191,
+            "gradleReportedDuration": "3m 10s",
+            "actionableTasks": 63,
+            "executedTasks": 63,
+            "runtimeJdk": "Temurin 17.0.20.1",
+            "workerJdk": "Temurin 21.0.12.1",
+            "gradle": "8.10.2",
+            "androidSdk": "/workspace/.toolchain/android-sdk",
+            "gradleUserHome": "/workspace/.gradle (pre-existing cache, offline)",
+            "ndk": "27.0.12077973 (not invoked)",
+            "xml": "05-store-integration/xml/TEST-com.localai.workspace.artifacts.ArtifactRoundtripTest.xml",
+            "xmlSha256": "64ffa04d8122a46dcfdfd544c0ef21a4733f755ff15a61d1f2793345fbbea3b7",
+            "log": "05-store-integration/gradle.log",
+            "command": "05-store-integration/command.txt",
+            "coverage": [
+              "staged two edits against one original code artifact",
+              "persisted preview is readable after constructing a new ArtifactStore instance",
+              "applying it creates immutable v2 with the expected body/hash",
+              "original v1 bytes/body remain unchanged",
+              "applied preview is removed"
+            ]
+          },
+          "red": {
+            "sourceCodeSha": "efb5a089268be3b03238b97561b07733a44b071f",
+            "testWorkingTree": "only the regression test was added before the red run",
+            "counts": {
+              "tests": 4,
+              "failures": 1,
+              "errors": 0,
+              "skipped": 0
+            },
+            "expectedFailure": "multiEditsAreResolvedFromOriginalSourceRegardlessOfOrder: CODE_PATCH_MATCH_AMBIGUOUS",
+            "exitCode": 1,
+            "log": "02-red-offline-cache/gradle.log",
+            "xml": "02-red-offline-cache/xml/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml"
+          }
+        },
+        "attempts": [
+          {
+            "id": "01-red",
+            "classification": "INFRASTRUCTURE_FAILURE_BEFORE_GRADLE",
+            "exitCode": 1,
+            "startedAtUtc": "2026-10-19T19:36:20Z",
+            "finishedAtUtc": "2026-10-19T19:36:25Z",
+            "detail": "Gradle wrapper distribution fetch failed with Connection refused; no Gradle task or test started; no XML."
+          },
+          {
+            "id": "02-red-offline-cache",
+            "classification": "EXPECTED_RED_PRODUCT_REGRESSION_REPRODUCED",
+            "exitCode": 1,
+            "durationSeconds": 35,
+            "detail": "Cached Gradle distribution allowed the baseline reproduction; 4 tests, 3 passed, 1 failed as expected."
+          },
+          {
+            "id": "03-green",
+            "classification": "IMPLEMENTATION_COMPILE_FAILURE_NOT_TESTED",
+            "codeSha": "aebd6bbe03d4f958cce526dd4d2f98d2883e0841",
+            "exitCode": 1,
+            "durationSeconds": 92,
+            "detail": "Kotlin compilation failed because the new located-edit record was referenced using a nonexistent 'after' property; no fresh JUnit XML. The preserved NOT_GREEN_XML.txt marks this attempt; no red XML is attributed to it."
+          },
+          {
+            "id": "04-green-current",
+            "classification": "FOCUSED_HOST_PASS",
+            "codeSha": "f235a2385d0f885291256ba7ed7299aceeee36a4",
+            "exitCode": 0,
+            "durationSeconds": 192,
+            "detail": "Corrected implementation compiled and the focused class passed 5/5."
+          },
+          {
+            "id": "05-store-integration",
+            "classification": "FOCUSED_HOST_PASS",
+            "codeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+            "exitCode": 0,
+            "durationSeconds": 191,
+            "detail": "ArtifactStore multi-edit preview persisted/reopened/applied as an immutable revision; 1/1 test, no failures/errors/skips."
+          }
+        ],
+        "otherGates": {
+          "fullAppJvm": "NOT_RUN",
+          "liteRtCompatJvm": "NOT_RUN",
+          "lintDebug": "NOT_RUN",
+          "androidTestCompilation": "NOT_RUN",
+          "emulator": "NOT_RUN",
+          "physicalDevice": "NOT_RUN",
+          "apk": "NOT_GENERATED"
+        },
+        "sourceTask": {
+          "id": "M03-06",
+          "sourceStatus": "TODO",
+          "requiresDevice": true,
+          "dependsOn": [
+            "M03-01",
+            "M02-08"
+          ],
+          "formalCompletion": false,
+          "classification": "Preparatory code-patch correctness only; complete diff preview/recovery, device gate and upstream dependencies are not closed."
+        },
+        "sourcePlanUnchanged": {
+          "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+          "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+          "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+          "taskCount": 97,
+          "uniqueIds": 97,
+          "dependencyEdges": 120,
+          "sourceStatuses": {
+            "TODO": 97
+          },
+          "sourceFilesModified": false
+        }
       }
     ],
-    "nextPreparatoryIncrement": "Continue the authenticated master program with a bounded implementation slice; keep original task IDs, dependencies and statuses unchanged.",
+    "nextPreparatoryIncrement": "Continue the authenticated master program sequentially; keep all original IDs, dependencies and TODO states unchanged.",
     "latestPreparatoryIncrement": {
-      "name": "M03-06 preparatory fix: resolve multi-edits against original source",
-      "kind": "PREPARATORY_M03_06_CODE_PATCH_ORDER_INDEPENDENCE",
+      "name": "M03-06 preparatory multi-edit patch planner and ArtifactStore integration",
+      "kind": "PREPARATORY_M03_06_CODE_PATCH_ORDER_AND_STORE_INTEGRATION",
       "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO",
       "baselineCodeSha": "efb5a089268be3b03238b97561b07733a44b071f",
       "codeCommits": [
         "aebd6bbe03d4f958cce526dd4d2f98d2883e0841",
-        "f235a2385d0f885291256ba7ed7299aceeee36a4"
+        "f235a2385d0f885291256ba7ed7299aceeee36a4",
+        "498519c696ee19bc53c734a110cabee46849fe9b"
       ],
-      "codeSha": "f235a2385d0f885291256ba7ed7299aceeee36a4",
-      "testedTreeSha": "404cc8e0fc179b80e2ee7b92e13f2db2a89fd201",
+      "codeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+      "testedTreeSha": "1be03b773cd51e8442469cc0c72b6c3374705480",
       "workingBranch": "codex/master-program-recovery-20261019",
       "evidence": "docs/validation/master-program-code-patch-order-20261019/RESULTS.md",
       "evidenceManifest": {
         "path": "docs/validation/master-program-code-patch-order-20261019/SHA256SUMS",
-        "entries": 29,
-        "sha256": "add1554e7549be6982dfb5211e888608cd63268c35ed28db0d5314848b7e43d6",
-        "locallyVerified": "29/29"
+        "entries": 36,
+        "sha256": "a1110892c32d730aca93709bfc2b7e7a262df190d811e14fb21c11ce9f3ee110",
+        "locallyVerified": "36/36"
       },
       "finding": "CodePatchPlanner.apply previously located and applied each edit on the already-mutated result. A first replacement could make the next original snippet ambiguous. The red regression reproduced CODE_PATCH_MATCH_AMBIGUOUS for alpha→beta followed by beta→gamma.",
       "implementation": "Locate each unique before-snippet in the immutable source, sort ranges, reject overlapping ranges, then apply replacements from the end of the source toward the beginning. Existing size, UTF-8 byte and stale-base hash guards remain.",
       "host": {
-        "class": "com.localai.workspace.artifacts.CodePatchPlannerTest",
-        "red": {
-          "sourceCodeSha": "efb5a089268be3b03238b97561b07733a44b071f",
-          "testWorkingTree": "only the regression test was added before the red run",
-          "counts": {
-            "tests": 4,
-            "failures": 1,
-            "errors": 0,
-            "skipped": 0
-          },
-          "expectedFailure": "multiEditsAreResolvedFromOriginalSourceRegardlessOfOrder: CODE_PATCH_MATCH_AMBIGUOUS",
-          "exitCode": 1,
-          "log": "02-red-offline-cache/gradle.log",
-          "xml": "02-red-offline-cache/xml/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml"
-        },
-        "green": {
+        "planner": {
           "testedCodeSha": "f235a2385d0f885291256ba7ed7299aceeee36a4",
           "counts": {
             "tests": 5,
@@ -8437,6 +8641,56 @@
           "xml": "04-green-current/xml/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml",
           "xmlSha256": "e37448d405b20806f955413cecf10ebb16ee9bbb20ba01c944215abf50a1ca9b",
           "command": "04-green-current/command.txt"
+        },
+        "storeIntegration": {
+          "testedCodeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+          "class": "com.localai.workspace.artifacts.ArtifactRoundtripTest",
+          "test": "multiEditPatchSurvivesPreviewReopenAndCreatesAnImmutableRevision",
+          "counts": {
+            "tests": 1,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "passed": 1,
+          "exitCode": 0,
+          "startedAtUtc": "2026-10-19T19:48:24Z",
+          "finishedAtUtc": "2026-10-19T19:51:35Z",
+          "wallSeconds": 191,
+          "gradleReportedDuration": "3m 10s",
+          "actionableTasks": 63,
+          "executedTasks": 63,
+          "runtimeJdk": "Temurin 17.0.20.1",
+          "workerJdk": "Temurin 21.0.12.1",
+          "gradle": "8.10.2",
+          "androidSdk": "/workspace/.toolchain/android-sdk",
+          "gradleUserHome": "/workspace/.gradle (pre-existing cache, offline)",
+          "ndk": "27.0.12077973 (not invoked)",
+          "xml": "05-store-integration/xml/TEST-com.localai.workspace.artifacts.ArtifactRoundtripTest.xml",
+          "xmlSha256": "64ffa04d8122a46dcfdfd544c0ef21a4733f755ff15a61d1f2793345fbbea3b7",
+          "log": "05-store-integration/gradle.log",
+          "command": "05-store-integration/command.txt",
+          "coverage": [
+            "staged two edits against one original code artifact",
+            "persisted preview is readable after constructing a new ArtifactStore instance",
+            "applying it creates immutable v2 with the expected body/hash",
+            "original v1 bytes/body remain unchanged",
+            "applied preview is removed"
+          ]
+        },
+        "red": {
+          "sourceCodeSha": "efb5a089268be3b03238b97561b07733a44b071f",
+          "testWorkingTree": "only the regression test was added before the red run",
+          "counts": {
+            "tests": 4,
+            "failures": 1,
+            "errors": 0,
+            "skipped": 0
+          },
+          "expectedFailure": "multiEditsAreResolvedFromOriginalSourceRegardlessOfOrder: CODE_PATCH_MATCH_AMBIGUOUS",
+          "exitCode": 1,
+          "log": "02-red-offline-cache/gradle.log",
+          "xml": "02-red-offline-cache/xml/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml"
         }
       },
       "attempts": [
@@ -8470,6 +8724,14 @@
           "exitCode": 0,
           "durationSeconds": 192,
           "detail": "Corrected implementation compiled and the focused class passed 5/5."
+        },
+        {
+          "id": "05-store-integration",
+          "classification": "FOCUSED_HOST_PASS",
+          "codeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+          "exitCode": 0,
+          "durationSeconds": 191,
+          "detail": "ArtifactStore multi-edit preview persisted/reopened/applied as an immutable revision; 1/1 test, no failures/errors/skips."
         }
       ],
       "otherGates": {
@@ -8505,63 +8767,49 @@
         "sourceFilesModified": false
       }
     },
-    "currentSourceCommit": "f235a2385d0f885291256ba7ed7299aceeee36a4",
-    "latestSourceTreeSha": "404cc8e0fc179b80e2ee7b92e13f2db2a89fd201",
+    "currentSourceCommit": "498519c696ee19bc53c734a110cabee46849fe9b",
+    "latestSourceTreeSha": "1be03b773cd51e8442469cc0c72b6c3374705480",
     "latestM03_02FormulaEditFollowUp": "docs/validation/master-program-m03-02-xlsx-formulas/RESULTS.md",
-    "latestCodeSourceSha": "f235a2385d0f885291256ba7ed7299aceeee36a4",
-    "lastPreparatoryIncrement": "M03-06 code-patch ordering bug reproduced on baseline and fixed; focused CodePatchPlannerTest passed 5/5 at f235a238; original task remains TODO/device-gated with M03-01 and M02-08 dependencies TODO.",
+    "latestCodeSourceSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+    "lastPreparatoryIncrement": "M03-06 multi-edit patch ordering was reproduced and fixed; CodePatchPlannerTest passed 5/5 at f235a23, and the actual ArtifactStore preview-reopen-apply integration passed 1/1 at 498519c. Original M03-06 remains TODO/device-gated with M03-01 and M02-08 dependencies TODO.",
     "previousLatestSourceCommit": "0551915039efdd17557271a793163290f30be8d2",
     "latestSourceIncrement": {
-      "name": "M03-06 preparatory fix: resolve multi-edits against original source",
-      "codeSha": "f235a2385d0f885291256ba7ed7299aceeee36a4",
+      "name": "M03-06 preparatory multi-edit patch planner and ArtifactStore integration",
+      "codeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
       "evidence": "docs/validation/master-program-code-patch-order-20261019/RESULTS.md",
       "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO",
       "evidenceManifest": {
         "path": "docs/validation/master-program-code-patch-order-20261019/SHA256SUMS",
-        "entries": 29,
-        "sha256": "add1554e7549be6982dfb5211e888608cd63268c35ed28db0d5314848b7e43d6",
-        "locallyVerified": "29/29"
+        "entries": 36,
+        "sha256": "a1110892c32d730aca93709bfc2b7e7a262df190d811e14fb21c11ce9f3ee110",
+        "locallyVerified": "36/36"
       }
     }
   },
   "latestMasterProgramIncrement": {
-    "name": "M03-06 preparatory fix: resolve multi-edits against original source",
-    "kind": "PREPARATORY_M03_06_CODE_PATCH_ORDER_INDEPENDENCE",
+    "name": "M03-06 preparatory multi-edit patch planner and ArtifactStore integration",
+    "kind": "PREPARATORY_M03_06_CODE_PATCH_ORDER_AND_STORE_INTEGRATION",
     "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO",
     "baselineCodeSha": "efb5a089268be3b03238b97561b07733a44b071f",
     "codeCommits": [
       "aebd6bbe03d4f958cce526dd4d2f98d2883e0841",
-      "f235a2385d0f885291256ba7ed7299aceeee36a4"
+      "f235a2385d0f885291256ba7ed7299aceeee36a4",
+      "498519c696ee19bc53c734a110cabee46849fe9b"
     ],
-    "codeSha": "f235a2385d0f885291256ba7ed7299aceeee36a4",
-    "testedTreeSha": "404cc8e0fc179b80e2ee7b92e13f2db2a89fd201",
+    "codeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+    "testedTreeSha": "1be03b773cd51e8442469cc0c72b6c3374705480",
     "workingBranch": "codex/master-program-recovery-20261019",
     "evidence": "docs/validation/master-program-code-patch-order-20261019/RESULTS.md",
     "evidenceManifest": {
       "path": "docs/validation/master-program-code-patch-order-20261019/SHA256SUMS",
-      "entries": 29,
-      "sha256": "add1554e7549be6982dfb5211e888608cd63268c35ed28db0d5314848b7e43d6",
-      "locallyVerified": "29/29"
+      "entries": 36,
+      "sha256": "a1110892c32d730aca93709bfc2b7e7a262df190d811e14fb21c11ce9f3ee110",
+      "locallyVerified": "36/36"
     },
     "finding": "CodePatchPlanner.apply previously located and applied each edit on the already-mutated result. A first replacement could make the next original snippet ambiguous. The red regression reproduced CODE_PATCH_MATCH_AMBIGUOUS for alpha→beta followed by beta→gamma.",
     "implementation": "Locate each unique before-snippet in the immutable source, sort ranges, reject overlapping ranges, then apply replacements from the end of the source toward the beginning. Existing size, UTF-8 byte and stale-base hash guards remain.",
     "host": {
-      "class": "com.localai.workspace.artifacts.CodePatchPlannerTest",
-      "red": {
-        "sourceCodeSha": "efb5a089268be3b03238b97561b07733a44b071f",
-        "testWorkingTree": "only the regression test was added before the red run",
-        "counts": {
-          "tests": 4,
-          "failures": 1,
-          "errors": 0,
-          "skipped": 0
-        },
-        "expectedFailure": "multiEditsAreResolvedFromOriginalSourceRegardlessOfOrder: CODE_PATCH_MATCH_AMBIGUOUS",
-        "exitCode": 1,
-        "log": "02-red-offline-cache/gradle.log",
-        "xml": "02-red-offline-cache/xml/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml"
-      },
-      "green": {
+      "planner": {
         "testedCodeSha": "f235a2385d0f885291256ba7ed7299aceeee36a4",
         "counts": {
           "tests": 5,
@@ -8586,6 +8834,56 @@
         "xml": "04-green-current/xml/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml",
         "xmlSha256": "e37448d405b20806f955413cecf10ebb16ee9bbb20ba01c944215abf50a1ca9b",
         "command": "04-green-current/command.txt"
+      },
+      "storeIntegration": {
+        "testedCodeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+        "class": "com.localai.workspace.artifacts.ArtifactRoundtripTest",
+        "test": "multiEditPatchSurvivesPreviewReopenAndCreatesAnImmutableRevision",
+        "counts": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "passed": 1,
+        "exitCode": 0,
+        "startedAtUtc": "2026-10-19T19:48:24Z",
+        "finishedAtUtc": "2026-10-19T19:51:35Z",
+        "wallSeconds": 191,
+        "gradleReportedDuration": "3m 10s",
+        "actionableTasks": 63,
+        "executedTasks": 63,
+        "runtimeJdk": "Temurin 17.0.20.1",
+        "workerJdk": "Temurin 21.0.12.1",
+        "gradle": "8.10.2",
+        "androidSdk": "/workspace/.toolchain/android-sdk",
+        "gradleUserHome": "/workspace/.gradle (pre-existing cache, offline)",
+        "ndk": "27.0.12077973 (not invoked)",
+        "xml": "05-store-integration/xml/TEST-com.localai.workspace.artifacts.ArtifactRoundtripTest.xml",
+        "xmlSha256": "64ffa04d8122a46dcfdfd544c0ef21a4733f755ff15a61d1f2793345fbbea3b7",
+        "log": "05-store-integration/gradle.log",
+        "command": "05-store-integration/command.txt",
+        "coverage": [
+          "staged two edits against one original code artifact",
+          "persisted preview is readable after constructing a new ArtifactStore instance",
+          "applying it creates immutable v2 with the expected body/hash",
+          "original v1 bytes/body remain unchanged",
+          "applied preview is removed"
+        ]
+      },
+      "red": {
+        "sourceCodeSha": "efb5a089268be3b03238b97561b07733a44b071f",
+        "testWorkingTree": "only the regression test was added before the red run",
+        "counts": {
+          "tests": 4,
+          "failures": 1,
+          "errors": 0,
+          "skipped": 0
+        },
+        "expectedFailure": "multiEditsAreResolvedFromOriginalSourceRegardlessOfOrder: CODE_PATCH_MATCH_AMBIGUOUS",
+        "exitCode": 1,
+        "log": "02-red-offline-cache/gradle.log",
+        "xml": "02-red-offline-cache/xml/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml"
       }
     },
     "attempts": [
@@ -8619,6 +8917,14 @@
         "exitCode": 0,
         "durationSeconds": 192,
         "detail": "Corrected implementation compiled and the focused class passed 5/5."
+      },
+      {
+        "id": "05-store-integration",
+        "classification": "FOCUSED_HOST_PASS",
+        "codeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+        "exitCode": 0,
+        "durationSeconds": 191,
+        "detail": "ArtifactStore multi-edit preview persisted/reopened/applied as an immutable revision; 1/1 test, no failures/errors/skips."
       }
     ],
     "otherGates": {
@@ -10702,6 +11008,180 @@
           "exitCode": 0,
           "durationSeconds": 192,
           "detail": "Corrected implementation compiled and the focused class passed 5/5."
+        }
+      ],
+      "otherGates": {
+        "fullAppJvm": "NOT_RUN",
+        "liteRtCompatJvm": "NOT_RUN",
+        "lintDebug": "NOT_RUN",
+        "androidTestCompilation": "NOT_RUN",
+        "emulator": "NOT_RUN",
+        "physicalDevice": "NOT_RUN",
+        "apk": "NOT_GENERATED"
+      },
+      "sourceTask": {
+        "id": "M03-06",
+        "sourceStatus": "TODO",
+        "requiresDevice": true,
+        "dependsOn": [
+          "M03-01",
+          "M02-08"
+        ],
+        "formalCompletion": false,
+        "classification": "Preparatory code-patch correctness only; complete diff preview/recovery, device gate and upstream dependencies are not closed."
+      },
+      "sourcePlanUnchanged": {
+        "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+        "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+        "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+        "taskCount": 97,
+        "uniqueIds": 97,
+        "dependencyEdges": 120,
+        "sourceStatuses": {
+          "TODO": 97
+        },
+        "sourceFilesModified": false
+      }
+    },
+    {
+      "name": "M03-06 preparatory multi-edit patch planner and ArtifactStore integration",
+      "kind": "PREPARATORY_M03_06_CODE_PATCH_ORDER_AND_STORE_INTEGRATION",
+      "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO",
+      "baselineCodeSha": "efb5a089268be3b03238b97561b07733a44b071f",
+      "codeCommits": [
+        "aebd6bbe03d4f958cce526dd4d2f98d2883e0841",
+        "f235a2385d0f885291256ba7ed7299aceeee36a4",
+        "498519c696ee19bc53c734a110cabee46849fe9b"
+      ],
+      "codeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+      "testedTreeSha": "1be03b773cd51e8442469cc0c72b6c3374705480",
+      "workingBranch": "codex/master-program-recovery-20261019",
+      "evidence": "docs/validation/master-program-code-patch-order-20261019/RESULTS.md",
+      "evidenceManifest": {
+        "path": "docs/validation/master-program-code-patch-order-20261019/SHA256SUMS",
+        "entries": 36,
+        "sha256": "a1110892c32d730aca93709bfc2b7e7a262df190d811e14fb21c11ce9f3ee110",
+        "locallyVerified": "36/36"
+      },
+      "finding": "CodePatchPlanner.apply previously located and applied each edit on the already-mutated result. A first replacement could make the next original snippet ambiguous. The red regression reproduced CODE_PATCH_MATCH_AMBIGUOUS for alpha→beta followed by beta→gamma.",
+      "implementation": "Locate each unique before-snippet in the immutable source, sort ranges, reject overlapping ranges, then apply replacements from the end of the source toward the beginning. Existing size, UTF-8 byte and stale-base hash guards remain.",
+      "host": {
+        "planner": {
+          "testedCodeSha": "f235a2385d0f885291256ba7ed7299aceeee36a4",
+          "counts": {
+            "tests": 5,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "passed": 5,
+          "exitCode": 0,
+          "startedAtUtc": "2026-10-19T19:40:14Z",
+          "finishedAtUtc": "2026-10-19T19:43:26Z",
+          "wallSeconds": 192,
+          "gradleReportedDuration": "3m 10s",
+          "actionableTasks": 63,
+          "executedTasks": 63,
+          "runtimeJdk": "Temurin 17.0.20.1",
+          "workerJdk": "Temurin 21.0.12.1",
+          "gradle": "8.10.2",
+          "androidSdk": "/workspace/.toolchain/android-sdk",
+          "ndk": "27.0.12077973",
+          "log": "04-green-current/gradle.log",
+          "xml": "04-green-current/xml/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml",
+          "xmlSha256": "e37448d405b20806f955413cecf10ebb16ee9bbb20ba01c944215abf50a1ca9b",
+          "command": "04-green-current/command.txt"
+        },
+        "storeIntegration": {
+          "testedCodeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+          "class": "com.localai.workspace.artifacts.ArtifactRoundtripTest",
+          "test": "multiEditPatchSurvivesPreviewReopenAndCreatesAnImmutableRevision",
+          "counts": {
+            "tests": 1,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "passed": 1,
+          "exitCode": 0,
+          "startedAtUtc": "2026-10-19T19:48:24Z",
+          "finishedAtUtc": "2026-10-19T19:51:35Z",
+          "wallSeconds": 191,
+          "gradleReportedDuration": "3m 10s",
+          "actionableTasks": 63,
+          "executedTasks": 63,
+          "runtimeJdk": "Temurin 17.0.20.1",
+          "workerJdk": "Temurin 21.0.12.1",
+          "gradle": "8.10.2",
+          "androidSdk": "/workspace/.toolchain/android-sdk",
+          "gradleUserHome": "/workspace/.gradle (pre-existing cache, offline)",
+          "ndk": "27.0.12077973 (not invoked)",
+          "xml": "05-store-integration/xml/TEST-com.localai.workspace.artifacts.ArtifactRoundtripTest.xml",
+          "xmlSha256": "64ffa04d8122a46dcfdfd544c0ef21a4733f755ff15a61d1f2793345fbbea3b7",
+          "log": "05-store-integration/gradle.log",
+          "command": "05-store-integration/command.txt",
+          "coverage": [
+            "staged two edits against one original code artifact",
+            "persisted preview is readable after constructing a new ArtifactStore instance",
+            "applying it creates immutable v2 with the expected body/hash",
+            "original v1 bytes/body remain unchanged",
+            "applied preview is removed"
+          ]
+        },
+        "red": {
+          "sourceCodeSha": "efb5a089268be3b03238b97561b07733a44b071f",
+          "testWorkingTree": "only the regression test was added before the red run",
+          "counts": {
+            "tests": 4,
+            "failures": 1,
+            "errors": 0,
+            "skipped": 0
+          },
+          "expectedFailure": "multiEditsAreResolvedFromOriginalSourceRegardlessOfOrder: CODE_PATCH_MATCH_AMBIGUOUS",
+          "exitCode": 1,
+          "log": "02-red-offline-cache/gradle.log",
+          "xml": "02-red-offline-cache/xml/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml"
+        }
+      },
+      "attempts": [
+        {
+          "id": "01-red",
+          "classification": "INFRASTRUCTURE_FAILURE_BEFORE_GRADLE",
+          "exitCode": 1,
+          "startedAtUtc": "2026-10-19T19:36:20Z",
+          "finishedAtUtc": "2026-10-19T19:36:25Z",
+          "detail": "Gradle wrapper distribution fetch failed with Connection refused; no Gradle task or test started; no XML."
+        },
+        {
+          "id": "02-red-offline-cache",
+          "classification": "EXPECTED_RED_PRODUCT_REGRESSION_REPRODUCED",
+          "exitCode": 1,
+          "durationSeconds": 35,
+          "detail": "Cached Gradle distribution allowed the baseline reproduction; 4 tests, 3 passed, 1 failed as expected."
+        },
+        {
+          "id": "03-green",
+          "classification": "IMPLEMENTATION_COMPILE_FAILURE_NOT_TESTED",
+          "codeSha": "aebd6bbe03d4f958cce526dd4d2f98d2883e0841",
+          "exitCode": 1,
+          "durationSeconds": 92,
+          "detail": "Kotlin compilation failed because the new located-edit record was referenced using a nonexistent 'after' property; no fresh JUnit XML. The preserved NOT_GREEN_XML.txt marks this attempt; no red XML is attributed to it."
+        },
+        {
+          "id": "04-green-current",
+          "classification": "FOCUSED_HOST_PASS",
+          "codeSha": "f235a2385d0f885291256ba7ed7299aceeee36a4",
+          "exitCode": 0,
+          "durationSeconds": 192,
+          "detail": "Corrected implementation compiled and the focused class passed 5/5."
+        },
+        {
+          "id": "05-store-integration",
+          "classification": "FOCUSED_HOST_PASS",
+          "codeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+          "exitCode": 0,
+          "durationSeconds": 191,
+          "detail": "ArtifactStore multi-edit preview persisted/reopened/applied as an immutable revision; 1/1 test, no failures/errors/skips."
         }
       ],
       "otherGates": {
@@ -15779,10 +16259,10 @@
   },
   "latestMasterProgramContinuation": {
     "status": "ACTIVE_PREPARATORY_IMPLEMENTATION",
-    "codeSha": "f235a2385d0f885291256ba7ed7299aceeee36a4",
-    "currentIncrement": "M03-06 preparatory fix: resolve multi-edits against original source",
+    "codeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+    "currentIncrement": "M03-06 preparatory multi-edit patch planner and ArtifactStore integration",
     "evidence": "docs/validation/master-program-code-patch-order-20261019/RESULTS.md",
-    "next": "Continue one bounded source-backed preparatory capability; retain M03-06 source TODO, its device requirement and unsatisfied upstream dependencies. Do not change source task statuses.",
+    "next": "Continue one bounded source-backed implementation slice in the authorized artifact and document program. M03-06 remains TODO and device-gated; do not promote original task statuses.",
     "noFormalTasksClosed": true,
     "sourcePlan": {
       "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
@@ -16538,43 +17018,29 @@
     }
   },
   "latestM03_06CodePatchOrdering": {
-    "name": "M03-06 preparatory fix: resolve multi-edits against original source",
-    "kind": "PREPARATORY_M03_06_CODE_PATCH_ORDER_INDEPENDENCE",
+    "name": "M03-06 preparatory multi-edit patch planner and ArtifactStore integration",
+    "kind": "PREPARATORY_M03_06_CODE_PATCH_ORDER_AND_STORE_INTEGRATION",
     "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO",
     "baselineCodeSha": "efb5a089268be3b03238b97561b07733a44b071f",
     "codeCommits": [
       "aebd6bbe03d4f958cce526dd4d2f98d2883e0841",
-      "f235a2385d0f885291256ba7ed7299aceeee36a4"
+      "f235a2385d0f885291256ba7ed7299aceeee36a4",
+      "498519c696ee19bc53c734a110cabee46849fe9b"
     ],
-    "codeSha": "f235a2385d0f885291256ba7ed7299aceeee36a4",
-    "testedTreeSha": "404cc8e0fc179b80e2ee7b92e13f2db2a89fd201",
+    "codeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+    "testedTreeSha": "1be03b773cd51e8442469cc0c72b6c3374705480",
     "workingBranch": "codex/master-program-recovery-20261019",
     "evidence": "docs/validation/master-program-code-patch-order-20261019/RESULTS.md",
     "evidenceManifest": {
       "path": "docs/validation/master-program-code-patch-order-20261019/SHA256SUMS",
-      "entries": 29,
-      "sha256": "add1554e7549be6982dfb5211e888608cd63268c35ed28db0d5314848b7e43d6",
-      "locallyVerified": "29/29"
+      "entries": 36,
+      "sha256": "a1110892c32d730aca93709bfc2b7e7a262df190d811e14fb21c11ce9f3ee110",
+      "locallyVerified": "36/36"
     },
     "finding": "CodePatchPlanner.apply previously located and applied each edit on the already-mutated result. A first replacement could make the next original snippet ambiguous. The red regression reproduced CODE_PATCH_MATCH_AMBIGUOUS for alpha→beta followed by beta→gamma.",
     "implementation": "Locate each unique before-snippet in the immutable source, sort ranges, reject overlapping ranges, then apply replacements from the end of the source toward the beginning. Existing size, UTF-8 byte and stale-base hash guards remain.",
     "host": {
-      "class": "com.localai.workspace.artifacts.CodePatchPlannerTest",
-      "red": {
-        "sourceCodeSha": "efb5a089268be3b03238b97561b07733a44b071f",
-        "testWorkingTree": "only the regression test was added before the red run",
-        "counts": {
-          "tests": 4,
-          "failures": 1,
-          "errors": 0,
-          "skipped": 0
-        },
-        "expectedFailure": "multiEditsAreResolvedFromOriginalSourceRegardlessOfOrder: CODE_PATCH_MATCH_AMBIGUOUS",
-        "exitCode": 1,
-        "log": "02-red-offline-cache/gradle.log",
-        "xml": "02-red-offline-cache/xml/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml"
-      },
-      "green": {
+      "planner": {
         "testedCodeSha": "f235a2385d0f885291256ba7ed7299aceeee36a4",
         "counts": {
           "tests": 5,
@@ -16599,6 +17065,56 @@
         "xml": "04-green-current/xml/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml",
         "xmlSha256": "e37448d405b20806f955413cecf10ebb16ee9bbb20ba01c944215abf50a1ca9b",
         "command": "04-green-current/command.txt"
+      },
+      "storeIntegration": {
+        "testedCodeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+        "class": "com.localai.workspace.artifacts.ArtifactRoundtripTest",
+        "test": "multiEditPatchSurvivesPreviewReopenAndCreatesAnImmutableRevision",
+        "counts": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "passed": 1,
+        "exitCode": 0,
+        "startedAtUtc": "2026-10-19T19:48:24Z",
+        "finishedAtUtc": "2026-10-19T19:51:35Z",
+        "wallSeconds": 191,
+        "gradleReportedDuration": "3m 10s",
+        "actionableTasks": 63,
+        "executedTasks": 63,
+        "runtimeJdk": "Temurin 17.0.20.1",
+        "workerJdk": "Temurin 21.0.12.1",
+        "gradle": "8.10.2",
+        "androidSdk": "/workspace/.toolchain/android-sdk",
+        "gradleUserHome": "/workspace/.gradle (pre-existing cache, offline)",
+        "ndk": "27.0.12077973 (not invoked)",
+        "xml": "05-store-integration/xml/TEST-com.localai.workspace.artifacts.ArtifactRoundtripTest.xml",
+        "xmlSha256": "64ffa04d8122a46dcfdfd544c0ef21a4733f755ff15a61d1f2793345fbbea3b7",
+        "log": "05-store-integration/gradle.log",
+        "command": "05-store-integration/command.txt",
+        "coverage": [
+          "staged two edits against one original code artifact",
+          "persisted preview is readable after constructing a new ArtifactStore instance",
+          "applying it creates immutable v2 with the expected body/hash",
+          "original v1 bytes/body remain unchanged",
+          "applied preview is removed"
+        ]
+      },
+      "red": {
+        "sourceCodeSha": "efb5a089268be3b03238b97561b07733a44b071f",
+        "testWorkingTree": "only the regression test was added before the red run",
+        "counts": {
+          "tests": 4,
+          "failures": 1,
+          "errors": 0,
+          "skipped": 0
+        },
+        "expectedFailure": "multiEditsAreResolvedFromOriginalSourceRegardlessOfOrder: CODE_PATCH_MATCH_AMBIGUOUS",
+        "exitCode": 1,
+        "log": "02-red-offline-cache/gradle.log",
+        "xml": "02-red-offline-cache/xml/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml"
       }
     },
     "attempts": [
@@ -16632,6 +17148,14 @@
         "exitCode": 0,
         "durationSeconds": 192,
         "detail": "Corrected implementation compiled and the focused class passed 5/5."
+      },
+      {
+        "id": "05-store-integration",
+        "classification": "FOCUSED_HOST_PASS",
+        "codeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+        "exitCode": 0,
+        "durationSeconds": 191,
+        "detail": "ArtifactStore multi-edit preview persisted/reopened/applied as an immutable revision; 1/1 test, no failures/errors/skips."
       }
     ],
     "otherGates": {

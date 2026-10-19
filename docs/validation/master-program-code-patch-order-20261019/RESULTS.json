@@ -5,12 +5,14 @@
   "baselineCodeSha": "efb5a089268be3b03238b97561b07733a44b071f",
   "codeCommits": [
     "aebd6bbe03d4f958cce526dd4d2f98d2883e0841",
-    "f235a2385d0f885291256ba7ed7299aceeee36a4"
+    "f235a2385d0f885291256ba7ed7299aceeee36a4",
+    "498519c696ee19bc53c734a110cabee46849fe9b"
   ],
-  "testedCodeSha": "f235a2385d0f885291256ba7ed7299aceeee36a4",
-  "testedTreeSha": "404cc8e0fc179b80e2ee7b92e13f2db2a89fd201",
+  "testedCodeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+  "testedTreeSha": "1be03b773cd51e8442469cc0c72b6c3374705480",
   "changedFiles": [
     "app/src/main/java/com/localai/workspace/artifacts/CodePatch.kt",
+    "app/src/test/java/com/localai/workspace/artifacts/ArtifactRoundtripTest.kt",
     "app/src/test/java/com/localai/workspace/artifacts/CodePatchPlannerTest.kt"
   ],
   "finding": "CodePatchPlanner.apply previously located and applied each edit on the already-mutated result. A first replacement could make the next original snippet ambiguous. The red regression reproduced CODE_PATCH_MATCH_AMBIGUOUS for alpha→beta followed by beta→gamma.",
@@ -56,6 +58,42 @@
       "xml": "04-green-current/xml/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml",
       "xmlSha256": "e37448d405b20806f955413cecf10ebb16ee9bbb20ba01c944215abf50a1ca9b",
       "command": "04-green-current/command.txt"
+    },
+    "integration": {
+      "testedCodeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+      "class": "com.localai.workspace.artifacts.ArtifactRoundtripTest",
+      "test": "multiEditPatchSurvivesPreviewReopenAndCreatesAnImmutableRevision",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed": 1,
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-19T19:48:24Z",
+      "finishedAtUtc": "2026-10-19T19:51:35Z",
+      "wallSeconds": 191,
+      "gradleReportedDuration": "3m 10s",
+      "actionableTasks": 63,
+      "executedTasks": 63,
+      "runtimeJdk": "Temurin 17.0.20.1",
+      "workerJdk": "Temurin 21.0.12.1",
+      "gradle": "8.10.2",
+      "androidSdk": "/workspace/.toolchain/android-sdk",
+      "gradleUserHome": "/workspace/.gradle (pre-existing cache, offline)",
+      "ndk": "27.0.12077973 (not invoked)",
+      "xml": "05-store-integration/xml/TEST-com.localai.workspace.artifacts.ArtifactRoundtripTest.xml",
+      "xmlSha256": "64ffa04d8122a46dcfdfd544c0ef21a4733f755ff15a61d1f2793345fbbea3b7",
+      "log": "05-store-integration/gradle.log",
+      "command": "05-store-integration/command.txt",
+      "coverage": [
+        "staged two edits against one original code artifact",
+        "persisted preview is readable after constructing a new ArtifactStore instance",
+        "applying it creates immutable v2 with the expected body/hash",
+        "original v1 bytes/body remain unchanged",
+        "applied preview is removed"
+      ]
     }
   },
   "attempts": [
@@ -89,6 +127,14 @@
       "exitCode": 0,
       "durationSeconds": 192,
       "detail": "Corrected implementation compiled and the focused class passed 5/5."
+    },
+    {
+      "id": "05-store-integration",
+      "classification": "FOCUSED_HOST_PASS",
+      "codeSha": "498519c696ee19bc53c734a110cabee46849fe9b",
+      "exitCode": 0,
+      "durationSeconds": 191,
+      "detail": "ArtifactStore multi-edit preview persisted/reopened/applied as an immutable revision; 1/1 test, no failures/errors/skips."
     }
   ],
   "notRun": {

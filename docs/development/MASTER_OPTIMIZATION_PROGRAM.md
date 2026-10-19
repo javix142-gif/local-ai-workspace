@@ -304,3 +304,8 @@ The recovered history already contains the bounded revision diff and cancel-pres
 `CodePatchPlanner.apply` now locates each edit in the same original body, rejects intersecting ranges and applies non-overlapping replacements from right to left. This fixes the reproduced case where an earlier replacement created a false ambiguous match for a later edit. Test-first evidence: baseline `efb5a089268be3b03238b97561b07733a44b071f` expected-red 3/4; corrected source `f235a2385d0f885291256ba7ed7299aceeee36a4` focused test class 5/5, exit 0, 192-second wall time, Gradle 8.10.2/JDK 17 with JDK 21 test worker. See `docs/validation/master-program-code-patch-order-20261019/RESULTS.md`.
 
 This does not close source task M03-06: it remains TODO, requires device validation, and depends on M03-01 and M02-08, still TODO. No other gate or APK was run. The original plan remains 97 unique IDs, 120 dependency edges, all source statuses TODO.
+
+
+## 2026-10-19 — M03-06 ArtifactStore multi-edit integration
+
+A focused `ArtifactRoundtripTest` now exercises the corrected two-edit patch through the actual artifact store: stage preview, reopen stored preview, apply as immutable revision 2, and verify original revision 1 remains unchanged. Exact test SHA `498519c696ee19bc53c734a110cabee46849fe9b` passed 1/1 with exit 0. The planner test passed 5/5 on its preceding exact SHA `f235a2385d0f885291256ba7ed7299aceeee36a4`; the integration commit changes only tests. Full app/LiteRT suites, lint, AndroidTest, emulator, device and APK remain unrun. See `docs/validation/master-program-code-patch-order-20261019/RESULTS.md`. M03-06 stays TODO/device-gated and upstream dependencies M03-01/M02-08 remain TODO.
