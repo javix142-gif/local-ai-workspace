@@ -80,4 +80,30 @@ class ArtifactRevisionPreviewUiTest {
         assertArrayEquals("Cancel preserves the original saved bytes",originalBytes,store.verifiedFile(project,original).readBytes())
         assertEquals(original.sha256,ArtifactStore.hash(store.verifiedFile(project,original).readBytes()))
     }
+
+    @Test fun oversizedLineDiffFallsBackWithoutTruncatingBeforeOrAfterPreview() {
+        val originalBody=(0..256).joinToString("\n") { "val item$it = $it" }
+        val proposedBody=originalBody.replace("val item256 = 256","val item256 = 257")
+        val original=store.create(project,ArtifactSpec.parse(JSONObject()
+            .put("format","CODE").put("name","large.kt").put("body",originalBody)))
+
+        compose.setContent { LocalAiTheme { ArtifactsDialog(project,onDismiss={}) } }
+        val revisionTag="artifact-${original.id}"
+        compose.waitUntil(10_000) { compose.onAllNodesWithTag(revisionTag).fetchSemanticsNodes().isNotEmpty() }
+        compose.onNodeWithTag(revisionTag).performScrollTo().performClick()
+        compose.waitUntil(10_000) { compose.onAllNodesWithTag("artifact-spec-editor").fetchSemanticsNodes().isNotEmpty() }
+        val proposed=ArtifactSpec.parse(JSONObject()
+            .put("format","CODE").put("name","large.kt").put("body",proposedBody))
+        compose.onNodeWithTag("artifact-spec-editor").performScrollTo()
+            .performTextReplacement(proposed.json().toString(2))
+        compose.onNodeWithText("Preview changes").performScrollTo().performClick()
+        compose.waitUntil(10_000) {
+            compose.onAllNodesWithTag("artifact-diff-unavailable").fetchSemanticsNodes().isNotEmpty()
+        }
+
+        compose.onNodeWithTag("artifact-diff-unavailable").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("artifact-saved-preview").performScrollTo().assertTextEquals(originalBody)
+        compose.onNodeWithTag("artifact-preview").performScrollTo().assertTextEquals(proposedBody)
+        assertEquals("Review remains read-only",1,store.history(project,original.id).size)
+    }
 }

@@ -128,7 +128,7 @@ import org.json.JSONObject
                 preview?.let { spec->
                     if(selected!=null && savedPreview!=previewText) {
                         Text("Saved v${selected!!.version} · before")
-                        SelectionContainer{Text(savedPreview,style=MaterialTheme.typography.bodySmall)}
+                        SelectionContainer{Text(savedPreview,Modifier.testTag("artifact-saved-preview"),style=MaterialTheme.typography.bodySmall)}
                         Text("Proposed version · after")
                         ArtifactRevisionDiff(savedPreview,previewText)
                     }
