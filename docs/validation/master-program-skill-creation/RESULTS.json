@@ -1,0 +1,134 @@
+{
+  "name": "Conversational Skill authoring",
+  "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_NO_SOURCE_TASK_CLOSED",
+  "repository": "https://github.com/javix142-gif/local-ai-workspace.git",
+  "workingBranch": "codex/aws-master-resume-20261019",
+  "codeCommit": "3bccb94a9a22164088b9b1facde1fe7bbd92f13b",
+  "codeParent": "ef8e508e90478f86526c87a603755894fc5bbbb6",
+  "testedCodeSha": "3bccb94a9a22164088b9b1facde1fe7bbd92f13b",
+  "publicationTarget": "codex/aws-master-resume-20261019",
+  "implementation": {
+    "entry": "Settings > Skills > CREAR SKILL opens a mode-specific chat session using the existing shared local model/session pipeline.",
+    "initialPrompt": "¿Qué debiese hacer la Skill?",
+    "review": "Completed assistant proposal is parsed and editable before explicit save; invalid/missing required fields do not register.",
+    "registration": "Existing SkillRegistry; USER_AUTHORED origin; enabled=false; explicit-only routing. User must separately enable it.",
+    "capabilityBoundary": "Only selected existing standard tools and local source types may be configured. Unsupported/non-local capability requirements are shown unavailable; generated text cannot grant capabilities or execute scripts.",
+    "runtime": "No second model. Authoring mode bypasses agent/skill routing, memory injection and tool dispatch on that authoring turn."
+  },
+  "changedFiles": [
+    "app/src/main/java/com/localai/workspace/MainActivity.kt",
+    "app/src/main/java/com/localai/workspace/skills/SkillDraftProposal.kt",
+    "app/src/main/java/com/localai/workspace/ui/ChatSessions.kt",
+    "app/src/main/java/com/localai/workspace/ui/SkillsAgentsUi.kt",
+    "app/src/main/java/com/localai/workspace/ui/ViewModels.kt",
+    "app/src/test/java/com/localai/workspace/skills/SkillAgentRegistryTest.kt",
+    "app/src/test/java/com/localai/workspace/skills/SkillDraftProposalTest.kt",
+    "app/src/test/java/com/localai/workspace/ui/ChatSessionPipelineTest.kt",
+    "app/src/test/java/com/localai/workspace/ui/SkillProposalReviewUiTest.kt"
+  ],
+  "host": {
+    "status": "PASS_FOCUSED_ONLY",
+    "commandPath": "docs/validation/master-program-skill-creation/attempt-13/command.txt",
+    "command": "./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.skills.SkillDraftProposalTest --tests com.localai.workspace.skills.SkillAgentRegistryTest.reviewedConversationDraftRegistersDisabledAndExportsAsSkillMarkdown --tests com.localai.workspace.ui.SkillProposalReviewUiTest --tests com.localai.workspace.ui.ChatSessionPipelineTest.skillAuthoringUsesSharedLocalChatButSkipsAgentMemoryAndToolExecution",
+    "tests": 7,
+    "passed": 7,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "timedOut": false,
+    "durationSeconds": 89.602,
+    "startedAtUtc": "2026-10-19T22:06:59.367414+00:00",
+    "finishedAtUtc": "2026-10-19T22:08:28.969005+00:00",
+    "gradle": "8.10.2",
+    "runtimeJdk": "Temurin 17.0.20.1",
+    "toolchainJdk": "Temurin 21.0.12.1",
+    "androidSdk": "/workspace/.toolchain/android-sdk API 35",
+    "ndk": "27.0.12077973",
+    "gradleUserHome": "/workspace/.gradle existing offline cache",
+    "os": "Linux x86_64",
+    "actionableTasks": 63,
+    "executedTasks": 3,
+    "upToDateTasks": 60,
+    "xml": [
+      {
+        "path": "docs/validation/master-program-skill-creation/attempt-13/xml/TEST-com.localai.workspace.skills.SkillDraftProposalTest.xml",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "45febe3f8417cf9d05320b1d3d6c4ef7c6ab812e95c921ac991ce530a2e8b485"
+      },
+      {
+        "path": "docs/validation/master-program-skill-creation/attempt-13/xml/TEST-com.localai.workspace.skills.SkillAgentRegistryTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "13544198fedb3798b8346500ee897a84bb4c139ce43db8afa9886f6ce93c223d"
+      },
+      {
+        "path": "docs/validation/master-program-skill-creation/attempt-13/xml/TEST-com.localai.workspace.ui.ChatSessionPipelineTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "d0d2db9f851e6bdf3fc11d0c0fc8a787626357139e5f296d62ec53ccb1609173"
+      },
+      {
+        "path": "docs/validation/master-program-skill-creation/attempt-13/xml/TEST-com.localai.workspace.ui.SkillProposalReviewUiTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "b581ef0957c478cbbe3b10185a86e9267bf2bd9bee0115b601e3eaa606e8e714"
+      }
+    ],
+    "log": "docs/validation/master-program-skill-creation/attempt-13/gradle.log",
+    "logSha256": "a8fd0d2464e39139f7e68b7c2bc5569a207d3ff209ee91a84c3d8ed65e56c8d5",
+    "toolchainPreflight": "docs/validation/master-program-skill-creation/attempt-13/toolchain-preflight.txt",
+    "toolchainPreflightSha256": "49150a07ff0d52db1b09634fe29ef725e186b801cdae21d36c2b03bf57acb741",
+    "allAttempts": "Preserved attempts 01-13; see RESULTS.md for classification. Earlier failed attempts are not hidden."
+  },
+  "notRun": {
+    "fullAppJvm": "NOT_RUN",
+    "litertCompat": "NOT_RUN",
+    "lintDebug": "NOT_RUN",
+    "assembleDebug": "NOT_RUN",
+    "assembleRelease": "NOT_RUN",
+    "androidTestCompile": "NOT_RUN",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED",
+    "realGemmaGeneration": "NOT_TESTED",
+    "motorolaPerformance": "NOT_RUN"
+  },
+  "globalAndroidContext": {
+    "emulator": "Historical global result remains FAIL: authentic Room v1 schema fixture unavailable; six model-dependent tests skipped; this increment did not rerun or change that result.",
+    "physicalDevice": "NOT_RUN; Moto G86 Power and original workbook not available to this validation."
+  },
+  "sourcePlan": {
+    "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmapPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskCount": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": {
+      "TODO": 97
+    },
+    "sourceFilesModified": false
+  },
+  "formalOriginalTask": null,
+  "formalTaskCompletion": false,
+  "evidencePath": "docs/validation/master-program-skill-creation/RESULTS.md",
+  "payloadManifestPath": "docs/validation/master-program-skill-creation/SHA256SUMS",
+  "payloadManifestEntries": 137,
+  "payloadManifestSha256": "0d1230378914b4cdbae2e56e875e39131aa5513cd104ea2be526d7c6b7b69cb5",
+  "limits": [
+    "Controlled host test backend; no actual Gemma output or model quality/latency result.",
+    "Focused test only; no full JVM/LiteRT, lint, assembly, AndroidTest, emulator, physical device or APK.",
+    "Skill remains disabled after registration; user must explicitly enable it."
+  ]
+}

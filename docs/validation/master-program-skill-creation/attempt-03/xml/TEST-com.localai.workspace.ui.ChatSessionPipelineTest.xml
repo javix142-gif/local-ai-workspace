@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.ChatSessionPipelineTest" tests="1" skipped="0" failures="1" errors="0" timestamp="2026-10-19T21:49:22" hostname="42c4f375d730" time="4.851">
+  <properties/>
+  <testcase name="skillAuthoringUsesSharedLocalChatButSkipsAgentMemoryAndToolExecution" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="4.851">
+    <failure message="org.junit.ComparisonFailure: expected:&lt;[Create a Skill for reviewing a synthetic maintenance checklist]&gt; but was:&lt;[partial final]&gt;" type="org.junit.ComparisonFailure">org.junit.ComparisonFailure: expected:&lt;[Create a Skill for reviewing a synthetic maintenance checklist]&gt; but was:&lt;[partial final]&gt;
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at com.localai.workspace.ui.ChatSessionPipelineTest$skillAuthoringUsesSharedLocalChatButSkipsAgentMemoryAndToolExecution$1.invokeSuspend(ChatSessionPipelineTest.kt:120)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:101)
+	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)
+	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:589)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:832)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:720)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:707)
+</failure>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

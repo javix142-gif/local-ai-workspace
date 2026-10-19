@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.ChatSessionPipelineTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-19T22:04:48" hostname="42c4f375d730" time="0.753">
+  <properties/>
+  <testcase name="skillAuthoringUsesSharedLocalChatButSkipsAgentMemoryAndToolExecution" classname="com.localai.workspace.ui.ChatSessionPipelineTest" time="0.753"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

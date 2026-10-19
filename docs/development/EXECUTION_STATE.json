@@ -552,7 +552,7 @@
     "PPTXImageEmbedding": "IMPLEMENTED_HOST_TESTED_WITH_FOCUSED_APPROXIMATE_LAYOUT_PREVIEW; caller-supplied PNG only, no generated images or WYSIWYG/render fidelity claim; current preview evidence is not Android/device validation.",
     "latestMasterProgramRecoveryCheckpoint": "Latest focused M00/M02/M03 preparatory evidence on codex/master-program-20261019. It does not change source TODO states, task IDs, order, dependencies, or device gates."
   },
-  "currentSourceHeadSha": "96359377838e2dfe1670604a73354fbe09ec6b57",
+  "currentSourceHeadSha": "3bccb94a9a22164088b9b1facde1fe7bbd92f13b",
   "lastFullJvmTestCodeSha": "f54c1430cab4ea59a302b58dd2aa27deea579c49",
   "latestDelivery": {
     "name": "Clean-checkout model-source ignore matrix and release reproducibility follow-up",
@@ -7386,9 +7386,26 @@
     ],
     "independentHumanAudit": "PENDING",
     "physicalDevice": "NOT_RUN",
-    "latestSourceCommit": "9778e4f5dd4ea5358011189e3be366351747c86f",
-    "workingBranch": "codex/master-program-recovery-20261019",
+    "latestSourceCommit": "3bccb94a9a22164088b9b1facde1fe7bbd92f13b",
+    "workingBranch": "codex/aws-master-resume-20261019",
     "latestIncrement": {
+      "name": "Conversational Skill authoring (master-program preparatory increment)",
+      "kind": "PREPARATORY_CHAT_BASED_SKILL_AUTHORING",
+      "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_NO_SOURCE_TASK_CLOSED",
+      "codeCommit": "3bccb94a9a22164088b9b1facde1fe7bbd92f13b",
+      "testedCodeSha": "3bccb94a9a22164088b9b1facde1fe7bbd92f13b",
+      "workingBranch": "codex/aws-master-resume-20261019",
+      "evidence": "docs/validation/master-program-skill-creation/RESULTS.md",
+      "evidenceManifest": {
+        "path": "docs/validation/master-program-skill-creation/SHA256SUMS",
+        "entries": 137,
+        "sha256": "0d1230378914b4cdbae2e56e875e39131aa5513cd104ea2be526d7c6b7b69cb5",
+        "localVerification": "137/137 payload entries verified with sha256sum -c"
+      },
+      "formalTaskCompletion": false,
+      "testSummary": "Focused HOST 7/7; no full gates, emulator, device or APK in this increment."
+    },
+    "previousIncrement": {
       "name": "M03-06 preparatory code patch UTF-16 integrity",
       "kind": "PREPARATORY_M03_06_UTF16_PATCH_INTEGRITY",
       "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO",
@@ -7509,250 +7526,6 @@
         },
         "sourceFilesModified": false
       }
-    },
-    "previousIncrement": {
-      "name": "Preparatory M00-06: correlate XLSX import and EG1 indexing diagnostics",
-      "kind": "PREPARATORY_M00_06_IMPORT_EG1_TIMING_CORRELATION",
-      "status": "HOST_FOCUSED_PASS_AND_PROPORTIONAL_BUILD_PASS; EMULATOR_FAIL_INCOMPLETE; OFFICIAL_QA_FAIL_CLOSED; NOT_FORMAL",
-      "baseHead": "b48338c557a94351157de18378a5221d00a4ba43",
-      "codeCommit": "9dc50102f47d551d9d3d0298c65106e802d1021c",
-      "testedTreeSha": "daa6c615534b445ef37196fabdde6242cb99f1fa",
-      "branch": "feat/0.5.0-skills-agents",
-      "formalOriginalTask": "M00-06 remains source TODO; its full timeline DoD and device measurements are incomplete.",
-      "originalTaskCompletion": "NO_ID_MARKED_COMPLETE",
-      "sourceTask": {
-        "id": "M00-06",
-        "title": "Instrumentar latencias XLSX y chat",
-        "status": "TODO",
-        "requires_device": false,
-        "depends_on": [],
-        "definition_of_done": "Timeline real con import parse index memory retrieval context gate model TTFT decode y e2e; metadata sin contenido privado"
-      },
-      "sourcePlan": {
-        "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
-        "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
-        "roadmapPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
-        "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
-        "taskIds": 97,
-        "uniqueTaskIds": 97,
-        "dependencyEdges": 120,
-        "sourceStatuses": {
-          "TODO": 97
-        },
-        "sourceFilesModified": false
-      },
-      "files": [
-        "app/src/main/java/com/localai/workspace/data/DocumentIngestion.kt",
-        "app/src/main/java/com/localai/workspace/semantic/SemanticRetrievalService.kt",
-        "app/src/main/java/com/localai/workspace/AppGraph.kt",
-        "app/src/main/java/com/localai/workspace/ui/PerformanceScreen.kt",
-        "app/src/test/java/com/localai/workspace/data/DocumentPipelineTimingTest.kt",
-        "app/src/test/java/com/localai/workspace/semantic/v2/SemanticContextPostfixTest.kt"
-      ],
-      "implementation": {
-        "correlation": "Random UUID flows from a successful import callback to the scheduled EG1 project index run and through RUNNING/COMPLETE/CANCELLED/FAILED diagnostics; import exposes it only when scheduling returns true.",
-        "screen": "Shows run id, matching status, supersession and separates callback duration from background indexing duration.",
-        "privacy": "No filename, path, content hash, project/document identity or cell text is stored in diagnostic models; synthetic XLSX test checks serialized diagnostics.",
-        "schemaOrDependenciesChanged": false,
-        "retrievalOrInferenceChanged": false
-      },
-      "host": {
-        "environment": {
-          "gradle": "8.10.2",
-          "runtimeJdk": "Temurin 17.0.20.1",
-          "workerJdk": "Temurin 21.0.12.1",
-          "androidSdk": "API 35",
-          "ndk": "27.0.12077973",
-          "gradleUserHome": "/workspace/.gradle-master-program-20261016",
-          "offline": true
-        },
-        "failedHarnessCompileAttempt": {
-          "path": "docs/validation/master-program-m00-06/attempt-01-xlsx-import-index-correlation/",
-          "exitCode": 1,
-          "durationSeconds": 220,
-          "cause": "Test-only missing kotlinx.coroutines.launch import; 0 tests executed; no product failure."
-        },
-        "finalFocused": {
-          "path": "docs/validation/master-program-m00-06/attempt-05-final-focused/",
-          "command": "./gradlew --offline --no-daemon --no-parallel --max-workers=1 --console=plain -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17-temurin,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.data.DocumentPipelineTimingTest --tests com.localai.workspace.semantic.v2.SemanticContextPostfixTest.editDeleteReimportKeepsProjectGenerationsScopedAndNeverServesStaleHits",
-          "startedAtUtc": "2026-10-17T03:02:45Z",
-          "finishedAtUtc": "2026-10-17T03:03:35Z",
-          "durationSeconds": 50,
-          "exitCode": 0,
-          "tests": 2,
-          "passed": 2,
-          "failures": 0,
-          "errors": 0,
-          "skipped": 0,
-          "xml": [
-            "xml/TEST-com.localai.workspace.data.DocumentPipelineTimingTest.xml",
-            "xml/TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml"
-          ]
-        },
-        "proportionalGate": {
-          "path": "docs/validation/master-program-m00-06/attempt-03-lint-androidtest-compile/",
-          "command": "./gradlew --offline --no-daemon --no-parallel --max-workers=1 --console=plain -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17-temurin,/workspace/.toolchain/jdk-21-temurin :app:lintDebug :app:compileDebugAndroidTestKotlin",
-          "startedAtUtc": "2026-10-17T02:55:59Z",
-          "finishedAtUtc": "2026-10-17T03:00:50Z",
-          "durationSeconds": 291,
-          "exitCode": 0,
-          "lint": {
-            "errors": 0,
-            "warnings": 77,
-            "information": 1,
-            "changedFileFindings": 0
-          },
-          "androidTestKotlin": "PASS_COMPILE_ONLY",
-          "instrumentation": "NOT_RUN"
-        }
-      },
-      "automation": {
-        "emulator": {
-          "runId": "38997371699",
-          "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38997371699",
-          "sourceCommit": "9dc50102f47d551d9d3d0298c65106e802d1021c",
-          "productCodeSha": "9dc50102f47d551d9d3d0298c65106e802d1021c",
-          "sourceTreeSha": "daa6c615534b445ef37196fabdde6242cb99f1fa",
-          "workflowPath": ".github/workflows/android-emulator-instrumented.yml",
-          "jobId": "117292766307",
-          "jobUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38997371699/job/117292766307",
-          "status": "EMULATOR_FAIL_INCOMPLETE_INSTRUMENTATION",
-          "label": "EMULATOR",
-          "api": 35,
-          "androidRelease": "15",
-          "abi": "x86_64",
-          "emulatorModel": "sdk_gphone64_x86_64",
-          "resolution": "1080x1920",
-          "densityDpi": 420,
-          "adbSerial": "emulator-5554",
-          "adbConnected": true,
-          "avdBoot": "PASS",
-          "task": ":app:connectedDebugAndroidTest",
-          "command": "./gradlew :app:connectedDebugAndroidTest --no-daemon --no-parallel --max-workers=2 --stacktrace --console=plain",
-          "gradleExitCode": 1,
-          "gradleSummary": "BUILD FAILED in 12m 26s; 114 actionable tasks (102 executed, 12 from cache)",
-          "gradleExpectedTests": 16,
-          "gradleReceivedTests": 6,
-          "gradleProgress": [
-            "6/16",
-            "7/16",
-            "9/16"
-          ],
-          "xmlCount": 1,
-          "xml": {
-            "tests": 7,
-            "passed": 3,
-            "failed": 2,
-            "errors": 0,
-            "skipped": 2,
-            "executed": 5,
-            "internallyConsistent": true,
-            "consistentWithGradle": false,
-            "path": "automatic-ci-38997371699/artifact-contents/instrumented-xml/debug/TEST-emulator-5554 - 15-_app-.xml"
-          },
-          "testRunnerEvents": {
-            "started": 10,
-            "finished": 9,
-            "failedEvents": 1,
-            "modelAssumptionSkips": 2
-          },
-          "observedFailures": [
-            {
-              "test": "WorkspaceDatabaseMigrationTest.v1ModelsAreExtendedWithoutLosingExistingRecords",
-              "classification": "HISTORICAL_FIXTURE_UNAVAILABLE",
-              "reason": "Authentic WorkspaceDatabase/1.json unavailable; no schema fabricated and test unchanged."
-            },
-            {
-              "test": "ChatHeaderLayoutTest.largeFontScaleExpandsHeaderAndKeepsAllThreeLinesVisible",
-              "classification": "UNEXPLAINED_XML_FAILURE_NOT_ATTRIBUTED_TO_9DC5010",
-              "reason": "XML failure element empty; no TestRunner failure event/stack. Test file unchanged from parent and screenshots/bounds show three lines without overlap. Root cause NOT_DETERMINED."
-            }
-          ],
-          "skippedModelCasesObserved": 2,
-          "modelDependentCasesNotReached": "The run ended before all six expected model-dependent cases were reached; the remaining four are not counted as observed skips.",
-          "missingXmlEvents": [
-            "ChatHeaderLayoutTest.standardFontScaleKeepsAgentTitleAndModelInsideHeader finished in logcat but absent from XML",
-            "ContextMemoryDeviceTest.inspectorDoesNotStartGenerationAutomatically finished in logcat but absent from XML"
-          ],
-          "unfinishedEvent": "ContextMemoryDeviceTest.structuredMemoryEntryAndEditorAreAccessible started without a finish event.",
-          "postTaskPackageCheck": {
-            "checked": true,
-            "applicationApkInstalled": false,
-            "cause": "NOT_DETERMINED"
-          },
-          "screenshots": [
-            {
-              "path": "automatic-ci-38997371699/artifact-contents/ui-diagnostics/screenshots/chat-header-standard.png",
-              "validPng": true,
-              "width": 1080,
-              "height": 1920,
-              "bytes": 47792,
-              "sha256": "214f9e93a5f68d47b1e2825fcf0bc4727f91e0d60073c024746673397441084f",
-              "visualInspection": "Three labels visible; emulator only."
-            },
-            {
-              "path": "automatic-ci-38997371699/artifact-contents/ui-diagnostics/screenshots/chat-header-large-font.png",
-              "validPng": true,
-              "width": 1080,
-              "height": 1920,
-              "bytes": 82777,
-              "sha256": "648e95eee679b74cd1e415fd9e704a203fc1a336e1a3b8ad0c45cf39d78a8469",
-              "visualInspection": "Three labels visible at Compose font scale 1.6; emulator only."
-            }
-          ],
-          "artifactId": "12087494744",
-          "artifactName": "android-emulator-evidence-38997371699-1",
-          "artifactUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38997371699/artifacts/12087494744",
-          "artifactBytes": 149528,
-          "artifactSha256": "4c03ee8cc624ee2ae905e58743c9cd9c8e95630c06b2db0d99ba86885f65f4fa",
-          "artifactPath": "docs/validation/master-program-m00-06/automatic-ci-38997371699/github-artifact-12087494744.zip",
-          "artifactZipCrc": "PASS",
-          "internalManifestEntries": 32,
-          "internalManifestEntriesVerified": 32,
-          "artifactExpiresAtUtc": "2026-10-24T03:18:36Z",
-          "physicalDevice": "NOT_RUN",
-          "classification": "EMULATOR_FAIL_INCOMPLETE_INSTRUMENTATION; ROOT_CAUSE_OF_HEADER_RESULT_NOT_DETERMINED",
-          "evidence": "docs/validation/master-program-m00-06/automatic-ci-38997371699/RUN_READBACK.json"
-        },
-        "officialQa": {
-          "runId": "38997371673",
-          "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/38997371673",
-          "sourceCommit": "9dc50102f47d551d9d3d0298c65106e802d1021c",
-          "workflowPath": ".github/workflows/qa-debug-arm64-apk.yml",
-          "jobId": "117292766236",
-          "status": "FAIL_CLOSED_BEFORE_APK_BUILD",
-          "gateReason": "ANDROID_INSTRUMENTATION_NOT_SUCCESSFUL",
-          "apkBuild": "SKIPPED",
-          "artifactUpload": "SKIPPED",
-          "artifactCount": 0,
-          "apk": "NOT_GENERATED",
-          "classification": "OFFICIAL_QA_FAIL_CLOSED_NO_APK"
-        }
-      },
-      "notRun": {
-        "fullAppJvm": "NOT_RUN",
-        "liteRtCompatJvm": "NOT_RUN",
-        "instrumentedCurrentSha": "FAIL_INCOMPLETE_INSTRUMENTATION; XML/Gradle counts conflict",
-        "physicalDevice": "NOT_RUN",
-        "apk": "NOT_GENERATED; official gate failed closed",
-        "nativePerformance": "NOT_MEASURED"
-      },
-      "evidence": "docs/validation/master-program-m00-06/RESULTS.md",
-      "evidenceAttemptsRoot": "docs/validation/master-program-m00-06/",
-      "independentAudit": "PENDING",
-      "limitations": [
-        "Only import-to-EG1 timing correlation was added; memory retrieval/context/generation/model/TTFT/decode are not one full cross-stage timeline.",
-        "No neural latency, quality, RAM, energy or thermal result is inferred from the synthetic driver.",
-        "No Moto G86 Power or private original XLSX was used.",
-        "M00-06 source remains TODO; no formal milestone closure is claimed.",
-        "Exact-SHA emulator task failed incompletely: XML reports 7 tests while Gradle expected 16 and reports 6 received; runner events also do not reconcile. Do not treat the internally consistent XML as a complete run.",
-        "The XML has an empty ChatHeader large-font failure element without a matching failure event/stack; cause NOT_DETERMINED and not attributed to the M00-06 change.",
-        "Only two real-model assumption skips were observed before instrumentation stopped; the remaining expected model-dependent cases were not reached and are not counted as skipped.",
-        "Official QA failed closed before APK build; no APK was generated."
-      ],
-      "evidenceManifestPath": "docs/validation/master-program-m00-06/SHA256SUMS",
-      "evidenceManifestSha256": "9aa2e8cba179599fa8a6ba95f125b7824fce345b41c99ded3487f4523f47ed75",
-      "evidenceManifestEntries": 112
     },
     "incrementHistory": [
       {
@@ -8660,151 +8433,75 @@
           },
           "sourceFilesModified": false
         }
+      },
+      {
+        "name": "Conversational Skill authoring (master-program preparatory increment)",
+        "kind": "PREPARATORY_CHAT_BASED_SKILL_AUTHORING",
+        "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_NO_SOURCE_TASK_CLOSED",
+        "codeCommit": "3bccb94a9a22164088b9b1facde1fe7bbd92f13b",
+        "testedCodeSha": "3bccb94a9a22164088b9b1facde1fe7bbd92f13b",
+        "workingBranch": "codex/aws-master-resume-20261019",
+        "evidence": "docs/validation/master-program-skill-creation/RESULTS.md",
+        "evidenceManifest": {
+          "path": "docs/validation/master-program-skill-creation/SHA256SUMS",
+          "entries": 137,
+          "sha256": "0d1230378914b4cdbae2e56e875e39131aa5513cd104ea2be526d7c6b7b69cb5",
+          "localVerification": "137/137 payload entries verified with sha256sum -c"
+        },
+        "formalTaskCompletion": false,
+        "testSummary": "Focused HOST 7/7; no full gates, emulator, device or APK in this increment."
       }
     ],
-    "nextPreparatoryIncrement": "Continue with the next bounded implementation slice in M02/M03 preparation, while preserving original dependencies and TODO states.",
+    "nextPreparatoryIncrement": "Audit the authentic source DoD and existing code/tests for the next bounded M01/M02/M03 preparatory gap; retain the source plan unchanged and avoid repeating already documented work.",
     "latestPreparatoryIncrement": {
-      "name": "M03-06 preparatory code patch UTF-16 integrity",
-      "kind": "PREPARATORY_M03_06_UTF16_PATCH_INTEGRITY",
-      "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO",
-      "baselineCodeSha": "da47ed7f1fa1d395a01d1132ad25202802b660f7",
-      "redTestCommit": "7b737dc0a0a584a69a617e18166d580374ad26f9",
-      "codeCommit": "9778e4f5dd4ea5358011189e3be366351747c86f",
-      "codeSha": "9778e4f5dd4ea5358011189e3be366351747c86f",
-      "testedTreeSha": "7878d780001cc8079980ac84ba0a5ec1bc47bdbc",
-      "workingBranch": "codex/master-program-recovery-20261019",
-      "evidence": "docs/validation/master-program-code-patch-unicode-20261019/RESULTS.md",
+      "name": "Conversational Skill authoring (master-program preparatory increment)",
+      "kind": "PREPARATORY_CHAT_BASED_SKILL_AUTHORING",
+      "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_NO_SOURCE_TASK_CLOSED",
+      "codeCommit": "3bccb94a9a22164088b9b1facde1fe7bbd92f13b",
+      "testedCodeSha": "3bccb94a9a22164088b9b1facde1fe7bbd92f13b",
+      "workingBranch": "codex/aws-master-resume-20261019",
+      "evidence": "docs/validation/master-program-skill-creation/RESULTS.md",
       "evidenceManifest": {
-        "path": "docs/validation/master-program-code-patch-unicode-20261019/SHA256SUMS",
-        "entries": 23,
-        "sha256": "89018c441be098d88fd92b4041bbf202e54804f83595a78b0345fad4e79f46d6",
-        "locallyVerified": "23/23"
+        "path": "docs/validation/master-program-skill-creation/SHA256SUMS",
+        "entries": 137,
+        "sha256": "0d1230378914b4cdbae2e56e875e39131aa5513cd104ea2be526d7c6b7b69cb5",
+        "localVerification": "137/137 payload entries verified with sha256sum -c"
       },
-      "finding": "The planner accepted a before fragment containing only a high surrogate, replaced it inside a valid supplementary character, and would leave malformed UTF-16 in the result. It also accepted malformed replacement or base strings.",
-      "implementation": "Reject ill-formed UTF-16 in the source body and both before/after edit strings with CODE_PATCH_INVALID_UTF16 before locating/applying replacements. Valid supplementary pairs remain permitted and are covered by the existing Unicode/line-ending test.",
-      "host": {
-        "red": {
-          "testCodeSha": "7b737dc0a0a584a69a617e18166d580374ad26f9",
-          "productionBaseSha": "da47ed7f1fa1d395a01d1132ad25202802b660f7",
-          "test": "malformedUtf16SourceAndEditFragmentsAreRejected",
-          "counts": {
-            "tests": 1,
-            "failures": 1,
-            "errors": 0,
-            "skipped": 0
-          },
-          "exitCode": 1,
-          "startedAtUtc": "2026-10-19T19:53:53Z",
-          "finishedAtUtc": "2026-10-19T19:56:56Z",
-          "wallSeconds": 183,
-          "failure": "Expected CODE_PATCH_INVALID_UTF16; planner returned instead of rejecting the split-surrogate edit.",
-          "log": "red-baseline/gradle.log",
-          "xml": "red-baseline/xml/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml"
-        },
-        "plannerGreen": {
-          "codeSha": "9778e4f5dd4ea5358011189e3be366351747c86f",
-          "class": "com.localai.workspace.artifacts.CodePatchPlannerTest",
-          "counts": {
-            "tests": 6,
-            "failures": 0,
-            "errors": 0,
-            "skipped": 0
-          },
-          "passed": 6,
-          "exitCode": 0,
-          "startedAtUtc": "2026-10-19T19:57:57Z",
-          "finishedAtUtc": "2026-10-19T20:01:01Z",
-          "wallSeconds": 184,
-          "gradleReportedDuration": "3m 3s",
-          "actionableTasks": 63,
-          "executedTasks": 63,
-          "xml": "green-current/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml",
-          "xmlSha256": "ef0c38d6b822eb26982ee787491065ddeea35d2872510b4e07281bbe2383b839",
-          "log": "green-current/gradle.log"
-        },
-        "storeIntegration": {
-          "codeSha": "9778e4f5dd4ea5358011189e3be366351747c86f",
-          "test": "ArtifactRoundtripTest.multiEditPatchSurvivesPreviewReopenAndCreatesAnImmutableRevision",
-          "counts": {
-            "tests": 1,
-            "failures": 0,
-            "errors": 0,
-            "skipped": 0
-          },
-          "passed": 1,
-          "exitCode": 0,
-          "startedAtUtc": "2026-10-19T20:01:30Z",
-          "finishedAtUtc": "2026-10-19T20:04:36Z",
-          "wallSeconds": 186,
-          "gradleReportedDuration": "3m 5s",
-          "actionableTasks": 63,
-          "executedTasks": 63,
-          "xml": "store-integration/TEST-com.localai.workspace.artifacts.ArtifactRoundtripTest.xml",
-          "xmlSha256": "0c553262bfb3ef7f9d1a874baf73c62d087218cbad3a85df3d207b3b381c1d32",
-          "log": "store-integration/gradle.log"
-        }
-      },
-      "environment": {
-        "gradle": "8.10.2",
-        "runtimeJdk": "Temurin 17.0.20.1",
-        "testLauncherJdk": "Temurin 21.0.12.1 (project toolchain configuration)",
-        "androidSdk": "/workspace/.toolchain/android-sdk",
-        "ndk": "27.0.12077973 (not used by JVM tests)",
-        "gradleUserHome": "/workspace/.gradle, pre-existing, offline"
-      },
-      "otherGates": {
-        "fullAppJvm": "NOT_RUN",
-        "liteRtCompatJvm": "NOT_RUN",
-        "lintDebug": "NOT_RUN",
-        "androidTest": "NOT_RUN",
-        "emulator": "NOT_RUN",
-        "physicalDevice": "NOT_RUN",
-        "apk": "NOT_GENERATED"
-      },
-      "sourceTask": {
-        "id": "M03-06",
-        "sourceStatus": "TODO",
-        "requiresDevice": true,
-        "dependsOn": [
-          "M03-01",
-          "M02-08"
-        ],
-        "formalCompletion": false,
-        "classification": "Preparatory guard against malformed UTF-16 in code patches only; workspace integration, complete rollback/device DoD and upstream dependencies remain open."
-      },
-      "sourcePlanUnchanged": {
-        "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
-        "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
-        "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
-        "taskCount": 97,
-        "uniqueIds": 97,
-        "dependencyEdges": 120,
-        "sourceStatuses": {
-          "TODO": 97
-        },
-        "sourceFilesModified": false
-      }
+      "formalTaskCompletion": false,
+      "testSummary": "Focused HOST 7/7; no full gates, emulator, device or APK in this increment."
     },
-    "currentSourceCommit": "9778e4f5dd4ea5358011189e3be366351747c86f",
-    "latestSourceTreeSha": "7878d780001cc8079980ac84ba0a5ec1bc47bdbc",
+    "currentSourceCommit": "3bccb94a9a22164088b9b1facde1fe7bbd92f13b",
+    "latestSourceTreeSha": "187121b77cb4ad70ee888c2aba9e646d1c04cb63",
     "latestM03_02FormulaEditFollowUp": "docs/validation/master-program-m03-02-xlsx-formulas/RESULTS.md",
-    "latestCodeSourceSha": "9778e4f5dd4ea5358011189e3be366351747c86f",
-    "lastPreparatoryIncrement": "M03-06 preparatory code editing now resolves multi-edits against the original source, persists/reopens/applies previews without changing old revisions, and rejects malformed UTF-16. The planner class passed 6/6 and ArtifactStore integration 1/1 at 9778e4f; source task remains TODO/device-gated with M03-01 and M02-08 TODO.",
+    "latestCodeSourceSha": "3bccb94a9a22164088b9b1facde1fe7bbd92f13b",
+    "lastPreparatoryIncrement": "Conversational Skill authoring uses the existing shared local chat/session; proposals are reviewed and edited before explicit save, registered USER_AUTHORED and disabled. Focused HOST passed 7/7 on 3bccb94. It does not close an original task or validate actual Gemma/Motorola behavior.",
     "previousLatestSourceCommit": "0551915039efdd17557271a793163290f30be8d2",
     "latestSourceIncrement": {
-      "name": "M03-06 preparatory code patch UTF-16 integrity",
-      "codeSha": "9778e4f5dd4ea5358011189e3be366351747c86f",
-      "evidence": "docs/validation/master-program-code-patch-unicode-20261019/RESULTS.md",
-      "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO",
-      "evidenceManifest": {
-        "path": "docs/validation/master-program-code-patch-unicode-20261019/SHA256SUMS",
-        "entries": 23,
-        "sha256": "89018c441be098d88fd92b4041bbf202e54804f83595a78b0345fad4e79f46d6",
-        "locallyVerified": "23/23"
-      }
-    }
+      "name": "Conversational Skill authoring (master-program preparatory increment)",
+      "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_NO_SOURCE_TASK_CLOSED",
+      "codeSha": "3bccb94a9a22164088b9b1facde1fe7bbd92f13b",
+      "evidence": "docs/validation/master-program-skill-creation/RESULTS.md"
+    },
+    "latestIncrementEvidence": "docs/validation/master-program-skill-creation/RESULTS.md"
   },
   "latestMasterProgramIncrement": {
+    "name": "Conversational Skill authoring (master-program preparatory increment)",
+    "kind": "PREPARATORY_CHAT_BASED_SKILL_AUTHORING",
+    "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_NO_SOURCE_TASK_CLOSED",
+    "codeCommit": "3bccb94a9a22164088b9b1facde1fe7bbd92f13b",
+    "testedCodeSha": "3bccb94a9a22164088b9b1facde1fe7bbd92f13b",
+    "workingBranch": "codex/aws-master-resume-20261019",
+    "evidence": "docs/validation/master-program-skill-creation/RESULTS.md",
+    "evidenceManifest": {
+      "path": "docs/validation/master-program-skill-creation/SHA256SUMS",
+      "entries": 137,
+      "sha256": "0d1230378914b4cdbae2e56e875e39131aa5513cd104ea2be526d7c6b7b69cb5",
+      "localVerification": "137/137 payload entries verified with sha256sum -c"
+    },
+    "formalTaskCompletion": false,
+    "testSummary": "Focused HOST 7/7; no full gates, emulator, device or APK in this increment."
+  },
+  "previousMasterProgramIncrement": {
     "name": "M03-01 preparatory ArtifactStore staging symlink boundary regression",
     "kind": "PREPARATORY_M03_01_STAGING_SYMLINK_BOUNDARIES",
     "status": "FOCUSED_HOST_PASS_PREPARATORY_DEPENDENCY_BLOCKED_NOT_FORMAL",
@@ -8869,16 +8566,6 @@
     "evidence": "docs/validation/master-program-artifact-recovery/attempt-11-symlink-safety/RESULTS.md",
     "manifest": "docs/validation/master-program-artifact-recovery/attempt-11-symlink-safety/SHA256SUMS",
     "manifestSha256": "a3ebbc30d25515a629d98015fcd6aef678adabbdbb437aded349e8cfec4bebbb"
-  },
-  "previousMasterProgramIncrement": {
-    "name": "M03-03 built-in DOCX style templates preparation",
-    "kind": "PREPARATORY_M03_03_DOCX_TEMPLATES",
-    "status": "FOCUSED_HOST_PASS_4_OF_4_INDEPENDENT_PYTHON_DOCX_PASS_NOT_FORMAL",
-    "testedCodeSha": "56090d0e4d5c686a9346a5359dfd18d86e7c5d78",
-    "workingBranch": "codex/master-program-20261019",
-    "formalOriginalTask": "M03-03 remains source TODO; preparatory evidence only.",
-    "evidence": "docs/validation/master-program-docx-templates/RESULTS.md",
-    "evidenceManifestSha256": "0ed2a7266c2fc727214dd189756905f84043ec26d0ce53b6094a6b67d94f561e"
   },
   "masterProgramIncrementHistory": [
     {
@@ -11314,6 +11001,23 @@
       "evidence": "docs/validation/master-program-artifact-recovery/attempt-11-symlink-safety/RESULTS.md",
       "manifest": "docs/validation/master-program-artifact-recovery/attempt-11-symlink-safety/SHA256SUMS",
       "manifestSha256": "a3ebbc30d25515a629d98015fcd6aef678adabbdbb437aded349e8cfec4bebbb"
+    },
+    {
+      "name": "Conversational Skill authoring (master-program preparatory increment)",
+      "kind": "PREPARATORY_CHAT_BASED_SKILL_AUTHORING",
+      "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_NO_SOURCE_TASK_CLOSED",
+      "codeCommit": "3bccb94a9a22164088b9b1facde1fe7bbd92f13b",
+      "testedCodeSha": "3bccb94a9a22164088b9b1facde1fe7bbd92f13b",
+      "workingBranch": "codex/aws-master-resume-20261019",
+      "evidence": "docs/validation/master-program-skill-creation/RESULTS.md",
+      "evidenceManifest": {
+        "path": "docs/validation/master-program-skill-creation/SHA256SUMS",
+        "entries": 137,
+        "sha256": "0d1230378914b4cdbae2e56e875e39131aa5513cd104ea2be526d7c6b7b69cb5",
+        "localVerification": "137/137 payload entries verified with sha256sum -c"
+      },
+      "formalTaskCompletion": false,
+      "testSummary": "Focused HOST 7/7; no full gates, emulator, device or APK in this increment."
     }
   ],
   "latestM02_01Preparation": {
@@ -16336,14 +16040,15 @@
   },
   "latestMasterProgramContinuation": {
     "status": "ACTIVE_PREPARATORY_IMPLEMENTATION",
-    "codeSha": "96359377838e2dfe1670604a73354fbe09ec6b57",
-    "currentIncrement": "M03-01 ArtifactStore staging symlink boundary regression (test-only)",
-    "evidence": "docs/validation/master-program-artifact-recovery/attempt-11-symlink-safety/RESULTS.md",
-    "next": "Select the next source-backed implementation with a measurable product gap; M03-01 remains TODO while M02-05 is TODO. Do not repeat completed M02-01 synthetic corpus preparation.",
+    "codeSha": "3bccb94a9a22164088b9b1facde1fe7bbd92f13b",
+    "currentIncrement": "Conversational Skill authoring (master-program preparatory increment)",
+    "evidence": "docs/validation/master-program-skill-creation/RESULTS.md",
+    "next": "Continue the authorized sequential master program by auditing the original source DoD and current production/test gap for the next bounded M01/M02/M03 preparation. Avoid repeating already evidenced increments, preserve all source TODO states and device gates.",
     "noFormalTasksClosed": true,
     "sourcePlan": {
       "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
       "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+      "roadmapPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
       "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
       "taskCount": 97,
       "uniqueIds": 97,
@@ -16353,7 +16058,7 @@
       },
       "sourceFilesModified": false
     },
-    "productCodeSha": "d1bd2062c0638ac3edd44d243d4783a578f2d00e"
+    "productCodeSha": "3bccb94a9a22164088b9b1facde1fe7bbd92f13b"
   },
   "latestM03_01SafMimePreparation": {
     "name": "M03-01 preparatory format-aware SAF export MIME",
@@ -17976,5 +17681,140 @@
     "evidence": "docs/validation/master-program-artifact-recovery/attempt-11-symlink-safety/RESULTS.md",
     "manifest": "docs/validation/master-program-artifact-recovery/attempt-11-symlink-safety/SHA256SUMS",
     "manifestSha256": "a3ebbc30d25515a629d98015fcd6aef678adabbdbb437aded349e8cfec4bebbb"
+  },
+  "latestSkillAuthoring": {
+    "name": "Conversational Skill authoring (master-program preparatory increment)",
+    "kind": "PREPARATORY_CHAT_BASED_SKILL_AUTHORING",
+    "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_NO_SOURCE_TASK_CLOSED",
+    "codeCommit": "3bccb94a9a22164088b9b1facde1fe7bbd92f13b",
+    "testedCodeSha": "3bccb94a9a22164088b9b1facde1fe7bbd92f13b",
+    "codeTreeSha": "187121b77cb4ad70ee888c2aba9e646d1c04cb63",
+    "workingBranch": "codex/aws-master-resume-20261019",
+    "parentCommit": "ef8e508e90478f86526c87a603755894fc5bbbb6",
+    "featureBaseAtResume": "e6f16ac30914fe32f7140241e81e5976660c03d2",
+    "productionChanged": true,
+    "changedFiles": [
+      "app/src/main/java/com/localai/workspace/MainActivity.kt",
+      "app/src/main/java/com/localai/workspace/skills/SkillDraftProposal.kt",
+      "app/src/main/java/com/localai/workspace/ui/ChatSessions.kt",
+      "app/src/main/java/com/localai/workspace/ui/SkillsAgentsUi.kt",
+      "app/src/main/java/com/localai/workspace/ui/ViewModels.kt",
+      "app/src/test/java/com/localai/workspace/skills/SkillAgentRegistryTest.kt",
+      "app/src/test/java/com/localai/workspace/skills/SkillDraftProposalTest.kt",
+      "app/src/test/java/com/localai/workspace/ui/ChatSessionPipelineTest.kt",
+      "app/src/test/java/com/localai/workspace/ui/SkillProposalReviewUiTest.kt"
+    ],
+    "implementation": {
+      "entry": "Settings > Skills > CREAR SKILL starts a dedicated authoring chat through the existing shared model/session path.",
+      "initialQuestion": "¿Qué debiese hacer la Skill?",
+      "proposalFlow": "Completed assistant response is parsed as SKILL.md proposal and reviewed/edited before explicit save.",
+      "registration": "Existing registry; USER_AUTHORED; disabled; explicit-only routing. The user separately chooses to enable.",
+      "policy": "No generated script execution or capability grant. Only standard existing tools/local sources can be selected; unavailable capability requirements remain visibly unavailable.",
+      "runtimeIsolation": "No second LLM. Authoring turn skips Agent/Skill routing, memory injection and tool dispatch."
+    },
+    "host": {
+      "status": "PASS_FOCUSED",
+      "command": "./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.skills.SkillDraftProposalTest --tests com.localai.workspace.skills.SkillAgentRegistryTest.reviewedConversationDraftRegistersDisabledAndExportsAsSkillMarkdown --tests com.localai.workspace.ui.SkillProposalReviewUiTest --tests com.localai.workspace.ui.ChatSessionPipelineTest.skillAuthoringUsesSharedLocalChatButSkipsAgentMemoryAndToolExecution",
+      "commandFile": "docs/validation/master-program-skill-creation/attempt-13/command.txt",
+      "tests": 7,
+      "passed": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "durationSeconds": 89.602,
+      "startedAtUtc": "2026-10-19T22:06:59.367414+00:00",
+      "finishedAtUtc": "2026-10-19T22:08:28.969005+00:00",
+      "gradle": "8.10.2",
+      "runtimeJdk": "Temurin 17.0.20.1",
+      "toolchainJdk": "Temurin 21.0.12.1",
+      "androidSdk": "/workspace/.toolchain/android-sdk API 35",
+      "ndk": "27.0.12077973",
+      "gradleUserHome": "/workspace/.gradle existing offline cache",
+      "os": "Linux x86_64",
+      "actionableTasks": 63,
+      "executedTasks": 3,
+      "upToDateTasks": 60,
+      "log": "docs/validation/master-program-skill-creation/attempt-13/gradle.log",
+      "logSha256": "a8fd0d2464e39139f7e68b7c2bc5569a207d3ff209ee91a84c3d8ed65e56c8d5",
+      "toolchainPreflight": "docs/validation/master-program-skill-creation/attempt-13/toolchain-preflight.txt",
+      "toolchainPreflightSha256": "49150a07ff0d52db1b09634fe29ef725e186b801cdae21d36c2b03bf57acb741",
+      "xml": [
+        {
+          "path": "docs/validation/master-program-skill-creation/attempt-13/xml/TEST-com.localai.workspace.skills.SkillDraftProposalTest.xml",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "45febe3f8417cf9d05320b1d3d6c4ef7c6ab812e95c921ac991ce530a2e8b485"
+        },
+        {
+          "path": "docs/validation/master-program-skill-creation/attempt-13/xml/TEST-com.localai.workspace.skills.SkillAgentRegistryTest.xml",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "13544198fedb3798b8346500ee897a84bb4c139ce43db8afa9886f6ce93c223d"
+        },
+        {
+          "path": "docs/validation/master-program-skill-creation/attempt-13/xml/TEST-com.localai.workspace.ui.ChatSessionPipelineTest.xml",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "d0d2db9f851e6bdf3fc11d0c0fc8a787626357139e5f296d62ec53ccb1609173"
+        },
+        {
+          "path": "docs/validation/master-program-skill-creation/attempt-13/xml/TEST-com.localai.workspace.ui.SkillProposalReviewUiTest.xml",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "b581ef0957c478cbbe3b10185a86e9267bf2bd9bee0115b601e3eaa606e8e714"
+        }
+      ]
+    },
+    "otherGates": {
+      "fullAppJvm": "NOT_RUN",
+      "litertCompatJvm": "NOT_RUN",
+      "lintDebug": "NOT_RUN",
+      "assembleDebug": "NOT_RUN",
+      "assembleRelease": "NOT_RUN",
+      "androidTestCompile": "NOT_RUN",
+      "emulator": "NOT_RUN",
+      "physicalDevice": "NOT_RUN",
+      "apk": "NOT_GENERATED"
+    },
+    "sourceTask": {
+      "id": null,
+      "formalCompletion": false,
+      "reason": "This feature has no assigned original backlog ID; it is authorized preparatory work from the master prompt."
+    },
+    "sourcePlanUnchanged": {
+      "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+      "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+      "roadmapPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+      "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+      "taskCount": 97,
+      "uniqueIds": 97,
+      "dependencyEdges": 120,
+      "sourceStatuses": {
+        "TODO": 97
+      },
+      "sourceFilesModified": false
+    },
+    "evidence": "docs/validation/master-program-skill-creation/RESULTS.md",
+    "evidenceJson": "docs/validation/master-program-skill-creation/RESULTS.json",
+    "evidenceManifest": {
+      "path": "docs/validation/master-program-skill-creation/SHA256SUMS",
+      "entries": 137,
+      "sha256": "0d1230378914b4cdbae2e56e875e39131aa5513cd104ea2be526d7c6b7b69cb5",
+      "localVerification": "137/137 payload entries verified with sha256sum -c"
+    },
+    "limitations": [
+      "Tests use a controlled backend, not a real Gemma run.",
+      "No full JVM/LiteRT gate, lint, assembly, AndroidTest, emulator, Motorola or APK was run for this increment.",
+      "The existing global emulator failure for authentic Room v1 fixture and six model-dependent skips is unchanged."
+    ]
   }
 }
