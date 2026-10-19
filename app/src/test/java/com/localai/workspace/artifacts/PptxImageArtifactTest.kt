@@ -272,6 +272,10 @@ class PptxImageArtifactTest {
             val firstSpec = ArtifactSpec.parse(descriptor)
             val first = store.create(project, firstSpec)
             val firstBytes = store.verifiedFile(project, first).readBytes()
+            File("build/pptx-image/figures/figures-v1.pptx").apply {
+                parentFile?.mkdirs()
+                writeBytes(firstBytes)
+            }
             assertTrue(firstSpec.preview().contains("Figure rectangle: Entrada & revisión"))
             assertTrue(firstSpec.preview().contains("Figure ellipse: Resultado aprobado"))
             assertTrue(firstSpec.preview().contains("Figure roundedRectangle: Revisión pendiente"))
