@@ -143,6 +143,45 @@ class XlsxArtifactRevisionTest {
         }
     }
 
+    @Test fun formulaCellEditPreservesNativeTableAndPriorWorkbookRevision()=runBlocking {
+        val project="xlsx-table-cell-edit-${UUID.randomUUID()}"
+        val store=ArtifactStore(context)
+        try {
+            val original=store.create(project,ArtifactSpec.parse(tableDescriptor()))
+            val originalHash=original.sha256
+            val toolId="artifacts.xlsxSetCells"
+            val registry=ToolRegistry(listOf(ArtifactTool(context,toolId)))
+            val toolContext=ToolContext(project,"chat",File(context.cacheDir,"xlsx-table-cell-edit-work"))
+            val args=JSONObject().put("id",original.id).put("expectedVersion",original.version)
+                .put("edits",JSONArray().put(JSONObject().put("sheet","Ventas").put("address","B2").put("formula","SUM(A2:A2)")))
+            val result=registry.execute(ToolRequest(toolId,args.toString(),TrustOrigin.MODEL),setOf(toolId),toolContext,ToolRegistry.ToolLoopState())
+            assertTrue("Editing a table body formula should create a verified immutable revision",result is ToolExecutionResult.Success)
+
+            val latest=store.history(project,original.id).single{it.version==2}
+            assertEquals(2,store.history(project,original.id).size)
+            assertEquals(originalHash,ArtifactStore.fileHash(store.verifiedFile(project,original)))
+            val originalFile=store.verifiedFile(project,original)
+            val editedFile=store.verifiedFile(project,latest)
+            ZipFile(originalFile).use{zip->assertNotNull("Original table part must remain available",zip.getEntry("xl/tables/table1.xml"))}
+            ZipFile(editedFile).use{zip->
+                val worksheet=zip.getInputStream(zip.getEntry("xl/worksheets/sheet1.xml")).bufferedReader().use{it.readText()}
+                val relationships=zip.getInputStream(zip.getEntry("xl/worksheets/_rels/sheet1.xml.rels")).bufferedReader().use{it.readText()}
+                val table=zip.getInputStream(zip.getEntry("xl/tables/table1.xml")).bufferedReader().use{it.readText()}
+                assertTrue(worksheet.contains("<tableParts count=\"1\"><tablePart r:id=\"rIdTable1\"/></tableParts>"))
+                assertTrue(relationships.contains("Target=\"../tables/table1.xml\""))
+                assertTrue(table.contains("name=\"TablaVentas\" displayName=\"TablaVentas\" ref=\"A1:B2\""))
+                assertTrue(table.contains("name=\"Producto\""))
+                assertTrue(table.contains("name=\"Cantidad\""))
+            }
+            val edited=StructuredDocuments.xlsx(editedFile).cells.single{it.sheet=="Ventas"&&it.address=="B2"}
+            assertEquals("SUM(A2:A2)",edited.formula)
+            assertEquals(null,edited.value)
+            exportInteropFixture("table-cell-edited.xlsx",editedFile)
+        } finally {
+            File(File(context.filesDir,"tool-workspaces"),"artifacts-${ArtifactStore.hash(project.toByteArray(Charsets.UTF_8))}").deleteRecursively()
+        }
+    }
+
     private fun exportInteropFixture(name:String,file:File) {
         val configured=System.getenv("LOCALAI_XLSX_INTEROP_DIR")?.takeIf{it.isNotBlank()}?:return
         val directory=File(configured).canonicalFile
