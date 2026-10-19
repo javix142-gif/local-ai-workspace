@@ -21,6 +21,17 @@ data class SemanticIndexJob(@PrimaryKey val id: String, val scopeKey: String, va
 @Entity(tableName = "semantic_active_indexes")
 data class SemanticActiveIndex(@PrimaryKey val scopeKey: String, val indexId: String, val spaceKey: String)
 data class IndexedSegment(@Embedded val segment: SemanticSegmentRecord, val sourceName: String, val vector: ByteArray, val dimension: Int, val spaceKey: String, val modelHash: String, val modelId: String)
+data class IndexedSegmentPageRow(
+    @Embedded val segment: SemanticSegmentRecord,
+    val sourceName: String,
+    val vector: ByteArray,
+    val dimension: Int,
+    val spaceKey: String,
+    val modelHash: String,
+    val modelId: String,
+    val cursorTaskType: String,
+    val cursorContentHash: String,
+)
 @Dao interface SemanticDao {
     @Query("UPDATE semantic_index_jobs SET state='CANCELLED',errorCode='PROCESS_RESTART_RECOVERABLE',updatedAt=:recoveredAt WHERE state='INDEXING'") suspend fun recoverInterruptedJobs(recoveredAt: Long): Int
     @Query("SELECT * FROM semantic_models_v2 ORDER BY importedAt DESC") fun observeModels(): Flow<List<SemanticModelRecord>>
@@ -77,6 +88,8 @@ data class IndexedSegment(@Embedded val segment: SemanticSegmentRecord, val sour
         }
     }
     @Query("SELECT s.*, o.displayName AS sourceName, p.vector AS vector, e.dimension AS dimension, e.embeddingSpaceKey AS spaceKey, e.modelHash AS modelHash, e.modelId AS modelId FROM semantic_segments s JOIN semantic_sources o ON o.id=s.sourceId JOIN semantic_embeddings_v2 e ON e.segmentId=s.id JOIN semantic_vector_payloads_v2 p ON p.embeddingSpaceKey=e.embeddingSpaceKey AND p.taskType=e.taskType AND p.contentHash=e.contentHash WHERE e.indexId=:indexId AND o.scopeKey=:scope AND e.embeddingSpaceKey=:space LIMIT :limit") suspend fun corpus(indexId: String, scope: String, space: String, limit: Int): List<IndexedSegment>
+    @Query("SELECT s.*, o.displayName AS sourceName, p.vector AS vector, e.dimension AS dimension, e.embeddingSpaceKey AS spaceKey, e.modelHash AS modelHash, e.modelId AS modelId, e.taskType AS cursorTaskType, e.contentHash AS cursorContentHash FROM semantic_segments s JOIN semantic_sources o ON o.id=s.sourceId JOIN semantic_embeddings_v2 e ON e.segmentId=s.id JOIN semantic_vector_payloads_v2 p ON p.embeddingSpaceKey=e.embeddingSpaceKey AND p.taskType=e.taskType AND p.contentHash=e.contentHash WHERE e.indexId=:indexId AND o.scopeKey=:scope AND e.embeddingSpaceKey=:space AND (:afterSegmentId IS NULL OR s.id>:afterSegmentId OR (s.id=:afterSegmentId AND e.taskType>:afterTaskType) OR (s.id=:afterSegmentId AND e.taskType=:afterTaskType AND e.contentHash>:afterContentHash)) ORDER BY s.id,e.taskType,e.contentHash LIMIT :limit")
+    suspend fun corpusPage(indexId:String,scope:String,space:String,afterSegmentId:String?,afterTaskType:String?,afterContentHash:String?,limit:Int):List<IndexedSegmentPageRow>
 }
 /** Sidecar DB is additive: the complete version-8 workspace, including EG1 vectors, is untouched. */
 @Database(entities = [SemanticModelRecord::class, SemanticSourceRecord::class, SemanticSegmentRecord::class, SemanticEmbeddingLink::class, SemanticVectorPayload::class, SemanticIndexJob::class, SemanticActiveIndex::class], version = 1, exportSchema = true)

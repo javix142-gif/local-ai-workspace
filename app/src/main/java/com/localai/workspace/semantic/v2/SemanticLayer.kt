@@ -18,7 +18,22 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.io.File
 import java.security.MessageDigest
+import java.util.PriorityQueue
 import java.util.UUID
+
+private const val SEMANTIC_SEARCH_CORPUS_PAGE_SIZE=256
+private const val SEMANTIC_SEARCH_CORPUS_LIMIT=10_000
+private const val SEMANTIC_SEARCH_TOP_K=30
+private data class SemanticCorpusCursor(val segmentId:String,val taskType:String,val contentHash:String)
+private data class SemanticCorpusWindow(
+    val eligibleRows:List<IndexedSegmentPageRow>,
+    val cursor:SemanticCorpusCursor,
+    val rowsScanned:Int,
+    val exhausted:Boolean,
+)
+private data class SemanticScoredRow(val row:IndexedSegmentPageRow,val score:Double)
+
+private fun IndexedSegmentPageRow.cursor()=SemanticCorpusCursor(segment.id,cursorTaskType,cursorContentHash)
 
 private data class ProjectIndexChunk(
     val key:String,
@@ -365,10 +380,28 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
         val sourceDocumentIds=sources.mapNotNull { source->documentIdByPath[source.reference]?.let{source.id to it} }.toMap()
         val allowedSourceIds=if(documentIds.isEmpty())null else sourceDocumentIds.filterValues{it in validSelectedIds}.keys
         if(allowedSourceIds!=null&&allowedSourceIds.isEmpty())return@withContext emptyList()
-        val corpus=dao.corpus(active.indexId,scope.key,space.id,10_000).filter {
-            SemanticModality.valueOf(it.segment.modality) in modalities && (allowedSourceIds==null || it.segment.sourceId in allowedSourceIds)
+        fun eligible(row:IndexedSegmentPageRow)=SemanticModality.valueOf(row.segment.modality) in modalities &&
+            (allowedSourceIds==null || row.segment.sourceId in allowedSourceIds)
+        var corpusCursor:SemanticCorpusCursor?=null
+        var corpusRowsScanned=0
+        var firstWindow:SemanticCorpusWindow?=null
+        while(corpusRowsScanned<SEMANTIC_SEARCH_CORPUS_LIMIT) {
+            ensureActive()
+            val pageLimit=minOf(SEMANTIC_SEARCH_CORPUS_PAGE_SIZE,SEMANTIC_SEARCH_CORPUS_LIMIT-corpusRowsScanned)
+            val page=dao.corpusPage(active.indexId,scope.key,space.id,corpusCursor?.segmentId,corpusCursor?.taskType,corpusCursor?.contentHash,pageLimit)
+            if(page.isEmpty())break
+            corpusRowsScanned+=page.size
+            corpusCursor=page.last().cursor()
+            val eligibleRows=page.filter(::eligible)
+            val exhausted=page.size<pageLimit
+            if(eligibleRows.isNotEmpty()) {
+                firstWindow=SemanticCorpusWindow(eligibleRows,corpusCursor!!,corpusRowsScanned,exhausted)
+                break
+            }
+            if(exhausted)break
         }
-        if(corpus.isEmpty())return@withContext emptyList()
+        var window=firstWindow ?: return@withContext emptyList()
+        firstWindow=null
         val task=TaskPromptProfile.queryTask(query,modalities)
         // Cache only immutable text/code descriptors. Image/audio paths do not identify bytes.
         // Rank/lexical/source/selection checks ALWAYS rerun; never cache retrieved evidence.
@@ -387,19 +420,49 @@ class SemanticLayer(private val context: Context, private val workspace: Workspa
         }
         queryEmbeddingReused.value=cached!=null
         if(queryVector.space!=space)throw SemanticFailure(SemanticError.SPACE_MISMATCH)
-        val ranked=corpus.map { c -> c to SemanticVectors.cosineEncoded(queryVector,c.spaceKey,c.vector,c.dimension) }.sortedByDescending { it.second }.take(30)
-        // Existing FTS remains the lexical source of truth. Fuse ranks, never raw scores from different spaces.
+        // FTS stays the lexical source of truth and remains bounded to 30 rows.
         val lexical=if(scope.type==ScopeType.PROJECT && query is SemanticInput.Text) {
             val terms=Regex("[\\p{L}\\p{N}_]{2,}").findAll(query.content).map { "\"${it.value}\"" }.take(18).joinToString(" OR ")
             if(terms.isBlank()) emptyList() else if(validSelectedIds.isEmpty())workspace.documentDao().searchLexical(scope.id,terms,30)else workspace.documentDao().searchLexicalDocuments(scope.id,validSelectedIds.toList().sorted(),terms,30)
         } else emptyList()
         val lexicalIds=lexical.map { it.id }
-        val candidates=(ranked.map { it.first } + corpus.filter { c -> lexicalIds.any { c.segment.legacySegmentId==it } }).distinctBy { it.segment.id }
+        val lexicalIdSet=lexicalIds.toHashSet()
+        val bestFirst=compareByDescending<SemanticScoredRow>{it.score}
+            .thenBy{it.row.segment.id}.thenBy{it.row.cursorTaskType}.thenBy{it.row.cursorContentHash}
+        val top=PriorityQueue(SEMANTIC_SEARCH_TOP_K,bestFirst.reversed())
+        val lexicalCandidates=linkedMapOf<Long,IndexedSegmentPageRow>()
+        fun consume(rows:List<IndexedSegmentPageRow>) {
+            for(row in rows) {
+                val scored=SemanticScoredRow(row,SemanticVectors.cosineEncoded(queryVector,row.spaceKey,row.vector,row.dimension))
+                if(top.size<SEMANTIC_SEARCH_TOP_K)top.add(scored)
+                else if(bestFirst.compare(scored,top.peek())<0) { top.poll();top.add(scored) }
+                val legacyId=row.segment.legacySegmentId
+                if(legacyId!=null && legacyId in lexicalIdSet)lexicalCandidates.putIfAbsent(legacyId,row)
+            }
+        }
+        consume(window.eligibleRows)
+        corpusCursor=window.cursor
+        corpusRowsScanned=window.rowsScanned
+        var corpusExhausted=window.exhausted
+        window=window.copy(eligibleRows=emptyList())
+        while(!corpusExhausted && corpusRowsScanned<SEMANTIC_SEARCH_CORPUS_LIMIT) {
+            ensureActive()
+            val pageLimit=minOf(SEMANTIC_SEARCH_CORPUS_PAGE_SIZE,SEMANTIC_SEARCH_CORPUS_LIMIT-corpusRowsScanned)
+            val page=dao.corpusPage(active.indexId,scope.key,space.id,corpusCursor?.segmentId,corpusCursor?.taskType,corpusCursor?.contentHash,pageLimit)
+            if(page.isEmpty())break
+            corpusRowsScanned+=page.size
+            corpusCursor=page.last().cursor()
+            consume(page.filter(::eligible))
+            corpusExhausted=page.size<pageLimit
+        }
+        val ranked=top.toList().sortedWith(bestFirst)
+        // Fuse ranks, never raw scores from different spaces. Retain at most semantic top-30 plus lexical top-30.
+        val candidates=(ranked.map{it.row} + lexical.mapNotNull{lexicalCandidates[it.id]}).distinctBy { it.segment.id }
         val hits=candidates.map { c ->
-            val semanticRank=ranked.indexOfFirst { it.first.segment.id==c.segment.id };val lexicalRank=lexicalIds.indexOfFirst { c.segment.legacySegmentId==it }
+            val semanticRank=ranked.indexOfFirst { it.row.segment.id==c.segment.id };val lexicalRank=lexicalIds.indexOfFirst { c.segment.legacySegmentId==it }
             val fused=(if(semanticRank>=0)1.0/(60+semanticRank+1)else 0.0)+(if(lexicalRank>=0)1.0/(60+lexicalRank+1)else 0.0)
             val s=c.segment
-            RetrievalHit(s.sourceId,s.id,s.title?.takeIf{it.isNotBlank()} ?: c.sourceName,SemanticModality.valueOf(s.modality),s.textContent,s.page,s.lineStart,s.lineEnd,s.startMs,s.endMs,ranked.firstOrNull { it.first.segment.id==s.id }?.second,if(lexicalRank>=0)1.0/(lexicalRank+1)else null,fused,space.id,sourceDocumentIds[s.sourceId],s.legacySegmentId)
+            RetrievalHit(s.sourceId,s.id,s.title?.takeIf{it.isNotBlank()} ?: c.sourceName,SemanticModality.valueOf(s.modality),s.textContent,s.page,s.lineStart,s.lineEnd,s.startMs,s.endMs,ranked.firstOrNull { it.row.segment.id==s.id }?.score,if(lexicalRank>=0)1.0/(lexicalRank+1)else null,fused,space.id,sourceDocumentIds[s.sourceId],s.legacySegmentId)
         }.sortedByDescending { it.fusedScore }.take(limit)
         val currentActive=dao.active(scope.key);val currentJob=dao.job(active.indexId)
         if(configurationRevision.value!=searchRevision || manager.profile!=searchProfile || manager.selected?.id!=model.id)

@@ -48,6 +48,35 @@ class SemanticStorageTest {
             val hit=dao.corpus("index","PROJECT:p","space",10).single();assertEquals(10,hit.segment.lineStart);assertEquals(100L,hit.segment.startMs);assertTrue(dao.corpus("index","PROJECT:other","space",10).isEmpty());assertTrue(dao.corpus("index","PROJECT:p","different",10).isEmpty())
         } finally { db.close() }
     }
+    @Test fun corpusPagesUseCompositeCursorWithoutSkippingTaskRows()=runBlocking {
+        val db=Room.inMemoryDatabaseBuilder(RuntimeEnvironment.getApplication(),SemanticDatabase::class.java).build()
+        try {
+            val dao=db.dao()
+            dao.source(SemanticSourceRecord("source","PROJECT:p","DOCUMENT","file","text/plain","reference",1,1,"hash"))
+            listOf("seg-a","seg-b","seg-c").forEachIndexed { index,id -> dao.segment(SemanticSegmentRecord(id,"source","TEXT","text-$index","file",null,null,null,null,null,"segment-$index")) }
+            val indexedRows=listOf(
+                Triple("seg-a","DOCUMENT","hash-a"),
+                Triple("seg-b","CODE_DOCUMENT","hash-b"),
+                Triple("seg-b","DOCUMENT","hash-b"),
+                Triple("seg-c","DOCUMENT","hash-c"),
+            )
+            indexedRows.forEachIndexed { index,(segmentId,taskType,hash) ->
+                dao.embedding(SemanticEmbeddingRecord("index",segmentId,"space","litert","model","a".repeat(64),1,true,taskType,hash,SemanticVectors.FORMAT,ByteArray(4){index.toByte()},index.toLong()))
+            }
+
+            var cursor:IndexedSegmentPageRow?=null
+            val visited=mutableListOf<String>()
+            while(true) {
+                val page=dao.corpusPage("index","PROJECT:p","space",cursor?.segment?.id,cursor?.cursorTaskType,cursor?.cursorContentHash,2)
+                if(page.isEmpty())break
+                visited+=page.map{"${it.segment.id}:${it.cursorTaskType}:${it.cursorContentHash}"}
+                cursor=page.last()
+            }
+            assertEquals(listOf("seg-a:DOCUMENT:hash-a","seg-b:CODE_DOCUMENT:hash-b","seg-b:DOCUMENT:hash-b","seg-c:DOCUMENT:hash-c"),visited)
+            assertTrue(dao.corpusPage("index","PROJECT:other","space",null,null,null,2).isEmpty())
+            assertTrue(dao.corpusPage("index","PROJECT:p","different",null,null,null,2).isEmpty())
+        } finally { db.close() }
+    }
 
     @Test
     @Config(sdk = [35], application = Application::class)
