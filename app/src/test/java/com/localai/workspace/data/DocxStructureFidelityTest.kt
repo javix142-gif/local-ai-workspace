@@ -122,8 +122,12 @@ class DocxStructureFidelityTest {
             <w:abstractNum w:abstractNumId="1">
                 <w:lvl w:ilvl="0"><w:start w:val="1"/><w:numFmt w:val="decimal"/><w:lvlText w:val="%1."/></w:lvl>
             </w:abstractNum>
+            <w:abstractNum w:abstractNumId="2">
+                <w:lvl w:ilvl="0"><w:start w:val="1"/><w:numFmt w:val="upperLetter"/><w:lvlText w:val="%1)"/></w:lvl>
+            </w:abstractNum>
             <w:num w:numId="7"><w:abstractNumId w:val="0"/></w:num>
             <w:num w:numId="8"><w:abstractNumId w:val="1"/></w:num>
+            <w:num w:numId="9"><w:abstractNumId w:val="2"/><w:lvlOverride w:ilvl="0"><w:startOverride w:val="3"/></w:lvlOverride></w:num>
         </w:numbering>""".trimIndent()
         val document = """<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>
             <w:p><w:pPr><w:numPr><w:ilvl w:val="0"/><w:numId w:val="7"/></w:numPr></w:pPr><w:r><w:t>Primer elemento</w:t></w:r></w:p>
@@ -131,6 +135,8 @@ class DocxStructureFidelityTest {
             <w:p><w:pPr><w:numPr><w:ilvl w:val="1"/><w:numId w:val="7"/></w:numPr></w:pPr><w:r><w:t>Elemento anidado</w:t></w:r></w:p>
             <w:p><w:pPr><w:numPr><w:ilvl w:val="0"/><w:numId w:val="8"/></w:numPr></w:pPr><w:r><w:t>Primero numerado</w:t></w:r></w:p>
             <w:p><w:pPr><w:numPr><w:ilvl w:val="0"/><w:numId w:val="8"/></w:numPr></w:pPr><w:r><w:t>Segundo numerado</w:t></w:r></w:p>
+            <w:p><w:pPr><w:numPr><w:ilvl w:val="0"/><w:numId w:val="9"/></w:numPr></w:pPr><w:r><w:t>Tercer valor alfabético</w:t></w:r></w:p>
+            <w:p><w:pPr><w:numPr><w:ilvl w:val="0"/><w:numId w:val="9"/></w:numPr></w:pPr><w:r><w:t>Cuarto valor alfabético</w:t></w:r></w:p>
         </w:body></w:document>""".trimIndent()
 
         val text = parseDocumentXml(document, numbering).pages.single().text
@@ -139,6 +145,8 @@ class DocxStructureFidelityTest {
         assertTrue("Nested list level should remain visible: $text", text.contains("  ◦ Elemento anidado"))
         assertTrue("Numbering should resolve from numbering.xml: $text", text.contains("1. Primero numerado"))
         assertTrue("The same numId should increment in document order: $text", text.contains("2. Segundo numerado"))
+        assertTrue("A numbering-instance start override should be used: $text", text.contains("C) Tercer valor alfabético"))
+        assertTrue("The overridden numbering instance should advance: $text", text.contains("D) Cuarto valor alfabético"))
     }
 
     @Test fun unresolvedDocxListDefinitionIsVisibleAndKeepsItemText() {
