@@ -1,0 +1,145 @@
+{
+  "name": "DOCX explicit list marker extraction",
+  "kind": "PREPARATORY_M02_03_DOCX_LIST_EXTRACTION",
+  "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO",
+  "productionBaseSha": "5800c4bdefb78265f2c00caa39b7f2f4d08c9a18",
+  "redTestCommit": "a351f5f8ace366251833504170a72fa1f2587657",
+  "codeCommit": "dadcb46ca06eb74301f0e6a4e5f3eb9e39dcb240",
+  "testedTreeSha": "f88c756fa78f0f6d31a538ef16c470bd39c033fa",
+  "workingBranch": "codex/master-program-recovery-20261019",
+  "evidenceDirectory": "docs/validation/master-program-docx-list-markers-20261019",
+  "finding": "OfficeText.docx preserved DOCX text but discarded explicit paragraph numPr and word/numbering.xml semantics, so list item text was returned as ordinary paragraphs.",
+  "implementation": {
+    "format": "Resolves explicit paragraph numId/ilvl against bounded word/numbering.xml definitions.",
+    "supported": "Bullets with level-based canonical glyphs; decimal, decimalZero, lower/upper alphabetic and lower/upper Roman numbering; levels 0–8; level starts and num-level startOverride; resolvable %1–%9 marker references.",
+    "failureVisibility": "Missing definitions, unsupported formats and unresolved references emit a DOCX list unresolved marker while retaining the original item text.",
+    "bounds": "8 MiB numbering XML through the existing bounded reader; DTD/ENTITY rejected; up to 4096 unique stored abstract definitions and 4096 unique number instances; levels 0–8; existing text limit and interruption handling retained.",
+    "limitations": [
+      "Only explicit paragraph numPr is resolved; numbering inherited only through paragraph styles is not resolved.",
+      "Picture bullets, style-linked numbering and unsupported numFmt values are not reproduced; unsupported explicit definitions remain visible as unresolved markers.",
+      "Bullet symbols use deterministic textual glyphs by nesting level and do not reproduce source-font visual symbols."
+    ]
+  },
+  "host": {
+    "red": {
+      "testTreeSha": "a351f5f8ace366251833504170a72fa1f2587657",
+      "productionBaseSha": "5800c4bdefb78265f2c00caa39b7f2f4d08c9a18",
+      "method": "DocxStructureFidelityTest.docxListNumberingAndNestingArePreservedInExtractedText",
+      "counts": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "exitCode": 1,
+      "startedAtUtc": "2026-10-19T20:10:00Z",
+      "finishedAtUtc": "2026-10-19T20:13:14Z",
+      "wallSeconds": 194,
+      "observedFailure": "The test showed five plain item strings without any list marker; the bullet-preservation assertion failed.",
+      "log": "red-baseline/gradle.log.gz",
+      "xml": "red-baseline/xml/app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.data.DocxStructureFidelityTest.xml",
+      "xmlSha256": "24bd381bb7257200fc13c123648fb04152de6c0a7dc3fc92f1ccd4e30b1ede1a",
+      "passed": 0
+    },
+    "intermediateGreen": {
+      "codeSha": "dadcb46ca06eb74301f0e6a4e5f3eb9e39dcb240",
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-19T20:15:04Z",
+      "finishedAtUtc": "2026-10-19T20:18:09Z",
+      "wallSeconds": 185,
+      "actionableTasks": 63,
+      "executedTasks": 63,
+      "xml": "green/xml/app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.data.DocxStructureFidelityTest.xml",
+      "xmlSha256": "ade09c0ca8a47e6cceaceac5e6af88fc2f449a36abb203060084a7ececb488d1",
+      "log": "green/gradle.log.gz",
+      "note": "Passed before startOverride assertions were added; superseded by greenFinal.",
+      "passed": 5
+    },
+    "greenFinal": {
+      "codeSha": "dadcb46ca06eb74301f0e6a4e5f3eb9e39dcb240",
+      "testedTreeSha": "f88c756fa78f0f6d31a538ef16c470bd39c033fa",
+      "class": "com.localai.workspace.data.DocxStructureFidelityTest",
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed": 5,
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-19T20:18:44Z",
+      "finishedAtUtc": "2026-10-19T20:21:52Z",
+      "wallSeconds": 188,
+      "gradleReportedDuration": "3m 6s",
+      "actionableTasks": 63,
+      "executedTasks": 63,
+      "xml": "green-final/xml/app/build/test-results/testDebugUnitTest/TEST-com.localai.workspace.data.DocxStructureFidelityTest.xml",
+      "xmlSha256": "57049fe58bf89a2acf70f13abf2c2323f71dd569d845d9d13d8125d0ea35b871",
+      "log": "green-final/gradle.log.gz"
+    }
+  },
+  "environment": {
+    "gradle": "8.10.2",
+    "runtimeJdk": "Temurin 17.0.20.1",
+    "testLauncherJdk": "Temurin 21.0.12.1",
+    "androidSdk": "/workspace/.toolchain/android-sdk API 35",
+    "ndk": "27.0.12077973",
+    "gradleUserHome": "/workspace/.gradle pre-existing; test commands used --offline"
+  },
+  "otherGates": {
+    "fullAppJvm": "NOT_RUN",
+    "litertCompatJvm": "NOT_RUN",
+    "lintDebug": "NOT_RUN",
+    "androidTestCompilation": "NOT_RUN",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  },
+  "sourceTask": {
+    "id": "M02-03",
+    "sourceStatus": "TODO",
+    "requiresDevice": false,
+    "dependsOn": [
+      "M02-01"
+    ],
+    "dependencyStatuses": {
+      "M02-01": "TODO"
+    },
+    "formalCompletion": false,
+    "classification": "Preparatory parser behavior only. M02-01 and the remaining M02-03 definition of done are open."
+  },
+  "sourcePlanUnchanged": {
+    "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "roadmapPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskCount": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": {
+      "TODO": 97
+    },
+    "sourceFilesModified": false
+  },
+  "auxiliaryProbe": {
+    "status": "FAILED_BEFORE_GRADLE_NO_TASKS",
+    "detail": "A wrapper --version probe omitted GRADLE_USER_HOME and --offline, attempted to download Gradle and received Connection refused. It ran no task and is not build/test evidence. A corrected wrapper version probe then succeeded with /workspace/.gradle and --offline; both test invocations used the existing cache offline."
+  },
+  "manifest": {
+    "path": "docs/validation/master-program-docx-list-markers-20261019/SHA256SUMS",
+    "entries": 33,
+    "sha256": "5ced51c2841bf3d246335b3075a6450b28f340bf3d0b089b52c1c8d41d62036b",
+    "locallyVerified": "33/33",
+    "excludes": [
+      "RESULTS.md",
+      "RESULTS.json",
+      "SHA256SUMS"
+    ]
+  }
+}

@@ -1,0 +1,5 @@
+original_bytes=534004
+original_sha256=5be4a582317b529928e1347ccc3df673dfb03b6895681a1df60a4e0af92ad3e9
+compressed_bytes=46883
+compressed_sha256=8e0db4fccdc1ef7a89f297bf2d5ccd81da2e87343e51565e677caa48dbced964
+byte_identical_after_gunzip=true

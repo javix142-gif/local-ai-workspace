@@ -1,3 +1,13 @@
+# Current recovery checkpoint — DOCX list extraction preparation (2026-10-19)
+
+The exact focused HOST run at test/code tree `f88c756fa78f0f6d31a538ef16c470bd39c033fa` passed `DocxStructureFidelityTest` 5/5 (0 failures/errors/skips), Gradle 8.10.2 exit 0, 63/63 actionable tasks executed. A test-first red run at `a351f5f` reproduced that the production parser returned list items as plain paragraphs without list markers. Production code at `dadcb46` resolves common explicit DOCX `numPr`/`numbering.xml` lists, including bullet/nesting, decimal and tested alphabetic start overrides; unknown explicit numbering remains visibly unresolved and item text is retained. See [`M02-03 DOCX list evidence`](../validation/master-program-docx-list-markers-20261019/RESULTS.md) and the recorded commands, logs, XML, preflight and checksums.
+
+This is preparatory only: source M02-03 remains `TODO`, depends on M02-01 (`TODO`), and does not close the full heading/table/page/location fidelity DoD. M02-01 is itself device-gated. The original plan stays at 97 IDs/120 dependencies/all source statuses TODO. No full suite, LiteRT, lint, AndroidTest, emulator, physical device or APK ran. `PHYSICAL_DEVICE=NOT_RUN`; M01-06 stays `PENDING_REQUIRES_DEVICE`. `M03-07` also remains TODO/device-gated with M03-01 still TODO. The lost local commit `2f8b0d4` remains unrecovered; no code was reconstructed from it.
+
+The recovery checkpoint remains on `codex/master-program-recovery-20261019`; `main` and peeled `v0.4.2` remain at `de615b772cf37a99e7e08a647c59607b271de606`. Continue sequentially with one source-backed preparatory implementation; do not promote a task in the source catalog from this partial evidence.
+
+---
+
 # Current master-program recovery checkpoint — M00-06 context composition (2026-10-19)
 
 The user-supplied recovery prompt referenced feature HEAD `b8e75b4a688d9e1f441324a3a1ecccb369f99ebc`; the actual fetched feature was `e6f16ac30914fe32f7140241e81e5976660c03d2`. The exact fetched commit is preserved by `recovery/backup-e6f16ac-20261019`; implementation continues on the independent `codex/master-program-recovery-20261019` branch. The reported lost local commit `2f8b0d496db8973edf161c7703efc8f0c17d34fd` was not recovered and no source was reconstructed. `main` and peeled `v0.4.2` remain at `de615b772cf37a99e7e08a647c59607b271de606`.
