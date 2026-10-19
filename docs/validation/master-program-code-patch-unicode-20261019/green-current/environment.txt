@@ -1,0 +1,10 @@
+codeSha=9778e4f5dd4ea5358011189e3be366351747c86f
+branch=codex/master-program-recovery-20261019
+gradle=8.10.2
+runtimeJdk=Temurin 17.0.20.1
+workerJdk=Temurin 21.0.12.1
+gradleUserHome=/workspace/.gradle (pre-existing cache, offline)
+androidSdk=/workspace/.toolchain/android-sdk
+ndk=27.0.12077973 (not invoked by host JVM test)
+filter=com.localai.workspace.artifacts.CodePatchPlannerTest
+timeout=300s

@@ -309,3 +309,8 @@ This does not close source task M03-06: it remains TODO, requires device validat
 ## 2026-10-19 — M03-06 ArtifactStore multi-edit integration
 
 A focused `ArtifactRoundtripTest` now exercises the corrected two-edit patch through the actual artifact store: stage preview, reopen stored preview, apply as immutable revision 2, and verify original revision 1 remains unchanged. Exact test SHA `498519c696ee19bc53c734a110cabee46849fe9b` passed 1/1 with exit 0. The planner test passed 5/5 on its preceding exact SHA `f235a2385d0f885291256ba7ed7299aceeee36a4`; the integration commit changes only tests. Full app/LiteRT suites, lint, AndroidTest, emulator, device and APK remain unrun. See `docs/validation/master-program-code-patch-order-20261019/RESULTS.md`. M03-06 stays TODO/device-gated and upstream dependencies M03-01/M02-08 remain TODO.
+
+
+## 2026-10-19 — M03-06 code patch UTF-16 integrity
+
+The planner now rejects malformed UTF-16 in the source body or either side of a patch before applying offsets. The red test demonstrated that matching a single high surrogate inside a valid supplementary character was previously accepted. Exact source SHA `9778e4f5dd4ea5358011189e3be366351747c86f`: `CodePatchPlannerTest` 6/6 and the actual stored preview/reopen/apply integration 1/1 passed. The original TODO task M03-06 remains device-required and depends on M03-01 and M02-08, both TODO. See `docs/validation/master-program-code-patch-unicode-20261019/RESULTS.md`.

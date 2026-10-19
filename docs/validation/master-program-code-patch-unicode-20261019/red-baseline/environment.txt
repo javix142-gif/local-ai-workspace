@@ -1,0 +1,10 @@
+testCodeSha=7b737dc
+branch=codex/master-program-recovery-20261019
+gradle=8.10.2
+runtimeJdk=Temurin 17.0.20.1
+workerJdk=Temurin 21.0.12.1
+gradleUserHome=/workspace/.gradle (pre-existing cache, offline)
+androidSdk=/workspace/.toolchain/android-sdk
+ndk=27.0.12077973 (not invoked by host JVM test)
+filter=CodePatchPlannerTest.malformedUtf16SourceAndEditFragmentsAreRejected
+timeout=300s

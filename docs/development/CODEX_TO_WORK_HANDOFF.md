@@ -1323,3 +1323,10 @@ This is a focused HOST preparatory slice, not M03-06 completion: the original ta
 On exact test/code SHA `498519c696ee19bc53c734a110cabee46849fe9b`, `ArtifactRoundtripTest.multiEditPatchSurvivesPreviewReopenAndCreatesAnImmutableRevision` passed 1/1, zero failures/errors/skips, Gradle exit 0. It exercised `stageCodePatch`, persisted and reopened the preview with a new `ArtifactStore`, applied it as immutable version 2, and verified the original body/version remained unchanged. The previous planner class remains 5/5 at code SHA `f235a2385d0f885291256ba7ed7299aceeee36a4`; no production file changed between those two tested SHAs. XML and complete logs are included in the 36-file local manifest at `../validation/master-program-code-patch-order-20261019/`.
 
 This is preparatory HOST evidence only. M03-06 remains source TODO because device validation and dependencies M03-01/M02-08 are open. No full suite, lint, AndroidTest, emulator, physical device or APK was run. Original source plan stays 97 unique IDs, 120 dependency edges and all statuses TODO.
+
+
+## 2026-10-19 — M03-06 malformed UTF-16 patch rejection
+
+The test-only red commit `7b737dc0a0a584a69a617e18166d580374ad26f9` reproduced that a half-surrogate `before` fragment was accepted against a valid supplementary character and returned malformed text. Production commit `9778e4f5dd4ea5358011189e3be366351747c86f` validates well-formed UTF-16 for the source body and both edit strings, refusing invalid input with `CODE_PATCH_INVALID_UTF16`. On the exact source SHA, `CodePatchPlannerTest` passed 6/6 and the persisted `ArtifactStore` multi-edit preview/reopen/apply test passed 1/1; both runs exited 0. See `../validation/master-program-code-patch-unicode-20261019/RESULTS.md` and its 23-file checksum manifest.
+
+This is focused HOST preparation only. M03-06 remains source TODO, device-required and dependent on M03-01/M02-08, both TODO. Full gates, emulator, Motorola and APK were not run. Source plan is unchanged: 97 IDs, 120 dependency edges, all 97 statuses TODO.

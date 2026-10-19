@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.artifacts.CodePatchPlannerTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-19T20:01:00" hostname="42c4f375d730" time="0.117">
+  <properties/>
+  <testcase name="overlappingEditsAreRejectedAgainstTheSameBaseBody" classname="com.localai.workspace.artifacts.CodePatchPlannerTest" time="0.073"/>
+  <testcase name="malformedUtf16SourceAndEditFragmentsAreRejected" classname="com.localai.workspace.artifacts.CodePatchPlannerTest" time="0.005"/>
+  <testcase name="editAndBodyBoundsAreEnforced" classname="com.localai.workspace.artifacts.CodePatchPlannerTest" time="0.03"/>
+  <testcase name="staleMissingAmbiguousEmptyAndNoOpEditsAreRejected" classname="com.localai.workspace.artifacts.CodePatchPlannerTest" time="0.004"/>
+  <testcase name="multiEditsAreResolvedFromOriginalSourceRegardlessOfOrder" classname="com.localai.workspace.artifacts.CodePatchPlannerTest" time="0.002"/>
+  <testcase name="exactMultiEditPreservesUnicodeAndLineEndings" classname="com.localai.workspace.artifacts.CodePatchPlannerTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

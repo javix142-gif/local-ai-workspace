@@ -1,0 +1,118 @@
+{
+  "name": "M03-06 preparatory code patch UTF-16 integrity",
+  "status": "FOCUSED_HOST_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO",
+  "workingBranch": "codex/master-program-recovery-20261019",
+  "baselineCodeSha": "da47ed7f1fa1d395a01d1132ad25202802b660f7",
+  "redTestCommit": "7b737dc0a0a584a69a617e18166d580374ad26f9",
+  "codeCommit": "9778e4f5dd4ea5358011189e3be366351747c86f",
+  "testedCodeSha": "9778e4f5dd4ea5358011189e3be366351747c86f",
+  "testedTreeSha": "7878d780001cc8079980ac84ba0a5ec1bc47bdbc",
+  "changedFiles": [
+    "app/src/main/java/com/localai/workspace/artifacts/CodePatch.kt",
+    "app/src/test/java/com/localai/workspace/artifacts/CodePatchPlannerTest.kt"
+  ],
+  "finding": "The planner accepted a before fragment containing only a high surrogate, replaced it inside a valid supplementary character, and would leave malformed UTF-16 in the result. It also accepted malformed replacement or base strings.",
+  "implementation": "Reject ill-formed UTF-16 in the source body and both before/after edit strings with CODE_PATCH_INVALID_UTF16 before locating/applying replacements. Valid supplementary pairs remain permitted and are covered by the existing Unicode/line-ending test.",
+  "host": {
+    "red": {
+      "testCodeSha": "7b737dc0a0a584a69a617e18166d580374ad26f9",
+      "productionBaseSha": "da47ed7f1fa1d395a01d1132ad25202802b660f7",
+      "test": "malformedUtf16SourceAndEditFragmentsAreRejected",
+      "counts": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "exitCode": 1,
+      "startedAtUtc": "2026-10-19T19:53:53Z",
+      "finishedAtUtc": "2026-10-19T19:56:56Z",
+      "wallSeconds": 183,
+      "failure": "Expected CODE_PATCH_INVALID_UTF16; planner returned instead of rejecting the split-surrogate edit.",
+      "log": "red-baseline/gradle.log",
+      "xml": "red-baseline/xml/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml"
+    },
+    "plannerGreen": {
+      "codeSha": "9778e4f5dd4ea5358011189e3be366351747c86f",
+      "class": "com.localai.workspace.artifacts.CodePatchPlannerTest",
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed": 6,
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-19T19:57:57Z",
+      "finishedAtUtc": "2026-10-19T20:01:01Z",
+      "wallSeconds": 184,
+      "gradleReportedDuration": "3m 3s",
+      "actionableTasks": 63,
+      "executedTasks": 63,
+      "xml": "green-current/TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml",
+      "xmlSha256": "ef0c38d6b822eb26982ee787491065ddeea35d2872510b4e07281bbe2383b839",
+      "log": "green-current/gradle.log"
+    },
+    "storeIntegration": {
+      "codeSha": "9778e4f5dd4ea5358011189e3be366351747c86f",
+      "test": "ArtifactRoundtripTest.multiEditPatchSurvivesPreviewReopenAndCreatesAnImmutableRevision",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed": 1,
+      "exitCode": 0,
+      "startedAtUtc": "2026-10-19T20:01:30Z",
+      "finishedAtUtc": "2026-10-19T20:04:36Z",
+      "wallSeconds": 186,
+      "gradleReportedDuration": "3m 5s",
+      "actionableTasks": 63,
+      "executedTasks": 63,
+      "xml": "store-integration/TEST-com.localai.workspace.artifacts.ArtifactRoundtripTest.xml",
+      "xmlSha256": "0c553262bfb3ef7f9d1a874baf73c62d087218cbad3a85df3d207b3b381c1d32",
+      "log": "store-integration/gradle.log"
+    }
+  },
+  "environment": {
+    "gradle": "8.10.2",
+    "runtimeJdk": "Temurin 17.0.20.1",
+    "testLauncherJdk": "Temurin 21.0.12.1 (project toolchain configuration)",
+    "androidSdk": "/workspace/.toolchain/android-sdk",
+    "ndk": "27.0.12077973 (not used by JVM tests)",
+    "gradleUserHome": "/workspace/.gradle, pre-existing, offline"
+  },
+  "notRun": {
+    "fullAppJvm": "NOT_RUN",
+    "liteRtCompatJvm": "NOT_RUN",
+    "lintDebug": "NOT_RUN",
+    "androidTest": "NOT_RUN",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  },
+  "sourceTask": {
+    "id": "M03-06",
+    "sourceStatus": "TODO",
+    "requiresDevice": true,
+    "dependsOn": [
+      "M03-01",
+      "M02-08"
+    ],
+    "formalCompletion": false,
+    "classification": "Preparatory guard against malformed UTF-16 in code patches only; workspace integration, complete rollback/device DoD and upstream dependencies remain open."
+  },
+  "planIntegrity": {
+    "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskCount": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": {
+      "TODO": 97
+    },
+    "sourceFilesModified": false
+  }
+}
