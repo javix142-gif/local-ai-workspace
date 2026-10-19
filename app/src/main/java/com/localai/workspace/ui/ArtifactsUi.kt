@@ -9,8 +9,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.text.selection.SelectionContainer
 import com.localai.workspace.artifacts.*
@@ -126,6 +130,7 @@ import org.json.JSONObject
                         Text("Saved v${selected!!.version} · before")
                         SelectionContainer{Text(savedPreview,style=MaterialTheme.typography.bodySmall)}
                         Text("Proposed version · after")
+                        ArtifactRevisionDiff(savedPreview,previewText)
                     }
                     SelectionContainer{Text(previewText,Modifier.testTag("artifact-preview"),style=MaterialTheme.typography.bodySmall)}
                     if(spec.format==ArtifactFormat.PPTX) PptxImageVisualPreview(imagePreviews)
@@ -140,4 +145,75 @@ import org.json.JSONObject
             }
         }
     })
+}
+
+private sealed interface ArtifactLineDiff {
+    data class Lines(val entries:List<ArtifactDiffEntry>):ArtifactLineDiff
+    data object TooLarge:ArtifactLineDiff
+}
+
+private enum class ArtifactDiffKind { UNCHANGED, REMOVED, ADDED }
+private data class ArtifactDiffEntry(val kind:ArtifactDiffKind,val text:String)
+
+/** Bounded LCS diff. Large drafts retain their full before/after previews without allocating an unbounded matrix. */
+private fun artifactLineDiff(before:String,after:String):ArtifactLineDiff {
+    if(before==after)return ArtifactLineDiff.Lines(emptyList())
+    fun linesBounded(value:String):List<String>? {
+        val lines=ArrayList<String>()
+        val iterator=value.lineSequence().iterator()
+        while(iterator.hasNext()) {
+            lines+=iterator.next()
+            if(lines.size>256)return null
+        }
+        return lines
+    }
+    val old=linesBounded(before)?:return ArtifactLineDiff.TooLarge
+    val new=linesBounded(after)?:return ArtifactLineDiff.TooLarge
+    if((old.size+1L)*(new.size+1L)>66_049L)return ArtifactLineDiff.TooLarge
+    val lcs=Array(old.size+1){IntArray(new.size+1)}
+    for(i in old.indices.reversed())for(j in new.indices.reversed()) {
+        lcs[i][j]=if(old[i]==new[j])1+lcs[i+1][j+1] else maxOf(lcs[i+1][j],lcs[i][j+1])
+    }
+    val entries=ArrayList<ArtifactDiffEntry>(old.size+new.size)
+    var i=0;var j=0
+    while(i<old.size||j<new.size) {
+        when {
+            i<old.size&&j<new.size&&old[i]==new[j] -> { entries+=ArtifactDiffEntry(ArtifactDiffKind.UNCHANGED,old[i]);i++;j++ }
+            i<old.size&&(j==new.size||lcs[i+1][j]>=lcs[i][j+1]) -> { entries+=ArtifactDiffEntry(ArtifactDiffKind.REMOVED,old[i]);i++ }
+            else -> { entries+=ArtifactDiffEntry(ArtifactDiffKind.ADDED,new[j]);j++ }
+        }
+    }
+    return ArtifactLineDiff.Lines(entries)
+}
+
+@Composable private fun ArtifactRevisionDiff(before:String,after:String) {
+    val diff=remember(before,after){artifactLineDiff(before,after)}
+    Text("Line-by-line changes",style=MaterialTheme.typography.titleSmall,modifier=Modifier.testTag("artifact-line-diff-title"))
+    when(diff) {
+        ArtifactLineDiff.TooLarge -> Text(
+            "Line comparison is too large to compute safely. The complete before and after previews remain available.",
+            style=MaterialTheme.typography.bodySmall,modifier=Modifier.testTag("artifact-diff-unavailable"),
+        )
+        is ArtifactLineDiff.Lines -> if(diff.entries.isEmpty()) {
+            Text("No line changes",style=MaterialTheme.typography.bodySmall,modifier=Modifier.testTag("artifact-diff-unchanged"))
+        } else SelectionContainer {
+            Column(Modifier.fillMaxWidth().testTag("artifact-line-diff")) {
+                diff.entries.forEachIndexed { index,entry ->
+                    val text=when(entry.kind) {
+                        ArtifactDiffKind.UNCHANGED -> "Unchanged: ${entry.text}"
+                        ArtifactDiffKind.REMOVED -> "Removed: ${entry.text}"
+                        ArtifactDiffKind.ADDED -> "Added: ${entry.text}"
+                    }
+                    val color:Color=when(entry.kind) {
+                        ArtifactDiffKind.UNCHANGED -> MaterialTheme.colorScheme.onSurfaceVariant
+                        ArtifactDiffKind.REMOVED -> MaterialTheme.colorScheme.error
+                        ArtifactDiffKind.ADDED -> MaterialTheme.colorScheme.primary
+                    }
+                    Text(text,color=color,style=MaterialTheme.typography.bodySmall.copy(fontFamily=FontFamily.Monospace),
+                        modifier=Modifier.fillMaxWidth().testTag("artifact-diff-row-$index")
+                            .semantics { contentDescription=text })
+                }
+            }
+        }
+    }
 }
