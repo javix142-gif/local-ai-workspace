@@ -1,0 +1,3 @@
+# Initial implementation run — stale Room version assertion
+
+The two focused classes ran 49 tests and Gradle exited 1. The single failure was the pre-existing `SemanticStorageTest.additiveSidecarLeavesVersion8WorkspaceAndEg1VectorsIntact` asserting version 8 while current `WorkspaceDatabase` is version 10 (added by later migrations). It did not identify a paging failure. The test was corrected to compare the current version before and after opening the independent sidecar while retaining all stored-data and EG1-vector assertions. The log is the original preserved run; its XML was later overwritten and is not claimed as attached.

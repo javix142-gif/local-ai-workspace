@@ -1,0 +1,8 @@
+JAVA_HOME=/workspace/.toolchain/jdk-17
+Gradle runtime: Temurin 17
+test workers: /workspace/.toolchain/jdk-21-temurin
+Gradle: wrapper 8.10.2
+ANDROID_HOME=/workspace/.toolchain/android-sdk
+NDK: existing install 27.0.12077973
+GRADLE_USER_HOME=/workspace/.gradle (pre-existing cache, no cleanup/install)
+Mode: offline; no emulator/device/model inference

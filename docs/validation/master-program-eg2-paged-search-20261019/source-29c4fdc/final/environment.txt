@@ -1,0 +1,7 @@
+Source HEAD: 29c4fdc8586a9d8d61e022ab743ab0734cf407ae
+Gradle runtime: Temurin JDK 17 at /workspace/.toolchain/jdk-17
+App JVM test worker: Temurin JDK 21 at /workspace/.toolchain/jdk-21-temurin
+Gradle wrapper: 8.10.2
+Android SDK: /workspace/.toolchain/android-sdk, API 35; existing NDK 27.0.12077973
+GRADLE_USER_HOME: existing /workspace/.gradle; offline; no installs or cache deletion
+Scope: SemanticContextPostfixTest and SemanticStorageTest only; no build/lint/AndroidTest/emulator/device/APK.

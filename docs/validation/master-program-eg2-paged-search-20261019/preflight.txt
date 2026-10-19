@@ -1,0 +1,15 @@
+Pre-increment Git and plan snapshot
+Timestamp: 2026-10-19 UTC
+Working branch: codex/aws-master-resume-20261019
+Branch HEAD and origin/codex ref before this increment: 234b89873ac54437b8c71e5eae5c4ad2c59f9235
+Tracked working-tree changes: none at the starting checkpoint. Pre-existing untracked memory-vector evidence directories were present and were preserved; they were not staged or modified by this increment.
+main and peeled v0.4.2: de615b772cf37a99e7e08a647c59607b271de606
+feat/0.5.0-skills-agents: e6f16ac30914fe32f7140241e81e5976660c03d2 (separate, untouched)
+Backup reference: recovery/backup-codex-aws-master-20261019-234b898 -> 234b89873ac54437b8c71e5eae5c4ad2c59f9235
+
+Canonical plan integrity command/result:
+Python JSON read and SHA-256 verification of Local_AI_Workspace_BACKLOG.json and Local_AI_Workspace_ROADMAP.md; validate 97 unique IDs, 120 dependency edges, all references resolve, graph acyclic.
+backlog sha256: bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235
+roadmap sha256: 260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5
+result: 97 tasks; 97 unique IDs; 120 dependencies; 0 dangling dependencies; acyclic; source states TODO=97.
+The canonical backlog and roadmap were not modified.

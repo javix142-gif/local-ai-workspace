@@ -1,0 +1,3 @@
+# Semantic sidecar comment follow-up
+
+At source `d214453df7e1c53ed60107d76e98017ce7beab6c`, the full focused Gradle invocation exited 0 in 38 seconds. `:app:compileDebugKotlin` executed; `:app:testDebugUnitTest` was `UP-TO-DATE`, so this invocation did **not** execute tests and its existing XML is not attributed to this run. The executable paging and regression tests were run with `--rerun-tasks` at the immediately preceding source `bb85544e37a44ed1a8a9eacfcd843ee0a79f5112`, recorded in `../source-bb85544/verified-run/` (49/49 PASS). The only change between those source commits is a KDoc comment replacing an obsolete version-8 claim; no test result is transferred to claim a new execution here.

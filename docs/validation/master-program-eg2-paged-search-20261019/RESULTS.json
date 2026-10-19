@@ -1,0 +1,113 @@
+{
+  "increment": "Preparatory bounded paging for Semantic V2 online corpus search",
+  "workingBranch": "codex/aws-master-resume-20261019",
+  "codeCommits": {
+    "redTest": "939d14d",
+    "production": "29c4fdc8586a9d8d61e022ab743ab0734cf407ae",
+    "staleTestCorrection": "bb85544e37a44ed1a8a9eacfcd843ee0a79f5112",
+    "commentOnlyFollowup": "d214453df7e1c53ed60107d76e98017ce7beab6c"
+  },
+  "productionTestedSha": "bb85544e37a44ed1a8a9eacfcd843ee0a79f5112",
+  "latestSourceSha": "d214453df7e1c53ed60107d76e98017ce7beab6c",
+  "implementation": {
+    "pageRows": 256,
+    "maximumScoredRows": 10000,
+    "semanticTopK": 30,
+    "lexicalCandidateLimit": 30,
+    "stableKeyset": ["segmentId", "taskType", "contentHash"],
+    "vectorPayloadBoundAt768Dimensions": {
+      "pageBytes": 786432,
+      "previousMaximumBytes": 30720000,
+      "measurement": "calculated bound only; no heap profile or device measurement"
+    },
+    "preserved": ["project scope", "selected-document scope", "modality eligibility", "FTS rank fusion", "cancellation", "index READY checks", "no query embedding when no eligible row"],
+    "schemaOrDependencyChange": false
+  },
+  "attempts": [
+    {
+      "sourceSha": "939d14d",
+      "kind": "expected-red-regression",
+      "result": "FAIL_EXPECTED",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "failure": "expected two 256-row page reads; previous implementation used one full-corpus read",
+      "evidence": "source-939d14d/red/"
+    },
+    {
+      "sourceSha": "29c4fdc8586a9d8d61e022ab743ab0734cf407ae",
+      "result": "FAIL_STALE_TEST_EXPECTATION",
+      "tests": 49,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "failure": "pre-existing test expected Workspace DB version 8; current version is 10",
+      "gradleExitCode": 1,
+      "evidence": "source-29c4fdc/final/"
+    },
+    {
+      "sourceSha": "bb85544e37a44ed1a8a9eacfcd843ee0a79f5112",
+      "result": "PASS_FOCUSED_HOST",
+      "command": "./gradlew --offline --no-daemon --no-parallel --max-workers=1 --console=plain --info -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.semantic.v2.SemanticContextPostfixTest --tests com.localai.workspace.semantic.v2.SemanticStorageTest --rerun-tasks",
+      "gradleExitCode": 0,
+      "durationSeconds": 185,
+      "startUtc": "2026-10-19T23:39:51Z",
+      "finishUtc": "2026-10-19T23:42:56Z",
+      "tests": 49,
+      "passed": 49,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": {
+        "SemanticContextPostfixTest": 40,
+        "SemanticStorageTest": 9
+      },
+      "evidence": "source-bb85544/verified-run/"
+    },
+    {
+      "sourceSha": "d214453df7e1c53ed60107d76e98017ce7beab6c",
+      "result": "COMPILE_PASS_TEST_TASK_UP_TO_DATE_NOT_EXECUTED",
+      "gradleExitCode": 0,
+      "durationSeconds": 38,
+      "appCompileDebugKotlin": "EXECUTED",
+      "appTestDebugUnitTest": "UP-TO-DATE; zero tests executed by this invocation",
+      "evidence": "source-d214453/verification/"
+    }
+  ],
+  "environment": {
+    "gradle": "8.10.2",
+    "gradleRuntimeJdk": "/workspace/.toolchain/jdk-17",
+    "testWorkerJdk": "/workspace/.toolchain/jdk-21-temurin",
+    "androidSdk": "/workspace/.toolchain/android-sdk",
+    "ndk": "27.0.12077973",
+    "gradleUserHome": "/workspace/.gradle (pre-existing; no cleanup/install)",
+    "offline": true
+  },
+  "validationNotRun": {
+    "fullJvmSuite": true,
+    "litertCompatSuite": true,
+    "lint": true,
+    "assemble": true,
+    "androidTest": true,
+    "emulator": true,
+    "physicalDevice": true,
+    "nativeModelInference": true,
+    "apk": true,
+    "devicePerformanceMeasurements": true
+  },
+  "sourcePlan": {
+    "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmap": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskCount": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": {"TODO": 97},
+    "formalTasksClosed": []
+  },
+  "emulator": "NOT_RUN",
+  "physicalDevice": "NOT_RUN",
+  "apk": "NOT_GENERATED"
+}

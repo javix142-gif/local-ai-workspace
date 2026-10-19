@@ -1,0 +1,37 @@
+{
+  "testedSourceCommit": "bb85544e37a44ed1a8a9eacfcd843ee0a79f5112",
+  "command": "See command.txt",
+  "result": "PASS_FOCUSED_HOST",
+  "gradleExitCode": 0,
+  "startUtc": "2026-10-19T23:39:51Z",
+  "finishUtc": "2026-10-19T23:42:56Z",
+  "durationSeconds": 185,
+  "task": "app:testDebugUnitTest (two selected classes; --rerun-tasks)",
+  "xml": [
+    {
+      "file": "TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml",
+      "tests": 40,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 10.828
+    },
+    {
+      "file": "TEST-com.localai.workspace.semantic.v2.SemanticStorageTest.xml",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 3.29
+    }
+  ],
+  "totals": {
+    "tests": 49,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "emulator": "NOT_RUN",
+  "physicalDevice": "NOT_RUN",
+  "nativeModelInference": "NOT_RUN"
+}

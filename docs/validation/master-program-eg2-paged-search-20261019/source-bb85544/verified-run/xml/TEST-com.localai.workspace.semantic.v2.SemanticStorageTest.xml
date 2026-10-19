@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.semantic.v2.SemanticStorageTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-19T23:42:52" hostname="42c4f375d730" time="3.29">
+  <properties/>
+  <testcase name="staleOrFailedIndexCannotBeRestored" classname="com.localai.workspace.semantic.v2.SemanticStorageTest" time="2.781"/>
+  <testcase name="sameSegmentCanRetainDifferentRepresentationsWithoutOverwriting" classname="com.localai.workspace.semantic.v2.SemanticStorageTest" time="0.048"/>
+  <testcase name="interruptedJobRecoveryPreservesActiveIndex" classname="com.localai.workspace.semantic.v2.SemanticStorageTest" time="0.048"/>
+  <testcase name="corpusPagesUseCompositeCursorWithoutSkippingTaskRows" classname="com.localai.workspace.semantic.v2.SemanticStorageTest" time="0.073"/>
+  <testcase name="deduplicationIncludesSpaceTaskAndHash" classname="com.localai.workspace.semantic.v2.SemanticStorageTest" time="0.058"/>
+  <testcase name="citationSegmentReadRequiresExactScopeAndAuthorizedDocumentPath" classname="com.localai.workspace.semantic.v2.SemanticStorageTest" time="0.067"/>
+  <testcase name="scopeCannotReadAnotherProjectsVectors" classname="com.localai.workspace.semantic.v2.SemanticStorageTest" time="0.056"/>
+  <testcase name="additiveSidecarLeavesCurrentWorkspaceVersionAndEg1VectorsIntact" classname="com.localai.workspace.semantic.v2.SemanticStorageTest" time="0.099"/>
+  <testcase name="cancelledGreenBuildDoesNotReplaceBluePointer" classname="com.localai.workspace.semantic.v2.SemanticStorageTest" time="0.06"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

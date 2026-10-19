@@ -1,3 +1,13 @@
+## 2026-10-19 — bounded keyset-paged Semantic V2 search corpus
+
+`SemanticLayer.search()` previously loaded up to 10,000 joined corpus rows and vector payloads at once. The new online-search path reads stable keyset pages of 256 `(segmentId, taskType, contentHash)` rows and scores each page into a deterministic semantic top-30 heap plus at most 30 lexical candidates. The existing 10,000 row cap, project and selected-document scope, modality filter, FTS rank fusion, cancellation, and READY-generation checks remain. An eligibility pre-scan still avoids query embedding when the selected/in-scope corpus contains no eligible modality.
+
+At 768-dimensional FLOAT32, each page has at most 786,432 bytes of vector payload, compared with 30,720,000 bytes if the old 10,000-row materialization held every vector. This arithmetic excludes row/object/SQLite overhead and is not a measured heap profile, latency improvement, or native model benchmark.
+
+Expected-red regression at `939d14d` failed 1/1 because the old path made one corpus read instead of the two required page reads. An initial implementation run exposed a pre-existing test pinned to Workspace DB version 8 although the current schema is version 10; the test now checks that opening the separate Semantic V2 sidecar leaves the current Workspace version unchanged and still verifies stored Workspace/EG1 data. The exact focused HOST run at test/source SHA `bb85544e37a44ed1a8a9eacfcd843ee0a79f5112` passed 49/49 (SemanticContextPostfixTest 40/40; SemanticStorageTest 9/9), offline, Gradle 8.10.2, JDK 17 runtime/JDK 21 worker, 185s, exit 0. `d214453` only corrects stale KDoc and compiles; Gradle marked its test task `UP-TO-DATE`, so it contributes no new test counts. Full suites, lint, APK, AndroidTest, emulator, Motorola, model inference, latency and heap profiling were not run. See `../validation/master-program-eg2-paged-search-20261019/RESULTS.md` and its checksummed logs/XML.
+
+This is preparatory work only; no original task or milestone is closed. The source backlog and roadmap remain unchanged at 97 IDs, 120 dependencies and all source states TODO. Physical-device and model-performance measurements remain pending.
+
 ## 2026-10-19 — score EG2 corpus vectors from persisted bytes
 
 Code SHA aabca8226634de6da08006dc255b0b5727360cdd changes the semantic search scoring loop to read FLOAT32_LE_V1 bytes directly and compute cosine in one pass. The previous code created a decoded FloatArray and then performed another pass per corpus row, up to the existing 10,000-row bound. Tests assert exact score equality against the previous path and reject incompatible space, dimension and non-finite payloads.

@@ -1,0 +1,6 @@
+Source HEAD: 939d14d8360d28624b59b55a0e580c9dd06120d6
+Gradle runtime: Temurin JDK 17 at /workspace/.toolchain/jdk-17
+App JVM test worker: Temurin JDK 21 at /workspace/.toolchain/jdk-21-temurin
+Gradle wrapper: 8.10.2
+Android SDK: /workspace/.toolchain/android-sdk, API 35; existing NDK 27.0.12077973
+GRADLE_USER_HOME: existing /workspace/.gradle; offline; no installs or cache deletion
