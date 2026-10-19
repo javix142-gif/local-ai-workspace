@@ -83,7 +83,13 @@ import org.json.JSONObject
             FlowRow {ArtifactFormat.entries.forEach{format->TextButton(enabled=!busy,onClick={
                 selected=null;selectedPatch=null;versions=emptyList();preview=null;previewText="";imagePreviews=emptyList();savedPreview=""
                 val obj=JSONObject().put("format",format.name).put("name","draft.${format.extension}")
-                when(format){ArtifactFormat.CODE->obj.put("body","");ArtifactFormat.XLSX->obj.put("sheets",org.json.JSONArray().put(JSONObject().put("name","Sheet1").put("cells",org.json.JSONArray())));ArtifactFormat.PPTX->obj.put("slides",org.json.JSONArray().put(JSONObject().put("title","").put("body","")));else->obj.put("paragraphs",org.json.JSONArray().put(JSONObject().put("text","").put("style","body")))}
+                when(format){
+                    ArtifactFormat.CODE->obj.put("body","")
+                    ArtifactFormat.XLSX->obj.put("sheets",org.json.JSONArray().put(JSONObject().put("name","Sheet1").put("cells",org.json.JSONArray())))
+                    ArtifactFormat.PPTX->obj.put("slides",org.json.JSONArray().put(JSONObject().put("title","").put("body","")))
+                    ArtifactFormat.DOCX->obj.put("blocks",org.json.JSONArray().put(JSONObject().put("kind","paragraph").put("text","").put("style","body")))
+                    ArtifactFormat.PDF->obj.put("paragraphs",org.json.JSONArray().put(JSONObject().put("text","").put("style","body")))
+                }
                 descriptor=obj.toString(2)
             }){Text(format.name,style=MaterialTheme.typography.labelSmall)}}}
             items.forEach{revision->TextButton(enabled=!busy,onClick={load(revision)},modifier=Modifier.testTag("artifact-${revision.id}")){Text("${revision.name} · v${revision.version} · ${revision.bytes} bytes")}}

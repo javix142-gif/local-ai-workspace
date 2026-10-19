@@ -71,15 +71,20 @@ class ArtifactRenderer(private val context:Context) {
     private fun docx(spec:ArtifactSpec):Map<String,String> {
         val ns="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
         fun runs(s:String)=s.split('\n').mapIndexed{i,line->(if(i>0)"<w:r><w:br/></w:r>"else "")+"<w:r><w:t xml:space=\"preserve\">${xml(line)}</w:t></w:r>"}.joinToString("")
-        val paragraphs=spec.json().getJSONArray("paragraphs").objects().joinToString(""){p->
+        fun paragraph(p:JSONObject):String {
             val style=p.optString("style","body");val props=when(style){"title"->"<w:pStyle w:val=\"Title\"/>";"heading"->"<w:pStyle w:val=\"Heading1\"/>";"bullet"->"<w:numPr><w:ilvl w:val=\"0\"/><w:numId w:val=\"1\"/></w:numPr>";"pageBreak"->"<w:pageBreakBefore/>";else->""}
-            "<w:p><w:pPr>$props</w:pPr>${runs(p.getString("text"))}</w:p>"
+            return "<w:p><w:pPr>$props</w:pPr>${runs(p.getString("text"))}</w:p>"
         }
-        val tables=spec.json().optJSONArray("tables")?.objects().orEmpty().joinToString(""){t->"<w:tbl><w:tblPr><w:tblW w:w=\"0\" w:type=\"auto\"/><w:tblBorders>"+listOf("top","left","bottom","right","insideH","insideV").joinToString(""){"<w:$it w:val=\"single\" w:sz=\"4\"/>"}+"</w:tblBorders></w:tblPr><w:tblGrid>"+(0 until t.getJSONArray("rows").getJSONArray(0).length()).joinToString(""){"<w:gridCol w:w=\"${9026/t.getJSONArray("rows").getJSONArray(0).length()}\"/>"}+"</w:tblGrid>"+t.getJSONArray("rows").arrays().joinToString(""){row->"<w:tr>"+(0 until row.length()).joinToString(""){"<w:tc><w:p>${runs(row.getString(it))}</w:p></w:tc>"}+"</w:tr>"}+"</w:tbl>"}
+        fun table(t:JSONObject):String="<w:tbl><w:tblPr><w:tblW w:w=\"0\" w:type=\"auto\"/><w:tblBorders>"+listOf("top","left","bottom","right","insideH","insideV").joinToString(""){"<w:$it w:val=\"single\" w:sz=\"4\"/>"}+"</w:tblBorders></w:tblPr><w:tblGrid>"+(0 until t.getJSONArray("rows").getJSONArray(0).length()).joinToString(""){"<w:gridCol w:w=\"${9026/t.getJSONArray("rows").getJSONArray(0).length()}\"/>"}+"</w:tblGrid>"+t.getJSONArray("rows").arrays().joinToString(""){row->"<w:tr>"+(0 until row.length()).joinToString(""){"<w:tc><w:p>${runs(row.getString(it))}</w:p></w:tc>"}+"</w:tr>"}+"</w:tbl>"
+        val descriptor=spec.json()
+        val content=if(descriptor.has("blocks")) descriptor.getJSONArray("blocks").objects().joinToString(""){block->
+            when(block.getString("kind")){"paragraph"->paragraph(block);"table"->table(block);else->error("DOCX_BLOCK_KIND_UNSUPPORTED")}
+        } else descriptor.getJSONArray("paragraphs").objects().joinToString(""){paragraph(it)}+
+            descriptor.optJSONArray("tables")?.objects().orEmpty().joinToString(""){table(it)}
         return linkedMapOf(
             "[Content_Types].xml" to types("word/document.xml" to "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml","word/styles.xml" to "application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml","word/numbering.xml" to "application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"),
             "_rels/.rels" to rels(Triple("rId1","officeDocument","word/document.xml")),
-            "word/document.xml" to declaration("<w:document xmlns:w=\"$ns\"><w:body>$paragraphs$tables<w:sectPr><w:pgSz w:w=\"11906\" w:h=\"16838\"/><w:pgMar w:top=\"1440\" w:right=\"1440\" w:bottom=\"1440\" w:left=\"1440\"/></w:sectPr></w:body></w:document>"),
+            "word/document.xml" to declaration("<w:document xmlns:w=\"$ns\"><w:body>$content<w:sectPr><w:pgSz w:w=\"11906\" w:h=\"16838\"/><w:pgMar w:top=\"1440\" w:right=\"1440\" w:bottom=\"1440\" w:left=\"1440\"/></w:sectPr></w:body></w:document>"),
             "word/_rels/document.xml.rels" to rels(Triple("styles","styles","styles.xml"),Triple("numbering","numbering","numbering.xml")),
             "word/styles.xml" to declaration("<w:styles xmlns:w=\"$ns\"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii=\"Calibri\" w:hAnsi=\"Calibri\"/><w:sz w:val=\"24\"/></w:rPr></w:rPrDefault></w:docDefaults><w:style w:type=\"paragraph\" w:default=\"1\" w:styleId=\"Normal\"><w:name w:val=\"Normal\"/></w:style><w:style w:type=\"paragraph\" w:styleId=\"Title\"><w:name w:val=\"Title\"/><w:rPr><w:b/><w:sz w:val=\"40\"/></w:rPr></w:style><w:style w:type=\"paragraph\" w:styleId=\"Heading1\"><w:name w:val=\"heading 1\"/><w:rPr><w:b/><w:sz w:val=\"32\"/></w:rPr></w:style></w:styles>"),
             "word/numbering.xml" to declaration("<w:numbering xmlns:w=\"$ns\"><w:abstractNum w:abstractNumId=\"0\"><w:lvl w:ilvl=\"0\"><w:start w:val=\"1\"/><w:numFmt w:val=\"bullet\"/><w:lvlText w:val=\"•\"/><w:pPr><w:ind w:left=\"720\" w:hanging=\"360\"/></w:pPr></w:lvl></w:abstractNum><w:num w:numId=\"1\"><w:abstractNumId w:val=\"0\"/></w:num></w:numbering>")

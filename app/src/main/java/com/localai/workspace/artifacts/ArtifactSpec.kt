@@ -35,6 +35,19 @@ class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String
                 }
             }
         }.joinToString("\n\n")
+        ArtifactFormat.DOCX->{
+            val descriptor=json()
+            if(descriptor.has("blocks")) descriptor.getJSONArray("blocks").objects().joinToString("\n\n") { block ->
+                when(block.getString("kind")) {
+                    "paragraph"->block.getString("text")
+                    "table"->block.getJSONArray("rows").arrays().joinToString("\n") { row->(0 until row.length()).joinToString(" | "){row.getString(it)} }
+                    else->error("DOCX_BLOCK_KIND_UNSUPPORTED")
+                }
+            } else descriptor.getJSONArray("paragraphs").objects().joinToString("\n\n"){it.getString("text")}+
+                descriptor.optJSONArray("tables")?.objects().orEmpty().joinToString("\n\n",prefix="\n") { t->
+                    t.getJSONArray("rows").arrays().joinToString("\n"){row->(0 until row.length()).joinToString(" | "){row.getString(it)}}
+                }
+        }
         else->json().getJSONArray("paragraphs").objects().joinToString("\n\n"){it.getString("text")}+
             json().optJSONArray("tables")?.objects().orEmpty().joinToString("\n\n",prefix="\n") { t->
                 t.getJSONArray("rows").arrays().joinToString("\n"){row->(0 until row.length()).joinToString(" | "){row.getString(it)}}
@@ -49,7 +62,7 @@ class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String
             require(name.length in 1..100 && Regex("[\\p{L}\\p{N}][\\p{L}\\p{N}\\p{M}._ -]*").matches(name) && !name.contains("..")){"ARTIFACT_NAME_INVALID"}
             val extension=name.substringAfterLast('.',"").lowercase(Locale.ROOT)
             require(if(format==ArtifactFormat.CODE)extension in setOf("txt","md","kt","java","py","js","ts","json","xml","html","css","c","cpp","h","rs","go","sh","sql")else extension==format.extension){"ARTIFACT_EXTENSION_MISMATCH"}
-            val keys=setOf("format","name")+when(format){ArtifactFormat.CODE->setOf("body");ArtifactFormat.XLSX->setOf("sheets");ArtifactFormat.PPTX->setOf("slides");else->setOf("paragraphs","tables")}
+            val keys=setOf("format","name")+when(format){ArtifactFormat.CODE->setOf("body");ArtifactFormat.XLSX->setOf("sheets");ArtifactFormat.PPTX->setOf("slides");ArtifactFormat.DOCX->setOf("paragraphs","tables","blocks");ArtifactFormat.PDF->setOf("paragraphs","tables")}
             fields(input,keys)
             when(format) {
                 ArtifactFormat.CODE->text(input.getString("body"),128*1024)
@@ -91,12 +104,23 @@ class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String
                         }
                     }
                 }
-                else->{
-                    val paragraphs=input.getJSONArray("paragraphs");require(paragraphs.length() in 1..500){"PARAGRAPH_LIMIT"}
-                    paragraphs.objects().forEach{fields(it,setOf("text","style"));text(it.getString("text"),10000);require(it.optString("style","body") in setOf("title","heading","body","bullet","pageBreak")){"PARAGRAPH_STYLE_UNSUPPORTED"}}
-                    val tables=input.optJSONArray("tables") ?: JSONArray();require(tables.length()<=16){"TABLE_LIMIT"}
-                    for(t in tables.objects()){fields(t,setOf("rows"));val rows=t.getJSONArray("rows");require(rows.length() in 1..200){"ROW_LIMIT"};var width:Int?=null;for(row in rows.arrays()){require(row.length() in 1..8 && (width==null||width==row.length())){"TABLE_RECTANGLE_REQUIRED"};width=row.length();for(i in 0 until row.length())text(row.getString(i),2000)}}
+                ArtifactFormat.DOCX->{
+                    if(input.has("blocks")) {
+                        require(!input.has("paragraphs")&&!input.has("tables")){"DOCX_BLOCKS_CANNOT_MIX_LEGACY_CONTENT"}
+                        val blocks=input.getJSONArray("blocks");require(blocks.length() in 1..516){"DOCX_BLOCK_LIMIT"}
+                        var paragraphs=0;var tables=0
+                        for(block in blocks.objects()) when(block.getString("kind")) {
+                            "paragraph"->{
+                                require(++paragraphs<=500){"PARAGRAPH_LIMIT"}
+                                fields(block,setOf("kind","text","style"));text(block.getString("text"),10000)
+                                require(block.optString("style","body") in setOf("title","heading","body","bullet","pageBreak")){"PARAGRAPH_STYLE_UNSUPPORTED"}
+                            }
+                            "table"->{require(++tables<=16){"TABLE_LIMIT"};fields(block,setOf("kind","rows"));validateTable(block.getJSONArray("rows"))}
+                            else->error("DOCX_BLOCK_KIND_UNSUPPORTED")
+                        }
+                    } else validateLegacyParagraphsAndTables(input)
                 }
+                ArtifactFormat.PDF->validateLegacyParagraphsAndTables(input)
             }
             return ArtifactSpec(format,name,input.toString())
         }
@@ -106,6 +130,19 @@ class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String
             require(col<=16384 && row<=1048576){"ADDRESS_OUT_OF_EXCEL_BOUNDS"};return row to col
         }
         private fun number(v:String) {val n=v.toBigDecimalOrNull() ?: error("NUMBER_INVALID");require(n.precision()<=128 && kotlin.math.abs(n.scale().toLong())<=128){"NUMBER_PRECISION_LIMIT"}}
+        private fun validateLegacyParagraphsAndTables(input:JSONObject) {
+            val paragraphs=input.getJSONArray("paragraphs");require(paragraphs.length() in 1..500){"PARAGRAPH_LIMIT"}
+            paragraphs.objects().forEach{fields(it,setOf("text","style"));text(it.getString("text"),10000);require(it.optString("style","body") in setOf("title","heading","body","bullet","pageBreak")){"PARAGRAPH_STYLE_UNSUPPORTED"}}
+            val tables=input.optJSONArray("tables") ?: JSONArray();require(tables.length()<=16){"TABLE_LIMIT"}
+            for(t in tables.objects()){fields(t,setOf("rows"));validateTable(t.getJSONArray("rows"))}
+        }
+        private fun validateTable(rows:JSONArray) {
+            require(rows.length() in 1..200){"ROW_LIMIT"};var width:Int?=null
+            for(row in rows.arrays()) {
+                require(row.length() in 1..8 && (width==null||width==row.length())){"TABLE_RECTANGLE_REQUIRED"}
+                width=row.length();for(i in 0 until row.length())text(row.getString(i),2000)
+            }
+        }
         private fun fields(j:JSONObject,allowed:Set<String>) {require(j.keys().asSequence().all{it in allowed}){"ARTIFACT_FIELD_UNSUPPORTED"}}
         private fun text(s:String,max:Int){require(s.length<=max){"ARTIFACT_TEXT_LIMIT"};var i=0;while(i<s.length){val c=s.codePointAt(i);require(c==9||c==10||c==13||c in 32..0xD7FF||c in 0xE000..0xFFFD||c in 0x10000..0x10FFFF){"ARTIFACT_INVALID_UNICODE"};i+=Character.charCount(c)}}
     }
