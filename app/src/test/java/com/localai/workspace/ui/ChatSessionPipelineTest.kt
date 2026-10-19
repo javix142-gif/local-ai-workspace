@@ -15,6 +15,7 @@ import kotlinx.coroutines.test.*
 import org.junit.*
 import org.junit.Assert.*
 import org.junit.runner.RunWith
+import org.json.JSONObject
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.Shadows.shadowOf
@@ -202,6 +203,20 @@ class ChatSessionPipelineTest {
         assertNotNull("The first visible host state is timed", firstContent.firstVisibleUiMs)
         assertNull("A fake runtime must not fabricate a native callback metric", firstContent.firstCallbackMs)
         val diagnosticJson = graph.normalGenerationTrace.report()
+        val traceJson = JSONObject(diagnosticJson)
+        assertTrue("A normal-chat trace must include metadata about context composition", traceJson.has("contextComposition"))
+        val contextComposition = traceJson.getJSONObject("contextComposition")
+        assertEquals(com.localai.workspace.context.ContextTokenEstimator.METHOD, contextComposition.getString("estimator"))
+        assertTrue(contextComposition.getInt("estimatedUnits") <= contextComposition.getInt("availableUnits"))
+        fun totalCounts(key: String): Int {
+            val counts = contextComposition.getJSONObject(key)
+            var total = 0
+            val names = counts.keys()
+            while (names.hasNext()) total += counts.getInt(names.next())
+            return total
+        }
+        assertEquals(contextComposition.getInt("includedItemCount"), totalCounts("includedByKind"))
+        assertEquals(contextComposition.getInt("omittedItemCount"), totalCounts("omittedByReason"))
         assertFalse(diagnosticJson.contains(privatePrompt))
         assertFalse(diagnosticJson.contains("partial final"))
         assertFalse(diagnosticJson.contains("/private/"))

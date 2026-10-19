@@ -116,6 +116,16 @@ fun PerformanceScreen(graph: AppGraph, back: () -> Unit) {
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
+            Text("CONTEXT COMPOSITION", style = MaterialTheme.typography.titleSmall)
+            val contextRows = GenerationTimelinePresentation.contextCompositionRows(trace)
+            if (contextRows.isEmpty()) {
+                Text("Context budget summary unavailable for this request.", style = MaterialTheme.typography.bodySmall)
+            } else {
+                contextRows.forEach { (label, value) ->
+                    Text("$label · $value", style = MaterialTheme.typography.bodySmall)
+                }
+                Text("Estimator-specific units; these are not native tokenizer counts.", style = MaterialTheme.typography.bodySmall)
+            }
             val correlatedRows = GenerationTimelinePresentation.correlatedMetricRows(trace, modelRequestMetrics)
             if (correlatedRows.isEmpty()) {
                 Text("No final runtime metrics are correlated to this request trace yet. Native TTFT and decode are not inferred.", style = MaterialTheme.typography.bodySmall)

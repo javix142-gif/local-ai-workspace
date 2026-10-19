@@ -35,4 +35,11 @@ class NormalGenerationTraceTest {
  @Test fun corrupt_trace_does_not_block_new_request()=runBlocking<Unit>{
   file().writeText("invalid");val journal=NormalGenerationTrace(file());val id=journal.begin(null,false);journal.mark(id,"REQUEST_COMPLETE"){it.copy(completedAt=1)};assertEquals(id,journal.state.value!!.runId)
  }
+ @Test fun legacy_trace_without_context_composition_remains_readable(){
+  file().writeText("""{"runId":"legacy","conversationId":null,"projectPresent":false,"startedAt":1,"startedElapsedMs":10,"phase":"REQUEST_COMPLETE","completedAt":20,"events":[{"phase":"REQUEST_CREATED","elapsedRealtimeMs":10},{"phase":"REQUEST_COMPLETE","elapsedRealtimeMs":20}]}""")
+  val restored=NormalGenerationTrace(file()).state.value!!
+  assertEquals("legacy",restored.runId)
+  assertEquals("REQUEST_COMPLETE",restored.phase)
+  assertNull(restored.contextComposition)
+ }
 }

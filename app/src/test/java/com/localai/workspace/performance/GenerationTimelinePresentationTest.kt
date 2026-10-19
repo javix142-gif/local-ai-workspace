@@ -5,9 +5,41 @@ import com.localai.workspace.diagnostics.NormalGenerationSnapshot
 import com.localai.workspace.domain.model.RuntimeMetrics
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class GenerationTimelinePresentationTest {
+    @Test
+    fun presentsContextBudgetAsEstimatorSpecificMetadataAndOmitsNoContent() {
+        val snapshot = NormalGenerationSnapshot(
+            runId = "run",
+            conversationId = null,
+            projectPresent = false,
+            startedAt = 1L,
+            startedElapsedMs = 1_000L,
+            contextComposition = com.localai.workspace.diagnostics.ContextCompositionSummary(
+                estimator = "ESTIMATED_UTF8_BYTES_V1",
+                estimatedUnits = 142,
+                availableUnits = 300,
+                includedItemCount = 2,
+                omittedItemCount = 1,
+                includedByKind = mapOf("SOURCE" to 1, "OBJECTIVE" to 1),
+                omittedByReason = mapOf("TOKEN_BUDGET" to 1),
+            ),
+        )
+
+        assertEquals(listOf(
+            "Estimated context units" to "142 / 300 · ESTIMATED_UTF8_BYTES_V1",
+            "Included / omitted context items" to "2 / 1",
+            "Included by kind" to "OBJECTIVE 1, SOURCE 1",
+            "Omitted by reason" to "TOKEN_BUDGET 1",
+        ), GenerationTimelinePresentation.contextCompositionRows(snapshot))
+        assertTrue(GenerationTimelinePresentation.contextCompositionRows(snapshot).none { (label, value) ->
+            label.contains("prompt", ignoreCase = true) || value.contains("private", ignoreCase = true)
+        })
+        assertEquals(emptyList<Pair<String, String>>(), GenerationTimelinePresentation.contextCompositionRows(snapshot.copy(contextComposition = null)))
+    }
+
     @Test
     fun reportsElapsedAndAdjacentIntervalsInRecordedOrder() {
         val snapshot = NormalGenerationSnapshot(

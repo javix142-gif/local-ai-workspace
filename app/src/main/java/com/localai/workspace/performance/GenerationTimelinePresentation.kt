@@ -13,6 +13,21 @@ data class GenerationTimelineRow(
 
 /** Presents the existing monotonic request checkpoints without inferring missing stage boundaries. */
 object GenerationTimelinePresentation {
+    /** Metadata-only budget summary; units are explicitly estimator-specific, never native token counts. */
+    fun contextCompositionRows(snapshot: NormalGenerationSnapshot): List<Pair<String, String>> {
+        val summary = snapshot.contextComposition ?: return emptyList()
+        return buildList {
+            add("Estimated context units" to "${summary.estimatedUnits} / ${summary.availableUnits} · ${summary.estimator}")
+            add("Included / omitted context items" to "${summary.includedItemCount} / ${summary.omittedItemCount}")
+            if (summary.includedByKind.isNotEmpty()) {
+                add("Included by kind" to summary.includedByKind.toSortedMap().entries.joinToString { "${it.key} ${it.value}" })
+            }
+            if (summary.omittedByReason.isNotEmpty()) {
+                add("Omitted by reason" to summary.omittedByReason.toSortedMap().entries.joinToString { "${it.key} ${it.value}" })
+            }
+        }
+    }
+
     /** Never joins stale benchmark/preparation metrics to a different chat trace. */
     fun correlatedMetrics(snapshot: NormalGenerationSnapshot, metrics: RuntimeMetrics?): RuntimeMetrics? =
         metrics?.takeIf { it.normalGenerationTraceId == snapshot.runId }

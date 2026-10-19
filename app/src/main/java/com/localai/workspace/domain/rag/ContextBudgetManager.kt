@@ -56,6 +56,11 @@ private data class EvidenceDeduplicationKey(
  * tokenizer supplied by the active runtime.
  */
 class ContextBudgetManager {
+    companion object {
+        /** Heuristic estimate only; this is not the active model tokenizer. */
+        const val ESTIMATOR_ID = "ESTIMATED_CHARACTERS_DIV_4_V1"
+    }
+
     fun allocate(input: ContextBudgetInput): ContextBudgetResult {
         val contextLimit = minOf(
             input.modelContextLength.coerceAtLeast(256),

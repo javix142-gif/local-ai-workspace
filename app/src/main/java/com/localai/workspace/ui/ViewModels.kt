@@ -607,6 +607,7 @@ class ChatViewModel(
             var contextMemoryMs: Long? = null
             var sourceRetrievalMs: Long? = null
             var conversationRetrievalMs: Long? = null
+            var contextComposition: com.localai.workspace.diagnostics.ContextCompositionSummary? = null
             var collectedMetrics: com.localai.workspace.domain.model.RuntimeMetrics? = null
             var requestRuntime: InferenceRuntime? = null
             var generationCollectionStarted = false
@@ -819,6 +820,15 @@ class ChatViewModel(
                     contextMemoryMs=selectedContext.timings.memoryMs
                     sourceRetrievalMs=selectedContext.timings.retrievalMs
                     conversationRetrievalMs=selectedContext.timings.historyMs
+                    contextComposition = com.localai.workspace.diagnostics.ContextCompositionSummary(
+                        estimator = com.localai.workspace.context.ContextTokenEstimator.METHOD,
+                        estimatedUnits = selectedContext.estimatedInputTokens,
+                        availableUnits = selectedContext.inputBudget,
+                        includedItemCount = selectedContext.included.size,
+                        omittedItemCount = selectedContext.dropped.size,
+                        includedByKind = selectedContext.included.groupingBy { it.kind.name }.eachCount().toSortedMap(),
+                        omittedByReason = selectedContext.dropped.groupingBy { it.reason }.eachCount().toSortedMap(),
+                    )
                     trace("MEMORY_COMPLETE")
                     trace("CONTEXT_V1_BUILD_COMPLETE")
                     suppliedEvidence = selectedContext.sourceEvidence
@@ -854,10 +864,28 @@ class ChatViewModel(
                         if(categories.isNotEmpty()) _notices.emit("${categories.joinToString(", ").replaceFirstChar { it.uppercase() }} did not fit this turn; the answer may omit those details. Saved data remains available.")
                     }
                 }
+                if (!useContextV1 && !diagnosticSmoke) {
+                    val omittedByReason = buildMap {
+                        if (budget.budgetExcluded.isNotEmpty()) put("TOKEN_BUDGET", budget.budgetExcluded.size)
+                        if (budget.deduplicated.isNotEmpty()) put("DUPLICATE_CONTENT", budget.deduplicated.size)
+                    }
+                    contextComposition = com.localai.workspace.diagnostics.ContextCompositionSummary(
+                        estimator = com.localai.workspace.domain.rag.ContextBudgetManager.ESTIMATOR_ID,
+                        estimatedUnits = budget.estimatedInputTokens,
+                        availableUnits = budget.availableInputTokens,
+                        includedItemCount = budget.included.size,
+                        omittedItemCount = budget.excluded.size,
+                        includedByKind = budget.included.groupingBy { it.kind.name }.eachCount().toSortedMap(),
+                        omittedByReason = omittedByReason,
+                    )
+                }
                 requestedThinking = graph.assistantSettings.forProject(projectId).thinking.name
                 effectiveThinking = if (conversation.enableThinking) "ON" else "OFF"
                 contextBuildMs = android.os.SystemClock.elapsedRealtime() - contextStartedAt
-                trace("CONTEXT_BUILD_COMPLETE") { it.copy(thinkingEffective = conversation.enableThinking, toolsEffectiveCount = routedTools.size) }
+                trace("CONTEXT_BUILD_COMPLETE") {
+                    it.copy(thinkingEffective = conversation.enableThinking, toolsEffectiveCount = routedTools.size,
+                        contextComposition = contextComposition)
+                }
                 if (model.toDescriptor().runtime == RuntimeType.LITERT_LM) {
                     graph.database.messageDao().setEffectiveTurn(userId, conversation.userMessage, model.id)
                 }

@@ -12,6 +12,16 @@ import java.util.UUID
 
 /** Metadata only: never accepts a prompt, answer, file path or exception message. */
 data class GenerationCheckpoint(val phase:String,val elapsedRealtimeMs:Long)
+/** Estimator-specific context budget metadata; intentionally contains no prompt or evidence. */
+data class ContextCompositionSummary(
+ val estimator:String,
+ val estimatedUnits:Int,
+ val availableUnits:Int,
+ val includedItemCount:Int,
+ val omittedItemCount:Int,
+ val includedByKind:Map<String,Int> = emptyMap(),
+ val omittedByReason:Map<String,Int> = emptyMap(),
+)
 data class NormalGenerationSnapshot(
  val runId:String,val conversationId:String?,val projectPresent:Boolean,
  val startedAt:Long,val startedElapsedMs:Long,val phase:String="REQUEST_CREATED",
@@ -22,6 +32,7 @@ data class NormalGenerationSnapshot(
  val toolsRequested:Boolean?=null,val toolsEffectiveCount:Int?=null,
  val modelState:String?=null,val engineReused:Boolean?=null,val sessionReused:Boolean?=null,
  val backendRequested:String?=null,val backendEffective:String?=null,val workerCheckpoint:String?=null,
+ val contextComposition:ContextCompositionSummary?=null,
  val processRestartObserved:Boolean=false,val checkpointBoundary:String="APP_PIPELINE_AND_EXISTING_WORKER_PROGRESS",
  val events:List<GenerationCheckpoint> = emptyList(),val persistenceErrorClass:String?=null,
 )
