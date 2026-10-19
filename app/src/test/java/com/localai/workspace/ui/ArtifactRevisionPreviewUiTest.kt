@@ -70,7 +70,8 @@ class ArtifactRevisionPreviewUiTest {
         assertEquals("Reviewing a proposal must not create a revision",1,store.history(project,original.id).size)
         assertArrayEquals("Preview is read-only",originalBytes,store.verifiedFile(project,original).readBytes())
 
-        compose.onNodeWithText("Close").performScrollTo().performClick()
+        // Close is the AlertDialog confirm button, outside the scrollable body.
+        compose.onNodeWithText("Close").performClick()
         assertTrue("The dialog exposes its normal cancel/dismiss callback",dismissed)
         assertEquals("Closing a proposal must not persist it",1,store.history(project,original.id).size)
         assertArrayEquals("Cancel preserves the original saved bytes",originalBytes,store.verifiedFile(project,original).readBytes())
