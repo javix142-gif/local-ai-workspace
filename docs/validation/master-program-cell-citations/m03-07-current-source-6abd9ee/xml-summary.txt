@@ -1,0 +1,2 @@
+TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml: tests=2 failures=0 errors=0 skipped=0
+TOTAL: tests=2 failures=0 errors=0 skipped=0

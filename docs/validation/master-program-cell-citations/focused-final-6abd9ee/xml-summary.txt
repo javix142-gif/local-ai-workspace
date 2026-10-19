@@ -1,0 +1,6 @@
+TEST-com.localai.workspace.data.WorkspaceCitationEvidenceMigrationTest.xml: tests=1 failures=0 errors=0 skipped=0
+TEST-com.localai.workspace.data.WorkspaceMigration3Test.xml: tests=1 failures=0 errors=0 skipped=0
+TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml: tests=2 failures=0 errors=0 skipped=0
+TEST-com.localai.workspace.ui.ChatContentUiTest.xml: tests=1 failures=0 errors=0 skipped=0
+TEST-com.localai.workspace.ui.CitationSourcePreviewTest.xml: tests=7 failures=0 errors=0 skipped=0
+TOTAL: tests=12 failures=0 errors=0 skipped=0

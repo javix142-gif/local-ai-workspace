@@ -1,0 +1,8 @@
+source_sha=6abd9eee7689f08b3cadbceb97cbfdcb5358064c
+gradle_version=8.10.2
+runtime_jdk=Temurin 17.0.20.1
+duration_reported_by_gradle=16s
+exit_code=1
+task=:llama-runtime:extractDebugAnnotations FAILED
+missing_cached_dependency=com.android.tools.lint:lint-gradle:31.7.3
+app_lint=NOT_REACHED

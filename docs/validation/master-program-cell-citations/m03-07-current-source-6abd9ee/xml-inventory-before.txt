@@ -1,0 +1,5 @@
+TEST-com.localai.workspace.data.WorkspaceCitationEvidenceMigrationTest.xml 520 1792430579.5940566650
+TEST-com.localai.workspace.data.WorkspaceMigration3Test.xml 512 1792430579.5877511230
+TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml 673 1792430579.5944750830
+TEST-com.localai.workspace.ui.ChatContentUiTest.xml 481 1792430579.5925749790
+TEST-com.localai.workspace.ui.CitationSourcePreviewTest.xml 1421 1792430579.5937184460

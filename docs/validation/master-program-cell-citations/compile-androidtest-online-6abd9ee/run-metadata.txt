@@ -1,0 +1,10 @@
+source_sha=6abd9eee7689f08b3cadbceb97cbfdcb5358064c
+started_at=2026-10-19T17:23:49Z
+finished_at=2026-10-19T17:32:33Z
+wall_seconds=524
+gradle_reported_duration=8m43s
+exit_code=1
+last_task=:app:processDebugAndroidTestManifest FAILED
+classification=INFRASTRUCTURE_NETWORK_UNREACHABLE
+android_test_kotlin_compilation=NOT_REACHED
+new_junit_xml=0

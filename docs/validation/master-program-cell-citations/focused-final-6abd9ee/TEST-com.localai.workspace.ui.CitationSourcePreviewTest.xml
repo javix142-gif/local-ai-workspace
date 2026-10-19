@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.CitationSourcePreviewTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-19T17:22:44" hostname="42c4f375d730" time="0.127">
+  <properties/>
+  <testcase name="persistedCitationsGroupByTheirAssistantMessage" classname="com.localai.workspace.ui.CitationSourcePreviewTest" time="0.019"/>
+  <testcase name="semanticSegmentRequiresTheSameAuthorizedDocumentAndScope" classname="com.localai.workspace.ui.CitationSourcePreviewTest" time="0.088"/>
+  <testcase name="wrongDocumentOrSegmentNeverSubstitutesHomonymousContent" classname="com.localai.workspace.ui.CitationSourcePreviewTest" time="0.0"/>
+  <testcase name="opensOnlyTheMatchingStoredSegmentAndRetainsItsLocation" classname="com.localai.workspace.ui.CitationSourcePreviewTest" time="0.0"/>
+  <testcase name="cellReferenceCodecRejectsOverflowAndCorruptMetadataWithoutTruncation" classname="com.localai.workspace.ui.CitationSourcePreviewTest" time="0.003"/>
+  <testcase name="evidenceMapperAndSourcePreviewRetainResolvedSheetQualifiedCells" classname="com.localai.workspace.ui.CitationSourcePreviewTest" time="0.008"/>
+  <testcase name="missingSegmentUsesSavedExcerptAndDifferentConversationIsRejected" classname="com.localai.workspace.ui.CitationSourcePreviewTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

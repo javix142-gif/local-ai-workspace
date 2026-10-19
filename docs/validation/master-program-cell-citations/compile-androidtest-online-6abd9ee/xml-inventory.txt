@@ -1,0 +1,2 @@
+AndroidTest compilation only; no test task ran and no JUnit XML was generated.
+A timestamp-bounded inventory of app/build/test-results between 2026-10-19T17:23:49Z and 2026-10-19T17:32:33Z was empty.

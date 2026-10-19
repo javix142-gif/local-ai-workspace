@@ -1,0 +1,6 @@
+source_sha=6abd9eee7689f08b3cadbceb97cbfdcb5358064c
+exit_code=1
+gradle_started=false
+reason=wrapper default GRADLE_USER_HOME (/home/agent/.gradle) lacked the Gradle 8.10.2 distribution; wrapper download returned Connection refused
+no_gradle_tasks=TRUE
+exact_utc_start=NOT_CAPTURED

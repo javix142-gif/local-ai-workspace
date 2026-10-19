@@ -1,0 +1,4 @@
+source_sha=6abd9eee7689f08b3cadbceb97cbfdcb5358064c
+base_remote_feature=d25f05997c0487bbcbad964f68acb34a175e2313
+started_at_utc=2026-10-19T17:34:06Z
+pre_run_xml_inventory=not yet captured

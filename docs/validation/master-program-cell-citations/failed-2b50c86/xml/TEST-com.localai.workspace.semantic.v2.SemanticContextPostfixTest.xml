@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-19T17:21:17" hostname="42c4f375d730" time="0.788">
+  <properties/>
+  <testcase name="lexicalFallbackReportsMissingQualifiedLog10WithoutUsingHomonym" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.613"/>
+  <testcase name="eg2Log10CellDependencyReachesFinalContextAndProvenance" classname="com.localai.workspace.semantic.v2.SemanticContextPostfixTest" time="0.175"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

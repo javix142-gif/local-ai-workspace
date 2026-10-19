@@ -1,0 +1,101 @@
+{
+  "compression": "gzip, lossless; mtime=0",
+  "payloads": [
+    {
+      "original": "compile-androidtest-6abd9ee/gradle.log",
+      "originalBytes": 6413,
+      "originalSha256": "4e10163e6fb6f4bba7a282ea0890403d5547df0801c51ac702969c437defdaec",
+      "compressed": "compile-androidtest-6abd9ee/gradle.log.gz",
+      "compressedBytes": 1496,
+      "compressedSha256": "1c28edbc8236859d86f20b2a03e323bc87ffd7fd51314d7ee5739a82b8bbd399"
+    },
+    {
+      "original": "compile-androidtest-online-6abd9ee/gradle-daemon-threads-40502-second.txt",
+      "originalBytes": 106798,
+      "originalSha256": "b3ec5c5173d855435285f586b114192c84832ee779a42dc69ad34545e64fbbaa",
+      "compressed": "compile-androidtest-online-6abd9ee/gradle-daemon-threads-40502-second.txt.gz",
+      "compressedBytes": 10625,
+      "compressedSha256": "7c16c69f63402d4a2cdefc4193b18d8ce157f0fbde7da5d77995f13d8b6ae9b2"
+    },
+    {
+      "original": "compile-androidtest-online-6abd9ee/gradle-daemon-threads-40502.txt",
+      "originalBytes": 109451,
+      "originalSha256": "04aa9d8b16980998743d59555f2e2e8ec51db17c1671762b19875f1c7b3a8097",
+      "compressed": "compile-androidtest-online-6abd9ee/gradle-daemon-threads-40502.txt.gz",
+      "compressedBytes": 11278,
+      "compressedSha256": "142e702a4365a076c47544536531f36e9ce66be861646afd906c3a277e3ddcb3"
+    },
+    {
+      "original": "compile-androidtest-online-6abd9ee/gradle.log",
+      "originalBytes": 10956,
+      "originalSha256": "125a5a903d8b197fe0c37cbf992b6dcf3fa1fa288422f57f0311208c44979af0",
+      "compressed": "compile-androidtest-online-6abd9ee/gradle.log.gz",
+      "compressedBytes": 1764,
+      "compressedSha256": "05abb4ecc058536e5fa777f29417f382e20acb9d3fcdca57f1095ebbea3c01cb"
+    },
+    {
+      "original": "failed-2b50c86/gradle.log",
+      "originalBytes": 407480,
+      "originalSha256": "1f86549aeb570255ee224ca6172820d8e985aaf30f4ba2467ea767a87592833c",
+      "compressed": "failed-2b50c86/gradle.log.gz",
+      "compressedBytes": 33894,
+      "compressedSha256": "60e7d42c44473666544c0174a2cef622dfd7ef165881efd44a150b548369b60c"
+    },
+    {
+      "original": "focused-current-2b50c86/gradle.log",
+      "originalBytes": 407480,
+      "originalSha256": "1f86549aeb570255ee224ca6172820d8e985aaf30f4ba2467ea767a87592833c",
+      "compressed": "focused-current-2b50c86/gradle.log.gz",
+      "compressedBytes": 33894,
+      "compressedSha256": "60e7d42c44473666544c0174a2cef622dfd7ef165881efd44a150b548369b60c"
+    },
+    {
+      "original": "focused-final-6abd9ee/gradle.log",
+      "originalBytes": 423970,
+      "originalSha256": "ea7a7033dcfe844efcdfd6603b26ab5c2440d81090f2d338522d31c8791d3ba6",
+      "compressed": "focused-final-6abd9ee/gradle.log.gz",
+      "compressedBytes": 35042,
+      "compressedSha256": "15c48b88e92e9d7f4858affadc6517da1f01dcdd9ac4d4f7c4fcd8516db8af50"
+    },
+    {
+      "original": "ksp-schema10/gradle.log",
+      "originalBytes": 258948,
+      "originalSha256": "7f74d281257b38c314a483e5ae4091091c20d3fb1b4e8ccaaa4ee9893dfe5617",
+      "compressed": "ksp-schema10/gradle.log.gz",
+      "compressedBytes": 20330,
+      "compressedSha256": "0e0d5ea9b41179dcb3fdc5badf331859405600d92bbe7875df9fc1c5f70d7bcb"
+    },
+    {
+      "original": "lint-offline-6abd9ee-cached-home.log",
+      "originalBytes": 2575,
+      "originalSha256": "2018fbc3d0fdb34d79fda23634efe70ccdf57294dae15558a02727bc868b3d00",
+      "compressed": "lint-offline-6abd9ee-cached-home.log.gz",
+      "compressedBytes": 1006,
+      "compressedSha256": "f6d57120def074f43c720488567dbbf2b2d9e69a0e589dcf8636fee5e80cb75b"
+    },
+    {
+      "original": "lint-offline-6abd9ee.log",
+      "originalBytes": 2050,
+      "originalSha256": "bb85c8a579c297e974ca8504a95c1ba4e87732d5487b3767af5d12db6fd3e92c",
+      "compressed": "lint-offline-6abd9ee.log.gz",
+      "compressedBytes": 555,
+      "compressedSha256": "6e7392fdc95770685c9114f434b2dd2e9ad8993aee4c6542566176220b544698"
+    },
+    {
+      "original": "m03-07-current-source-6abd9ee/gradle.log",
+      "originalBytes": 331952,
+      "originalSha256": "a8b0482eed903af0541361ffc256b8eefe0aa4db639bc3216b65cf6696220075",
+      "compressed": "m03-07-current-source-6abd9ee/gradle.log.gz",
+      "compressedBytes": 24104,
+      "compressedSha256": "fade210a9b35949eebd0476fb748d20e1322fe0ea48e5ab952b66c7f2d245264"
+    },
+    {
+      "original": "red-1924c28/gradle-red.log",
+      "originalBytes": 314576,
+      "originalSha256": "fbf3a8883cc959e62638409fe448b1da889b5f4bf705f80e3ddb4cff6aa35346",
+      "compressed": "red-1924c28/gradle-red.log.gz",
+      "compressedBytes": 24900,
+      "compressedSha256": "5df1ec1ddfd0f556e815f064038c81d8c2813ed38cc56205212813b7550a490e"
+    }
+  ]
+}

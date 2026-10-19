@@ -1,0 +1,175 @@
+{
+  "name": "M02-05 sheet-qualified cell references in persisted citations; M03-07 current-source focused revalidation",
+  "status": "PREPARATORY_HOST_FOCUSED_PASS_WITH_ENVIRONMENT_BLOCKS; NO_FORMAL_TASK_CLOSURE",
+  "baseRemoteHead": "d25f05997c0487bbcbad964f68acb34a175e2313",
+  "testedCodeSha": "6abd9eee7689f08b3cadbceb97cbfdcb5358064c",
+  "implementationBranch": "codex/master-program-20261019",
+  "codeCommits": [
+    "1924c285e7b867eff0106668fb49d9a86ca87a7a",
+    "2b50c86745d657a58ce5ced6967072b3f42b7bc4",
+    "6abd9eee7689f08b3cadbceb97cbfdcb5358064c"
+  ],
+  "recovery": {
+    "promptReportedHead": "b8e75b4a688d9e1f441324a3a1ecccb369f99ebc",
+    "actualFetchedFeatureAndCodexHead": "d25f05997c0487bbcbad964f68acb34a175e2313",
+    "backupRef": "recovery/backup-b8e75b4",
+    "backupSha": "b8e75b4a688d9e1f441324a3a1ecccb369f99ebc",
+    "lostCommit": "2f8b0d496db8973edf161c7703efc8f0c17d34fd",
+    "lostCommitAvailable": false,
+    "lostSourceReconstructed": false
+  },
+  "change": {
+    "description": "Carry resolved sheet-qualified cellReferences from EG2 and lexical ContextFoundation Evidence into bounded persisted citation metadata, and present them in existing citation card/detail/source preview.",
+    "roomVersion": 10,
+    "migration": "9->10 additive cellReferencesJson TEXT NOT NULL DEFAULT []",
+    "maxReferences": 64,
+    "maxCharsPerReference": 256,
+    "maxUtf8Bytes": 8192,
+    "newDependencies": false,
+    "retrievalScopeExpanded": false
+  },
+  "sourceTask": {
+    "id": "M02-05",
+    "status": "TODO",
+    "formalCompletion": false,
+    "dependsOn": [
+      "M02-01",
+      "M01-05"
+    ],
+    "dependencyNote": "M02-01 remains TODO and depends on device-gated M00-10; M01-05 evidence is host-accepted but original source status remains TODO."
+  },
+  "focusedCitationTests": {
+    "status": "PASS",
+    "tests": 12,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "durationSeconds": 65,
+    "sourceSha": "6abd9eee7689f08b3cadbceb97cbfdcb5358064c",
+    "evidence": "focused-final-6abd9ee/",
+    "testNames": [
+      "SemanticContextPostfixTest.eg2Log10CellDependencyReachesFinalContextAndProvenance",
+      "SemanticContextPostfixTest.lexicalFallbackReportsMissingQualifiedLog10WithoutUsingHomonym",
+      "WorkspaceCitationEvidenceMigrationTest.version8CitationRowsSurviveAndV2CodeLineEvidenceCanBeStored",
+      "WorkspaceMigration3Test.version2WorkspacesChatsAndModelsSurviveRoomMigrationAndDeletedDefaultStaysDeleted",
+      "CitationSourcePreviewTest (all 7)",
+      "ChatContentUiTest.citationReferenceKeepsEvidenceIdAndShowsStoredSourcePageAndExcerpt"
+    ]
+  },
+  "redBaseline": {
+    "commit": "1924c285e7b867eff0106668fb49d9a86ca87a7a",
+    "result": "EXPECTED_COMPILE_FAILURE",
+    "reason": "Two new assertions failed to compile because Evidence.cellReferences was absent."
+  },
+  "initialImplementationAttempt": {
+    "commit": "2b50c86745d657a58ce5ced6967072b3f42b7bc4",
+    "tests": 12,
+    "failures": 2,
+    "reason": "Plain JVM test used Android org.json stub; codec corrected to existing Gson dependency, no new dependency."
+  },
+  "m03_07Revalidation": {
+    "status": "PASS",
+    "sourceSha": "6abd9eee7689f08b3cadbceb97cbfdcb5358064c",
+    "class": "ArtifactRevisionPreviewUiTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "durationSeconds": 34,
+    "taskStatus": "TODO; requires_device=true; depends on M03-01 TODO"
+  },
+  "environment": {
+    "gradle": "8.10.2",
+    "runtimeJdk": "Temurin 17.0.20.1",
+    "jvmTestWorkerJdk": "Temurin 21.0.12.1",
+    "androidSdk": "API 35 at /workspace/.toolchain/android-sdk",
+    "ndk": "27.0.12077973",
+    "gradleUserHome": "/workspace/.gradle"
+  },
+  "additionalGates": {
+    "compileDebugAndroidTestOffline": {
+      "status": "BLOCKED_MISSING_CACHE",
+      "exitCode": 1,
+      "task": "app:processDebugAndroidTestManifest",
+      "kotlinCompileReached": false,
+      "xmlCount": 0,
+      "missing": [
+        "androidx.test.ext:junit:1.2.1",
+        "androidx.test.espresso:espresso-core:3.6.1",
+        "androidx.room:room-testing:2.6.1",
+        "androidx.test:monitor:1.6.1",
+        "androidx.test.espresso:espresso-idling-resource:3.5.0",
+        "com.google.code.findbugs:jsr305:2.0.2"
+      ],
+      "evidence": "compile-androidtest-6abd9ee/"
+    },
+    "compileDebugAndroidTestOnline": {
+      "status": "INFRASTRUCTURE_FAILURE_NETWORK_UNREACHABLE",
+      "exitCode": 1,
+      "startedAtUtc": "2026-10-19T17:23:49Z",
+      "finishedAtUtc": "2026-10-19T17:32:33Z",
+      "gradleReportedDuration": "8m43s",
+      "lastTask": "app:processDebugAndroidTestManifest",
+      "androidTestKotlinCompileReached": false,
+      "junitXmlCount": 0,
+      "networkError": "Google Maven and Maven Central returned Network is unreachable",
+      "evidence": "compile-androidtest-online-6abd9ee/"
+    },
+    "lintWrapperMisconfigured": {
+      "status": "NOT_STARTED",
+      "exitCode": 1,
+      "reason": "Default GRADLE_USER_HOME lacked Gradle 8.10.2; wrapper download Connection refused; no task ran."
+    },
+    "lintOfflineCorrectGradleHome": {
+      "status": "BLOCKED_MISSING_CACHE",
+      "exitCode": 1,
+      "task": "llama-runtime:extractDebugAnnotations",
+      "missing": "com.android.tools.lint:lint-gradle:31.7.3",
+      "appLintReached": false,
+      "gradleDuration": "16s",
+      "evidence": "lint-offline-6abd9ee-cached-home/"
+    },
+    "fullJvmGate": "NOT_RUN",
+    "assembleDebug": "NOT_RUN",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_RUN"
+  },
+  "deviceAndAppState": {
+    "emulatorCurrentSha": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "m01_06": "PENDING_REQUIRES_DEVICE",
+    "apkNotBuiltReason": "No debug signing key found in the standard executor locations checked; no replacement key was created."
+  },
+  "sourcePlan": {
+    "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmapPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskIds": 97,
+    "uniqueTaskIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": {
+      "TODO": 97
+    },
+    "modified": false
+  },
+  "protectedRefs": {
+    "main": "de615b772cf37a99e7e08a647c59607b271de606",
+    "v0.4.2": "de615b772cf37a99e7e08a647c59607b271de606"
+  },
+  "evidenceManifest": {
+    "path": "SHA256SUMS",
+    "payloadEntries": 51,
+    "manifestSha256": "9bc9a5a2c906fb171687f935ed047fc20a8dfb8370de6e7d8776b144ac4c6f13",
+    "scope": "versioned evidence payloads only; raw Gradle/JVM diagnostic outputs are retained as lossless gzip in log-payload-hashes.json; report/json/manifest are excluded"
+  },
+  "compressedLogPayloads": {
+    "path": "log-payload-hashes.json",
+    "count": 12,
+    "rawFilesExcludedFromGit": true,
+    "lossless": true
+  }
+}
