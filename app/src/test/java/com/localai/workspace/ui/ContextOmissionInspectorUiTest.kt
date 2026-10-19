@@ -15,7 +15,7 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [35], application = LocalAiApplication::class, qualifiers = "w320dp-h640dp")
+@Config(sdk = [35], application = MultiProcessUiTestApplication::class, qualifiers = "w320dp-h640dp")
 class ContextOmissionInspectorUiTest {
     @get:Rule val compose = createComposeRule()
 
