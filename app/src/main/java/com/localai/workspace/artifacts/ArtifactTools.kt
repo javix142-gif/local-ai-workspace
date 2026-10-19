@@ -14,11 +14,18 @@ class ArtifactTool(context:Context,private val operation:String):LocalTool {
     override val timeoutMs=20_000L
     override val descriptor=ToolDescriptor(operation,setOf(if(operation in setOf("artifacts.list","artifacts.read"))ToolPermission.READ_LOCAL else ToolPermission.WRITE_LOCAL),ConfirmationPolicy.NEVER)
     override fun validate(arguments:JSONObject):String?=try {
-        val fields=when(operation){"artifacts.list"->emptySet();"artifacts.read"->setOf("id")+if(arguments.has("version"))setOf("version")else emptySet();"artifacts.create"->setOf("spec");"artifacts.revise"->setOf("id","expectedVersion","spec");"artifacts.patchPreview"->setOf("id","expectedVersion","expectedSha256","edits");"artifacts.xlsxSetCells"->setOf("id","expectedVersion","edits");else->error("ARTIFACT_OPERATION_UNSUPPORTED")}
+        val fields=when(operation){"artifacts.list"->emptySet();"artifacts.read"->setOf("id")+if(arguments.has("version"))setOf("version")else emptySet();"artifacts.create"->setOf("spec");"artifacts.revise"->setOf("id","expectedVersion","spec");"artifacts.patchPreview"->setOf("id","expectedVersion","expectedSha256","edits");"artifacts.xlsxSetCells"->setOf("id","expectedVersion","edits");"artifacts.xlsxAddSheet"->setOf("id","expectedVersion","name");else->error("ARTIFACT_OPERATION_UNSUPPORTED")}
         require(arguments.keys().asSequence().toSet()==fields){"ARTIFACT_ARGUMENTS_INVALID"}
         if(operation in setOf("artifacts.create","artifacts.revise"))ArtifactSpec.parse(arguments.getJSONObject("spec"))
         if(operation=="artifacts.read")require(Regex("[0-9a-f-]{36}").matches(arguments.getString("id"))&&(!arguments.has("version")||arguments.getInt("version") in 1..1000)){"ARTIFACT_ID_OR_VERSION_INVALID"}
         if(operation=="artifacts.revise"){require(Regex("[0-9a-f-]{36}").matches(arguments.getString("id"))&&arguments.getInt("expectedVersion")>0){"ARTIFACT_REVISION_INVALID"}}
+        if(operation=="artifacts.xlsxAddSheet") {
+            require(Regex("[0-9a-f-]{36}").matches(arguments.getString("id"))&&arguments.getInt("expectedVersion") in 1..1000){"XLSX_REVISION_INVALID"}
+            require(arguments.opt("name") is String){"XLSX_SHEET_NAME_INVALID"}
+            val candidate=JSONObject().put("format","XLSX").put("name","sheet.xlsx")
+                .put("sheets",JSONArray().put(JSONObject().put("name",arguments.getString("name")).put("cells",JSONArray())))
+            ArtifactSpec.parse(candidate) // Reuse the exact sheet-name and XLSX descriptor limits.
+        }
         if(operation=="artifacts.xlsxSetCells") {
             require(Regex("[0-9a-f-]{36}").matches(arguments.getString("id"))&&arguments.getInt("expectedVersion") in 1..1000){"XLSX_REVISION_INVALID"}
             val edits=arguments.getJSONArray("edits");require(edits.length() in 1..64){"XLSX_CELL_EDIT_LIMIT_64"}
@@ -73,6 +80,11 @@ class ArtifactTool(context:Context,private val operation:String):LocalTool {
             store.verifiedFile(context.projectId,revision)
             JSONObject().put("artifact",revision.json()).put("state","PRIVATE_DRAFT_VERIFIED")
                 .put("note","The selected cells were saved as a new immutable XLSX version. Formula edits remove old cached results and request recalculation by a compatible spreadsheet reader; formulas are not recalculated by this app. Re-read this version before another update; imported originals remain unchanged.").toString()
+        } else if(operation=="artifacts.xlsxAddSheet") {
+            val revision=store.addXlsxSheet(context.projectId,arguments.getString("id"),arguments.getInt("expectedVersion"),arguments.getString("name"))
+            store.verifiedFile(context.projectId,revision)
+            JSONObject().put("artifact",revision.json()).put("state","PRIVATE_DRAFT_VERIFIED")
+                .put("note","The empty worksheet was added to a new immutable version of this app-generated workbook. Existing sheets, cells, formulas and cached values were preserved; this app does not recalculate formulas. Re-read the new version before editing cells. Imported files are unchanged and export remains a separate user-selected SAF action.").toString()
         } else {
             val spec=ArtifactSpec.parse(arguments.getJSONObject("spec"))
             val revision=if(operation=="artifacts.create")store.create(context.projectId,spec)else store.revise(context.projectId,arguments.getString("id"),arguments.getInt("expectedVersion"),spec)
@@ -81,5 +93,5 @@ class ArtifactTool(context:Context,private val operation:String):LocalTool {
                 .put("note","Actual bytes created locally. Open Artifacts in this chat for the text/structure preview, version editing and explicit export. Original imports are unchanged. Formulas are not recalculated; CODE is not executed; PDF is regenerated. PPTX can embed only a supplied, validated PNG with alt text; the preview is not a slide canvas.").toString()
         }
     }
-    companion object {val IDS=setOf("artifacts.create","artifacts.revise","artifacts.list","artifacts.read","artifacts.patchPreview","artifacts.xlsxSetCells")}
+    companion object {val IDS=setOf("artifacts.create","artifacts.revise","artifacts.list","artifacts.read","artifacts.patchPreview","artifacts.xlsxSetCells","artifacts.xlsxAddSheet")}
 }

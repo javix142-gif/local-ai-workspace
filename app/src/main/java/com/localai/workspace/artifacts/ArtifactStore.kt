@@ -187,6 +187,20 @@ class ArtifactStore(context:Context,private val root:File=File(context.filesDir,
         }
         return revise(projectId,id,expectedVersion,ArtifactSpec.parse(updated))
     }
+    /** Add one empty worksheet to a current app-private generated workbook as a new immutable version. */
+    fun addXlsxSheet(projectId:String,id:String,expectedVersion:Int,sheetName:String):ArtifactRevision {
+        require(expectedVersion in 1..1000) { "XLSX_REVISION_INVALID" }
+        val versions=history(projectId,id)
+        val revision=versions.singleOrNull{it.version==expectedVersion} ?: error("ARTIFACT_VERSION_NOT_FOUND")
+        require(versions.firstOrNull()?.version==expectedVersion) { "ARTIFACT_REVISION_NOT_CURRENT" }
+        require(revision.format==ArtifactFormat.XLSX) { "XLSX_ARTIFACT_REQUIRED" }
+        val updated=spec(projectId,revision).json()
+        val sheets=updated.getJSONArray("sheets")
+        require(sheets.length()<16) { "SHEET_LIMIT" }
+        sheets.put(JSONObject().put("name",sheetName).put("cells",org.json.JSONArray()))
+        // ArtifactSpec revalidates name syntax/uniqueness and the complete preserved descriptor.
+        return revise(projectId,id,expectedVersion,ArtifactSpec.parse(updated))
+    }
     private fun commit(projectId:String,id:String,expectedVersion:Int,spec:ArtifactSpec):ArtifactRevision {
         val owner=project(projectId)
         RandomAccessFile(File(owner,".write.lock"),"rw").channel.use { channel->

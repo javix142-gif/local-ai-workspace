@@ -45,8 +45,7 @@ class XlsxArtifactRevisionTest {
         val enabled=setOf(toolId)
         assertEquals(enabled,AssistantRouting.tools(enabled,"Agrega una hoja Resumen al libro Excel",documents=false))
         val project="xlsx-add-sheet-${UUID.randomUUID()}"
-        val root=File(context.cacheDir,"xlsx-add-sheet-${UUID.randomUUID()}")
-        val store=ArtifactStore(context,root)
+        val store=ArtifactStore(context)
         val fixture=JSONObject().put("format","XLSX").put("name","budget.xlsx").put("sheets",JSONArray()
             .put(JSONObject().put("name","Hoja1").put("cells",JSONArray()
                 .put(JSONObject().put("address","A1").put("value","1").put("type","number"))
@@ -86,13 +85,31 @@ class XlsxArtifactRevisionTest {
             assertEquals("4",table.cells.single{it.sheet=="Hoja1"&&it.address=="A3"}.value)
             assertEquals("\$A\$2-\$A\$1",table.cells.single{it.sheet=="Hoja1"&&it.address=="A3"}.formula)
             assertEquals("preserve",table.cells.single{it.sheet=="Hoja2"&&it.address=="B14"}.value)
+            exportInteropFixture("sheet-added.xlsx",store.verifiedFile(project,latest))
+
+            val duplicateArgs=JSONObject().put("id",original.id).put("expectedVersion",latest.version).put("name","hoja1")
+            val duplicate=registry.execute(ToolRequest(toolId,duplicateArgs.toString(),TrustOrigin.MODEL),setOf(toolId),toolContext,ToolRegistry.ToolLoopState())
+            assertTrue("Sheet names must remain case-insensitively unique",duplicate is ToolExecutionResult.Failed)
+            val staleArgs=JSONObject().put("id",original.id).put("expectedVersion",original.version).put("name","Stale")
+            val stale=registry.execute(ToolRequest(toolId,staleArgs.toString(),TrustOrigin.MODEL),setOf(toolId),toolContext,ToolRegistry.ToolLoopState())
+            assertTrue("A stale worksheet edit must not overwrite the latest revision",stale is ToolExecutionResult.Failed)
+            assertEquals(2,store.history(project,original.id).size)
+
+            val fullWorkbook=JSONObject().put("format","XLSX").put("name","full.xlsx").put("sheets",JSONArray().apply {
+                (1..16).forEach{index->put(JSONObject().put("name","Sheet$index").put("cells",JSONArray()))}
+            })
+            val full=store.create(project,ArtifactSpec.parse(fullWorkbook))
+            val limitArgs=JSONObject().put("id",full.id).put("expectedVersion",full.version).put("name","Sheet17")
+            val limit=registry.execute(ToolRequest(toolId,limitArgs.toString(),TrustOrigin.MODEL),setOf(toolId),toolContext,ToolRegistry.ToolLoopState())
+            assertTrue("The workbook sheet cap must be enforced",limit is ToolExecutionResult.Failed)
+            assertEquals(1,store.history(project,full.id).size)
 
             val schema=JSONObject(ChatToolSchemas.schema(toolId))
             val parameters=schema.getJSONObject("parameters")
             assertEquals(setOf("id","expectedVersion","name"),parameters.getJSONArray("required").let{a->(0 until a.length()).map(a::getString).toSet()})
             assertEquals(31,parameters.getJSONObject("properties").getJSONObject("name").getInt("maxLength"))
         } finally {
-            root.deleteRecursively()
+            File(File(context.filesDir,"tool-workspaces"),"artifacts-${ArtifactStore.hash(project.toByteArray(Charsets.UTF_8))}").deleteRecursively()
         }
     }
 

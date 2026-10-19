@@ -72,6 +72,7 @@ object ChatToolSchemas {
     fun schema(id: String): String = JSONObject().put("name", id).put("description", when(id) {
         "artifacts.list" -> "List real private artifact drafts and their IDs/versions in this project."
         "artifacts.read" -> "Read the verified full structured descriptor of an artifact ID/version in this project, before revising it. Missing IDs/versions or oversized descriptors fail explicitly; no guessed content."
+        "artifacts.xlsxAddSheet" -> "Add one empty worksheet to the current app-generated XLSX draft. Supply id, expectedVersion and name (1–31 characters). Existing sheets, cells, formulas and cached values remain intact; the app never recalculates formulas. The operation creates a new immutable version, is limited to 16 sheets, and never edits imported files. Read the new version before writing cells; export is a separate user-selected SAF action."
         "artifacts.xlsxSetCells" -> "Edit 1–64 exact cells in the current generated XLSX revision. Supply id, expectedVersion, and edits [{sheet,address,value xor formula,type?,style?}]. A formula must use the bounded supported syntax and omit a leading =; replacing a formula removes its old cached result. The app does not evaluate formulas; the workbook requests recalculation when opened in a compatible spreadsheet reader. Each edit creates an immutable version; read the current version first. Imported originals are not modified; export remains a separate user-selected SAF action."
         "artifacts.patchPreview" -> "Prepare a review-only exact text patch for an existing CODE artifact revision in this project. Supply id, expectedVersion, expectedSha256, and edits [{before,after}]. Every before snippet must occur exactly once; no fuzzy matching. This stores a private preview only: it does not change draft bytes, exported files, or workspace documents. The user reviews before/after in Artifacts and explicitly applies it as a new immutable version. No code is executed."
         "artifacts.create", "artifacts.revise" -> "Create a verified private draft or new immutable version, never overwrite imports. Read the current descriptor before revising; preserve unchanged content. spec: format XLSX/DOCX/PDF/PPTX/CODE; name with extension. XLSX sheets [{name,cells:[{address:A1,value:string,type:string|number|boolean,formula:optional without =,style:plain|header}]}]. DOCX/PDF paragraphs [{text,style:title|heading|body|bullet|pageBreak}], tables [{rows:[[strings]]}]. PPTX slides [{title,body,imagePngBase64?,imageAltText?}]; optional image fields must be supplied together and contain one valid PNG per slide with non-empty alt text, at most 128KiB per image and total, dimensions <=4096x4096 and <=16M pixels. The bytes are supplied by the caller; no image generation, URL or path loading. CODE body:string. No formula evaluation or code execution. Artifacts preview shows text/structure and image alt labels, not a slide canvas; export is explicit."
@@ -118,6 +119,13 @@ object ChatToolSchemas {
                             .put("style",JSONObject().put("type","string").put("enum",org.json.JSONArray().put("plain").put("header"))))
                         .put("required",org.json.JSONArray().put("sheet").put("address"))))
             put("required",org.json.JSONArray().put("id").put("expectedVersion").put("edits"))
+        }
+        if(id=="artifacts.xlsxAddSheet") {
+            val properties=getJSONObject("properties")
+            properties.put("id",JSONObject().put("type","string"))
+                .put("expectedVersion",JSONObject().put("type","integer").put("minimum",1).put("maximum",1000))
+                .put("name",JSONObject().put("type","string").put("minLength",1).put("maxLength",31))
+            put("required",org.json.JSONArray().put("id").put("expectedVersion").put("name"))
         }
         if(id in setOf("artifacts.create","artifacts.revise")) {
             val properties=getJSONObject("properties")

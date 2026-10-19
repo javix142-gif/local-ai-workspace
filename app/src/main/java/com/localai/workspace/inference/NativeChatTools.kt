@@ -45,7 +45,7 @@ internal class NativeChatTools(private val context: Context) : AutoCloseable {
                 notify?.invoke(id, "RUNNING", callId)
                 db.withTransaction {
                     require(db.conversationDao().get(conversation)?.projectId == project) { "Tool scope no longer exists" }
-                    db.toolCallDao().insert(ToolCallEntity(callId, conversation, request.getString("messageId"), id, paramsJsonString.take(12000), if(id in setOf("artifacts.create","artifacts.revise","artifacts.patchPreview","artifacts.xlsxSetCells"))"WRITE_LOCAL"else "READ_LOCAL", status = "RUNNING", startedAt = start))
+                    db.toolCallDao().insert(ToolCallEntity(callId, conversation, request.getString("messageId"), id, paramsJsonString.take(12000), if(id in setOf("artifacts.create","artifacts.revise","artifacts.patchPreview","artifacts.xlsxSetCells","artifacts.xlsxAddSheet"))"WRITE_LOCAL"else "READ_LOCAL", status = "RUNNING", startedAt = start))
                 }
                 val result = registry.execute(ToolRequest(id, paramsJsonString, TrustOrigin.MODEL),
                     request.getStringArrayList("enabledTools").orEmpty().toSet(), ToolContext(project, conversation, directory), state)
@@ -60,7 +60,7 @@ internal class NativeChatTools(private val context: Context) : AutoCloseable {
                 // Private Room data for explicit Details, never logcat/benchmark.
                 db.withTransaction {
                     if (db.conversationDao().get(conversation)?.projectId == project) db.toolCallDao().insert(ToolCallEntity(callId, conversation, request.getString("messageId"), id,
-                        paramsJsonString.take(12000), if(id in setOf("artifacts.create","artifacts.revise","artifacts.patchPreview","artifacts.xlsxSetCells"))"WRITE_LOCAL"else "READ_LOCAL", status = status, startedAt = start, finishedAt = System.currentTimeMillis(), errorCode = if(status == "SUCCESS") null else status, resultJson = response.toString().take(16000)))
+                        paramsJsonString.take(12000), if(id in setOf("artifacts.create","artifacts.revise","artifacts.patchPreview","artifacts.xlsxSetCells","artifacts.xlsxAddSheet"))"WRITE_LOCAL"else "READ_LOCAL", status = status, startedAt = start, finishedAt = System.currentTimeMillis(), errorCode = if(status == "SUCCESS") null else status, resultJson = response.toString().take(16000)))
                 }
                 notify?.invoke(id, status, callId)
                 response.toString()
