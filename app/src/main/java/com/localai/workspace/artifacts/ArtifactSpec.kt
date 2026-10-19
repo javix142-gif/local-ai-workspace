@@ -48,16 +48,25 @@ class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String
         }.joinToString("\n\n")
         ArtifactFormat.DOCX->{
             val descriptor=json()
+            var inNumberedRun=false
+            var numberedIndex=0
+            fun paragraphPreview(paragraph:JSONObject):String = when(paragraph.optString("style","body")) {
+                "bullet"->{inNumberedRun=false;"• ${paragraph.getString("text")}"}
+                "numbered"->{numberedIndex=if(inNumberedRun)numberedIndex+1 else 1;inNumberedRun=true;"$numberedIndex. ${paragraph.getString("text")}"}
+                else->{inNumberedRun=false;paragraph.getString("text")}
+            }
+            fun tablePreview(table:JSONObject):String {
+                inNumberedRun=false
+                return table.getJSONArray("rows").arrays().joinToString("\n") { row->(0 until row.length()).joinToString(" | "){row.getString(it)} }
+            }
             if(descriptor.has("blocks")) descriptor.getJSONArray("blocks").objects().joinToString("\n\n") { block ->
                 when(block.getString("kind")) {
-                    "paragraph"->block.getString("text")
-                    "table"->block.getJSONArray("rows").arrays().joinToString("\n") { row->(0 until row.length()).joinToString(" | "){row.getString(it)} }
+                    "paragraph"->paragraphPreview(block)
+                    "table"->tablePreview(block)
                     else->error("DOCX_BLOCK_KIND_UNSUPPORTED")
                 }
-            } else descriptor.getJSONArray("paragraphs").objects().joinToString("\n\n"){it.getString("text")}+
-                descriptor.optJSONArray("tables")?.objects().orEmpty().joinToString("\n\n",prefix="\n") { t->
-                    t.getJSONArray("rows").arrays().joinToString("\n"){row->(0 until row.length()).joinToString(" | "){row.getString(it)}}
-                }
+            } else descriptor.getJSONArray("paragraphs").objects().joinToString("\n\n"){paragraphPreview(it)}+
+                descriptor.optJSONArray("tables")?.objects().orEmpty().joinToString("\n\n",prefix="\n") { tablePreview(it) }
         }
         else->json().getJSONArray("paragraphs").objects().joinToString("\n\n"){it.getString("text")}+
             json().optJSONArray("tables")?.objects().orEmpty().joinToString("\n\n",prefix="\n") { t->
@@ -131,12 +140,12 @@ class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String
                             "paragraph"->{
                                 require(++paragraphs<=500){"PARAGRAPH_LIMIT"}
                                 fields(block,setOf("kind","text","style"));text(block.getString("text"),10000)
-                                require(block.optString("style","body") in setOf("title","heading","body","bullet","pageBreak")){"PARAGRAPH_STYLE_UNSUPPORTED"}
+                                require(block.optString("style","body") in setOf("title","heading","body","bullet","numbered","pageBreak")){"PARAGRAPH_STYLE_UNSUPPORTED"}
                             }
                             "table"->{require(++tables<=16){"TABLE_LIMIT"};fields(block,setOf("kind","rows"));validateTable(block.getJSONArray("rows"))}
                             else->error("DOCX_BLOCK_KIND_UNSUPPORTED")
                         }
-                    } else validateLegacyParagraphsAndTables(input)
+                } else validateLegacyParagraphsAndTables(input, allowNumbered = true)
                 }
                 ArtifactFormat.PDF->validateLegacyParagraphsAndTables(input)
             }
@@ -205,9 +214,10 @@ class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String
             return definitions
         }
         private fun number(v:String) {val n=v.toBigDecimalOrNull() ?: error("NUMBER_INVALID");require(n.precision()<=128 && kotlin.math.abs(n.scale().toLong())<=128){"NUMBER_PRECISION_LIMIT"}}
-        private fun validateLegacyParagraphsAndTables(input:JSONObject) {
+        private fun validateLegacyParagraphsAndTables(input:JSONObject, allowNumbered:Boolean = false) {
             val paragraphs=input.getJSONArray("paragraphs");require(paragraphs.length() in 1..500){"PARAGRAPH_LIMIT"}
-            paragraphs.objects().forEach{fields(it,setOf("text","style"));text(it.getString("text"),10000);require(it.optString("style","body") in setOf("title","heading","body","bullet","pageBreak")){"PARAGRAPH_STYLE_UNSUPPORTED"}}
+            val allowedStyles=setOf("title","heading","body","bullet","pageBreak")+if(allowNumbered)setOf("numbered")else emptySet()
+            paragraphs.objects().forEach{fields(it,setOf("text","style"));text(it.getString("text"),10000);require(it.optString("style","body") in allowedStyles){"PARAGRAPH_STYLE_UNSUPPORTED"}}
             val tables=input.optJSONArray("tables") ?: JSONArray();require(tables.length()<=16){"TABLE_LIMIT"}
             for(t in tables.objects()){fields(t,setOf("rows"));validateTable(t.getJSONArray("rows"))}
         }

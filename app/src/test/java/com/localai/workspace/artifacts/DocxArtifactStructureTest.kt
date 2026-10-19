@@ -2,6 +2,7 @@ package com.localai.workspace.artifacts
 
 import android.app.Application
 import com.localai.workspace.data.DocumentParser
+import com.localai.workspace.domain.tools.ChatToolSchemas
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
@@ -165,6 +166,8 @@ class DocxArtifactStructureTest {
               "blocks":[
                 {"kind":"paragraph","text":"Primer paso","style":"numbered"},
                 {"kind":"paragraph","text":"Segundo paso","style":"numbered"},
+                {"kind":"paragraph","text":"Texto intermedio","style":"body"},
+                {"kind":"paragraph","text":"Nuevo primer paso","style":"numbered"},
                 {"kind":"paragraph","text":"Nota con viñeta","style":"bullet"}
               ]
             }
@@ -174,12 +177,19 @@ class DocxArtifactStructureTest {
             val file = store.verifiedFile("docx-ordered-list-project", revision)
             File("build/docx-independent-reader").mkdirs()
             File("build/docx-independent-reader/ordered-list.docx").writeBytes(file.readBytes())
+            val preview = store.spec("docx-ordered-list-project", revision).preview()
+            assertTrue(preview.contains("1. Primer paso\n\n2. Segundo paso"))
+            assertTrue(preview.contains("1. Nuevo primer paso"))
+            assertTrue(preview.contains("• Nota con viñeta"))
+            val createDescription = JSONObject(ChatToolSchemas.schema("artifacts.create")).getString("description")
+            assertTrue(createDescription.contains("style:title|heading|body|bullet|numbered|pageBreak"))
+            assertTrue(createDescription.contains("a non-list paragraph/table starts numbering again"))
 
             ZipFile(file).use { zip ->
                 val document = xml(zip, "word/document.xml")
                 val numberIds = document.getElementsByTagNameNS(word, "numId")
-                assertEquals(3, numberIds.length)
-                assertEquals(listOf("2", "2", "1"), (0 until numberIds.length).map {
+                assertEquals(4, numberIds.length)
+                assertEquals(listOf("2", "2", "3", "1"), (0 until numberIds.length).map {
                     numberIds.item(it).attributes.getNamedItemNS(word, "val").nodeValue
                 })
 
@@ -189,14 +199,40 @@ class DocxArtifactStructureTest {
                     formats.item(it).attributes.getNamedItemNS(word, "val").nodeValue
                 }.toSet())
                 val instances = numbering.getElementsByTagNameNS(word, "num")
-                assertEquals(2, instances.length)
+                assertEquals(3, instances.length)
+                assertEquals(listOf("0", "1", "1"), (0 until instances.length).map {
+                    instances.item(it).getElementsByTagNameNS(word, "abstractNumId").item(0)
+                        .attributes.getNamedItemNS(word, "val").nodeValue
+                })
             }
 
             val parsed = DocumentParser(context).parse(file, revision.format.mime, revision.name)
             val text = parsed.pages.joinToString("\n") { it.text }
             assertTrue("Ordered numbering should survive the generated DOCX roundtrip: $text", text.contains("1. Primer paso"))
             assertTrue("The second numbered paragraph should advance: $text", text.contains("2. Segundo paso"))
+            assertTrue("A new run after normal text should restart at one: $text", text.contains("1. Nuevo primer paso"))
             assertTrue("Existing bullet numbering should remain available: $text", text.contains("• Nota con viñeta"))
+
+            val legacy = ArtifactSpec.parse(JSONObject("""
+                {"format":"DOCX","name":"legacy-list.docx","paragraphs":[
+                  {"text":"Legacy primero","style":"numbered"},
+                  {"text":"Legacy segundo","style":"numbered"}
+                ]}
+            """.trimIndent()))
+            val legacyRevision = store.create("docx-ordered-list-project", legacy)
+            val legacyFile = store.verifiedFile("docx-ordered-list-project", legacyRevision)
+            val legacyText = DocumentParser(context).parse(legacyFile, legacyRevision.format.mime, legacyRevision.name)
+                .pages.joinToString("\n") { it.text }
+            assertTrue(legacyText.contains("1. Legacy primero"))
+            assertTrue(legacyText.contains("2. Legacy segundo"))
+
+            val unsupportedPdfStyle = try {
+                ArtifactSpec.parse(JSONObject("""{"format":"PDF","name":"list.pdf","paragraphs":[{"text":"No list","style":"numbered"}]}"""))
+                null
+            } catch (failure: IllegalArgumentException) {
+                failure
+            }
+            assertEquals("PARAGRAPH_STYLE_UNSUPPORTED", unsupportedPdfStyle?.message)
         } finally {
             root.deleteRecursively()
         }
