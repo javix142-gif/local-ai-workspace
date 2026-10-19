@@ -8,6 +8,10 @@ import java.io.FileOutputStream
 import java.security.MessageDigest
 import java.util.UUID
 import java.util.Locale
+import java.nio.file.FileVisitResult
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.SimpleFileVisitor
 import java.util.zip.ZipFile
 import com.localai.workspace.documents.StructuredDocuments
 
@@ -40,9 +44,13 @@ class ArtifactStore(context:Context,private val root:File=File(context.filesDir,
         require(Regex("[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}").matches(id)){"ARTIFACT_ID_INVALID"}
         val parent=project(projectId);return File(parent,id).also{require(it.canonicalFile.parentFile==parent.canonicalFile){"ARTIFACT_PATH_ESCAPE"}}
     }
-    fun list(projectId:String):List<ArtifactRevision> = project(projectId).listFiles().orEmpty().filter{it.isDirectory&&!it.name.startsWith('.')}.mapNotNull { folder->
-        history(projectId,folder.name).maxByOrNull{it.version}
-    }.sortedWith(compareByDescending<ArtifactRevision>{it.createdAt}.thenBy{it.id})
+    fun list(projectId:String):List<ArtifactRevision> {
+        val owner=project(projectId)
+        recoverAbandonedStagingIfIdle(owner)
+        return owner.listFiles().orEmpty().filter{it.isDirectory&&!it.name.startsWith('.')}.mapNotNull { folder->
+            history(projectId,folder.name).maxByOrNull{it.version}
+        }.sortedWith(compareByDescending<ArtifactRevision>{it.createdAt}.thenBy{it.id})
+    }
     fun history(projectId:String,id:String):List<ArtifactRevision> = item(projectId,id).listFiles().orEmpty().filter{it.isDirectory&&Regex("v[1-9][0-9]*").matches(it.name)}.map{folder->
         val meta=File(folder,"revision.json");require(meta.length() in 1..4096){"ARTIFACT_METADATA_INVALID"};val j=JSONObject(meta.readText())
         ArtifactRevision(j.getString("id"),j.getInt("version"),j.getString("name"),ArtifactFormat.valueOf(j.getString("format")),j.getLong("bytes"),j.getString("sha256"),j.getLong("createdAt"),j.getString("specSha256")).also{
@@ -207,6 +215,7 @@ class ArtifactStore(context:Context,private val root:File=File(context.filesDir,
             val lock=try{channel.tryLock()}catch(_:java.nio.channels.OverlappingFileLockException){null}
             requireNotNull(lock){"ARTIFACT_WRITE_BUSY_RETRY"}
             lock.use {
+                cleanAbandonedStaging(owner)
                 val folder=item(projectId,id).apply{check(mkdirs()||isDirectory)}
                 val old=history(projectId,id).firstOrNull();require((old?.version ?: 0)==expectedVersion){"ARTIFACT_VERSION_CONFLICT"}
                 require(old==null||old.name==spec.name&&old.format==spec.format){"ARTIFACT_RENAME_OR_FORMAT_CHANGE_UNSUPPORTED"}
@@ -227,6 +236,44 @@ class ArtifactStore(context:Context,private val root:File=File(context.filesDir,
             }
         }
     }
+    /** A crash can leave a private staging directory behind. Only exact UUID staging names
+     * inside UUID artifact folders are eligible, and cleanup shares the writer lock. */
+    private fun recoverAbandonedStagingIfIdle(owner:File) {
+        RandomAccessFile(File(owner,".write.lock"),"rw").channel.use { channel->
+            val lock=try{channel.tryLock()}catch(_:java.nio.channels.OverlappingFileLockException){null}
+            if(lock!=null) lock.use { cleanAbandonedStaging(owner) }
+        }
+    }
+    private fun cleanAbandonedStaging(owner:File) {
+        val ownerPath=owner.canonicalFile
+        owner.listFiles().orEmpty().filter { folder->
+            folder.isDirectory&&UUID_PATTERN.matches(folder.name)&&folder.canonicalFile.parentFile==ownerPath
+        }.forEach { folder->
+            val itemPath=folder.canonicalFile
+            folder.listFiles().orEmpty().filter { pending->
+                pending.name.startsWith(".pending-")&&UUID_PATTERN.matches(pending.name.removePrefix(".pending-"))&&
+                    pending.isDirectory&&pending.canonicalFile.parentFile==itemPath
+            }.forEach { pending->
+                try {
+                    // walkFileTree does not follow symbolic links; the root and its parent were
+                    // checked above, so a staging symlink cannot redirect cleanup elsewhere.
+                    Files.walkFileTree(pending.toPath(),object:SimpleFileVisitor<Path>() {
+                        override fun visitFile(file:Path,attrs:java.nio.file.attribute.BasicFileAttributes):FileVisitResult {
+                            Files.delete(file)
+                            return FileVisitResult.CONTINUE
+                        }
+                        override fun postVisitDirectory(dir:Path,error:java.io.IOException?):FileVisitResult {
+                            if(error!=null) throw error
+                            Files.delete(dir)
+                            return FileVisitResult.CONTINUE
+                        }
+                    })
+                } catch(error:Exception) {
+                    throw IllegalStateException("ARTIFACT_PENDING_RECOVERY_FAILED",error)
+                }
+            }
+        }
+    }
     private fun syncText(file:File,value:String){FileOutputStream(file).use{it.write(value.toByteArray(Charsets.UTF_8));it.fd.sync()}}
     private fun patchFolder(projectId:String):File {
         val owner=project(projectId)
@@ -240,6 +287,7 @@ class ArtifactStore(context:Context,private val root:File=File(context.filesDir,
     companion object {
         private const val MAX_PENDING_PATCHES=20
         private const val MAX_PATCH_BYTES=600*1024
+        private val UUID_PATTERN=Regex("[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}")
         fun hash(bytes:ByteArray)=MessageDigest.getInstance("SHA-256").digest(bytes).joinToString(""){"%02x".format(it)}
         fun fileHash(file:File):String {val digest=MessageDigest.getInstance("SHA-256");file.inputStream().use{input->val buffer=ByteArray(65536);while(true){if(Thread.currentThread().isInterrupted)throw InterruptedException();val n=input.read(buffer);if(n<0)break;digest.update(buffer,0,n)}};return digest.digest().joinToString(""){"%02x".format(it)}}
     }
