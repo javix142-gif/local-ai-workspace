@@ -5,9 +5,11 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import com.localai.workspace.artifacts.ArtifactSpec
 import com.localai.workspace.artifacts.ArtifactStore
 import com.localai.workspace.artifacts.CodePatchEdit
@@ -42,11 +44,13 @@ class ArtifactsPatchPreviewUiTest {
         val preview=patch
         compose.setContent { LocalAiTheme { ArtifactsDialog(project,onDismiss={}) } }
         compose.onNodeWithText("Code patch previews · not applied").assertIsDisplayed()
-        compose.onNodeWithTag("artifact-patch-${preview.id}").performClick()
-        compose.onNodeWithTag("artifact-patch-review-title").assertIsDisplayed()
-        compose.onNodeWithTag("artifact-patch-before").assertIsDisplayed()
+        val previewTag="artifact-patch-${preview.id}"
+        compose.waitUntil(10_000) { compose.onAllNodesWithTag(previewTag).fetchSemanticsNodes().isNotEmpty() }
+        compose.onNodeWithTag(previewTag).performScrollTo().performClick()
+        compose.onNodeWithTag("artifact-patch-review-title").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("artifact-patch-before").performScrollTo().assertIsDisplayed()
         compose.onNodeWithTag("artifact-patch-before").assertTextEquals(body)
-        compose.onNodeWithTag("artifact-patch-after").assertTextEquals("fun answer() = 43\n")
+        compose.onNodeWithTag("artifact-patch-after").performScrollTo().assertTextEquals("fun answer() = 43\n")
         assertEquals("Before explicit review action there is only the original revision",1,store.history(project,revision.id).size)
         assertEquals(body,store.verifiedFile(project,revision).readText())
 
@@ -60,8 +64,10 @@ class ArtifactsPatchPreviewUiTest {
     @Test fun discardingPreviewDoesNotChangeArtifactHistory() {
         val preview=patch
         compose.setContent { LocalAiTheme { ArtifactsDialog(project,onDismiss={}) } }
-        compose.onNodeWithTag("artifact-patch-${preview.id}").performClick()
-        compose.onNodeWithTag("artifact-patch-discard").performClick()
+        val previewTag="artifact-patch-${preview.id}"
+        compose.waitUntil(10_000) { compose.onAllNodesWithTag(previewTag).fetchSemanticsNodes().isNotEmpty() }
+        compose.onNodeWithTag(previewTag).performScrollTo().performClick()
+        compose.onNodeWithTag("artifact-patch-discard").performScrollTo().performClick()
         compose.waitUntil(10_000) { store.codePatchPreviews(project).isEmpty() }
         assertEquals(1,store.history(project,revision.id).size)
         assertEquals(body,store.verifiedFile(project,revision).readText())
