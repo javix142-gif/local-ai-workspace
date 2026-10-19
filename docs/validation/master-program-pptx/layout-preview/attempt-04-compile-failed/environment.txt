@@ -1,0 +1,1 @@
+Gradle 8.10.2; Temurin JDK 17 runtime; configured app test launcher JDK 21; Android SDK API 35; NDK 27.0.12077973; CMake 3.31.6; existing GRADLE_USER_HOME=/workspace/.gradle; --offline; no cache/tool install or cleanup.

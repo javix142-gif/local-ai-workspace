@@ -237,5 +237,129 @@
     "attribution": "Gradle ran from parent HEAD with the five final source/test files in the working tree; those files were committed unchanged afterward.",
     "evidenceManifestSha256": "6b97bb107b3168874b7fa95afd6e102c0d7dc3547891c033aaf73bf9b0001b53",
     "evidenceManifestEntries": 40
-  }
+  },
+  "slideLayoutPreviewFollowUp": {
+    "name": "Preparatory M03-05 approximate PPTX slide-layout preview",
+    "status": "FOCUSED_HOST_PASS_PREPARATORY_NOT_FORMAL",
+    "baseHead": "b3492e364198eec87e8beffa9ee3ebc36ec276ee",
+    "codeSha": "375e45035f63576b17c1111ce738720373100b99",
+    "codeCommits": [
+      "aa777a0e0a84037fc4d8617a500d6266f9ee665b",
+      "48b62ccf1f705201ac43ea5f3086407827c4cace",
+      "e50f28b1dd0a392deaa777ba22e488bb3424fce4",
+      "92f0823dd325bd3cd9db120845de8069bc431a7f",
+      "8648bd484866b2e218cf4637cf28fcfdd713c740",
+      "375e45035f63576b17c1111ce738720373100b99"
+    ],
+    "sourceTask": {
+      "id": "M03-05",
+      "sourceStatus": "TODO",
+      "requiresDevice": true,
+      "dependsOn": [
+        "M03-01"
+      ],
+      "dependencyStatus": "TODO",
+      "formalCompletion": "NOT_CLAIMED"
+    },
+    "behavior": "Per-slide 16:9 schematic from stored title/body and a labeled image-placement region; actual supplied PNG displayed separately below with accessible description, alt text and dimensions. Explicit notice says it is approximate and not a rendered PowerPoint page. Text areas scroll; exact selectable preview and read-only artifact bytes/history are preserved.",
+    "expectedRed": {
+      "sourceSha": "e50f28b1dd0a392deaa777ba22e488bb3424fce4",
+      "path": "docs/validation/master-program-pptx/layout-preview/attempt-03-red",
+      "tests": 1,
+      "passed": 0,
+      "failures": 1,
+      "reason": "The expected pptx-slide-preview-1 semantics node was absent before the implementation."
+    },
+    "finalFocusedHost": {
+      "sourceSha": "375e45035f63576b17c1111ce738720373100b99",
+      "path": "docs/validation/master-program-pptx/layout-preview/attempt-06-green",
+      "commandFile": "command.txt",
+      "startedAtUtc": "2026-10-19T14:19:05Z",
+      "finishedAtUtc": "2026-10-19T14:20:14Z",
+      "wallSeconds": 69,
+      "gradleReported": "BUILD SUCCESSFUL in 1m 8s",
+      "exitCode": 0,
+      "gradle": "8.10.2",
+      "runtimeJdk": "Temurin 17.0.20.1 (/workspace/.toolchain/jdk-17)",
+      "testWorkerJdk": "Temurin 21.0.12.1 (/workspace/.toolchain/jdk-21-temurin)",
+      "androidSdk": "/workspace/.toolchain/android-sdk API 35",
+      "ndk": "27.0.12077973",
+      "gradleUserHome": "/workspace/.gradle, existing cache, offline",
+      "junit": {
+        "xml": "junit/TEST-com.localai.workspace.ui.PptxImagePreviewUiTest.xml",
+        "tests": 1,
+        "passed": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "methodSeconds": 10.562,
+        "method": "savedPptxShowsAccessibleSlideLayoutAndImageAssetWithoutChangingRevision"
+      },
+      "gradleTaskCounts": {
+        "actionable": 63,
+        "executed": 7,
+        "upToDate": 56
+      }
+    },
+    "otherAttempts": [
+      {
+        "path": "attempt-01-red",
+        "classification": "HARNESS_SYNTAX_FAILURE",
+        "testsExecuted": 0,
+        "exitCode": 1
+      },
+      {
+        "path": "attempt-02-red",
+        "classification": "HARNESS_SYNTAX_FAILURE",
+        "testsExecuted": 0,
+        "exitCode": 1
+      },
+      {
+        "path": "attempt-04-compile-failed",
+        "classification": "IMPLEMENTATION_COMPILE_FAILURE",
+        "testsExecuted": 0,
+        "exitCode": 1
+      },
+      {
+        "path": "attempt-05-image-visibility-failed",
+        "classification": "LAYOUT_ASSERTION_FAILURE",
+        "tests": 1,
+        "failures": 1,
+        "exitCode": 1
+      }
+    ],
+    "notRun": [
+      "full JVM app suite",
+      "LiteRT compatibility",
+      "lint",
+      "AndroidTest compilation",
+      "connected instrumentation",
+      "emulator",
+      "physical device",
+      "APK"
+    ],
+    "evidenceDirectory": "docs/validation/master-program-pptx/layout-preview",
+    "limitations": [
+      "Schematic is not an OOXML/PowerPoint renderer and does not emulate exact fonts, line wrapping, or viewer fidelity.",
+      "No device/emulator capture or APK was produced.",
+      "Original M03-05 and M03-01 remain source TODO; no task is formally complete."
+    ],
+    "evidenceManifest": "layout-preview/SHA256SUMS",
+    "evidenceManifestEntries": 58,
+    "evidenceManifestSha256": "4c33a41952ad2718d3048153e9c7ccf0a4b68dc83f2095e9abd4679d382e1a69",
+    "sourcePlan": {
+      "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+      "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+      "roadmap": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+      "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+      "taskIds": 97,
+      "uniqueTaskIds": 97,
+      "dependencyEdges": 120,
+      "sourceStatuses": {
+        "TODO": 97
+      },
+      "sourceFilesModified": false
+    }
+  },
+  "historicalPreviewLimitationSupersededBy": "slideLayoutPreviewFollowUp (code 375e45035f63576b17c1111ce738720373100b99); older implementation/limitations above retain their original SHA attribution."
 }

@@ -1,0 +1,1 @@
+Production Kotlin compilation failed before test execution because Modifier.weight was imported as an inaccessible top-level extension rather than resolved from RowScope/ColumnScope. Exit 1; no fresh JUnit XML. This is an implementation compile error, not test evidence.

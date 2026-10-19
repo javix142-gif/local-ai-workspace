@@ -1,0 +1,154 @@
+{
+  "increment": "Preparatory M03-05 approximate PPTX slide-layout preview",
+  "status": "FOCUSED_HOST_PASS_PREPARATORY_NOT_FORMAL",
+  "sourceTask": {
+    "id": "M03-05",
+    "title": "Generación/edición básica PPTX",
+    "sourceStatus": "TODO",
+    "requiresDevice": true,
+    "dependsOn": [
+      "M03-01"
+    ],
+    "dependencySourceStatus": "TODO",
+    "formalCompletion": "NOT_CLAIMED"
+  },
+  "baseHead": "b3492e364198eec87e8beffa9ee3ebc36ec276ee",
+  "codeSha": "375e45035f63576b17c1111ce738720373100b99",
+  "codeCommits": [
+    "aa777a0e0a84037fc4d8617a500d6266f9ee665b",
+    "48b62ccf1f705201ac43ea5f3086407827c4cace",
+    "e50f28b1dd0a392deaa777ba22e488bb3424fce4",
+    "92f0823dd325bd3cd9db120845de8069bc431a7f",
+    "8648bd484866b2e218cf4637cf28fcfdd713c740",
+    "375e45035f63576b17c1111ce738720373100b99"
+  ],
+  "implementation": {
+    "description": "Compose draws a 16:9 approximate schematic from the stored title/body and labeled image region. It displays the validated caller-supplied PNG separately below the schematic, with slide identity, content description, alternative text and source dimensions. Exact selectable text remains available; preview is read-only.",
+    "notice": "Approximate layout · not a rendered PowerPoint page",
+    "noChangesTo": [
+      "PPTX bytes",
+      "artifact revisions/history",
+      "storage",
+      "dependencies",
+      "Room",
+      "inference/runtime",
+      "source backlog"
+    ]
+  },
+  "expectedRed": {
+    "sourceSha": "e50f28b1dd0a392deaa777ba22e488bb3424fce4",
+    "attempt": "attempt-03-red",
+    "tests": 1,
+    "passed": 0,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0,
+    "failure": "The product had no pptx-slide-preview-1 node; this reproduced the missing layout preview."
+  },
+  "finalFocusedHost": {
+    "sourceSha": "375e45035f63576b17c1111ce738720373100b99",
+    "attempt": "attempt-06-green",
+    "command": "timeout --signal=INT --kill-after=15s 300s env ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk GRADLE_USER_HOME=/workspace/.gradle JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.ui.PptxImagePreviewUiTest",
+    "startedAtUtc": "2026-10-19T14:19:05Z",
+    "finishedAtUtc": "2026-10-19T14:20:14Z",
+    "wallClockSeconds": 69,
+    "gradleReportedDuration": "1m 8s",
+    "gradleVersion": "8.10.2",
+    "runtimeJdk": "Temurin 17.0.20.1 (/workspace/.toolchain/jdk-17)",
+    "testWorkerJdk": "Temurin 21.0.12.1 (/workspace/.toolchain/jdk-21-temurin)",
+    "androidSdk": "/workspace/.toolchain/android-sdk (API 35)",
+    "ndk": "27.0.12077973",
+    "gradleUserHome": "/workspace/.gradle (existing cache, offline)",
+    "exitCode": 0,
+    "buildSuccessful": true,
+    "tasks": {
+      "appCompileDebugKotlin": "PASS",
+      "appCompileDebugUnitTestKotlin": "PASS",
+      "focusedPptxImagePreviewUiTest": "PASS",
+      "fullAppJvmSuite": "NOT_RUN",
+      "litertCompatSuite": "NOT_RUN",
+      "lint": "NOT_RUN",
+      "androidTestCompile": "NOT_RUN",
+      "emulator": "NOT_RUN",
+      "physicalDevice": "NOT_RUN",
+      "apk": "NOT_GENERATED"
+    },
+    "junit": {
+      "xml": "attempt-06-green/junit/TEST-com.localai.workspace.ui.PptxImagePreviewUiTest.xml",
+      "tests": 1,
+      "passed": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suiteSeconds": 10.562,
+      "method": "savedPptxShowsAccessibleSlideLayoutAndImageAssetWithoutChangingRevision"
+    },
+    "gradleTasks": {
+      "actionable": 63,
+      "executed": 7,
+      "upToDate": 56
+    }
+  },
+  "attemptLedger": [
+    {
+      "id": "attempt-01-red",
+      "classification": "HARNESS_SYNTAX_FAILURE",
+      "exitCode": 1,
+      "testsExecuted": 0
+    },
+    {
+      "id": "attempt-02-red",
+      "classification": "HARNESS_SYNTAX_FAILURE",
+      "exitCode": 1,
+      "testsExecuted": 0
+    },
+    {
+      "id": "attempt-03-red",
+      "classification": "EXPECTED_PRODUCT_GAP",
+      "exitCode": 1,
+      "tests": 1,
+      "failures": 1
+    },
+    {
+      "id": "attempt-04-compile-failed",
+      "classification": "IMPLEMENTATION_COMPILE_FAILURE",
+      "exitCode": 1,
+      "testsExecuted": 0,
+      "junitXml": "NOT_GENERATED"
+    },
+    {
+      "id": "attempt-05-image-visibility-failed",
+      "classification": "LAYOUT_ASSERTION_FAILURE",
+      "exitCode": 1,
+      "tests": 1,
+      "failures": 1
+    },
+    {
+      "id": "attempt-06-green",
+      "classification": "FOCUSED_PASS",
+      "exitCode": 0,
+      "tests": 1,
+      "passed": 1,
+      "failures": 0
+    }
+  ],
+  "limitations": [
+    "Schematic is not a PowerPoint rendering engine and does not claim exact typography or line wrapping.",
+    "No full HOST gate, lint, AndroidTest compilation, EMULATOR, PHYSICAL_DEVICE or APK was run/generated.",
+    "M03-05 remains source TODO and device-gated; M03-01 dependency remains TODO."
+  ],
+  "evidenceDirectory": "docs/validation/master-program-pptx/layout-preview",
+  "sourcePlan": {
+    "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmap": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskIds": 97,
+    "uniqueTaskIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": {
+      "TODO": 97
+    },
+    "sourceFilesModified": false
+  }
+}

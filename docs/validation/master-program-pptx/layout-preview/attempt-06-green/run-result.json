@@ -1,0 +1,32 @@
+{
+  "sourceSha": "375e45035f63576b17c1111ce738720373100b99",
+  "commandFile": "command.txt",
+  "startedAtUtc": "2026-10-19T14:19:05Z",
+  "finishedAtUtc": "2026-10-19T14:20:14Z",
+  "wallClockDurationSeconds": 69,
+  "gradleReportedDuration": "1m 8s",
+  "exitCode": 0,
+  "buildSuccessful": true,
+  "gradle": "8.10.2",
+  "gradleRuntimeJdk": "Temurin 17.0.20.1 at /workspace/.toolchain/jdk-17",
+  "testWorkerJdk": "Temurin 21.0.12.1 discovered at /workspace/.toolchain/jdk-21-temurin",
+  "androidSdk": "/workspace/.toolchain/android-sdk (API 35)",
+  "ndk": "27.0.12077973",
+  "gradleUserHome": "/workspace/.gradle (existing cache, offline)",
+  "focusedJUnit": {
+    "xml": "junit/TEST-com.localai.workspace.ui.PptxImagePreviewUiTest.xml",
+    "tests": 1,
+    "passed": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "suiteSeconds": 10.562,
+    "method": "savedPptxShowsAccessibleSlideLayoutAndImageAssetWithoutChangingRevision"
+  },
+  "taskOutcomes": "task-outcomes.txt",
+  "limitations": [
+    "Focused HOST Compose/Robolectric test only; no full JVM or LiteRT suite.",
+    "Lint and AndroidTest compilation were not run in this increment.",
+    "No emulator, physical-device, Moto G86, or APK validation."
+  ]
+}

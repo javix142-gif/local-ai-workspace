@@ -1,0 +1,13 @@
+Gradle command exit code: 0
+:app:compileDebugKotlin: PASS (executed)
+:app:compileDebugUnitTestKotlin: PASS (executed)
+:app:testDebugUnitTest --tests com.localai.workspace.ui.PptxImagePreviewUiTest: PASS (1/1; executed)
+Full :app:testDebugUnitTest suite: NOT_RUN (class filter only)
+:litert-compat:testDebugUnitTest: NOT_RUN
+:app:lintDebug: NOT_RUN
+:app:compileDebugAndroidTestKotlin: NOT_RUN
+Connected Android instrumentation: NOT_RUN
+Emulator: NOT_RUN
+Physical device: NOT_RUN
+APK: NOT_GENERATED
+Gradle reported 63 actionable tasks: 7 executed, 56 up-to-date; BUILD SUCCESSFUL in 1m 8s.

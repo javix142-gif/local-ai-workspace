@@ -1,0 +1,1 @@
+Expected behavioral red on source SHA e50f28b. The focused test compiled and ran 1 method, then failed because the current product exposed no node tagged pptx-slide-preview-1. JUnit XML: tests=1, failures=1, errors=0, skipped=0. This demonstrates the missing slide-layout preview.

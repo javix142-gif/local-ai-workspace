@@ -1,0 +1,1 @@
+Harness compile failure; no test method executed. The first syntax correction added one closing parenthesis too many. Exit 1. This is not behavioral evidence.

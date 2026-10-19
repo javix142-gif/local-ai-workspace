@@ -1,0 +1,1 @@
+PASS. Exact source SHA 375e45035f63576b17c1111ce738720373100b99. :app:testDebugUnitTest ran the focused PptxImagePreviewUiTest method; Gradle exit 0, BUILD SUCCESSFUL. JUnit XML: 1 test, 1 passed, 0 failures, 0 errors, 0 skipped. No full suite, lint, AndroidTest, emulator, device, or APK was run/generated.

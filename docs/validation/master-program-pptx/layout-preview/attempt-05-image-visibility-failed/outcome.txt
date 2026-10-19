@@ -1,0 +1,1 @@
+The focused Compose method ran and failed its image-node assertIsDisplayed check after a bitmap was placed inside the bounded 16:9 layout. JUnit XML: tests=1, failures=1, errors=0, skipped=0. This led to separating the accessible image placement region in the schematic from the actual supplied-PNG preview below it.

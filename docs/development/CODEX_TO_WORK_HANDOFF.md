@@ -1,3 +1,15 @@
+# Current continuation checkpoint — M03-05 approximate PPTX slide schematic (2026-10-19)
+
+The exact code tested is `375e45035f63576b17c1111ce738720373100b99`. It adds a read-only 16:9 Compose schematic from existing slide title/body plus a labeled image region; the validated caller-supplied PNG remains separately visible with accessible alt text and source dimensions. The UI explicitly says this is approximate and not a rendered PowerPoint page; text areas scroll and the exact text preview remains selectable.
+
+The original M03-05 DoD gap was reproduced at `e50f28b1dd0a392deaa777ba22e488bb3424fce4` (focused test 1/1 failure: slide preview node absent). The final exact-SHA `PptxImagePreviewUiTest` at `375e450` passed 1/1, Gradle exit 0 in 69 seconds (7 tasks executed, 56 up-to-date). The path, command, environment, full log, XML and attempt classifications are documented in `../validation/master-program-pptx/layout-preview/RESULTS.md`; its 58-entry evidence manifest is `../validation/master-program-pptx/layout-preview/SHA256SUMS` (SHA-256 `4c33a41952ad2718d3048153e9c7ccf0a4b68dc83f2095e9abd4679d382e1a69`). The enclosing 155-entry PPTX evidence manifest is `../validation/master-program-pptx/SHA256SUMS` (155 entries; SHA-256 `72208e63556f2708a922880e014ecd523518fc52f0f29da59d8d01fb1a9cd97e`).
+
+No full app/LiteRT suite, lint, AndroidTest compilation/execution, emulator, Motorola, APK or performance benchmark was run. The original M03-05 remains `TODO`, requires device validation and depends on M03-01 (`TODO`); this is preparatory HOST evidence only. The 97 source IDs, 120 dependencies and all 97 source TODO statuses are unchanged. The older Room-v1 emulator failure/six model-dependent skips remain historical and separate.
+
+Code commits: `aa777a0`, `48b62cc`, `e50f28b`, `92f0823`, `8648bd4`, `375e450`. The first two harness syntax failures, one expected red, one compile failure, and one image-visibility failure are preserved and not counted as PASS.
+
+---
+
 # Current checkpoint — M03-07 bounded line-diff preparation (2026-10-19)
 
 The active implementation branch is `codex/master-program-20261019`; the exact source/test SHA is `fad7acb0663485e2bd6ec86cf76e36b85a9baf57`. The existing feature baseline is `b8e75b4a688d9e1f441324a3a1ecccb369f99ebc`, with recovery backup `recovery/backup-b8e75b4` at the same SHA. This increment adds a bounded added/removed/unchanged line view to the generic revision preview and an explicit oversized-diff fallback that preserves the complete before/after text. Production commit: `bddf6827c873e84708fc686ceed6655807187c12`; final test commit: `fad7acb0663485e2bd6ec86cf76e36b85a9baf57`. Regression test-only commit: `54b37764fecf48681266c061ec2184b5a97b590c`.
