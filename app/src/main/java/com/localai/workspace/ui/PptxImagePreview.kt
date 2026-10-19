@@ -3,11 +3,17 @@ package com.localai.workspace.ui
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.weight
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.localai.workspace.artifacts.ArtifactFormat
 import com.localai.workspace.artifacts.ArtifactSpec
@@ -83,31 +90,80 @@ internal suspend fun decodePptxImagePreviews(spec: ArtifactSpec): List<PptxImage
 }
 
 @Composable
-internal fun PptxImageVisualPreview(items: List<PptxImagePreviewItem>) {
-    if (items.isEmpty()) return
+internal fun PptxSlideLayoutPreview(spec: ArtifactSpec, items: List<PptxImagePreviewItem>) {
+    if (spec.format != ArtifactFormat.PPTX) return
+    val slides = spec.json().getJSONArray("slides")
+    val imagesBySlide = items.associateBy(PptxImagePreviewItem::slideNumber)
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text("Supplied image assets", style = MaterialTheme.typography.titleSmall)
+        Text("Slide preview · approximate layout", style = MaterialTheme.typography.titleSmall)
         Text(
-            "Image asset preview only · slide layout is not rendered",
+            "Approximate layout · not a rendered PowerPoint page",
             style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier.testTag("pptx-image-preview-disclaimer")
+            modifier = Modifier.testTag("pptx-slide-preview-note")
         )
-        items.forEach { item ->
+        for (index in 0 until slides.length()) {
+            val slideNumber = index + 1
+            val slide = slides.getJSONObject(index)
+            val title = slide.getString("title")
+            val body = slide.getString("body")
+            val image = imagesBySlide[slideNumber]
             Card(Modifier.fillMaxWidth()) {
                 Column(
-                    Modifier.fillMaxWidth().padding(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                    Modifier.fillMaxWidth()
+                        .aspectRatio(16f / 9f)
+                        .background(Color(0xFFF6F7F4))
+                        .padding(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    Text("Slide ${item.slideNumber} · ${item.slideTitle}", style = MaterialTheme.typography.titleSmall)
-                    Image(
-                        bitmap = item.bitmap.asImageBitmap(),
-                        contentDescription = "Image on slide ${item.slideNumber}: ${item.altText}",
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier.fillMaxWidth().heightIn(max = 220.dp)
-                            .testTag("artifact-image-preview-${item.slideNumber}")
+                    Text(
+                        "Slide $slideNumber · approximate layout",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color(0xFF54605B),
+                        modifier = Modifier.testTag("pptx-slide-preview-$slideNumber")
                     )
-                    Text("Alternative text: ${item.altText}", style = MaterialTheme.typography.bodySmall)
-                    Text("PNG source: ${item.sourceWidth} × ${item.sourceHeight} px", style = MaterialTheme.typography.labelSmall)
+                    Text(
+                        title,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color(0xFF1D2522),
+                        modifier = Modifier.fillMaxWidth().weight(0.3f).verticalScroll(rememberScrollState())
+                            .testTag("pptx-slide-title-$slideNumber")
+                    )
+                    Row(Modifier.fillMaxWidth().weight(0.7f)) {
+                        Text(
+                            body,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color(0xFF1D2522),
+                            modifier = Modifier.weight(if (image == null) 1f else 0.48f)
+                                .fillMaxHeight().verticalScroll(rememberScrollState())
+                                .testTag("pptx-slide-body-$slideNumber")
+                        )
+                        if (image != null) {
+                            Column(
+                                Modifier.weight(0.52f).fillMaxHeight(),
+                                verticalArrangement = Arrangement.spacedBy(2.dp)
+                            ) {
+                                Image(
+                                    bitmap = image.bitmap.asImageBitmap(),
+                                    contentDescription = "Image on slide $slideNumber: ${image.altText}",
+                                    contentScale = ContentScale.Fit,
+                                    modifier = Modifier.fillMaxWidth().weight(1f)
+                                        .testTag("artifact-image-preview-$slideNumber")
+                                )
+                                Text(
+                                    "Alternative text: ${image.altText}",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = Color(0xFF54605B),
+                                    modifier = Modifier.testTag("pptx-slide-image-alt-$slideNumber")
+                                )
+                                Text(
+                                    "PNG source: ${image.sourceWidth} × ${image.sourceHeight} px",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = Color(0xFF54605B),
+                                    modifier = Modifier.testTag("pptx-slide-image-size-$slideNumber")
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
