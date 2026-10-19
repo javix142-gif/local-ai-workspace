@@ -44,6 +44,12 @@ class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String
                     append("\n[PNG image: ").append(slide.getString("imageAltText")).append(']')
                     append("\n[PNG SHA-256: ").append(ArtifactStore.hash(image.bytes)).append(']')
                 }
+                PptxFigureDescriptor.parse(slide).forEach { figure ->
+                    append("\n[Figure ").append(figure.kind).append(": ").append(figure.description)
+                    figure.label?.let { append(" · label: ").append(it) }
+                    append(" · box: ").append(figure.left).append(',').append(figure.top)
+                        .append(',').append(figure.width).append(',').append(figure.height).append(']')
+                }
             }
         }.joinToString("\n\n")
         ArtifactFormat.DOCX->{
@@ -115,9 +121,9 @@ class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String
                 }
                 ArtifactFormat.PPTX->{
                     val slides=input.getJSONArray("slides");require(slides.length() in 1..30){"SLIDE_LIMIT"}
-                    var totalImageBytes=0L
+                    var totalImageBytes=0L;var totalShapes=0
                     slides.objects().forEach{slide->
-                        fields(slide,setOf("title","body","imagePngBase64","imageAltText"))
+                        fields(slide,setOf("title","body","imagePngBase64","imageAltText","shapes"))
                         text(slide.getString("title"),120);text(slide.getString("body"),1000)
                         val hasImage=slide.has("imagePngBase64");val hasAlt=slide.has("imageAltText")
                         require(hasImage==hasAlt){"PPTX_IMAGE_FIELDS_REQUIRED_TOGETHER"}
@@ -126,6 +132,8 @@ class ArtifactSpec private constructor(val format:ArtifactFormat,val name:String
                             totalImageBytes+=PptxImagePayloadValidator.decodeAndValidate(slide.getString("imagePngBase64")).bytes.size
                             require(totalImageBytes<=PptxImagePayloadValidator.MAX_TOTAL_IMAGE_BYTES){"PPTX_TOTAL_IMAGE_BYTES_LIMIT"}
                         }
+                        totalShapes+=PptxFigureDescriptor.parse(slide).size
+                        require(totalShapes<=PptxFigureDescriptor.MAX_PER_PRESENTATION){"PPTX_SHAPE_LIMIT_PER_PRESENTATION"}
                     }
                 }
                 ArtifactFormat.DOCX->{

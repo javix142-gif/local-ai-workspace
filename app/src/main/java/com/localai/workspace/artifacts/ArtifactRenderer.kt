@@ -180,7 +180,8 @@ class ArtifactRenderer(private val context:Context) {
         slides.forEachIndexed{i,s->
             val hasImage=s.has("imagePngBase64")
             val bodyWidth=if(hasImage)5_200_000L else 11_094_720L
-            val body=box(3,"Body",548640,1554480,bodyWidth,4754880,s.getString("body"),2200)
+            val body=box(3,"Body",548640,1554480,bodyWidth,4754880,s.getString("body"),2200)+
+                PptxFigureDescriptor.parse(s).mapIndexed { index, figure -> pptxFigure(figure,index+1) }.joinToString("")
             val image=if(hasImage) {
                 val payload=PptxImagePayloadValidator.decodeAndValidate(s.getString("imagePngBase64"))
                 val boxX=6_048_640L;val boxY=1_554_480L;val boxW=5_500_000L;val boxH=4_754_880L
@@ -197,6 +198,27 @@ class ArtifactRenderer(private val context:Context) {
             entries["ppt/slides/_rels/slide${i+1}.xml.rels"]=rels(*relationships.toTypedArray()).toByteArray(Charsets.UTF_8)
         }
         return entries
+    }
+    private fun pptxFigure(figure:PptxFigure,number:Int):String {
+        val slideWidth=12_192_000L
+        val slideHeight=6_858_000L
+        val x=slideWidth*figure.left/1000
+        val y=slideHeight*figure.top/1000
+        val width=slideWidth*figure.width/1000
+        val height=slideHeight*figure.height/1000
+        val textBody=figure.label?.let { label ->
+            val textColor=contrastingFigureTextColor(figure.fillColor)
+            "<p:txBody><a:bodyPr wrap=\"square\" lIns=\"45720\" tIns=\"22860\" rIns=\"45720\" bIns=\"22860\" anchor=\"ctr\"><a:normAutofit/></a:bodyPr><a:lstStyle/><a:p><a:pPr algn=\"ctr\"/><a:r><a:rPr lang=\"es-ES\" sz=\"1200\" b=\"1\"><a:solidFill><a:srgbClr val=\"$textColor\"/></a:solidFill><a:latin typeface=\"Arial\"/></a:rPr><a:t>${xml(label)}</a:t></a:r><a:endParaRPr lang=\"es-ES\"/></a:p></p:txBody>"
+        } ?: "<p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr/></a:p></p:txBody>"
+        return "<p:sp><p:nvSpPr><p:cNvPr id=\"${number+4}\" name=\"Figure $number\" descr=\"${xml(figure.description)}\"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr><p:spPr><a:xfrm><a:off x=\"$x\" y=\"$y\"/><a:ext cx=\"$width\" cy=\"$height\"/></a:xfrm><a:prstGeom prst=\"${PptxFigureDescriptor.formatName(figure.kind)}\"><a:avLst/></a:prstGeom><a:solidFill><a:srgbClr val=\"${figure.fillColor}\"/></a:solidFill><a:ln w=\"19050\"><a:solidFill><a:srgbClr val=\"${figure.lineColor}\"/></a:solidFill><a:prstDash val=\"solid\"/></a:ln></p:spPr>$textBody</p:sp>"
+    }
+    private fun contrastingFigureTextColor(background:String):String {
+        val red=background.substring(0,2).toInt(16)/255.0
+        val green=background.substring(2,4).toInt(16)/255.0
+        val blue=background.substring(4,6).toInt(16)/255.0
+        fun linear(value:Double)=if(value<=0.04045)value/12.92 else Math.pow((value+0.055)/1.055,2.4)
+        val luminance=0.2126*linear(red)+0.7152*linear(green)+0.0722*linear(blue)
+        return if(luminance>0.179) "000000" else "FFFFFF"
     }
     private fun theme():String {
         val colors=listOf("dk1" to "1D2522","lt1" to "FFFFFF","dk2" to "54605B","lt2" to "EFF1EE","accent1" to "3E746D","accent2" to "256D46","accent3" to "7A5D00","accent4" to "54605B","accent5" to "77817C","accent6" to "A5D8CE","hlink" to "3E746D","folHlink" to "54605B")

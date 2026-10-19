@@ -261,6 +261,10 @@ class PptxImageArtifactTest {
                 .put("label", "Aprobado").put("left", 600).put("top", 620)
                 .put("width", 250).put("height", 200).put("fillColor", "FFFFFF")
                 .put("lineColor", "1D2522"))
+            .put(JSONObject().put("kind", "roundedRectangle").put("description", "Revisión pendiente")
+                .put("left", 100).put("top", 700).put("width", 250).put("height", 100))
+            .put(JSONObject().put("kind", "triangle").put("description", "Decisión requerida")
+                .put("left", 700).put("top", 100).put("width", 200).put("height", 250))
         val descriptor = JSONObject().put("format", "PPTX").put("name", "figures.pptx")
             .put("slides", org.json.JSONArray().put(JSONObject().put("title", "Flujo")
                 .put("body", "Entrada, revisión y resultado.").put("shapes", figures)))
@@ -270,6 +274,8 @@ class PptxImageArtifactTest {
             val firstBytes = store.verifiedFile(project, first).readBytes()
             assertTrue(firstSpec.preview().contains("Figure rectangle: Entrada & revisión"))
             assertTrue(firstSpec.preview().contains("Figure ellipse: Resultado aprobado"))
+            assertTrue(firstSpec.preview().contains("Figure roundedRectangle: Revisión pendiente"))
+            assertTrue(firstSpec.preview().contains("Figure triangle: Decisión requerida"))
             ZipFile(store.verifiedFile(project, first)).use { zip ->
                 val slide = xml(zip, "ppt/slides/slide1.xml")
                 val presentationNs = "http://schemas.openxmlformats.org/presentationml/2006/main"
@@ -279,14 +285,28 @@ class PptxImageArtifactTest {
                     .single { shape -> shape.getElementsByTagNameNS(presentationNs, "cNvPr").let { it.length > 0 && it.item(0).attributes.getNamedItem("name").nodeValue == "Figure 1" } }
                 val ellipse = (0 until shapes.length).map { shapes.item(it) as org.w3c.dom.Element }
                     .single { shape -> shape.getElementsByTagNameNS(presentationNs, "cNvPr").let { it.length > 0 && it.item(0).attributes.getNamedItem("name").nodeValue == "Figure 2" } }
+                val roundedRectangle = (0 until shapes.length).map { shapes.item(it) as org.w3c.dom.Element }
+                    .single { shape -> shape.getElementsByTagNameNS(presentationNs, "cNvPr").let { it.length > 0 && it.item(0).attributes.getNamedItem("name").nodeValue == "Figure 3" } }
+                val triangle = (0 until shapes.length).map { shapes.item(it) as org.w3c.dom.Element }
+                    .single { shape -> shape.getElementsByTagNameNS(presentationNs, "cNvPr").let { it.length > 0 && it.item(0).attributes.getNamedItem("name").nodeValue == "Figure 4" } }
                 assertEquals("Entrada & revisión", rectangle.getElementsByTagNameNS(presentationNs, "cNvPr").item(0)
                     .attributes.getNamedItem("descr").nodeValue)
                 assertEquals("rect", rectangle.getElementsByTagNameNS(drawingNs, "prstGeom").item(0)
                     .attributes.getNamedItem("prst").nodeValue)
                 assertEquals("ellipse", ellipse.getElementsByTagNameNS(drawingNs, "prstGeom").item(0)
                     .attributes.getNamedItem("prst").nodeValue)
+                assertEquals("roundRect", roundedRectangle.getElementsByTagNameNS(drawingNs, "prstGeom").item(0)
+                    .attributes.getNamedItem("prst").nodeValue)
+                assertEquals("triangle", triangle.getElementsByTagNameNS(drawingNs, "prstGeom").item(0)
+                    .attributes.getNamedItem("prst").nodeValue)
                 assertEquals("Entrada", rectangle.getElementsByTagNameNS(drawingNs, "t").item(0).textContent)
                 assertEquals("Aprobado", ellipse.getElementsByTagNameNS(drawingNs, "t").item(0).textContent)
+                assertEquals("FFFFFF", rectangle.getElementsByTagNameNS(drawingNs, "rPr").item(0)
+                    .let { it as org.w3c.dom.Element }.getElementsByTagNameNS(drawingNs, "srgbClr").item(0)
+                    .attributes.getNamedItem("val").nodeValue)
+                assertEquals("000000", ellipse.getElementsByTagNameNS(drawingNs, "rPr").item(0)
+                    .let { it as org.w3c.dom.Element }.getElementsByTagNameNS(drawingNs, "srgbClr").item(0)
+                    .attributes.getNamedItem("val").nodeValue)
                 val rectangleOffset = rectangle.getElementsByTagNameNS(drawingNs, "off").item(0) as org.w3c.dom.Element
                 val rectangleExtent = rectangle.getElementsByTagNameNS(drawingNs, "ext").item(0) as org.w3c.dom.Element
                 assertEquals("1219200", rectangleOffset.getAttribute("x"))
@@ -317,6 +337,61 @@ class PptxImageArtifactTest {
             }
         } finally {
             root.deleteRecursively()
+        }
+    }
+
+    @Test
+    fun rejectsPptxFiguresOutsideCanvasOrShapeLimits() {
+        fun source(shapes: org.json.JSONArray) = JSONObject().put("format", "PPTX").put("name", "bounded.pptx")
+            .put("slides", org.json.JSONArray().put(JSONObject().put("title", "Title").put("body", "Body").put("shapes", shapes)))
+        fun shape(left: Int = 100, width: Int = 100) = JSONObject().put("kind", "rectangle")
+            .put("description", "Accessible figure").put("left", left).put("top", 100)
+            .put("width", width).put("height", 100)
+
+        val invalid = listOf(
+            shape(left = 950, width = 100),
+            shape().put("kind", "freeform"),
+            shape().put("fillColor", "GG0000"),
+            shape().put("description", " "),
+            shape().put("width", 0),
+        )
+        invalid.forEach { descriptor ->
+            try {
+                ArtifactSpec.parse(source(org.json.JSONArray().put(descriptor)))
+                fail("invalid figure descriptor must be rejected: $descriptor")
+            } catch (failure: IllegalArgumentException) {
+                assertTrue("Expected a PPTX shape validation reason", failure.message?.startsWith("PPTX_SHAPE_") == true)
+            }
+        }
+        val wrongCollectionType = source(org.json.JSONArray()).apply {
+            getJSONArray("slides").getJSONObject(0).put("shapes", "not an array")
+        }
+        try {
+            ArtifactSpec.parse(wrongCollectionType)
+            fail("a malformed figures field must not be silently ignored")
+        } catch (failure: IllegalArgumentException) {
+            assertEquals("PPTX_SHAPE_ARRAY_REQUIRED", failure.message)
+        }
+
+        val tooManyOnOneSlide = org.json.JSONArray().apply { repeat(PptxFigureDescriptor.MAX_PER_SLIDE + 1) { put(shape()) } }
+        try {
+            ArtifactSpec.parse(source(tooManyOnOneSlide))
+            fail("per-slide shape bound must be enforced")
+        } catch (failure: IllegalArgumentException) {
+            assertEquals("PPTX_SHAPE_LIMIT_PER_SLIDE", failure.message)
+        }
+
+        val twelve = org.json.JSONArray().apply { repeat(PptxFigureDescriptor.MAX_PER_SLIDE) { put(shape()) } }
+        val manySlides = org.json.JSONArray().apply {
+            repeat(PptxFigureDescriptor.MAX_PER_PRESENTATION / PptxFigureDescriptor.MAX_PER_SLIDE + 1) {
+                put(JSONObject().put("title", "Title").put("body", "Body").put("shapes", twelve))
+            }
+        }
+        try {
+            ArtifactSpec.parse(JSONObject().put("format", "PPTX").put("name", "bounded.pptx").put("slides", manySlides))
+            fail("deck-wide shape bound must be enforced")
+        } catch (failure: IllegalArgumentException) {
+            assertEquals("PPTX_SHAPE_LIMIT_PER_PRESENTATION", failure.message)
         }
     }
 
