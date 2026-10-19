@@ -1,0 +1,158 @@
+{
+  "schema": "aws-master-program-evidence-v1",
+  "name": "M03-03 ordered DOCX blocks preparation",
+  "codeSha": "463819926bf61523c59cab96ccc083513e19d8f4",
+  "productionCommit": "d5d49ba9fba4cfaf9869c8118142bc3abe213ad3",
+  "testFirstCommit": "a0a71455f9bdf1305097dd0cb987e0b3b92fb0f5",
+  "revisionTestCommit": "463819926bf61523c59cab96ccc083513e19d8f4",
+  "branch": "codex/master-program-20261019",
+  "finding": "The old descriptor represented paragraphs and tables as separate lists and the renderer placed all paragraphs before tables; paragraph-table-paragraph ordering was not representable. Added validated ordered blocks for generated DOCX while preserving legacy descriptors.",
+  "attempts": {
+    "red": {
+      "sourceSha": "a0a71455f9bdf1305097dd0cb987e0b3b92fb0f5",
+      "status": "EXPECTED_RED_REPRODUCTION",
+      "test": "generatedDocxPreservesParagraphAndTableBlockOrder",
+      "junit": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "gradleExitCode": 1,
+      "durationSeconds": 49,
+      "failure": "ArtifactSpec.parse rejected blocks with ARTIFACT_FIELD_UNSUPPORTED before implementation. XML was not retained; log is preserved.",
+      "log": {
+        "archive": "docs/validation/master-program-docx-ordered-blocks/attempts/red-before-implementation/gradle.log.gz",
+        "archiveSha256": "552aa4075a0843b53dc5355240e54c4b9fb46841980139578ad603b1e73b656f",
+        "rawSha256": "e1343cfe9922060d35b0018ffd2bcefd59b86a8f16636925045edce684a94898",
+        "rawBytes": 378187,
+        "gzipBytes": 30516
+      }
+    },
+    "focused": {
+      "sourceSha": "463819926bf61523c59cab96ccc083513e19d8f4",
+      "status": "PASS",
+      "command": "attempts/final-focused/command.txt",
+      "startedAtUtc": "2026-10-19T14:56:40Z",
+      "finishedAtUtc": "2026-10-19T14:57:26Z",
+      "wallSeconds": 46,
+      "gradleExitCode": 0,
+      "gradle": "8.10.2",
+      "actionableTasks": 63,
+      "executedTasks": 3,
+      "upToDateTasks": 60,
+      "junit": {
+        "suite": "com.localai.workspace.artifacts.DocxArtifactStructureTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "testcases": [
+          {
+            "name": "generatedDocxResolvesStylesNumberingTablesAndImmutableRevisions",
+            "seconds": 5.642
+          },
+          {
+            "name": "generatedDocxPreservesParagraphAndTableBlockOrder",
+            "seconds": 0.084
+          }
+        ],
+        "xmlSha256": "da5f379f279158e7fcde747d4c7766e1ea47a5d7f5ecff7403308af86f052a06"
+      },
+      "log": {
+        "archive": "docs/validation/master-program-docx-ordered-blocks/attempts/final-focused/gradle.log.gz",
+        "archiveSha256": "f57e6f2c88c7dc8d211d0eb3f0ef3f0202a9da6f420d53aefb14210aa4f58e7d",
+        "rawSha256": "a1fda132c93a29d8df6e3024aaf0e21fb1b085368072f621b42aa7cd76a3360b",
+        "rawBytes": 376519,
+        "gzipBytes": 29787
+      },
+      "reader": "attempts/final-focused/external-reader.json"
+    },
+    "lintAndCompile": {
+      "sourceSha": "463819926bf61523c59cab96ccc083513e19d8f4",
+      "status": "ENVIRONMENT_BLOCKED_OFFLINE_DEPENDENCY_NOT_CACHED",
+      "command": "attempts/proportional-host/lint-and-compile-command.txt",
+      "startedAtUtc": "2026-10-19T14:57:40Z",
+      "finishedAtUtc": "2026-10-19T15:09:53Z",
+      "wallSeconds": 733,
+      "gradleExitCode": 1,
+      "tasks": {
+        "cmakeReleaseArm64": "PASS",
+        "buildCMakeReleaseArm64": "PASS",
+        "cmakeReleaseX86_64": "PASS",
+        "buildCMakeReleaseX86_64": "PASS",
+        "llamaRuntimeExtractDebugAnnotations": "FAILED_MISSING_OFFLINE_ARTIFACT",
+        "appLintDebug": "NOT_REACHED",
+        "appCompileDebugAndroidTestKotlin": "NOT_REACHED"
+      },
+      "missingArtifact": "com.android.tools.lint:lint-gradle:31.7.3",
+      "log": {
+        "archive": "docs/validation/master-program-docx-ordered-blocks/attempts/proportional-host/lint-and-compile-invocation.log.gz",
+        "archiveSha256": "cb730d6cad1dc683bf6164b09c18bcffce3a620f62d9b837a77bd5d7fdaf361f",
+        "rawSha256": "d1e76131e0f12d3e06642b82ff983bd4952a476ef63bfa9aad6bbba445da3507",
+        "rawBytes": 215282,
+        "gzipBytes": 18696
+      }
+    },
+    "androidTestCompileAlone": {
+      "sourceSha": "463819926bf61523c59cab96ccc083513e19d8f4",
+      "status": "ENVIRONMENT_BLOCKED_OFFLINE_DEPENDENCIES_NOT_CACHED",
+      "command": "attempts/proportional-host/androidtest-compile-command.txt",
+      "startedAtUtc": "2026-10-19T15:10:08Z",
+      "finishedAtUtc": "2026-10-19T15:10:31Z",
+      "wallSeconds": 23,
+      "gradleExitCode": 1,
+      "tasks": {
+        "processDebugAndroidTestManifest": "FAILED_DEPENDENCY_RESOLUTION",
+        "compileDebugAndroidTestKotlin": "NOT_REACHED"
+      },
+      "missingArtifacts": [
+        "androidx.test.ext:junit:1.2.1",
+        "androidx.test.espresso:espresso-core:3.6.1",
+        "androidx.room:room-testing:2.6.1",
+        "androidx.test:monitor:1.6.1",
+        "androidx.test.espresso:espresso-idling-resource:3.5.0",
+        "com.google.code.findbugs:jsr305:2.0.2",
+        "6 additional artifacts with identical uncached-offline cause"
+      ],
+      "log": {
+        "archive": "docs/validation/master-program-docx-ordered-blocks/attempts/proportional-host/androidtest-compile-invocation.log.gz",
+        "archiveSha256": "83a67d11274ae4c876d6604ce3ea39a2a33160e79e15152f43a1a58507d79c1b",
+        "rawSha256": "35b24383bbea6e77b5070d7a85221b48218ad0c773bb7717277dfb7bc12af9e6",
+        "rawBytes": 245544,
+        "gzipBytes": 18411
+      }
+    }
+  },
+  "sourceTask": {
+    "id": "M03-03",
+    "title": "Generador y editor basico DOCX",
+    "sourceStatus": "TODO",
+    "requiresDevice": true,
+    "dependsOn": [
+      "M03-01",
+      "M02-03"
+    ],
+    "dependencyStatuses": {
+      "M03-01": "TODO",
+      "M02-03": "TODO"
+    },
+    "formalCompletion": false
+  },
+  "validation": {
+    "HOST": "focused test PASS; independent-reader PASS; lint and AndroidTest compile blocked by existing offline-cache dependencies",
+    "EMULATOR": "NOT_RUN",
+    "PHYSICAL_DEVICE": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  },
+  "originalPlan": {
+    "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmap": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskIds": 97,
+    "dependencyEdges": 120,
+    "statuses": "97 TODO",
+    "sourceFilesModified": false
+  }
+}

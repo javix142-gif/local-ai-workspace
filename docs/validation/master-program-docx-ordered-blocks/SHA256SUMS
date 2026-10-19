@@ -1,0 +1,17 @@
+9d392113eb783880d7916306de16a9a918cacf10a8afbd6dc70c1eed29079e68  docs/validation/master-program-docx-ordered-blocks/RESULTS.json
+a586925ac20e253f915a702f1a085bcdd70ff0bdedc25f7ecaa8ec1bf65ed3d2  docs/validation/master-program-docx-ordered-blocks/RESULTS.md
+da5f379f279158e7fcde747d4c7766e1ea47a5d7f5ecff7403308af86f052a06  docs/validation/master-program-docx-ordered-blocks/attempts/final-focused/DocxArtifactStructureTest.xml
+08b72a86f37d2c25e0694ba60da90460bcb7e83d2b42f9332d906a5098cb5d20  docs/validation/master-program-docx-ordered-blocks/attempts/final-focused/command.txt
+dc97ea15e24a0493b7158972da840925b26e7f9338f7d1504ad72bf1f2cd822b  docs/validation/master-program-docx-ordered-blocks/attempts/final-focused/environment.json
+f774f6220b5486c3126cd86b114b7fe6b344fee1767000691af2f6b31778f3a9  docs/validation/master-program-docx-ordered-blocks/attempts/final-focused/external-reader.json
+f57e6f2c88c7dc8d211d0eb3f0ef3f0202a9da6f420d53aefb14210aa4f58e7d  docs/validation/master-program-docx-ordered-blocks/attempts/final-focused/gradle.log.gz
+451007876a61652de93f9ea1df227835ef7b18833728545e44dc7165844ae3db  docs/validation/master-program-docx-ordered-blocks/attempts/final-focused/ordered-blocks-v1.docx
+930adf39863732b7a4ca373ccda543333f293b96de4cee9b38f1ffd2450196ef  docs/validation/master-program-docx-ordered-blocks/attempts/final-focused/ordered-blocks-v2.docx
+99a9fa45f98cccfe96a69b9cdcf34129ffe562b55691b85a1f793be24662a365  docs/validation/master-program-docx-ordered-blocks/attempts/proportional-host/androidtest-compile-command.txt
+83a67d11274ae4c876d6604ce3ea39a2a33160e79e15152f43a1a58507d79c1b  docs/validation/master-program-docx-ordered-blocks/attempts/proportional-host/androidtest-compile-invocation.log.gz
+dc97ea15e24a0493b7158972da840925b26e7f9338f7d1504ad72bf1f2cd822b  docs/validation/master-program-docx-ordered-blocks/attempts/proportional-host/environment.json
+e0553cdf03022f9c46f45dc66132ad3bc59d712bf042533385f4b89c1ace63fc  docs/validation/master-program-docx-ordered-blocks/attempts/proportional-host/lint-and-compile-command.txt
+cb730d6cad1dc683bf6164b09c18bcffce3a620f62d9b837a77bd5d7fdaf361f  docs/validation/master-program-docx-ordered-blocks/attempts/proportional-host/lint-and-compile-invocation.log.gz
+93efe3babe072fb58e826294f097e5b86688adf224b0e6a8883f07d024fb1a6c  docs/validation/master-program-docx-ordered-blocks/attempts/red-before-implementation/command.txt
+dc97ea15e24a0493b7158972da840925b26e7f9338f7d1504ad72bf1f2cd822b  docs/validation/master-program-docx-ordered-blocks/attempts/red-before-implementation/environment.json
+552aa4075a0843b53dc5355240e54c4b9fb46841980139578ad603b1e73b656f  docs/validation/master-program-docx-ordered-blocks/attempts/red-before-implementation/gradle.log.gz

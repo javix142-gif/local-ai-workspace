@@ -1,0 +1,31 @@
+{
+  "gradle": "8.10.2",
+  "runtimeJdk": {
+    "vendor": "Eclipse Temurin",
+    "version": "17.0.20.1",
+    "path": "/workspace/.toolchain/jdk-17"
+  },
+  "workerAndToolchainJdk": {
+    "vendor": "Eclipse Temurin",
+    "version": "21.0.12.1",
+    "path": "/workspace/.toolchain/jdk-21-temurin"
+  },
+  "androidSdk": {
+    "path": "/workspace/.toolchain/android-sdk",
+    "platform": "API 35"
+  },
+  "ndk": {
+    "path": "/workspace/.toolchain/android-sdk/ndk/27.0.12077973",
+    "version": "27.0.12077973"
+  },
+  "gradleUserHome": {
+    "path": "/workspace/.gradle",
+    "preexisting": true,
+    "offline": true
+  },
+  "host": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "pythonDocx": "1.2.0",
+  "codeSha": "463819926bf61523c59cab96ccc083513e19d8f4",
+  "branch": "codex/master-program-20261019"
+}

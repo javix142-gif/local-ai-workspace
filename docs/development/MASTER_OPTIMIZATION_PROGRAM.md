@@ -1,5 +1,12 @@
 # Master optimization program — first implementation delivery
 
+## 2026-10-19 — M03-03 ordered generated-DOCX blocks (preparatory)
+
+At code SHA `463819926bf61523c59cab96ccc083513e19d8f4`, generated DOCX descriptors can now express paragraphs and tables in sequence through bounded ordered blocks while preserving the legacy descriptor form. The gap was reproduced first: the ordered-block regression failed with `ARTIFACT_FIELD_UNSUPPORTED`; after implementation the focused class passed 2/2 and `python-docx 1.2.0` opened both immutable synthetic revisions with paragraph/table/paragraph body order. See `../validation/master-program-docx-ordered-blocks/RESULTS.md` and its 17-entry `SHA256SUMS`.
+
+The focused HOST check and independent reader pass. The proportional lint command was blocked offline by uncached `com.android.tools.lint:lint-gradle:31.7.3` after the native CMake Release builds; the separate AndroidTest compile was blocked by uncached AndroidX/Room test dependencies before Kotlin compilation. No online retry, emulator, Motorola, or APK was run. M03-03 remains source TODO and device-required; M03-01/M02-03 dependencies remain TODO. No source task or dependency changed; the original catalog remains 97 IDs/120 edges/all TODO.
+
+
 User authorization permits sequential preparatory M01/M02/M03 work despite unfinished physical M00 gates, and feature-only fast-forward publication. The archived original 97 IDs/120 dependencies/order/TODO baseline are immutable. This document is an implementation crosswalk, not a replacement backlog or formal milestone closure.
 
 ## 2026-10-19 — M03-02 cached formula result-type regression coverage

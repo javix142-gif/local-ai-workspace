@@ -1,0 +1,64 @@
+{
+  "reader": "python-docx",
+  "version": "1.2.0",
+  "python": "3.12.14",
+  "documents": [
+    {
+      "name": "ordered-blocks-v1.docx",
+      "bytes": 2444,
+      "sha256": "451007876a61652de93f9ea1df227835ef7b18833728545e44dc7165844ae3db",
+      "zipCrc": "PASS",
+      "directBodyOrder": [
+        "p",
+        "tbl",
+        "p",
+        "sectPr"
+      ],
+      "paragraphs": [
+        "Before the table",
+        "After the table"
+      ],
+      "tables": [
+        [
+          [
+            "Label",
+            "Value"
+          ],
+          [
+            "Entry",
+            "7"
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "ordered-blocks-v2.docx",
+      "bytes": 2451,
+      "sha256": "930adf39863732b7a4ca373ccda543333f293b96de4cee9b38f1ffd2450196ef",
+      "zipCrc": "PASS",
+      "directBodyOrder": [
+        "p",
+        "tbl",
+        "p",
+        "sectPr"
+      ],
+      "paragraphs": [
+        "Before the table",
+        "After the revised table"
+      ],
+      "tables": [
+        [
+          [
+            "Label",
+            "Value"
+          ],
+          [
+            "Entry",
+            "7"
+          ]
+        ]
+      ]
+    }
+  ],
+  "result": "PASS"
+}

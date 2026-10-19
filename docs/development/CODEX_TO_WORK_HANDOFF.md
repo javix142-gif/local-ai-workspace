@@ -1,4 +1,18 @@
-# Current checkpoint — M03-02 cached formula result-type coverage (2026-10-19)
+# Current checkpoint — M03-03 ordered DOCX content blocks (2026-10-19)
+
+The code is on `codex/master-program-20261019`; tested source SHA `463819926bf61523c59cab96ccc083513e19d8f4`. The red regression at `a0a71455f9bdf1305097dd0cb987e0b3b92fb0f5` demonstrated that a generated document could not represent paragraph → table → paragraph: `ArtifactSpec.parse` rejected the ordered `blocks` field with `ARTIFACT_FIELD_UNSUPPORTED`. Production commit `d5d49ba9fba4cfaf9869c8118142bc3abe213ad3` adds a bounded ordered-block descriptor and renders paragraphs/tables in sequence; the old `paragraphs`/`tables` descriptor remains supported. The editor and project-tool description now use the ordered DOCX form. Test commit `4638199` checks ordered preview/OOXML content and two immutable revisions. The red log is retained, but its JUnit XML was overwritten by the final green run and is not available.
+
+At exact source SHA `4638199`, `DocxArtifactStructureTest` passed **2/2**, 0 failures/errors/skips, Gradle exit 0, 46s wall; XML and full log are in [`M03-03 ordered DOCX evidence`](../validation/master-program-docx-ordered-blocks/RESULTS.md). `python-docx 1.2.0` independently opened both synthetic v1/v2 DOCX files; ZIP CRC passes and direct body order is `p, tbl, p, sectPr`; the revised v2 changes its final paragraph while v1 bytes/hash remain unchanged.
+
+The proportional Gradle command `:app:lintDebug :app:compileDebugAndroidTestKotlin` exited 1 after 12m13s in offline mode because `:llama-runtime:extractDebugAnnotations` could not resolve uncached `com.android.tools.lint:lint-gradle:31.7.3`; CMake/Ninja release builds for arm64-v8a and x86_64 finished, but `:app:lintDebug` was not reached. A separate `:app:compileDebugAndroidTestKotlin` attempt exited 1 in 23s while resolving AndroidX/Roombased Android test dependencies at `:app:processDebugAndroidTestManifest`; Kotlin compilation was not reached. No network retry or package install was made. Both complete logs/commands are in the evidence directory. This is an offline-cache blocker, not a product pass or demonstrated product failure.
+
+M03-03 remains source `TODO`, `requires_device=true`, with M03-01 and M02-03 dependencies still `TODO`. The original 97 task IDs, 120 edges/order and all source statuses are unchanged. This tests synthetic generated DOCX only; imported DOCX preservation, Android SAF/Office viewer behavior, emulator and Motorola remain unverified. No full JVM/LiteRT suite or APK was run. Next bounded review: M03-04 PDF against its authentic source DoD. Do not alter source task states.
+
+Evidence manifest: `docs/validation/master-program-docx-ordered-blocks/SHA256SUMS`.
+
+---
+
+## Previous checkpoint — M03-02 cached formula result-type coverage (2026-10-19)
 
 Current source/test SHA: `b08d438b8bfe2b1b7b17e16a3141998a41760df3`; this branch adds a focused regression test only. A proposed serialization defect was checked and **not reproduced**: production `ArtifactRenderer.xlsx` already emits numeric formula caches as OOXML `n`, boolean caches as `b`, and string caches as `str`. The new filtered test passed 1/1, zero failures/errors/skips, captured Gradle exit 0, 3m30s; source/log/XML/task outcome and hashes are in [`M03-02 cache-type results`](../validation/master-program-xlsx-cache-types/RESULTS.md). A first wrapper attempt did not start Gradle because the default `/home/agent/.gradle` lacked Gradle 8.10.2 and the network refused the distribution request; the successful run used the existing `/workspace/.gradle` cache offline. The independent openpyxl control demonstrates why the type distinction matters, but this run did not independently reopen its emitted workbook with openpyxl.
 
