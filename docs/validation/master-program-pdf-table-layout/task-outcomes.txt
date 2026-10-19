@@ -1,0 +1,8 @@
+M03-04 original source task: TODO; requires_device=true; depends_on=[M03-01], which remains TODO.
+This increment is preparatory only; no original task ID, dependency, order, or source status changed.
+
+Red source c134a97f9fbea0512a2e86e88dea433fa4fa2f54: expected failure reproduced at the assertion that extracted PDF table text still contained '|'. JUnit 1 test, 0 passed, 1 failed, 0 errors, 0 skipped. Gradle exit 1; production table renderer was unchanged.
+Green source effb4ccd8089e04b98ffa4f6af6d6fdacb4bf475: PdfArtifactLayoutTest 2/2 passed, 0 failures, 0 errors, 0 skipped. Gradle exit 0; 63 actionable tasks, 3 executed, 60 up-to-date; 46 seconds wall time.
+Independent readers: PyMuPDF 1.26.6 and pypdf 6.10.0 both opened the synthetic PDF; 3 Letter pages, 300/300 repeated cell tokens preserved, no pipe-delimited text, 48 vector drawings, zero text or drawings outside page bounds.
+
+NOT_RUN: full app JVM suite; LiteRT compatibility; lint; AndroidTest compile/instrumentation; emulator; Motorola; APK.

@@ -1,0 +1,171 @@
+{
+  "name": "M03-04 PDF table layout preparation",
+  "kind": "PREPARATORY_M03_04_PDF_TABLE_LAYOUT",
+  "baseCodeSha": "56090d0e4d5c686a9346a5359dfd18d86e7c5d78",
+  "testFirstCommit": "c134a97f9fbea0512a2e86e88dea433fa4fa2f54",
+  "productionCommit": "9c1417e57bb3ffeec5211ca2e67a4b23b955096e",
+  "testAssertionCommit": "effb4ccd8089e04b98ffa4f6af6d6fdacb4bf475",
+  "testedCodeSha": "effb4ccd8089e04b98ffa4f6af6d6fdacb4bf475",
+  "testedTreeSha": "d98c156276635edb3f9efb6e0d58e5d1ee8db402",
+  "workingBranch": "codex/master-program-20261019",
+  "sourceTask": {
+    "id": "M03-04",
+    "title": "Generador local PDF",
+    "status": "TODO",
+    "requires_device": true,
+    "depends_on": [
+      "M03-01"
+    ],
+    "definition_of_done": "PDF exportado abre y preserva layout/texto; tests de fuentes/tamaño/paginas",
+    "dependencyStatus": {
+      "M03-01": "TODO"
+    },
+    "formalCompletion": false
+  },
+  "redReproduction": {
+    "status": "EXPECTED_FAILURE_REPRODUCED",
+    "testSourceSha": "c134a97f9fbea0512a2e86e88dea433fa4fa2f54",
+    "productionRendererBlobUnchangedFromBase": true,
+    "treeSha": "a7a18cf80f805adc48c8b98c1533d16e76fd47c7",
+    "startedAtUtc": "2026-10-19T15:40:21Z",
+    "finishedAtUtc": "2026-10-19T15:41:03Z",
+    "wallSeconds": 42,
+    "exitCode": 1,
+    "junit": {
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 5.333
+    },
+    "failureAssertion": "java.lang.AssertionError: PDF table cells must be laid out as cells, not pipe-delimited prose",
+    "log": "red-baseline/gradle.log",
+    "logSha256": "c8aff0a079e2531547b263b67e3189f7299d262c37e5f9b23c97f662917fe4b9",
+    "xml": "red-baseline/TEST-com.localai.workspace.artifacts.PdfArtifactLayoutTest.xml",
+    "xmlSha256": "597d47e9c71f944fab32f4f0cb56aae6d05625b17c8d3db44793a65346d6bd0a"
+  },
+  "fullRebuildFocusedRun": {
+    "status": "PASS_SUPPLEMENTAL_BEFORE_FINAL_ASSERTION",
+    "productionSha": "9c1417e57bb3ffeec5211ca2e67a4b23b955096e",
+    "startedAtUtc": "2026-10-19T15:41:50Z",
+    "finishedAtUtc": "2026-10-19T15:45:12Z",
+    "wallSeconds": 202,
+    "exitCode": 0,
+    "junit": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 6.425
+    },
+    "log": "postfix-01-full-rebuild/gradle.log",
+    "logSha256": "d44b60618a437269f66441a843a6d71c7b6d263fd43c0ce9d4f7b2e240a419ad",
+    "xml": "postfix-01-full-rebuild/TEST-com.localai.workspace.artifacts.PdfArtifactLayoutTest.xml",
+    "xmlSha256": "7e0ea39e36585a409da0336ebc7ce9b9de2e72a9c9e04097080fe7229d481bb0",
+    "gradleTasks": "63 actionable; full rerun, all 63 executed"
+  },
+  "finalFocusedHost": {
+    "status": "PASS",
+    "startedAtUtc": "2026-10-19T15:45:39Z",
+    "finishedAtUtc": "2026-10-19T15:46:26Z",
+    "wallSecondsByTimestamps": 47,
+    "gradleReportedDurationSeconds": 46,
+    "exitCode": 0,
+    "command": "commands.txt final exact-SHA invocation",
+    "junit": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 5.679
+    },
+    "actionableTasks": 63,
+    "executedTasks": 3,
+    "upToDateTasks": 60,
+    "log": "final-focused/gradle.log",
+    "logSha256": "13395cd44bc1ce4f4747c63c9e5a83c31f8c4159928cf839940c5b49508ab60f",
+    "xml": "final-focused/TEST-com.localai.workspace.artifacts.PdfArtifactLayoutTest.xml",
+    "xmlSha256": "72fda6243303dec0c57cd9604669c94afb0484a2958ee5c4ae8461801a6c2a24"
+  },
+  "independentReadback": {
+    "status": "PASS",
+    "readers": {
+      "PyMuPDF": "1.26.6",
+      "pypdf": "6.10.0"
+    },
+    "path": "docs/validation/master-program-pdf-table-layout/final-focused/table-v1.pdf",
+    "bytes": 2864,
+    "sha256": "72207f10c97adc6a4df9d7b35870115694a6c9804917f9d0c0dcba9161e3a345",
+    "pages": 3,
+    "pageSizePoints": [
+      612.0,
+      792.0
+    ],
+    "tableVectorDrawingCount": 48,
+    "cellTextOccurrenceCount": 300,
+    "pipeDelimiterPresent": false,
+    "textOutsidePageBounds": 0,
+    "drawingsOutsidePageBounds": 0,
+    "allPagesLetterSize": true,
+    "preview": "docs/validation/master-program-pdf-table-layout/final-focused/table-page-1.png",
+    "previewBytes": 64810,
+    "previewSha256": "f69085396f393f0ea25e0fb6b873d2947e8dd4415975967e976e5916a831ad61"
+  },
+  "changedFiles": [
+    "app/src/main/java/com/localai/workspace/artifacts/ArtifactRenderer.kt",
+    "app/src/test/java/com/localai/workspace/artifacts/PdfArtifactLayoutTest.kt"
+  ],
+  "hostEnvironment": {
+    "testedCodeSha": "effb4ccd8089e04b98ffa4f6af6d6fdacb4bf475",
+    "testSourceCommit": "effb4ccd8089e04b98ffa4f6af6d6fdacb4bf475",
+    "branch": "codex/master-program-20261019",
+    "os": "Linux x86_64",
+    "kernel": "6.18.55",
+    "gradle": "8.10.2",
+    "gradleRuntimeJdk": "Temurin 17.0.20.1",
+    "gradleRuntimePath": "/workspace/.toolchain/jdk-17",
+    "workerToolchainJdk": "Temurin 21.0.12.1 available at /workspace/.toolchain/jdk-21-temurin",
+    "toolchainDiscovery": "/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin",
+    "androidSdk": "/workspace/.toolchain/android-sdk, Android API 35",
+    "androidNdk": "27.0.12077973",
+    "gradleUserHome": "/workspace/.gradle existing cache; offline execution; no cache cleanup or installation",
+    "externalReaders": {
+      "python": "3.12.14",
+      "PyMuPDF": "1.26.6",
+      "pypdf": "6.10.0"
+    },
+    "deviceTests": "NOT_RUN"
+  },
+  "notRun": {
+    "fullAppJvm": "NOT_RUN",
+    "liteRtCompatibility": "NOT_RUN",
+    "lint": "NOT_RUN",
+    "androidTestCompile": "NOT_RUN",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  },
+  "globalValidationContext": {
+    "emulator": "Historical FAIL due authentic Room v1 schema fixture unavailable; six model-dependent tests skipped.",
+    "physicalDevice": "NOT_RUN",
+    "M01-06": "PENDING_REQUIRES_DEVICE"
+  },
+  "originalPlan": {
+    "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmap": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskIds": 97,
+    "uniqueTaskIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": {
+      "TODO": 97
+    },
+    "sourceFilesModified": false
+  },
+  "evidenceManifest": {
+    "path": "docs/validation/master-program-pdf-table-layout/SHA256SUMS",
+    "entries": 18,
+    "verification": "sha256sum -c passes for every entry from a fresh manifest in this repository tree."
+  }
+}

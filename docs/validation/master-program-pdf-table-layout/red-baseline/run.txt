@@ -1,0 +1,3 @@
+start_utc=2026-10-19T15:40:21Z
+end_utc=2026-10-19T15:41:03Z
+exit_code=1

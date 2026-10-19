@@ -1,0 +1,16 @@
+Tested code/test source: effb4ccd8089e04b98ffa4f6af6d6fdacb4bf475
+Working branch: codex/master-program-20261019
+
+Expected red reproduction (test-only source c134a97f9fbea0512a2e86e88dea433fa4fa2f54; production renderer unchanged):
+timeout --signal=TERM --kill-after=15s 300s env JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH GRADLE_USER_HOME=/workspace/.gradle ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.artifacts.PdfArtifactLayoutTest.generatedPdfTablesUseGridAndPaginateLongCellsWithoutLosingText
+
+Green full-rebuild run (production source 9c1417e57bb3ffeec5211ca2e67a4b23b955096e; original focused regression):
+timeout --signal=TERM --kill-after=15s 300s env JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH GRADLE_USER_HOME=/workspace/.gradle ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --rerun-tasks -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.artifacts.PdfArtifactLayoutTest
+
+Final exact-SHA focused run (2 methods, includes exact 300-word retention assertion):
+timeout --signal=TERM --kill-after=15s 300s env JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH GRADLE_USER_HOME=/workspace/.gradle ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest --tests com.localai.workspace.artifacts.PdfArtifactLayoutTest
+
+Independent PDF readback:
+python3 docs/validation/master-program-pdf-table-layout/validate_pdf_table.py docs/validation/master-program-pdf-table-layout/final-focused/table-v1.pdf docs/validation/master-program-pdf-table-layout/final-focused/table-page-1.png
+
+Validation scope: focused app JVM class only, plus independent PyMuPDF/pypdf readback. No full JVM/compatibility gate, lint, AndroidTest, emulator, physical device, or APK build was run for this increment.

@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "readers": {
+    "PyMuPDF": "1.26.6",
+    "pypdf": "6.10.0"
+  },
+  "path": "docs/validation/master-program-pdf-table-layout/final-focused/table-v1.pdf",
+  "bytes": 2864,
+  "sha256": "72207f10c97adc6a4df9d7b35870115694a6c9804917f9d0c0dcba9161e3a345",
+  "pages": 3,
+  "pageSizePoints": [
+    612.0,
+    792.0
+  ],
+  "tableVectorDrawingCount": 48,
+  "cellTextOccurrenceCount": 300,
+  "pipeDelimiterPresent": false,
+  "textOutsidePageBounds": 0,
+  "drawingsOutsidePageBounds": 0,
+  "allPagesLetterSize": true,
+  "preview": "docs/validation/master-program-pdf-table-layout/final-focused/table-page-1.png",
+  "previewBytes": 64810,
+  "previewSha256": "f69085396f393f0ea25e0fb6b873d2947e8dd4415975967e976e5916a831ad61"
+}

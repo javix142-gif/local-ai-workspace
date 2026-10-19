@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.artifacts.PdfArtifactLayoutTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-19T15:45:04" hostname="42c4f375d730" time="6.425">
+  <properties/>
+  <testcase name="generatedPdfKeepsWordsTogetherAndPreservesPageLayoutAndVersions" classname="com.localai.workspace.artifacts.PdfArtifactLayoutTest" time="6.283"/>
+  <testcase name="generatedPdfTablesUseGridAndPaginateLongCellsWithoutLosingText" classname="com.localai.workspace.artifacts.PdfArtifactLayoutTest" time="0.142"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

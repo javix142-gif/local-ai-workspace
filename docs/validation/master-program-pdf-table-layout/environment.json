@@ -1,0 +1,21 @@
+{
+  "testedCodeSha": "effb4ccd8089e04b98ffa4f6af6d6fdacb4bf475",
+  "testSourceCommit": "effb4ccd8089e04b98ffa4f6af6d6fdacb4bf475",
+  "branch": "codex/master-program-20261019",
+  "os": "Linux x86_64",
+  "kernel": "6.18.55",
+  "gradle": "8.10.2",
+  "gradleRuntimeJdk": "Temurin 17.0.20.1",
+  "gradleRuntimePath": "/workspace/.toolchain/jdk-17",
+  "workerToolchainJdk": "Temurin 21.0.12.1 available at /workspace/.toolchain/jdk-21-temurin",
+  "toolchainDiscovery": "/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin",
+  "androidSdk": "/workspace/.toolchain/android-sdk, Android API 35",
+  "androidNdk": "27.0.12077973",
+  "gradleUserHome": "/workspace/.gradle existing cache; offline execution; no cache cleanup or installation",
+  "externalReaders": {
+    "python": "3.12.14",
+    "PyMuPDF": "1.26.6",
+    "pypdf": "6.10.0"
+  },
+  "deviceTests": "NOT_RUN"
+}
