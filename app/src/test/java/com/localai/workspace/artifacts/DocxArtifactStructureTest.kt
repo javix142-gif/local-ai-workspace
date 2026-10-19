@@ -259,7 +259,10 @@ class DocxArtifactStructureTest {
 
                     val document = xml(zip, "word/document.xml")
                     assertEquals(1, document.getElementsByTagNameNS(word, "tbl").length)
-                    assertEquals(2, document.getElementsByTagNameNS(word, "pStyle").length)
+                    val paragraphStyles = document.getElementsByTagNameNS(word, "pStyle")
+                    assertEquals(listOf("Title", "Heading1"), (0 until paragraphStyles.length).map {
+                        paragraphStyles.item(it).attributes.getNamedItemNS(word, "val").nodeValue
+                    })
                     val body = document.getElementsByTagNameNS(word, "body").item(0)
                     val directChildren = (0 until body.childNodes.length).mapNotNull { index ->
                         body.childNodes.item(index).takeIf { it.nodeType == org.w3c.dom.Node.ELEMENT_NODE }?.localName
