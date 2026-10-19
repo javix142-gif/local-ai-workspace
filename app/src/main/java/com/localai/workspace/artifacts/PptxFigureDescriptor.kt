@@ -75,6 +75,15 @@ internal object PptxFigureDescriptor {
         else -> error("PPTX_SHAPE_KIND_UNSUPPORTED")
     }
 
+    fun contrastTextColor(background: String): String {
+        val red = background.substring(0, 2).toInt(16) / 255.0
+        val green = background.substring(2, 4).toInt(16) / 255.0
+        val blue = background.substring(4, 6).toInt(16) / 255.0
+        fun linear(value: Double) = if (value <= 0.04045) value / 12.92 else Math.pow((value + 0.055) / 1.055, 2.4)
+        val luminance = 0.2126 * linear(red) + 0.7152 * linear(green) + 0.0722 * linear(blue)
+        return if (luminance > 0.179) "000000" else "FFFFFF"
+    }
+
     private fun integer(shape: JSONObject, key: String): Int {
         val raw = shape.opt(key)
         require(raw is Number) { "PPTX_SHAPE_COORDINATE_INTEGER_REQUIRED" }

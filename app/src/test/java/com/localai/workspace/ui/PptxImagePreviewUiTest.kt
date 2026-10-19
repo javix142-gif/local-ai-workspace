@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.fetchSemanticsNode
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -12,6 +13,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.test.core.app.ApplicationProvider
+import androidx.compose.ui.geometry.Rect
 import com.localai.workspace.artifacts.ArtifactSpec
 import com.localai.workspace.artifacts.ArtifactStore
 import kotlinx.coroutines.runBlocking
@@ -54,10 +56,23 @@ class PptxImagePreviewUiTest {
                 .put(JSONObject()
                     .put("title","Informe visual")
                     .put("body","España y una imagen local.")
-                    .put("shapes",JSONArray().put(JSONObject()
-                        .put("kind","rectangle").put("description","Zona de entrada")
-                        .put("label","Entrada").put("left",100).put("top",200)
-                        .put("width",300).put("height",180).put("fillColor","3E746D")))
+                    .put("shapes",JSONArray()
+                        .put(JSONObject()
+                            .put("kind","rectangle").put("description","Zona de entrada")
+                            .put("label","Entrada").put("left",100).put("top",200)
+                            .put("width",300).put("height",180).put("fillColor","3E746D"))
+                        .put(JSONObject()
+                            .put("kind","ellipse").put("description","Fuente")
+                            .put("label","Origen").put("left",500).put("top",200)
+                            .put("width",180).put("height",180).put("fillColor","256D46"))
+                        .put(JSONObject()
+                            .put("kind","roundedRectangle").put("description","Proceso")
+                            .put("left",100).put("top",500).put("width",300).put("height",180)
+                            .put("fillColor","7A5D00"))
+                        .put(JSONObject()
+                            .put("kind","triangle").put("description","Salida")
+                            .put("label","Fin").put("left",600).put("top",500)
+                            .put("width",200).put("height",200).put("fillColor","3E746D")))
                     .put("imagePngBase64",encoded)
                     .put("imageAltText","Mapa & datos"))
                 .put(JSONObject()
@@ -97,6 +112,19 @@ class PptxImagePreviewUiTest {
             .performScrollTo().assertIsDisplayed()
         compose.onNodeWithTag("pptx-figure-label-1-1").performScrollTo()
             .assertTextContains("Entrada", substring=false)
+        val canvasBounds = compose.onNodeWithTag("pptx-figure-canvas-1")
+            .fetchSemanticsNode().boundsInRoot
+        val rectangleBounds = compose.onNodeWithTag("pptx-figure-preview-1-1")
+            .fetchSemanticsNode().boundsInRoot
+        assertNormalizedRect(canvasBounds, rectangleBounds, left=0.1f, top=0.2f, width=0.3f, height=0.18f)
+        listOf(
+            "pptx-figure-preview-1-2" to "Figure 2 on slide 1: Fuente · Origen",
+            "pptx-figure-preview-1-3" to "Figure 3 on slide 1: Proceso",
+            "pptx-figure-preview-1-4" to "Figure 4 on slide 1: Salida · Fin"
+        ).forEach { (tag, description) ->
+            compose.onNodeWithTag(tag).performScrollTo().assertIsDisplayed()
+            compose.onNodeWithContentDescription(description).performScrollTo().assertIsDisplayed()
+        }
         compose.onNodeWithTag("pptx-slide-preview-note").performScrollTo()
             .assertTextContains("Approximate layout", substring=true)
         compose.onNodeWithTag("pptx-slide-preview-2").performScrollTo().assertIsDisplayed()
@@ -132,6 +160,21 @@ class PptxImagePreviewUiTest {
         writeChunk(png,"IDAT",compressed.toByteArray())
         writeChunk(png,"IEND",byteArrayOf())
         return Base64.getEncoder().encodeToString(png.toByteArray())
+    }
+
+    private fun assertNormalizedRect(
+        canvas: Rect,
+        figure: Rect,
+        left: Float,
+        top: Float,
+        width: Float,
+        height: Float
+    ) {
+        val tolerancePx = 2f
+        assertEquals(canvas.left + canvas.width * left, figure.left, tolerancePx)
+        assertEquals(canvas.top + canvas.height * top, figure.top, tolerancePx)
+        assertEquals(canvas.width * width, figure.width, tolerancePx)
+        assertEquals(canvas.height * height, figure.height, tolerancePx)
     }
 
     private fun writeChunk(output:ByteArrayOutputStream,type:String,data:ByteArray) {
