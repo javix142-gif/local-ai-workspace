@@ -1,6 +1,7 @@
 package com.localai.workspace.data
 
-import org.json.JSONArray
+import com.google.gson.Gson
+import com.google.gson.JsonParser
 import java.nio.charset.StandardCharsets
 
 /** Bounded JSON storage for resolved sheet-qualified cell identities attached to citations. */
@@ -8,6 +9,7 @@ internal object CitationCellReferenceCodec {
     const val MAX_REFERENCES = 64
     const val MAX_REFERENCE_CHARS = 256
     const val MAX_ENCODED_UTF8_BYTES = 8_192
+    private val gson = Gson()
 
     fun encode(references: List<String>): String {
         require(references.size <= MAX_REFERENCES) { "Too many citation cell references" }
@@ -15,7 +17,7 @@ internal object CitationCellReferenceCodec {
         require(references.all { it.isNotBlank() && it.length <= MAX_REFERENCE_CHARS }) {
             "Invalid citation cell reference"
         }
-        val json = JSONArray().apply { references.forEach(::put) }.toString()
+        val json = gson.toJson(references)
         require(json.toByteArray(StandardCharsets.UTF_8).size <= MAX_ENCODED_UTF8_BYTES) {
             "Citation cell references exceed the storage limit"
         }
@@ -26,11 +28,14 @@ internal object CitationCellReferenceCodec {
     fun decode(json: String): List<String>? {
         if (json.toByteArray(StandardCharsets.UTF_8).size > MAX_ENCODED_UTF8_BYTES) return null
         return try {
-            val array = JSONArray(json)
-            if (array.length() > MAX_REFERENCES) return null
-            val references = ArrayList<String>(array.length())
-            for (index in 0 until array.length()) {
-                val value = array.get(index) as? String ?: return null
+            val parsed = JsonParser.parseString(json)
+            if (!parsed.isJsonArray) return null
+            val array = parsed.asJsonArray
+            if (array.size() > MAX_REFERENCES) return null
+            val references = ArrayList<String>(array.size())
+            for (element in array) {
+                if (!element.isJsonPrimitive || !element.asJsonPrimitive.isString) return null
+                val value = element.asString
                 if (value.isBlank() || value.length > MAX_REFERENCE_CHARS) return null
                 references += value
             }
