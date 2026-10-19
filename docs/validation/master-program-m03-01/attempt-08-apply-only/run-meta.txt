@@ -1,0 +1,11 @@
+source_sha=f8a409369d3da0deed58eca71768f6063d2e7757
+started_utc=2026-10-19T13:25:35Z
+finished_utc=2026-10-19T13:29:10Z
+exit_code=0
+gradle_reported_duration_seconds=214
+wall_duration_seconds=215
+junit_tests=1; passed=1; failed=0; errors=0; skipped=0
+junit_method=ArtifactsPatchPreviewUiTest.previewShowsExactBeforeAndAfterAndOnlyAppliesAfterUserAction
+junit_case_seconds=7.801
+gradle_captured_exit_code=0
+outer_exec_session_exit_code=1; cause=NOT_DETERMINED

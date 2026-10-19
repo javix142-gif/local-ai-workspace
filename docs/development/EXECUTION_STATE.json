@@ -8212,19 +8212,21 @@
     "latestM03_02FormulaEditFollowUp": "docs/validation/master-program-m03-02-xlsx-formulas/RESULTS.md"
   },
   "latestMasterProgramIncrement": {
-    "name": "M03-02 generated XLSX formula-edit follow-up",
-    "kind": "PREPARATORY_M03_02_XLSX_FORMULA_EDIT",
-    "status": "FOCUSED_HOST_JUNIT_AND_OPENPYXL_PASS_PREPARATORY_ONLY_SOURCE_TASK_TODO_DEPENDENCIES_AND_DEVICE_GATES_OPEN",
-    "codeCommit": "188047a188a9b03a493ebf1a6d26a42c7a81553a",
-    "testedCodeSha": "de7445114ad90c0a11453663971286feb2c5fdef",
+    "name": "M03-01 code-patch preview Apply UI focused test follow-up",
+    "kind": "PREPARATORY_M03_01_PATCH_PREVIEW_APPLY_UI_TEST",
+    "status": "FOCUSED_JUNIT_PASS_WITH_OUTER_EXEC_STATUS_DISCREPANCY; PREPARATORY_ONLY_NOT_FORMAL",
+    "testedCodeSha": "f8a409369d3da0deed58eca71768f6063d2e7757",
     "workingBranch": "codex/master-program-20261019",
     "publicationTarget": "codex/master-program-20261019",
-    "originalTask": "M03-02 remains source TODO; preparatory formula-edit slice only",
-    "evidencePath": "docs/validation/master-program-m03-02-xlsx-formulas/RESULTS.md",
-    "hostTests": "XlsxArtifactRevisionTest 5/5; openpyxl 3.1.5 independently read both formula revisions; outer exec status discrepancy recorded; no full gates/device/APK",
+    "sourceTask": "M03-01 remains TODO; depends on M02-05 TODO; full DoD and device/provider gates remain open",
+    "hostResult": "ArtifactsPatchPreviewUiTest.previewShowsExactBeforeAndAfterAndOnlyAppliesAfterUserAction: 1/1 JUnit pass, captured Gradle exit 0, BUILD SUCCESSFUL, 63 tasks executed; outer tool exit 1, cause NOT_DETERMINED",
+    "evidencePath": "docs/validation/master-program-m03-01/attempt-08-apply-only/",
+    "evidenceManifestSha256": "0f30146136c58ba0ce89388afae8e04381815ce496795153ed6cad108433f669",
+    "productionCodeChanged": false,
     "formalOriginalTaskCompletion": false,
-    "testedSourceSha": "188047a188a9b03a493ebf1a6d26a42c7a81553a",
-    "productionCodeSha": "de7445114ad90c0a11453663971286feb2c5fdef"
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED"
   },
   "previousMasterProgramIncrement": {
     "name": "Preparatory M00-06: correlate XLSX import and EG1 indexing diagnostics",
@@ -12369,7 +12371,7 @@
       "emulator": "NOT_RUN",
       "physicalDevice": "NOT_RUN",
       "apk": "NOT_RUN",
-      "evidenceManifestSha256": "4cc3c41313de7c01151ca9014627a054943748f18feff4b2b40529d39ac670d5"
+      "evidenceManifestSha256": "0f30146136c58ba0ce89388afae8e04381815ce496795153ed6cad108433f669"
     },
     "canonicalPlan": {
       "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
@@ -12423,10 +12425,26 @@
       "taskId": "M03-01",
       "formalStatus": "TODO",
       "incrementStatus": "HOST_FOCUSED_PREPARATORY_ONLY_NOT_COMPLETE",
-      "testedCodeSha": "1b82c05c65edfe173fe2d968c85dc38598f2f769",
+      "testedCodeSha": "f8a409369d3da0deed58eca71768f6063d2e7757",
       "evidence": "docs/validation/master-program-m03-01/RESULTS.md"
     },
     "evidenceManifestSha256": "4cc3c41313de7c01151ca9014627a054943748f18feff4b2b40529d39ac670d5"
+  },
+  "latestM03_01PatchPreviewApplyFollowup": {
+    "name": "Code-patch preview Apply action focused HOST validation",
+    "status": "PASS_WITH_OUTER_EXEC_EXIT_DISCREPANCY; PREPARATORY_ONLY_NOT_FORMAL",
+    "testedSourceSha": "f8a409369d3da0deed58eca71768f6063d2e7757",
+    "testClass": "com.localai.workspace.ui.ArtifactsPatchPreviewUiTest",
+    "testMethod": "previewShowsExactBeforeAndAfterAndOnlyAppliesAfterUserAction",
+    "result": {"tests": 1, "passed": 1, "failed": 0, "errors": 0, "skipped": 0, "testcaseSeconds": 7.801},
+    "gradle": {"version": "8.10.2", "runtimeJdk": "/workspace/.toolchain/jdk-17", "workerToolchain": "/workspace/.toolchain/jdk-21-temurin", "mode": "offline; existing cache; --rerun-tasks", "durationSeconds": 214, "wallDurationSeconds": 215, "tasksExecuted": 63, "capturedCommandExitCode": 0, "buildSuccessful": true, "outerExecutionToolExitCode": 1, "outerExitCause": "NOT_DETERMINED"},
+    "evidence": "docs/validation/master-program-m03-01/attempt-08-apply-only/",
+    "evidenceManifest": "docs/validation/master-program-m03-01/SHA256SUMS",
+    "evidenceManifestSha256": "0f30146136c58ba0ce89388afae8e04381815ce496795153ed6cad108433f669",
+    "sourceTaskStatus": "TODO",
+    "sourceTaskCompletion": false,
+    "productionFilesChanged": false,
+    "fullJvmAndDeviceGates": "NOT_RUN"
   },
   "latestM03_02FormulaEditFollowUp": {
     "name": "M03-02 generated XLSX formula-edit follow-up",

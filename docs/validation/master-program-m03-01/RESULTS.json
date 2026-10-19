@@ -24,7 +24,10 @@
     "errors": 0,
     "skipped": 0,
     "sourceSha": "5514d085bccf14948cb6efa019df52f009f8950c",
-    "evidenceRuns": ["attempt-01", "attempt-02"],
+    "evidenceRuns": [
+      "attempt-01",
+      "attempt-02"
+    ],
     "suites": {
       "ArtifactRoundtripTest": 10,
       "ArtifactPatchRecoveryTest": 1,
@@ -34,8 +37,8 @@
     "scope": "Robolectric synthetic fixtures; not device, office-reader, or complete task validation"
   },
   "patchPreviewUiFollowup": {
-    "status": "PARTIAL",
-    "finalTestedSha": "1b82c05c65edfe173fe2d968c85dc38598f2f769",
+    "status": "BOTH_ISOLATED_CASES_HAVE_JUNIT_PASS_OUTER_EXEC_EXIT_DISCREPANCY_UNRESOLVED_PREPARATORY_ONLY",
+    "finalTestedSha": "f8a409369d3da0deed58eca71768f6063d2e7757",
     "discardMethod": {
       "status": "PASS",
       "attempt": "attempt-06",
@@ -51,17 +54,117 @@
       "xml": "attempt-06/TEST-com.localai.workspace.ui.ArtifactsPatchPreviewUiTest.xml",
       "xmlSha256": "f6ea75125339469be026172099b4e3cd095c3e0bfa668915bd3114b210e90141"
     },
-    "applyMethodAfterAssertionFix": "NOT_RUN",
+    "applyMethodAfterAssertionFix": {
+      "status": "PASS_WITH_OUTER_EXIT_DISCREPANCY",
+      "attempt": "attempt-08-apply-only",
+      "sourceSha": "f8a409369d3da0deed58eca71768f6063d2e7757",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "gradleCapturedExitCode": 0,
+      "gradleBuildSuccessful": true,
+      "tasksExecuted": 63,
+      "gradleReportedDurationSeconds": 214,
+      "wallDurationSeconds": 215,
+      "testcaseSeconds": 7.801,
+      "xml": "attempt-08-apply-only/junit-xml/TEST-com.localai.workspace.ui.ArtifactsPatchPreviewUiTest.xml",
+      "xmlSha256": "93497a59cbfa2b930824f63ee61b15ae7cfc66837334b5884dd08cc4d3eea4c6",
+      "logGzip": "attempt-08-apply-only/gradle.log.gz",
+      "rawLogSha256": "2f8cbfef861b2988c8d649fbd45fbccab15d945b8052275c5780eaad983aa389",
+      "logGzipSha256": "c94bc625a5f6f5116013cac659c75796e73083558b60edeb95d1c2d36ffdd32c",
+      "outerExecutionToolExitCode": 1,
+      "outerExitCause": "NOT_DETERMINED",
+      "attemptManifestSha256": "775d0cbbcc6712f271c8892dbd80ff536f82b797eef8c1d8b3a71b4c197ac5cb",
+      "attemptManifestEntries": 9
+    },
     "outerExecutionToolExitCode": 1,
-    "outerExitDiscrepancy": "Tool session returned 1 although fresh JUnit XML, Gradle BUILD SUCCESSFUL and captured command exit were all 0; cause NOT_DETERMINED."
+    "outerExitDiscrepancy": "Attempt 08 outer session returned 1; command wrapper captured Gradle exit 0, the complete Gradle log says BUILD SUCCESSFUL, and fresh JUnit XML is 1/1. Cause NOT_DETERMINED."
   },
   "attempts": [
-    {"id":"attempt-01","sourceSha":"bb2c9829732b6c82c6d3cbdf01c65509925284ed","tests":15,"passed":13,"failed":2,"errors":0,"skipped":0,"exitCode":1,"classification":"FAIL_PATCH_PREVIEW_UI_TESTS"},
-    {"id":"attempt-02","sourceSha":"5514d085bccf14948cb6efa019df52f009f8950c","tests":15,"passed":13,"failed":2,"errors":0,"skipped":0,"exitCode":1,"classification":"FAIL_PATCH_PREVIEW_UI_TESTS"},
-    {"id":"attempt-03","sourceSha":"6d60bf6a8065309444e087b41f138c0d1633279f","tests":2,"passed":0,"failed":2,"errors":0,"skipped":0,"exitCode":1,"classification":"FAIL_TEST_EXPECTATION_AND_ASYNC_ROW_TIMEOUT"},
-    {"id":"attempt-04","sourceSha":"1b82c05c65edfe173fe2d968c85dc38598f2f769","tests":1,"passed":1,"failed":0,"errors":0,"skipped":0,"capturedExitCode":0,"outerToolExitCode":1,"classification":"PASS_WITH_OUTER_EXIT_DISCREPANCY"},
-    {"id":"attempt-05","sourceSha":"1b82c05c65edfe173fe2d968c85dc38598f2f769","tests":0,"executed":false,"taskOutcome":"UP-TO-DATE","capturedExitCode":0,"outerToolExitCode":1,"classification":"NOT_EXECUTED_UP_TO_DATE"},
-    {"id":"attempt-06","sourceSha":"1b82c05c65edfe173fe2d968c85dc38598f2f769","tests":1,"passed":1,"failed":0,"errors":0,"skipped":0,"capturedExitCode":0,"outerToolExitCode":1,"classification":"PASS_WITH_OUTER_EXIT_DISCREPANCY"}
+    {
+      "id": "attempt-01",
+      "sourceSha": "bb2c9829732b6c82c6d3cbdf01c65509925284ed",
+      "tests": 15,
+      "passed": 13,
+      "failed": 2,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 1,
+      "classification": "FAIL_PATCH_PREVIEW_UI_TESTS"
+    },
+    {
+      "id": "attempt-02",
+      "sourceSha": "5514d085bccf14948cb6efa019df52f009f8950c",
+      "tests": 15,
+      "passed": 13,
+      "failed": 2,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 1,
+      "classification": "FAIL_PATCH_PREVIEW_UI_TESTS"
+    },
+    {
+      "id": "attempt-03",
+      "sourceSha": "6d60bf6a8065309444e087b41f138c0d1633279f",
+      "tests": 2,
+      "passed": 0,
+      "failed": 2,
+      "errors": 0,
+      "skipped": 0,
+      "exitCode": 1,
+      "classification": "FAIL_TEST_EXPECTATION_AND_ASYNC_ROW_TIMEOUT"
+    },
+    {
+      "id": "attempt-04",
+      "sourceSha": "1b82c05c65edfe173fe2d968c85dc38598f2f769",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "capturedExitCode": 0,
+      "outerToolExitCode": 1,
+      "classification": "PASS_WITH_OUTER_EXIT_DISCREPANCY"
+    },
+    {
+      "id": "attempt-05",
+      "sourceSha": "1b82c05c65edfe173fe2d968c85dc38598f2f769",
+      "tests": 0,
+      "executed": false,
+      "taskOutcome": "UP-TO-DATE",
+      "capturedExitCode": 0,
+      "outerToolExitCode": 1,
+      "classification": "NOT_EXECUTED_UP_TO_DATE"
+    },
+    {
+      "id": "attempt-06",
+      "sourceSha": "1b82c05c65edfe173fe2d968c85dc38598f2f769",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "capturedExitCode": 0,
+      "outerToolExitCode": 1,
+      "classification": "PASS_WITH_OUTER_EXIT_DISCREPANCY"
+    },
+    {
+      "id": "attempt-08-apply-only",
+      "sourceSha": "f8a409369d3da0deed58eca71768f6063d2e7757",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "capturedExitCode": 0,
+      "outerToolExitCode": 1,
+      "classification": "PASS_WITH_OUTER_EXIT_DISCREPANCY",
+      "durationSeconds": 215,
+      "method": "ArtifactsPatchPreviewUiTest.previewShowsExactBeforeAndAfterAndOnlyAppliesAfterUserAction",
+      "xml": "attempt-08-apply-only/junit-xml/TEST-com.localai.workspace.ui.ArtifactsPatchPreviewUiTest.xml"
+    }
   ],
   "gates": {
     "fullAppJvm": "NOT_RUN",
@@ -73,9 +176,16 @@
     "apk": "NOT_RUN"
   },
   "dependencies": {
-    "M03-01": ["M02-05"],
-    "M02-05": ["M02-01", "M01-05"],
-    "M02-01": ["M00-10"],
+    "M03-01": [
+      "M02-05"
+    ],
+    "M02-05": [
+      "M02-01",
+      "M01-05"
+    ],
+    "M02-01": [
+      "M00-10"
+    ],
     "formalClosureAllowed": false,
     "reason": "Source task dependencies remain TODO; this is preparatory evidence only."
   },

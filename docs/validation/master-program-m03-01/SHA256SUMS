@@ -1,5 +1,5 @@
-4f245a8c7cb73727c91d22a4866dec3762bbf02425a733f8aa5cdf8c652b7517  docs/validation/master-program-m03-01/RESULTS.json
-fbb84182de68a755568a6224cd7bf16c40aec69d15407201cf737b7d685640ff  docs/validation/master-program-m03-01/RESULTS.md
+b4fc467c1150f59af1cb983f5a763e24c8499a902406db6c4fe24a1197a74ecf  docs/validation/master-program-m03-01/RESULTS.json
+469e6cc2d8004f578c8fd89f68a6a1e1aa006a7e427518c2b56f43752b8144b8  docs/validation/master-program-m03-01/RESULTS.md
 e2ff9eb9bdd67a32212c87579f41c95e1a9dbe26b6bb01779f0811f99a24754e  docs/validation/master-program-m03-01/attempt-01/TEST-com.localai.workspace.artifacts.ArtifactPatchRecoveryTest.xml
 8837ffd1a1467358343299557d709fd4a843b4efb688668b091cfa1bc6b597ea  docs/validation/master-program-m03-01/attempt-01/TEST-com.localai.workspace.artifacts.ArtifactRoundtripTest.xml
 97fc41c21a4a5a18804115037a2e846aef7309e92db4380cd1af71a85d2ec5ef  docs/validation/master-program-m03-01/attempt-01/TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml
@@ -54,3 +54,13 @@ a3072138074b21b952147de0fefe5bae541ec4a23802c9a524400a61a5bf6e90  docs/validatio
 57d136efd94a9879ce0281ac53cd499fe3b4d57647dc55cf7ce4898db54bb8b3  docs/validation/master-program-m03-01/attempt-06/run-meta.txt
 3aaf4c2a8f96a41f1c2d8852d6571c0a21869b428696849c0e46f7057de79ea5  docs/validation/master-program-m03-01/attempt-06/task-outcomes.txt
 5aa6250047689542913ce2599c72f9f2a3d2ccb171c97650f30bef1149634235  docs/validation/master-program-m03-01/attempt-06/xml-before.txt
+775d0cbbcc6712f271c8892dbd80ff536f82b797eef8c1d8b3a71b4c197ac5cb  docs/validation/master-program-m03-01/attempt-08-apply-only/SHA256SUMS
+ce71fa6f16e8b4ae4e1225645d493375f86020dee91f01c85dbf9909571305b9  docs/validation/master-program-m03-01/attempt-08-apply-only/command.txt
+9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa  docs/validation/master-program-m03-01/attempt-08-apply-only/exit-code.txt
+c94bc625a5f6f5116013cac659c75796e73083558b60edeb95d1c2d36ffdd32c  docs/validation/master-program-m03-01/attempt-08-apply-only/gradle.log.gz
+93497a59cbfa2b930824f63ee61b15ae7cfc66837334b5884dd08cc4d3eea4c6  docs/validation/master-program-m03-01/attempt-08-apply-only/junit-xml/TEST-com.localai.workspace.ui.ArtifactsPatchPreviewUiTest.xml
+e78080d2ce85164e81d8ca0b72df88c49d1c859c519cfadc667dbac5384bc7be  docs/validation/master-program-m03-01/attempt-08-apply-only/log-hash.json
+3cb0a7ae335447c2286af261b2316ad75c167523738e2a7788686a12b4b8e06b  docs/validation/master-program-m03-01/attempt-08-apply-only/outer-session-status.txt
+9c95c31999f39b4caef7c421245cc474e30f260aef5299aff9626757a4334c58  docs/validation/master-program-m03-01/attempt-08-apply-only/run-meta.txt
+4ac574d507415f3eb5efbd5640134356a0d075dcd79b14a9d4f4a4739f5aca96  docs/validation/master-program-m03-01/attempt-08-apply-only/task-outcomes.txt
+504279aa30c74a9e9a2bd3e13838df61463a765061179d5d34d02489d22d4522  docs/validation/master-program-m03-01/attempt-08-apply-only/xml-before.txt
