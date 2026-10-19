@@ -198,6 +198,7 @@ data class CitationEvidenceEntity(
     val semanticSegmentId: String? = null,
     val lineStart: Int? = null,
     val lineEnd: Int? = null,
+    @androidx.room.ColumnInfo(defaultValue = "'[]'") val cellReferencesJson: String = "[]",
 )
 
 @Entity(tableName = "tool_calls", indices = [Index("conversationId"), Index("startedAt")])

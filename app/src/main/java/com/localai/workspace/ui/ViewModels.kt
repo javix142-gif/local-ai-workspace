@@ -1033,24 +1033,11 @@ class ChatViewModel(
                 }
                 val citationRows = validated.valid.map { resolved ->
                     val item = resolved.evidence
-                    CitationEvidenceEntity(
+                    item.toCitationEvidenceEntity(
                         id = UUID.randomUUID().toString(),
                         conversationId = conversationId,
                         messageId = assistantId,
-                        evidenceId = item.id,
-                        segmentId = item.segmentId,
-                        excerpt = item.excerpt,
-                        documentId = item.documentId,
-                        sourceLabel = item.documentTitle,
-                        pageStart = item.pageStart,
-                        pageEnd = item.pageEnd,
-                        charStart = item.charStart,
-                        charEnd = item.charEnd,
-                        retrievalScore = item.retrievalScore,
                         createdAt = System.currentTimeMillis(),
-                        semanticSegmentId = item.semanticSegmentId,
-                        lineStart = item.lineStart,
-                        lineEnd = item.lineEnd,
                     )
                 }
                 if (citationRows.isNotEmpty()) graph.workspace.saveCitationEvidence(citationRows)

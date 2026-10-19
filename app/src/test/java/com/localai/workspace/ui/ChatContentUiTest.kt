@@ -21,6 +21,7 @@ import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.text.LinkAnnotation
 import com.localai.workspace.data.CitationEvidenceEntity
+import com.localai.workspace.data.CitationCellReferenceCodec
 import com.localai.workspace.ModelCard
 import com.localai.workspace.data.ModelEntity
 import org.junit.Assert.*
@@ -45,6 +46,7 @@ class ChatContentUiTest {
             sourceLabel = "Project notes · onboarding.txt",
             pageStart = 7,
             excerpt = excerpt,
+            cellReferences = listOf("Hoja2!A1", "Hoja1!A3"),
         ))
         var selectedId: String? = null
         var minimumTouchTargetPx = 0f
@@ -70,7 +72,7 @@ class ChatContentUiTest {
         compose.onNodeWithText("LCL-AB12", useUnmergedTree = true).assertIsDisplayed()
         compose.onNodeWithText("Project notes · onboarding.txt", useUnmergedTree = true).assertIsDisplayed()
         val reference = compose.onNodeWithContentDescription(
-            "Evidence LCL-AB12, source Project notes · onboarding.txt, page 7",
+            "Evidence LCL-AB12, source Project notes · onboarding.txt, page 7, cells Hoja2!A1, Hoja1!A3",
         ).assertIsDisplayed()
         val referenceNode = reference.fetchSemanticsNode()
         assertEquals(Role.Button, referenceNode.config[SemanticsProperties.Role])
@@ -81,6 +83,10 @@ class ChatContentUiTest {
         compose.onNodeWithTag("citation-detail-title", useUnmergedTree = true).assertTextEquals("LCL-AB12").assertIsDisplayed()
         compose.onNodeWithTag("citation-source", useUnmergedTree = true).assertTextEquals("Project notes · onboarding.txt")
         compose.onNodeWithTag("citation-page", useUnmergedTree = true).assertTextEquals("Page 7")
+        compose.onNodeWithTag("citation-cells", useUnmergedTree = true)
+            .assertTextEquals("Cells Hoja2!A1, Hoja1!A3").assertIsDisplayed()
+        compose.onNodeWithTag("citation-detail-cells", useUnmergedTree = true)
+            .assertTextEquals("Hoja2!A1, Hoja1!A3").performScrollTo().assertIsDisplayed()
         compose.onNodeWithTag("citation-excerpt", useUnmergedTree = true).assertTextEquals(excerpt)
         compose.onNodeWithText("Excerpt only; it does not represent a full-document review.").assertIsDisplayed()
         compose.onNodeWithText("Metadata comes from the local index, not from model-generated citation text.").assertIsDisplayed()
@@ -224,6 +230,7 @@ class ChatContentUiTest {
         semanticSegmentId: String? = null,
         lineStart: Int? = null,
         lineEnd: Int? = null,
+        cellReferences: List<String> = emptyList(),
     ) = CitationEvidenceEntity(
         id = "citation-$evidenceId",
         conversationId = "conversation-1",
@@ -239,6 +246,7 @@ class ChatContentUiTest {
         semanticSegmentId = semanticSegmentId,
         lineStart = lineStart,
         lineEnd = lineEnd,
+        cellReferencesJson = CitationCellReferenceCodec.encode(cellReferences),
     )
 
     @Test fun pendingImageIsVisibleAndRemoveClearsIt() {

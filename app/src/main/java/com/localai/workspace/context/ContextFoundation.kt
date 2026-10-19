@@ -125,12 +125,13 @@ class ContextFoundation(private val graph:AppGraph, private val semanticLayerPro
                         val start=excerpt.charStart?.let{offset->base?.plus(offset)}
                         val end=excerpt.charEnd?.let{offset->base?.plus(offset)}
                         evidence?.firstOrNull{it.segmentId==legacyId && it.documentId==hit.documentId}
-                            ?.copy(documentTitle=hit.sourceName.ifBlank{document.displayName},excerpt=excerpt.text,charStart=start,charEnd=end,semanticSegmentId=hit.segmentId,lineStart=hit.lineStart,lineEnd=hit.lineEnd)
+                            ?.copy(documentTitle=hit.sourceName.ifBlank{document.displayName},excerpt=excerpt.text,charStart=start,charEnd=end,semanticSegmentId=hit.segmentId,lineStart=hit.lineStart,lineEnd=hit.lineEnd,cellReferences=excerpt.cellReferences)
                             ?: Evidence(
                                 id="LCL-${com.localai.workspace.semantic.VectorPersistence.hash("${access.projectId.orEmpty()}:$legacyId").take(8).uppercase()}",
                                 segmentId=legacyId,documentId=document.id,documentTitle=hit.sourceName.ifBlank{document.displayName},excerpt=excerpt.text,
                                 pageStart=hit.page ?: segment.pageStart,pageEnd=segment.pageEnd,charStart=start,
-                                charEnd=end,retrievalScore=hit.fusedScore,semanticSegmentId=hit.segmentId,lineStart=hit.lineStart,lineEnd=hit.lineEnd)
+                                charEnd=end,retrievalScore=hit.fusedScore,semanticSegmentId=hit.segmentId,lineStart=hit.lineStart,lineEnd=hit.lineEnd,
+                                cellReferences=excerpt.cellReferences)
                     }
                 } else {
                     val document=hit.documentId?.let{graph.database.documentDao().get(it)}
@@ -139,7 +140,8 @@ class ContextFoundation(private val graph:AppGraph, private val semanticLayerPro
                         id=semanticEvidenceId,segmentId=null,documentId=document.id,
                         documentTitle=hit.sourceName.ifBlank{document.displayName},excerpt=excerpt.text,
                         pageStart=hit.page,pageEnd=hit.page,charStart=null,charEnd=null,
-                        retrievalScore=hit.fusedScore,semanticSegmentId=hit.segmentId,lineStart=hit.lineStart,lineEnd=hit.lineEnd)
+                        retrievalScore=hit.fusedScore,semanticSegmentId=hit.segmentId,lineStart=hit.lineStart,lineEnd=hit.lineEnd,
+                        cellReferences=excerpt.cellReferences)
                 }
                 val itemId=evidenceHit?.id ?: semanticEvidenceId
                 val segmentStart=hit.legacySegmentId?.let{graph.database.documentDao().segment(it)?.charStart}
@@ -200,7 +202,7 @@ class ContextFoundation(private val graph:AppGraph, private val semanticLayerPro
                 val singleSegment=related.size==1
                 val start=excerpt.charStart?.takeIf{singleSegment}?.let{primary.charStart?.plus(it)}
                 val end=excerpt.charEnd?.takeIf{singleSegment}?.let{primary.charStart?.plus(it)}
-                val compact=primary.copy(excerpt=excerpt.text,charStart=start,charEnd=end)
+                val compact=primary.copy(excerpt=excerpt.text,charStart=start,charEnd=end,cellReferences=excerpt.cellReferences)
                 all+=ContextItem(primary.id,ContextKind.SOURCE,excerpt.text,sourceScope,ContextTrust.UNTRUSTED_SOURCE,80,primary.retrievalScore,
                     ContextProvenance(primary.documentId,primary.segmentId.toString(),page=primary.pageStart,lineStart=primary.lineStart,lineEnd=primary.lineEnd,sourceName=primary.documentTitle,documentId=primary.documentId,charStart=start,charEnd=end,excerpted=excerpt.shortened,originalCharacters=excerpt.originalCharacters,cellAddresses=excerpt.cellAddresses,evidenceIncompleteReasons=excerpt.incompleteReasons,missingCellAddresses=excerpt.missingCellAddresses,cellReferences=excerpt.cellReferences,missingCellReferences=excerpt.missingCellReferences,ambiguousCellReferences=excerpt.ambiguousCellReferences,unresolvedCellReferences=excerpt.unresolvedCellReferences,relatedSegmentIds=relatedIds))
                 sourceEvidenceByItem[primary.id]=compact

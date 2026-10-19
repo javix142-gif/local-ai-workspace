@@ -22,7 +22,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         ToolCallEntity::class,
         PendingDocumentDeletionEntity::class, SemanticVectorEntity::class,
     ],
-    version = 9,
+    version = 10,
     exportSchema = true,
 )
 abstract class WorkspaceDatabase : RoomDatabase() {
@@ -44,7 +44,7 @@ abstract class WorkspaceDatabase : RoomDatabase() {
             context,
             WorkspaceDatabase::class.java,
             "local_ai_workspace.db",
-        ).enableMultiInstanceInvalidation().addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9).build()
+        ).enableMultiInstanceInvalidation().addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10).build()
 
         /** Preserves all existing citation rows while allowing V2-only segment and code-line provenance. */
         val MIGRATION_8_9 = object : Migration(8, 9) {
@@ -86,6 +86,13 @@ abstract class WorkspaceDatabase : RoomDatabase() {
                 database.execSQL("ALTER TABLE citation_evidence_new RENAME TO citation_evidence")
                 database.execSQL("CREATE INDEX IF NOT EXISTS index_citation_evidence_conversationId ON citation_evidence (conversationId)")
                 database.execSQL("CREATE INDEX IF NOT EXISTS index_citation_evidence_evidenceId ON citation_evidence (evidenceId)")
+            }
+        }
+
+        /** Adds bounded sheet-qualified cell locations without rewriting existing citation rows. */
+        val MIGRATION_9_10 = object : Migration(9, 10) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE citation_evidence ADD COLUMN cellReferencesJson TEXT NOT NULL DEFAULT '[]'")
             }
         }
 

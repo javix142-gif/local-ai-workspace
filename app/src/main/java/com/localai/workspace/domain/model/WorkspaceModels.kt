@@ -324,6 +324,8 @@ data class Evidence(
     val semanticSegmentId: String? = null,
     val lineStart: Int? = null,
     val lineEnd: Int? = null,
+    /** Resolved, sheet-qualified spreadsheet cells represented by this bounded excerpt. */
+    val cellReferences: List<String> = emptyList(),
 )
 
 data class CitationCandidate(

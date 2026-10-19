@@ -86,8 +86,9 @@ class WorkspaceCitationEvidenceMigrationTest {
                     WorkspaceDatabase.MIGRATION_3_4, WorkspaceDatabase.MIGRATION_4_5,
                     WorkspaceDatabase.MIGRATION_5_6, WorkspaceDatabase.MIGRATION_6_7,
                     WorkspaceDatabase.MIGRATION_7_8, WorkspaceDatabase.MIGRATION_8_9,
+                    WorkspaceDatabase.MIGRATION_9_10,
                 ).build()
-            assertEquals(9, migrated.openHelper.readableDatabase.version)
+            assertEquals(10, migrated.openHelper.readableDatabase.version)
             val oldCitation = migrated.citationEvidenceDao().observeForMessage("message-1").first().single()
             assertEquals("legacy-citation", oldCitation.id)
             assertEquals(77L, oldCitation.segmentId)
@@ -97,12 +98,14 @@ class WorkspaceCitationEvidenceMigrationTest {
             assertNull(oldCitation.semanticSegmentId)
             assertNull(oldCitation.lineStart)
             assertNull(oldCitation.lineEnd)
+            assertEquals("[]", oldCitation.cellReferencesJson)
 
             val codeCitation = CitationEvidenceEntity(
                 id = "code-citation", conversationId = "chat-1", messageId = "message-2",
                 evidenceId = "SV2-0123456789ABCDEF", segmentId = null, excerpt = "fun answer() = 42",
                 documentId = "code-doc", sourceLabel = "src/Answer.kt", retrievalScore = 0.8,
                 createdAt = 101L, semanticSegmentId = "index:code-doc:0", lineStart = 4, lineEnd = 6,
+                cellReferencesJson = CitationCellReferenceCodec.encode(listOf("Hoja2!A1", "Hoja1!A3")),
             )
             migrated.citationEvidenceDao().insertAll(listOf(codeCitation))
             assertEquals(codeCitation, migrated.citationEvidenceDao().observeForMessage("message-2").first().single())

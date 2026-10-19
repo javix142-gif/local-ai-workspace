@@ -22,6 +22,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.localai.workspace.data.CitationEvidenceEntity
+import com.localai.workspace.data.CitationCellReferenceCodec
 
 /** Displays only evidence records already validated and attached to this assistant message. */
 @Composable
@@ -42,6 +43,9 @@ internal fun CitationEvidenceReferences(
                 item.lineStart?.let { start ->
                     val end = item.lineEnd?.takeIf { it != start }
                     append(if (end == null) ", line $start" else ", lines $start–$end")
+                }
+                CitationCellReferenceCodec.decode(item.cellReferencesJson)?.takeIf { it.isNotEmpty() }?.let {
+                    append(", cells ${it.joinToString(", ")}")
                 }
             }
             OutlinedCard(
@@ -73,6 +77,11 @@ internal fun CitationEvidenceReferences(
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.testTag("citation-lines"))
+                    }
+                    CitationCellReferenceCodec.decode(item.cellReferencesJson)?.takeIf { it.isNotEmpty() }?.let { refs ->
+                        Text("Cells ${refs.joinToString(", ")}", style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.testTag("citation-cells"))
                     }
                 }
             }
@@ -120,6 +129,17 @@ internal fun CitationEvidenceDialog(
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.testTag("citation-detail-lines"))
+                }
+                when (val refs = CitationCellReferenceCodec.decode(item.cellReferencesJson)) {
+                    null -> Text("Cell location metadata is unavailable.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.testTag("citation-cell-location-unavailable"))
+                    else -> if (refs.isNotEmpty()) Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Text("Cells", style = MaterialTheme.typography.labelMedium,
+                            modifier = Modifier.semantics { heading() })
+                        Text(refs.joinToString(", "), modifier = Modifier.testTag("citation-detail-cells"))
+                    }
                 }
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     Text("Excerpt", style = MaterialTheme.typography.labelMedium,

@@ -1,8 +1,10 @@
 package com.localai.workspace.ui
 
 import com.localai.workspace.data.CitationEvidenceEntity
+import com.localai.workspace.data.CitationCellReferenceCodec
 import com.localai.workspace.data.DocumentEntity
 import com.localai.workspace.data.DocumentSegmentEntity
+import com.localai.workspace.domain.model.Evidence
 import com.localai.workspace.semantic.v2.SemanticSegmentRecord
 import com.localai.workspace.semantic.v2.SemanticSourceRecord
 import org.junit.Assert.*
@@ -115,5 +117,34 @@ class CitationSourcePreviewTest {
 
         assertEquals(listOf(citation), grouped["assistant-1"])
         assertEquals(listOf(second), grouped["assistant-2"])
+    }
+
+    @Test fun evidenceMapperAndSourcePreviewRetainResolvedSheetQualifiedCells() {
+        val references = listOf("Hoja1!A3", "'O''Brien'!A1")
+        val evidence = Evidence(
+            id = "SV2-CELL-1", segmentId = null, documentId = document.id,
+            documentTitle = document.displayName, excerpt = "A3=4; 'O''Brien'!A1=5",
+            pageStart = null, pageEnd = null, charStart = null, charEnd = null,
+            retrievalScore = 0.9, semanticSegmentId = "segment-1", cellReferences = references,
+        )
+
+        val saved = evidence.toCitationEvidenceEntity(
+            id = "citation-cell-1", conversationId = "conversation-1", messageId = "assistant-1", createdAt = 2,
+        )
+
+        assertEquals(references, CitationCellReferenceCodec.decode(saved.cellReferencesJson))
+        val preview = resolveCitationSourcePreview(
+            saved, "conversation-1", "project-1", "PROJECT:project-1",
+            document, legacySegment = null, semanticSource = null, semanticSegment = null,
+        )
+        assertEquals("Cells Hoja1!A3, 'O''Brien'!A1", preview?.location)
+        assertEquals(saved.excerpt, preview?.text)
+        assertFalse(preview!!.indexedSegmentAvailable)
+    }
+
+    @Test fun cellReferenceCodecRejectsOverflowAndCorruptMetadataWithoutTruncation() {
+        val tooMany = (1..(CitationCellReferenceCodec.MAX_REFERENCES + 1)).map { "Sheet!A$it" }
+        assertThrows(IllegalArgumentException::class.java) { CitationCellReferenceCodec.encode(tooMany) }
+        assertNull(CitationCellReferenceCodec.decode("not-json"))
     }
 }
