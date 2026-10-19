@@ -66,7 +66,7 @@ object CodePatchPlanner {
         }
         var result = source
         located.asReversed().forEach { edit ->
-            result = result.replaceRange(edit.start, edit.end, edit.after)
+            result = result.replaceRange(edit.start, edit.end, edit.replacement)
             require(bytes(result).size <= MAX_BODY_BYTES) { "CODE_PATCH_BODY_TOO_LARGE" }
         }
         return result
