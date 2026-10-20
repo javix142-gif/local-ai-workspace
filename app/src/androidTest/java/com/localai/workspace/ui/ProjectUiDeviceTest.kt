@@ -29,6 +29,7 @@ class ProjectUiDeviceTest {
         compose.onNodeWithText("Files").performClick()
         compose.onNodeWithText("No files yet").assertExists()
         compose.onNodeWithText("Memory").performClick()
+        compose.onNodeWithText("Structured memory").performClick()
         compose.onNodeWithText("Add").performClick()
         compose.onNodeWithText("Content").performTextInput("Approved UI validation memory")
         compose.onNodeWithText("Save").performClick()
