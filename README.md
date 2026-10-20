@@ -40,6 +40,22 @@ it must never sign a release or production build. Android permits an in-place up
 only when the installed app has the same signing certificate; do not uninstall an app
 with local data to work around a signature or package conflict.
 
+The QA key is `keystore/aws-qa-dev.jks`, alias `awsqa`, with the public QA password
+`awsqadev` for both the keystore and key. These fixed values are intentionally visible
+and provide no production security. The key signs Debug/QA only; replace it with a
+protected release-signing arrangement before any public release.
+
+### Memory ZIP scope
+
+The personal-memory ZIP is a bounded portability package, not a full-app backup. It
+contains eligible active user/project memory records and their supported metadata,
+after secret filtering. Imported records remain pending for explicit review and
+approval; vectors are not included. The ZIP does **not** back up chats or messages,
+project records, documents/files, model weights, application settings, or the app
+database. Project-scoped memories can fall back to user scope when their project is
+absent on import, with a count reported by the app. Keep a separate backup of any
+chats, projects, documents, or settings you need to preserve.
+
 ## Repository boundaries
 
 GitHub is the canonical source-code history. Large external artifacts are not stored in Git: Gemma/EmbeddingGemma weights, APK/AAB packages, Gradle/NDK build output, caches, raw device exports and source backup archives. Their known names, provenance, sizes and hashes are recorded in [docs/EXTERNAL_ARTIFACTS.md](docs/EXTERNAL_ARTIFACTS.md). The Pyodide WebAssembly files under `app/src/main/assets/python/` are application runtime assets, not model weights, and are required by the opt-in Python feature.

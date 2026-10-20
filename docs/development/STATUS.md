@@ -2,7 +2,7 @@
 
 Fecha: 2026-10-20. Rama: `feat/0.5.0-skills-agents`. Código Android/test actual: `01161491acc2a7c836222a84b7bd6f778292f8f3`.
 
-## H1 — memoria personalizada y unificada
+## H1 — memoria personalizada y unificada: HOST/CI_VERIFIED; DEVICE_PENDING
 
 - Contrato vigente: [H1_PRUEBAS_ACEPTACION.md v1.2](H1_PRUEBAS_ACEPTACION.md). El tope de memorias fijadas es 15 %; tres fijadas cortas caben y una nueva fijación que rebase el tope se rechaza con explicación antes de persistir.
 - HOST completo histórico en `aed4d8f6220e9d1e65e93f7d54a5bbd77e749755`: app JVM 941/941 y LiteRT compat 2/2; lint y compilación Kotlin AndroidTest exit 0; `assembleDebug` up-to-date. No atribuir ese gate completo al SHA `0116149`.
@@ -15,14 +15,17 @@ Fecha: 2026-10-20. Rama: `feat/0.5.0-skills-agents`. Código Android/test actual
 - Run [39511660726](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39511660726), mismo SHA `0116149`, terminó PASS. Artifact GitHub [12307042341](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39511660726/artifacts/12307042341), 48,959,437 bytes, SHA-256 `313faccd96667f3d0977dcfc676dbd9701f432a3e4fd0b678df19d66c30b617e`, retención hasta 2026-10-27.
 - APK: `com.localai.workspace.debug`, `0.5.0-debug`/27, únicamente `arm64-v8a`, 121,582,979 bytes, SHA-256 `2dc3dd24992d2878099e67c2117bbc711fd1bce96ab610be4ba8a35ab7de6b6f`. ZIP/CRC y zipalign PASS; apksigner v2 PASS; certificado Debug SHA-256 `b0d1c40838a22b6bbfc7bfa176c9bb917c7194c7b74dedf749566fb268ab120b`. No contiene pesos.
 - El usuario pidió solo el APK en Drive. Drive limita la carga directa a 100 MiB, así que el archivo está dentro de un ZIP contenedor que contiene exactamente ese APK: [descarga](https://drive.google.com/file/d/1adOGxZnyyePC_CY68ZMWWBjy6mKjIWt9/view?usp=drivesdk). Tamaño 47,248,070 bytes; SHA-256 del ZIP `1146cacfc2989b4cd22c208af004f09acef209873437dd7f145c9bb1a33cc8b8`; readback descargado coincide byte por byte. La actualización se probó en emulador con igual paquete y certificado; si Android muestra conflicto en el teléfono, cancela y no desinstales ni borres datos.
+- La verificación focal del código actual `16287d649eabf063fb4482d302060f378b2ff35a` pasó `H1PreferenceContextTest` (24/24) y `H1MemoryApprovalUiTest` (1/1), exit 0. Incluye AT-04/AT-17: el límite del 15 % se conserva, el pin conflictivo se rechaza antes de persistir, el lote permanece pendiente hasta la selección/confirmación explícita y `originalPinned` queda en la procedencia. Evidencia: [`corrective/verification-16287d6`](../validation/master-program-h1-20261020/corrective/verification-16287d6/).
+- El keystore QA del repositorio es intencionalmente público y solo sirve para Debug/QA: `keystore/aws-qa-dev.jks`, alias `awsqa`, contraseña pública `awsqadev`; certificado `b0d1c408…ab120b`. La variante `.parallel` sigue disponible para la transición controlada. La rotación a una clave protegida queda pendiente antes de cualquier publicación oficial.
 - Artifact de QA etiqueta `QA_DEBUG_ARM64_NOT_FOR_PRODUCTION`; no es release. EMULATOR=PASS solo para la matriz ejecutada arriba; PHYSICAL_DEVICE=NOT_RUN.
 
 ## Estado y siguientes pasos autorizados
 
-- H1 no se declara formalmente cerrado: quedan los criterios físicos/revisiones indicados en el contrato y validación Moto G86 con el XLSX original. El fixture Room 1→7 auténtico no está disponible; no se inventó ni se reabrió.
+- **H1: `HOST/CI_VERIFIED`; no equivale a cierre físico integral.** Permanecen AT-06/20/24 y la validación Moto G86 con el XLSX original como `DEVICE_PENDING`. AT-20 exige una copia externa antes de instalar en el teléfono. El fixture Room 1→7 auténtico no está disponible; no se inventó ni se reabrió.
 - Los seis tests que requieren modelos reales están SKIPPED, no aprobados. No se midieron TTFT, tokens/s, PSS, energía, temperatura ni calidad de inferencia en el Motorola.
 - La autorización vigente permite continuar secuencialmente con el trabajo preparatorio H2 a pesar de las dependencias físicas pendientes; registrar esa excepción y no cerrar los criterios bloqueados.
 - `M01-06=PENDING_REQUIRES_DEVICE`; PHYSICAL_DEVICE=NOT_RUN. No se sustituyó el workbook original por datos sintéticos.
+- El ZIP de memoria restaura solo registros de memoria elegibles y metadatos soportados. No restaura chats/mensajes, entidades de proyecto, documentos/archivos, modelos, ajustes ni la base completa; la importación exige revisión/aprobación y no transporta vectores.
 - El catálogo fuente mantiene sus 97 IDs, 120 dependencias y estados históricos TODO. No se editó. `EXECUTION_STATE.json` se conserva intacto según la instrucción activa.
 - `main` y el tag `v0.4.2` no se modifican; ambos resuelven al commit pelado `de615b772cf37a99e7e08a647c59607b271de606`.
 
