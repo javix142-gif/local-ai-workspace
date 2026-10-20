@@ -14,3 +14,4 @@ See [architecture](docs/SKILLS_AGENTS_ARCHITECTURE.md). Models/APKs/caches remai
 ## Master optimization program — current host checkpoint (2026-10-20)
 
 H0 host stabilization at code 49f5913937fe7c049bf0ad71d2d75f7e5321b557: 916 app JVM + 2 LiteRT compatibility tests passed; ARM64 lint, AndroidTest Kotlin compilation and Debug ARM64 assembly passed. Instrumented/device tests were not run. A locally built QA APK is not update-compatible because the previous Debug private key is unavailable, so it was not uploaded or installed. Original catalog remains unchanged (97 IDs, 120 dependencies, all TODO); no source task was closed. See [H0 evidence](docs/validation/master-program-h0-stabilization-20261020/RESULTS.md).
+H0 source/evidence publication read back from feat/0.5.0-skills-agents at d7baa4d5e56caf0ee3d826aab39994150bcaac43; main and v0.4.2 remain at de615b772cf37a99e7e08a647c59607b271de606.

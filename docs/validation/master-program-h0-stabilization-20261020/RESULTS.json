@@ -78,5 +78,12 @@
     },
     "modified": false
   },
-  "evidence": "RESULTS.md"
+  "evidence": "RESULTS.md",
+  "publication": {
+    "status": "FAST_FORWARD_READBACK_VERIFIED",
+    "branch": "feat/0.5.0-skills-agents",
+    "head": "d7baa4d5e56caf0ee3d826aab39994150bcaac43",
+    "main": "de615b772cf37a99e7e08a647c59607b271de606",
+    "v0.4.2": "de615b772cf37a99e7e08a647c59607b271de606"
+  }
 }

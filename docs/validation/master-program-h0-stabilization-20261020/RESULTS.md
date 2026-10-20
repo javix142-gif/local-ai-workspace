@@ -49,3 +49,7 @@ The canonical backlog and roadmap remain byte-identical: 97 unique task IDs, 120
 The user-provided visual guide SHA-256 is 9cbc5b998887481ffee9c42eaf5b900776d5e2152b9a75e9b0891f485e34966e; it is design guidance, not a brand-image reference set. No direct ChatGPT/Claude image comparison was made.
 
 Source task IDs/dependencies are preserved. H0 is a host stabilization checkpoint, not a roadmap completion.
+
+## Publication readback
+
+The source and evidence history were pushed by fast-forward to feat/0.5.0-skills-agents. Remote readback: d7baa4d5e56caf0ee3d826aab39994150bcaac43. main and peeled v0.4.2 both remain de615b772cf37a99e7e08a647c59607b271de606.

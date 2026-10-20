@@ -19005,6 +19005,10 @@
       "path": "docs/development/history/EXECUTION_STATE-20261020-before-h0.json",
       "sha256": "99096e91be0175ed71186961d9327dcc9de98019d4546c6b8e95444fa04751d3"
     },
-    "publicationStatus": "PENDING_FAST_FORWARD_PUBLICATION_TO_FEATURE_REF"
+    "publicationStatus": "PUBLISHED_FAST_FORWARD",
+    "publishedFeatureHeadSha": "d7baa4d5e56caf0ee3d826aab39994150bcaac43",
+    "remoteReadbackVerified": true,
+    "mainAtReadback": "de615b772cf37a99e7e08a647c59607b271de606",
+    "v042AtReadback": "de615b772cf37a99e7e08a647c59607b271de606"
   }
 }
