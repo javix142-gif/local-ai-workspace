@@ -41,12 +41,15 @@ class ProjectUiDeviceTest {
                 it.scopeId == project.id && it.text == "Approved UI validation memory"
             }.id
         }
-        compose.onNode(hasContentDescription("Edit memory") and hasAnyAncestor(hasTestTag("memory-$memoryId"))).performClick()
-        compose.onNode(hasSetTextAction()).performTextReplacement("Edited UI validation memory")
+        compose.onNodeWithText("Details").performClick()
+        compose.onNodeWithText("Edit").performClick()
+        compose.onNodeWithText("Content").performTextReplacement("Edited UI validation memory")
         compose.onNodeWithText("Save").performClick()
         awaitText("Edited UI validation memory")
-        compose.onNode(hasContentDescription("Remove memory") and hasAnyAncestor(hasTestTag("memory-$memoryId"))).performClick()
-        compose.onNodeWithText("Remove").performClick()
+        compose.onNodeWithText("Details").performClick()
+        compose.onNodeWithText("Delete").performClick()
+        compose.onNodeWithText("Delete memory?").assertIsDisplayed()
+        compose.onNodeWithText("Delete").performClick()
         compose.waitUntil(15_000) { compose.onAllNodesWithText("Edited UI validation memory").fetchSemanticsNodes().isEmpty() }
         compose.onNodeWithText("Settings").performClick()
         compose.onNodeWithText("Current configuration").assertExists()
