@@ -1,3 +1,17 @@
+# Current master-program checkpoint — H0 host stabilization (2026-10-20)
+
+Code SHA 49f5913937fe7c049bf0ad71d2d75f7e5321b557 contains the H0 test/runtime fixes: schema version expectation 10, two-page DOCX assertions, immediate dismissal of stale removed-file details with a retry-outbox UI regression, and an authentic exported-schema v8→v10 migration test. Historical Room v1 remains unverified because its authentic schema is unavailable; the Android migration test compiled but was not instrumented.
+
+The forced HOST JVM gate passed 916/916 app plus 2/2 LiteRT compatibility tests. ARM64-scoped lint passed with 0 errors, 77 warnings and 1 informational item; AndroidTest Kotlin compilation and Debug ARM64 assembly passed. No emulator, Motorola or inference/model performance test ran. Full commands, XML, compressed logs, APK validation and checksums are in [H0 stabilization evidence](../validation/master-program-h0-stabilization-20261020/RESULTS.md).
+
+A local 0.5.0-debug/27 ARM64 APK passed archive, alignment, signature and package checks, but its certificate 4d95e3... differs from the prior update certificate f9085e.... The compatible private key is unavailable. The APK was not uploaded or installed; do not uninstall or clear app data to use it.
+
+The canonical source plan remains 97 unique IDs and 120 dependencies, all 97 statuses TODO; source files were not modified. M01-06 remains PENDING_REQUIRES_DEVICE and PHYSICAL_DEVICE=NOT_RUN. The user-provided GUIA_VISUAL_AWS.md is design guidance (SHA-256 9cbc5b998887481ffee9c42eaf5b900776d5e2152b9a75e9b0891f485e34966e), not brand-image reference material.
+
+Continue the authorized program with an inspected, test-first M02-01 synthetic corpus preparation if current fixtures leave a concrete gap. M02-01 stays TODO because its M00-10 dependency remains device-gated. No original task is closed by H0.
+
+---
+
 # Current master-program checkpoint — direct EG2 scoring from stored vectors (2026-10-19)
 
 Code commit aabca8226634de6da08006dc255b0b5727360cdd replaces the SemanticLayer corpus path's decode-to-FloatArray plus second scoring pass with a single pass over persisted FLOAT32_LE_V1 bytes. This avoids one decoded vector array per corpus row (the existing search bound is 10,000 rows). Space identity, dimensions, malformed vectors, non-finite values, project/selected-document scope, FTS fusion and result limits remain checked. No schema, dependency, runtime or model changed.

@@ -1,0 +1,5 @@
+check	start_utc	finish_utc	duration	result
+full_jvm	XML 2026-10-20 12:56:44 to final XML 2026-10-20 12:58:03	log mtime 2026-10-20 12:58:06	Gradle reported 1m40s	PASS
+androidtest_compile	2026-10-20T13:20:22Z	2026-10-20T13:21:05Z	43s	PASS
+lint_arm64	2026-10-20T13:21:16Z	2026-10-20T13:25:57Z	4m41s	PASS
+assemble_debug_arm64	2026-10-20T13:18:50Z	2026-10-20T13:19:53Z	1m03s	PASS

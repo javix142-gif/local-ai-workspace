@@ -1,0 +1,1028 @@
+{
+  "app": {
+    "xmlFiles": 125,
+    "tests": 916,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "suites": [
+      {
+        "file": "TEST-com.localai.workspace.artifacts.ArtifactPatchRecoveryTest.xml",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "69f8c7542e174de8addd71a82653892758e5e7f037802db867b53cbce4f4cc9d"
+      },
+      {
+        "file": "TEST-com.localai.workspace.artifacts.ArtifactRoundtripTest.xml",
+        "tests": 11,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "ba251ee579290d0c775db4e0da4c9e3988fcbcff490af573d01912eb9256210f"
+      },
+      {
+        "file": "TEST-com.localai.workspace.artifacts.CodePatchPlannerTest.xml",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "e48755172b65bbd62c7d907f005d7828f3351cba50612c918d7fcaa3d026ea9d"
+      },
+      {
+        "file": "TEST-com.localai.workspace.artifacts.DocxArtifactStructureTest.xml",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "d98c8fd96a0fe9137706bbf0b1542b3c836e152627c49e313eefa8e6ec18e4d3"
+      },
+      {
+        "file": "TEST-com.localai.workspace.artifacts.NativeArtifactToolTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "5076fd7d2d688c651aa7fe61c7f2b43ff32bf9e145482f7db60904169bff36a5"
+      },
+      {
+        "file": "TEST-com.localai.workspace.artifacts.OfficeRetrievalTest.xml",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "671e7b482aa5b9daa3954705cebacd52a191113bc290e1d18e594db69ab0da7b"
+      },
+      {
+        "file": "TEST-com.localai.workspace.artifacts.PdfArtifactLayoutTest.xml",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "4477e8195d89ff6cdcd1a9a5d68fff3a8bbbe3cd6f1541ad767349da1d40fe20"
+      },
+      {
+        "file": "TEST-com.localai.workspace.artifacts.PptxImageArtifactTest.xml",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "fa48a44b88b655c51fcd6a5074d78ba1280bc1d9c375e31989b1e61a1c760693"
+      },
+      {
+        "file": "TEST-com.localai.workspace.artifacts.XlsxArtifactRevisionTest.xml",
+        "tests": 11,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "ce643d39516792d2998dfec049dc0558e344567eb096b00a6c8d6c534771f3f3"
+      },
+      {
+        "file": "TEST-com.localai.workspace.context.AuditHarness.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "665ac48c98e4a4378163ea36526e661ae5c181582706b3eba506db77e317b67a"
+      },
+      {
+        "file": "TEST-com.localai.workspace.context.ContextDeduplicationAblationTest.xml",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "60089e2d27d4e892b0e0f06f55ce1115bf472e33e717180f76dc8aa7f480d551"
+      },
+      {
+        "file": "TEST-com.localai.workspace.context.ContextEvidenceExcerptTest.xml",
+        "tests": 32,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "1ca3e705f5d4ce2e9914b2a40dacf21766b9adf6fa0272462e4385f7be8751e9"
+      },
+      {
+        "file": "TEST-com.localai.workspace.context.ContextFoundationDeduplicationTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "7d4fc4f84f62c64dac17b8deaf7f99191a5f2b587dc2c06ecd0a4c3b7d1bf850"
+      },
+      {
+        "file": "TEST-com.localai.workspace.context.ContextFoundationTest.xml",
+        "tests": 38,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "905bcf8cb5aaadd536783da1b9f8cd697a13e616d6607dd9671f89f8697b3f7b"
+      },
+      {
+        "file": "TEST-com.localai.workspace.context.MemoryBundleImportTest.xml",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "68f8f45d66947b8bbecae8cf547c194b1e7e84848956fe204cae8c2abe3df6dd"
+      },
+      {
+        "file": "TEST-com.localai.workspace.context.MemoryBundleV1Test.xml",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "c723634e357471c6ff4337ca6141528b418be65c971c5366d84e48305b851627"
+      },
+      {
+        "file": "TEST-com.localai.workspace.context.MemoryRelevanceTest.xml",
+        "tests": 19,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "8eef59cf6f924c2f3a106ea61dcf669a6d73449ae8943d8f4ae6f2c4a035ab96"
+      },
+      {
+        "file": "TEST-com.localai.workspace.data.ApplicationModelPreparationTest.xml",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "bfcee8650bf2ea237f27d9496d557c5c9a0c1484e1a57f980c341ca0b4febe6c"
+      },
+      {
+        "file": "TEST-com.localai.workspace.data.ChatDeletionTest.xml",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "6ea751e16801c1b90e7650262867661699b25215ef7056a0788697bdf178375e"
+      },
+      {
+        "file": "TEST-com.localai.workspace.data.DeletedWorkspaceImportTest.xml",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "28211691593b5618ccf1ba617382bd2f96a0836e1fdf0769a10a197be65cec38"
+      },
+      {
+        "file": "TEST-com.localai.workspace.data.DocumentCorpusFixtureTest.xml",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "3e13d8f74cf715967ab5f3f970686b0f823cd2ed43318496e7a64fb12c7eb224"
+      },
+      {
+        "file": "TEST-com.localai.workspace.data.DocumentDeletionLifecycleTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "8235d61d4ea92363ddf1a09a0cc1b802c928464909ffaf571321c07a51560c46"
+      },
+      {
+        "file": "TEST-com.localai.workspace.data.DocumentPipelineTimingTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "b507e596b95caeb182813c6a58190d91c6ff98d72c0306bf63b8faea97b3c6cc"
+      },
+      {
+        "file": "TEST-com.localai.workspace.data.DocxStructureFidelityTest.xml",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "ca25a1cefbefb207613c8a11e1ddd3d86da08bd700a751f24430f966e37f317d"
+      },
+      {
+        "file": "TEST-com.localai.workspace.data.GenerationMetricsPresentationTest.xml",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "530d87025673debd8bd453dacc5f3e1535a61787b390f82612bd3360b310b9d6"
+      },
+      {
+        "file": "TEST-com.localai.workspace.data.LiteRtChatDefaultsUpgradeTest.xml",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "648d099f0f6c0d01611f079e720ab3cbfd3f2fe29279845b173bb3109253ac3f"
+      },
+      {
+        "file": "TEST-com.localai.workspace.data.LiteRtDefaultsUpgradeTest.xml",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "9c7127744fedde4bff0d722e99f8a0dd669033535eef6d74e5c35dc9b998807f"
+      },
+      {
+        "file": "TEST-com.localai.workspace.data.RetrievalIntegrityTest.xml",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "be4098cc291c68dd5710915fc8afcee2fd6638c23cfcb322a0ffca887b2c8102"
+      },
+      {
+        "file": "TEST-com.localai.workspace.data.SemanticMemoryTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "fddd38bccfe7fd06a416444b7b119989e7c6c8a28b028d8910b14091e7dc68ea"
+      },
+      {
+        "file": "TEST-com.localai.workspace.data.SemanticRetrievalIntegrationTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "8b4b34b397b75a91ef7c8b79463b534a7533b6bfeb118b4d4b5343e522ce049f"
+      },
+      {
+        "file": "TEST-com.localai.workspace.data.SemanticVectorsTest.xml",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "272497754d7814665e8befa8c9680e8d2bb0326a78922dd51228f58d4dc5193f"
+      },
+      {
+        "file": "TEST-com.localai.workspace.data.StructuredDocumentsTest.xml",
+        "tests": 11,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "a441d3301bddfd33ba370db93dde0e9aeb88cc77061b7d937afbd65628e21d03"
+      },
+      {
+        "file": "TEST-com.localai.workspace.data.VisionPersistenceTest.xml",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "cee5e793fba8282dd7568b3d11ec9d2ed88ad4d2bf0ef28ca75d6c00cb73876f"
+      },
+      {
+        "file": "TEST-com.localai.workspace.data.WorkspaceCitationEvidenceMigrationTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "fbb1f40d823d1d2ee528990aa1427defd243502964b7a58ac8bf297fbabb2f43"
+      },
+      {
+        "file": "TEST-com.localai.workspace.data.WorkspaceLifecycleTest.xml",
+        "tests": 11,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "85c672102add92556cdac6ff903a388a8d5ee3fe59faa0c498e51529379fb569"
+      },
+      {
+        "file": "TEST-com.localai.workspace.data.WorkspaceMigration3Test.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "f39f1702a5d4aefd7af56fc84d35a3f651e9bda812e81d77b0d6bb6e832002cb"
+      },
+      {
+        "file": "TEST-com.localai.workspace.diagnostics.NormalGenerationTraceTest.xml",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "805e7eda08a90658ae0e9399a3b0a2e4274afa35b3622f1602fd49e8cbbe6ca4"
+      },
+      {
+        "file": "TEST-com.localai.workspace.documents.CodeLineChunkerTest.xml",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "840abf6a07e75a44e5b1ab7e1da2407fe2a19db73c6d331b601d05692600d99c"
+      },
+      {
+        "file": "TEST-com.localai.workspace.domain.ContextBudgetManagerTest.xml",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "c0d392c359b024fa9c55a7960def1fddf8ebf4b0a12d77e843848bfae10a7a3b"
+      },
+      {
+        "file": "TEST-com.localai.workspace.domain.ConversationPromptTest.xml",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "fdd20bc005d3d8b49a93521c4710c45586db02d88bc782a913aacc0a055fb48b"
+      },
+      {
+        "file": "TEST-com.localai.workspace.domain.RecentHistoryBudgetTest.xml",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "0f697408209a8599f69b10f059ce8acee833a13267519b3ff86665b58cbcb7f0"
+      },
+      {
+        "file": "TEST-com.localai.workspace.domain.RepetitionParagraphTest.xml",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "470b22f127c62f0b24896fd5cb264add6726e13993376f4a5e0e9cac31e56f7f"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.ApplicationPreparationLifecycleTest.xml",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "4923d08b61cb8a2737ef2a0e31bf8834c706d4a33ffe5ae268ebb64a734eb2c3"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.AudioInputTest.xml",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "ba7d4d5e957a17e5f9df5a70056c43b32d53d9ddc282dbf0d1903e473681ee54"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.CanonicalConversationTest.xml",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "658b46886f4c956f31e39159a72be4740d438b980b0292183a178e478147cd50"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.ChatRuntimePoolTest.xml",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "4bf130a639686f099c906afaed5f356e49d2923b8052e446ba583847205ed09b"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.GenerationDiagnosticPersistenceTest.xml",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "758c1e59fbfe2c524c725b639de591ef129ef091f2310eac9896f72d9e4fa32c"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.IndependentInferenceDeadlineTest.xml",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "a881891aca0c1edeaf4032da9546ff112a4db703984cb79ba60e0e88afe359f8"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.InferenceWatchdogTest.xml",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "ea41ef048ce8117526151a448387bb91549e9551c2667e3a99e5eb437f687a59"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.LiteRtBundleMetadataTest.xml",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "6f0a621b3213996f7f0e4b8504e0cb9afbd120de789c46322387df8682e83628"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.LiteRtCapabilityStateTest.xml",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "6f7d8af69c71ee394dc1b7ae004ff4ed9ed59bfd881e124e3159b9b3646f668f"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.LiteRtContextCapacityTest.xml",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "ad3c89682261609ee09de60a707568e0b310f086e0e75660ed920e416e8b9478"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.LiteRtConversationPayloadTest.xml",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "9a9ffcfa9a38f6afde032569c95cb7193f0c6efc2b8819af68c32b2802d9caed"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.LiteRtConversationReuseTest.xml",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "cbf60769ae1703dd089a017f6f524b33de7867f4d7781a32562e461a142e2b63"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.LiteRtDecodeControlsTest.xml",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "b75992b393be59e9c95f9e568f371bbb10357eb88ff1a68402ece494f9b9da41"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.LiteRtEngineResourcesTest.xml",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "08784a13a4d984113d4b541d255ec815b26d2c7453a3b82f4c00b0d75b7e1010"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.LiteRtIpcDispatchTest.xml",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "b027b7624117255a69ad15b93a5fb7419dabc0d4c50184fa4c4eff3b0337d301"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.LiteRtModelIntegrityTest.xml",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "a3c057a052ebafa29ad32bd9d95ef041446b4d5a8e7463a49fa362a9e4b6d641"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.LiteRtRuntimeDeadlineTest.xml",
+        "tests": 11,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "e03b3360cec46580b1142bea7471e3e5bcfb1b60dcd09547af20d75c504edebe"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.LiteRtVerificationCacheTest.xml",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "47ac0387ea544fe4cfa0cf625a0cb20d8610d0ac2f05e982709ec5c40635cce9"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.LiteRtVisionInputTest.xml",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "4d38c45b82a6db795abffdc16b6af8aa93ac3d75e05cb233684dc5835f527ce6"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.LiteRtVisionPayloadTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "9381344f983ba4ead2c2b0689a877c2a5733d60eb190e9c7a1c7754494895c9b"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.Part2ThinkingTest.xml",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "701b6be67ffd212300586d0b23b44f2c0b7051dbd39c094ae7446001c4851fbc"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.RuntimePreparationTest.xml",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "987a7d1438d41de8a85fe059f54b325a11ed5bbe9ba3bb3c3e34a39309f011e6"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.ThinkingDiagnosticsTest.xml",
+        "tests": 18,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "987bd2279553d5a103437354ebf896e181621c3bf05822892e959e51b1d60a53"
+      },
+      {
+        "file": "TEST-com.localai.workspace.inference.VisionEngineTextReuseTest.xml",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "7011f4c93690efd8105f10c03f4a403268632d3367339faf809d242b03b6475f"
+      },
+      {
+        "file": "TEST-com.localai.workspace.model.ModelManagerDomainTest.xml",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "45dd1122a7c79b63ed9bfe538fd80840528def6d50ed475380046ec0b4ddeddd"
+      },
+      {
+        "file": "TEST-com.localai.workspace.performance.BenchmarkSummaryTest.xml",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "ea98957d97c4e724aba2f474923706e62a7b895f79b3d760139ce00b450de135"
+      },
+      {
+        "file": "TEST-com.localai.workspace.performance.DocumentPipelineTimelinePresentationTest.xml",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "7661f2281bedd549705fdee0cf942b99dfd5ea9e5714ce4667d29b7055473fd2"
+      },
+      {
+        "file": "TEST-com.localai.workspace.performance.GenerationTimelinePresentationTest.xml",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "85d33e2ed19757525f2d0f753963c5e7e47e9c18937d59db6d1e895d6aa40bdb"
+      },
+      {
+        "file": "TEST-com.localai.workspace.performance.PerformanceDiagnosticsIntegrationTest.xml",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "7742768bc15476eb9515129c0f4a790351e0f7aa07d91e246aa5f991eaec0565"
+      },
+      {
+        "file": "TEST-com.localai.workspace.performance.PerformancePolicyTest.xml",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "aadc3faf129248209f00ba9333353529c4d82d51633ee13cfd0470cc2aa7c9f4"
+      },
+      {
+        "file": "TEST-com.localai.workspace.rag.CitationValidatorTest.xml",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "3b9a8490d88e485a9e5d1ef6e805760dd4ed0607f170bc3db801ff4526e04354"
+      },
+      {
+        "file": "TEST-com.localai.workspace.rag.DocumentRetrievalTest.xml",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "974cf4bc1f13c471ae5162fdf0e6eeab9c78f81ba13bc74f53958bc6d41ae9ec"
+      },
+      {
+        "file": "TEST-com.localai.workspace.rag.ReciprocalRankFusionTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "106c11c2bb94f621f2a0ad38c89652fe6b1febc7415dd571498356a98e2c8965"
+      },
+      {
+        "file": "TEST-com.localai.workspace.security.SecurityPolicyTest.xml",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "1e40bf7f475a4e4299e5636472fe427d8bb43ccf62924c287c1a2cec61ffb726"
+      },
+      {
+        "file": "TEST-com.localai.workspace.semantic.EmbeddingImportPipelineTest.xml",
+        "tests": 18,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "b6af1ee645a10ef01e6bdd2dff40b314408cc1dd2f8506547e1bedc5c2dd28ec"
+      },
+      {
+        "file": "TEST-com.localai.workspace.semantic.EmbeddingModelsFailureTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "1bd028cf97cfc5f725283045a42a276010cc01ded9c12fa66ac6bc7d40bac20f"
+      },
+      {
+        "file": "TEST-com.localai.workspace.semantic.v2.CodeSegmentsTest.xml",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "d36e77ae3b0420cbdc5e5fde84c499c193e7580fbbbd51815f972a9fa6566bff"
+      },
+      {
+        "file": "TEST-com.localai.workspace.semantic.v2.EmbeddingEngineManagerTest.xml",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "f11c739a710eda35c817312d683e7ff8c51cc378accc0ded1e12018f9f8e9154"
+      },
+      {
+        "file": "TEST-com.localai.workspace.semantic.v2.SearchEmbeddingCacheTest.xml",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "e14b38b37be36a66b65f424dd7c3e85835b626d82d3b7a93c3182cf1cc895027"
+      },
+      {
+        "file": "TEST-com.localai.workspace.semantic.v2.SemanticContextPostfixTest.xml",
+        "tests": 40,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "2fb633704b49b29c025ec67cce49159fdd3ff19a05faa3469f836d2f9e6e8eb5"
+      },
+      {
+        "file": "TEST-com.localai.workspace.semantic.v2.SemanticDomainTest.xml",
+        "tests": 24,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "e0421f124979849ff11db2c841a3010a30f040643f30d25dfb52d28f903f5e6a"
+      },
+      {
+        "file": "TEST-com.localai.workspace.semantic.v2.SemanticIndexRestartRecoveryTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "435520f35764a741865f9032af97cfb9e2c54ebfd5bb605a1b231e354c99ba6c"
+      },
+      {
+        "file": "TEST-com.localai.workspace.semantic.v2.SemanticStabilityTest.xml",
+        "tests": 22,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "b65c1619e0c50475320b6cd2c106deb5f9662cc4a24d7ea1bf6fe7c8fbf22e83"
+      },
+      {
+        "file": "TEST-com.localai.workspace.semantic.v2.SemanticStorageTest.xml",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "34b97269ff19ef08afdff58f9ff5fa4d9197ae57db9422c014c3687f88908430"
+      },
+      {
+        "file": "TEST-com.localai.workspace.skills.AgentSkillContextTest.xml",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "121230dd0cc5b245f54e88873fe2c150bb3205592cf37dda7687572f5f04aef7"
+      },
+      {
+        "file": "TEST-com.localai.workspace.skills.SchemaAdditivityTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "e6570a941aa88e0b1489a7163472de235286652fe2c47f4b889226fce398b3b3"
+      },
+      {
+        "file": "TEST-com.localai.workspace.skills.SkillAgentRegistryTest.xml",
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "0ffb3e9397e9abd9db70f66e1761b8d7bebe7017fb41437115266c40e9d0aeaf"
+      },
+      {
+        "file": "TEST-com.localai.workspace.skills.SkillDraftProposalTest.xml",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "8fd3cbb92025c8c1e8898cd56d1495b4ae54273a5e262491d8252f135ddd5b2b"
+      },
+      {
+        "file": "TEST-com.localai.workspace.skills.SkillRoutingFixturesTest.xml",
+        "tests": 117,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "ea6b4d9b482ec466033adb2afc21c696e7deafba2322e80c52da79760f458498"
+      },
+      {
+        "file": "TEST-com.localai.workspace.skills.ValidationReservationTest.xml",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "cb2df8824993ec26295ad2eb9bfffbada547d5449b0c508ffe3265d7dfea9eda"
+      },
+      {
+        "file": "TEST-com.localai.workspace.tools.ChatToolSchemasTest.xml",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "2957fcc4f71e6f509b3c6ff317246f06b6900f09ddc145353e37900138f39a65"
+      },
+      {
+        "file": "TEST-com.localai.workspace.tools.PythonToolTest.xml",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "91e8015613fa12853797f206fabfd96f2f69780b2f6dee1ec7996d968dc5c96d"
+      },
+      {
+        "file": "TEST-com.localai.workspace.tools.ToolFrameworkTest.xml",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "c543866e78e1422fd5ea39ceb913e6be82a4197324bf093a72bd90047be81763"
+      },
+      {
+        "file": "TEST-com.localai.workspace.tools.ToolLifecycleTest.xml",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "938adea439cf65549fb91d15b2c4f645917584b46ad5e8606f270d0a6b3738ce"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.ArtifactRevisionPreviewUiTest.xml",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "5af0521e05a533e1a9aed138360d75dbd57a1fbefb0f16ecb01fbd004c30a9c2"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.ArtifactSafExportUiTest.xml",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "c7aa63fd4004489ebbbf0e30a1a41fece9bf6036d03dd1e96e7384184eb23fba"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.ArtifactsDocxTemplateUiTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "473b1e1901b046c23e34340336bac734004ab3d75099374a9f3fa59bedf1a775"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.ArtifactsPatchPreviewUiTest.xml",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "259db6ec4289a4208c4d2597fcf6f27d811749308d8ebaf0f7d3dd416fe7d753"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.BasicMarkdownTest.xml",
+        "tests": 20,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "17ee8fddb53ac1121f3191f4b0012ab98c6ba9fadb609c605492270b558c4846"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.ChatContentUiTest.xml",
+        "tests": 18,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "91b484bd0ed6b3e95d0bec337e9d4ee94a71cdfd9d4fbb17aa30c34c5c546acc"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.ChatHeaderComposerCompactCaptureTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "ef5dc106015305fa028683e9b8bebfb00810e5ac060b11c3124f4ca8c7697ca3"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.ChatHeaderComposerLargeFontCaptureTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "6baeab6ca0b3b25c6ec11351c9da1fad02cdf45ace6f4a0d771b8f4ed7de2c73"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.ChatRefinementUiTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "d61a5847200c57bd7800a9d53ac3b553a014784c17e3c9dd4f0148f43fcb5612"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.ChatSessionPipelineTest.xml",
+        "tests": 23,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "f66b11a6e7da48327288435cf6f951e21d711e033a69d1a6f880d259ad5c23bf"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.ChatVisualSurfacesUiTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "ff20b695e1409450282348fee880e50d3f961ec7c933e6db9530973c9b0e4e21"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.CitationSourcePreviewTest.xml",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "fdc10b5a64c45120c0d13a1e0d75d0b203da72ed02bf58fd907e99d423613860"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.ContextOmissionInspectorUiTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "2d4c014b341c0965f94707748a4c3bc55056c1f1bfc08d0923c575325afbc4f6"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.DocumentRemovalUiTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "8c6ec89158834ac4cf08c4d683b96597585cae12371d792619d70085e8baecc1"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.LocalAiThemeTest.xml",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "0282ed3e0bff7e8711ac1f228404ce511574be9356c2d67be9939db23e5ec08b"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.MainActivityDarkThemeCaptureTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "e61b91ebfcaf592b3ef18576b032065cecabddd18c089214f60fce640ab47b7d"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.MainActivityThemeCaptureTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "f61448271feb4bc940b3932110bf88f5c9e3c10e251d4731754fa052d35469c5"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.NormalChatHotfixTest.xml",
+        "tests": 19,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "e5f554fde40eac24f606837f5ea913b587cdf0f53069480b369c3dc6cbc41f6a"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.PptxImagePreviewUiTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "1fe169648305f9fed2267817137447322e0687afb9f3419e7f37c1c546a19993"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.SemanticIndexJobLabelTest.xml",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "d616731adc1463d597878464c655e53e81e0b75e39261817252349c8a480b6c4"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.SkillProposalReviewUiTest.xml",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "04151f96fbc32f43f29a609755c312e8900c3168b35995980a52d1309870967b"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.UiPresentationTest.xml",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "45434d8c3db5ec2c3593b718aa7e198b2cd84434ffe8ad74a6c219a9ba2ce523"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.UiSmokeTest.xml",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "20eda4160a384591128f8fea9d30e44c998dd9aa3dbdc9fb26d0b7b26f93dc26"
+      },
+      {
+        "file": "TEST-com.localai.workspace.ui.WorkspaceRefinementUiTest.xml",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "16bd48982622a8de3f93a0ca654372a2094f45ca0b8b726fc08e3801d2ebab0f"
+      },
+      {
+        "file": "TEST-com.localai.workspace.validation.ThinkingBudgetControlTest.xml",
+        "tests": 20,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "0612266daecd60d917be1ffdf6a38a35fc701e53a19dee7bb7f3e5a042e098ab"
+      },
+      {
+        "file": "TEST-com.localai.workspace.validation.ValidationFrameworkTest.xml",
+        "tests": 25,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "91ae797f9b6ff03693f5c665d7f4311cbd8415a6a36e0782ab7d0f7eca16ef2b"
+      },
+      {
+        "file": "TEST-com.localai.workspace.validation.ValidationIsolationTest.xml",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "bbe4eb5e634c4238b8a748069e3c238367dfbeac9a8e67a18976b6b910a73ea1"
+      },
+      {
+        "file": "TEST-com.localai.workspace.validation.ValidationPrerequisitesTest.xml",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "6eb4a21ec1a18c21ead7cb8d48e49724c941b24d125236f28a1ce9af9cf72b7c"
+      },
+      {
+        "file": "TEST-com.localai.workspace.validation.ZipTraversalControlTest.xml",
+        "tests": 13,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "1600d2b067ccab92f8073eb8d7e36f3f19240824a836dfb881804a448af28c08"
+      }
+    ]
+  },
+  "litert-compat": {
+    "xmlFiles": 1,
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "suites": [
+      {
+        "file": "TEST-com.google.ai.edge.litertlm.NativeHistoryRoleTest.xml",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "sha256": "31576c5b22c785e259b405066df13590b540b634945a3fb9f0d2ccc141b363f9"
+      }
+    ]
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "name": "H0 host stabilization",
+  "sourceCodeSha": "49f5913937fe7c049bf0ad71d2d75f7e5321b557",
+  "workingBranch": "codex/aws-master-resume-20261019",
+  "host": {
+    "appJvm": {
+      "status": "PASS",
+      "tests": 916,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlFiles": 125
+    },
+    "litertCompatJvm": {
+      "status": "PASS",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlFiles": 1
+    },
+    "androidTestKotlinCompilation": {
+      "status": "PASS",
+      "instrumentationExecuted": false,
+      "log": "docs/validation/master-program-h0-stabilization-20261020/logs/androidtest-compile.log.gz",
+      "exitCode": 0,
+      "durationSeconds": 43
+    },
+    "lintDebugArm64Only": {
+      "status": "PASS",
+      "errors": 0,
+      "warnings": 77,
+      "information": 1,
+      "exitCode": 0,
+      "durationSeconds": 281,
+      "log": "docs/validation/master-program-h0-stabilization-20261020/logs/lint-arm64.log.gz"
+    },
+    "assembleDebugArm64Only": {
+      "status": "PASS",
+      "exitCode": 0,
+      "durationSeconds": 63,
+      "cmakeNinjaArm64Executed": true,
+      "log": "docs/validation/master-program-h0-stabilization-20261020/logs/assemble-debug-arm64.log.gz"
+    },
+    "jvmEnvironment": "Gradle 8.10.2; Temurin JDK 17 runtime; Temurin JDK 21 worker; SDK API 35; NDK 27.0.12077973; CMake 3.31.6; existing /workspace/.gradle cache"
+  },
+  "apk": {
+    "artifactType": "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
+    "builtAndLocallyValidated": true,
+    "delivered": false,
+    "reason": "The only generated local Debug certificate differs from the recorded prior update certificate; its compatible private key is not mounted. The APK was not uploaded or installed.",
+    "package": "com.localai.workspace.debug",
+    "versionName": "0.5.0-debug",
+    "versionCode": 27,
+    "abi": "arm64-v8a only",
+    "bytes": 121092571,
+    "sha256": "70955926aa58be1a0739975aae509d2da260acd0370565bd7ed3329b30e40b0e",
+    "currentCertificateSha256": "4d95e3efd34874f6564aee7a5f347e2aa406f63a41b40d44763ddaac0603c955",
+    "priorUpdateCertificateSha256": "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b",
+    "zipCrc": "PASS",
+    "zipalign": "PASS",
+    "apksignerV2": "PASS",
+    "models": "NONE; DebugProbesKt.bin is compiled class data"
+  },
+  "emulator": "NOT_RUN",
+  "physicalDevice": "NOT_RUN",
+  "formalSourceTaskClosed": false,
+  "sourcePlan": {
+    "backlog": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmap": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "tasks": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "statuses": {
+      "TODO": 97
+    },
+    "modified": false
+  },
+  "evidence": "RESULTS.md"
+}
