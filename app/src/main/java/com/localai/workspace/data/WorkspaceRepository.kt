@@ -15,6 +15,7 @@ class WorkspaceRepository(
     private val privateDocumentsDirectory: File? = null,
     private val onWorkspaceDeleted: suspend (String) -> Unit = {},
     private val onDocumentDeleted: suspend (String, String) -> Unit = { _, _ -> },
+    private val onConversationDeleted: suspend (String) -> Unit = {},
 ) {
     private val projects = database.projectDao()
     private val conversations = database.conversationDao()
@@ -106,29 +107,39 @@ class WorkspaceRepository(
 
     /** Remove one project conversation, or the entire isolated owner of a standalone chat. */
     suspend fun deleteConversation(id: String): Int {
-        val deletedWorkspace = database.withTransaction {
+        data class DeletedConversation(val workspaceId:String?,val conversationIds:List<String>)
+        val deleted:DeletedConversation? = database.withTransaction {
             val conversation = conversations.get(id) ?: return@withTransaction null
             val owner = conversation.projectId?.let { projects.get(it) }
             if (owner?.workspaceKind == WorkspaceKind.CHAT) {
-                deleteWorkspaceRows(owner.id)
-                owner.id
+                DeletedConversation(owner.id,deleteWorkspaceRows(owner.id))
             }
             else {
+                database.semanticVectorDao().deleteForLegacyMemoryScope("SESSION", id)
+                database.memoryDao().deleteForLegacyScope("SESSION", id)
                 database.citationEvidenceDao().deleteForConversation(id)
                 database.toolCallDao().deleteForConversation(id)
                 database.pendingDocumentDeletionDao().insertAll(messages.imagesForConversation(id).map { PendingDocumentDeletionEntity(it) })
                 messages.deleteForConversation(id)
                 conversations.delete(id)
-                null
+                DeletedConversation(null,listOf(id))
             }
         }
-        deletedWorkspace?.let { kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) { onWorkspaceDeleted(it) } }
+        if(deleted!=null){
+            kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) {
+                deleted.conversationIds.forEach { onConversationDeleted(it) }
+                deleted.workspaceId?.let { onWorkspaceDeleted(it) }
+            }
+        }
         return cleanupDeletedDocuments()
     }
 
     suspend fun deleteWorkspace(id: String): Int {
-        database.withTransaction { deleteWorkspaceRows(id) }
-        kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) { onWorkspaceDeleted(id) }
+        val conversationIds=database.withTransaction { deleteWorkspaceRows(id) }
+        kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) {
+            conversationIds.forEach { onConversationDeleted(it) }
+            onWorkspaceDeleted(id)
+        }
         return cleanupDeletedDocuments()
     }
 
@@ -153,17 +164,20 @@ class WorkspaceRepository(
         return cleanupDeletedDocuments()
     }
 
-    private suspend fun deleteWorkspaceRows(id: String) {
+    private suspend fun deleteWorkspaceRows(id: String): List<String> {
+        val conversationIds=conversations.idsForProject(id)
         val documents = database.documentDao()
         database.pendingDocumentDeletionDao().insertAll(documents.forProject(id).map { PendingDocumentDeletionEntity(it.localPath) })
-        deleteProjectChats(id)
         database.semanticVectorDao().deleteForProject(id)
+        database.memoryDao().deleteForLegacyScope("PROJECT", id)
+        database.memoryDao().deleteLegacySessionsForProject(id)
+        deleteProjectChats(id)
         documents.deleteEmbeddingsForProject(id)
         // Room's external-content FTS triggers remove the deleted segments from the index.
         documents.deleteSegmentsForProject(id)
         documents.deleteForProject(id)
-        database.memoryDao().deleteForProject(id)
         projects.delete(id)
+        return conversationIds
     }
 
     /** Durable outbox: DB deletion is atomic; failed private-file cleanup can be retried after restart. */

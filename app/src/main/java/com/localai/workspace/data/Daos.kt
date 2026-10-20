@@ -53,6 +53,9 @@ interface ConversationDao {
     @Query("SELECT * FROM conversations WHERE id = :id LIMIT 1")
     suspend fun get(id: String): ConversationEntity?
 
+    @Query("SELECT id FROM conversations WHERE projectId = :projectId ORDER BY id")
+    suspend fun idsForProject(projectId: String): List<String>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(conversation: ConversationEntity)
 
@@ -219,23 +222,15 @@ interface DocumentDao {
 
 @Dao
 interface MemoryDao {
-    @Query("SELECT * FROM memory_items WHERE id = :id LIMIT 1") suspend fun get(id: String): MemoryItemEntity?
-    @Query("DELETE FROM memory_items WHERE scopeType = 'PROJECT' AND scopeId = :projectId")
-    suspend fun deleteForProject(projectId: String)
-    @Query("SELECT * FROM memory_items WHERE status = 'ACTIVE' AND (scopeType = 'GLOBAL' OR (scopeType = 'PROJECT' AND scopeId = :projectId)) ORDER BY updatedAt DESC")
-    fun observeRelevant(projectId: String): Flow<List<MemoryItemEntity>>
-
-    @Query("SELECT * FROM memory_items WHERE status = 'ACTIVE' AND (scopeType = 'GLOBAL' OR (scopeType = 'PROJECT' AND scopeId = :projectId)) ORDER BY updatedAt DESC LIMIT :limit")
-    suspend fun relevant(projectId: String, limit: Int): List<MemoryItemEntity>
-
+    @Query("SELECT * FROM memory_items ORDER BY status, scopeType, scopeId, kind, content, id") suspend fun allForMigration(): List<MemoryItemEntity>
+    @Query("DELETE FROM memory_items") suspend fun deleteAllAfterVerifiedMigration()
+    /** Delete-only compatibility cleanup; legacy rows are never read outside migration. */
+    @Query("DELETE FROM memory_items WHERE scopeType = :scopeType AND scopeId = :scopeId")
+    suspend fun deleteForLegacyScope(scopeType: String, scopeId: String)
+    @Query("DELETE FROM memory_items WHERE scopeType = 'SESSION' AND scopeId IN (SELECT id FROM conversations WHERE projectId = :projectId)")
+    suspend fun deleteLegacySessionsForProject(projectId: String)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(item: MemoryItemEntity)
-
-    @Query("UPDATE memory_items SET content = :content, updatedAt = :updatedAt WHERE id = :id")
-    suspend fun updateContent(id: String, content: String, updatedAt: Long)
-
-    @Query("UPDATE memory_items SET status = 'ARCHIVED', updatedAt = :updatedAt WHERE id = :id")
-    suspend fun archive(id: String, updatedAt: Long)
 }
 
 @Dao
@@ -292,7 +287,10 @@ interface PendingDocumentDeletionDao {
 @Dao interface SemanticVectorDao {
  @Query("SELECT * FROM semantic_vectors WHERE originId = :origin AND modelId = :model LIMIT 1") suspend fun get(origin: String, model: String): SemanticVectorEntity?
  @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun put(record: SemanticVectorEntity)
- @Query("DELETE FROM semantic_vectors WHERE documentId IN (SELECT id FROM documents WHERE projectId = :projectId) OR memoryId IN (SELECT id FROM memory_items WHERE scopeType = 'PROJECT' AND scopeId = :projectId)") suspend fun deleteForProject(projectId: String)
+ @Query("DELETE FROM semantic_vectors WHERE documentId IN (SELECT id FROM documents WHERE projectId = :projectId) OR memoryId IN (SELECT id FROM memory_items WHERE scopeType = 'PROJECT' AND scopeId = :projectId) OR memoryId IN (SELECT id FROM memory_items WHERE scopeType = 'SESSION' AND scopeId IN (SELECT id FROM conversations WHERE projectId = :projectId))") suspend fun deleteForProject(projectId: String)
+ @Query("DELETE FROM semantic_vectors WHERE memoryId IN (SELECT id FROM memory_items WHERE scopeType = :scopeType AND scopeId = :scopeId)") suspend fun deleteForLegacyMemoryScope(scopeType: String, scopeId: String)
  @Query("DELETE FROM semantic_vectors WHERE documentId = :documentId") suspend fun deleteForDocument(documentId: String)
  @Query("DELETE FROM semantic_vectors WHERE memoryId = :id") suspend fun deleteMemory(id: String)
+ @Query("DELETE FROM semantic_vectors WHERE memoryId IS NOT NULL") suspend fun deleteAllMemoryVectorsAfterVerifiedMigration()
+ @Query("SELECT COUNT(*) FROM semantic_vectors WHERE memoryId IS NOT NULL") suspend fun countMemoryVectors(): Int
 }

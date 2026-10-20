@@ -49,9 +49,14 @@ class AppGraph(context: Context,
     /** Compatibility alias for older screens while chat is migrated to the registry. */
     val runtime get() = llamaRuntime
     val workspace = WorkspaceRepository(database, java.io.File(appContext.filesDir, "documents"), onWorkspaceDeleted = { id ->
-        if (validationOwner == null) semanticV2.deleteProjectScope(id)
+        if (validationOwner == null) {
+            semanticV2.deleteProjectScope(id)
+            contextFoundation.deleteProjectScope(id)
+        }
     }, onDocumentDeleted = { projectId, documentId ->
         if (validationOwner == null) semanticV2.deleteDocumentSources(projectId, documentId)
+    }, onConversationDeleted = { id ->
+        if (validationOwner == null) contextFoundation.deleteConversation(id)
     })
     val documents = DocumentIngestionService(appContext, database, database.documentDao(), onIndexed = { id, indexRunId ->
         if(validationOwner==null) {

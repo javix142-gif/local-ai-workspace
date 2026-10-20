@@ -5,6 +5,8 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.localai.workspace.MainActivity
 import com.localai.workspace.LocalAiApplication
+import com.localai.workspace.context.MemoryKind
+import com.localai.workspace.context.ScopeAccess
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -34,8 +36,8 @@ class ProjectUiDeviceTest {
         val graph = (compose.activity.application as LocalAiApplication).graph
         val memoryId = runBlocking(Dispatchers.IO) {
             val project = graph.workspace.activeProjects.first().single { it.name == name }
-            graph.database.memoryDao().relevant(project.id, 100).single {
-                it.scopeId == project.id && it.content == "Approved UI validation memory"
+            graph.contextFoundation.memory.lookup(ScopeAccess(projectId=project.id),MemoryKind.FACT).single {
+                it.scopeId == project.id && it.text == "Approved UI validation memory"
             }.id
         }
         compose.onNode(hasContentDescription("Edit memory") and hasAnyAncestor(hasTestTag("memory-$memoryId"))).performClick()

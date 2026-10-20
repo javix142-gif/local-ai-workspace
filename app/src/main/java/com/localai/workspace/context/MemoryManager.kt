@@ -21,9 +21,56 @@ class MemoryManager(val database:MemoryContextDatabase,private val embed:suspend
             database.dao().active(listOf(scope.key),now).firstOrNull{it.contentHash==hash&&it.kind==kind.name} ?: MemoryRecord(UUID.randomUUID().toString(),kind.name,scope.type.name,scope.id,title,text.trim(),status=if(pending)"PENDING"else"ACTIVE",confidence=if(pending).5 else 1.0,createdAt=now,updatedAt=now,expiresAt=expiresAt,sourceType=sourceType,sourceId=sourceId,sourceMessageId=sourceMessageId,contentHash=hash,subject=subject,predicate=predicate,objectValue=objectValue,structuredPayloadJson=structuredPayloadJson).also{database.dao().put(it)}
         }
     }
+    /**
+     * Creates a structured preference, requiring a separate explicit confirmation before
+     * superseding an active preference with the same subject/predicate and a different value.
+     */
+    suspend fun createStructuredPreference(
+        text:String,
+        scope:SemanticScope,
+        subject:String,
+        predicate:String,
+        objectValue:String,
+        title:String?=null,
+        expiresAt:Long?=null,
+        replaceConflictId:String?=null,
+    ):MemoryRecord=withContext(Dispatchers.IO){
+        require(text.isNotBlank()&&text.length<=16000)
+        require(subject.isNotBlank()&&predicate.isNotBlank()&&objectValue.isNotBlank()){"STRUCTURED_PREFERENCE_FIELDS_REQUIRED"}
+        require(scope.type in setOf(ScopeType.USER,ScopeType.PROJECT)){"STRUCTURED_PREFERENCE_SCOPE_UNSUPPORTED"}
+        database.withTransaction {
+            val now=System.currentTimeMillis()
+            require(expiresAt==null||expiresAt>now)
+            val hash=MemoryContent.hash(text,MemoryKind.PREFERENCE)
+            database.dao().activeDuplicate(MemoryKind.PREFERENCE.name,hash,scope.type.name,scope.id,now)?.let{return@withTransaction it}
+            var superseded:MemoryRecord?=null
+            val conflicts=database.dao().matchingStructured(
+                MemoryKind.PREFERENCE.name,subject,predicate,scope.type.name,scope.id,now,
+            ).filter{it.status==MemoryStatus.ACTIVE.name&&it.objectValue!=objectValue}
+            if(conflicts.isNotEmpty()){
+                val selected=conflicts.singleOrNull()?.takeIf{it.id==replaceConflictId}
+                if(selected==null)throw StructuredPreferenceConflictException(conflicts.map{it.id})
+                superseded=selected
+                database.dao().put(selected.copy(status=MemoryStatus.SUPERSEDED.name,updatedAt=now))
+                database.dao().deleteVectors(selected.id)
+            }else if(replaceConflictId!=null){
+                throw IllegalStateException("STRUCTURED_PREFERENCE_CONFLICT_CHANGED")
+            }
+            val record=MemoryRecord(
+                id=UUID.randomUUID().toString(),kind=MemoryKind.PREFERENCE.name,
+                scopeType=scope.type.name,scopeId=scope.id,title=title,text=text.trim(),
+                status=MemoryStatus.ACTIVE.name,confidence=1.0,createdAt=now,updatedAt=now,
+                expiresAt=expiresAt,sourceType="USER_EXPLICIT",contentHash=hash,version=(superseded?.version ?: 0)+1,
+                supersedesId=superseded?.id,subject=subject,predicate=predicate,objectValue=objectValue,
+            )
+            database.dao().put(record)
+            record
+        }
+    }
     suspend fun get(id:String)=database.dao().get(id)
-    data class BundleImportResult(val imported:Int,val duplicates:Int,val pendingIds:List<String>)
-    data class BundleExportResult(val archive:ByteArray,val exportedRecords:Int)
+    data class BundleImportResult(val imported:Int,val duplicates:Int,val pendingIds:List<String>,val missingProjectFallbackCount:Int=0)
+    data class BundleExportResult(val archive:ByteArray,val exportedRecords:Int,val excludedSensitiveRecords:Int=0)
+    data class JsonExportResult(val json:String,val exportedRecords:Int,val excludedSensitiveRecords:Int)
     data class BundleCandidateReview(val exactDuplicate:Boolean=false,val possibleContradiction:Boolean=false)
     suspend fun inspectBundle(preview:MemoryBundleV1.Preview):Map<String,BundleCandidateReview> = withContext(Dispatchers.IO){
         val now=System.currentTimeMillis();val duplicateKeys=mutableSetOf<String>();val conflictKeys=mutableSetOf<String>()
@@ -44,20 +91,28 @@ class MemoryManager(val database:MemoryContextDatabase,private val embed:suspend
             .flatten().forEach{conflictKeys+=it.key}
         preview.candidates.associate{it.key to BundleCandidateReview(it.key in duplicateKeys,it.key in conflictKeys)}
     }
-    suspend fun importBundlePending(preview:MemoryBundleV1.Preview,selectedKeys:Set<String>):BundleImportResult=withContext(Dispatchers.IO){
+    suspend fun importBundlePending(preview:MemoryBundleV1.Preview,selectedKeys:Set<String>,availableProjectIds:Set<String> = emptySet()):BundleImportResult=withContext(Dispatchers.IO){
         require(selectedKeys.isNotEmpty()){"NO_MEMORIES_SELECTED"}
         val candidates=preview.candidates.filter{it.key in selectedKeys}
         require(candidates.size==selectedKeys.size){"UNKNOWN_MEMORY_SELECTION"}
         require(candidates.all{it.content.isNotBlank()&&it.content.length<=16_000}){"INVALID_MEMORY_CONTENT"}
         require(candidates.none{it.sensitiveCandidate||MemoryBundleV1.isSensitive(it)}){"SENSITIVE_MEMORY_REQUIRES_REMOVAL"}
-        require(candidates.size<=250){"TOO_MANY_SELECTED_MEMORIES"}
-        val now=System.currentTimeMillis();val pendingIds=mutableListOf<String>();var duplicates=0
+        require(candidates.size<=1000){"TOO_MANY_SELECTED_MEMORIES"}
+        val now=System.currentTimeMillis();val pendingIds=mutableListOf<String>();var duplicates=0;var missingProjectFallbackCount=0
         database.withTransaction {
             for(candidate in candidates){
                 val sourceId="${preview.bundleId}:${candidate.key}"
-                if(database.dao().bySource("IMPORTED_UNREVIEWED",sourceId)!=null){duplicates++;continue}
+                if(database.dao().bySourceId(sourceId)!=null){duplicates++;continue}
+                val candidateScope=when(candidate.originalScopeType){
+                    "USER"->"USER" to "local"
+                    "PROJECT"->{
+                        val project=candidate.originalScopeId?.takeIf{it in availableProjectIds}
+                        if(project!=null)"PROJECT" to project else {missingProjectFallbackCount++;"USER" to "local"}
+                    }
+                    else->"USER" to "local"
+                }
                 val hash=MemoryContent.hash(candidate.content,candidate.kind)
-                if(database.dao().activeDuplicate(candidate.kind.name,hash,"USER","local",now)!=null){duplicates++;continue}
+                if(database.dao().activeDuplicate(candidate.kind.name,hash,candidateScope.first,candidateScope.second,now)!=null){duplicates++;continue}
                 val id=UUID.randomUUID().toString()
                 val provenance=Gson().toJson(mapOf(
                     "packageSchema" to MemoryBundleV1.SCHEMA,
@@ -72,35 +127,124 @@ class MemoryManager(val database:MemoryContextDatabase,private val embed:suspend
                     "originalStatus" to candidate.originalStatus,
                     "originalTitle" to candidate.originalTitle,
                     "originMetadata" to candidate.originalMetadataJson?.let { JsonParser.parseString(it).asJsonObject },
+                    "originalScopeType" to candidate.originalScopeType,
+                    "originalScopeId" to candidate.originalScopeId,
+                    "scopeFallback" to (candidate.originalScopeType=="PROJECT"&&candidateScope.first=="USER"),
                     "subject" to candidate.subject,
                     "predicate" to candidate.predicate,
                     "object" to candidate.objectValue,
                     "instructionsAreData" to true,
                 ))
                 database.dao().put(MemoryRecord(
-                    id=id,kind=candidate.kind.name,scopeType="USER",scopeId="local",title=candidate.originalTitle ?: candidate.category,
+                    id=id,kind=candidate.kind.name,scopeType=candidateScope.first,scopeId=candidateScope.second,title=candidate.originalTitle ?: candidate.category,
                     text=candidate.content,status="PENDING",confidence=candidate.confidence ?: .5,
-                    createdAt=now,updatedAt=now,sourceType="IMPORTED_UNREVIEWED",sourceId=sourceId,
+                    importance=candidate.originalImportance?:.5,pinned=candidate.originalPinned,createdAt=now,updatedAt=now,
+                    lastAccessedAt=candidate.originalLastAccessedAt,expiresAt=candidate.originalExpiresAt,
+                    sourceType="IMPORTED_UNREVIEWED",sourceId=sourceId,
                     contentHash=hash,indexState="INDEX_PENDING",structuredPayloadJson=provenance,
                     subject=candidate.subject,predicate=candidate.predicate,objectValue=candidate.objectValue,
                 ))
                 pendingIds+=id
             }
         }
-        BundleImportResult(pendingIds.size,duplicates,pendingIds)
+        BundleImportResult(pendingIds.size,duplicates,pendingIds,missingProjectFallbackCount)
     }
     suspend fun update(id:String,text:String,expiresAt:Long?=null):MemoryRecord=withContext(Dispatchers.IO){database.withTransaction{
         val old=requireNotNull(get(id));require(old.status in setOf("ACTIVE","PENDING"));require(text.isNotBlank()&&text.length<=16000);val now=System.currentTimeMillis();require(expiresAt==null||expiresAt>now);if(old.status=="PENDING")require(!MemoryContent.secret(text)){"SECRET_CANDIDATE_REJECTED"}
         val next=old.copy(id=UUID.randomUUID().toString(),text=text.trim(),createdAt=now,updatedAt=now,version=old.version+1,supersedesId=old.id,contentHash=MemoryContent.hash(text,MemoryKind.valueOf(old.kind)),expiresAt=expiresAt,indexState="INDEX_PENDING")
         database.dao().put(old.copy(status="SUPERSEDED",updatedAt=now));database.dao().deleteVectors(old.id);database.dao().put(next);next
     }}
-    suspend fun approve(id:String)=database.withTransaction{val m=requireNotNull(get(id));require(m.status=="PENDING");require(!MemoryContent.secret(m.text)){"SECRET_CANDIDATE_REJECTED"};database.dao().put(m.copy(status="ACTIVE",confidence=1.0,updatedAt=System.currentTimeMillis()))}
-    suspend fun pin(id:String)=database.withTransaction{val m=requireNotNull(get(id));database.dao().put(m.copy(pinned=!m.pinned,updatedAt=System.currentTimeMillis()))}
+    suspend fun approve(id:String,access:ScopeAccess=ScopeAccess())=database.withTransaction{
+        val m=requireNotNull(get(id));require(m.status=="PENDING");require(!MemoryContent.secret(m.text)){"SECRET_CANDIDATE_REJECTED"}
+        require(access.permits(m.scopeType,m.scopeId)){"MEMORY_SCOPE_NOT_ALLOWED"}
+        val now=System.currentTimeMillis();require(m.expiresAt==null||m.expiresAt>now){"EXPIRED_MEMORY_CANNOT_APPROVE"}
+        val approved=m.copy(status="ACTIVE",confidence=if(m.sourceType=="IMPORTED_UNREVIEWED")m.confidence else 1.0,
+            sourceType=if(m.sourceType=="IMPORTED_UNREVIEWED")"USER_APPROVED"else m.sourceType,updatedAt=now)
+        if(approved.pinned)requirePinnedPreferenceBudget(approved,access)
+        database.dao().put(approved)
+    }
+    suspend fun pin(id:String,access:ScopeAccess=ScopeAccess())=database.withTransaction{
+        val m=requireNotNull(get(id));val next=m.copy(pinned=!m.pinned,updatedAt=System.currentTimeMillis())
+        if(next.pinned&&next.status=="ACTIVE")requirePinnedPreferenceBudget(next,access)
+        database.dao().put(next)
+    }
+    private suspend fun requirePinnedPreferenceBudget(candidate:MemoryRecord,access:ScopeAccess){
+        require(access.permits(candidate.scopeType,candidate.scopeId)){"MEMORY_SCOPE_NOT_ALLOWED"}
+        val now=System.currentTimeMillis()
+        val existing=database.dao().active(access.allowed.map{it.key},now).filter{it.id!=candidate.id}
+        val projected=approvedPromptMemories(existing+candidate).filter{it.pinned}
+        val size=ContextBudgetPolicy.preferenceBlockSize(projected)
+        val limit=ContextBudgetPolicy.preferenceBudget(ContextBudgetPolicy.inputBudget())
+        require(size<=limit){"PINNED_PREFERENCE_LIMIT_EXCEEDED"}
+    }
     suspend fun delete(id:String)=database.withTransaction{val m=get(id) ?: return@withTransaction;database.dao().put(m.copy(status="DELETED",indexState="NOT_INDEXED",updatedAt=System.currentTimeMillis()));database.dao().deleteVectors(id)}
+    /** Permanently remove one record and every superseded version in its lineage. */
+    suspend fun forgetPermanently(id:String):Int=withContext(Dispatchers.IO){
+        database.enableSecureDelete()
+        val removed=database.withTransaction {
+            val all=database.dao().allForMaintenance()
+            val byId=all.associateBy{it.id}
+            if(id !in byId)return@withTransaction emptyList()
+            var root=id
+            val ancestors=mutableSetOf<String>()
+            while(true){
+                check(ancestors.add(root)){"MEMORY_VERSION_CYCLE"}
+                val parent=byId[root]?.supersedesId ?: break
+                if(parent !in byId)break
+                root=parent
+            }
+            val lineage=linkedSetOf(root)
+            var frontier=setOf(root)
+            while(frontier.isNotEmpty()){
+                val children=all.filter{it.supersedesId in frontier}.map{it.id}.filter{lineage.add(it)}.toSet()
+                frontier=children
+            }
+            check(id in lineage){"MEMORY_VERSION_LINEAGE_INVALID"}
+            val ids=lineage.toList()
+            database.dao().deleteVectors(ids)
+            database.dao().deleteMemories(ids)
+            ids
+        }
+        if(removed.isNotEmpty()){
+            database.compactAfterDeletion()
+            check(database.dao().allForMaintenance().none{it.id in removed}){"MEMORY_FORGET_VERIFY_FAILED"}
+            check(database.dao().vectorsForOrigins(removed).isEmpty()){"MEMORY_FORGET_VECTOR_VERIFY_FAILED"}
+        }
+        removed.size
+    }
+
+    /** Non-blocking retention cleanup; active or newer versions are never selected. */
+    suspend fun purgeSuperseded(olderThanMillis:Long=30L*24*60*60*1000,now:Long=System.currentTimeMillis()):Int=withContext(Dispatchers.IO){
+        require(olderThanMillis>=0)
+        val cutoff=now-olderThanMillis
+        val removed=database.withTransaction {
+            val ids=database.dao().allForMaintenance().filter{it.status=="SUPERSEDED"&&it.updatedAt<cutoff}.map{it.id}
+            if(ids.isNotEmpty()){database.dao().deleteVectors(ids);database.dao().deleteMemories(ids)}
+            ids
+        }
+        if(removed.isNotEmpty())database.compactAfterDeletion()
+        removed.size
+    }
     suspend fun lookup(access:ScopeAccess,kind:MemoryKind?=null,subject:String?=null,predicate:String?=null):List<MemoryRecord>{database.dao().expire(System.currentTimeMillis());return database.dao().active(access.allowed.map{it.key},System.currentTimeMillis()).filter{(kind==null||it.kind==kind.name)&&(subject==null||it.subject==subject)&&(predicate==null||it.predicate==predicate)}}
+    /** User-approved preferences/procedures and pinned records are policy context, not relevance hits. */
+    fun approvedPromptMemories(records:List<MemoryRecord>):List<MemoryRecord> = records
+        .filter { it.status=="ACTIVE"&&(it.expiresAt==null||it.expiresAt>System.currentTimeMillis())&&(it.kind in setOf(MemoryKind.PREFERENCE.name, MemoryKind.PROCEDURE.name) || it.pinned) }
+        .sortedWith(compareByDescending<MemoryRecord>{it.pinned}
+            .thenByDescending{it.importance}
+            .thenByDescending{it.updatedAt}
+            .thenBy{it.id})
     suspend fun exportBundle(access:ScopeAccess):BundleExportResult=withContext(Dispatchers.IO){
         val records=lookup(access)
-        BundleExportResult(MemoryBundleV1.write(records),records.size)
+        val safe=records.filterNot(::containsSensitiveMaterial)
+        BundleExportResult(MemoryBundleV1.write(safe),safe.size,records.size-safe.size)
+    }
+    /** Explicit full local backup: personal and project scopes only, never session/task/agent state. */
+    suspend fun exportAllWorkspaceMemories():BundleExportResult=withContext(Dispatchers.IO){
+        val records=database.dao().activeAll(System.currentTimeMillis()).filter{
+            it.scopeType=="USER"&&it.scopeId=="local"||it.scopeType=="PROJECT"
+        }
+        val safe=records.filterNot(::containsSensitiveMaterial)
+        BundleExportResult(MemoryBundleV1.write(safe),safe.size,records.size-safe.size)
     }
     suspend fun recover()=withContext(Dispatchers.IO){indexing.withLock{database.dao().expire(System.currentTimeMillis());database.dao().cleanupVectors();for(m in database.dao().pending()){currentCoroutineContext().ensureActive();index(m)}}}
     suspend fun index(m:MemoryRecord):Boolean {
@@ -113,10 +257,10 @@ class MemoryManager(val database:MemoryContextDatabase,private val embed:suspend
     }
     suspend fun queryEmbedding(query:String)=embed(SemanticInput.Text(query),EmbeddingTask.SEARCH)
     suspend fun search(query:String,access:ScopeAccess,limit:Int=6,queryVector:EmbeddingResult?=null,allowEmbedding:Boolean=true):List<MemoryHit> = select(query,access,limit,queryVector,allowEmbedding).included
-    suspend fun select(query:String,access:ScopeAccess,limit:Int=6,queryVector:EmbeddingResult?=null,allowEmbedding:Boolean=true):MemorySelection = withContext(Dispatchers.IO){
+    suspend fun select(query:String,access:ScopeAccess,limit:Int=6,queryVector:EmbeddingResult?=null,allowEmbedding:Boolean=true,excludedIds:Set<String> = emptySet(),candidateRecords:List<MemoryRecord>?=null):MemorySelection = withContext(Dispatchers.IO){
         require(limit in 1..50)
         if(MemoryRelevance.smallTalk(query))return@withContext MemorySelection(emptyList(),emptyList(),true)
-        val candidates=lookup(access);val vector=queryVector ?: if(allowEmbedding&&query.length>2)queryEmbedding(query)else null
+        val candidates=(candidateRecords ?: lookup(access)).filterNot{it.id in excludedIds};val vector=queryVector ?: if(allowEmbedding&&query.length>2)queryEmbedding(query)else null
         val storedVectors=if(vector==null) mutableMapOf() else loadVectors(candidates,vector.space.id)
         if(vector!=null){
             val attempted=mutableListOf<MemoryRecord>()
@@ -151,5 +295,22 @@ class MemoryManager(val database:MemoryContextDatabase,private val embed:suspend
         const val VECTOR_LOOKUP_BATCH_SIZE=400
         const val MAX_INLINE_INDEX_ATTEMPTS=8
     }
-    suspend fun exportJson(access:ScopeAccess)=GsonBuilder().serializeNulls().setPrettyPrinting().create().toJson(mapOf("schema" to "MEMORY_CONTEXT_V1","memories" to lookup(access),"vectorsIncluded" to false))
+    suspend fun exportJson(access:ScopeAccess):JsonExportResult=withContext(Dispatchers.IO){
+        val records=lookup(access)
+        val safe=records.filterNot(::containsSensitiveMaterial)
+        JsonExportResult(
+            GsonBuilder().serializeNulls().setPrettyPrinting().create().toJson(
+                mapOf("schema" to "MEMORY_CONTEXT_V1","memories" to safe,"vectorsIncluded" to false),
+            ),
+            safe.size,
+            records.size-safe.size,
+        )
+    }
+    private fun containsSensitiveMaterial(record:MemoryRecord)=MemoryContent.secret(listOf(
+        record.text,record.title.orEmpty(),record.structuredPayloadJson.orEmpty(),record.subject.orEmpty(),
+        record.predicate.orEmpty(),record.objectValue.orEmpty(),record.sourceId.orEmpty(),
+        record.sourceSegmentId.orEmpty(),record.sourceMessageId.orEmpty(),record.supersedesId.orEmpty(),
+    ).joinToString(" "))
 }
+
+class StructuredPreferenceConflictException(val conflictingIds:List<String>):IllegalStateException("STRUCTURED_PREFERENCE_CONFLICT")

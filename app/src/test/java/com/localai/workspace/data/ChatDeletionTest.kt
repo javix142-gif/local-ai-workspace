@@ -73,7 +73,7 @@ class ChatDeletionTest {
         assertEquals(project, db.projectDao().get("target"))
         assertEquals(document, db.documentDao().get("document"))
         assertEquals(1, db.documentDao().segmentsForDocument("document").size)
-        assertEquals(memory, db.memoryDao().relevant("target", 10).single())
+        assertEquals(memory, db.memoryDao().allForMigration().single())
         assertEquals(model, db.modelDao().get("model"))
         for (table in listOf("conversations", "messages", "citation_evidence", "tool_calls")) assertEquals(table, 1, count(table))
         assertEquals("other-default", db.conversationDao().getForProject("other")?.id)

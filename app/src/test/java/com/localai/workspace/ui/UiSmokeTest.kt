@@ -96,18 +96,29 @@ class UiSmokeTest {
         compose.onNodeWithText("Files").performClick()
         compose.onNodeWithText("No files yet").assertExists()
         compose.onNodeWithText("Memory").performClick()
+        compose.onNodeWithText("Structured memory").performClick()
         compose.onNodeWithText("No saved memory").assertExists()
         // Fixture is explicitly USER_APPROVED; the real text editor is exercised by the device test.
         kotlinx.coroutines.runBlocking(kotlinx.coroutines.Dispatchers.IO) {
-            graph.database.memoryDao().upsert(com.localai.workspace.data.MemoryItemEntity(
-                id = "approved", scopeType = "PROJECT", scopeId = projectId, content = "Prefiero respuestas breves",
-                sourceType = "USER_APPROVED", relevance = 1f, createdAt = 0, updatedAt = 0))
+            graph.contextFoundation.memory.create(
+                "Prefiero respuestas breves",
+                com.localai.workspace.semantic.v2.SemanticScope(com.localai.workspace.semantic.v2.ScopeType.PROJECT, projectId),
+                com.localai.workspace.context.MemoryKind.FACT,
+                sourceType = "USER_APPROVED",
+            )
         }
         awaitText("Prefiero respuestas breves")
-        compose.onNodeWithContentDescription("Edit memory").assertExists()
-        compose.onNodeWithContentDescription("Remove memory").performClick()
-        compose.onNodeWithText("Remove memory?").assertExists()
-        compose.onNodeWithText("Remove").performClick()
+        compose.onNodeWithText("Details").performClick()
+        compose.onNodeWithText("USER_APPROVED", substring = true).assertExists()
+        compose.onNodeWithText("Edit").performClick()
+        compose.onNodeWithText("Edit memory").assertExists()
+        compose.onNodeWithText("Content").performTextReplacement("Prefiero respuestas concretas")
+        compose.onNodeWithText("Save").performClick()
+        awaitText("Prefiero respuestas concretas")
+        compose.onNodeWithText("Details").performClick()
+        compose.onNodeWithText("Delete").performClick()
+        compose.onNodeWithText("Delete memory?").assertExists()
+        compose.onNodeWithText("Delete").performClick()
         awaitText("No saved memory")
         compose.onNodeWithText("Settings").performClick()
         compose.onNodeWithText("Current configuration").assertExists()

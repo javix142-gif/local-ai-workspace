@@ -23,7 +23,9 @@ import org.robolectric.annotation.Config
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.security.MessageDigest
+import java.util.zip.CRC32
 import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
 class MemoryBundleV1Test {
@@ -49,14 +51,18 @@ class MemoryBundleV1Test {
         assertTrue(preview.candidates.single { it.externalId == "fact-2" }.sensitiveCandidate)
     }
 
-    @Test fun rejectsBadIntegrityUnknownPathsUnsupportedVersionAndMalformedJsonl() {
+    @Test fun H1_AT_19_rejectsBadIntegrityUnknownPathsUnsupportedVersionAndMalformedJsonl() {
         assertInvalid("FILE_INTEGRITY_MISMATCH", bundle(hashOverride = "0".repeat(64)))
         assertInvalid("UNSAFE_OR_UNKNOWN_PATH", bundle(extraEntries = mapOf("AWS_MEMORY_IMPORT/../escape.txt" to byteArrayOf(1))))
+        assertInvalid("DUPLICATE_PATH", duplicatePathBundle())
         assertInvalid("UNSUPPORTED_SCHEMA", bundle(schemaVersion = 2))
         assertInvalid("INVALID_JSONL_RECORD", bundle(records = listOf("not-json")))
+        assertInvalid("RECORD_TYPE_UNSUPPORTED", bundle(records = listOf(
+            """{"id":"unknown-kind","type":"NOT_A_MEMORY_KIND","content":"must be rejected","trust":"USER_DECLARED"}""",
+        )))
     }
 
-    @Test fun rejectsInvalidUtf8DuplicateIdsAndIncompatiblePackage() {
+    @Test fun H1_AT_19_rejectsInvalidUtf8DuplicateIdsAndIncompatiblePackage() {
         assertInvalid("INVALID_RECORD_UTF8", bundle(facts = byteArrayOf(0xc3.toByte(), 0x28)))
         assertInvalid("DUPLICATE_RECORD_ID", bundle(records = listOf(
             """{"id":"same","content":"first","type":"FACT"}""",
@@ -65,8 +71,13 @@ class MemoryBundleV1Test {
         assertInvalid("INCOMPATIBLE_PACKAGE", bundle(compatibility = listOf("other")))
     }
 
-    @Test fun rejectsHighlyCompressedInputBeforeParsingRecords() {
+    @Test fun H1_AT_19_rejectsHighlyCompressedInputBeforeParsingRecords() {
         assertInvalid("EXPANSION_LIMIT_EXCEEDED", bundle(facts = ByteArray(2 * 1024 * 1024) { 'x'.code.toByte() }))
+    }
+
+    @Test fun H1_AT_19_rejectsTenThousandJsonLinesBeforeDatabaseWrites() {
+        val lines=(1..10_000).joinToString("\n"){i->"""{"id":"line-$i","type":"FACT","content":"H1-AT19-$i"}"""}.toByteArray()
+        assertInvalid("TOO_MANY_RECORDS",bundle(facts=lines))
     }
 
     @Test fun promptCarriesRequestedPurposeAndImportContract() {
@@ -179,6 +190,67 @@ class MemoryBundleV1Test {
             files.forEach { (path, bytes) -> zip.putNextEntry(ZipEntry(root + path)); zip.write(bytes); zip.closeEntry() }
             extraEntries.forEach { (path, bytes) -> zip.putNextEntry(ZipEntry(path)); zip.write(bytes); zip.closeEntry() }
         }
+        return output.toByteArray()
+    }
+
+    /** ZipOutputStream rejects duplicate names itself, so construct a standards-compliant stored ZIP for parser coverage. */
+    private fun duplicatePathBundle(): ByteArray {
+        val entries = mutableListOf<Pair<String, ByteArray>>()
+        ZipInputStream(ByteArrayInputStream(bundle())).use { zip ->
+            while (true) {
+                val entry = zip.nextEntry ?: break
+                entries += entry.name to zip.readBytes()
+                zip.closeEntry()
+            }
+        }
+        val duplicate = requireNotNull(entries.firstOrNull { it.first == "AWS_MEMORY_IMPORT/facts.jsonl" })
+        return storedZip(entries + duplicate)
+    }
+
+    private fun storedZip(entries: List<Pair<String, ByteArray>>): ByteArray {
+        fun ByteArrayOutputStream.u16(value: Int) {
+            write(value and 0xff)
+            write((value ushr 8) and 0xff)
+        }
+        fun ByteArrayOutputStream.u32(value: Long) {
+            write((value and 0xff).toInt())
+            write(((value ushr 8) and 0xff).toInt())
+            write(((value ushr 16) and 0xff).toInt())
+            write(((value ushr 24) and 0xff).toInt())
+        }
+        data class CentralEntry(val name: ByteArray, val bytes: ByteArray, val crc: Long, val offset: Int)
+
+        val output = ByteArrayOutputStream()
+        val central = mutableListOf<CentralEntry>()
+        entries.forEach { (path, bytes) ->
+            val name = path.toByteArray(Charsets.UTF_8)
+            val crc = CRC32().apply { update(bytes) }.value
+            val offset = output.size()
+            output.u32(0x04034b50)
+            output.u16(20); output.u16(0x0800); output.u16(0)
+            output.u16(0); output.u16(0)
+            output.u32(crc); output.u32(bytes.size.toLong()); output.u32(bytes.size.toLong())
+            output.u16(name.size); output.u16(0)
+            output.write(name); output.write(bytes)
+            central += CentralEntry(name, bytes, crc, offset)
+        }
+        val centralOffset = output.size()
+        central.forEach { entry ->
+            output.u32(0x02014b50)
+            output.u16(20); output.u16(20); output.u16(0x0800); output.u16(0)
+            output.u16(0); output.u16(0)
+            output.u32(entry.crc); output.u32(entry.bytes.size.toLong()); output.u32(entry.bytes.size.toLong())
+            output.u16(entry.name.size); output.u16(0); output.u16(0)
+            output.u16(0); output.u16(0); output.u32(0)
+            output.u32(entry.offset.toLong())
+            output.write(entry.name)
+        }
+        val centralSize = output.size() - centralOffset
+        output.u32(0x06054b50)
+        output.u16(0); output.u16(0)
+        output.u16(central.size); output.u16(central.size)
+        output.u32(centralSize.toLong()); output.u32(centralOffset.toLong())
+        output.u16(0)
         return output.toByteArray()
     }
 

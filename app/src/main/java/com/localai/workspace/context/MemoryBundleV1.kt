@@ -25,7 +25,7 @@ object MemoryBundleV1 {
     private const val MAX_EXPANDED_BYTES = 16 * 1024 * 1024
     private const val MAX_ENTRY_BYTES = 2 * 1024 * 1024
     private const val MAX_ENTRIES = 12
-    private const val MAX_RECORDS = 250
+    private const val MAX_RECORDS = 1000
     private const val MAX_TEXT_CHARS = 16_000
     private val allowedFiles = setOf(
         "manifest.json", "metadata.json", "profile.md", "context_summary.md",
@@ -60,6 +60,12 @@ object MemoryBundleV1 {
         val sensitiveCandidate: Boolean,
         val originalTitle: String? = null,
         val originalMetadataJson: String? = null,
+        val originalScopeType: String? = null,
+        val originalScopeId: String? = null,
+        val originalImportance: Double? = null,
+        val originalPinned: Boolean = false,
+        val originalLastAccessedAt: Long = 0,
+        val originalExpiresAt: Long? = null,
     )
 
     data class Preview(
@@ -163,8 +169,13 @@ object MemoryBundleV1 {
                 }
                 val externalId = json.optionalString("id", 96)?.takeIf { it.isNotBlank() }
                     ?: throw InvalidPackage("RECORD_ID_INVALID")
-                val kind = runCatching { MemoryKind.valueOf((json.optionalString("type", 64) ?: kindName).uppercase(Locale.ROOT)) }
-                    .getOrElse { runCatching { MemoryKind.valueOf(kindName) }.getOrThrowInvalid("RECORD_TYPE_UNSUPPORTED") }
+                val declaredKind = json.optionalString("type", 64)
+                val kind = if (declaredKind == null) {
+                    runCatching { MemoryKind.valueOf(kindName) }.getOrThrowInvalid("RECORD_TYPE_UNSUPPORTED")
+                } else {
+                    runCatching { MemoryKind.valueOf(declaredKind.uppercase(Locale.ROOT)) }
+                        .getOrThrowInvalid("RECORD_TYPE_UNSUPPORTED")
+                }
                 val content = json.optionalString("content", MAX_TEXT_CHARS)?.trim()?.takeIf { it.isNotEmpty() }
                     ?: throw InvalidPackage("RECORD_CONTENT_INVALID")
                 val trust = (json.optionalString("trust", 32) ?: "UNKNOWN").uppercase(Locale.ROOT)
@@ -183,6 +194,16 @@ object MemoryBundleV1 {
                 val originalMetadataJson = originalMetadata?.toString()?.also {
                     if (it.toByteArray(StandardCharsets.UTF_8).size > 16 * 1024) throw InvalidPackage("ORIGIN_METADATA_TOO_LARGE")
                 }
+                val origin = originalMetadata?.asJsonObject
+                val importance = origin?.optionalFiniteDouble("importance")
+                if(importance!=null&&importance !in 0.0..1.0)throw InvalidPackage("ORIGIN_IMPORTANCE_INVALID")
+                val pinned = origin?.optionalBoolean("pinned") ?: false
+                val lastAccessed = origin?.optionalLong("lastAccessedAt") ?: 0L
+                val expiresAt = origin?.optionalLong("expiresAt")
+                val scopeElement=json.get("scope")?.takeUnless{it.isJsonNull}
+                val scopeObject=scopeElement?.takeIf{it.isJsonObject}?.asJsonObject
+                val scopeType=scopeObject?.optionalString("type",32)?.uppercase(Locale.ROOT)
+                val scopeId=scopeObject?.optionalString("id",128)
                 val originalStatus = json.optionalString("status", 32)?.uppercase(Locale.ROOT)
                 if (originalStatus != null && originalStatus !in setOf("PENDING", "ACTIVE", "ARCHIVED", "DELETED")) {
                     throw InvalidPackage("RECORD_STATUS_UNSUPPORTED")
@@ -209,6 +230,12 @@ object MemoryBundleV1 {
                         json.optionalString("object", MAX_TEXT_CHARS).orEmpty(), originalTitle.orEmpty(), originalMetadataJson.orEmpty()).joinToString(" ")),
                     originalTitle = originalTitle,
                     originalMetadataJson = originalMetadataJson,
+                    originalScopeType = scopeType,
+                    originalScopeId = scopeId,
+                    originalImportance = importance,
+                    originalPinned = pinned,
+                    originalLastAccessedAt = lastAccessed,
+                    originalExpiresAt = expiresAt,
                 )
                 if (candidates.size > MAX_RECORDS) throw InvalidPackage("TOO_MANY_RECORDS")
                 if (candidates.take(candidates.lastIndex).any { it.key == candidates.last().key }) throw InvalidPackage("DUPLICATE_RECORD_ID")
@@ -393,7 +420,7 @@ manifest.json debe ser un objeto con schema="AWS_MEMORY_IMPORT_V1", schemaVersio
 
 Cada línea JSONL es un objeto con id único (máx. 96 caracteres), type (FACT, PREFERENCE, DECISION, EVENT, RELATIONSHIP, PROJECT_CONTEXT, SUMMARY, PROCEDURE, TASK_STATE u OTHER), content (1–16000 caracteres), trust (VERIFIED, USER_DECLARED, INFERRED o UNKNOWN), provenance y scope. confidence es opcional de 0 a 1; createdAt, updatedAt y status son metadatos de origen opcionales. Se conservan como procedencia, pero AWS crea nuevos recuerdos PENDING. Mantén cada recuerdo separado y conciso.
 
-Límites de lectura de AWS: ZIP máx. 8 MiB; entrada descomprimida máx. 2 MiB; total descomprimido máx. 16 MiB y límite contra expansión; hasta 12 archivos y 250 recuerdos; no más de 16000 caracteres por recuerdo. No inventes datos, no incluyas instrucciones de sistema, scripts, enlaces de permisos, macros, contraseñas ni secretos. No sobrescribas recuerdos existentes. La app validará rutas, compatibilidad, UTF-8, JSON/JSONL, inventario, tamaños y SHA-256; mostrará vista previa para editar o excluir cada recuerdo antes de importar como pendiente.
+Límites de lectura de AWS: ZIP máx. 8 MiB; entrada descomprimida máx. 2 MiB; total descomprimido máx. 16 MiB y límite contra expansión; hasta 12 archivos y 1000 recuerdos; no más de 16000 caracteres por recuerdo. No inventes datos, no incluyas instrucciones de sistema, scripts, enlaces de permisos, macros, contraseñas ni secretos. No sobrescribas recuerdos existentes. La app validará rutas, compatibilidad, UTF-8, JSON/JSONL, inventario, tamaños y SHA-256; mostrará vista previa para editar o excluir cada recuerdo antes de importar como pendiente.
 
 Ejemplo de línea JSONL: {"id":"pref-1","type":"PREFERENCE","content":"Responde en español","trust":"USER_DECLARED","provenance":"declarado en conversación","scope":{"type":"USER"},"confidence":0.95,"createdAt":"2026-10-01T10:00:00Z","updatedAt":"2026-10-01T10:00:00Z","status":"ACTIVE","subject":"language","predicate":"response-language","object":"Spanish"}. subject, predicate y object son opcionales; se usan solo para indicar posibles conflictos para revisión, nunca para sustituir recuerdos."""
 
@@ -431,6 +458,26 @@ Ejemplo de línea JSONL: {"id":"pref-1","type":"PREFERENCE","content":"Responde 
             throw InvalidPackage("INVALID_${name.uppercase(Locale.ROOT)}")
         }
         return value.asString
+    }
+
+    private fun JsonObject.optionalFiniteDouble(name:String):Double? {
+        val value=get(name)?.takeUnless{it.isJsonNull}?:return null
+        if(!value.isJsonPrimitive||!value.asJsonPrimitive.isNumber)throw InvalidPackage("ORIGIN_${name.uppercase(Locale.ROOT)}_INVALID")
+        return value.asDouble.takeIf{it.isFinite()}?:throw InvalidPackage("ORIGIN_${name.uppercase(Locale.ROOT)}_INVALID")
+    }
+
+    private fun JsonObject.optionalLong(name:String):Long? {
+        val value=get(name)?.takeUnless{it.isJsonNull}?:return null
+        if(!value.isJsonPrimitive||!value.asJsonPrimitive.isNumber)throw InvalidPackage("ORIGIN_${name.uppercase(Locale.ROOT)}_INVALID")
+        val number=value.asDouble
+        if(!number.isFinite()||number%1.0!=0.0||number !in Long.MIN_VALUE.toDouble()..Long.MAX_VALUE.toDouble())throw InvalidPackage("ORIGIN_${name.uppercase(Locale.ROOT)}_INVALID")
+        return number.toLong()
+    }
+
+    private fun JsonObject.optionalBoolean(name:String):Boolean? {
+        val value=get(name)?.takeUnless{it.isJsonNull}?:return null
+        if(!value.isJsonPrimitive||!value.asJsonPrimitive.isBoolean)throw InvalidPackage("ORIGIN_${name.uppercase(Locale.ROOT)}_INVALID")
+        return value.asBoolean
     }
 
     private fun decodeUtf8(bytes: ByteArray, error: String): String = try {

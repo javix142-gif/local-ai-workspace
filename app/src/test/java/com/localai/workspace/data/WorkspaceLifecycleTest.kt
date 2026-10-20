@@ -87,15 +87,19 @@ class WorkspaceLifecycleTest {
 
     @Test fun deletingProjectRemovesItsCardAndEveryOwnedResourceButKeepsOtherWorkAndModels() = runBlocking {
         val target = repo.createProject("target"); val other = repo.createProject("other")
-        conversation(target, "one"); conversation(target, "two"); conversation(other, "keep")
+        val targetChat = conversation(target, "one"); val targetChat2 = conversation(target, "two"); conversation(other, "keep")
         val targetFile = File(documents, "remove.txt"); val keepFile = File(documents, "keep.txt")
         document(target, "uniquewordtarget", targetFile); document(other, "keepword", keepFile)
         db.memoryDao().upsert(MemoryItemEntity("local", "PROJECT", target, "remove", "USER", createdAt = 1, updatedAt = 1))
+        db.memoryDao().upsert(MemoryItemEntity("session-local", "SESSION", targetChat.id, "remove session", "USER", createdAt = 1, updatedAt = 1))
         db.memoryDao().upsert(MemoryItemEntity("global", "GLOBAL", null, "keep", "USER", createdAt = 1, updatedAt = 1))
         val modelFile = File(files, "models/model.gguf").apply { parentFile!!.mkdirs(); writeText("model") }
         db.modelDao().insert(ModelEntity("model", "Model", modelFile.path, fileHash = "model", fileSize = 5,
             format = "GGUF", runtimeId = "llama.cpp-android", compatibilityStatus = "COMPATIBLE", importedAt = 1))
-        assertEquals(0, repo.deleteWorkspace(target))
+        val cleanedSessions=mutableListOf<String>()
+        val deletingRepo=WorkspaceRepository(db,documents,onConversationDeleted={cleanedSessions+=it})
+        assertEquals(0, deletingRepo.deleteWorkspace(target))
+        assertEquals(setOf(targetChat.id,targetChat2.id),cleanedSessions.toSet())
         assertNull(db.projectDao().get(target)); assertFalse(targetFile.exists()); assertTrue(keepFile.exists())
         assertNotNull(db.projectDao().get(other)); assertTrue(modelFile.exists()); assertNotNull(db.modelDao().get("model"))
         for (table in listOf("projects", "conversations", "messages", "citation_evidence", "tool_calls", "documents", "document_segments", "embedding_records", "memory_items")) assertEquals(table, 1, count(table))
@@ -106,6 +110,7 @@ class WorkspaceLifecycleTest {
         val id = repo.createChat(); val chat = repo.ensureConversation(id)
         val file = File(documents, "attachment.txt"); document(id, "chatfile", file)
         db.memoryDao().upsert(MemoryItemEntity("memory", "PROJECT", id, "remove", "USER", createdAt = 1, updatedAt = 1))
+        db.memoryDao().upsert(MemoryItemEntity("session-memory", "SESSION", chat.id, "remove session", "USER", createdAt = 1, updatedAt = 1))
         repo.deleteConversation(chat.id)
         assertTrue(repo.activeProjects.first().isEmpty()); assertEquals(0, count("projects"))
         assertEquals(0, count("conversations")); assertEquals(0, count("memory_items")); assertFalse(file.exists())

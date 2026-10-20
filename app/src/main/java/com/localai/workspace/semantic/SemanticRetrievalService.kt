@@ -33,17 +33,17 @@ class SemanticRetrievalService(private val db: WorkspaceDatabase, private val mo
  val indexingDiagnostics=MutableStateFlow(RetrievalIndexDiagnostics())
  private var nativeEmbeddingNanos=0L
  private fun embed(encoder:NeuralEmbeddings,text:String):FloatArray { val start=System.nanoTime();try{return encoder.embed(text)}finally{nativeEmbeddingNanos+=System.nanoTime()-start} }
- private suspend fun vector(encoder: NeuralEmbeddings, origin: String, content: String, documentId: String?=null,memoryId:String?=null): FloatArray {
+ private suspend fun vector(encoder: NeuralEmbeddings, origin: String, content: String, documentId: String): FloatArray {
   val hash=VectorPersistence.hash(content)
-  db.semanticVectorDao().get(origin,encoder.modelId)?.let { VectorPersistence.decode(it,hash,if(documentId!=null)2 else 1)?.let { v->return v } }
+  db.semanticVectorDao().get(origin,encoder.modelId)?.let { VectorPersistence.decode(it,hash,2)?.let { v->return v } }
   currentCoroutineContext().ensureActive()
   val value=embedFullPassage(encoder,content)
-  // Re-check ownership/hash before committing: deletion/edit cannot resurrect an index.
+  // Re-check document ownership before committing: deletion/edit cannot resurrect an index.
   db.withTransaction {
-   val valid=if(documentId!=null) db.documentDao().get(documentId)!=null else false
-   // Project memories use an additional scope-independent lookup.
-   val memoryValid=memoryId?.let { db.memoryDao().get(it)?.let { item->item.status=="ACTIVE" && item.content==content } } ?: false
-   if(valid || memoryValid) db.semanticVectorDao().put(SemanticVectorEntity(origin,encoder.modelId,documentId,memoryId,hash,768,if(documentId!=null)2 else 1,VectorPersistence.encode(value),System.currentTimeMillis()))
+   if(db.documentDao().get(documentId)!=null) db.semanticVectorDao().put(SemanticVectorEntity(
+    originId=origin,modelId=encoder.modelId,documentId=documentId,memoryId=null,sourceHash=hash,
+    dimensions=768,version=2,vector=VectorPersistence.encode(value),updatedAt=System.currentTimeMillis(),
+   ))
   }
   return value
  }
@@ -130,43 +130,22 @@ class SemanticRetrievalService(private val db: WorkspaceDatabase, private val mo
   } catch(cancel:CancellationException) { throw cancel }
     catch(_:Exception) { emptyMap() }
  }
- suspend fun memories(projectId:String,query:String,limit:Int=4): List<MemoryItemEntity> = withContext(Dispatchers.IO) {
-  diagnostics.value=diagnostics.value.copy(memoryRetrieved=0)
-  if(Regex("(?i)^(calcula|calculate)\\b.{0,50}[0-9].*$").matches(query)||RetrievalQuery.greeting(query)||Regex("^[0-9+*/().%\\s?¿=-]+$").matches(query))return@withContext emptyList()
-  val candidates=db.memoryDao().relevant(projectId,1000).filter { it.sourceType=="USER_APPROVED" && it.status=="ACTIVE" }
-  if(candidates.isEmpty())return@withContext emptyList()
-  val terms=RetrievalQuery.terms(query).toSet()
-  val lexical=candidates.map { m->m to RetrievalQuery.terms(m.content).count { it in terms }.toDouble() }.filter { it.second>0 }.sortedByDescending { it.second }
-  var result=lexical.take(limit).map { it.first }
-  try { val used = models.use { encoder->
-   val beforeEmbedding = nativeEmbeddingNanos
-   val q=embed(encoder,"task: search result | query: ${query.take(1000)}")
-   result=candidates.map { m->m to cosineSimilarity(q,vector(encoder,"M:${m.id}",m.content,memoryId=m.id)) }.filter { it.second>=0.40 }.sortedByDescending { it.second }.take(limit).map { it.first }
-   diagnostics.value=diagnostics.value.copy(embeddingMs=diagnostics.value.embeddingMs+(nativeEmbeddingNanos-beforeEmbedding)/1_000_000)
-   true
-  }
-   if (used != true) diagnostics.value=diagnostics.value.copy(notice="Memory embedding model unavailable · lexical fallback")
-  } catch(cancel:CancellationException){throw cancel} catch(error:Throwable){diagnostics.value=diagnostics.value.copy(notice="Memory embeddings failed: ${error.javaClass.simpleName}; lexical fallback")}
-  diagnostics.value=diagnostics.value.copy(memoryRetrieved=result.size);result
- }
  suspend fun indexProject(projectId: String, diagnosticRunId: String = java.util.UUID.randomUUID().toString()) {
   require(diagnosticRunId.isNotBlank() && diagnosticRunId.length <= 64)
-  val started=System.nanoTime();var segmentCount=0;var memoryCount=0;var completedSegments=0;var completedMemories=0
+  val started=System.nanoTime();var segmentCount=0;var completedSegments=0
   indexingDiagnostics.value=RetrievalIndexDiagnostics(status="RUNNING",runId=diagnosticRunId)
   try {
    models.use { encoder->
     val segments=db.documentDao().segmentsForProject(projectId,1000);segmentCount=segments.size
-    val memories=db.memoryDao().relevant(projectId,1000).filter { it.sourceType=="USER_APPROVED" };memoryCount=memories.size
-    indexingDiagnostics.value=RetrievalIndexDiagnostics(status="RUNNING",candidateSegments=segmentCount,candidateMemories=memoryCount,runId=diagnosticRunId)
+    indexingDiagnostics.value=RetrievalIndexDiagnostics(status="RUNNING",candidateSegments=segmentCount,runId=diagnosticRunId)
     segments.forEach { currentCoroutineContext().ensureActive();vector(encoder,"D:${it.id}",it.text,it.documentId);completedSegments++ }
-    memories.forEach { currentCoroutineContext().ensureActive();vector(encoder,"M:${it.id}",it.content,memoryId=it.id);completedMemories++ }
    } ?: error("Embedding model unavailable")
-   indexingDiagnostics.value=RetrievalIndexDiagnostics("COMPLETE",(System.nanoTime()-started)/1_000_000,segmentCount,completedSegments,memoryCount,completedMemories,runId=diagnosticRunId)
+   indexingDiagnostics.value=RetrievalIndexDiagnostics("COMPLETE",(System.nanoTime()-started)/1_000_000,segmentCount,completedSegments,runId=diagnosticRunId)
   } catch(cancel:CancellationException) {
-   indexingDiagnostics.value=RetrievalIndexDiagnostics("CANCELLED",(System.nanoTime()-started)/1_000_000,segmentCount,completedSegments,memoryCount,completedMemories,runId=diagnosticRunId)
+   indexingDiagnostics.value=RetrievalIndexDiagnostics("CANCELLED",(System.nanoTime()-started)/1_000_000,segmentCount,completedSegments,runId=diagnosticRunId)
    throw cancel
   } catch(error:Throwable) {
-   indexingDiagnostics.value=RetrievalIndexDiagnostics("FAILED",(System.nanoTime()-started)/1_000_000,segmentCount,completedSegments,memoryCount,completedMemories,error.javaClass.simpleName,diagnosticRunId)
+   indexingDiagnostics.value=RetrievalIndexDiagnostics("FAILED",(System.nanoTime()-started)/1_000_000,segmentCount,completedSegments,failureType=error.javaClass.simpleName,runId=diagnosticRunId)
    throw error
   }
  }

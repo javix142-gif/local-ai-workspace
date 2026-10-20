@@ -7,7 +7,7 @@ enum class MemoryStatus { PENDING,ACTIVE,SUPERSEDED,EXPIRED,DELETED }
 data class ScopeAccess(val userId:String="local",val projectId:String?=null,val sessionId:String?=null,val agentId:String?=null,val taskId:String?=null,val readableTypes:Set<ScopeType> = ScopeType.entries.toSet()) {
     val allowed:List<SemanticScope> get()=buildList {
         sessionId?.let{add(SemanticScope(ScopeType.SESSION,it))};taskId?.let{add(SemanticScope(ScopeType.TASK,it))};agentId?.let{add(SemanticScope(ScopeType.AGENT,it))};projectId?.let{add(SemanticScope(ScopeType.PROJECT,it))};add(SemanticScope(ScopeType.USER,userId));add(SemanticScope(ScopeType.GLOBAL))
-    }
+    }.filter{it.type in readableTypes}
     fun permits(type:String,id:String)=type in readableTypes.map{it.name} && allowed.any{it.type.name==type&&it.id==id}
 }
 object MemoryContent {

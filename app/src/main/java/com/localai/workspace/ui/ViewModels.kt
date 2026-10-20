@@ -727,7 +727,10 @@ class ChatViewModel(
                     return@launch
                 }
                 val contextStartedAt = android.os.SystemClock.elapsedRealtime()
-                val useContextV1 = contextBuilderRequested && submittedImage == null && submittedAudio == null && history.none { it.imagePath != null || it.audioPath != null } && model.toDescriptor().runtime == RuntimeType.LITERT_LM
+                // Context Foundation retains image/audio paths in ConversationPrompt history and
+                // passes the current attachment through GenerationRequest; multimodal turns must
+                // not silently bypass the canonical memory/context composition path.
+                val useContextV1 = contextBuilderRequested
 
                 trace("CONTEXT_BUILD_START") { it.copy(contextBuilderEnabled = useContextV1, thinkingRequested = graph.assistantSettings.forProject(projectId).thinking.name, toolsRequested = !skillAuthoringMode && graph.assistantSettings.forProject(projectId).tools.isNotEmpty(), projectPresent = activeProject.workspaceKind == "PROJECT") }
                 val routingTrace = if (!diagnosticSmoke && !skillAuthoringMode && (graph.validationOwner == null || graph.agentsSkillsValidationEnabled)) {
@@ -762,7 +765,12 @@ class ChatViewModel(
                 trace("MEMORY_START")
                 val memories = if (!skillAuthoringMode && !useContextV1 && !diagnosticSmoke && !smallTalk && activeProject.memoryEnabled && com.localai.workspace.sources.SourceType.STRUCTURED_MEMORY in allowedSources) {
                     val memoryStartedAt=android.os.SystemClock.elapsedRealtime()
-                    graph.retrieval.memories(projectId, trimmed, 4).filter{logicalAgent==null || it.scopeType in logicalAgent.memoryScopes.map{scope->scope.name}}
+                    val memoryScopes=logicalAgent?.memoryScopes ?: com.localai.workspace.semantic.v2.ScopeType.entries.toSet()
+                    val memoryAccess=com.localai.workspace.context.ScopeAccess(
+                        projectId=projectId,sessionId=conversationId,agentId=logicalAgent?.id,readableTypes=memoryScopes,
+                    )
+                    graph.contextFoundation.migrateLegacyMemories()
+                    graph.contextFoundation.memory.search(trimmed,memoryAccess,4).map{it.record}
                         .also { contextMemoryMs=android.os.SystemClock.elapsedRealtime()-memoryStartedAt }
                 } else emptyList()
                 trace(if (useContextV1) "LEGACY_MEMORY_BYPASSED" else "MEMORY_COMPLETE")
@@ -1310,7 +1318,7 @@ class ChatViewModel(
         project: ProjectEntity,
         userMessage: String,
         evidence: List<com.localai.workspace.domain.model.Evidence>,
-        memories: List<com.localai.workspace.data.MemoryItemEntity>,
+        memories: List<com.localai.workspace.context.MemoryRecord>,
         previousMessages: List<MessageEntity>,
         currentUserId: String,
         modelId: String,
@@ -1331,7 +1339,7 @@ class ChatViewModel(
                     40, chatHistory = pair, historyOrder = index))
             }
             memories.forEach { memory ->
-                add(com.localai.workspace.domain.rag.ContextItem(ContextItemKind.MEMORY, "USER-CONTROLLED MEMORY:\n${memory.content}", 50))
+                add(com.localai.workspace.domain.rag.ContextItem(ContextItemKind.MEMORY, "USER-CONTROLLED MEMORY:\n${memory.text}", 50))
             }
             evidence.forEach { item ->
                 add(

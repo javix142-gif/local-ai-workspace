@@ -145,8 +145,6 @@ import com.localai.workspace.ui.HomeViewModel
 import com.localai.workspace.ui.HomeViewModelFactory
 import com.localai.workspace.ui.LocalAiTheme
 import com.localai.workspace.ui.components.AppScreenContent
-import com.localai.workspace.ui.MemoryViewModel
-import com.localai.workspace.ui.MemoryViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.DisposableEffect
@@ -247,11 +245,7 @@ private fun LocalAiWorkspaceRoot() {
             }
             composable("memory/{projectId}") { entry ->
                 val projectId = entry.arguments?.getString("projectId").orEmpty()
-                val memoryViewModel: MemoryViewModel = viewModel(
-                    key = "memory-$projectId",
-                    factory = MemoryViewModelFactory(projectId, graph),
-                )
-                MemoryScreen(memoryViewModel, navController)
+                com.localai.workspace.ui.ContextMemoryEntry(projectId, initiallyOpen = true)
             }
         }
     }
@@ -449,11 +443,9 @@ private fun ProjectScreen(viewModel: HomeViewModel, navController: NavHostContro
                 } } }
             }
             2 -> {
-                val graph = (androidx.compose.ui.platform.LocalContext.current.applicationContext as LocalAiApplication).graph
-                val memoryViewModel: MemoryViewModel = viewModel(key = "memory-$projectId", factory = MemoryViewModelFactory(projectId, graph))
                 Box(Modifier.weight(1f)) {
                     if (busy) Text("Deleting…", Modifier.padding(16.dp))
-                    else Column { com.localai.workspace.ui.ContextMemoryEntry(projectId); Box(Modifier.weight(1f)) { MemoryScreen(memoryViewModel, navController, embedded = true) } }
+                    else com.localai.workspace.ui.ContextMemoryEntry(projectId)
                 }
             }
             3 -> Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(vertical = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -1232,69 +1224,6 @@ private fun DeleteChatDialog(projectName: String, onDismiss: () -> Unit, onConfi
         title = { Text("Delete chat?") },
         text = { Text("Delete “$projectName” and its messages, citations and tool history? This cannot be undone. Other chats, project files, memory and models are kept. An active response will be stopped.") },
         confirmButton = { TextButton(onClick = onConfirm) { Text("Delete", color = MaterialTheme.colorScheme.error) } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun MemoryScreen(viewModel: MemoryViewModel, navController: NavHostController, embedded: Boolean = false) {
-    val items by viewModel.items.collectAsStateWithLifecycle()
-    var editorId by rememberSaveable { mutableStateOf<String?>(null) }
-    var showEditor by rememberSaveable { mutableStateOf(false) }
-    var removeId by rememberSaveable { mutableStateOf<String?>(null) }
-    var info by remember { mutableStateOf(false) }
-    Column(Modifier.fillMaxSize().padding(horizontal = if (embedded) 0.dp else 16.dp)) {
-        if (!embedded) TopAppBar(title = { Text("Memory") },
-            navigationIcon = { IconButton(onClick = { navController.popBackStack() }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back") } },
-            actions = {
-                IconButton(onClick = { info = true }) { Icon(Icons.Default.Info, "About memory") }
-                IconButton(onClick = { editorId = null; showEditor = true }) { Icon(Icons.Default.Add, "Add memory") }
-            })
-        else Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Text("Approved memory", Modifier.weight(1f), style = MaterialTheme.typography.labelMedium)
-            IconButton(onClick = { info = true }) { Icon(Icons.Default.Info, "About memory") }
-            IconButton(onClick = { editorId = null; showEditor = true }) { Icon(Icons.Default.Add, "Add memory") }
-        }
-        if (items.isEmpty()) EmptyState("No saved memory", "Add only what you want remembered.")
-        else LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 16.dp)) {
-            items(items, key = { it.id }) { item -> Card(Modifier.fillMaxWidth().testTag("memory-${item.id}")) {
-                Row(Modifier.fillMaxWidth().padding(start = 12.dp, top = 6.dp, bottom = 6.dp), verticalAlignment = Alignment.Top) {
-                    Column(Modifier.weight(1f).padding(vertical = 8.dp)) {
-                        Text(item.content, style = MaterialTheme.typography.bodyMedium)
-                        if (item.scopeType == "GLOBAL") Text("Global", style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    }
-                    IconButton(onClick = { editorId = item.id; showEditor = true }) { Icon(Icons.Default.Edit, "Edit memory") }
-                    IconButton(onClick = { removeId = item.id }) { Icon(Icons.Default.DeleteOutline, "Remove memory") }
-                }
-            } }
-        }
-    }
-    if (info) AlertDialog(onDismissRequest = { info = false }, title = { Text("Approved memory") },
-        text = { Text("Only items you explicitly save are used as memory. Removing an item archives it and stops using it in new requests.") },
-        confirmButton = { TextButton(onClick = { info = false }) { Text("Done") } })
-    if (removeId != null) AlertDialog(onDismissRequest = { removeId = null }, title = { Text("Remove memory?") },
-        text = { Text("This item will no longer be used in new requests.") },
-        confirmButton = { TextButton(onClick = { removeId?.let(viewModel::archive); removeId = null }) { Text("Remove") } },
-        dismissButton = { TextButton(onClick = { removeId = null }) { Text("Cancel") } })
-    if (showEditor) MemoryEditorDialog(initial = items.firstOrNull { it.id == editorId }?.content.orEmpty(),
-        initialKind = items.firstOrNull { it.id == editorId }?.kind ?: "CONTEXT", initialGlobal = items.firstOrNull { it.id == editorId }?.scopeType == "GLOBAL",
-        onDismiss = { showEditor = false }, onSave = { content, kind, global -> viewModel.save(editorId, content, kind, global); showEditor = false })
-}
-
-@Composable
-private fun MemoryEditorDialog(initial: String, initialKind: String = "CONTEXT", initialGlobal: Boolean = false, onDismiss: () -> Unit, onSave: (String,String,Boolean) -> Unit) {
-    var content by rememberSaveable(initial) { mutableStateOf(initial) }
-    var kind by rememberSaveable { mutableStateOf(initialKind) };var global by rememberSaveable { mutableStateOf(initialGlobal) }
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(if (initial.isBlank()) "Add memory" else "Edit memory") },
-        text = { Column { OutlinedTextField(value = content, onValueChange = { content = it }, modifier = Modifier.fillMaxWidth(), label = { Text("Memory") }, minLines = 3, maxLines = 6)
-            Row { listOf("PREFERENCE", "FACT", "CONTEXT").forEach { type -> FilterChip(kind==type, {kind=type}, label={Text(type.lowercase())}) } }
-            Row { Text("Global",Modifier.weight(1f));androidx.compose.material3.Switch(global,{global=it}) }
-        } },
-        confirmButton = { Button(onClick = { onSave(content, kind, global) }, enabled = content.isNotBlank()) { Text("Save") } },
         dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
     )
 }

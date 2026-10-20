@@ -348,10 +348,13 @@ internal class ProductionValidationBackend(private val owner: AppGraph, private 
             "lexical"->{val a=document("semantic_a.txt");document("semantic_b.txt");val off=object:EmbeddingProvider { override suspend fun <T> use(block:suspend (NeuralEmbeddings)->T):T?=null }
                 val retriever=SemanticRetrievalService(db,off);val found=retriever.retrieve(projectId,"flamencos pigmentos");checkResult(found.firstOrNull()?.documentId==a && retriever.diagnostics.value.mode=="LEXICAL","LEXICAL_FALLBACK_MISMATCH",metrics("retrievalMode" to retriever.diagnostics.value.mode,"retrievalDurationMs" to retriever.diagnostics.value.retrievalMs))}
             "memory"->{if(graph.embeddingModels.id==null)skipped("EMBEDDING_MODEL_NOT_INSTALLED") else {
-                val now=System.currentTimeMillis();val memoryId="self-test-"+UUID.randomUUID();db.memoryDao().upsert(MemoryItemEntity(memoryId,"PROJECT",projectId,"Prefiero respuestas breves.","USER_APPROVED",createdAt=now,updatedAt=now,kind="PREFERENCE"))
-                val found=graph.retrieval.memories(projectId,"¿Cómo prefiero las respuestas?");val unrelated=graph.retrieval.memories(projectId,"Calcula 5+5.")
-                val record=db.semanticVectorDao().get("M:"+memoryId,graph.embeddingModels.id!!)
-                checkResult(found.any { it.id==memoryId } && unrelated.none { it.id==memoryId } && record?.dimensions==768,"MEMORY_RETRIEVAL_MISMATCH",metrics("memoryRetrieved" to found.size,"persistedRows" to if(record!=null)1 else 0))}}
+                val manager=graph.contextFoundation.memory
+                val record=manager.create("Prefiero respuestas breves.",com.localai.workspace.semantic.v2.SemanticScope(com.localai.workspace.semantic.v2.ScopeType.PROJECT,projectId),com.localai.workspace.context.MemoryKind.PREFERENCE)
+                val access=com.localai.workspace.context.ScopeAccess(projectId=projectId)
+                val found=manager.search("¿Cómo prefiero las respuestas?",access)
+                val unrelated=manager.search("Calcula 5+5.",access)
+                val indexed=manager.get(record.id)?.indexState=="INDEXED"
+                checkResult(found.any { it.record.id==record.id } && unrelated.none { it.record.id==record.id } && indexed,"MEMORY_RETRIEVAL_MISMATCH",metrics("memoryRetrieved" to found.size,"persistedRows" to if(indexed)1 else 0))}}
             "rebuild"->{val s=newSession();ask(s,"Hola. Responde brevemente.");val tool=ask(s,"Usa la calculadora para calcular 123*47.",AssistantProfile(ThinkingMode.OFF,setOf("calculator.evaluate")));val think=ask(s,"Analiza tres cajas con 4 objetos cada una. Se retiran 5. ¿Cuántos quedan?",AssistantProfile(ThinkingMode.ON,emptySet()))
                 checkResult(tool.calls.any { it.status=="SUCCESS" } && tool.metrics.sessionReused==false && tool.metrics.conversationRebuildReason in setOf("CONFIG_CHANGED","SESSION_LOST") && think.metrics.thinkingEffective==true && think.metrics.sessionReused==false && think.metrics.conversationRebuildReason=="THINKING_CHANGED","REBUILD_REASON_MISMATCH",evidence(think))}
             "persistence"->{val session=newSession();val t=ask(session,"Hola. Responde brevemente.");val reopened=WorkspaceDatabase.createValidation(context);try {

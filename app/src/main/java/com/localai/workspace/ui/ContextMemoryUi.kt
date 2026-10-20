@@ -28,15 +28,22 @@ import com.google.gson.GsonBuilder
 private fun memoryBundleExportError(failure:Exception):String = when(failure) {
     is MemoryBundleV1.InvalidPackage -> when(failure.reason) {
         "SENSITIVE_MEMORY_REQUIRES_REVIEW" -> "Export stopped: a saved memory may contain sensitive information. Review or edit it before exporting."
-        "TOO_MANY_RECORDS" -> "Export is limited to 250 memories. Narrow the scope or review saved records; none were silently omitted."
+        "TOO_MANY_RECORDS" -> "Export is limited to 1,000 memories. Narrow the scope or review saved records; none were silently omitted."
         "EXPORT_SIZE_LIMIT_EXCEEDED", "ARCHIVE_TOO_LARGE" -> "The selected memories exceed the portable ZIP size limit; no partial archive was exported."
         else -> failure.reason
     }
     else -> failure.message ?: failure.javaClass.simpleName
 }
 
-@Composable fun ContextMemoryEntry(projectId:String?=null) {
-    var open by remember{mutableStateOf(false)}
+internal fun memoryActionErrorMessage(failure:Exception):String = when(failure.message) {
+    "PINNED_PREFERENCE_LIMIT_EXCEEDED" -> "This memory was not pinned. Pinned preferences and procedures can use at most 15% of the context input budget. Unpin or shorten another entry first."
+    "STRUCTURED_PREFERENCE_CONFLICT" -> "A saved preference uses the same subject and rule with a different value. Review it before replacing it."
+    "STRUCTURED_PREFERENCE_CONFLICT_CHANGED" -> "The conflicting preference changed before it could be replaced. Review the current entry and try again."
+    else -> failure.message ?: failure.javaClass.simpleName
+}
+
+@Composable fun ContextMemoryEntry(projectId:String?=null,initiallyOpen:Boolean=false) {
+    var open by remember(initiallyOpen){mutableStateOf(initiallyOpen)}
     TextButton(onClick={open=true}){Text("Structured memory")}
     if(open) StructuredMemoryPanel(projectId){open=false}
 }
@@ -45,22 +52,62 @@ private fun memoryBundleExportError(failure:Exception):String = when(failure) {
     val all by foundation.memory.items.collectAsState(initial=emptyList());val access=ScopeAccess(projectId=projectId)
     var query by remember{mutableStateOf("")};var showInactive by remember{mutableStateOf(false)};var projectOnly by remember{mutableStateOf(projectId!=null)};var kindFilter by remember{mutableStateOf<MemoryKind?>(null)};var filters by remember{mutableStateOf(false)}
     var editing by remember{mutableStateOf<MemoryRecord?>(null)};var editor by remember{mutableStateOf(false)};var text by remember{mutableStateOf("")};var ttl by remember{mutableStateOf("")};var kind by remember{mutableStateOf(MemoryKind.FACT)};var choosingKind by remember{mutableStateOf(false)};var scopeMenu by remember{mutableStateOf(false)};var writingScope by remember(projectId){mutableStateOf(projectId?.let{SemanticScope(ScopeType.PROJECT,it)} ?: SemanticScope(ScopeType.USER,"local"))}
-    var details by remember{mutableStateOf<MemoryRecord?>(null)};var removal by remember{mutableStateOf<MemoryRecord?>(null)};var error by remember{mutableStateOf<String?>(null)};var busy by remember{mutableStateOf(false)};var brief by remember{mutableStateOf<ProjectBrief?>(null)}
+    var structuredSubject by remember{mutableStateOf("")};var structuredPredicate by remember{mutableStateOf("")};var structuredObject by remember{mutableStateOf("")};var structuredConflict by remember{mutableStateOf<StructuredPreferenceConflictException?>(null)}
+    var details by remember{mutableStateOf<MemoryRecord?>(null)};var removal by remember{mutableStateOf<MemoryRecord?>(null)};var permanentRemoval by remember{mutableStateOf<MemoryRecord?>(null)};var error by remember{mutableStateOf<String?>(null)};var busy by remember{mutableStateOf(false)};var brief by remember{mutableStateOf<ProjectBrief?>(null)}
     var implementDialog by remember{mutableStateOf(false)};var bundlePreview by remember{mutableStateOf<MemoryBundleV1.Preview?>(null)};var selectedBundleKeys by remember{mutableStateOf<Set<String>>(emptySet())};var importResult by remember{mutableStateOf<String?>(null)}
+    var exportAllWorkspaceMemory by remember{mutableStateOf(false)}
     var bundleReview by remember{mutableStateOf<Map<String,MemoryManager.BundleCandidateReview>>(emptyMap())}
-    fun run(block:suspend()->Unit){scope.launch{busy=true;error=null;try{withContext(Dispatchers.IO){block()}}catch(cancel:CancellationException){throw cancel}catch(e:Exception){error=e.message ?: e.javaClass.simpleName}finally{busy=false}}}
+    LaunchedEffect(foundation){
+        try { foundation.migrateLegacyMemories() }
+        catch(cancel:CancellationException){throw cancel}
+        catch(failure:Exception){error="Legacy memory remains intact because migration could not be verified: ${failure.message ?: failure.javaClass.simpleName}"}
+    }
+    fun run(block:suspend()->Unit){scope.launch{busy=true;error=null;try{withContext(Dispatchers.IO){block()}}catch(cancel:CancellationException){throw cancel}catch(e:Exception){error=memoryActionErrorMessage(e)}finally{busy=false}}}
+    fun saveCurrentMemory(replaceConflictId:String?=null){scope.launch{
+        busy=true;error=null
+        try {
+            val expires=ttl.takeIf{it.isNotBlank()}?.let{val days=it.toLong();require(days in 1..36500);System.currentTimeMillis()+days*86_400_000}
+            withContext(Dispatchers.IO){
+                val old=editing
+                if(old!=null)foundation.memory.update(old.id,text,expires)
+                else if(kind==MemoryKind.PREFERENCE&&listOf(structuredSubject,structuredPredicate,structuredObject).any{it.isNotBlank()}){
+                    require(listOf(structuredSubject,structuredPredicate,structuredObject).all{it.isNotBlank()}){"STRUCTURED_PREFERENCE_FIELDS_REQUIRED"}
+                    foundation.memory.createStructuredPreference(text,writingScope,structuredSubject.trim(),structuredPredicate.trim(),structuredObject.trim(),expiresAt=expires,replaceConflictId=replaceConflictId)
+                } else foundation.memory.create(text,writingScope,kind,expiresAt=expires)
+            }
+            structuredConflict=null;editor=false
+        } catch(cancel:CancellationException){throw cancel}
+        catch(conflict:StructuredPreferenceConflictException){structuredConflict=conflict}
+        catch(failure:Exception){error=memoryActionErrorMessage(failure)}
+        finally{busy=false}
+    }}
     val memoryBundleExporter=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/zip")){uri->
         if(uri!=null)scope.launch {
             busy=true;error=null
             try {
-                val exported=withContext(Dispatchers.IO){foundation.memory.exportBundle(access)}
+                val exportAll=exportAllWorkspaceMemory
+                val exported=withContext(Dispatchers.IO){if(exportAll)foundation.memory.exportAllWorkspaceMemories()else foundation.memory.exportBundle(access)}
                 withContext(Dispatchers.IO){
                     val output=context.contentResolver.openOutputStream(uri,"w") ?: throw IllegalStateException("MEMORY_EXPORT_DESTINATION_UNAVAILABLE")
                     output.use{it.write(exported.archive)}
                 }
-                importResult="Exported ${exported.exportedRecords} active in-scope memories. Embeddings were not included."
+                importResult="Exported ${exported.exportedRecords} active ${if(exportAll)"user and project"else"in-scope"} memories; ${exported.excludedSensitiveRecords} possible secrets excluded. Embeddings were not included."
                 implementDialog=false
             } catch(cancel:CancellationException){throw cancel} catch(e:Exception){error=memoryBundleExportError(e)}
+            finally{busy=false;exportAllWorkspaceMemory=false}
+        }
+    }
+    val memoryJsonExporter=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")){uri->
+        if(uri!=null)scope.launch {
+            busy=true;error=null
+            try {
+                val exported=withContext(Dispatchers.IO){foundation.memory.exportJson(access)}
+                withContext(Dispatchers.IO){
+                    val output=context.contentResolver.openOutputStream(uri,"w") ?: throw IllegalStateException("MEMORY_EXPORT_DESTINATION_UNAVAILABLE")
+                    output.use{it.write(exported.json.toByteArray(Charsets.UTF_8))}
+                }
+                importResult="Exported ${exported.exportedRecords} active in-scope memories; ${exported.excludedSensitiveRecords} possible secrets excluded."
+            } catch(cancel:CancellationException){throw cancel} catch(e:Exception){error=memoryActionErrorMessage(e)}
             finally{busy=false}
         }
     }
@@ -83,13 +130,12 @@ private fun memoryBundleExportError(failure:Exception):String = when(failure) {
     }
     SemanticPanel("Structured memory",close) {
         OutlinedTextField(query,{query=it},label={Text("Search saved memory")},singleLine=true,modifier=Modifier.fillMaxWidth())
-        Row { TextButton(onClick={editing=null;text="";ttl="";editor=true}){Text("Add")};TextButton(onClick={filters=!filters}){Text("Filter")};TextButton(onClick={run{context.getSystemService(android.content.ClipboardManager::class.java).setPrimaryClip(android.content.ClipData.newPlainText("Memory export",foundation.memory.exportJson(access)))}}){Text("Export JSON")};TextButton(onClick={implementDialog=true}){Text("IMPLEMENTAR")} }
+        Row { TextButton(onClick={editing=null;text="";ttl="";structuredSubject="";structuredPredicate="";structuredObject="";kind=MemoryKind.FACT;editor=true}){Text("Add")};TextButton(onClick={filters=!filters}){Text("Filter")};TextButton(onClick={memoryJsonExporter.launch("LOCAL_AI_WORKSPACE_MEMORY.json")}){Text("Export JSON")};TextButton(onClick={implementDialog=true}){Text("IMPLEMENTAR")} }
         if(filters){Row{Checkbox(showInactive,{showInactive=it});Text("Include inactive records")};if(projectId!=null)Row{Checkbox(projectOnly,{projectOnly=it});Text("Project only")};Box{TextButton(onClick={choosingKind=true}){Text(kindFilter?.name ?: "All types")};DropdownMenu(choosingKind,{choosingKind=false}){DropdownMenuItem(text={Text("All types")},onClick={kindFilter=null;choosingKind=false});MemoryKind.entries.forEach{k->DropdownMenuItem(text={Text(k.name)},onClick={kindFilter=k;choosingKind=false})}}}}
         val visible=all.filter{access.permits(it.scopeType,it.scopeId)&&(!projectOnly||it.scopeType=="PROJECT")&&(showInactive||it.status in setOf("ACTIVE","PENDING")&&it.expiresAt?.let{t->t>System.currentTimeMillis()}!=false)&&(kindFilter==null||it.kind==kindFilter?.name)&&it.text.contains(query,true)}
         if(visible.isEmpty())Text("No saved memory")
         if(visible.size>100)Text("Showing 100 of ${visible.size}; refine the search to see more")
         visible.take(100).forEach{m->Card(Modifier.fillMaxWidth()){Column(Modifier.padding(12.dp)){Text(m.text,maxLines=4,overflow=androidx.compose.ui.text.style.TextOverflow.Ellipsis);Text("${m.kind.lowercase()} · ${m.scopeType.lowercase()}${if(m.pinned)" · pinned"else""} · ${m.status.lowercase()}",style=MaterialTheme.typography.labelSmall);TextButton(onClick={details=m}){Text("Details")}}}}
-        TextButton(onClick={run{foundation.importApprovedLegacy(access)}}){Text("Copy approved legacy memory")}
         TextButton(onClick={run{foundation.memory.recover()}}){Text("Rebuild pending embeddings")}
         importResult?.let{Text(it,style=MaterialTheme.typography.bodySmall)}
         if(projectId!=null)TextButton(onClick={run{brief=foundation.database.dao().brief(projectId) ?: ProjectBrief(projectId,graph.database.projectDao().get(projectId)?.name.orEmpty())}}){Text("Project brief")}
@@ -101,7 +147,8 @@ private fun memoryBundleExportError(failure:Exception):String = when(failure) {
         text={Column(verticalArrangement=Arrangement.spacedBy(8.dp)){
             Text("Prepare portable personal memories for review before bringing them into this device.")
             TextButton(onClick={context.getSystemService(android.content.ClipboardManager::class.java).setPrimaryClip(android.content.ClipData.newPlainText("AWS memory import prompt",MemoryBundleV1.copyPrompt()));implementDialog=false;importResult="Prompt copied. The external assistant receives only the text you paste there."}){Text("COPIAR PROMPT")}
-            TextButton(enabled=!busy,onClick={memoryBundleExporter.launch("AWS_MEMORY_IMPORT.zip")}){Text("EXPORTAR MEMORIA (ZIP)")}
+            TextButton(enabled=!busy,onClick={exportAllWorkspaceMemory=false;memoryBundleExporter.launch("AWS_MEMORY_IMPORT.zip")}){Text("EXPORTAR MEMORIA DE ESTE ÁMBITO (ZIP)")}
+            if(projectId==null)TextButton(enabled=!busy,onClick={exportAllWorkspaceMemory=true;memoryBundleExporter.launch("AWS_MEMORY_IMPORT_ALL_PROJECTS.zip")}){Text("EXPORTAR USUARIO + PROYECTOS (ZIP)")}
             Text("Exports active memories available in this scope. Embeddings are excluded. Choose the destination in Android's file picker.",style=MaterialTheme.typography.bodySmall)
             TextButton(enabled=!busy,onClick={memoryBundlePicker.launch(arrayOf("application/zip","application/octet-stream","*/*"))}){Text("IMPORTAR MEMORIA")}
             Text("Imported entries stay pending and are not retrieved until you approve each one.",style=MaterialTheme.typography.bodySmall)
@@ -122,9 +169,10 @@ private fun memoryBundleExportError(failure:Exception):String = when(failure) {
         },
         onDismiss={bundlePreview=null},onImport={
             run {
-                val result=foundation.memory.importBundlePending(preview,selectedBundleKeys)
+                val availableProjects=graph.database.projectDao().observeActive().first().map{it.id}.toSet()
+                val result=foundation.memory.importBundlePending(preview,selectedBundleKeys,availableProjects)
                 withContext(Dispatchers.Main){
-                    importResult="Imported ${result.imported} pending memories; ${result.duplicates} duplicates already existed. Review and approve entries individually."
+                    importResult="Imported ${result.imported} pending memories; ${result.duplicates} duplicates already existed; ${result.missingProjectFallbackCount} missing project scopes moved to User. Review and approve entries individually."
                     if(result.imported>0){showInactive=true;projectOnly=false}
                     bundlePreview=null;bundleReview=emptyMap()
                 }
@@ -134,7 +182,7 @@ private fun memoryBundleExportError(failure:Exception):String = when(failure) {
     if(editor)SemanticPanel(if(editing==null)"Add memory"else"Edit memory",{editor=false}) {
         OutlinedTextField(text,{text=it},label={Text("Content")},modifier=Modifier.fillMaxWidth(),minLines=3)
         if(MemoryContent.secret(text))Text("This may contain a credential. Saving is explicit; avoid storing secrets.",color=MaterialTheme.colorScheme.error)
-        if(editing==null)Box{TextButton(onClick={choosingKind=true}){Text(kind.name)};DropdownMenu(choosingKind,{choosingKind=false}){MemoryKind.entries.forEach{k->DropdownMenuItem(text={Text(k.name)},onClick={kind=k;choosingKind=false})}}}
+        if(editing==null){Box{TextButton(onClick={choosingKind=true}){Text(kind.name)};DropdownMenu(choosingKind,{choosingKind=false}){MemoryKind.entries.forEach{k->DropdownMenuItem(text={Text(k.name)},onClick={kind=k;choosingKind=false})}}};if(kind==MemoryKind.PREFERENCE){Text("Optional structured fields detect conflicting preferences.",style=MaterialTheme.typography.bodySmall);OutlinedTextField(structuredSubject,{structuredSubject=it},label={Text("Subject")},singleLine=true,modifier=Modifier.fillMaxWidth());OutlinedTextField(structuredPredicate,{structuredPredicate=it},label={Text("Rule")},singleLine=true,modifier=Modifier.fillMaxWidth());OutlinedTextField(structuredObject,{structuredObject=it},label={Text("Value")},singleLine=true,modifier=Modifier.fillMaxWidth())}}
         if(editing!=null)Text("Scope: ${editing!!.scopeType.lowercase()}") else Box {
             TextButton(onClick={scopeMenu=true}){Text("Scope: ${writingScope.type.name.lowercase()}")}
             DropdownMenu(scopeMenu,{scopeMenu=false}) {
@@ -144,13 +192,30 @@ private fun memoryBundleExportError(failure:Exception):String = when(failure) {
             }
         }
         OutlinedTextField(ttl,{ttl=it},label={Text("Expires in days (optional)")},singleLine=true)
-        Button(enabled=text.isNotBlank()&&!busy,onClick={run{val expires=ttl.takeIf{it.isNotBlank()}?.let{val days=it.toLong();require(days in 1..36500);System.currentTimeMillis()+days*86_400_000};val old=editing;if(old==null)foundation.memory.create(text,writingScope,kind,expiresAt=expires)else foundation.memory.update(old.id,text,expires);editor=false}}){Text("Save")};error?.let{Text(it,color=MaterialTheme.colorScheme.error)}
+        Button(enabled=text.isNotBlank()&&!busy,onClick={saveCurrentMemory()}){Text("Save")};error?.let{Text(it,color=MaterialTheme.colorScheme.error)}
+    }
+    structuredConflict?.let{conflict->
+        val existing=conflict.conflictingIds.singleOrNull()?.let{id->all.firstOrNull{it.id==id}}
+        AlertDialog(
+            onDismissRequest={structuredConflict=null},
+            title={Text("Replace conflicting preference?")},
+            text={Column(verticalArrangement=Arrangement.spacedBy(8.dp)){
+                Text(if(existing==null)"More than one active preference has this subject and rule. Review those entries before replacing one." else "An active preference already uses this subject and rule with a different value.")
+                existing?.let{Text("Current: ${it.text}")}
+                Text("Proposed: $text")
+                Text("Nothing changes unless you confirm the replacement.",style=MaterialTheme.typography.bodySmall)
+            }},
+            confirmButton={TextButton(enabled=existing!=null&&!busy,onClick={saveCurrentMemory(requireNotNull(existing).id)}){Text("Replace")}},
+            dismissButton={TextButton(onClick={structuredConflict=null}){Text("Keep current")}},
+        )
     }
     details?.let{m->SemanticPanel("Memory details",{details=null}){Text(m.text);Text("${m.kind} · ${m.status}\nVersion ${m.version}\nSource: ${m.sourceType}\nReference: ${m.sourceId ?: "none"}\nMessage: ${m.sourceMessageId ?: "none"}\nEmbedding: ${m.indexState}\nExpires: ${m.expiresAt?.let{java.util.Date(it)} ?: "never"}")
-        if(m.status in setOf("ACTIVE","PENDING")){TextButton(onClick={editing=m;text=m.text;ttl=m.expiresAt?.let{((it-System.currentTimeMillis())/86_400_000).coerceAtLeast(1).toString()}.orEmpty();details=null;editor=true}){Text("Edit")};TextButton(onClick={run{foundation.memory.pin(m.id);details=null}}){Text(if(m.pinned)"Unpin"else"Pin")};if(m.status=="PENDING")TextButton(onClick={run{foundation.memory.approve(m.id);details=null}}){Text("Approve")}}
+        if(m.status in setOf("ACTIVE","PENDING")){TextButton(onClick={editing=m;text=m.text;ttl=m.expiresAt?.let{((it-System.currentTimeMillis())/86_400_000).coerceAtLeast(1).toString()}.orEmpty();details=null;editor=true}){Text("Edit")};TextButton(onClick={run{foundation.memory.pin(m.id,access);details=null}}){Text(if(m.pinned)"Unpin"else"Pin")};if(m.status=="PENDING")TextButton(onClick={run{foundation.memory.approve(m.id,access);details=null}}){Text("Approve")}}
         TextButton(onClick={removal=m;details=null}){Text("Delete")}
+        TextButton(onClick={permanentRemoval=m;details=null}){Text("Forget permanently")}
     }}
     removal?.let{m->AlertDialog(onDismissRequest={removal=null},title={Text("Delete memory?")},text={Text("It will no longer be retrieved. Its vectors will be removed; existing source files and chats remain.")},confirmButton={TextButton(onClick={run{foundation.memory.delete(m.id);removal=null}}){Text("Delete")}},dismissButton={TextButton(onClick={removal=null}){Text("Cancel")}})}
+    permanentRemoval?.let{m->AlertDialog(onDismissRequest={permanentRemoval=null},title={Text("Forget this memory and its versions?")},text={Text("This permanently removes this memory and its version history from the app database and rebuildable indexes. It cannot guarantee physical erasure from flash storage. Messages that mention it and copies previously exported outside the app remain until separately deleted.")},confirmButton={TextButton(onClick={run{foundation.memory.forgetPermanently(m.id);permanentRemoval=null}}){Text("Forget permanently")}},dismissButton={TextButton(onClick={permanentRemoval=null}){Text("Cancel")}})}
     brief?.let{initial->var b by remember(initial){mutableStateOf(initial)};SemanticPanel("Project brief",{brief=null}){listOf("Goal" to b.goal,"Current state" to b.currentState,"Constraints" to b.constraints,"Decisions" to b.keyDecisions,"Active tasks" to b.activeTasks,"Architecture" to b.architecture).forEachIndexed{i,pair->OutlinedTextField(pair.second,{v->b=when(i){0->b.copy(goal=v);1->b.copy(currentState=v);2->b.copy(constraints=v);3->b.copy(keyDecisions=v);4->b.copy(activeTasks=v);else->b.copy(architecture=v)}},label={Text(pair.first)},modifier=Modifier.fillMaxWidth())};Button(onClick={run{foundation.saveBrief(b);brief=null}}){Text("Save")}}}
 }
 
@@ -173,7 +238,7 @@ private fun MemoryBundleReviewDialog(
         text={Column(verticalArrangement=Arrangement.spacedBy(8.dp)){
             Text("Source: ${preview.sourceLabel.ifBlank{"Unknown"}} · ${preview.exportedAt}",style=MaterialTheme.typography.bodySmall)
             Text("${preview.candidates.size} entries · ${selectedKeys.size} selected. Potential secrets detected by a basic local pattern are excluded.")
-            Text("Imported records are stored as pending, mapped to this device's user scope, and retain original scope/trust as provenance.",style=MaterialTheme.typography.bodySmall)
+            Text("Imported records stay pending. Existing project scopes are preserved; missing projects fall back to User and are counted. Original scope and trust remain in provenance.",style=MaterialTheme.typography.bodySmall)
             Text("Package metadata (preview)",style=MaterialTheme.typography.labelLarge)
             Text(preview.metadata.take(1600),maxLines=8,overflow=androidx.compose.ui.text.style.TextOverflow.Ellipsis,style=MaterialTheme.typography.bodySmall)
             LazyColumn(Modifier.heightIn(max=420.dp)) {

@@ -21,6 +21,10 @@ open class LocalAiApplication : Application() {
             try { graph.semanticDiagnostics.recover() } catch(error:Exception) { android.util.Log.e("LocalAI/Semantic","benchmark_recovery_failed type=${error.javaClass.simpleName}") }
             com.localai.workspace.inference.LiteRtCapabilityRefresh.refresh(graph.database.modelDao(),graph.liteRtLmRuntime)
             graph.workspace.cleanupDeletedDocuments()
+            try { graph.contextFoundation.migrateLegacyMemories() } catch(error:Exception) {
+                graph.contextFoundation.notice.value = "LEGACY_MEMORY_MIGRATION_FAILED:${error.javaClass.simpleName}"
+                android.util.Log.e("LocalAI/Context", "legacy_memory_migration_failed type=${error.javaClass.simpleName}")
+            }
             try { graph.contextFoundation.recoverCanonical() } catch(error:Exception) {
                 graph.contextFoundation.notice.value = "MEMORY_RECOVERY_FAILED:${error.javaClass.simpleName}"
                 android.util.Log.e("LocalAI/Context", "memory_recovery_failed type=${error.javaClass.simpleName}")

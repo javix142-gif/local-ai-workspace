@@ -1,12 +1,15 @@
 package com.localai.workspace.context
 
 import android.content.Context
+import androidx.room.withTransaction
 import com.localai.workspace.AppGraph
+import com.localai.workspace.data.MemoryItemEntity
 import com.localai.workspace.domain.model.*
 import com.localai.workspace.rag.RetrievalQuery
 import com.localai.workspace.semantic.v2.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 /** Additive orchestration. It neither replaces semantic indexes nor owns a second embedding engine. */
@@ -17,6 +20,7 @@ class ContextFoundation(private val graph:AppGraph, private val semanticLayerPro
     val notice=MutableStateFlow<String?>(null)
     val last=MutableStateFlow<ContextBundle?>(null)
     val memory=MemoryManager(database){input,task->embedding(input,task)}
+    private val legacyMigration=Mutex()
     fun enable(value:Boolean){check(prefs.edit().putBoolean("enabled",value).commit());enabled.value=value}
     suspend fun embedding(input:SemanticInput,task:EmbeddingTask):EmbeddingResult?=withContext(Dispatchers.IO){
         try {
@@ -27,16 +31,160 @@ class ContextFoundation(private val graph:AppGraph, private val semanticLayerPro
         }catch(cancel:CancellationException){throw cancel}catch(error:Exception){notice.value="LEXICAL_FALLBACK:${if(error is SemanticFailure)error.code.name else error.javaClass.simpleName}";null}
     }
     suspend fun recoverCanonical()=withContext(Dispatchers.IO){database.dao().expire(System.currentTimeMillis());database.dao().cleanupVectors()}
-    suspend fun importApprovedLegacy(access:ScopeAccess):Int=withContext(Dispatchers.IO){
-        var imported=0
-        for(old in graph.database.memoryDao().observeRelevant(access.projectId.orEmpty()).first().filter{it.status=="ACTIVE"}) {
-            if(database.dao().importedLegacy(old.id)>0)continue
-            val type=runCatching{ScopeType.valueOf(old.scopeType)}.getOrDefault(ScopeType.GLOBAL)
-            val scope=SemanticScope(type,old.scopeId.orEmpty())
-            if(!access.permits(scope.type.name,scope.id))continue
-            memory.create(old.content,scope,MemoryKind.OTHER,sourceType="APPROVED_LEGACY",sourceId=old.id);imported++
-        };imported
+    internal data class LegacyMigrationResult(
+        val activeRecords:Int=0,val duplicateRecords:Int=0,val archivedPurged:Int=0,
+        val previouslyImported:Int=0,val legacyRowsRemoved:Int=0,
+    )
+
+    /** Copy and verify approved legacy rows before deleting their rebuildable Room source. */
+    internal suspend fun migrateLegacyMemories(afterRecord:suspend(Int)->Unit={}):LegacyMigrationResult = withContext(Dispatchers.IO){
+        legacyMigration.withLock {
+            if(prefs.getBoolean(LEGACY_MEMORY_MIGRATION_COMPLETE,false))return@withLock LegacyMigrationResult()
+            val legacy=graph.database.memoryDao().allForMigration()
+            if(legacy.isEmpty()){
+                check(prefs.edit().putBoolean(LEGACY_MEMORY_MIGRATION_COMPLETE,true).commit()){"LEGACY_MEMORY_MIGRATION_STATE_WRITE_FAILED"}
+                return@withLock LegacyMigrationResult()
+            }
+            val dao=database.dao()
+            val existing=dao.legacyImports().associateBy{it.sourceId.orEmpty()}.toMutableMap()
+            val canonicalByKey=linkedMapOf<String,String>()
+            val expectedById=linkedMapOf<String,MemoryRecord>()
+            val activeKeys=mutableSetOf<String>()
+            var duplicateCount=0
+            var archivedCount=0
+            var previouslyImported=0
+            var processed=0
+            val ordered=legacy.sortedWith(compareBy<MemoryItemEntity>{when(it.status){"ACTIVE"->0;"ARCHIVED"->1;else->2}}
+                .thenByDescending{existing.containsKey(it.id)}.thenBy{it.id})
+            for(old in ordered){
+                currentCoroutineContext().ensureActive()
+                if(old.status=="ARCHIVED"){
+                    archivedCount++
+                    val prior=existing.remove(old.id)
+                    if(prior!=null)database.withTransaction{dao.deleteVectors(prior.id);dao.deleteMemories(listOf(prior.id))}
+                    processed++;afterRecord(processed);continue
+                }
+                val kind=legacyKind(old.kind)
+                val scope=legacyScope(old)
+                val text=old.content.trim()
+                require(text.isNotBlank()&&text.length<=16_000){"LEGACY_MEMORY_INVALID:${old.id}"}
+                val hash=MemoryContent.hash(text,kind)
+                val key="${scope.key}|${kind.name}|$hash"
+                val prior=existing[old.id]
+                val targetStatus=when(old.status){
+                    "ACTIVE"->{
+                        if(prior!=null)previouslyImported++
+                        if(activeKeys.add(key))"ACTIVE" else {duplicateCount++;"SUPERSEDED"}
+                    }
+                    "PENDING"->"PENDING"
+                    "DELETED"->"DELETED"
+                    "SUPERSEDED"->"SUPERSEDED"
+                    "EXPIRED"->"EXPIRED"
+                    else->"PENDING"
+                }
+                val canonical=canonicalByKey[key]
+                val record=MemoryRecord(
+                    id=prior?.id?:"legacy-${old.id}",kind=kind.name,scopeType=scope.type.name,scopeId=scope.id,
+                    title=prior?.title,text=text,status=targetStatus,confidence=1.0,importance=old.relevance.toDouble(),
+                    pinned=prior?.pinned?:false,createdAt=old.createdAt,updatedAt=old.updatedAt,
+                    sourceType="APPROVED_LEGACY",sourceId=old.id,sourceSegmentId=old.sourceReference,
+                    contentHash=hash,version=prior?.version?:1,
+                    supersedesId=if(targetStatus=="SUPERSEDED")canonical?:prior?.supersedesId else prior?.supersedesId,
+                    indexState=if(targetStatus=="ACTIVE")prior?.indexState?:"INDEX_PENDING" else "NOT_INDEXED",
+                    structuredPayloadJson=legacyOriginMetadata(old),
+                )
+                database.withTransaction{dao.put(record);if(prior!=null&&prior.contentHash!=record.contentHash)dao.deleteVectors(prior.id)}
+                expectedById[old.id]=record
+                existing[old.id]=record
+                if(targetStatus=="ACTIVE")canonicalByKey.putIfAbsent(key,record.id)
+                processed++
+                afterRecord(processed)
+            }
+
+            val nonArchived=legacy.filter{it.status!="ARCHIVED"}
+            val importedById=dao.legacyImports().filter{it.sourceId in nonArchived.map(MemoryItemEntity::id)}.associateBy{it.sourceId.orEmpty()}
+            check(importedById.keys==nonArchived.map{it.id}.toSet()){"LEGACY_MEMORY_SOURCE_COVERAGE_MISMATCH"}
+            for(old in nonArchived){
+                val actual=checkNotNull(importedById[old.id]);val expected=checkNotNull(expectedById[old.id])
+                check(actual.text==old.content.trim()&&actual.kind==legacyKind(old.kind).name&&
+                    actual.scopeType==expected.scopeType&&actual.scopeId==expected.scopeId&&
+                    actual.createdAt==old.createdAt&&actual.updatedAt==old.updatedAt&&actual.status==expected.status){"LEGACY_MEMORY_VERIFY_FAILED:${old.id}"}
+            }
+            val importedActive=importedById.values.count{it.status=="ACTIVE"}
+            check(importedActive==activeKeys.size){"LEGACY_MEMORY_ACTIVE_COUNT_MISMATCH"}
+            check(importedById.values.count{it.status=="SUPERSEDED"}>=duplicateCount){"LEGACY_MEMORY_DUPLICATE_COUNT_MISMATCH"}
+            val archivedIds=legacy.filter{it.status=="ARCHIVED"}.map{it.id}.toSet()
+            check(dao.legacyImports().none{it.sourceId in archivedIds}){"LEGACY_ARCHIVED_MEMORY_NOT_PURGED"}
+
+            // The original Room rows and their vectors remain intact until the sidecar checks above pass.
+            graph.database.withTransaction {
+                graph.database.memoryDao().deleteAllAfterVerifiedMigration()
+                graph.database.semanticVectorDao().deleteAllMemoryVectorsAfterVerifiedMigration()
+            }
+            check(prefs.edit().putBoolean(LEGACY_MEMORY_MIGRATION_COMPLETE,true).commit()){"LEGACY_MEMORY_MIGRATION_STATE_WRITE_FAILED"}
+            LegacyMigrationResult(importedActive,duplicateCount,archivedCount,previouslyImported,legacy.size)
+        }
     }
+
+    private fun legacyKind(kind:String):MemoryKind=when(kind){
+        "CONTEXT"->MemoryKind.PROJECT_CONTEXT
+        else->runCatching{MemoryKind.valueOf(kind)}.getOrDefault(MemoryKind.OTHER)
+    }
+    private fun legacyScope(old:MemoryItemEntity):SemanticScope=when(old.scopeType){
+        "GLOBAL"->SemanticScope(ScopeType.USER,"local")
+        "USER"->SemanticScope(ScopeType.USER,old.scopeId?.takeIf{it.isNotBlank()}?:"local")
+        "PROJECT"->SemanticScope(ScopeType.PROJECT,old.scopeId?.takeIf{it.isNotBlank()}?:error("LEGACY_PROJECT_SCOPE_MISSING:${old.id}"))
+        else->SemanticScope(ScopeType.USER,"local")
+    }
+    private fun legacyOriginMetadata(old:MemoryItemEntity)=com.google.gson.Gson().toJson(mapOf(
+        "legacySourceType" to old.sourceType,"legacySourceReference" to old.sourceReference,"legacyRelevance" to old.relevance,
+    ))
+
+    private companion object { const val LEGACY_MEMORY_MIGRATION_COMPLETE="legacy_memory_migration_complete_v1" }
+
+    internal suspend fun importApprovedLegacy(access:ScopeAccess):Int {
+        val before=database.dao().legacyImports().mapNotNull{it.sourceId}.toSet()
+        migrateLegacyMemories()
+        return database.dao().legacyImports().count{it.sourceId !in before&&access.permits(it.scopeType,it.scopeId)}
+    }
+    /** Remove project-owned canonical memory, brief, conversation source records and indexes. */
+    internal suspend fun deleteProjectScope(projectId:String)=withContext(Dispatchers.IO){
+        val dao=database.dao()
+        val memories=dao.memoriesInScope(ScopeType.PROJECT.name,projectId)
+        val sources=dao.conversationSourcesInScope(ScopeType.PROJECT.name,projectId)
+        val origins=(memories.map{it.id}+sources.map{"history:${it.messageId}"}).distinct()
+        database.enableSecureDelete()
+        database.withTransaction {
+            dao.deleteConversationSourcesInScope(ScopeType.PROJECT.name,projectId)
+            dao.deleteBrief(projectId)
+            dao.deleteMemoriesInScope(ScopeType.PROJECT.name,projectId)
+            if(origins.isNotEmpty())dao.deleteVectors(origins)
+        }
+        database.compactAfterDeletion()
+        check(dao.memoriesInScope(ScopeType.PROJECT.name,projectId).isEmpty()){"PROJECT_MEMORY_CLEANUP_FAILED"}
+        check(dao.conversationSourcesInScope(ScopeType.PROJECT.name,projectId).isEmpty()){"PROJECT_MEMORY_SOURCES_CLEANUP_FAILED"}
+        check(dao.brief(projectId)==null){"PROJECT_BRIEF_CLEANUP_FAILED"}
+        if(origins.isNotEmpty())check(dao.vectorsForOrigins(origins).isEmpty()){"PROJECT_MEMORY_VECTOR_CLEANUP_FAILED"}
+    }
+
+    /** Remove conversation-indexed history and session memories; broader scopes survive. */
+    internal suspend fun deleteConversation(conversationId:String)=withContext(Dispatchers.IO){
+        val dao=database.dao()
+        val sources=dao.conversationSourcesForConversation(conversationId)
+        val sessions=dao.memoriesInScope(ScopeType.SESSION.name,conversationId)
+        val origins=(sources.map{"history:${it.messageId}"}+sessions.map{it.id}).distinct()
+        database.enableSecureDelete()
+        database.withTransaction {
+            dao.deleteConversation(conversationId)
+            dao.deleteMemoriesInScope(ScopeType.SESSION.name,conversationId)
+            if(origins.isNotEmpty())dao.deleteVectors(origins)
+        }
+        database.compactAfterDeletion()
+        check(dao.conversationSourcesForConversation(conversationId).isEmpty()){"CONVERSATION_MEMORY_SOURCE_CLEANUP_FAILED"}
+        check(dao.memoriesInScope(ScopeType.SESSION.name,conversationId).isEmpty()){"CONVERSATION_SESSION_MEMORY_CLEANUP_FAILED"}
+        if(origins.isNotEmpty())check(dao.vectorsForOrigins(origins).isEmpty()){"CONVERSATION_MEMORY_VECTOR_CLEANUP_FAILED"}
+    }
+
     suspend fun saveBrief(brief:ProjectBrief)=withContext(Dispatchers.IO){check(graph.database.projectDao().get(brief.projectId)!=null);database.dao().brief(brief.copy(updatedAt=System.currentTimeMillis()))}
     /** Opt-in source indexing. Stored content is rechecked against canonical Room before retrieval. */
     suspend fun indexConversation(id:String):Int=withContext(Dispatchers.IO){
@@ -75,12 +223,18 @@ class ContextFoundation(private val graph:AppGraph, private val semanticLayerPro
         }.sortedByDescending{it.score}.take(3)
     }
     suspend fun build(request:ContextRequest,evidence:List<Evidence>?=null,memoryEnabled:Boolean=true):ContextBundle=withContext(Dispatchers.IO){
+        migrateLegacyMemories()
         val started=System.nanoTime();val access=request.access;notice.value=null
         check(access.projectId==null||graph.database.projectDao().get(access.projectId)!=null){"PROJECT_NOT_FOUND"}
         val all=mutableListOf<ContextItem>();val memoryStart=System.nanoTime()
+        val memoryAccess=access.copy(readableTypes=request.memoryScopes)
+        val activeMemories=if(memoryEnabled)memory.lookup(memoryAccess)else emptyList()
+        val approvedPreferences=memory.approvedPromptMemories(activeMemories)
+        val approvedPreferenceIds=approvedPreferences.map{it.id}.toSet()
+        val searchableMemories=activeMemories.filterNot{record->record.id in approvedPreferenceIds}
         val memorySkipped=memoryEnabled&&MemoryRelevance.smallTalk(request.query)
-        val vector=if(memoryEnabled&&!memorySkipped)memory.queryEmbedding(request.query)else null
-        val selection=if(memoryEnabled)memory.select(request.query,access.copy(readableTypes=request.memoryScopes),queryVector=vector,allowEmbedding=false)else MemorySelection(emptyList(),emptyList())
+        val vector=if(memoryEnabled&&!memorySkipped&&searchableMemories.isNotEmpty())memory.queryEmbedding(request.query)else null
+        val selection=if(memoryEnabled)memory.select(request.query,memoryAccess,queryVector=vector,allowEmbedding=false,excludedIds=approvedPreferenceIds,candidateRecords=searchableMemories)else MemorySelection(emptyList(),emptyList())
         fun memoryItem(hit:MemoryHit,id:String):ContextItem {val m=hit.record;return ContextItem(id,ContextKind.MEMORY,m.text,SemanticScope(ScopeType.valueOf(m.scopeType),m.scopeId),ContextTrust.APPROVED_MEMORY,if(m.pinned)85 else 65,hit.score,ContextProvenance(sourceId=m.id,segmentId=m.sourceSegmentId,messageIds=listOfNotNull(m.sourceMessageId)),memoryRelevance=hit.relevance)}
         selection.included.forEachIndexed{i,hit->all+=memoryItem(hit,"M${i+1}")}
         val relevanceDropped=selection.dropped.mapIndexed{i,hit->DroppedContext(memoryItem(hit,"MD${i+1}"),"BELOW_RELEVANCE_THRESHOLD")}
@@ -238,7 +392,7 @@ class ContextFoundation(private val graph:AppGraph, private val semanticLayerPro
         }}
         if(request.includeConversation)all+=olderHistory(request.query,access,recentIds,vector)
         val historyMs=(System.nanoTime()-historyStart)/1_000_000
-        val result=ContextBuilder().build(request,all)
+        val result=ContextBuilder().build(request.copy(approvedPreferences=approvedPreferences),all)
         val renderStart=System.nanoTime();result.conversation();val renderMs=(System.nanoTime()-renderStart)/1_000_000
         val includedSourceIds=result.included.filter{it.kind==ContextKind.SOURCE}.map{it.id}.toSet()
         result.copy(dropped=result.dropped+relevanceDropped,memoryLookupSkipped=memorySkipped,timings=result.timings.copy(totalMs=(System.nanoTime()-started)/1_000_000,memoryMs=memoryMs,retrievalMs=retrievalMs,historyMs=historyMs,renderMs=renderMs),notice=sourceNotice ?: notice.value,sourceEvidence=sourceEvidenceByItem.filterKeys{it in includedSourceIds}.values.toList(),sourceEvidenceIssues=sourceEvidenceIssues.distinct()).also{last.value=it}

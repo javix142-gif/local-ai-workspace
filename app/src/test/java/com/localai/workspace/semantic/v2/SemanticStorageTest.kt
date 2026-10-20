@@ -27,7 +27,7 @@ class SemanticStorageTest {
         val newer=Room.inMemoryDatabaseBuilder(context,SemanticDatabase::class.java).build()
         try { newer.openHelper.writableDatabase
             assertEquals(workspaceVersionBeforeSidecar,old.openHelper.readableDatabase.version)
-            assertEquals(memory,old.memoryDao().get("memory"));assertEquals(project,old.projectDao().get("p"));assertEquals(chat,old.conversationDao().get("chat"));assertEquals(message,old.messageDao().recent("chat",10).single());assertEquals(model,old.modelDao().get("model"));assertArrayEquals(vector.vector,old.semanticVectorDao().get("D:1","eg1")!!.vector)
+            assertEquals(memory,old.memoryDao().allForMigration().single());assertEquals(project,old.projectDao().get("p"));assertEquals(chat,old.conversationDao().get("chat"));assertEquals(message,old.messageDao().recent("chat",10).single());assertEquals(model,old.modelDao().get("model"));assertArrayEquals(vector.vector,old.semanticVectorDao().get("D:1","eg1")!!.vector)
         } finally { newer.close();old.close() }
     }
     @Test fun cancelledGreenBuildDoesNotReplaceBluePointer()=runBlocking {

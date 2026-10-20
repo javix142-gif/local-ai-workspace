@@ -40,6 +40,6 @@ class AgentSkillContextTest {
     }
     @Test fun UTF8EstimatorAndAllBudgetBlocksAreReported() {
         val c=ContextBuilder().build(request().copy(extraReserve=200),emptyList())
-        assertEquals("ESTIMATED_UTF8_BYTES_V1",c.safeReport()["tokenCounting"]);assertEquals(setOf("SYSTEM","QUERY","AGENT","PROJECT","TOOLS","SKILLS","MEMORY","SOURCES","HISTORY"),c.blockCosts.keys);assertEquals(200,c.blockCosts["TOOLS"])
+        assertEquals("ESTIMATED_UTF8_BYTES_V1",c.safeReport()["tokenCounting"]);assertEquals(setOf("SYSTEM","QUERY","AGENT","PROJECT","TOOLS","SKILLS","PREFERENCES","MEMORY","SOURCES","HISTORY"),c.blockCosts.keys);assertEquals(200,c.blockCosts["TOOLS"]);assertEquals(0,c.blockCosts["PREFERENCES"])
     }
 }
