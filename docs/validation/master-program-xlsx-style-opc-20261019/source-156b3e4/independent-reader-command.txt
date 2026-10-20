@@ -1,0 +1,1 @@
+python3 docs/validation/master-program-xlsx-style-opc-20261019/source-156b3e4/independent-reader.py app/build/reports/xlsx-style-metadata/fixture.xlsx > docs/validation/master-program-xlsx-style-opc-20261019/source-156b3e4/independent-reader-result.json

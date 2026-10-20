@@ -1,0 +1,12 @@
+tested_code_sha=156b3e43f8728d7755b8f46f3bc474b009368097
+branch=codex/aws-master-resume-20261019
+Gradle=8.10.2 (wrapper)
+Gradle_runtime_JDK=Temurin 17.0.20.1 at /workspace/.toolchain/jdk-17
+test_worker_JDK=Temurin 21.0.12.1 at /workspace/.toolchain/jdk-21-temurin (confirmed in Gradle log)
+Android_SDK=/workspace/.toolchain/android-sdk
+Android_platform=API 35, Platform 15, revision 2
+GRADLE_USER_HOME=/workspace/.gradle (existing cache, offline; not cleaned)
+Independent_reader=OpenPyXL 3.1.5 (already installed; no dependency added)
+OS_arch=Linux amd64
+Only the named StructuredDocumentsTest method was selected. This is a host JVM/Robolectric run, not Android instrumentation.
+Pre-run tracked worktree was clean at the tested commit. Pre-existing unrelated untracked evidence directories under docs/validation/master-program-memory-vector-batch-20261019 were left untouched and were not staged.

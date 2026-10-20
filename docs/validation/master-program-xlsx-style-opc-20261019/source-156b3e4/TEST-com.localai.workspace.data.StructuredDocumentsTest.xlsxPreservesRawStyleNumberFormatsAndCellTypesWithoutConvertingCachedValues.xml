@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.data.StructuredDocumentsTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-19T23:55:34" hostname="42c4f375d730" time="2.63">
+  <properties/>
+  <testcase name="xlsxPreservesRawStyleNumberFormatsAndCellTypesWithoutConvertingCachedValues" classname="com.localai.workspace.data.StructuredDocumentsTest" time="2.63"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

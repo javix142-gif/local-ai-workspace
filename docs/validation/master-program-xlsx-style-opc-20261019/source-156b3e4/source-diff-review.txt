@@ -1,0 +1,5 @@
+commit=156b3e43f8728d7755b8f46f3bc474b009368097
+parent=caf0f3ae740196773377a0ae437b8dc147d688d4
+subject=test(xlsx): use complete OPC style fixture
+app/src/test/java/com/localai/workspace/data/StructuredDocumentsTest.kt
+app/src/test/resources/fixtures/xlsx-style-metadata-valid.xlsx

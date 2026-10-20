@@ -1,0 +1,4 @@
+Gradle aggregate from the raw log (authoritative):
+63 actionable tasks: 63 executed
+
+Console progress markers observed: 83. The progress stream includes a repeated test-task marker; this count is not substituted for Gradle task outcomes. See gradle.log for the raw task output.

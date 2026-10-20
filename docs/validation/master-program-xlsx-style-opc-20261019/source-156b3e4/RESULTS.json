@@ -1,0 +1,105 @@
+{
+  "name": "M02-02 XLSX style metadata valid OPC follow-up",
+  "classification": "PREPARATORY_HOST_ONLY_NOT_FORMAL_TASK_COMPLETION",
+  "testedCodeSha": "156b3e43f8728d7755b8f46f3bc474b009368097",
+  "branch": "codex/aws-master-resume-20261019",
+  "changes": {
+    "productionChanged": false,
+    "files": [
+      "app/src/test/java/com/localai/workspace/data/StructuredDocumentsTest.kt",
+      "app/src/test/resources/fixtures/xlsx-style-metadata-valid.xlsx"
+    ]
+  },
+  "focusedHost": {
+    "status": "PASS",
+    "commandFile": "command.txt",
+    "task": ":app:testDebugUnitTest --tests com.localai.workspace.data.StructuredDocumentsTest.xlsxPreservesRawStyleNumberFormatsAndCellTypesWithoutConvertingCachedValues",
+    "tests": 1,
+    "passed": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "gradleReported": "BUILD SUCCESSFUL; 63 actionable tasks executed",
+    "startedAtUtc": "2026-10-19T23:52:43Z",
+    "finishedAtUtc": "2026-10-19T23:55:38Z",
+    "durationSecondsByUtc": 175,
+    "gradleReportedDuration": "2m54s",
+    "xml": "TEST-com.localai.workspace.data.StructuredDocumentsTest.xlsxPreservesRawStyleNumberFormatsAndCellTypesWithoutConvertingCachedValues.xml",
+    "log": "gradle.log"
+  },
+  "fixture": {
+    "path": "app/src/test/resources/fixtures/xlsx-style-metadata-valid.xlsx",
+    "bytes": 5365,
+    "sha256": "e5eabcba0c6d70044b4e97dac354a4d9b887baa1de23b4b3015d532fc5f2f643",
+    "zipCrc": "PASS",
+    "requiredOpcParts": [
+      "[Content_Types].xml",
+      "_rels/.rels",
+      "xl/workbook.xml",
+      "xl/_rels/workbook.xml.rels",
+      "xl/worksheets/sheet1.xml",
+      "xl/styles.xml",
+      "xl/sharedStrings.xml"
+    ],
+    "copiedByTestTo": "app/build/reports/xlsx-style-metadata/fixture.xlsx",
+    "copiedBytesSha256": "e5eabcba0c6d70044b4e97dac354a4d9b887baa1de23b4b3015d532fc5f2f643"
+  },
+  "independentReader": {
+    "status": "PASS",
+    "tool": "OpenPyXL",
+    "version": "3.1.5",
+    "input": "app/build/reports/xlsx-style-metadata/fixture.xlsx",
+    "checks": [
+      "ZIP CRC and required OPC package parts",
+      "raw numeric values and built-in/custom number formats",
+      "boolean, shared-string and inline-string cells",
+      "formula text and stored cached value in formula/data_only modes"
+    ],
+    "doesNotClaim": [
+      "formula recalculation",
+      "Excel or LibreOffice GUI rendering",
+      "physical Android behavior"
+    ],
+    "resultFile": "independent-reader-result.json",
+    "exitCode": 0
+  },
+  "environment": {
+    "gradle": "8.10.2",
+    "gradleRuntimeJdk": "Temurin 17.0.20.1",
+    "testWorkerJdk": "Temurin 21.0.12.1",
+    "androidSdk": "/workspace/.toolchain/android-sdk (API 35)",
+    "gradleUserHome": "/workspace/.gradle (pre-existing, offline)",
+    "ndkCmakeInvoked": false,
+    "newDependenciesOrToolsInstalled": false
+  },
+  "otherChecks": {
+    "fullAppJvm": "NOT_RUN",
+    "liteRtCompatJvm": "NOT_RUN",
+    "lint": "NOT_RUN",
+    "assemble": "NOT_RUN",
+    "androidTestCompileOrExecution": "NOT_RUN",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  },
+  "sourceTask": {
+    "id": "M02-02",
+    "sourceStatus": "TODO",
+    "dependsOn": ["M02-01"],
+    "dependencyStatus": "M02-01 remains TODO",
+    "formalCompletion": false
+  },
+  "planIntegrity": {
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": {"TODO": 97},
+    "sourceFilesChanged": false
+  },
+  "priorIndependentReaderAttempt": {
+    "status": "NOT_VALIDATED",
+    "reason": "Historical minimal ZIP lacked [Content_Types].xml; retained in the original result and superseded only by this complete-package follow-up."
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "tests": 1,
+  "skipped": 0,
+  "failures": 0,
+  "errors": 0,
+  "passed": 1,
+  "testcaseNames": [
+    "xlsxPreservesRawStyleNumberFormatsAndCellTypesWithoutConvertingCachedValues"
+  ]
+}
