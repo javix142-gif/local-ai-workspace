@@ -145,8 +145,10 @@ class DocumentCorpusFixtureTest {
     @Test fun docxTableCellMatchesExpectedAnswer() = runBlocking {
         val expected = expected("v1-fixture.docx", "table row 2 column 1")
         val parsed = parse("v1-fixture.docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
-        assertEquals(1, parsed.pages.size)
-        assertTrue(parsed.pages.single().text.contains(expected.getString("expected")))
+        assertEquals(listOf(1, 2), parsed.pages.map { it.pageNumber })
+        assertTrue(parsed.pages[0].text.contains("Primera sección"))
+        assertTrue(parsed.pages[1].text.contains("Segunda página"))
+        assertTrue(parsed.pages[1].text.contains(expected.getString("expected")))
     }
 
     @Test fun digitalPdfPreservesExpectedPageAndAnswer() = runBlocking {

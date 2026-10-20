@@ -52,7 +52,7 @@ class ChatDeletionTest {
         repository.deleteProjectChats("target")
         for (table in listOf("conversations", "messages", "citation_evidence", "tool_calls")) assertEquals(table, 0, count(table))
         assertNotNull(db.projectDao().get("target"))
-        assertEquals(8, db.openHelper.readableDatabase.version)
+        assertEquals(10, db.openHelper.readableDatabase.version)
     }
 
     @Test fun preservesOtherChatsDocumentsMemoryModelsAndProjectSettings() = runBlocking {
