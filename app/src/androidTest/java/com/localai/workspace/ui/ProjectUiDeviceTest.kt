@@ -5,6 +5,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.localai.workspace.MainActivity
 import com.localai.workspace.LocalAiApplication
+import com.localai.workspace.R
 import com.localai.workspace.context.MemoryKind
 import com.localai.workspace.context.ScopeAccess
 import kotlinx.coroutines.Dispatchers
@@ -29,10 +30,10 @@ class ProjectUiDeviceTest {
         compose.onNodeWithText("Files").performClick()
         compose.onNodeWithText("No files yet").assertExists()
         compose.onNodeWithText("Memory").performClick()
-        compose.onNodeWithText("Structured memory").performClick()
-        compose.onNodeWithText("Add").performClick()
-        compose.onNodeWithText("Content").performTextInput("Approved UI validation memory")
-        compose.onNodeWithText("Save").performClick()
+        compose.onNodeWithText(text(R.string.memory_title)).performClick()
+        compose.onNodeWithText(text(R.string.common_add)).performClick()
+        compose.onNodeWithText(text(R.string.memory_content)).performTextInput("Approved UI validation memory")
+        compose.onNodeWithText(text(R.string.common_save)).performClick()
         awaitText("Approved UI validation memory")
         val graph = (compose.activity.application as LocalAiApplication).graph
         val memoryId = runBlocking(Dispatchers.IO) {
@@ -41,15 +42,15 @@ class ProjectUiDeviceTest {
                 it.scopeId == project.id && it.text == "Approved UI validation memory"
             }.id
         }
-        compose.onNodeWithText("Details").performClick()
-        compose.onNodeWithText("Edit").performClick()
-        compose.onNodeWithText("Content").performTextReplacement("Edited UI validation memory")
-        compose.onNodeWithText("Save").performClick()
+        compose.onNodeWithText(text(R.string.memory_details)).performClick()
+        compose.onNodeWithText(text(R.string.common_edit)).performClick()
+        compose.onNodeWithText(text(R.string.memory_content)).performTextReplacement("Edited UI validation memory")
+        compose.onNodeWithText(text(R.string.common_save)).performClick()
         awaitText("Edited UI validation memory")
-        compose.onNodeWithText("Details").performClick()
-        compose.onNodeWithText("Delete").performClick()
-        compose.onNodeWithText("Delete memory?").assertIsDisplayed()
-        compose.onNodeWithText("Delete").performClick()
+        compose.onNodeWithText(text(R.string.memory_details)).performClick()
+        compose.onNodeWithText(text(R.string.common_delete)).performClick()
+        compose.onNodeWithText(text(R.string.memory_delete_title)).assertIsDisplayed()
+        compose.onNodeWithText(text(R.string.common_delete)).performClick()
         compose.waitUntil(15_000) { compose.onAllNodesWithText("Edited UI validation memory").fetchSemanticsNodes().isEmpty() }
         compose.onNodeWithText("Settings").performClick()
         compose.onNodeWithText("Current configuration").assertExists()
@@ -63,4 +64,6 @@ class ProjectUiDeviceTest {
     private fun awaitText(text: String) = compose.waitUntil(15_000) {
         compose.onAllNodesWithText(text).fetchSemanticsNodes().isNotEmpty()
     }
+
+    private fun text(id: Int, vararg args: Any): String = compose.activity.getString(id, *args)
 }

@@ -5,6 +5,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.localai.workspace.LocalAiApplication
 import com.localai.workspace.MainActivity
+import com.localai.workspace.R
 import com.localai.workspace.context.ContextVector
 import com.localai.workspace.context.MemoryBundleV1
 import com.localai.workspace.context.MemoryKind
@@ -25,21 +26,21 @@ class ContextMemoryDeviceTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     @Test fun structuredMemoryEntryAndEditorAreAccessible() {
         compose.onNodeWithText("Settings").performClick()
-        compose.onNodeWithText("Structured memory").performClick()
-        compose.onNodeWithText("Search saved memory").assertExists()
-        compose.onNodeWithText("Add").performClick()
-        compose.onNodeWithText("Content").assertExists()
-        compose.onNodeWithText("Expires in days (optional)").assertExists()
-        compose.onNodeWithText("Scope: user").performClick()
-        compose.onNodeWithText("Global · this device").performClick()
-        compose.onNodeWithText("Scope: global").assertExists()
+        compose.onNodeWithText(text(R.string.memory_title)).performClick()
+        compose.onNodeWithText(text(R.string.memory_search)).assertExists()
+        compose.onNodeWithText(text(R.string.common_add)).performClick()
+        compose.onNodeWithText(text(R.string.memory_content)).assertExists()
+        compose.onNodeWithText(text(R.string.memory_expiration_days)).assertExists()
+        compose.onNodeWithText(text(R.string.memory_scope, text(R.string.memory_scope_user))).performClick()
+        compose.onNodeWithText(text(R.string.memory_global_scope)).performClick()
+        compose.onNodeWithText(text(R.string.memory_scope, text(R.string.memory_scope_global))).assertExists()
     }
     @Test fun inspectorDoesNotStartGenerationAutomatically() {
         compose.onNodeWithText("Settings").performClick()
         compose.onNodeWithText("Developer / Diagnostics").performClick()
-        compose.onNodeWithText("Context Inspector / Memory Validation").performScrollTo().performClick()
-        compose.onNodeWithText("Build context · no generation").assertExists().assertIsNotEnabled()
-        compose.onNodeWithText("Run with Gemma · explicit").assertDoesNotExist()
+        compose.onNodeWithText(text(R.string.memory_context_validation)).performScrollTo().performClick()
+        compose.onNodeWithText(text(R.string.memory_build_context_no_generation)).assertExists().assertIsNotEnabled()
+        compose.onNodeWithText(text(R.string.memory_run_gemma_explicit)).assertDoesNotExist()
     }
 
     @Test fun H1_AT_13_forgetPermanentlyUsesConfirmationAndLeavesNoAppOwnedMarkerBytes() {
@@ -66,13 +67,13 @@ class ContextMemoryDeviceTest {
         val current=versions.last()
 
         compose.onNodeWithText("Settings").performClick()
-        compose.onNodeWithText("Structured memory").performClick()
-        compose.onNodeWithText("Search saved memory").performTextReplacement(marker)
-        compose.onNodeWithText("Details").performScrollTo().performClick()
-        compose.onNodeWithText("Memory details").assertIsDisplayed()
-        compose.onNodeWithText("Forget permanently").performScrollTo().performClick()
-        compose.onNodeWithText("Forget this memory and its versions?").assertIsDisplayed()
-        compose.onNodeWithText("Forget permanently").performClick()
+        compose.onNodeWithText(text(R.string.memory_title)).performClick()
+        compose.onNodeWithText(text(R.string.memory_search)).performTextReplacement(marker)
+        compose.onNodeWithText(text(R.string.memory_details)).performScrollTo().performClick()
+        compose.onNodeWithText(text(R.string.memory_forget_permanently)).assertIsDisplayed()
+        compose.onNodeWithText(text(R.string.memory_forget_permanently)).performScrollTo().performClick()
+        compose.onNodeWithText(text(R.string.memory_forget_title)).assertIsDisplayed()
+        compose.onNodeWithText(text(R.string.memory_forget_permanently)).performClick()
 
         compose.waitUntil(10_000) { runBlocking { manager.get(current.id)==null } }
         runBlocking {
@@ -106,4 +107,6 @@ class ContextMemoryDeviceTest {
         }
         return false
     }
+
+    private fun text(id: Int, vararg args: Any): String = compose.activity.getString(id, *args)
 }
