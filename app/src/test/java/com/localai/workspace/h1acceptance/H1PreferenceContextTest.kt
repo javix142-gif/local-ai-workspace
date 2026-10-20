@@ -235,9 +235,9 @@ class H1PreferenceContextTest {
                 assertEquals("PINNED_PREFERENCE_LIMIT_EXCEEDED",failure.message)
                 rejectedId=item.id
                 assertFalse(requireNotNull(manager.get(item.id)).pinned)
-                val explanation=memoryActionErrorMessage(IllegalStateException(failure.message))
-                assertTrue(explanation.contains("15%"))
-                assertTrue(explanation.contains("not pinned"))
+                val explanation=memoryActionErrorMessage(RuntimeEnvironment.getApplication(),IllegalStateException(failure.message))
+                assertTrue(explanation.contains("15 %"))
+                assertTrue(explanation.contains("no se fijó"))
                 break
             }
             assertTrue(requireNotNull(manager.get(item.id)).pinned)
@@ -247,7 +247,25 @@ class H1PreferenceContextTest {
         assertTrue(ContextBudgetPolicy.preferenceBlockSize(pinned)<=ContextBudgetPolicy.preferenceBudget(ContextBudgetPolicy.inputBudget()))
     }
 
-    @Test fun H1_AT_04_importedOverBudgetPinsAreExplainedAndNeverReachTheRuntime()=runBlocking {
+    @Test fun H1_AT_04_individualApprovalCannotActivateAnImportedPinBeyondTheFifteenPercentCap()=runBlocking {
+        val manager=graph.contextFoundation.memory
+        val text="H1_AT04_IMPORTED_SINGLE_PIN_Ñ "+"x".repeat(8_000)
+        val preview=MemoryBundleV1.read(ByteArrayInputStream(MemoryBundleV1.write(listOf(
+            record("h1-at04-single-imported-pin",text,pinned=true,kind=MemoryKind.PREFERENCE),
+        ))))
+        val imported=manager.importBundlePending(preview,preview.candidates.map{it.key}.toSet())
+        val pendingId=imported.pendingIds.single()
+
+        val failure=runCatching{manager.approve(pendingId,ScopeAccess())}.exceptionOrNull()
+
+        assertEquals("PINNED_PREFERENCE_LIMIT_EXCEEDED",failure?.message)
+        val unchanged=requireNotNull(manager.get(pendingId))
+        assertEquals("PENDING",unchanged.status)
+        assertTrue("The original pin intent is retained while approval is pending",unchanged.pinned)
+        assertTrue(manager.lookup(ScopeAccess()).isEmpty())
+    }
+
+    @Test fun H1_AT_04_batchImportPinConflictStaysPendingUntilExplicitNoPinApproval()=runBlocking {
         val foundation=graph.contextFoundation
         foundation.enable(true)
         val records=(1..12).map{i->
@@ -256,16 +274,34 @@ class H1PreferenceContextTest {
         val preview=MemoryBundleV1.read(ByteArrayInputStream(MemoryBundleV1.write(records)))
         val imported=foundation.memory.importBundlePending(preview,preview.candidates.map{it.key}.toSet())
         assertEquals(12,imported.imported)
-        imported.pendingIds.forEach{foundation.memory.approve(it,ScopeAccess())}
-        assertEquals(12,foundation.memory.lookup(ScopeAccess()).count{it.pinned})
+        val initial=foundation.memory.approveBatch(imported.pendingIds,ScopeAccess())
+        assertTrue(initial is MemoryManager.ApprovalBatchResult.RequiresPinChoice)
+        assertEquals(imported.pendingIds.toSet(),(initial as MemoryManager.ApprovalBatchResult.RequiresPinChoice).pinnedCandidateIds.toSet())
+        assertTrue("A rejected batch must leave every selected row pending",imported.pendingIds.all{foundation.memory.get(it)?.status=="PENDING"})
+        assertEquals(0,foundation.memory.lookup(ScopeAccess()).count{it.pinned})
+
+        val unconfirmed=runCatching{
+            foundation.memory.approveBatch(imported.pendingIds,ScopeAccess(),imported.pendingIds.toSet(),confirmed=false)
+        }.exceptionOrNull()
+        assertEquals("PIN_APPROVAL_REQUIRES_EXPLICIT_CONFIRMATION",unconfirmed?.message)
+        assertTrue(imported.pendingIds.all{foundation.memory.get(it)?.status=="PENDING"})
+
+        val decision=foundation.memory.approveBatch(imported.pendingIds,ScopeAccess(),imported.pendingIds.toSet(),confirmed=true)
+        assertTrue(decision is MemoryManager.ApprovalBatchResult.Approved)
+        assertEquals(12,foundation.memory.lookup(ScopeAccess()).size)
+        assertEquals(0,foundation.memory.lookup(ScopeAccess()).count{it.pinned})
+        imported.pendingIds.forEach{id->
+            val approved=requireNotNull(foundation.memory.get(id))
+            val provenance=org.json.JSONObject(approved.structuredPayloadJson.orEmpty())
+            assertTrue(provenance.getBoolean("originalPinned"))
+            assertEquals("APPROVED_WITHOUT_PIN",provenance.getString("approvalDecision"))
+        }
 
         val vm=openChat()
         assertTrue(vm.send("Explain the saved context records"))
-        val error=withTimeout(20_000){vm.generationError.first{it?.code=="PINNED_PREFERENCE_EXCEEDS_CONTEXT_BUDGET"}}!!
-        assertTrue(error.message.contains("15%"))
-        assertTrue(error.message.contains("No prompt was sent"))
-        assertTrue(error.message.contains("Unpin or shorten"))
-        assertTrue("Context rejection must happen before a runtime request",backend.requests.tryReceive().isFailure)
+        val request=withTimeout(20_000){backend.requests.receive()}
+        assertTrue(request.prompt.contains("Explain the saved context records"))
+        assertNull("A conflict import must not leave chat blocked",vm.generationError.value)
     }
 
     @Test fun H1_AT_05_structuredConflictRequiresConfirmationAndOnlyTheReplacementReachesChat()=runBlocking {
@@ -282,7 +318,7 @@ class H1PreferenceContextTest {
         }.exceptionOrNull()
         assertTrue("A differing active structured value must require confirmation",conflict is StructuredPreferenceConflictException)
         assertEquals("STRUCTURED_PREFERENCE_CONFLICT",conflict?.message)
-        assertTrue(memoryActionErrorMessage(requireNotNull(conflict as? Exception)).contains("Review it before replacing it"))
+        assertTrue(memoryActionErrorMessage(RuntimeEnvironment.getApplication(),requireNotNull(conflict as? Exception)).contains("Revísala antes de reemplazarla"))
         assertEquals("ACTIVE",foundation.memory.get(old.id)?.status)
         assertEquals("short",foundation.memory.get(old.id)?.objectValue)
 
@@ -615,7 +651,7 @@ class H1PreferenceContextTest {
         assertNull(manager.get(old.id));assertEquals(recent,manager.get(recent.id));assertEquals(active,manager.get(active.id))
     }
 
-    @Test fun H1_AT_17_roundTripsAllThousandRecordsAndRejectsAnOversizedPinnedPrompt()=runBlocking {
+    @Test fun H1_AT_17_roundTripsAllThousandRecordsAndRequiresExplicitNoPinDecisionForOversizedPins()=runBlocking {
         val manager=graph.contextFoundation.memory;val now=System.currentTimeMillis()
         val projects=(1..3).map{graph.workspace.createProject("H1 AT17 project $it")}
         val source=(1..1000).map{i->
@@ -663,9 +699,20 @@ class H1PreferenceContextTest {
                 assertEquals(original.importance,candidate?.importance?:-1.0,0.0);assertEquals(original.confidence,candidate?.confidence?:-1.0,0.0)
                 assertEquals(original.subject,candidate?.subject);assertEquals(original.predicate,candidate?.predicate);assertEquals(original.objectValue,candidate?.objectValue)
             }
-            for(record in pending.values.sortedBy{it.id}){
-                val scopeAccess=if(record.scopeType=="PROJECT")ScopeAccess(projectId=record.scopeId)else ScopeAccess()
-                importedManager.approve(record.id,scopeAccess)
+            val approvedWithoutPinIds=mutableSetOf<String>()
+            pending.values.groupBy{it.scopeType to it.scopeId}.forEach{(scope,entries)->
+                val scopeAccess=if(scope.first=="PROJECT")ScopeAccess(projectId=scope.second)else ScopeAccess()
+                val ids=entries.map{it.id}
+                when(val result=importedManager.approveBatch(ids,scopeAccess)){
+                    is MemoryManager.ApprovalBatchResult.Approved -> Unit
+                    is MemoryManager.ApprovalBatchResult.RequiresPinChoice -> {
+                        assertTrue("No row in a conflicting batch may be activated",entries.all{importedManager.get(it.id)?.status=="PENDING"})
+                        val explicitlySelected=result.pinnedCandidateIds.toSet()
+                        assertEquals(entries.filter{it.pinned}.map{it.id}.toSet(),explicitlySelected)
+                        approvedWithoutPinIds+=explicitlySelected
+                        assertTrue(importedManager.approveBatch(ids,scopeAccess,explicitlySelected,confirmed=true) is MemoryManager.ApprovalBatchResult.Approved)
+                    }
+                }
             }
             val active=importedDb.dao().observe().first().filter{it.status=="ACTIVE"}
             assertEquals(1000,active.size)
@@ -674,15 +721,17 @@ class H1PreferenceContextTest {
                 assertEquals(original.text,imported.text)
                 assertEquals(original.kind,imported.kind)
                 assertEquals(original.scopeType,imported.scopeType);assertEquals(original.scopeId,imported.scopeId)
-                assertEquals(original.pinned,imported.pinned);assertEquals(original.expiresAt,imported.expiresAt)
+                val provenance=org.json.JSONObject(imported.structuredPayloadJson.orEmpty())
+                val explicitlyApprovedWithoutPin=provenance.optString("approvalDecision")=="APPROVED_WITHOUT_PIN"
+                assertEquals(original.pinned&&!explicitlyApprovedWithoutPin,imported.pinned);assertEquals(original.expiresAt,imported.expiresAt)
                 assertEquals(original.importance,imported.importance,0.0);assertEquals(original.confidence,imported.confidence,0.0)
                 assertEquals(original.subject,imported.subject);assertEquals(original.predicate,imported.predicate);assertEquals(original.objectValue,imported.objectValue)
+                assertEquals("Original pin metadata must remain auditable",original.pinned,provenance.getBoolean("originalPinned"))
+                if(explicitlyApprovedWithoutPin)assertTrue(original.pinned)
             }
-            assertEquals(50,active.count{it.pinned})
-            val promptFailure=runCatching {
-                ContextBuilder().build(ContextRequest("H1_AT_17_PINNED_BUDGET" ,approvedPreferences=importedManager.approvedPromptMemories(active)),emptyList())
-            }.exceptionOrNull()
-            assertEquals("PINNED_PREFERENCE_EXCEEDS_CONTEXT_BUDGET",promptFailure?.message)
+            assertEquals(0,active.count{it.pinned})
+            val contextBundle=ContextBuilder().build(ContextRequest("H1_AT_17_PINNED_BUDGET" ,approvedPreferences=importedManager.approvedPromptMemories(active)),emptyList())
+            assertTrue("Approved memories must leave a usable bounded prompt",contextBundle.estimatedInputTokens<=contextBundle.inputBudget)
             val duplicate=importedManager.importBundlePending(preview,preview.candidates.map{it.key}.toSet(),projects.toSet())
             assertEquals(0,duplicate.imported);assertEquals(1000,duplicate.duplicates)
         } finally { importedDb.close() }

@@ -10,8 +10,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.localai.workspace.LocalAiApplication
+import com.localai.workspace.R
 import com.localai.workspace.agents.*
 import com.localai.workspace.skills.*
 import com.localai.workspace.sources.*
@@ -27,6 +29,7 @@ fun SkillProposalReviewDialog(
     onDismiss: () -> Unit,
     onSave: (SkillDefinition) -> Unit,
 ) {
+    val context = LocalContext.current
     var editableMarkdown by remember(markdown) { mutableStateOf(markdown) }
     var proposal by remember(markdown) { mutableStateOf(runCatching { SkillDraftProposalParser.parse(markdown) }.getOrNull()) }
     var parseError by remember(markdown) { mutableStateOf<String?>(runCatching { SkillDraftProposalParser.parse(markdown) }.exceptionOrNull()?.message) }
@@ -45,50 +48,50 @@ fun SkillProposalReviewDialog(
 
     AlertDialog(
         onDismissRequest = { if (!saving) onDismiss() },
-        title = { Text(if (proposal == null) "Review SKILL.md draft" else "Review Skill proposal") },
+        title = { Text(stringResource(if (proposal == null) R.string.chat_skill_review_draft_title else R.string.chat_skill_review_proposal_title)) },
         text = {
             Column(Modifier.heightIn(max = 560.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 if (proposal == null) {
-                    Text("The response is not valid SKILL.md yet. Edit the draft or ask Gemma to return the required frontmatter; nothing has been saved.")
+                    Text(stringResource(R.string.chat_skill_invalid_draft))
                     parseError?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
-                    OutlinedTextField(editableMarkdown, { editableMarkdown = it }, label = { Text("SKILL.md draft") }, modifier = Modifier.fillMaxWidth(), minLines = 8)
+                    OutlinedTextField(editableMarkdown, { editableMarkdown = it }, label = { Text(stringResource(R.string.chat_skill_draft_label)) }, modifier = Modifier.fillMaxWidth(), minLines = 8)
                     errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
                 } else {
                     val parsed = requireNotNull(proposal)
-                    Text("Review and edit the proposal. Tool, source and capability suggestions start unselected. Saving keeps the Skill disabled.", style = MaterialTheme.typography.bodySmall)
-                    OutlinedTextField(name, { name = it }, label = { Text("Name") }, modifier = Modifier.fillMaxWidth())
-                    OutlinedTextField(description, { description = it }, label = { Text("Description") }, modifier = Modifier.fillMaxWidth(), minLines = 2)
-                    OutlinedTextField(version, { version = it }, label = { Text("Version") }, modifier = Modifier.fillMaxWidth())
-                    OutlinedTextField(tags, { tags = it }, label = { Text("Tags · comma separated") }, modifier = Modifier.fillMaxWidth())
-                    OutlinedTextField(activation, { activation = it }, label = { Text("Activation conditions") }, modifier = Modifier.fillMaxWidth(), minLines = 2)
-                    OutlinedTextField(instructions, { instructions = it }, label = { Text("Procedural instructions") }, modifier = Modifier.fillMaxWidth(), minLines = 5)
-                    OutlinedTextField(responseFormat, { responseFormat = it }, label = { Text("Response format") }, modifier = Modifier.fillMaxWidth(), minLines = 2)
-                    OutlinedTextField(restrictions, { restrictions = it }, label = { Text("Restrictions") }, modifier = Modifier.fillMaxWidth(), minLines = 2)
-                    OutlinedTextField(useCases, { useCases = it }, label = { Text("Use cases") }, modifier = Modifier.fillMaxWidth(), minLines = 2)
-                    Text("Available tools · select explicitly", style = MaterialTheme.typography.titleSmall)
-                    Text(if (parsed.suggestedTools.isEmpty()) "Gemma suggested no available tools." else "Gemma suggested: ${parsed.suggestedTools.sorted().joinToString()}. Suggestions are not selected automatically.", style = MaterialTheme.typography.bodySmall)
+                    Text(stringResource(R.string.chat_skill_review_guidance), style = MaterialTheme.typography.bodySmall)
+                    OutlinedTextField(name, { name = it }, label = { Text(stringResource(R.string.chat_skill_name)) }, modifier = Modifier.fillMaxWidth())
+                    OutlinedTextField(description, { description = it }, label = { Text(stringResource(R.string.chat_skill_description)) }, modifier = Modifier.fillMaxWidth(), minLines = 2)
+                    OutlinedTextField(version, { version = it }, label = { Text(stringResource(R.string.chat_skill_version)) }, modifier = Modifier.fillMaxWidth())
+                    OutlinedTextField(tags, { tags = it }, label = { Text(stringResource(R.string.chat_skill_tags)) }, modifier = Modifier.fillMaxWidth())
+                    OutlinedTextField(activation, { activation = it }, label = { Text(stringResource(R.string.chat_skill_activation)) }, modifier = Modifier.fillMaxWidth(), minLines = 2)
+                    OutlinedTextField(instructions, { instructions = it }, label = { Text(stringResource(R.string.chat_skill_instructions)) }, modifier = Modifier.fillMaxWidth(), minLines = 5)
+                    OutlinedTextField(responseFormat, { responseFormat = it }, label = { Text(stringResource(R.string.chat_skill_response_format)) }, modifier = Modifier.fillMaxWidth(), minLines = 2)
+                    OutlinedTextField(restrictions, { restrictions = it }, label = { Text(stringResource(R.string.chat_skill_restrictions)) }, modifier = Modifier.fillMaxWidth(), minLines = 2)
+                    OutlinedTextField(useCases, { useCases = it }, label = { Text(stringResource(R.string.chat_skill_use_cases)) }, modifier = Modifier.fillMaxWidth(), minLines = 2)
+                    Text(stringResource(R.string.chat_skill_available_tools), style = MaterialTheme.typography.titleSmall)
+                    Text(if (parsed.suggestedTools.isEmpty()) stringResource(R.string.chat_skill_no_tools_suggested) else stringResource(R.string.chat_skill_tools_suggested,parsed.suggestedTools.sorted().joinToString()), style = MaterialTheme.typography.bodySmall)
                     SkillDefinition.STANDARD_TOOLS.sorted().forEach { id -> Choice(id, id in selectedTools) { selectedTools = if (it) selectedTools + id else selectedTools - id } }
-                    Text("Capabilities · select requirements explicitly", style = MaterialTheme.typography.titleSmall)
-                    Text("Available locally: ${com.localai.workspace.capabilities.CapabilityPolicy.localCapabilities.map { it.name }.sorted().joinToString()}", style = MaterialTheme.typography.bodySmall)
-                    if (parsed.suggestedCapabilities.isNotEmpty()) Text("Gemma suggested: ${parsed.suggestedCapabilities.map { it.name }.sorted().joinToString()}. Suggestions are not selected automatically.", style = MaterialTheme.typography.bodySmall)
+                    Text(stringResource(R.string.chat_skill_capabilities), style = MaterialTheme.typography.titleSmall)
+                    Text(stringResource(R.string.chat_skill_local_capabilities,com.localai.workspace.capabilities.CapabilityPolicy.localCapabilities.map { it.name }.sorted().joinToString()), style = MaterialTheme.typography.bodySmall)
+                    if (parsed.suggestedCapabilities.isNotEmpty()) Text(stringResource(R.string.chat_skill_capabilities_suggested,parsed.suggestedCapabilities.map { it.name }.sorted().joinToString()), style = MaterialTheme.typography.bodySmall)
                     com.localai.workspace.capabilities.Capability.entries.forEach { capability ->
                         val availableLocally = capability in com.localai.workspace.capabilities.CapabilityPolicy.localCapabilities
-                        Choice(capability.name + if (availableLocally) "" else " · unavailable locally", capability in selectedCapabilities) {
+                        Choice(capability.name + if (availableLocally) "" else stringResource(R.string.chat_skill_unavailable_local), capability in selectedCapabilities) {
                             selectedCapabilities = if (it) selectedCapabilities + capability else selectedCapabilities - capability
                         }
                     }
-                    Text("Local sources · select explicitly", style = MaterialTheme.typography.titleSmall)
-                    if (parsed.suggestedSources.isNotEmpty()) Text("Gemma suggested: ${parsed.suggestedSources.map { it.name }.sorted().joinToString()}. Suggestions are not selected automatically.", style = MaterialTheme.typography.bodySmall)
+                    Text(stringResource(R.string.chat_skill_local_sources), style = MaterialTheme.typography.titleSmall)
+                    if (parsed.suggestedSources.isNotEmpty()) Text(stringResource(R.string.chat_skill_sources_suggested,parsed.suggestedSources.map { it.name }.sorted().joinToString()), style = MaterialTheme.typography.bodySmall)
                     SourceType.local.sortedBy { it.name }.forEach { source ->
                         Choice(source.name, source in selectedSources) { selectedSources = if (it) selectedSources + source else selectedSources - source }
                     }
                     val unavailable = buildList {
-                        parsed.unavailableTools.takeIf { it.isNotEmpty() }?.let { add("Tools not available: ${it.sorted().joinToString()}") }
+                        parsed.unavailableTools.takeIf { it.isNotEmpty() }?.let { add(context.getString(R.string.chat_skill_tools_unavailable,it.sorted().joinToString())) }
                         val unavailableCapabilities = parsed.unavailableCapabilities + selectedCapabilities
                             .filter { it !in com.localai.workspace.capabilities.CapabilityPolicy.localCapabilities }
                             .map { it.name }
-                        unavailableCapabilities.takeIf { it.isNotEmpty() }?.let { add("Capabilities not available in this local workspace: ${it.sorted().joinToString()}") }
-                        parsed.unavailableSources.takeIf { it.isNotEmpty() }?.let { add("Sources not available: ${it.sorted().joinToString()}") }
+                        unavailableCapabilities.takeIf { it.isNotEmpty() }?.let { add(context.getString(R.string.chat_skill_capabilities_unavailable,it.sorted().joinToString())) }
+                        parsed.unavailableSources.takeIf { it.isNotEmpty() }?.let { add(context.getString(R.string.chat_skill_sources_unavailable,it.sorted().joinToString())) }
                     }
                     unavailable.forEach { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
                     errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
@@ -112,15 +115,15 @@ fun SkillProposalReviewDialog(
                         parseError = null
                     }
                     .onFailure { parseError = it.message ?: "SKILL_METADATA_INVALID" }
-            }) { Text("Validate SKILL.md") }
+            }) { Text(stringResource(R.string.chat_skill_validate)) }
             else TextButton(enabled = !saving && name.isNotBlank() && description.isNotBlank() && version.isNotBlank() && instructions.isNotBlank(), onClick = {
                 val parsed = requireNotNull(proposal)
                 onSave(parsed.configured(name, description, instructions, activation, responseFormat, restrictions, useCases,
                     selectedTools, selectedCapabilities, selectedSources, version = version,
                     tags = tags.split(',').map(String::trim).filter(String::isNotEmpty)))
-            }) { Text(if (saving) "Saving…" else "Save disabled Skill") }
+            }) { Text(stringResource(if (saving) R.string.chat_skill_saving else R.string.chat_skill_save_disabled)) }
         },
-        dismissButton = { TextButton(enabled = !saving, onClick = onDismiss) { Text("Cancel") } },
+        dismissButton = { TextButton(enabled = !saving, onClick = onDismiss) { Text(stringResource(R.string.common_cancel)) } },
     )
 }
 
@@ -224,15 +227,16 @@ fun SkillProposalReviewDialog(
     var open by remember{mutableStateOf(false)}
     LaunchedEffect(Unit){graph.agentRegistry.initialize()}
     val current=agents.firstOrNull{it.id==(explicit ?: preferred?.preferredAgentId)&&it.enabled} ?: agents.firstOrNull{it.id==AgentResolver.GENERAL}
-    Box{TextButton(onClick={open=true},enabled=enabled){Text(current?.name ?: "General Agent",style=MaterialTheme.typography.labelSmall)};DropdownMenu(open,{open=false}){
-        DropdownMenuItem(text={Text("Project / General default")},onClick={vm.selectAgent(null);open=false})
-        agents.filter{it.enabled}.forEach{a->DropdownMenuItem(text={Text(a.name)},onClick={vm.selectAgent(a.id);open=false})}
+    val generalName=stringResource(R.string.chat_agent_general)
+    Box{TextButton(onClick={open=true},enabled=enabled){Text(if(current?.id==AgentResolver.GENERAL)generalName else current?.name ?: generalName,style=MaterialTheme.typography.labelSmall)};DropdownMenu(open,{open=false}){
+        DropdownMenuItem(text={Text(stringResource(R.string.chat_agent_project_default))},onClick={vm.selectAgent(null);open=false})
+        agents.filter{it.enabled}.forEach{a->DropdownMenuItem(text={Text(if(a.id==AgentResolver.GENERAL)generalName else a.name)},onClick={vm.selectAgent(a.id);open=false})}
     }}
 }
 @Composable fun ChatSkillSelection(vm:ChatViewModel,close:()->Unit) {
     val graph=(LocalContext.current.applicationContext as LocalAiApplication).graph;val skills by graph.skillRegistry.changes.collectAsState(initial=emptyList());val ids by vm.explicitSkillIds.collectAsState()
     LaunchedEffect(Unit){graph.skillRegistry.initialize()}
-    SemanticPanel("Skills for next turn",close){Text("Automatic deterministic selection remains active. Explicit selections still require agent and capability availability.",style=MaterialTheme.typography.bodySmall);skills.filter{it.enabled}.forEach{s->Choice(s.name,s.id in ids){vm.selectSkills(if(it)ids+s.id else ids-s.id)}};TextButton(onClick={vm.selectSkills(emptySet())}){Text("Clear explicit selections")}}
+    SemanticPanel(stringResource(R.string.chat_skills_next_turn),close){Text(stringResource(R.string.chat_skills_auto_description),style=MaterialTheme.typography.bodySmall);skills.filter{it.enabled}.forEach{s->Choice(s.name,s.id in ids){vm.selectSkills(if(it)ids+s.id else ids-s.id)}};TextButton(onClick={vm.selectSkills(emptySet())}){Text(stringResource(R.string.chat_skills_clear_selection))}}
 }
 @Composable fun AgentRoutingDetails(vm:ChatViewModel) {
     val trace by vm.agentTrace.collectAsState();val calls by vm.toolCalls.collectAsState()
@@ -247,7 +251,8 @@ fun SkillProposalReviewDialog(
     val agents by graph.agentRegistry.changes.collectAsState(initial=emptyList());val explicit by vm.selectedAgentId.collectAsState()
     val preferred by graph.agentsSkillsDatabase.dao().observePreference(vm.agentProjectId).collectAsState(initial=null)
     LaunchedEffect(Unit){graph.agentRegistry.initialize()}
-    Text(agents.firstOrNull{it.id==(explicit ?: preferred?.preferredAgentId)&&it.enabled}?.name ?: "General Agent",style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+    val selected=agents.firstOrNull{it.id==(explicit ?: preferred?.preferredAgentId)&&it.enabled}
+    Text(if(selected==null||selected.id==AgentResolver.GENERAL)stringResource(R.string.chat_agent_general) else selected.name,style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
 }
 
 @Composable fun AgentsSkillsDiagnosticsEntry() {

@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.CollectionItemInfo
@@ -40,6 +41,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.localai.workspace.ui.theme.LocalAiRadii
 import com.localai.workspace.ui.theme.LocalAiSpacing
+import com.localai.workspace.R
 import com.localai.workspace.ui.components.minimumAppTouchTarget
 
 /** A Material 3 chat app bar whose height follows its wrapped title content. */
@@ -144,14 +146,14 @@ fun ChatComposer(input: String, generating: Boolean, onInputChange: (String) -> 
             ) {
                 Box {
                     IconButton(onClick = { menu = true }, enabled = !generating,
-                        modifier = Modifier.minimumAppTouchTarget()) { Icon(Icons.Default.Add, "Add attachment") }
+                        modifier = Modifier.minimumAppTouchTarget()) { Icon(Icons.Default.Add, stringResource(R.string.chat_add_attachment)) }
                     DropdownMenu(expanded = menu && !generating, onDismissRequest = { menu = false }) {
-                        if (imageEnabled) DropdownMenuItem(text = { Text("Image") }, leadingIcon = { Icon(Icons.Default.Image, null) },
+                        if (imageEnabled) DropdownMenuItem(text = { Text(stringResource(R.string.chat_image)) }, leadingIcon = { Icon(Icons.Default.Image, null) },
                             onClick = { menu = false; onAttachImage() })
-                        if (audioEnabled && onAttachAudio != null) DropdownMenuItem(text = { Text("Audio") }, leadingIcon = { Icon(Icons.Default.AudioFile, null) }, onClick = { menu = false; onAttachAudio() })
-                        DropdownMenuItem(text = { Text("File") }, leadingIcon = { Icon(Icons.Default.AttachFile, null) },
+                        if (audioEnabled && onAttachAudio != null) DropdownMenuItem(text = { Text(stringResource(R.string.chat_audio)) }, leadingIcon = { Icon(Icons.Default.AudioFile, null) }, onClick = { menu = false; onAttachAudio() })
+                        DropdownMenuItem(text = { Text(stringResource(R.string.chat_file)) }, leadingIcon = { Icon(Icons.Default.AttachFile, null) },
                             onClick = { menu = false; onAttach() })
-                        onFiles?.let { action -> DropdownMenuItem(text = { Text("Workspace files") },
+                        onFiles?.let { action -> DropdownMenuItem(text = { Text(stringResource(R.string.chat_workspace_files)) },
                             leadingIcon = { Icon(Icons.Default.FolderOpen, null) }, onClick = { menu = false; action() }) }
                     }
                 }
@@ -162,7 +164,7 @@ fun ChatComposer(input: String, generating: Boolean, onInputChange: (String) -> 
                     maxLines = 5, enabled = !generating,
                     decorationBox = { field ->
                         Box(Modifier.padding(vertical = LocalAiSpacing.x2), contentAlignment = Alignment.CenterStart) {
-                            if (input.isEmpty()) Text("Ask anything…", style = MaterialTheme.typography.bodyLarge,
+                            if (input.isEmpty()) Text(stringResource(R.string.chat_input_hint), style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant)
                             field()
                         }
@@ -170,7 +172,8 @@ fun ChatComposer(input: String, generating: Boolean, onInputChange: (String) -> 
                 if (contextualControlsInline) contextualControls?.invoke()
                 IconButton(onClick = if (generating) onStop else onSend, enabled = generating || input.isNotBlank(),
                     modifier = Modifier.minimumAppTouchTarget()) {
-                    Icon(if (generating) Icons.Default.Stop else Icons.AutoMirrored.Filled.Send, if (generating) "Stop" else "Send")
+                    Icon(if (generating) Icons.Default.Stop else Icons.AutoMirrored.Filled.Send,
+                        if (generating) stringResource(R.string.chat_stop) else stringResource(R.string.chat_send))
                 }
             }
         }
@@ -218,7 +221,7 @@ internal fun ChatMessageSurface(
                         verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x1),
                     ) {
                         Text(
-                            text = if (isUser) "You" else "Assistant response",
+                            text = stringResource(if (isUser) R.string.chat_user_message else R.string.chat_assistant_message),
                             style = MaterialTheme.typography.labelMedium,
                             color = if (isUser) MaterialTheme.colorScheme.onPrimaryContainer
                             else MaterialTheme.colorScheme.onSurfaceVariant,
@@ -278,13 +281,14 @@ fun ChatRichText(content: String) {
 private fun MarkdownTable(block: MarkdownBlock.Table, blockIndex: Int) {
     val rows = remember(block) { listOf(block.headers) + block.rows }
     val scrollState = rememberScrollState()
+    val tableDescription = stringResource(R.string.chat_table_description, block.headers.size, block.rows.size)
     SelectionContainer {
         Column(Modifier.fillMaxWidth().testTag("chat-rich-text-block-$blockIndex")) {
             Column(
                 Modifier.fillMaxWidth().horizontalScroll(scrollState)
                     .semantics {
                         collectionInfo = CollectionInfo(rows.size, block.headers.size)
-                        contentDescription = "Table with ${block.headers.size} columns and ${block.rows.size} data rows. Scroll horizontally to view all columns."
+                        contentDescription = tableDescription
                     }
                     .testTag("chat-markdown-table-$blockIndex"),
             ) {
@@ -293,7 +297,7 @@ private fun MarkdownTable(block: MarkdownBlock.Table, blockIndex: Int) {
                         cells.forEachIndexed { columnIndex, value ->
                             val header = block.headers[columnIndex]
                             val isHeader = rowIndex == 0
-                            val accessibleValue = if (isHeader) "Column header: $value" else "$header: $value"
+                            val accessibleValue = if (isHeader) stringResource(R.string.chat_table_column_header, value) else "$header: $value"
                             Surface(
                                 modifier = Modifier.width(176.dp)
                                     .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RectangleShape),
@@ -398,7 +402,8 @@ internal fun AssistantResponseCopyAction(content: String) {
     val clipboard = LocalClipboardManager.current
     var copied by remember(content) { mutableStateOf(false) }
     IconButton(onClick = { clipboard.setText(AnnotatedString(content)); copied = true }) {
-        Icon(if (copied) Icons.Default.CheckCircle else Icons.Default.ContentCopy, "Copy response", Modifier.size(18.dp))
+        Icon(if (copied) Icons.Default.CheckCircle else Icons.Default.ContentCopy,
+            stringResource(R.string.chat_copy_response), Modifier.size(18.dp))
     }
 }
 
@@ -410,9 +415,9 @@ private fun CodeBlock(block: MarkdownBlock.Code, modifier: Modifier = Modifier) 
         color = MaterialTheme.colorScheme.surfaceContainerLowest) {
         Column {
             Row(Modifier.fillMaxWidth().padding(start = 12.dp, end = 4.dp), verticalAlignment = Alignment.CenterVertically) {
-                Text(block.language ?: "Code", Modifier.weight(1f), style = MaterialTheme.typography.labelSmall)
+                Text(block.language ?: stringResource(R.string.chat_code_fallback), Modifier.weight(1f), style = MaterialTheme.typography.labelSmall)
                 IconButton(onClick = { clipboard.setText(AnnotatedString(block.text)); copied = true }) {
-                    Icon(if (copied) Icons.Default.Check else Icons.Default.ContentCopy, "Copy code")
+                    Icon(if (copied) Icons.Default.Check else Icons.Default.ContentCopy, stringResource(R.string.chat_copy_code))
                 }
             }
             SelectionContainer {

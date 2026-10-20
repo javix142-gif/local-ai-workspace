@@ -57,6 +57,8 @@ credentials*
 CREDENTIALS*
 *.keystore
 *.jks
+# Stable development-only QA signer; never used for release signing.
+!keystore/aws-qa-dev.jks
 *.p12
 *.pfx
 *.pem

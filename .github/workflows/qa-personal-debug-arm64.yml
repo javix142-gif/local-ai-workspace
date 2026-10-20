@@ -12,7 +12,12 @@ on:
       - 'app/src/main/java/com/localai/workspace/MainActivity.kt'
       - 'app/src/main/java/com/localai/workspace/ui/ChatContent.kt'
       - 'app/src/main/java/com/localai/workspace/ui/ContextMemoryUi.kt'
+      - 'app/src/main/java/com/localai/workspace/context/MemoryManager.kt'
+      - 'app/src/main/res/values/strings.xml'
+      - 'app/src/test/java/com/localai/workspace/h1acceptance/**'
       - 'app/src/test/java/com/localai/workspace/ui/ChatVisualSurfacesUiTest.kt'
+      - 'keystore/aws-qa-dev.jks'
+      - 'README.md'
   workflow_dispatch:
     inputs:
       parallel_install:
@@ -45,26 +50,6 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Require persistent personal QA signing secrets
-        env:
-          QA_ARTIFACT_DIR: ${{ runner.temp }}/local-ai-workspace-personal-qa-arm64
-          QA_KEYSTORE_B64: ${{ secrets.QA_KEYSTORE_B64 }}
-          QA_KEYSTORE_PASSWORD: ${{ secrets.QA_KEYSTORE_PASSWORD }}
-          QA_KEY_ALIAS: ${{ secrets.QA_KEY_ALIAS }}
-          QA_KEY_PASSWORD: ${{ secrets.QA_KEY_PASSWORD }}
-        run: |
-          mkdir -p "$QA_ARTIFACT_DIR/logs"
-          set -o pipefail
-          python3 - <<'PY' | tee "$QA_ARTIFACT_DIR/logs/signing-preflight.log"
-          import os, sys
-          names = ("QA_KEYSTORE_B64", "QA_KEYSTORE_PASSWORD", "QA_KEY_ALIAS", "QA_KEY_PASSWORD")
-          missing = [name for name in names if not os.environ.get(name)]
-          if missing:
-              print("MISSING_REQUIRED_ACTIONS_SECRETS=" + ",".join(missing))
-              sys.exit(1)
-          print("PERSISTENT_QA_SIGNING_SECRETS_PRESENT")
-          PY
-
       - name: Initialize personal QA evidence
         if: always()
         env:
@@ -94,11 +79,6 @@ jobs:
         timeout-minutes: 65
         env:
           QA_ARTIFACT_DIR: ${{ runner.temp }}/local-ai-workspace-personal-qa-arm64
-          QA_KEYSTORE_B64: ${{ secrets.QA_KEYSTORE_B64 }}
-          QA_KEYSTORE_PASSWORD: ${{ secrets.QA_KEYSTORE_PASSWORD }}
-          QA_KEY_ALIAS: ${{ secrets.QA_KEY_ALIAS }}
-          QA_KEY_PASSWORD: ${{ secrets.QA_KEY_PASSWORD }}
-          QA_REQUIRE_PERSISTENT_SIGNING: 'true'
           QA_PARALLEL_INSTALL: ${{ inputs.parallel_install }}
         run: |
           set -o pipefail

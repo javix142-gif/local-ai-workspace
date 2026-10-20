@@ -456,6 +456,10 @@ def main() -> int:
         "avd-preflight-exit-code.txt",
     ):
         safe_copy(RUNNER_TEMP / filename, OUT / "logs" / filename)
+    at12_dir = RUNNER_TEMP / "h1-at12"
+    for path in sorted(at12_dir.glob("*.txt")):
+        safe_copy(path, OUT / "h1-at12" / path.name)
+    safe_copy(at12_dir / "h1-at12-summary.json", OUT / "h1-at12" / "summary.json")
     safe_copy(RUNNER_TEMP / "avd-prelaunch.json", OUT / "avd-prelaunch.json")
     safe_copy(RUNNER_TEMP / "avd-prelaunch-json-exit-code.txt", OUT / "avd-prelaunch-json-exit-code.txt")
 
@@ -491,6 +495,7 @@ def main() -> int:
         gradle_exit = None
     facts = adb_facts(serial)
     avd_prelaunch = read_json_if_available(OUT / "avd-prelaunch.json")
+    h1_at12 = read_json_if_available(OUT / "h1-at12" / "summary.json")
     packages = installed_package_facts(serial)
     application_installed_after_tests = (
         packages.get("packages", {}).get("application", {}).get("installed") is True
@@ -521,6 +526,8 @@ def main() -> int:
         "testsExecuted": counts["executed"] > 0,
         "noTestFailuresOrErrors": counts["failed"] == 0 and counts["errors"] == 0,
         "headerUiDiagnosticsCaptured": len(header_screenshots) == 2,
+        "h1At12RealUpdateVerified": bool(h1_at12 and h1_at12.get("status") == "PASS"
+            and h1_at12.get("installUpdateCommand") == "adb install -r <current-debug-apk>"),
     }
     summary: dict[str, object] = {
         "label": "EMULATOR",
@@ -547,6 +554,7 @@ def main() -> int:
             "captureReport": screenshot_report,
             "logcat": logcat_report,
         },
+        "h1At12Update": h1_at12 or {"status": "NOT_RUN", "reason": "No H1-AT-12 summary was produced."},
         "acceptanceChecks": checks,
         "status": "PASS" if all(checks.values()) else "FAIL",
         "failureReasons": [key for key, passed in checks.items() if not passed],

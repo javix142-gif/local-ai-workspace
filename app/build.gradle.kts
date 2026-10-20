@@ -7,17 +7,8 @@ plugins {
 
 val arm64Only = providers.gradleProperty("arm64Only").orNull == "true"
 val qaParallelInstall = providers.gradleProperty("qaParallelInstall").orNull == "true"
-val qaKeystoreFile = providers.environmentVariable("QA_KEYSTORE_FILE").orNull
-val qaKeystorePassword = providers.environmentVariable("QA_KEYSTORE_PASSWORD").orNull
-val qaKeyAlias = providers.environmentVariable("QA_KEY_ALIAS").orNull
-val qaKeyPassword = providers.environmentVariable("QA_KEY_PASSWORD").orNull
-val qaKeystoreType = providers.environmentVariable("QA_KEYSTORE_TYPE").orNull
-val qaSigningValues = listOf(qaKeystoreFile, qaKeystorePassword, qaKeyAlias, qaKeyPassword)
-val qaSigningValueCount = qaSigningValues.count { !it.isNullOrBlank() }
-if (qaSigningValueCount in 1..3) {
-    throw GradleException("QA_PERSONAL_SIGNING_CONFIGURATION_INCOMPLETE")
-}
-val qaPersistentSigning = qaSigningValueCount == 4
+val qaDevelopmentKeystore = rootProject.file("keystore/aws-qa-dev.jks")
+if (!qaDevelopmentKeystore.isFile) throw GradleException("QA_DEVELOPMENT_KEYSTORE_MISSING")
 
 android {
     namespace = "com.localai.workspace"
@@ -39,23 +30,19 @@ android {
         }
     }
 
-    if (qaPersistentSigning) {
-        signingConfigs.create("qaPersonal") {
-            storeFile = file(qaKeystoreFile!!)
-            storeType = qaKeystoreType
-            storePassword = qaKeystorePassword
-            keyAlias = qaKeyAlias
-            keyPassword = qaKeyPassword
-        }
+    signingConfigs.create("qaDevelopment") {
+        storeFile = qaDevelopmentKeystore
+        storeType = "JKS"
+        storePassword = "awsqadev"
+        keyAlias = "awsqa"
+        keyPassword = "awsqadev"
     }
 
     buildTypes {
         debug {
             applicationIdSuffix = if (qaParallelInstall) ".parallel" else ".debug"
             versionNameSuffix = "-debug"
-            if (qaPersistentSigning) {
-                signingConfig = signingConfigs.getByName("qaPersonal")
-            }
+            signingConfig = signingConfigs.getByName("qaDevelopment")
         }
         release {
             isMinifyEnabled = false

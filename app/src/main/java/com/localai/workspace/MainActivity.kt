@@ -82,6 +82,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.TopAppBar
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import com.localai.workspace.ui.ChatComposer
 import com.localai.workspace.ui.ChatHeaderTitle
@@ -149,6 +150,20 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.DisposableEffect
 import kotlinx.coroutines.CancellationException
+
+@Composable
+private fun localizedChatGenerationLabel(stage: GenerationStage, cancelling: Boolean = false): String =
+    stringResource(when {
+        cancelling -> R.string.chat_status_stopping
+        stage == GenerationStage.LOADING_MODEL -> R.string.chat_status_loading
+        stage == GenerationStage.WARMING_MODEL || stage == GenerationStage.CREATING_SESSION ||
+            stage == GenerationStage.PREPARING_PROMPT || stage == GenerationStage.PREFILLING -> R.string.chat_status_warming
+        stage == GenerationStage.GENERATING -> R.string.chat_status_generating
+        stage == GenerationStage.ERROR -> R.string.chat_retry_failure
+        stage == GenerationStage.CANCELLED -> R.string.chat_status_stopped
+        stage == GenerationStage.UNLOADING -> R.string.chat_status_unloading
+        else -> R.string.chat_ready
+    })
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -495,11 +510,10 @@ private fun ProjectScreen(viewModel: HomeViewModel, navController: NavHostContro
 private fun DeleteWorkspaceDialog(name: String, standalone: Boolean, onDismiss: () -> Unit, onConfirm: () -> Unit) {
     AlertDialog(onDismissRequest = onDismiss,
         icon = { Icon(Icons.Default.DeleteOutline, contentDescription = null) },
-        title = { Text(if (standalone) "Delete chat?" else "Delete project?") },
-        text = { Text(if (standalone) "Delete “$name”, its messages, attached private files and chat memory? This cannot be undone. Installed models and global memory are kept."
-            else "Delete “$name”, all its chats, private files, source indexes and project memory? This cannot be undone. Installed models, global memory and other projects are kept.") },
-        confirmButton = { TextButton(onClick = onConfirm) { Text("Delete", color = MaterialTheme.colorScheme.error) } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } })
+        title = { Text(stringResource(if (standalone) R.string.chat_delete_title else R.string.chat_delete_project_title)) },
+        text = { Text(stringResource(if (standalone) R.string.chat_delete_workspace_detail else R.string.chat_delete_project_detail,name)) },
+        confirmButton = { TextButton(onClick = onConfirm) { Text(stringResource(R.string.common_delete), color = MaterialTheme.colorScheme.error) } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.common_cancel)) } })
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -925,6 +939,7 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
     var skillProposalError by remember { mutableStateOf<String?>(null) }
     var skillProposalSaving by remember { mutableStateOf(false) }
     val chatScope = rememberCoroutineScope()
+    val skillSavedDisabledMessage = stringResource(R.string.chat_skill_saved_disabled)
     val skillRegistry = (androidx.compose.ui.platform.LocalContext.current.applicationContext as LocalAiApplication).graph.skillRegistry
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let(viewModel::attachDocument) }
     val audioPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let(viewModel::attachAudio) }
@@ -940,38 +955,41 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                 title = {
                     ChatHeaderTitle(
                         agentTitle = { com.localai.workspace.ui.ChatAgentLabel(viewModel) },
-                        conversationTitle = if (skillAuthoringMode) "Create a Skill" else if (standalone) project?.name ?: "Chat" else "${conversation?.title ?: "Chat"} · ${project?.name ?: "Project"}",
-                        modelStatus = selectedModel?.let { "${humanModelName(it.displayName)} · Local · ${when {
-                            generating -> compactGenerationLabel(generationProgress.stage, generationProgress.cancellationRequested)
-                            preparation.modelId == it.id && preparation.preparing -> compactGenerationLabel(preparation.progress.stage)
-                            preparation.modelId == it.id && preparation.ready -> "Ready"
-                            else -> "Not loaded"
-                        }}" } ?: "Choose a model",
+                        conversationTitle = if (skillAuthoringMode) stringResource(R.string.chat_skill_create_title) else if (standalone) project?.name ?: stringResource(R.string.chat_default_title) else "${conversation?.title ?: stringResource(R.string.chat_default_title)} · ${project?.name ?: stringResource(R.string.chat_project_title)}",
+                        modelStatus = selectedModel?.let { model ->
+                            val state = when {
+                                generating -> localizedChatGenerationLabel(generationProgress.stage, generationProgress.cancellationRequested)
+                                preparation.modelId == model.id && preparation.preparing -> localizedChatGenerationLabel(preparation.progress.stage)
+                                preparation.modelId == model.id && preparation.ready -> stringResource(R.string.chat_ready)
+                                else -> stringResource(R.string.chat_not_loaded)
+                            }
+                            stringResource(R.string.chat_local_model_status, humanModelName(model.displayName), state)
+                        } ?: stringResource(R.string.chat_choose_model),
                         onModelClick = { showModelPicker = true },
                         enabled = !generating && !deletingChat,
                     )
                 },
-                navigationIcon = { IconButton(onClick = { navController.popBackStack() }, enabled = !deletingChat) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back") } },
+                navigationIcon = { IconButton(onClick = { navController.popBackStack() }, enabled = !deletingChat) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.chat_back)) } },
                 actions = {
                     Box {
                         IconButton(onClick = { showChatMenu = true }, enabled = !deletingChat) {
-                            Icon(Icons.Default.MoreVert, contentDescription = "Chat options")
+                            Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.chat_options))
                         }
                         DropdownMenu(expanded = showChatMenu, onDismissRequest = { showChatMenu = false }) {
-                            DropdownMenuItem(text = { Text("Model") }, enabled = !generating,
+                            DropdownMenuItem(text = { Text(stringResource(R.string.chat_model)) }, enabled = !generating,
                                 onClick = { showChatMenu = false; showModelPicker = true })
                             if (!skillAuthoringMode) {
-                                DropdownMenuItem(text = { Text("Agent") }, enabled = !generating, onClick = { showChatMenu = false; showAgent = true })
-                                DropdownMenuItem(text = { Text("Skills") }, enabled = !generating, onClick = { showChatMenu = false; showSkills = true })
+                                DropdownMenuItem(text = { Text(stringResource(R.string.chat_agent)) }, enabled = !generating, onClick = { showChatMenu = false; showAgent = true })
+                                DropdownMenuItem(text = { Text(stringResource(R.string.chat_skills)) }, enabled = !generating, onClick = { showChatMenu = false; showSkills = true })
                             }
-                            DropdownMenuItem(text = { Text("Files") }, onClick = { showChatMenu = false; showFiles = true })
+                            DropdownMenuItem(text = { Text(stringResource(R.string.chat_files)) }, onClick = { showChatMenu = false; showFiles = true })
                             if (!skillAuthoringMode) {
-                                DropdownMenuItem(text = { Text("Artifacts") }, enabled=!generating&&!deletingChat, onClick = { showChatMenu=false;showArtifacts=true })
-                                DropdownMenuItem(text = { Text("Memory") }, onClick = { showChatMenu = false; navController.navigate("memory/${project?.id.orEmpty()}") })
-                                DropdownMenuItem(text = { Text("Diagnostics") }, onClick = { showChatMenu = false; showDiagnostics = true })
+                                DropdownMenuItem(text = { Text(stringResource(R.string.chat_artifacts)) }, enabled=!generating&&!deletingChat, onClick = { showChatMenu=false;showArtifacts=true })
+                                DropdownMenuItem(text = { Text(stringResource(R.string.chat_memory)) }, onClick = { showChatMenu = false; navController.navigate("memory/${project?.id.orEmpty()}") })
+                                DropdownMenuItem(text = { Text(stringResource(R.string.chat_diagnostics)) }, onClick = { showChatMenu = false; showDiagnostics = true })
                             }
                             DropdownMenuItem(
-                                text = { Text("Delete chat") },
+                                text = { Text(stringResource(R.string.chat_delete)) },
                                 leadingIcon = { Icon(Icons.Default.DeleteOutline, contentDescription = null) },
                                 onClick = { showChatMenu = false; showDeleteChat = true },
                             )
@@ -988,9 +1006,9 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                         if (attachedImage != null) {
                             com.localai.workspace.ui.PendingImageAttachment(attachedImage!!, !generating && !deletingChat, viewModel::clearImage)
                         }
-                        if (attachedAudio != null) InputChip(selected = true, onClick = {}, label = { Text("Audio attached") }, trailingIcon = { IconButton(onClick = viewModel::clearAudio, enabled = !generating) { Icon(Icons.Default.Close, "Remove audio") } })
+                        if (attachedAudio != null) InputChip(selected = true, onClick = {}, label = { Text(stringResource(R.string.chat_audio_attached)) }, trailingIcon = { IconButton(onClick = viewModel::clearAudio, enabled = !generating) { Icon(Icons.Default.Close, stringResource(R.string.chat_remove_audio)) } })
                         if (selectedFiles.isNotEmpty() || importing) TextButton(onClick = { showFiles = true }) {
-                            Text(if (importing) "Reading files…" else "${selectedFiles.size} file${if (selectedFiles.size == 1) "" else "s"} selected")
+                            Text(if (importing) stringResource(R.string.chat_reading_files) else stringResource(if (selectedFiles.size == 1) R.string.chat_files_selected_one else R.string.chat_files_selected_many, selectedFiles.size))
                         }
                     }
                 }
@@ -1009,7 +1027,7 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
     ) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding)) {
             if (deletingChat) {
-                Text("Deleting chat…", modifier = Modifier.padding(16.dp), style = MaterialTheme.typography.labelMedium)
+                Text(stringResource(R.string.chat_deleting), modifier = Modifier.padding(16.dp), style = MaterialTheme.typography.labelMedium)
                 LinearProgressIndicator(Modifier.fillMaxWidth())
             }
             if (generating || (preparation.preparing && preparation.modelId == selectedModel?.id)) {
@@ -1017,24 +1035,24 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
             }
             if (!generating && preparation.preparing && preparation.modelId == selectedModel?.id) {
                 Row(Modifier.fillMaxWidth().padding(start = 16.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Text(compactGenerationLabel(preparation.progress.stage), Modifier.weight(1f), style = MaterialTheme.typography.labelSmall)
-                    TextButton(onClick = viewModel::cancelPreparation) { Text("Cancel") }
+                    Text(localizedChatGenerationLabel(preparation.progress.stage), Modifier.weight(1f), style = MaterialTheme.typography.labelSmall)
+                    TextButton(onClick = viewModel::cancelPreparation) { Text(stringResource(R.string.common_cancel)) }
                 }
             }
             if (!generating && (generationError != null || preparation.error != null)) {
                 Row(Modifier.fillMaxWidth().padding(start = 16.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Text("Could not finish", Modifier.weight(1f), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.error)
-                    TextButton(onClick = { historicalDiagnostic = generationError ?: preparation.error; showTechnicalError = true }) { Text("Details") }
+                    Text(stringResource(R.string.chat_retry_failure), Modifier.weight(1f), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.error)
+                    TextButton(onClick = { historicalDiagnostic = generationError ?: preparation.error; showTechnicalError = true }) { Text(stringResource(R.string.common_details)) }
                 }
             }
             if (messages.isEmpty()) {
                 if (skillAuthoringMode) {
                     Column(Modifier.fillMaxWidth().padding(24.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Text("¿Qué debiese hacer la Skill?", style = MaterialTheme.typography.titleLarge)
-                        Text("Describe el trabajo que quieres enseñar. Gemma preparará un borrador SKILL.md; nada se guarda hasta que lo revises y lo apruebes.", style = MaterialTheme.typography.bodyMedium)
-                        Text("La conversación usa el modelo local seleccionado. No ejecuta herramientas ni activa la Skill automáticamente.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(stringResource(R.string.chat_skill_prompt_title), style = MaterialTheme.typography.titleLarge)
+                        Text(stringResource(R.string.chat_skill_prompt_body), style = MaterialTheme.typography.bodyMedium)
+                        Text(stringResource(R.string.chat_skill_prompt_local), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
-                } else EmptyState("How can I help?", "")
+                } else EmptyState(stringResource(R.string.chat_empty_title), "")
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
@@ -1047,7 +1065,7 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                         Column {
                         toolCalls.filter { it.messageId == message.id }.forEach { com.localai.workspace.ui.ToolExecutionCard(it) }
                         MessageBubble(message, content, messageEvidence,
-                            activeLabel = if (generating && message.id == messages.lastOrNull()?.id) compactGenerationLabel(generationProgress.stage, generationProgress.cancellationRequested) else null,
+                            activeLabel = if (generating && message.id == messages.lastOrNull()?.id) localizedChatGenerationLabel(generationProgress.stage, generationProgress.cancellationRequested) else null,
                             canContinue = !generating && !deletingChat && message.id == messages.lastOrNull()?.id && message.status == "COMPLETE",
                             onContinue = { viewModel.continueResponse(message.id) },
                             onRetry = if (!generating && !deletingChat && message.id == messages.lastOrNull()?.id && message.status in setOf("FAILED", "CANCELED")) {
@@ -1057,7 +1075,7 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                             onDiagnostic = { historicalDiagnostic = it; showTechnicalError = true },
                             onCitation = { id -> selectedEvidence = messageEvidence.singleOrNull { it.evidenceId == id } })
                         if (skillAuthoringMode && message.role == "ASSISTANT" && message.status == "COMPLETE") {
-                            TextButton(onClick = { skillProposalMessageId = message.id }) { Text("Review Skill proposal") }
+                            TextButton(onClick = { skillProposalMessageId = message.id }) { Text(stringResource(R.string.chat_review_skill_proposal)) }
                         }
                         }
                     }
@@ -1065,19 +1083,19 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
             }
         }
     }
-    if (showModelPicker) AlertDialog(onDismissRequest = { showModelPicker = false }, title = { Text("Model") },
-        confirmButton = { TextButton(onClick = { showModelPicker = false }) { Text("Done") } }, text = {
+    if (showModelPicker) AlertDialog(onDismissRequest = { showModelPicker = false }, title = { Text(stringResource(R.string.chat_model)) },
+        confirmButton = { TextButton(onClick = { showModelPicker = false }) { Text(stringResource(R.string.common_done)) } }, text = {
             Column(Modifier.heightIn(max = 440.dp).verticalScroll(rememberScrollState())) {
-                if (models.isEmpty()) TextButton(onClick = { showModelPicker = false; navController.navigate("models") }) { Text("Add a model") }
+                if (models.isEmpty()) TextButton(onClick = { showModelPicker = false; navController.navigate("models") }) { Text(stringResource(R.string.chat_add_model)) }
                 models.forEach { model -> Row(verticalAlignment = Alignment.CenterVertically) {
                     TextButton(onClick = { viewModel.selectModel(model.id); showModelPicker = false }, enabled = !generating && !deletingChat, modifier = Modifier.weight(1f)) {
                         Text(humanModelName(model.displayName), maxLines = 2, overflow = TextOverflow.Ellipsis)
                     }
-                    IconButton(onClick = { showModelPicker = false; navController.navigate("model/${model.id}") }) { Icon(Icons.Default.Settings, "Settings for ${humanModelName(model.displayName)}") }
+                    IconButton(onClick = { showModelPicker = false; navController.navigate("model/${model.id}") }) { Icon(Icons.Default.Settings, stringResource(R.string.chat_model_settings,humanModelName(model.displayName))) }
                 } }
             }
         })
-    if (showAgent && !skillAuthoringMode) AlertDialog(onDismissRequest = { showAgent = false }, title = { Text("Logical Agent") }, text = { com.localai.workspace.ui.ChatAgentSelector(viewModel, !generating) }, confirmButton = { TextButton(onClick = { showAgent = false }) { Text("Done") } })
+    if (showAgent && !skillAuthoringMode) AlertDialog(onDismissRequest = { showAgent = false }, title = { Text(stringResource(R.string.chat_logical_agent)) }, text = { com.localai.workspace.ui.ChatAgentSelector(viewModel, !generating) }, confirmButton = { TextButton(onClick = { showAgent = false }) { Text(stringResource(R.string.common_done)) } })
     if (showSkills && !skillAuthoringMode) com.localai.workspace.ui.ChatSkillSelection(viewModel) { showSkills = false }
     if (showArtifacts && project!=null) com.localai.workspace.ui.ArtifactsDialog(project!!.id) { showArtifacts=false }
     val skillProposalMessage = messages.firstOrNull { it.id == skillProposalMessageId }
@@ -1094,7 +1112,7 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                     try {
                         skillRegistry.update(definition)
                         skillProposalMessageId = null
-                        snackbarHostState.showSnackbar("Skill saved disabled. Find it in Settings → Skills to enable or export its SKILL.md.")
+                        snackbarHostState.showSnackbar(skillSavedDisabledMessage)
                     } catch (cancelled: CancellationException) {
                         throw cancelled
                     } catch (error: Exception) {
@@ -1106,35 +1124,35 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
             },
         )
     }
-    if (showDiagnostics) AlertDialog(onDismissRequest = { showDiagnostics = false }, title = { Text("Diagnostics") },
-        confirmButton = { TextButton(onClick = { showDiagnostics = false }) { Text("Close") } }, text = {
+    if (showDiagnostics) AlertDialog(onDismissRequest = { showDiagnostics = false }, title = { Text(stringResource(R.string.chat_diagnostics)) },
+        confirmButton = { TextButton(onClick = { showDiagnostics = false }) { Text(stringResource(R.string.common_close)) } }, text = {
             Column(Modifier.heightIn(max = 460.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 val progress = if (generating || generationError != null) generationProgress else preparation.progress
                 com.localai.workspace.ui.AgentRoutingDetails(viewModel)
-                Text(progress.label); progress.detail?.let { Text(it) }
-                Text("Thinking: ${assistantProfile.thinking}");Text("Tools: ${toolCalls.size} calls · ${toolCalls.count { it.status != "SUCCESS" }} non-success · ${toolCalls.sumOf { (it.finishedAt ?: it.startedAt) - it.startedAt }} ms")
+                Text(localizedChatGenerationLabel(progress.stage, progress.cancellationRequested)); progress.detail?.let { Text(it) }
+                Text(stringResource(R.string.chat_tool_diagnostics,assistantProfile.thinking,toolCalls.size,toolCalls.count { it.status != "SUCCESS" },toolCalls.sumOf { (it.finishedAt ?: it.startedAt) - it.startedAt }))
                 val rag by (androidx.compose.ui.platform.LocalContext.current.applicationContext as LocalAiApplication).graph.retrieval.diagnostics.collectAsStateWithLifecycle()
-                Text("RAG: ${rag.mode} · ${rag.retrieved} chunks · ${rag.retrievalMs} ms · embedding ${rag.embeddingMs} ms")
-                Text("Memory: ${rag.memoryRetrieved}");rag.notice?.let { Text(it) }
-                Text("Last audio preprocessing: ${viewModel.audioPreprocessingMs.collectAsStateWithLifecycle().value ?: "unavailable"} ms", style = MaterialTheme.typography.bodySmall)
+                Text(stringResource(R.string.chat_rag_diagnostics,rag.mode,rag.retrieved,rag.retrievalMs,rag.embeddingMs))
+                Text(stringResource(R.string.chat_memory_diagnostics,rag.memoryRetrieved));rag.notice?.let { Text(it) }
+                Text(stringResource(R.string.chat_audio_preprocessing,viewModel.audioPreprocessingMs.collectAsStateWithLifecycle().value?.toString() ?: stringResource(R.string.memory_default_unknown)), style = MaterialTheme.typography.bodySmall)
                 Text(viewModel.audioDiagnostics.collectAsStateWithLifecycle().value, style = MaterialTheme.typography.bodySmall)
-                Text("Thinking actual: ${viewModel.actualThinking.collectAsStateWithLifecycle().value}", style = MaterialTheme.typography.bodySmall)
+                Text(stringResource(R.string.chat_thinking_actual,viewModel.actualThinking.collectAsStateWithLifecycle().value), style = MaterialTheme.typography.bodySmall)
                 Text(viewModel.visionDiagnostics.collectAsStateWithLifecycle().value, style = MaterialTheme.typography.bodySmall)
                 if (progress.bytesCompleted != null && progress.bytesTotal != null)
-                    Text("Integrity: ${progress.bytesCompleted} / ${progress.bytesTotal} bytes · ${progress.elapsedMs} ms")
-                preparation.metrics?.let { measured -> TextButton(onClick = { selectedMetrics = GenerationMetricsPresentation.encode(measured); showDiagnostics = false }) { Text("Model preparation details") } }
-                TextButton(onClick = { showDiagnostics = false; navController.navigate("performance") }) { Text("Local AI Performance") }
+                    Text(stringResource(R.string.chat_integrity,progress.bytesCompleted,progress.bytesTotal,progress.elapsedMs))
+                preparation.metrics?.let { measured -> TextButton(onClick = { selectedMetrics = GenerationMetricsPresentation.encode(measured); showDiagnostics = false }) { Text(stringResource(R.string.chat_model_preparation_details)) } }
+                TextButton(onClick = { showDiagnostics = false; navController.navigate("performance") }) { Text(stringResource(R.string.chat_local_ai_performance)) }
                 if (selectedModel?.toDescriptor()?.runtime == RuntimeType.LITERT_LM) {
-                    TextButton(onClick = { showDiagnostics = false; viewModel.runLiteRtSmokeTest() }, enabled = !generating && !deletingChat && !preparation.preparing) { Text("Run CPU smoke test") }
-                    Text("Text · 1024 context · 32 output", style = MaterialTheme.typography.labelSmall)
+                    TextButton(onClick = { showDiagnostics = false; viewModel.runLiteRtSmokeTest() }, enabled = !generating && !deletingChat && !preparation.preparing) { Text(stringResource(R.string.chat_cpu_smoke_test)) }
+                    Text(stringResource(R.string.chat_smoke_parameters), style = MaterialTheme.typography.labelSmall)
                 }
             }
         })
     if (showFiles) AlertDialog(onDismissRequest = { showFiles = false },
-        title = { Text("Local files") }, confirmButton = { TextButton(onClick = { showFiles = false }) { Text("Done") } },
+        title = { Text(stringResource(R.string.chat_local_files)) }, confirmButton = { TextButton(onClick = { showFiles = false }) { Text(stringResource(R.string.common_done)) } },
         text = { Column {
-            Text("Selected files send up to 3 readable excerpts with your next message. Large files are not sent in full.", style = MaterialTheme.typography.bodySmall)
-            if (documents.isEmpty()) Text("No files yet")
+            Text(stringResource(R.string.chat_file_help), style = MaterialTheme.typography.bodySmall)
+            if (documents.isEmpty()) Text(stringResource(R.string.chat_no_files))
             LazyColumn(Modifier.heightIn(max = 440.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 items(documents, key = { it.id }) { doc -> Column {
                     val ready = doc.extractionStatus == "READY" && doc.indexingStatus == "READY"
@@ -1143,21 +1161,21 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                             onCheckedChange = { viewModel.selectDocument(doc.id, it) })
                         Text(doc.displayName, style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
                     }
-                    Text(if (ready) "Ready · readable text indexed" else "${doc.extractionStatus} · ${doc.indexingStatus}", style = MaterialTheme.typography.labelSmall)
+                    Text(if (ready) stringResource(R.string.chat_file_ready) else "${doc.extractionStatus} · ${doc.indexingStatus}", style = MaterialTheme.typography.labelSmall)
                     doc.errorMessage?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
                     Row {
-                        TextButton(onClick = { previewId = doc.id }) { Text("Preview text") }
+                        TextButton(onClick = { previewId = doc.id }) { Text(stringResource(R.string.chat_preview_text)) }
                         TextButton(enabled = ready && !generating && !deletingChat, onClick = {
                             showFiles = false; viewModel.analyzeDocument(doc.id)
-                        }) { Text("Summarize") }
+                        }) { Text(stringResource(R.string.chat_summarize)) }
                     }
                     HorizontalDivider()
                 } }
             }
         } })
-    if (previewId != null) AlertDialog(onDismissRequest = { previewId = null }, title = { Text("Extracted text · opening excerpts") },
-        confirmButton = { TextButton(onClick = { previewId = null }) { Text("Close") } },
-        text = { Box(Modifier.heightIn(max = 460.dp).verticalScroll(rememberScrollState())) { Text(previewText.ifBlank { "Reading…" }) } })
+    if (previewId != null) AlertDialog(onDismissRequest = { previewId = null }, title = { Text(stringResource(R.string.chat_extracted_text)) },
+        confirmButton = { TextButton(onClick = { previewId = null }) { Text(stringResource(R.string.common_close)) } },
+        text = { Box(Modifier.heightIn(max = 460.dp).verticalScroll(rememberScrollState())) { Text(previewText.ifBlank { stringResource(R.string.chat_reading_files) }) } })
     if (showDeleteChat) {
         val confirm = { showDeleteChat = false; viewModel.deleteChat { navController.popBackStack() } }
         if (standalone) DeleteWorkspaceDialog(project?.name ?: "Chat", true, { showDeleteChat = false }, confirm)
@@ -1166,8 +1184,8 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
     if (showTechnicalError) {
         AlertDialog(
             onDismissRequest = { showTechnicalError = false },
-            confirmButton = { TextButton(onClick = { showTechnicalError = false }) { Text("Close") } },
-            title = { Text("LiteRT generation diagnostic") },
+            confirmButton = { TextButton(onClick = { showTechnicalError = false }) { Text(stringResource(R.string.common_close)) } },
+            title = { Text(stringResource(R.string.chat_litert_diagnostic)) },
             text = { Box(Modifier.heightIn(max = 480.dp).verticalScroll(rememberScrollState())) {
                 Text((historicalDiagnostic ?: generationError)?.let { it.displayText() + "\n\n" + it.technicalDetail.orEmpty() }.orEmpty())
             } },
@@ -1206,13 +1224,13 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
             selectedEvidence = citationSourceReturn
             citationSourceReturn = null
         },
-        title = { Text("Source unavailable") },
-        text = { Text("This citation is no longer associated with the active conversation.") },
+        title = { Text(stringResource(R.string.chat_source_unavailable)) },
+        text = { Text(stringResource(R.string.chat_source_unavailable_detail)) },
         confirmButton = { TextButton(onClick = {
             citationSourceUnavailable = false
             selectedEvidence = citationSourceReturn
             citationSourceReturn = null
-        }) { Text("Back to citation") } },
+        }) { Text(stringResource(R.string.chat_back_to_citation)) } },
     )
 }
 
@@ -1221,10 +1239,10 @@ private fun DeleteChatDialog(projectName: String, onDismiss: () -> Unit, onConfi
     AlertDialog(
         onDismissRequest = onDismiss,
         icon = { Icon(Icons.Default.DeleteOutline, contentDescription = null) },
-        title = { Text("Delete chat?") },
-        text = { Text("Delete “$projectName” and its messages, citations and tool history? This cannot be undone. Other chats, project files, memory and models are kept. An active response will be stopped.") },
-        confirmButton = { TextButton(onClick = onConfirm) { Text("Delete", color = MaterialTheme.colorScheme.error) } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+        title = { Text(stringResource(R.string.chat_delete_title)) },
+        text = { Text(stringResource(R.string.chat_delete_detail,projectName)) },
+        confirmButton = { TextButton(onClick = onConfirm) { Text(stringResource(R.string.common_delete), color = MaterialTheme.colorScheme.error) } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.common_cancel)) } },
     )
 }
 
@@ -1244,29 +1262,29 @@ private fun MessageBubble(message: MessageEntity, content: String,
     ) {
         val displayed = if (diagnostic != null && content == diagnostic.displayText()) diagnostic.message else content
         val body = displayed.ifBlank { activeLabel ?: when (message.status) {
-            "GENERATING" -> "Response interrupted"
-            "CANCELED" -> "Stopped"
-            "FAILED" -> "Could not finish"
-            else -> "No text returned"
+            "GENERATING" -> stringResource(R.string.chat_response_interrupted)
+            "CANCELED" -> stringResource(R.string.chat_status_stopped)
+            "FAILED" -> stringResource(R.string.chat_retry_failure)
+            else -> stringResource(R.string.chat_no_text_returned)
         } }
-        if (user && message.audioPath != null) Text("Audio attachment", style = MaterialTheme.typography.labelSmall)
+        if (user && message.audioPath != null) Text(stringResource(R.string.chat_audio_attachment), style = MaterialTheme.typography.labelSmall)
         if (user) message.imagePath?.let { com.localai.workspace.ui.ImageAttachment(it) }
         if (user || content.isBlank()) Text(body, style = MaterialTheme.typography.bodyLarge) else ChatRichText(body)
         if (!user && evidence.isNotEmpty()) CitationEvidenceReferences(evidence, onCitation)
-        if (!user && metrics?.outputLimitReached == true) Text("Answer may be incomplete", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        if (!user && metrics?.outputLimitReached == true) Text(stringResource(R.string.chat_answer_may_be_incomplete), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         if (!user && message.status != "GENERATING") Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            if (message.status == "FAILED") Text("Could not finish", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.error)
+            if (message.status == "FAILED") Text(stringResource(R.string.chat_retry_failure), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.error)
             Spacer(Modifier.weight(1f))
             if (content.isNotBlank()) AssistantResponseCopyAction(content)
             Box {
-                IconButton(onClick = { menu = true }) { Icon(Icons.Default.MoreVert, "Response options", Modifier.size(18.dp)) }
+                IconButton(onClick = { menu = true }) { Icon(Icons.Default.MoreVert, stringResource(R.string.chat_response_options), Modifier.size(18.dp)) }
                 DropdownMenu(menu, { menu = false }) {
-                    if (metrics?.outputLimitReached == true && canContinue) DropdownMenuItem(text = { Text("Continue") }, onClick = { menu = false; onContinue() })
-                    onRetry?.let { action -> DropdownMenuItem(text = { Text("Retry") }, onClick = { menu = false; action() }) }
-                    if (diagnostic != null) DropdownMenuItem(text = { Text("Details") }, onClick = { menu = false; onDiagnostic(diagnostic) })
-                    else if (metrics != null) DropdownMenuItem(text = { Text("Details") }, onClick = { menu = false; onMetrics(metrics.raw) })
+                    if (metrics?.outputLimitReached == true && canContinue) DropdownMenuItem(text = { Text(stringResource(R.string.chat_continue)) }, onClick = { menu = false; onContinue() })
+                    onRetry?.let { action -> DropdownMenuItem(text = { Text(stringResource(R.string.chat_retry)) }, onClick = { menu = false; action() }) }
+                    if (diagnostic != null) DropdownMenuItem(text = { Text(stringResource(R.string.common_details)) }, onClick = { menu = false; onDiagnostic(diagnostic) })
+                    else if (metrics != null) DropdownMenuItem(text = { Text(stringResource(R.string.common_details)) }, onClick = { menu = false; onMetrics(metrics.raw) })
                     if (diagnostic == null && metrics == null && onRetry == null && !(metrics?.outputLimitReached == true && canContinue))
-                        DropdownMenuItem(text = { Text("Copy") }, onClick = { menu = false; clipboard.setText(AnnotatedString(content)) })
+                        DropdownMenuItem(text = { Text(stringResource(R.string.chat_copy_response)) }, onClick = { menu = false; clipboard.setText(AnnotatedString(content)) })
                     }
             }
         }
@@ -1278,8 +1296,8 @@ private fun ResponseDetailsDialog(metrics: GenerationMetricsPresentation, onDism
     var showRaw by rememberSaveable(metrics.raw) { mutableStateOf(false) }
     AlertDialog(
         onDismissRequest = onDismiss,
-        confirmButton = { TextButton(onClick = onDismiss) { Text("Close") } },
-        title = { Text("Details") },
+        confirmButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.common_close)) } },
+        title = { Text(stringResource(R.string.common_details)) },
         text = {
             Column(Modifier.heightIn(max = 480.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 metrics.rows().forEach { (label, value) ->
@@ -1288,7 +1306,7 @@ private fun ResponseDetailsDialog(metrics: GenerationMetricsPresentation, onDism
                         Text(value, style = MaterialTheme.typography.bodyMedium)
                     }
                 }
-                TextButton(onClick = { showRaw = !showRaw }) { Text(if (showRaw) "Hide technical metrics" else "Technical metrics") }
+                TextButton(onClick = { showRaw = !showRaw }) { Text(stringResource(if (showRaw) R.string.chat_hide_technical_metrics else R.string.chat_technical_metrics)) }
                 if (showRaw) Text(metrics.raw, style = MaterialTheme.typography.bodySmall)
             }
         },

@@ -69,6 +69,15 @@ class MemoryManager(val database:MemoryContextDatabase,private val embed:suspend
     }
     suspend fun get(id:String)=database.dao().get(id)
     data class BundleImportResult(val imported:Int,val duplicates:Int,val pendingIds:List<String>,val missingProjectFallbackCount:Int=0)
+    sealed class ApprovalBatchResult {
+        data class Approved(val ids:List<String>,val approvedWithoutPinIds:Set<String>):ApprovalBatchResult()
+        data class RequiresPinChoice(
+            val ids:List<String>,
+            val pinnedCandidateIds:List<String>,
+            val projectedCharacters:Int,
+            val maximumCharacters:Int,
+        ):ApprovalBatchResult()
+    }
     data class BundleExportResult(val archive:ByteArray,val exportedRecords:Int,val excludedSensitiveRecords:Int=0)
     data class JsonExportResult(val json:String,val exportedRecords:Int,val excludedSensitiveRecords:Int)
     data class BundleCandidateReview(val exactDuplicate:Boolean=false,val possibleContradiction:Boolean=false)
@@ -126,6 +135,7 @@ class MemoryManager(val database:MemoryContextDatabase,private val embed:suspend
                     "originalUpdatedAt" to candidate.originalUpdatedAt,
                     "originalStatus" to candidate.originalStatus,
                     "originalTitle" to candidate.originalTitle,
+                    "originalPinned" to candidate.originalPinned,
                     "originMetadata" to candidate.originalMetadataJson?.let { JsonParser.parseString(it).asJsonObject },
                     "originalScopeType" to candidate.originalScopeType,
                     "originalScopeId" to candidate.originalScopeId,
@@ -154,13 +164,85 @@ class MemoryManager(val database:MemoryContextDatabase,private val embed:suspend
         val next=old.copy(id=UUID.randomUUID().toString(),text=text.trim(),createdAt=now,updatedAt=now,version=old.version+1,supersedesId=old.id,contentHash=MemoryContent.hash(text,MemoryKind.valueOf(old.kind)),expiresAt=expiresAt,indexState="INDEX_PENDING")
         database.dao().put(old.copy(status="SUPERSEDED",updatedAt=now));database.dao().deleteVectors(old.id);database.dao().put(next);next
     }}
-    suspend fun approve(id:String,access:ScopeAccess=ScopeAccess())=database.withTransaction{
-        val m=requireNotNull(get(id));require(m.status=="PENDING");require(!MemoryContent.secret(m.text)){"SECRET_CANDIDATE_REJECTED"}
-        require(access.permits(m.scopeType,m.scopeId)){"MEMORY_SCOPE_NOT_ALLOWED"}
-        val now=System.currentTimeMillis();require(m.expiresAt==null||m.expiresAt>now){"EXPIRED_MEMORY_CANNOT_APPROVE"}
-        val approved=m.copy(status="ACTIVE",confidence=if(m.sourceType=="IMPORTED_UNREVIEWED")m.confidence else 1.0,
-            sourceType=if(m.sourceType=="IMPORTED_UNREVIEWED")"USER_APPROVED"else m.sourceType,updatedAt=now)
-        database.dao().put(approved)
+    suspend fun approve(id:String,access:ScopeAccess=ScopeAccess()) {
+        when(val result=approveBatch(listOf(id),access)) {
+            is ApprovalBatchResult.Approved -> Unit
+            is ApprovalBatchResult.RequiresPinChoice -> throw IllegalStateException("PINNED_PREFERENCE_LIMIT_EXCEEDED")
+        }
+    }
+
+    /**
+     * Approves a set atomically. A batch which would activate an over-budget pin set returns a
+     * review result without changing any row. The caller must obtain an explicit user choice for
+     * every pin to remove, then call again with confirmed=true. Original pin intent is retained
+     * in structured provenance for every record approved without its pin.
+     */
+    suspend fun approveBatch(
+        ids:Collection<String>,
+        access:ScopeAccess=ScopeAccess(),
+        approveWithoutPinIds:Set<String> = emptySet(),
+        confirmed:Boolean=false,
+    ):ApprovalBatchResult=database.withTransaction {
+        val requested=ids.toList()
+        require(requested.isNotEmpty()){"NO_MEMORIES_SELECTED"}
+        require(requested.distinct().size==requested.size){"DUPLICATE_APPROVAL_ID"}
+        require(approveWithoutPinIds.all{it in requested}){"UNKNOWN_MEMORY_SELECTION"}
+        val now=System.currentTimeMillis()
+        val pending=requested.map{id->requireNotNull(get(id)){"MEMORY_NOT_FOUND"}.also{memory->
+            require(memory.status=="PENDING"){"MEMORY_NOT_PENDING"}
+            require(!MemoryContent.secret(memory.text)){"SECRET_CANDIDATE_REJECTED"}
+            require(access.permits(memory.scopeType,memory.scopeId)){"MEMORY_SCOPE_NOT_ALLOWED"}
+            require(memory.expiresAt==null||memory.expiresAt>now){"EXPIRED_MEMORY_CANNOT_APPROVE"}
+        }}
+        require(approveWithoutPinIds.all{id->pending.single{it.id==id}.pinned}){"MEMORY_IS_NOT_PINNED"}
+        if(approveWithoutPinIds.isNotEmpty()&&!confirmed){
+            throw IllegalStateException("PIN_APPROVAL_REQUIRES_EXPLICIT_CONFIRMATION")
+        }
+
+        val active=database.dao().active(access.allowed.map{it.key},now)
+        val projectedRecords=active+pending.map{memory->
+            memory.copy(status="ACTIVE",pinned=memory.pinned&&memory.id !in approveWithoutPinIds)
+        }
+        val projectedPins=approvedPromptMemories(projectedRecords).filter{it.pinned}
+        val projectedCharacters=ContextBudgetPolicy.preferenceBlockSize(projectedPins)
+        val maximumCharacters=ContextBudgetPolicy.preferenceBudget(ContextBudgetPolicy.inputBudget())
+        val addsPinnedCandidate=pending.any{it.pinned&&it.id !in approveWithoutPinIds}
+        if(addsPinnedCandidate&&projectedCharacters>maximumCharacters){
+            val pinCandidates=approvedPromptMemories(pending.map{it.copy(status="ACTIVE")})
+                .filter{it.pinned}.map{it.id}
+            return@withTransaction ApprovalBatchResult.RequiresPinChoice(
+                requested,pinCandidates,projectedCharacters,maximumCharacters,
+            )
+        }
+
+        pending.forEach{memory->
+            val withoutPin=memory.id in approveWithoutPinIds
+            database.dao().put(memory.copy(
+                status="ACTIVE",
+                confidence=if(memory.sourceType=="IMPORTED_UNREVIEWED")memory.confidence else 1.0,
+                sourceType=if(memory.sourceType=="IMPORTED_UNREVIEWED")"USER_APPROVED"else memory.sourceType,
+                pinned=if(withoutPin)false else memory.pinned,
+                structuredPayloadJson=if(withoutPin)approvalWithoutPinProvenance(memory,now)else memory.structuredPayloadJson,
+                updatedAt=now,
+            ))
+        }
+        ApprovalBatchResult.Approved(requested,approveWithoutPinIds)
+    }
+
+    private fun approvalWithoutPinProvenance(memory:MemoryRecord,approvedAt:Long):String {
+        val provenance=runCatching {
+            memory.structuredPayloadJson?.let(com.google.gson.JsonParser::parseString)
+                ?.takeIf{it.isJsonObject}?.asJsonObject
+                ?: com.google.gson.JsonObject()
+        }.getOrElse{com.google.gson.JsonObject()}
+        val originMetadata=provenance.getAsJsonObject("originMetadata")
+        val originalPinned=provenance.get("originalPinned")?.takeUnless{it.isJsonNull}?.asBoolean
+            ?:originMetadata?.get("pinned")?.takeUnless{it.isJsonNull}?.asBoolean
+            ?:memory.pinned
+        provenance.addProperty("originalPinned",originalPinned)
+        provenance.addProperty("approvalDecision","APPROVED_WITHOUT_PIN")
+        provenance.addProperty("approvedWithoutPinAt",approvedAt)
+        return provenance.toString()
     }
     suspend fun pin(id:String,access:ScopeAccess=ScopeAccess())=database.withTransaction{
         val m=requireNotNull(get(id));val next=m.copy(pinned=!m.pinned,updatedAt=System.currentTimeMillis())

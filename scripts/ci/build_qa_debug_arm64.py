@@ -4,14 +4,12 @@
 from __future__ import annotations
 
 import hashlib
-import base64
 import json
 import os
 import re
 import shutil
 import subprocess
 import sys
-import tempfile
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
@@ -21,7 +19,10 @@ ROOT = Path(__file__).resolve().parents[2]
 RUNNER_TEMP = Path(os.environ.get("RUNNER_TEMP", "/tmp"))
 OUT = Path(os.environ.get("QA_ARTIFACT_DIR", RUNNER_TEMP / "local-ai-workspace-qa-arm64"))
 APK_NAME = "local-ai-workspace-0.5.0-debug-arm64.apk"
-PREVIOUS_UPDATE_CERTIFICATE_SHA256 = "f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b"
+QA_KEYSTORE_PATH = ROOT / "keystore" / "aws-qa-dev.jks"
+QA_KEYSTORE_PASSWORD = "awsqadev"
+QA_KEY_ALIAS = "awsqa"
+EXPECTED_QA_CERTIFICATE_SHA256 = "b0d1c40838a22b6bbfc7bfa176c9bb917c7194c7b74dedf749566fb268ab120b"
 EXPECTED_COMMIT = os.environ.get("GITHUB_SHA", "")
 
 
@@ -40,10 +41,8 @@ def sanitize(value: str) -> str:
     ]
     for pattern, replacement in replacements:
         value = re.sub(pattern, replacement, value)
-    for name in ("QA_KEYSTORE_B64", "QA_KEYSTORE_PASSWORD", "QA_KEY_ALIAS", "QA_KEY_PASSWORD"):
-        secret = os.environ.get(name)
-        if secret:
-            value = value.replace(secret, "[REDACTED]")
+    for secret in (QA_KEYSTORE_PASSWORD, QA_KEY_ALIAS):
+        value = value.replace(secret, "[REDACTED]")
     return value
 
 
@@ -104,43 +103,6 @@ def write_report(data: dict[str, object]) -> None:
     )
 
 
-def prepare_persistent_signing() -> Path | None:
-    names = ("QA_KEYSTORE_B64", "QA_KEYSTORE_PASSWORD", "QA_KEY_ALIAS", "QA_KEY_PASSWORD")
-    values = {name: os.environ.get(name, "") for name in names}
-    present = [bool(value) for value in values.values()]
-    if not any(present):
-        if os.environ.get("QA_REQUIRE_PERSISTENT_SIGNING", "").lower() == "true":
-            raise QaBuildError("SIGNING_CONFIG", "QA_PERSISTENT_SIGNING_SECRETS_REQUIRED")
-        return None
-    if not all(present):
-        missing = ",".join(name for name, value in values.items() if not value)
-        raise QaBuildError("SIGNING_CONFIG", f"QA_SIGNING_SECRETS_INCOMPLETE:{missing}")
-
-    encoded = "".join(values["QA_KEYSTORE_B64"].split())
-    try:
-        keystore_bytes = base64.b64decode(encoded, validate=True)
-    except (ValueError, base64.binascii.Error) as error:
-        raise QaBuildError("SIGNING_CONFIG", "QA_KEYSTORE_B64_INVALID") from error
-    if not keystore_bytes or len(keystore_bytes) > 1024 * 1024:
-        raise QaBuildError("SIGNING_CONFIG", "QA_KEYSTORE_SIZE_INVALID")
-    if keystore_bytes.startswith(b"\xfe\xed\xfe\xed"):
-        keystore_type = "JKS"
-    elif keystore_bytes.startswith(b"\x30"):
-        keystore_type = "PKCS12"
-    else:
-        raise QaBuildError("SIGNING_CONFIG", "QA_KEYSTORE_FORMAT_UNRECOGNIZED")
-
-    RUNNER_TEMP.mkdir(parents=True, exist_ok=True)
-    signing_dir = Path(tempfile.mkdtemp(prefix="aws-personal-qa-signing-", dir=RUNNER_TEMP))
-    signing_dir.chmod(0o700)
-    keystore_path = signing_dir / "qa-signing.keystore"
-    keystore_path.write_bytes(keystore_bytes)
-    keystore_path.chmod(0o600)
-    os.environ["QA_KEYSTORE_FILE"] = str(keystore_path)
-    os.environ["QA_KEYSTORE_TYPE"] = keystore_type
-    return signing_dir
-
-
 def certificate_sha256_from_keytool(output: str) -> str | None:
     match = re.search(r"SHA256:\s*([0-9a-fA-F:]+)", output)
     return match.group(1).replace(":", "").lower() if match else None
@@ -179,9 +141,21 @@ def main() -> int:
         "debugKeystoreExported": False,
     }
 
-    signing_dir: Path | None = None
     try:
-        signing_dir = prepare_persistent_signing()
+        if not QA_KEYSTORE_PATH.is_file():
+            raise QaBuildError("SIGNING_CONFIG", "QA_DEVELOPMENT_KEYSTORE_MISSING")
+        keytool = shutil.which("keytool")
+        if not keytool:
+            raise QaBuildError("SIGNING_CONFIG", "KEYTOOL_NOT_FOUND")
+        keytool_output = run(
+            "Verify repository development QA keystore",
+            [keytool, "-list", "-v", "-keystore", str(QA_KEYSTORE_PATH), "-alias", QA_KEY_ALIAS],
+            input_text=QA_KEYSTORE_PASSWORD + "\n",
+        )
+        expected_keystore_certificate = certificate_sha256_from_keytool(keytool_output)
+        if expected_keystore_certificate != EXPECTED_QA_CERTIFICATE_SHA256:
+            raise QaBuildError("SIGNING_CONFIG", "QA_DEVELOPMENT_CERTIFICATE_MISMATCH")
+
         parallel_install = os.environ.get("QA_PARALLEL_INSTALL", "").lower() == "true"
         expected_package = "com.localai.workspace.parallel" if parallel_install else "com.localai.workspace.debug"
         apk_name = (
@@ -270,25 +244,9 @@ def main() -> int:
         certificate_dn = dn_match.group(1).strip()
         if len(certificate_sha256) != 64:
             raise QaBuildError("APK_SIGNATURE", "SIGNER_CERTIFICATE_FINGERPRINT_INVALID")
-        if signing_dir is not None:
-            keytool = shutil.which("keytool")
-            if not keytool:
-                raise QaBuildError("APK_SIGNATURE", "KEYTOOL_NOT_FOUND")
-            keytool_output = run(
-                "Verify persistent QA keystore certificate",
-                [keytool, "-list", "-v", "-keystore", str(os.environ["QA_KEYSTORE_FILE"]), "-alias", os.environ["QA_KEY_ALIAS"]],
-                input_text=os.environ["QA_KEYSTORE_PASSWORD"] + "\n",
-            )
-            expected_certificate_sha256 = certificate_sha256_from_keytool(keytool_output)
-            if not expected_certificate_sha256 or certificate_sha256 != expected_certificate_sha256:
-                raise QaBuildError("APK_SIGNATURE", "APK_CERTIFICATE_DOES_NOT_MATCH_PERSISTENT_QA_KEYSTORE")
-            if not parallel_install and certificate_sha256 != PREVIOUS_UPDATE_CERTIFICATE_SHA256:
-                raise QaBuildError("APK_SIGNATURE", "PERSISTENT_QA_CERTIFICATE_DIFFERS_FROM_PREVIOUS_UPDATE_KEY; USE_PARALLEL_INSTALL_OR_RESTORE_THE_COMPATIBLE_KEY")
-            signing_variant = "Persistent personal QA keystore supplied through Actions secrets"
-        else:
-            if "Android Debug" not in certificate_dn:
-                raise QaBuildError("APK_SIGNATURE", "NOT_SIGNED_BY_STANDARD_ANDROID_DEBUG_KEY")
-            signing_variant = "Gradle standard Android Debug keystore"
+        if certificate_sha256 != EXPECTED_QA_CERTIFICATE_SHA256:
+            raise QaBuildError("APK_SIGNATURE", "APK_CERTIFICATE_DOES_NOT_MATCH_REPOSITORY_QA_KEYSTORE")
+        signing_variant = "Repository development QA JKS (Debug only)"
 
         aapt = sdk / "build-tools" / "35.0.0" / "aapt"
         badging = run("Inspect package and version", [str(aapt), "dump", "badging", str(apk_path)])
@@ -344,8 +302,7 @@ def main() -> int:
     except Exception as error:  # Keep failure evidence without exposing a traceback or environment.
         report.update({"completedAtUtc": datetime.now(timezone.utc).isoformat(), "status": "FAIL", "failedStage": "UNEXPECTED", "failureReason": sanitize(type(error).__name__ + ": " + str(error))})
     finally:
-        if signing_dir is not None:
-            shutil.rmtree(signing_dir, ignore_errors=True)
+        pass
 
     write_report(report)
     tail = LOG_PATH.read_text(encoding="utf-8", errors="replace")[-12000:] if LOG_PATH.exists() else ""
