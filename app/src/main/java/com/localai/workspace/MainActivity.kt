@@ -142,6 +142,7 @@ import com.localai.workspace.domain.inference.GenerationError
 import com.localai.workspace.domain.inference.RuntimePreparation
 import com.localai.workspace.ui.ChatViewModel
 import com.localai.workspace.ui.ChatViewModelFactory
+import com.localai.workspace.ui.localizedChatDisplayText
 import com.localai.workspace.ui.HomeViewModel
 import com.localai.workspace.ui.HomeViewModelFactory
 import com.localai.workspace.ui.LocalAiTheme
@@ -1211,7 +1212,10 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
             confirmButton = { TextButton(onClick = { showTechnicalError = false }) { Text(stringResource(R.string.common_close)) } },
             title = { Text(stringResource(R.string.chat_litert_diagnostic)) },
             text = { Box(Modifier.heightIn(max = 480.dp).verticalScroll(rememberScrollState())) {
-                Text((historicalDiagnostic ?: generationError)?.let { it.displayText() + "\n\n" + it.technicalDetail.orEmpty() }.orEmpty())
+                Text((historicalDiagnostic ?: generationError)?.let {
+                    it.localizedChatDisplayText(androidx.compose.ui.platform.LocalContext.current) +
+                        "\n\n" + it.technicalDetail.orEmpty()
+                }.orEmpty())
             } },
         )
     }
@@ -1279,12 +1283,15 @@ private fun MessageBubble(message: MessageEntity, content: String,
     val diagnostic = remember(message.generationMetrics) { GenerationDiagnosticCodec.decode(message.generationMetrics) }
     val metrics = remember(message.generationMetrics) { GenerationMetricsPresentation.decode(message.generationMetrics) }
     val clipboard = LocalClipboardManager.current
+    val context = androidx.compose.ui.platform.LocalContext.current
     var menu by remember { mutableStateOf(false) }
     ChatMessageSurface(
         isUser = user,
         stateLabel = activeLabel?.takeIf { !user && content.isNotBlank() },
     ) {
-        val displayed = if (diagnostic != null && content == diagnostic.displayText()) diagnostic.message else content
+        val displayed = if (diagnostic != null && content in setOf(
+                diagnostic.localizedChatDisplayText(context), diagnostic.displayText(),
+            )) diagnostic.message else content
         val body = displayed.ifBlank { activeLabel ?: when (message.status) {
             "GENERATING" -> stringResource(R.string.chat_response_interrupted)
             "CANCELED" -> stringResource(R.string.chat_status_stopped)

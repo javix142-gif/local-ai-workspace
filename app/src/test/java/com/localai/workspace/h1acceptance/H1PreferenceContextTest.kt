@@ -6,13 +6,17 @@ import androidx.lifecycle.viewModelScope
 import androidx.room.Room
 import androidx.room.withTransaction
 import com.localai.workspace.AppGraph
+import com.localai.workspace.R
 import com.localai.workspace.context.ContextBuilder
 import com.localai.workspace.context.*
 import com.localai.workspace.data.*
+import com.localai.workspace.domain.inference.GenerationError
+import com.localai.workspace.domain.inference.GenerationStage
 import com.localai.workspace.domain.inference.InferenceRuntime
 import com.localai.workspace.domain.model.*
 import com.localai.workspace.semantic.v2.*
 import com.localai.workspace.ui.ChatViewModel
+import com.localai.workspace.ui.localizedChatDisplayText
 import com.localai.workspace.ui.memoryActionErrorMessage
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
@@ -245,6 +249,23 @@ class H1PreferenceContextTest {
         assertNotNull("Synthetic records must reach the 15% pin ceiling",rejectedId)
         val pinned=manager.approvedPromptMemories(manager.lookup(access)).filter{it.pinned}
         assertTrue(ContextBudgetPolicy.preferenceBlockSize(pinned)<=ContextBudgetPolicy.preferenceBudget(ContextBudgetPolicy.inputBudget()))
+    }
+
+    @Test fun H1_AT_04_chatGenerationDiagnosticLabelsAreLocalized() {
+        val formatted=GenerationError(
+            GenerationStage.PREPARING_PROMPT,
+            "PINNED_PREFERENCE_EXCEEDS_CONTEXT_BUDGET",
+            context.getString(R.string.chat_pinned_memory_budget_error),
+            elapsedMs=42,
+            checkpoint="CONTEXT_BUILD_START",
+        ).localizedChatDisplayText(context)
+
+        assertTrue(formatted.contains("Las memorias fijadas superan el 15 %"))
+        assertTrue(formatted.contains("Etapa: PREPARING_PROMPT"))
+        assertTrue(formatted.contains("Código: PINNED_PREFERENCE_EXCEEDS_CONTEXT_BUDGET"))
+        assertTrue(formatted.contains("Tiempo transcurrido: 42 ms"))
+        assertTrue(formatted.contains("Último punto de control: CONTEXT_BUILD_START"))
+        assertFalse(formatted.contains("Stage:"))
     }
 
     @Test fun H1_AT_04_individualApprovalCannotActivateAnImportedPinBeyondTheFifteenPercentCap()=runBlocking {

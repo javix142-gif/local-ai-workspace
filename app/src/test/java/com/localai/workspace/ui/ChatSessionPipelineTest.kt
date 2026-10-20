@@ -182,14 +182,14 @@ class ChatSessionPipelineTest {
             assertTrue(
                 "Expected a clear notice explaining that relevant memory was omitted: $observedNotices",
                 observedNotices.any {
-                    it.contains("Relevant memory did not fit this turn") &&
-                        it.contains("answer may omit those details") &&
-                        it.contains("Saved data remains available")
+                    it.contains("No cupo memoria pertinente en este turno") &&
+                        it.contains("La respuesta podría omitir esos detalles") &&
+                        it.contains("los datos guardados siguen disponibles")
                 },
             )
             finish(vm, materialTurn)
 
-            val omissionNoticeCount = observedNotices.count { it.contains("did not fit this turn") }
+            val omissionNoticeCount = observedNotices.count { it.contains("No cupo") }
             val routine = foundation.memory.create(
                 "Orbital mechanics describes trajectories around a distant star.",
                 com.localai.workspace.semantic.v2.SemanticScope(com.localai.workspace.semantic.v2.ScopeType.USER, "local"),
@@ -201,7 +201,7 @@ class ChatSessionPipelineTest {
             assertTrue(routineBundle.dropped.any { it.item.provenance.sourceId == routine.id && it.reason == "BELOW_RELEVANCE_THRESHOLD" })
             assertFalse(routineBundle.requiresUserNotice)
             finish(vm, routineTurn)
-            assertEquals(omissionNoticeCount, observedNotices.count { it.contains("did not fit this turn") })
+            assertEquals(omissionNoticeCount, observedNotices.count { it.contains("No cupo") })
         } finally {
             collector.cancelAndJoin()
             foundation.memory.delete(material.id)
@@ -350,7 +350,7 @@ class ChatSessionPipelineTest {
     @Test fun unsupportedModelRejectsImageBeforePreparing() = check {
         val (_, vm) = chat(); vm.models.first { it.isNotEmpty() }
         val uri = Uri.parse("content://test/not-readable")
-        val notice = vm.viewModelScope.async(start = CoroutineStart.UNDISPATCHED) { vm.notices.first { it.contains("vision model") } }
+        val notice = vm.viewModelScope.async(start = CoroutineStart.UNDISPATCHED) { vm.notices.first { it.contains("modelo compatible con imágenes") } }
         vm.attachImage(uri)
         notice.await(); vm.isImporting.first { !it }
         assertNull(vm.attachedImagePath.value)
@@ -459,7 +459,7 @@ class ChatSessionPipelineTest {
         val (firstId, first) = chat(); first.send("First")
         val firstTurn = backend.turns.receive(); first.leaveScreen()
         val (_, second) = chat(); second.send("Second")
-        second.generationProgress.first { it.detail?.contains("Waiting for the active generation") == true }
+        second.generationProgress.first { it.detail?.contains("Esperando a que termine la generación activa") == true }
         second.stop(); second.isGenerating.first { !it }
         assertTrue(first.isGenerating.value); assertEquals(0, backend.cancellations)
         assertTrue(backend.turns.tryReceive().isFailure)

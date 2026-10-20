@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.room.withTransaction
 import kotlinx.coroutines.Dispatchers
+import android.content.Context
 import com.localai.workspace.AppGraph
+import com.localai.workspace.R
 import com.localai.workspace.data.CitationEvidenceEntity
 import com.localai.workspace.data.DocumentEntity
 import com.localai.workspace.data.HuggingFaceFile
@@ -66,6 +68,20 @@ import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.withContext
 import java.util.UUID
 
+internal fun GenerationError.localizedChatDisplayText(context: Context): String = buildString {
+    append(message)
+    append("\n\n")
+    append(context.getString(R.string.chat_diagnostic_stage, stage.name))
+    append('\n')
+    append(context.getString(R.string.chat_diagnostic_code, code))
+    append('\n')
+    append(context.getString(R.string.chat_diagnostic_elapsed, elapsedMs))
+    checkpoint?.let {
+        append('\n')
+        append(context.getString(R.string.chat_diagnostic_checkpoint, it))
+    }
+}
+
 class HomeViewModel(private val graph: AppGraph) : ViewModel() {
     val chatActivities = graph.chatSessions.activities
     fun stopChatActivity(projectId: String, conversationId: String?) = graph.chatSessions.stop(projectId, conversationId)
@@ -74,6 +90,7 @@ class HomeViewModel(private val graph: AppGraph) : ViewModel() {
     fun retryModelPreparation() = graph.modelPreparation.retry()
     fun cancelModelPreparation() = graph.modelPreparation.cancel()
     private val documentImports = mutableMapOf<String, Job>()
+    private fun homeText(id: Int, vararg args: Any): String = graph.contextForMeasurements.getString(id, *args)
     private val _creating = MutableStateFlow(false)
     val creating = _creating.asStateFlow()
     val pendingDocumentCleanup = graph.workspace.pendingDocumentCleanup.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
@@ -91,7 +108,7 @@ class HomeViewModel(private val graph: AppGraph) : ViewModel() {
                 if (projectId == null) onCreated(graph.workspace.createChat(), null)
                 else onCreated(projectId, graph.workspace.createConversation(projectId).id)
             } catch (cancelled: CancellationException) { throw cancelled }
-            catch (error: Exception) { _notices.emit(error.message ?: "Could not start chat") }
+            catch (error: Exception) { _notices.emit(homeText(R.string.workspace_chat_start_failed, error.message ?: error.javaClass.simpleName)) }
             finally { _creating.value = false }
         }
     }
@@ -104,10 +121,10 @@ class HomeViewModel(private val graph: AppGraph) : ViewModel() {
                 documentImports.remove(id)?.cancelAndJoin()
                 graph.chatSessions.removeWorkspace(id)
                 val pending = graph.workspace.deleteWorkspace(id)
-                _notices.emit(if (pending == 0) "Deleted" else "Deleted. Some private files need cleanup; retry from Workspace.")
+                _notices.emit(if (pending == 0) homeText(R.string.workspace_delete_complete) else homeText(R.string.workspace_delete_cleanup_pending))
                 onDeleted()
             } catch (cancelled: CancellationException) { throw cancelled }
-            catch (error: Exception) { _notices.emit(error.message ?: "Could not delete. Please retry.") }
+            catch (error: Exception) { _notices.emit(homeText(R.string.workspace_delete_failed, error.message ?: error.javaClass.simpleName)) }
             finally { _deletingChats.value -= id }
         }
     }
@@ -119,30 +136,30 @@ class HomeViewModel(private val graph: AppGraph) : ViewModel() {
             try {
                 graph.chatSessions.removeConversation(projectId, id)
                 graph.workspace.deleteConversation(id)
-                _notices.emit("Chat deleted")
+                _notices.emit(homeText(R.string.workspace_chat_deleted))
             } catch (cancelled: CancellationException) { throw cancelled }
-            catch (error: Exception) { _notices.emit(error.message ?: "Could not delete chat") }
+            catch (error: Exception) { _notices.emit(homeText(R.string.workspace_chat_delete_failed, error.message ?: error.javaClass.simpleName)) }
             finally { _deletingChats.value -= projectId }
         }
     }
 
     fun retryDocumentCleanup() { viewModelScope.launch {
         val pending = graph.workspace.cleanupDeletedDocuments()
-        _notices.emit(if (pending == 0) "Private file cleanup completed" else "$pending private files still need cleanup")
+        _notices.emit(if (pending == 0) homeText(R.string.workspace_file_cleanup_complete) else homeText(R.string.workspace_file_cleanup_pending, pending))
     } }
 
     fun deleteDocument(projectId: String, documentId: String, onDeleted: () -> Unit = {}) {
         if (documentImports[projectId]?.isActive == true) {
-            viewModelScope.launch { _notices.emit("Wait for the current file import to finish before removing a file.") }
+            viewModelScope.launch { _notices.emit(homeText(R.string.workspace_wait_for_import)) }
             return
         }
         viewModelScope.launch {
             try {
                 val pending = graph.workspace.deleteDocument(projectId, documentId)
-                _notices.emit(if (pending == 0) "File removed from this workspace" else "File removed. Some private files still need cleanup; retry from Workspace.")
+                _notices.emit(if (pending == 0) homeText(R.string.workspace_file_removed) else homeText(R.string.workspace_file_removed_cleanup_pending))
                 onDeleted()
             } catch (cancelled: CancellationException) { throw cancelled }
-            catch (error: Exception) { _notices.emit(error.message ?: "Could not remove this file") }
+            catch (error: Exception) { _notices.emit(homeText(R.string.workspace_file_remove_failed, error.message ?: error.javaClass.simpleName)) }
         }
     }
 
@@ -150,8 +167,8 @@ class HomeViewModel(private val graph: AppGraph) : ViewModel() {
         if (projectId in _deletingChats.value || documentImports[projectId]?.isActive == true) return
         documentImports[projectId] = viewModelScope.launch {
             graph.documents.ingest(projectId, uri).fold(
-                onSuccess = { _notices.emit("Document imported; check its indexing status in Files") },
-                onFailure = { _notices.emit(it.message ?: "Document import failed") })
+                onSuccess = { _notices.emit(homeText(R.string.workspace_document_imported)) },
+                onFailure = { _notices.emit(homeText(R.string.workspace_document_import_failed, it.message ?: it.javaClass.simpleName)) })
         }
     }
     private val _deletingChats = MutableStateFlow<Set<String>>(emptySet())
@@ -163,9 +180,9 @@ class HomeViewModel(private val graph: AppGraph) : ViewModel() {
         viewModelScope.launch {
             try {
                 graph.workspace.deleteProjectChats(projectId)
-                _notices.emit("Chat deleted. Project files and memory kept.")
+                _notices.emit(homeText(R.string.workspace_project_chats_deleted))
             } catch (cancelled: CancellationException) { throw cancelled }
-            catch (error: Exception) { _notices.emit(error.message ?: "Could not delete chat. Please retry.") }
+            catch (error: Exception) { _notices.emit(homeText(R.string.workspace_project_chats_delete_failed, error.message ?: error.javaClass.simpleName)) }
             finally { _deletingChats.value -= projectId }
         }
     }
@@ -349,7 +366,7 @@ class HomeViewModel(private val graph: AppGraph) : ViewModel() {
     ) {
         viewModelScope.launch {
             graph.workspace.updateModelSettings(modelId, accelerator, contextSize, maxOutputTokens, temperature, topP, topK, repeatPenalty, seed)
-            _notices.emit("Model settings saved")
+            _notices.emit(graph.contextForMeasurements.getString(R.string.model_settings_saved))
         }
     }
 }
@@ -361,6 +378,9 @@ class ChatViewModel(
     private val requestedConversationId: String? = null,
     val skillAuthoringMode: Boolean = false,
 ) : ViewModel() {
+    private fun chatText(id: Int, vararg args: Any): String =
+        graph.contextForMeasurements.getString(id, *args)
+
     val selectedAgentId = MutableStateFlow<String?>(null)
     val explicitSkillIds = MutableStateFlow<Set<String>>(emptySet())
     val agentTrace = MutableStateFlow<com.localai.workspace.agents.AgentSkillTrace?>(null)
@@ -384,12 +404,12 @@ class ChatViewModel(
     private var mediaPreparationError: String? = null
     private val _attachedAudioPath = MutableStateFlow<String?>(null)
     val attachedAudioPath: StateFlow<String?> = _attachedAudioPath.asStateFlow()
-    private val _audioDiagnostics = MutableStateFlow("Audio input: absent")
+    private val _audioDiagnostics = MutableStateFlow(chatText(R.string.chat_audio_input_absent))
     val audioDiagnostics = _audioDiagnostics.asStateFlow()
     private val _audioPreprocessingMs = MutableStateFlow<Long?>(null)
     val audioPreprocessingMs = _audioPreprocessingMs.asStateFlow()
     val actualThinking = MutableStateFlow(false)
-    private val _visionDiagnostics = MutableStateFlow("Vision input: absent")
+    private val _visionDiagnostics = MutableStateFlow(chatText(R.string.chat_vision_input_absent))
     val visionDiagnostics: StateFlow<String> = _visionDiagnostics.asStateFlow()
     val assistantProfile = graph.assistantSettings.changes.map { graph.assistantSettings.forProject(projectId) }.stateIn(viewModelScope, SharingStarted.Eagerly, graph.assistantSettings.forProject(projectId))
     fun setAssistantProfile(profile: com.localai.workspace.data.AssistantProfile) { if (!_isGenerating.value) graph.assistantSettings.update(projectId, profile) }
@@ -523,7 +543,7 @@ class ChatViewModel(
                 _selectedModelId.value = graph.workspace.observeProject(projectId).first()?.defaultModelId ?: graph.modelPreparation.selectedModelId()
                 prepareSelectedModel()
             } catch (cancelled: CancellationException) { throw cancelled }
-            catch (error: Exception) { _notices.emit(error.message ?: "Could not open chat") }
+            catch (error: Exception) { _notices.emit(chatText(R.string.chat_open_failed)) }
         }
     }
 
@@ -567,7 +587,7 @@ class ChatViewModel(
                 activeRuntime = null
                 preparation.invalidateReady()
                 val pending = _conversationId.value?.let { graph.workspace.deleteConversation(it) } ?: 0
-                if (pending > 0) _notices.emit("Chat deleted; some private files need cleanup from Workspace")
+                if (pending > 0) _notices.emit(chatText(R.string.chat_delete_cleanup_pending))
                 _conversationId.value = null
                 _streamingText.value = ""
                 _evidence.value = emptyList()
@@ -577,7 +597,7 @@ class ChatViewModel(
                 onDeleted()
                 graph.chatSessions.forget(this@ChatViewModel)
             } catch (cancelled: CancellationException) { throw cancelled }
-            catch (error: Exception) { _notices.emit(error.message ?: "Could not delete chat. Please retry.") }
+            catch (error: Exception) { _notices.emit(chatText(R.string.chat_delete_failed)) }
             finally { _isDeletingChat.value = false }
         }
     }
@@ -594,7 +614,7 @@ class ChatViewModel(
 
     fun send(message: String, diagnosticSmoke: Boolean = false, retryImagePath: String? = null, retryAudioPath: String? = null): Boolean {
         if(graph.validationOwner == null && graph.validationBusy.value) {
-            viewModelScope.launch { _notices.emit("Device Validation is using the local model. Cancel it or wait until it finishes.") }
+            viewModelScope.launch { _notices.emit(chatText(R.string.chat_validation_model_busy)) }
             return false
         }
         val trimmed = message.trim()
@@ -604,16 +624,17 @@ class ChatViewModel(
         if (submittedAudio != null) {
             val model = com.localai.workspace.data.ApplicationModelPreparation.usableModel(models.value, _selectedModelId.value)
             if (model == null || model.toDescriptor().runtime != RuntimeType.LITERT_LM || com.localai.workspace.domain.model.ModelCapability.AUDIO !in model.toDescriptor().capabilities) {
-                viewModelScope.launch { _notices.emit("This model does not support audio input.") }; return false
+                viewModelScope.launch { _notices.emit(chatText(R.string.chat_audio_not_supported)) }; return false
             }
         }
         var submittedImage = if (diagnosticSmoke || retryAudioPath != null) null else retryImagePath ?: _attachedImagePath.value
-        _visionDiagnostics.value = if (submittedImage == null) "Vision input: absent" else "Vision input: pending; preprocessing succeeded"
+        _visionDiagnostics.value = if (submittedImage == null) chatText(R.string.chat_vision_input_absent)
+            else chatText(R.string.chat_vision_input_pending)
         if (submittedImage != null) {
             val model = com.localai.workspace.data.ApplicationModelPreparation.usableModel(models.value, _selectedModelId.value)
             if (model == null || model.toDescriptor().runtime != RuntimeType.LITERT_LM ||
                 com.localai.workspace.domain.model.ModelCapability.VISION !in model.toDescriptor().capabilities) {
-                viewModelScope.launch { _notices.emit("This model does not support image input.") }; return false
+                viewModelScope.launch { _notices.emit(chatText(R.string.chat_image_not_supported)) }; return false
             }
         }
         _isGenerating.value = true
@@ -717,13 +738,13 @@ class ChatViewModel(
                         status = MessageStatus.GENERATING.name,
                     ),
                 )
-                _generationProgress.value = GenerationProgress(GenerationStage.PREPARING_PROMPT, detail = "Waiting for file reading / model preparation")
+                _generationProgress.value = GenerationProgress(GenerationStage.PREPARING_PROMPT, detail = chatText(R.string.chat_waiting_for_files_and_model))
                 imports.toList().forEach { it.join() }
                 trace("MODEL_PREPARATION_WAIT")
                 preparation.awaitPending()
                 trace("MODEL_READY") { it.copy(modelState = if (preparation.state.value.ready) "READY" else preparation.state.value.progress.stage.name, engineReused = preparation.state.value.metrics?.engineReused) }
                 if (stopRequested) throw CancellationException("Cancelled before inference")
-                _generationProgress.value = GenerationProgress(GenerationStage.PREPARING_PROMPT, detail = "Waiting for the active generation, if any")
+                _generationProgress.value = GenerationProgress(GenerationStage.PREPARING_PROMPT, detail = chatText(R.string.chat_waiting_for_active_generation))
                 val contextBuilderRequested = !diagnosticSmoke && !skillAuthoringMode && (graph.validationOwner == null || graph.agentsSkillsValidationEnabled) &&
                     graph.contextForMeasurements.getSharedPreferences("context_foundation_v1", android.content.Context.MODE_PRIVATE).getBoolean("enabled", true)
                 // All embedding/retrieval/routing work must finish BEFORE the generation gate.
@@ -736,10 +757,10 @@ class ChatViewModel(
                     if (!diagnosticSmoke && it.toDescriptor().runtime == RuntimeType.LITERT_LM) graph.liteRtDefaults.applyOnce(it.id) else it
                 }
                 if (effectiveModel == null) {
-                    val text = "No usable local model is imported yet. Open Models and add a GGUF or LiteRT-LM model; no cloud fallback is used."
+                    val text = chatText(R.string.chat_no_usable_model_message)
                     _streamingText.value = text
                     graph.workspace.updateGeneratedMessage(assistantId, text, MessageStatus.FAILED.name, null)
-                    _notices.emit("Local inference is unavailable until a model is imported")
+                    _notices.emit(chatText(R.string.chat_no_model_imported_notice))
                     return@launch
                 }
                 val model = effectiveModel
@@ -755,7 +776,7 @@ class ChatViewModel(
                     ) || model.compatibilityStatus == ModelCompatibilityStatus.CORRUPT_OR_INCOMPLETE.name ||
                     model.compatibilityStatus == ModelCompatibilityStatus.UNSUPPORTED_ARCHITECTURE.name
                 ) {
-                    val text = "${model.displayName} is not loadable: ${model.compatibilityWarning ?: model.compatibilityStatus}."
+                    val text = chatText(R.string.chat_model_not_loadable, model.displayName, model.compatibilityWarning ?: model.compatibilityStatus)
                     _streamingText.value = text
                     graph.workspace.updateGeneratedMessage(assistantId, text, MessageStatus.FAILED.name, null)
                     return@launch
@@ -836,12 +857,13 @@ class ChatViewModel(
                 var suppliedEvidence = evidence.orEmpty().filter { it.id in suppliedIds }
                 var suppliedDocumentIds = suppliedEvidence.map { it.documentId }.toSet()
                 if (!useContextV1 && !diagnosticSmoke && (selectedFiles - suppliedEvidence.map { it.documentId }.toSet()).isNotEmpty()) {
-                    _notices.emit("Some selected files had no relevant passage or did not fit; they remain selected for your next message")
+                    _notices.emit(chatText(R.string.chat_selected_files_not_fully_used))
                 }
                 if (!useContextV1 && !diagnosticSmoke && selectedFiles.isNotEmpty() && suppliedEvidence.isEmpty())
-                    _notices.emit("No relevant document passage found for this turn")
+                    _notices.emit(chatText(R.string.chat_no_relevant_selected_passage))
                 _generationProgress.value = GenerationProgress(GenerationStage.PREPARING_PROMPT,
-                    detail = if (suppliedEvidence.isEmpty()) "Preparing your message" else "Sending ${suppliedEvidence.size} relevant document excerpts to the model")
+                    detail = if (suppliedEvidence.isEmpty()) chatText(R.string.chat_preparing_message)
+                    else chatText(R.string.chat_sending_document_excerpts, suppliedEvidence.size))
                 var prompt = if (diagnosticSmoke || useContextV1) trimmed else budget.included.joinToString("\n\n") { it.text }
                 var conversation = (if (diagnosticSmoke || useContextV1) ConversationPrompt(trimmed) else ConversationPromptBuilder.build(trimmed, budget.included))
                     .copy(conversationId = conversationId, enableThinking = !diagnosticSmoke && com.localai.workspace.data.AssistantRouting.thinking(
@@ -879,18 +901,18 @@ class ChatViewModel(
                     val selectedSourceDrops=selectedContext.dropped.filter { it.item.kind==com.localai.workspace.context.ContextKind.SOURCE && it.item.provenance.documentId in selectedFiles }
                     val selectedSourceBudgetDrop=selectedSourceDrops.any { it.reason=="TOKEN_BUDGET" }
                     val incompleteCellEvidence=selectedContext.sourceEvidenceIssues.isNotEmpty() || selectedContext.included.any { it.kind==com.localai.workspace.context.ContextKind.SOURCE && it.provenance.evidenceIncompleteReasons.isNotEmpty() }
-                    if(incompleteCellEvidence) _notices.emit("Some requested spreadsheet cells or formula dependencies could not be included; verify the cell evidence before relying on totals.")
-                    if(selectedSourceBudgetDrop) _notices.emit("A relevant passage from a selected file did not fit this turn and was not sent to the model")
+                    if(incompleteCellEvidence) _notices.emit(chatText(R.string.chat_spreadsheet_evidence_incomplete))
+                    if(selectedSourceBudgetDrop) _notices.emit(chatText(R.string.chat_selected_passage_did_not_fit))
                     else if (!incompleteCellEvidence && (selectedFiles - suppliedDocumentIds).isNotEmpty()) {
-                        if(suppliedDocumentIds.isEmpty()) _notices.emit("No relevant passage was found in the selected files; their contents were not sent")
-                        else _notices.emit("One or more selected files had no relevant passage for this question")
+                        if(suppliedDocumentIds.isEmpty()) _notices.emit(chatText(R.string.chat_no_relevant_passage_not_sent))
+                        else _notices.emit(chatText(R.string.chat_some_files_no_relevant_passage))
                     }
                     if(selectedContext.droppedSkills.isNotEmpty()) {
                         agentTrace.value?.let { trace ->
                             val selection=trace.selection.copy(active=trace.selection.active.filter{it.id !in selectedContext.droppedSkills},evaluations=trace.selection.evaluations.map{if(it.skillId in selectedContext.droppedSkills)it.copy(active=false,reasons=it.reasons+"SKILL_CONTEXT_BUDGET")else it})
                             trace.copy(selection=selection).also{agentTrace.value=it;graph.agentSkills.last.value=it}
                         }
-                        _notices.emit("Skill instructions did not fit this turn's context budget")
+                        _notices.emit(chatText(R.string.chat_skill_instructions_did_not_fit))
                     }
                     conversation = selectedContext.conversation().copy(enableThinking = conversation.enableThinking,
                         validationThinkingBudget = conversation.validationThinkingBudget)
@@ -898,13 +920,13 @@ class ChatViewModel(
                     if (selectedContext.requiresUserNotice && !selectedSourceBudgetDrop) {
                         val droppedKinds=selectedContext.dropped.filter{it.reason=="TOKEN_BUDGET"}.map{it.item.kind}.toSet()
                         val categories=listOfNotNull(
-                            "relevant document evidence".takeIf{com.localai.workspace.context.ContextKind.SOURCE in droppedKinds},
-                            "relevant memory".takeIf{com.localai.workspace.context.ContextKind.MEMORY in droppedKinds},
-                            "recent conversation context".takeIf{com.localai.workspace.context.ContextKind.RECENT_CONVERSATION in droppedKinds},
-                            "project context".takeIf{com.localai.workspace.context.ContextKind.PROJECT in droppedKinds},
-                            "tool observations".takeIf{com.localai.workspace.context.ContextKind.TOOL_OBSERVATION in droppedKinds},
+                            chatText(R.string.chat_context_documents).takeIf{com.localai.workspace.context.ContextKind.SOURCE in droppedKinds},
+                            chatText(R.string.chat_context_memory).takeIf{com.localai.workspace.context.ContextKind.MEMORY in droppedKinds},
+                            chatText(R.string.chat_context_conversation).takeIf{com.localai.workspace.context.ContextKind.RECENT_CONVERSATION in droppedKinds},
+                            chatText(R.string.chat_context_project).takeIf{com.localai.workspace.context.ContextKind.PROJECT in droppedKinds},
+                            chatText(R.string.chat_context_tools).takeIf{com.localai.workspace.context.ContextKind.TOOL_OBSERVATION in droppedKinds},
                         )
-                        if(categories.isNotEmpty()) _notices.emit("${categories.joinToString(", ").replaceFirstChar { it.uppercase() }} did not fit this turn; the answer may omit those details. Saved data remains available.")
+                        if(categories.isNotEmpty()) _notices.emit(chatText(R.string.chat_context_omitted_notice,categories.joinToString(", ")))
                     }
                 }
                 if (!useContextV1 && !diagnosticSmoke) {
@@ -946,19 +968,20 @@ class ChatViewModel(
                     graph.database.messageDao().setEffectiveTurn(userId, conversation.userMessage, model.id)
                 }
                 if (!useContextV1 && budget.budgetExcluded.any { it.kind == ContextItemKind.HISTORY }) {
-                    _notices.emit("Only the most recent complete turns that fit were sent; older history remains saved")
+                    _notices.emit(chatText(R.string.chat_recent_history_budget_notice))
                 }
                 if (!useContextV1 && budget.budgetExcluded.any { it.kind == ContextItemKind.LOCAL_EVIDENCE }) {
-                    _notices.emit("Some source passages were excluded by the active context budget")
+                    _notices.emit(chatText(R.string.chat_source_budget_notice))
                 }
                 val descriptor = model.toDescriptor()
                 val attachedImage = submittedImage
                 val attachedAudio = submittedAudio
-                _audioDiagnostics.value = if (attachedAudio == null) "Audio input: absent" else "Audio input: pending; preprocessing succeeded"
-                require(attachedAudio == null || (descriptor.runtime == RuntimeType.LITERT_LM && com.localai.workspace.domain.model.ModelCapability.AUDIO in descriptor.capabilities)) { "Audio unsupported; no text-only request sent" }
+                _audioDiagnostics.value = if (attachedAudio == null) chatText(R.string.chat_audio_input_absent)
+                    else chatText(R.string.chat_audio_input_pending)
+                require(attachedAudio == null || (descriptor.runtime == RuntimeType.LITERT_LM && com.localai.workspace.domain.model.ModelCapability.AUDIO in descriptor.capabilities)) { chatText(R.string.chat_audio_not_supported) }
                 actualThinking.value = conversation.enableThinking
                 if (attachedImage != null && com.localai.workspace.domain.model.ModelCapability.VISION !in descriptor.capabilities) {
-                    val text = "${model.displayName} does not support vision in its current runtime."
+                    val text = chatText(R.string.chat_image_not_supported_for_model, model.displayName)
                     _streamingText.value = text
                     graph.workspace.updateGeneratedMessage(assistantId, text, MessageStatus.FAILED.name, null)
                     _notices.emit(text)
@@ -982,8 +1005,8 @@ class ChatViewModel(
                             else if (generationCollectionStarted && workerEvent == "LITERT_FIRST_TOKEN") trace("SDK_CALLBACK_FIRST") { it.copy(nativeInFlight = true, workerCheckpoint = workerEvent) }
                             else trace("WORKER_CHECKPOINT") { it.copy(workerCheckpoint = workerEvent) }
                         }
-                        if (progress.event == "LITERT_AUDIO_INPUT_READY") progress.detail?.let { _audioDiagnostics.value = it }
-                        if (progress.event == "LITERT_VISION_INPUT_READY") progress.detail?.let { _visionDiagnostics.value = it }
+                        if (progress.event == "LITERT_AUDIO_INPUT_READY") _audioDiagnostics.value = chatText(R.string.chat_audio_input_ready)
+                        if (progress.event == "LITERT_VISION_INPUT_READY") _visionDiagnostics.value = chatText(R.string.chat_vision_input_ready)
                         progress.error?.let { _generationError.value = it }
                     }
                 }
@@ -1036,13 +1059,13 @@ class ChatViewModel(
                 if (stopRequested) throw CancellationException("Cancelled before prompt submission")
                 preparation.loadedForRequest(model.id, runtime.metrics())
                 if (usedAccelerator != selectedAccelerator) {
-                    _notices.emit("${selectedAccelerator.name} failed to initialize; safely fell back to ${usedAccelerator.name}")
+                    _notices.emit(chatText(R.string.chat_accelerator_fallback, selectedAccelerator.name, usedAccelerator.name))
                 }
                 if (attachedImage != null && !runtime.capabilities().vision) {
                     throw GenerationException(GenerationError(GenerationStage.LOADING_MODEL, "VISION_UNAVAILABLE",
-                        "Image input could not be initialized. No text-only request was sent."))
+                        chatText(R.string.chat_image_initialization_failed)))
                 }
-                if (attachedAudio != null && !runtime.capabilities().audio) throw GenerationException(GenerationError(GenerationStage.LOADING_MODEL, "AUDIO_UNAVAILABLE", "Audio could not be initialized. No text-only request was sent."))
+                if (attachedAudio != null && !runtime.capabilities().audio) throw GenerationException(GenerationError(GenerationStage.LOADING_MODEL, "AUDIO_UNAVAILABLE", chatText(R.string.chat_audio_initialization_failed)))
                 val answer = StringBuilder()
                 var metrics: String? = null
                 _generationProgress.value = GenerationProgress(GenerationStage.PREPARING_PROMPT)
@@ -1113,7 +1136,7 @@ class ChatViewModel(
                     suppliedEvidence,
                 )
                 if (validated.invalidEvidenceIds.isNotEmpty()) {
-                    _notices.emit("Ignored ${validated.invalidEvidenceIds.size} citation ID(s) not present in this turn")
+                    _notices.emit(chatText(R.string.chat_invalid_citation_ids, validated.invalidEvidenceIds.size))
                 }
                 val citationRows = validated.valid.map { resolved ->
                     val item = resolved.evidence
@@ -1139,7 +1162,7 @@ class ChatViewModel(
                 withContext(NonCancellable) { finishMetrics("CANCELLED") }
                 withContext(NonCancellable) { graph.workspace.updateGeneratedMessage(
                     assistantId,
-                    _streamingText.value.ifBlank { "Generation cancelled. Ready to retry." },
+                    _streamingText.value.ifBlank { chatText(R.string.chat_generation_cancelled_retry) },
                     MessageStatus.CANCELED.name,
                     null,
                 ) }
@@ -1147,24 +1170,31 @@ class ChatViewModel(
             } catch (error: Throwable) {
                 trace("REQUEST_FAILED") { it.copy(errorClass = error.javaClass.simpleName, completedAt = traceStore.terminalTime()) }
                 preparation.invalidateReady()
-                val diagnostic = (error as? GenerationException)?.diagnostic ?: if (error.message == "PINNED_PREFERENCE_EXCEEDS_CONTEXT_BUDGET") {
+                val runtimeDiagnostic = (error as? GenerationException)?.diagnostic
+                val diagnostic = runtimeDiagnostic?.let { cause ->
+                    when (cause.code) {
+                        "VISION_UNAVAILABLE" -> cause.copy(message = chatText(R.string.chat_image_initialization_failed))
+                        "AUDIO_UNAVAILABLE" -> cause.copy(message = chatText(R.string.chat_audio_initialization_failed))
+                        else -> cause
+                    }
+                } ?: if (error.message == "PINNED_PREFERENCE_EXCEEDS_CONTEXT_BUDGET") {
                     GenerationError(
                         _generationProgress.value.stage,
                         "PINNED_PREFERENCE_EXCEEDS_CONTEXT_BUDGET",
-                        "Pinned memories exceed 15% of the context input limit. No prompt was sent. Unpin or shorten some entries, then try again.",
+                        chatText(R.string.chat_pinned_memory_budget_error),
                         technicalDetail = error.javaClass.name,
                     )
                 } else GenerationError(
-                    _generationProgress.value.stage, "GENERATION_ERROR", error.message ?: "Local generation failed.",
-                    technicalDetail = error.javaClass.name,
+                    _generationProgress.value.stage, "GENERATION_ERROR", chatText(R.string.chat_local_generation_failed),
+                    technicalDetail = error.message ?: error.javaClass.name,
                 )
                 _generationError.value = diagnostic
                 _generationProgress.value = GenerationProgress(GenerationStage.ERROR, error = diagnostic)
                 finishMetrics(if (diagnostic.code.contains("TIMEOUT")) "TIMEOUT" else "ERROR")
                 val partial = _streamingText.value.trimEnd()
                 val text = if (diagnostic.code == "REPETITION_LOOP" && partial.isNotBlank()) {
-                    "$partial\n\nGeneration stopped: the model repeated the same passage. Ready to retry."
-                } else diagnostic.displayText()
+                    "$partial\n\n${chatText(R.string.chat_repetition_stopped_retry)}"
+                } else diagnostic.localizedChatDisplayText(graph.contextForMeasurements)
                 _streamingText.value = text
                 graph.workspace.updateGeneratedMessage(assistantId, text, MessageStatus.FAILED.name, GenerationDiagnosticCodec.encode(diagnostic))
                 _notices.emit(diagnostic.message)
@@ -1184,8 +1214,8 @@ class ChatViewModel(
                         try { activeRuntime?.unload() }
                         catch (cleanup: Throwable) {
                             val diagnostic = (cleanup as? GenerationException)?.diagnostic ?: GenerationError(
-                                GenerationStage.UNLOADING, "UNLOAD_FAILED", "Runtime cleanup failed; native worker was reset.",
-                                technicalDetail = cleanup.javaClass.name,
+                                GenerationStage.UNLOADING, "UNLOAD_FAILED", chatText(R.string.chat_runtime_cleanup_failed),
+                                technicalDetail = cleanup.message ?: cleanup.javaClass.name,
                             )
                             _generationError.value = diagnostic
                             _generationProgress.value = GenerationProgress(GenerationStage.ERROR, error = diagnostic)
@@ -1242,9 +1272,11 @@ class ChatViewModel(
         _selectedDocumentIds.value = if (selected) _selectedDocumentIds.value + id else _selectedDocumentIds.value - id
     }
     suspend fun previewDocument(id: String): String {
-        val doc = graph.database.documentDao().get(id)?.takeIf { it.projectId == projectId } ?: return "File no longer exists"
-        if (doc.indexingStatus != "READY") return doc.errorMessage ?: "File is still being read"
-        return graph.database.documentDao().openingSegments(id, 3).joinToString("\n\n") { it.text }.ifBlank { "No readable text" }
+        val doc = graph.database.documentDao().get(id)?.takeIf { it.projectId == projectId }
+            ?: return chatText(R.string.chat_preview_file_missing)
+        if (doc.indexingStatus != "READY") return chatText(R.string.chat_preview_file_not_ready, doc.errorMessage ?: "")
+        return graph.database.documentDao().openingSegments(id, 3).joinToString("\n\n") { it.text }
+            .ifBlank { chatText(R.string.chat_preview_no_readable_text) }
     }
     internal suspend fun previewCitationSource(citation: CitationEvidenceEntity): CitationSourcePreview? {
         val conversationId = _conversationId.value ?: return null
@@ -1281,9 +1313,9 @@ class ChatViewModel(
         val job = viewModelScope.launch(start = CoroutineStart.LAZY) {
             _importCount.value++
             try { block() }
-            catch (timeout: kotlinx.coroutines.TimeoutCancellationException) { _notices.emit("Attachment preparation timed out. No new attachment was sent.") }
+            catch (timeout: kotlinx.coroutines.TimeoutCancellationException) { _notices.emit(chatText(R.string.chat_attachment_preparation_timeout)) }
             catch (cancelled: CancellationException) { throw cancelled }
-            catch (failure: Exception) { _notices.emit(failure.message ?: "File import failed") }
+            catch (failure: Exception) { _notices.emit(chatText(R.string.chat_attachment_preparation_failed, failure.message ?: failure.javaClass.simpleName)) }
             finally { _importCount.value-- }
         }
         imports += job
@@ -1302,11 +1334,11 @@ class ChatViewModel(
             val result = graph.documents.ingest(projectId, uri)
             val document = result.getOrNull()?.let { graph.database.documentDao().get(it) }
             when {
-                result.isFailure -> _notices.emit(result.exceptionOrNull()?.message ?: "Document import failed")
-                document?.indexingStatus != "READY" -> _notices.emit(document?.errorMessage ?: "File could not be read")
+                result.isFailure -> _notices.emit(chatText(R.string.chat_document_import_failed, result.exceptionOrNull()?.message ?: ""))
+                document?.indexingStatus != "READY" -> _notices.emit(chatText(R.string.chat_document_not_ready, document?.errorMessage ?: ""))
                 else -> {
                     _selectedDocumentIds.value += document.id
-                    _notices.emit("File ready · excerpts will be included in your next message")
+                    _notices.emit(chatText(R.string.chat_file_ready_for_next_message))
                 }
             }
         }
@@ -1319,16 +1351,16 @@ class ChatViewModel(
             mediaPreparationError = null
             val model = com.localai.workspace.data.ApplicationModelPreparation.usableModel(graph.workspace.allModels.first(), _selectedModelId.value)
             if (model == null || model.toDescriptor().runtime != RuntimeType.LITERT_LM || com.localai.workspace.domain.model.ModelCapability.VISION !in model.toDescriptor().capabilities) {
-                mediaPreparationError = "Select a vision model before attaching an image"; _notices.emit(mediaPreparationError!!); return
+                mediaPreparationError = chatText(R.string.chat_select_vision_model_before_image); _notices.emit(mediaPreparationError!!); return
             }
             try {
                 val file = graph.imagePreprocessor.prepare(uri)
                 _attachedImagePath.value?.let { java.io.File(it).delete() }
                 _attachedAudioPath.value?.let { java.io.File(it).delete() }; _attachedAudioPath.value = null
                 _attachedImagePath.value = file.absolutePath
-                _notices.emit("Image prepared locally for the selected vision model")
-            } catch (cancelled: CancellationException) { mediaPreparationError = "Image preparation cancelled; no text-only request was sent."; throw cancelled }
-            catch (failure: Throwable) { mediaPreparationError = "Image could not be prepared. No text-only request was sent."; _notices.emit(mediaPreparationError!!) }
+                _notices.emit(chatText(R.string.chat_image_prepared_locally))
+            } catch (cancelled: CancellationException) { mediaPreparationError = chatText(R.string.chat_image_preparation_cancelled); throw cancelled }
+            catch (failure: Throwable) { mediaPreparationError = chatText(R.string.chat_image_preparation_failed); _notices.emit(mediaPreparationError!!) }
     }
     fun attachAudio(uri: android.net.Uri) { importJob { prepareAudio(uri) } }
     private suspend fun prepareAudio(uri: android.net.Uri) {
@@ -1336,13 +1368,13 @@ class ChatViewModel(
         val preprocessingStarted = android.os.SystemClock.elapsedRealtime()
         try {
         val model = com.localai.workspace.data.ApplicationModelPreparation.usableModel(graph.workspace.allModels.first(), _selectedModelId.value)
-        require(model != null && model.toDescriptor().runtime == RuntimeType.LITERT_LM && com.localai.workspace.domain.model.ModelCapability.AUDIO in model.toDescriptor().capabilities) { "This model does not support audio input." }
+        require(model != null && model.toDescriptor().runtime == RuntimeType.LITERT_LM && com.localai.workspace.domain.model.ModelCapability.AUDIO in model.toDescriptor().capabilities) { chatText(R.string.chat_audio_not_supported) }
         val file = graph.audioPreprocessor.prepare(uri)
         _attachedImagePath.value?.let { java.io.File(it).delete() }; _attachedImagePath.value = null
         _attachedAudioPath.value?.let { java.io.File(it).delete() }; _attachedAudioPath.value = file.path
         val info = com.localai.workspace.audio.WavInput.inspect(file)
-        _audioDiagnostics.value = "Audio prepared: ${info.durationMs} ms; ${info.dataBytes} bytes; PCM WAV"
-        } catch (failure: Throwable) { mediaPreparationError = "Audio preparation failed; no text-only request was sent."; throw failure }
+        _audioDiagnostics.value = chatText(R.string.chat_audio_prepared, info.durationMs, info.dataBytes)
+        } catch (failure: Throwable) { mediaPreparationError = chatText(R.string.chat_audio_preparation_failed); throw failure }
         finally { _audioPreprocessingMs.value = android.os.SystemClock.elapsedRealtime() - preprocessingStarted }
     }
     fun clearAudio() {
