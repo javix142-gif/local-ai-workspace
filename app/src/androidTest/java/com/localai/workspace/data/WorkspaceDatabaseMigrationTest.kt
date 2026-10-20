@@ -1,6 +1,5 @@
 package com.localai.workspace.data
 
-import androidx.room.Database
 import androidx.room.testing.MigrationTestHelper
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -39,8 +38,9 @@ class WorkspaceDatabaseMigrationTest {
         )
         starting.close()
 
-        val currentVersion = WorkspaceDatabase::class.java
-            .getAnnotation(Database::class.java).version
+        // Room's @Database is a compile-time schema declaration; its annotation
+        // is not guaranteed to be present for runtime reflection on Android.
+        val currentVersion = WORKSPACE_DATABASE_VERSION
         val migrated = helper.runMigrationsAndValidate(
             databaseName,
             currentVersion,

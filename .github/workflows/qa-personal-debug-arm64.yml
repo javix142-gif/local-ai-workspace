@@ -6,11 +6,20 @@ on:
       - feat/0.5.0-skills-agents
     paths:
       - '.github/workflows/qa-personal-debug-arm64.yml'
+      - 'app/build.gradle.kts'
+      - 'scripts/ci/build_qa_debug_arm64.py'
+      - 'scripts/ci/verify_qa_debug_apk_integrity.py'
       - 'app/src/main/java/com/localai/workspace/MainActivity.kt'
       - 'app/src/main/java/com/localai/workspace/ui/ChatContent.kt'
       - 'app/src/main/java/com/localai/workspace/ui/ContextMemoryUi.kt'
       - 'app/src/test/java/com/localai/workspace/ui/ChatVisualSurfacesUiTest.kt'
   workflow_dispatch:
+    inputs:
+      parallel_install:
+        description: "Use a separate applicationId for import testing without replacing the installed app"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -36,7 +45,28 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      - name: Require persistent personal QA signing secrets
+        env:
+          QA_ARTIFACT_DIR: ${{ runner.temp }}/local-ai-workspace-personal-qa-arm64
+          QA_KEYSTORE_B64: ${{ secrets.QA_KEYSTORE_B64 }}
+          QA_KEYSTORE_PASSWORD: ${{ secrets.QA_KEYSTORE_PASSWORD }}
+          QA_KEY_ALIAS: ${{ secrets.QA_KEY_ALIAS }}
+          QA_KEY_PASSWORD: ${{ secrets.QA_KEY_PASSWORD }}
+        run: |
+          mkdir -p "$QA_ARTIFACT_DIR/logs"
+          set -o pipefail
+          python3 - <<'PY' | tee "$QA_ARTIFACT_DIR/logs/signing-preflight.log"
+          import os, sys
+          names = ("QA_KEYSTORE_B64", "QA_KEYSTORE_PASSWORD", "QA_KEY_ALIAS", "QA_KEY_PASSWORD")
+          missing = [name for name in names if not os.environ.get(name)]
+          if missing:
+              print("MISSING_REQUIRED_ACTIONS_SECRETS=" + ",".join(missing))
+              sys.exit(1)
+          print("PERSISTENT_QA_SIGNING_SECRETS_PRESENT")
+          PY
+
       - name: Initialize personal QA evidence
+        if: always()
         env:
           QA_ARTIFACT_DIR: ${{ runner.temp }}/local-ai-workspace-personal-qa-arm64
         run: |
@@ -64,6 +94,12 @@ jobs:
         timeout-minutes: 65
         env:
           QA_ARTIFACT_DIR: ${{ runner.temp }}/local-ai-workspace-personal-qa-arm64
+          QA_KEYSTORE_B64: ${{ secrets.QA_KEYSTORE_B64 }}
+          QA_KEYSTORE_PASSWORD: ${{ secrets.QA_KEYSTORE_PASSWORD }}
+          QA_KEY_ALIAS: ${{ secrets.QA_KEY_ALIAS }}
+          QA_KEY_PASSWORD: ${{ secrets.QA_KEY_PASSWORD }}
+          QA_REQUIRE_PERSISTENT_SIGNING: 'true'
+          QA_PARALLEL_INSTALL: ${{ inputs.parallel_install }}
         run: |
           set -o pipefail
           python3 scripts/ci/build_qa_debug_arm64.py 2>&1 | tee "$QA_ARTIFACT_DIR/logs/workflow-build.log"
@@ -72,9 +108,14 @@ jobs:
         id: apk-integrity
         env:
           QA_ARTIFACT_DIR: ${{ runner.temp }}/local-ai-workspace-personal-qa-arm64
+          QA_PARALLEL_INSTALL: ${{ inputs.parallel_install }}
         run: |
           set -euo pipefail
-          apk="$QA_ARTIFACT_DIR/local-ai-workspace-0.5.0-debug-arm64.apk"
+          if [[ "${QA_PARALLEL_INSTALL,,}" == "true" ]]; then
+            apk="$QA_ARTIFACT_DIR/local-ai-workspace-0.5.0-debug-arm64-parallel.apk"
+          else
+            apk="$QA_ARTIFACT_DIR/local-ai-workspace-0.5.0-debug-arm64.apk"
+          fi
           log="$QA_ARTIFACT_DIR/logs/apk-integrity.log"
           sdk_root="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
           if [[ -z "$sdk_root" ]]; then
@@ -105,6 +146,7 @@ jobs:
           from pathlib import Path
 
           root = Path(sys.argv[1])
+          root.mkdir(parents=True, exist_ok=True)
           report_path = root / "RESULTS.json"
           report = json.loads(report_path.read_text(encoding="utf-8")) if report_path.exists() else {}
           report["artifactType"] = "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION"
@@ -120,9 +162,9 @@ jobs:
           validation = report.setdefault("validation", {})
           validation["apkZipIntegrity"] = os.environ.get("ZIP_INTEGRITY") or "NOT_CONFIRMED"
           validation["zipalign"] = os.environ.get("ZIPALIGN") or "NOT_CONFIRMED"
-          if os.environ.get("JOB_STATUS") != "success" and report.get("status") == "PASS":
+          if os.environ.get("JOB_STATUS") != "success":
               report["status"] = "FAIL"
-              report["failureReason"] = "A post-build APK validation step failed."
+              report.setdefault("failureReason", "A required setup, build, or APK validation step failed before a verified personal QA artifact was produced.")
           report["workflowJobStatus"] = os.environ.get("JOB_STATUS", "unknown").upper()
           report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
           files = sorted(path for path in root.rglob("*") if path.is_file() and path.name != "SHA256SUMS")

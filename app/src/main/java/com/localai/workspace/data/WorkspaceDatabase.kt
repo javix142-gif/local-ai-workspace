@@ -7,6 +7,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 
+internal const val WORKSPACE_DATABASE_VERSION = 10
+
 @Database(
     entities = [
         ProjectEntity::class,
@@ -22,7 +24,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         ToolCallEntity::class,
         PendingDocumentDeletionEntity::class, SemanticVectorEntity::class,
     ],
-    version = 10,
+    version = WORKSPACE_DATABASE_VERSION,
     exportSchema = true,
 )
 abstract class WorkspaceDatabase : RoomDatabase() {

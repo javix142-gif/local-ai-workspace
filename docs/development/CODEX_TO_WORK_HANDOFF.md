@@ -1,3 +1,15 @@
+# Current master-program checkpoint — H0 → H1 → H2 continuity (2026-10-20)
+
+The active user contract is `CORRECCION_CONTINUIDAD_H0_H1_H2.md`. Its four reference documents are preserved verbatim at `docs/development/OBJETIVO_AWS.md`, `docs/development/PROMPT_CODEX_REDIRECCION.md`, `docs/development/H1_PRUEBAS_ACEPTACION.md`, and `docs/design/GUIA_VISUAL_AWS.md`. Their roles are objective, operational redirection, H1 acceptance criteria, and visual/accessibility guidance; the redirection document is reference material, while the direct continuity contract governs this work.
+
+Current branch at handoff: `feat/0.5.0-skills-agents`, starting HEAD `986c57b01460f68ce023eb262e459f57612c81f6`. H0 HOST results remain those recorded for code `49f5913937fe7c049bf0ad71d2d75f7e5321b557`; they do not establish emulator or physical-device success. Run `39431545966` proves `getAnnotation(Database::class.java)` returned null at `WorkspaceDatabaseMigrationTest.kt:43`; the fix uses the same compile-time constant for `@Database.version` and the existing v8→v10 migration test, preserving its data assertions. HOST AndroidTest compilation passes after that fix; the connected test has not yet rerun. If a remaining external CI blocker is demonstrated after the correction, record `CI_PENDING` and continue to H1 with the limitation explicit.
+
+The Personal QA workflow now requires the four named GitHub Actions signing secrets, decodes the keystore into a temporary private path, verifies the APK signer fingerprint, and removes the key file after build. The normal package is accepted only with the recorded previous update certificate; `parallel_install=true` uses `com.localai.workspace.parallel` for isolated import checks. The user must configure the compatible key in Actions; secret availability was not readable in this executor. Do not install or replace the existing phone app. The workflow has not yet run with a configured key.
+
+Next: H1 acceptance IDs `H1-AT-01` through `H1-AT-24` (including `H1-AT-05b`) from the preserved contract. H2 follows H1. H1 HOST, CI and DEVICE evidence remain separate; no acceptance state is inferred from existing partial implementation. H0/H1/H2 status is summarized in [`STATUS.md`](STATUS.md), and the operational queue is [`BACKLOG_ACTIVO.md`](BACKLOG_ACTIVO.md). The canonical 97-task/120-dependency plan and its historical states remain unchanged; `M01-06=PENDING_REQUIRES_DEVICE`, `PHYSICAL_DEVICE=NOT_RUN`.
+
+---
+
 # Current master-program checkpoint — H0 host stabilization (2026-10-20)
 
 Code SHA 49f5913937fe7c049bf0ad71d2d75f7e5321b557 contains the H0 test/runtime fixes: schema version expectation 10, two-page DOCX assertions, immediate dismissal of stale removed-file details with a retry-outbox UI regression, and an authentic exported-schema v8→v10 migration test. Historical Room v1 remains unverified because its authentic schema is unavailable; the Android migration test compiled but was not instrumented.
