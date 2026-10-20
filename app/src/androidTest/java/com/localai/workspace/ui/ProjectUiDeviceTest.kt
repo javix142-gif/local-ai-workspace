@@ -20,6 +20,7 @@ class ProjectUiDeviceTest {
     @Test fun createProjectAndExplicitlySaveEditRemoveMemory() {
         val name = "UI validation ${System.currentTimeMillis()}"
         compose.onNodeWithText("Start project").performClick()
+        compose.onNodeWithText("Project name").assertIsDisplayed()
         compose.onNodeWithText("Project name").performTextInput(name)
         compose.onNodeWithText("Create").performClick()
         awaitText("Files")
