@@ -128,7 +128,10 @@ class H1At12AfterUpdateTest {
                 sourceRetrievalMode = com.localai.workspace.context.SourceRetrievalMode.DISABLED),
             evidence = emptyList(),
         ).conversation().systemInstruction
-        assertTrue("The migrated preference is applied to the next chat context", prompt.contains("H1_AT12_NEXT_CHAT_Ñ"))
+        assertTrue(
+            "The migrated preference is applied to the next chat context",
+            prompt?.contains("H1_AT12_NEXT_CHAT_Ñ") == true,
+        )
 
         val expected = JSONArray(requireNotNull(state.getString("expectedMemories", null)))
         val active = graph.contextFoundation.memory.items.first().filter { it.status == "ACTIVE" }
