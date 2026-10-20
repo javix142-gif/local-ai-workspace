@@ -1,27 +1,26 @@
 # Estado operativo — AWS H0 → H1 → H2
 
-Fecha: 2026-10-20. Rama `feat/0.5.0-skills-agents`; código publicado `dffd919a26d1d1c5a708787c77388c00510f7014`.
+Fecha: 2026-10-20. Rama `feat/0.5.0-skills-agents`; código H1 `3efc959694f193122da45130b08b2abe60e24608`.
 
-## H0 — CI aún pendiente de corregir
+## H0 — verificación CI en curso
 
-- El run `39443809946` ejecutó la instrumentación conectada en API 35 x86_64: XML con 16 casos, 10 ejecutados sin fallos y 6 omitidos porque requieren modelos reales. La migración comprobada no falló.
-- El collector marcó FAIL únicamente porque Android Gradle Plugin retiró los paquetes al concluir la tarea y la comprobación posterior no reconoció la instalación durante la prueba. Se preservan `applicationApkInstalled=false` y el resultado del run original; no se reclasifica retroactivamente.
-- Hay una corrección local del collector con prueba HOST 4/4. Aún requiere publicación y un nuevo run. H0 no se declara cerrado.
-- El workflow QA oficial quedó fail-closed sin APK. Personal QA no pudo firmar porque faltan secretos persistentes de firma; no se exponen ni se reemplazan con otra clave.
+- El arreglo del collector quedó publicado en `ae4cdbd`; conserva como histórico el FAIL del run `39443809946` (16 XML: 10 ejecutados, 6 omitidos por falta de modelos; 0 fallos de pruebas, collector falló al verificar paquetes después de la tarea).
+- El push del código H1 inició el run instrumentado `39463950185` en API 35 x86_64. Aún no hay resultado final; no se declara H0 cerrado.
+- QA ARM64 `39463950123` espera el éxito de esa instrumentación. Personal QA `39463950118` falló el preflight porque faltan los secretos persistentes de firma; no produjo una APK personal aprobada.
 
-## H1 — implementación en curso
+## H1 — cambio publicado, HOST validado
 
-- Contrato vigente: [`H1_PRUEBAS_ACEPTACION.md`](H1_PRUEBAS_ACEPTACION.md), versión 1.1; la versión 1.0 original se conserva en `archive/`.
-- La revisión autorizada de H1-AT-04 fija el límite del bloque en 15 %: tres fijadas cortas deben caber; un pin que excedería el cupo se rechaza con explicación y sin cambiar el estado.
-- Hay cambios locales no publicados para preferencias/contexto y continuidad multimodal. El selector de Skills ahora descuenta el costo de preferencias. La clase focal H1 pasó 5/5 en el árbol de trabajo actual (Gradle 8.10.2, JDK 17, offline, 1m36s); se está ampliando la cobertura de los demás criterios.
-- No se declara ningún criterio H1 aceptado aún. H2 no ha comenzado.
+- Contrato v1.1: [`H1_PRUEBAS_ACEPTACION.md`](H1_PRUEBAS_ACEPTACION.md). Se aplica el límite de AT-04: el bloque de preferencias no excede 15 %; un pin que excede el máximo se rechaza antes de persistir, con explicación.
+- El gate HOST exacto del código `3efc959` pasó: app 938/938, LiteRT compatibilidad 2/2, 0 fallos/errores/omisiones; `lintDebug`, `assembleDebug` y `compileDebugAndroidTestKotlin` también completaron. Gradle 8.10.2, runtime JDK 17, worker app JDK 21, SDK/NDK preinstalados; ejecución offline, 904 s de pared, 158 tareas ejecutadas.
+- Log completo fuera de Git: `/tmp/aws-h1-full-host-gate-v2.log` (SHA-256 `c977579d1013c2e603504817b4295ea70e078a13ee0ba37cf3aa6b1613ecb75f`). El gate local produjo un APK Debug de compilación; no es una entrega ni una validación Android.
+- **H1-AT-17 BLOQUEADO:** la prueba de importación de 1.000 registros conserva campos y detecta correctamente duplicados, pero su fixture exige aprobar 50 pins de ~300 caracteres y dejar 1.000 `ACTIVE`. Eso contradice el límite obligatorio de AT-04 v1.1, que rechaza el pin que excede 15 % y prohíbe omitirlo silenciosamente. La prueba no se cuenta como aceptación de AT-17; no se relajó ninguno de los criterios.
+- Los demás criterios HOST requieren correlación y revisión criterio por criterio; HOST PASS no los convierte en CI_VERIFIED. H1 sigue abierto y H2 no ha comenzado.
 
-## Secuencia y límites
+## Pendientes y límites
 
-1. Publicar el arreglo del collector y verificar un nuevo run H0; si queda un bloqueo externo demostrado, registrar `CI_PENDING` y continuar H1 sin decir H0 aprobado.
-2. Completar los criterios HOST de H1; mantener separados HOST, CI y dispositivo.
-3. H2 sigue después de H1, según el contrato de redirección.
+- Esperar y auditar el run Android `39463950185`; si falla, separar el fallo funcional de los seis skips por modelos reales.
+- AT-02/09 incluyen inspección; AT-12 requiere CI y dispositivo; AT-06/20 requieren el Motorola, con AT-20 antes de instalar H1. AT-24 también depende del dispositivo. `PHYSICAL_DEVICE=NOT_RUN`; `M01-06=PENDING_REQUIRES_DEVICE`.
+- El catálogo histórico sigue intacto: 97 IDs y 120 dependencias; no se promovió ningún ID. El `EXECUTION_STATE.json` histórico no se modifica bajo el contrato vigente.
+- No se afirma rendimiento nativo, TTFT, tokens/s, consumo ni compatibilidad Motorola.
 
-`PHYSICAL_DEVICE=NOT_RUN`; Motorola y métricas reales de inferencia pendientes. `M01-06=PENDING_REQUIRES_DEVICE`. El catálogo histórico continúa intacto: 97 IDs y 120 dependencias. `EXECUTION_STATE.json` ya no es el estado operativo; su última copia antes de la sustitución por este archivo se archivó sin cambios en `archive/EXECUTION_STATE_pre-STATUS_20261020.json`.
-
-Referencias preservadas: [`OBJETIVO_AWS.md`](OBJETIVO_AWS.md), [`PROMPT_CODEX_REDIRECCION.md`](PROMPT_CODEX_REDIRECCION.md), [`guía visual`](../design/GUIA_VISUAL_AWS.md), [`contrato de continuidad`](CORRECCION_CONTINUIDAD_H0_H1_H2.md) y [`backlog activo`](BACKLOG_ACTIVO.md).
+Referencias: [`continuidad`](CORRECCION_CONTINUIDAD_H0_H1_H2.md), [`backlog activo`](BACKLOG_ACTIVO.md), [`contrato H1`](H1_PRUEBAS_ACEPTACION.md), [`handoff`](CODEX_TO_WORK_HANDOFF.md).
