@@ -1,7 +1,7 @@
 # H1: contrato de pruebas de aceptación (memoria personal)
 
-Versión 1.0 · 2026-10-20 · Base de referencia: `e83322d` (`codex/aws-master-resume-20261019`)
-Redactado de forma independiente antes de implementar H1. Al cerrar H1, la auditoría se hará contra este contrato y contra el código del SHA publicado.
+Versión 1.1 · 2026-10-20 · Revisión autorizada por el usuario de H1-AT-04; base: `archive/H1_PRUEBAS_ACEPTACION_v1.0.md`.
+El resto de los criterios conserva la versión 1.0. Al cerrar H1, la auditoría se hará contra este contrato y contra el código del SHA publicado.
 
 ## Reglas del contrato
 
@@ -47,15 +47,17 @@ Redactado de forma independiente antes de implementar H1. Al cerrar H1, la audit
 - **Esperado:** ninguno de los cuatro marcadores aparece en ninguna parte de la petición (sistema, historial ni mensaje).
 - **Riesgo:** inyección por importación no aprobada y recuerdos caducados.
 
-**H1-AT-04 · B · HOST · Presupuesto del bloque**
-- **Estado inicial:** 200 preferencias `ACTIVE`/`USER` de unos 200 caracteres cada una; 3 de ellas fijadas.
-- **Procedimiento:** una consulta normal con contexto de 4096.
+**H1-AT-04 · B · HOST · Presupuesto del bloque (versión 1.1)**
+- **Estado inicial:** hasta 200 preferencias `ACTIVE`/`USER`; tres fijadas de aproximadamente 60 caracteres para que el caso aceptado quepa en el cupo. Las demás pueden tener unos 200 caracteres.
+- **Procedimiento:** construir una petición normal con ventana de contexto 4096; probar también la acción real de fijar una cuarta memoria cuya inclusión haría que el bloque fijado excediera el 15 %.
 - **Esperado:**
-  - El bloque ocupa como máximo el 15 % del presupuesto de entrada estimado.
-  - Las 3 fijadas siempre están incluidas.
+  - El bloque de preferencias incluido ocupa como máximo el 15 % del presupuesto de entrada estimado; ese límite prevalece siempre.
+  - En el fixture que cabe, las tres fijadas se incluyen. Una operación que intente fijar una memoria y haga que el total fijado supere el 15 % se rechaza antes de persistir el cambio y la UI explica el límite. El estado fijado anterior permanece intacto.
+  - Ninguna memoria fijada se omite silenciosamente. La construcción del contexto conserva el límite; si un estado previo no válido no cabe, lo informa de forma explícita y no genera una petición que aparente incluirla.
   - El orden es determinista: fijadas, luego importancia, luego las más recientes.
-  - Las omitidas quedan en el diagnóstico con el motivo `PREFERENCE_BUDGET`.
+  - Las memorias no fijadas que no quepan quedan en el diagnóstico con el motivo `PREFERENCE_BUDGET`.
   - El mensaje del usuario llega completo.
+- **Resolución de la contradicción:** el máximo del 15 % prevalece sobre la cantidad o longitud de fijadas. La versión 1.0 de este criterio se conserva sin cambios en `archive/H1_PRUEBAS_ACEPTACION_v1.0.md`; esta versión 1.1 concreta el caso compatible y el rechazo de un pin que excedería el límite.
 
 **H1-AT-05 · B · HOST · Contradicción estructurada**
 - **Estado inicial:** `PREFERENCE`/`USER` con `subject="respuestas"`, `predicate="longitud"`, `object="cortas"`.

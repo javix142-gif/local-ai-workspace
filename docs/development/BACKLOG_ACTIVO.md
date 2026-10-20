@@ -1,23 +1,28 @@
-# Backlog activo — contrato H0 → H1 → H2
+# Backlog operativo — AWS H0 → H1 → H2
 
-Este documento es una vista operativa, no el backlog canónico. Los documentos fuente archivados de 97 tareas y 120 dependencias permanecen intactos; ninguno de sus estados se modifica aquí.
+Esta vista sigue el contrato de continuidad preservado en [`CORRECCION_CONTINUIDAD_H0_H1_H2.md`](CORRECCION_CONTINUIDAD_H0_H1_H2.md). No sustituye el catálogo histórico.
 
-## Estado vigente
+## Secuencia vigente
 
-- H0: base HOST registrada en `49f5913937fe7c049bf0ad71d2d75f7e5321b557`. Run `39431545966` confirmó que el test fallaba al reflejar `@Database.version` (Room devolvió anotación nula); el cambio sustituye esa reflexión por una constante compartida con `@Database`. Sigue pendiente ejecutar la instrumentación en CI y producir una APK trazable.
-- H1: siguiente hito activo después de corregir el defecto H0. El contrato de aceptación independiente es [`H1_PRUEBAS_ACEPTACION.md`](H1_PRUEBAS_ACEPTACION.md); sus IDs son H1-AT-01…H1-AT-24 (incluido H1-AT-05b). No relajar resultados esperados.
-- H2: posterior a H1, según [`PROMPT_CODEX_REDIRECCION.md`](PROMPT_CODEX_REDIRECCION.md), sección “H2: Acciones Android”; aún no iniciado.
-- Motorola: `DEVICE_PENDING`; no hay validación física declarada. `M01-06=PENDING_REQUIRES_DEVICE`.
+1. **H0 — cerrar validación de CI:** corregir el collector para que reconozca la instalación demostrada por una ejecución instrumentada completada aunque Gradle desinstale los paquetes después. Ejecutar un único run nuevo después del push. El run `39443809946` tuvo 16 casos XML: 10 ejecutados sin fallos y 6 omitidos por ausencia de modelos; se clasificó FAIL por la comprobación post-run, que es objeto de la corrección. No declarar H0 cerrado hasta revisar el nuevo artefacto.
+2. **H1 — memoria personalizada y unificada:** contrato independiente [`H1_PRUEBAS_ACEPTACION.md`](H1_PRUEBAS_ACEPTACION.md), v1.1. Se trabaja por los IDs H1-AT-01…H1-AT-24 (incluido H1-AT-05b); no se rebajan. La corrección v1.1 de AT-04 hace prevalecer el tope 15 % e incluye rechazo comprensible al fijar por encima del límite.
+3. **H2 — acciones Android:** posterior a H1; alcance de [`PROMPT_CODEX_REDIRECCION.md`](PROMPT_CODEX_REDIRECCION.md), sección H2.
 
-## Contrato vigente y referencias
+## Estado actual
 
-- Instrucción de continuidad: `CORRECCION_CONTINUIDAD_H0_H1_H2.md` (adjunta en el hilo; aplicarla como contrato vigente).
-- [`OBJETIVO_AWS.md`](OBJETIVO_AWS.md): objetivo y metas de producto.
-- [`PROMPT_CODEX_REDIRECCION.md`](PROMPT_CODEX_REDIRECCION.md): orden operativo H0, H1 y H2.
-- [`H1_PRUEBAS_ACEPTACION.md`](H1_PRUEBAS_ACEPTACION.md): aceptación obligatoria de H1.
-- [`../design/GUIA_VISUAL_AWS.md`](../design/GUIA_VISUAL_AWS.md): guía visual y de accesibilidad.
-- [`STATUS.md`](STATUS.md): checkpoint breve vigente.
+- H1 está en curso; una regresión roja probó que Skills podía exceder el presupuesto al coexistir con preferencias. La corrección descontó el bloque de preferencias antes de admitir Skills; la clase focal actual pasó 5/5. Faltan los demás criterios y validaciones H1.
+- H0 está pendiente del run posterior a la corrección del collector. El run anterior no se altera.
+- Personal QA requiere la clave persistente configurada por el usuario; no se crea una clave sustituta.
+- `PHYSICAL_DEVICE=NOT_RUN`; `M01-06=PENDING_REQUIRES_DEVICE`.
 
-## Reglas de estado
+## Integridad del plan histórico
 
-Los IDs H1-AT son criterios de aceptación, no sustituyen ni reescriben IDs del plan histórico. Ningún criterio ni tarea original se considera terminado por preparación, pruebas parciales o evidencia de otro SHA. Los resultados del dispositivo, CI y HOST se registran por separado.
+Los documentos canónicos de 97 tareas y 120 dependencias permanecen sin cambios. H1-AT son criterios de aceptación de este contrato, no IDs del backlog original. No se infiere cierre de tareas por pruebas parciales.
+
+## Referencias
+
+- [Objetivo](OBJETIVO_AWS.md)
+- [Redirección operativa](PROMPT_CODEX_REDIRECCION.md)
+- [Aceptación H1](H1_PRUEBAS_ACEPTACION.md)
+- [Guía visual](../design/GUIA_VISUAL_AWS.md)
+- [Estado breve](STATUS.md)
