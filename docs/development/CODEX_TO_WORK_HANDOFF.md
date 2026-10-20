@@ -1,28 +1,47 @@
-# Current handoff — AWS H0 → H1 → H2 (2026-10-20)
+# Current handoff — AWS H0 → H1 (2026-10-20)
 
-Rama única `feat/0.5.0-skills-agents`. Código H1 publicado: `3efc959694f193122da45130b08b2abe60e24608`, descendiente directo del HEAD `ae4cdbd2cc3843886c68295810c8818c869b99ab`. Push fast-forward verificado; `main` y `v0.4.2` permanecen en `de615b772cf37a99e7e08a647c59607b271de606`. Los siete bundles locales bajo `docs/validation/master-program-memory-vector-batch-20261019/` son evidencia preexistente no rastreada y no se agregaron.
+Rama única `feat/0.5.0-skills-agents`. Código H1 validado: `3ca1d7945752b89817ea1e972fed2cdc4872e6d4`, con commits de código `06d6d8f`, `e14a06a` y `3ca1d79` después del primer slice `3efc959`. El HEAD remoto previo a este cierre documental coincidía con `3ca1d79`; `main` y el commit pelado de `v0.4.2` siguen en `de615b772cf37a99e7e08a647c59607b271de606`. Los siete bundles preexistentes bajo `docs/validation/master-program-memory-vector-batch-20261019/` se preservan sin añadirlos.
 
-Los documentos de referencia de AWS ya están preservados byte por byte. `H1_PRUEBAS_ACEPTACION.md` v1.1 es el contrato activo; `archive/H1_PRUEBAS_ACEPTACION_v1.0.md` queda intacto. El catálogo histórico de 97 IDs y 120 dependencias no se modifica.
+Los documentos de referencia AWS están preservados byte por byte. `H1_PRUEBAS_ACEPTACION.md` v1.1 es el contrato activo; `archive/H1_PRUEBAS_ACEPTACION_v1.0.md` queda intacto. El catálogo original mantiene sus 97 IDs, 120 dependencias y TODO históricos; no se modificó `EXECUTION_STATE.json` bajo el alcance de continuidad actual.
 
-## HOST en el código `3efc959`
+## Cambios verificados de H1
 
-Gate ejecutado 2026-10-20 16:53:33–17:08:37 UTC, duración 904 s, exit 0; Gradle informó `BUILD SUCCESSFUL` en 14m31s y 158 tareas ejecutadas. Comando:
+- La aprobación de un lote importado conserva `pinned` y el resto de metadata de los registros; esa operación no convierte la importación en una acción explícita de pin. `MemoryManager.pin()` aplica el tope v1.1 del 15 % y devuelve rechazo antes de persistir si lo excedería.
+- Si una consulta selecciona pins cuyo bloque supera ese 15 %, Context Builder no llama al motor y ChatViewModel muestra un motivo claro. Ninguna memoria marcada como fijada se elimina del contexto sin explicación.
+- El test de AT-17 preserva los 1,000 registros/metadata y el caso de importación duplicada, a la vez que comprueba el rechazo de un prompt con pin sobredimensionado. AT-04 prueba tres pins de unos 60 caracteres que caben y un pin explícito rechazado. No se suavizaron las aserciones.
+- El Android test de proyecto navega el UI real: abre el acordeón “Structured memory”, usa “Add”/“Content”, abre “Details” y sigue el botón “Edit”; la aserción de que el contenido eliminado desaparece se conserva. La pantalla limpia el detalle tras una eliminación exitosa.
+
+## HOST — árbol fuente publicado como `3ca1d79`
+
+Gate ejecutado 2026-10-20 18:15:27–18:25:08 UTC, 9m41s, Gradle exit 0, `BUILD SUCCESSFUL`, 158/158 tareas. Comando literal:
 
 ```sh
 GRADLE_USER_HOME=/workspace/.gradle JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --info --rerun-tasks --init-script /tmp/aws-h1-test-events.init.gradle -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug :app:assembleDebug :app:compileDebugAndroidTestKotlin
 ```
 
-JUnit parseado: app 126 XML/938 tests PASS; LiteRT compatibilidad 1 XML/2 tests PASS; cero fallos, errores u omisiones. El listener registró 940 TEST_START y 940 TEST_END, todos `SUCCESS`. `lintDebug`, `assembleDebug` y `compileDebugAndroidTestKotlin` ejecutaron y completaron. Es compilación AndroidTest, no instrumentación. Se usaron Gradle 8.10.2, JDK 17 como runtime, JDK 21 para el worker de tests app, SDK/NDK existentes y modo offline. Log íntegro fuera de Git `/tmp/aws-h1-full-host-gate-v2.log`, SHA-256 `c977579d1013c2e603504817b4295ea70e078a13ee0ba37cf3aa6b1613ecb75f`; supervisor SHA-256 `1f73f55a6f9170fe16caacb86256dfd182336249ec4c227a99471acb4e54bbae`; listener SHA-256 `539222edf9c75f83f2b07da14bf34a0957e103a0bce46e4611dc0c71844c7d5d`. Los bundles XML/log históricos permanecen locales y sin versionar conforme al contrato.
+JUnit: app 126 XML/939 PASS; LiteRT compatibilidad 1 XML/2 PASS; total 941 PASS, 0 fail/error/skip. La clase de aceptación H1 fue 22/22. El listener registró 941 `TEST_START` y 941 `TEST_END SUCCESS`. `lintDebug`, `assembleDebug` y `compileDebugAndroidTestKotlin` finalizaron. Gradle 8.10.2; JDK 17 runtime; JDK 21 worker app tests; SDK/NDK existentes; offline. Log íntegro local `/tmp/aws-h1-full-host-gate-v4.log`, SHA-256 `1d4c70f0f05faca56f59145df85a93c7b319225161a623c28b85fff11767aaaf`; metadata `/tmp/aws-h1-full-host-gate-v4.meta`, SHA-256 `772d528879acc7e57322c52b44af70d7645ed69acbc57b01b3eb2e231c987c53`; init listener SHA-256 `539222edf9c75f83f2b07da14bf34a0957e103a0bce46e4611dc0c71844c7d5d`.
 
-El gate produjo APK Debug local como salida de `assembleDebug`; no se inspeccionó ni distribuyó como QA. No hubo emulador ni dispositivo en el gate.
+## EMULATOR — run `39474604686`
 
-## Estado de aceptación y acciones
+- Fuente `3ca1d7945752b89817ea1e972fed2cdc4872e6d4`, job `118807197684`, API 35 / Android 15 x86_64, AVD `localai-api35-x86_64`, ADB `emulator-5554`. `:app:connectedDebugAndroidTest` exit 0; collector PASS. XML único: 20 casos, 14 pass, 6 skip, 0 fail/error. Los seis skips son dos `LiteRtLmDeviceSmokeTest` y cuatro `NormalChatNativeDeviceTest` que requieren el modelo real no instalado. XML/summary informan 20; Gradle también imprimió `26/20 completed`, discrepancia de progreso que permanece sin explicación.
+- Los tests del proyecto de memoria y migración v8/v9/v10, navegación, encabezado, Context Inspector y Skill UI pasaron. Room v1 auténtico sigue sin fuente/fixture histórica; este run no la resuelve.
+- Artifact [12289288740](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39474604686/artifacts/12289288740): 148,684 bytes, SHA-256 `81b0f027ad80a80196961fd603b0ee8c7a7a541328a046c6c83cd2097ab0d6cc`, expira 2026-10-27T18:40:13Z. ZIP descargado y hash recalculado localmente; manifest interno 32/32. PNG estándar y font-scale grande: 1080×1920, válidos; hashes `214f9e93a5f68d47b1e2825fcf0bc4727f91e0d60073c024746673397441084f` y `648e95eee679b74cd1e415fd9e704a203fc1a336e1a3b8ad0c45cf39d78a8469`.
 
-- **H1-AT-17 = BLOQUEADO, no aceptado.** La prueba ejercita exportación/importación de 1.000 registros, preserva metadatos y detecta importación duplicada. Su fixture exige también aprobarlos todos y conservar 50 pins de ~300 caracteres. El tope vinculante de AT-04 v1.1 impide persistir un pin cuando el total supera el 15 %, por lo que la prueba demuestra que parte del lote permanece `PENDING`. No se cambió ninguno de los dos resultados esperados ni se declara el test de bloqueo como aceptación AT-17. Hace falta una decisión del usuario sobre este conflicto antes de cerrar H1.
-- Los demás resultados del gate son únicamente HOST. La revisión detallada de AT-02/09 y los estados `CI_VERIFIED` siguen pendientes; el run instrumentado actual puede aportar la capa CI, pero no reemplaza inspecciones ni pruebas físicas.
-- Run Android `39463950185` (API 35 x86_64) está en curso en el SHA `3efc959`; run QA ARM64 `39463950123` espera ese gate. Personal QA `39463950118` falló en el preflight: faltan `QA_KEYSTORE_B64`, `QA_KEYSTORE_PASSWORD`, `QA_KEY_ALIAS` y `QA_KEY_PASSWORD`; no se generó una APK personal. No hubo fuga ni clave sustituta.
-- H1-AT-06/20/24 y M01-06 continúan `PENDING_REQUIRES_DEVICE`; `PHYSICAL_DEVICE=NOT_RUN`. AT-20 requiere backup externo comprobado antes de instalar en el Motorola. H0 todavía espera el run actual del collector; el FAIL anterior `39443809946` conserva su resultado histórico.
-- No se alteró `EXECUTION_STATE.json`, el catálogo de 97 tareas ni sus dependencias. H2 no empieza mientras H1 tenga este bloqueo.
+## APK Debug ARM64 — QA y compatibilidad
+
+El gate oficial [39474604678](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39474604678) esperó el PASS exacto de instrumentación y produjo el artifact `12290056446` (48,879,298 bytes; SHA-256 `7de7ca2697176fe57e691d052e7d5344636e062a2771a14c030bccfed424136f`; retención 7 días). El artifact se descargó y su manifest 3/3 se verificó. APK `local-ai-workspace-0.5.0-debug-arm64.apk`: 121,190,875 bytes, SHA-256 `0ec88a2efeffb4adb95b8bd869cfe6ada9a3caeb89bf698c181e24faad9352d6`; package `com.localai.workspace.debug`, version `0.5.0-debug`/27, nueve bibliotecas solo `arm64-v8a`. `apksigner` v2, ZIP CRC, `zipalign`, `aapt` package/version y `MODEL_PAYLOADS=NONE` pasaron en la revisión del artifact.
+
+La clave QA persistente no está disponible. Firma del APK actual `f68ad607fee4d7145ac631d92645a4cd5d72c050a74ce9334fce1f851830ccd7`; firma de la APK personal anterior `f9085e76beaabc923e5f81bee66d35aca8bbc1aac59b9a3e29e07a6bf7afca1b`. No es actualizable como reemplazo de la app existente. El ZIP de Drive incluye solo el APK y está etiquetado para evitar instalación accidental: [descargar (NO COMPATIBLE COMO ACTUALIZACIÓN)](https://drive.google.com/file/d/1DQ2MaHDvo1u1c5vphlg-gM4QTFLlfbqA/view?usp=drivesdk), ID `1DQ2MaHDvo1u1c5vphlg-gM4QTFLlfbqA`, 47,297,228 bytes, SHA-256 `4fff7aad4c8e812d4b039161262b55da23d9647bc8c46dbda4b3ec70604524d5`. Drive readback confirmó el mismo tamaño y bytes; el archivo ZIP contiene solamente el APK. No se instaló ni se desinstaló nada.
+
+El PERSONAL QA run `39474605036` no produjo APK porque faltaban `QA_KEYSTORE_B64`, `QA_KEYSTORE_PASSWORD`, `QA_KEY_ALIAS`, `QA_KEY_PASSWORD`; su artifact `12289590346` contiene únicamente el informe del fallo. El estándar QA y este intento personal son resultados separados.
+
+## Pendientes
+
+- H1 permanece abierto hasta la revisión completa de AT-01…24 y los criterios de dispositivo; AT-06/20/24 requieren el Motorola. AT-20 exige confirmar backup externo antes de cualquier instalación.
+- `PHYSICAL_DEVICE=NOT_RUN`; `M01-06=PENDING_REQUIRES_DEVICE`. Para la validación M00 se necesita el Moto G86 Power y el XLSX original. Nunca se sustituye por las fixtures sintéticas.
+- Room v1 sigue bloqueado por falta de esquema histórico auténtico. No se inventó, copió ni cambió fixture/test.
+- No se midieron inferencia real, TTFT, tokens/s, RAM/PSS, energía, temperatura ni calidad en el teléfono. Los seis tests de modelo en emulator siguen `SKIPPED`.
+- H2 no iniciado. La fuente de plan sigue intacta: 97 tareas/IDs, 120 dependencias; todos los estados fuente históricos permanecen TODO. `EXECUTION_STATE.json` no se modificó bajo el contrato vigente.
 
 
 ## Historical checkpoints (preserved)
