@@ -161,6 +161,33 @@ def installed_package_facts(serial: str | None) -> dict[str, object]:
     }
 
 
+def application_install_verification(
+    installed_after_tests: bool,
+    *,
+    gradle_exit_code: int | None,
+    xml_count: int,
+    executed_tests: int,
+    adb_connected: bool,
+) -> dict[str, object]:
+    """Treat completed connected instrumentation as proof the target app was installed.
+
+    Android Gradle Plugin can uninstall both APKs when the connected-test task exits.
+    The post-task package list remains useful diagnostic evidence, but it cannot be
+    the sole installation check after the test runner has already executed.
+    """
+    connected_execution = (
+        adb_connected
+        and gradle_exit_code == 0
+        and xml_count > 0
+        and executed_tests > 0
+    )
+    return {
+        "installedAfterTests": installed_after_tests,
+        "verifiedByConnectedInstrumentation": connected_execution,
+        "verifiedForRun": installed_after_tests or connected_execution,
+    }
+
+
 def parse_results(xml_files: list[Path]) -> tuple[dict[str, int], list[dict[str, str]]]:
     counts = {"total": 0, "passed": 0, "failed": 0, "errors": 0, "skipped": 0, "executed": 0}
     skipped_cases: list[dict[str, str]] = []
@@ -465,12 +492,23 @@ def main() -> int:
     facts = adb_facts(serial)
     avd_prelaunch = read_json_if_available(OUT / "avd-prelaunch.json")
     packages = installed_package_facts(serial)
+    application_installed_after_tests = (
+        packages.get("packages", {}).get("application", {}).get("installed") is True
+    )
+    install_verification = application_install_verification(
+        application_installed_after_tests,
+        gradle_exit_code=gradle_exit,
+        xml_count=len(xml_files),
+        executed_tests=counts["executed"],
+        adb_connected=serial is not None,
+    )
+    packages["applicationInstallVerification"] = install_verification
     run_id = os.environ.get("GITHUB_RUN_ID", "")
     server = os.environ.get("GITHUB_SERVER_URL", "https://github.com").rstrip("/")
     repository = os.environ.get("GITHUB_REPOSITORY", "")
     preflight_passed = bool(avd_prelaunch and avd_prelaunch.get("preflightPassed") is True)
     api_abi_valid = facts.get("api") == "35" and facts.get("abi") == "x86_64" and facts.get("emulator") == "1"
-    application_installed = packages.get("packages", {}).get("application", {}).get("installed") is True
+    application_installed = install_verification["verifiedForRun"] is True
     counts_consistent = counts["total"] == counts["passed"] + counts["failed"] + counts["errors"] + counts["skipped"]
     checks = {
         "avdPreflightPassed": preflight_passed,
