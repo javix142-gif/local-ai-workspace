@@ -1,0 +1,57 @@
+{
+  "status": "PASS",
+  "artifactType": "QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
+  "sourceCommit": "01161491acc2a7c836222a84b7bd6f778292f8f3",
+  "eventCommit": "01161491acc2a7c836222a84b7bd6f778292f8f3",
+  "branchRef": "refs/heads/feat/0.5.0-skills-agents",
+  "runId": "39511660726",
+  "runAttempt": "1",
+  "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39511660726",
+  "startedAtUtc": "2026-10-20T23:16:49.233200+00:00",
+  "buildCommand": "./gradlew :app:clean :app:assembleDebug -Parm64Only=true --no-daemon --no-parallel --max-workers=2 --stacktrace --console=plain",
+  "buildEnvironment": {
+    "runner": "GitHub-hosted ubuntu-24.04",
+    "jdk": "Temurin 17",
+    "gradleWrapper": "8.10.2",
+    "androidPlatform": "35",
+    "buildTools": "35.0.0",
+    "ndk": "27.0.12077973",
+    "cmake": "3.31.6",
+    "requestedAbi": "arm64-v8a"
+  },
+  "emulator": "NOT_RUN",
+  "physicalDevice": "NOT_RUN",
+  "debugKeystoreExported": false,
+  "parallelInstall": false,
+  "completedAtUtc": "2026-10-20T23:22:58.129773+00:00",
+  "stage": "APK_VERIFIED",
+  "apk": {
+    "filename": "local-ai-workspace-0.5.0-debug-arm64.apk",
+    "bytes": 121582979,
+    "sha256": "2dc3dd24992d2878099e67c2117bbc711fd1bce96ab610be4ba8a35ab7de6b6f",
+    "packageName": "com.localai.workspace.debug",
+    "versionCode": 27,
+    "versionName": "0.5.0-debug",
+    "abis": [
+      "arm64-v8a"
+    ],
+    "nativeLibraryCount": 9,
+    "signatureVerified": true,
+    "signingVariant": "Repository development QA JKS (Debug only)",
+    "certificateDn": "CN=Local AI Workspace QA, OU=Development, O=Local AI Workspace",
+    "certificateSha256": "b0d1c40838a22b6bbfc7bfa176c9bb917c7194c7b74dedf749566fb268ab120b"
+  },
+  "validation": {
+    "apksigner": "PASS",
+    "packageAndVersion": "PASS",
+    "arm64Only": "PASS",
+    "noReleaseSigningKeyExported": true
+  },
+  "workflowJobStatus": "SUCCESS",
+  "androidInstrumentation": {
+    "status": "PASS",
+    "runId": "39511660788",
+    "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39511660788",
+    "sourceCommit": "01161491acc2a7c836222a84b7bd6f778292f8f3"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "workflowRunId": 39511660788,
+  "sourceCommit": "01161491acc2a7c836222a84b7bd6f778292f8f3",
+  "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39511660788",
+  "jobId": 118933907267,
+  "artifactId": 12306559020,
+  "artifactName": "android-emulator-evidence-39511660788-1",
+  "artifactBytes": 166480,
+  "artifactSha256": "60a4da7a524da48ab8f40c9b16c761f2c3e96858df20a362ed253fba27188bfe",
+  "artifactUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39511660788/artifacts/12306559020",
+  "retentionExpiresUtc": "2026-10-27T23:16:39Z",
+  "downloadedZipSha256": "60a4da7a524da48ab8f40c9b16c761f2c3e96858df20a362ed253fba27188bfe",
+  "zipIntegrity": "PASS",
+  "innerManifest": "PASS"
+}

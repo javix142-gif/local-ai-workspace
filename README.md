@@ -34,6 +34,12 @@ Requirements are pinned in the Gradle files: JDK 17 to run Gradle and JDK 21 for
 
 For the ARM64 device build, add `-Parm64Only=true`. Gradle downloads dependencies on first use. The project includes a Gradle wrapper; do not commit local SDK paths or generated build output.
 
+The separate **Personal QA Debug ARM64** workflow signs only the Debug variant with a
+development-only key so QA builds can keep a stable signer. Treat this key as public:
+it must never sign a release or production build. Android permits an in-place update
+only when the installed app has the same signing certificate; do not uninstall an app
+with local data to work around a signature or package conflict.
+
 ## Repository boundaries
 
 GitHub is the canonical source-code history. Large external artifacts are not stored in Git: Gemma/EmbeddingGemma weights, APK/AAB packages, Gradle/NDK build output, caches, raw device exports and source backup archives. Their known names, provenance, sizes and hashes are recorded in [docs/EXTERNAL_ARTIFACTS.md](docs/EXTERNAL_ARTIFACTS.md). The Pyodide WebAssembly files under `app/src/main/assets/python/` are application runtime assets, not model weights, and are required by the opt-in Python feature.

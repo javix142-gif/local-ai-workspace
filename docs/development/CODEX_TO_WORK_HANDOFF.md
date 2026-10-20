@@ -1,4 +1,19 @@
-# Current handoff — AWS H0 → H1 (2026-10-20)
+# Current checkpoint — H1 emulator and QA artifact (2026-10-20)
+
+- Branch: `feat/0.5.0-skills-agents`; code/test SHA `01161491acc2a7c836222a84b7bd6f778292f8f3`. Remote readback matched this SHA. Only test selectors changed after `013eb839`; product code tested is the published H1 implementation.
+- H1 contract: `H1_PRUEBAS_ACEPTACION.md` v1.2. Keep its 15% cap, reject-and-explain pin behavior, and explicit no-pin approval for oversized imported pins.
+- HOST: full suite 941/941 app + 2/2 LiteRT, lint and AndroidTest Kotlin compilation are historical for `aed4d8f6220e9d1e65e93f7d54a5bbd77e749755`; `assembleDebug` was UP-TO-DATE there. At `0116149`, local `:app:compileDebugAndroidTestKotlin` passed; the full JVM suite was not rerun at this SHA.
+- EMULATOR run [39511660788](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39511660788), job `118933907267`, exact source `0116149`, completed PASS in 20m03s. API 35 / Android 15 x86_64, AVD `localai-api35-x86_64`, serial `emulator-5554`; `:app:connectedDebugAndroidTest` exit 0. XML: 22 total = 16 PASS, 0 FAIL, 0 ERROR, 6 SKIPPED (two LiteRT and four native chat tests require real models). Artifact `12306559020`, 166,480 bytes, SHA-256 `60a4da7a524da48ab8f40c9b16c761f2c3e96858df20a362ed253fba27188bfe`; inner SHA manifest passed 50/50 files. H1-AT-12 passed `adb install -r`, same package/certificate, and preserved 20 synthetic memories, project, chat/message, and next-context preference.
+- Room scope: current XML verifies v8→current and authentic H1 migrations from schemas 8–10. Authentic v1–7 schema fixtures remain unavailable and are not claimed as tested.
+- Official QA run [39511660726](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39511660726), same source SHA, succeeded. Artifact `12307042341`, 48,959,437 bytes, SHA-256 `313faccd96667f3d0977dcfc676dbd9701f432a3e4fd0b678df19d66c30b617e`. APK SHA `2dc3dd24992d2878099e67c2117bbc711fd1bce96ab610be4ba8a35ab7de6b6f`, 121,582,979 bytes, package `com.localai.workspace.debug`, version 0.5.0-debug/27, only ABI `arm64-v8a`, zip CRC/zipalign/apksigner v2 PASS. Certificate SHA-256 `b0d1c40838a22b6bbfc7bfa176c9bb917c7194c7b74dedf749566fb268ab120b`.
+- Drive has a ZIP wrapper containing only the APK because its direct-upload connector limit is 100 MiB: [download](https://drive.google.com/file/d/1adOGxZnyyePC_CY68ZMWWBjy6mKjIWt9/view?usp=drivesdk), 47,248,070 bytes, SHA-256 `1146cacfc2989b4cd22c208af004f09acef209873437dd7f145c9bb1a33cc8b8`. Readback matched byte-for-byte. On the phone, if Android reports a package/signature conflict, cancel; do not uninstall or clear app data. The emulator update proves compatibility only with the specified prior QA APK.
+- PHYSICAL_DEVICE=NOT_RUN; Moto G86, original XLSX, real model-backed behavior and performance metrics remain untested. H1 is not formally closed while its physical/manual criteria remain. H2 preparatory implementation is explicitly authorized to proceed sequentially with these blockers tracked.
+- Original plan-source remains unchanged: 97 IDs, 120 dependencies. `EXECUTION_STATE.json` intentionally untouched. `main` and peeled `v0.4.2` remain at `de615b772cf37a99e7e08a647c59607b271de606`.
+- Evidence: `docs/validation/master-program-h1-20261020/RESULTS.md`, `emulator-39511660788/`, and `qa-39511660726/`. H0→H1→H2 source contract: `CORRECCION_CONTINUIDAD_H0_H1_H2.md`.
+
+---
+
+# Historical handoff snapshot — AWS H0 → H1 at code 3ca1d79 (superseded by the current checkpoint above)
 
 Rama única `feat/0.5.0-skills-agents`. Código H1 validado: `3ca1d7945752b89817ea1e972fed2cdc4872e6d4`, con commits de código `06d6d8f`, `e14a06a` y `3ca1d79` después del primer slice `3efc959`. El HEAD remoto previo a este cierre documental coincidía con `3ca1d79`; `main` y el commit pelado de `v0.4.2` siguen en `de615b772cf37a99e7e08a647c59607b271de606`. Los siete bundles preexistentes bajo `docs/validation/master-program-memory-vector-batch-20261019/` se preservan sin añadirlos.
 
