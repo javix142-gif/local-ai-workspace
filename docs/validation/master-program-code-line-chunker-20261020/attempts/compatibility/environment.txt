@@ -1,0 +1,8 @@
+source_commit=3e3fb0dffcd6e4488e1f28522067bfad7dd2a270
+runtime_jdk=/workspace/.toolchain/jdk-17 (Temurin 17.0.20.1)
+test_worker_jdk=/workspace/.toolchain/jdk-21-temurin (Temurin 21.0.12.1; confirmed by Gradle test executor log)
+gradle_wrapper=8.10.2
+android_sdk=/workspace/.toolchain/android-sdk (API 35)
+ndk=/workspace/.toolchain/android-sdk/ndk/27.0.12077973 (source.properties present)
+gradle_user_home=/workspace/.gradle (pre-existing cache)
+network=offline

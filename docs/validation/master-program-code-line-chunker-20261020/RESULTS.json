@@ -1,0 +1,118 @@
+{
+  "name": "CodeLineChunker leading-blank budget boundary",
+  "kind": "PREPARATORY_M02_08_CODE_LINE_CHUNK_BOUNDARY",
+  "status": "PREPARATORY_FOCUSED_HOST_PASS_DEPENDENCY_BLOCKED",
+  "redTestCommit": "6ce7788429a00260816d184eb39601905fad317c",
+  "testedCodeCommit": "3e3fb0dffcd6e4488e1f28522067bfad7dd2a270",
+  "testedCodeTreeSha": "3026c5c3d47a87c915834a7fa6038e4d5d6ade7e",
+  "evidencePath": "docs/validation/master-program-code-line-chunker-20261020/RESULTS.md",
+  "runs": [
+    {
+      "attempt": "red",
+      "sourceCommit": "6ce7788429a00260816d184eb39601905fad317c",
+      "status": "EXPECTED_RED",
+      "command": "attempts/red/command.txt",
+      "exitCode": 1,
+      "wallSeconds": 168,
+      "gradleReported": "BUILD FAILED in 2m 47s; 63 actionable tasks executed",
+      "tests": 3,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "failure": "A max-length line after a leading blank row was emitted with an extra leading newline.",
+      "logPath": "attempts/red/gradle.log.gz",
+      "logBytes": 47087,
+      "logSha256": "2515db545904aead84f3f20e67a9628cd09957d7986dc89281160d1edc7dfe21",
+      "logContentBytes": 534551,
+      "logContentSha256": "44005246d57710a1ea8449f45d372f2c79fc886362f00cd479585ee96f3e668d",
+      "log": "attempts/red/gradle.log.gz"
+    },
+    {
+      "attempt": "green",
+      "sourceCommit": "3e3fb0dffcd6e4488e1f28522067bfad7dd2a270",
+      "status": "PASS",
+      "command": "attempts/green/command.txt",
+      "exitCode": 0,
+      "wallSeconds": 45,
+      "gradleReported": "BUILD SUCCESSFUL in 44s; 7 tasks executed, 56 up-to-date",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "junit": "attempts/green/junit/TEST-com.localai.workspace.documents.CodeLineChunkerTest.xml",
+      "logPath": "attempts/green/gradle.log.gz",
+      "logBytes": 36166,
+      "logSha256": "0ba9191ba358bc9b02ce44c2b92b6d02d7670f7b2506c433a7b956210b4bf359",
+      "logContentBytes": 434495,
+      "logContentSha256": "f36d4712ec2efc24d6c9b67777c0dd48404750a51d5db47fcaa3949c3ef83fe3",
+      "log": "attempts/green/gradle.log.gz"
+    },
+    {
+      "attempt": "compatibility",
+      "sourceCommit": "3e3fb0dffcd6e4488e1f28522067bfad7dd2a270",
+      "status": "PASS",
+      "command": "attempts/compatibility/command.txt",
+      "exitCode": 0,
+      "wallSeconds": 20,
+      "gradleReported": "BUILD SUCCESSFUL in 20s; 1 task executed, 62 up-to-date",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suite": "com.localai.workspace.semantic.v2.CodeSegmentsTest",
+      "junit": "attempts/compatibility/junit/TEST-com.localai.workspace.semantic.v2.CodeSegmentsTest.xml",
+      "logPath": "attempts/compatibility/gradle.log.gz",
+      "logBytes": 24644,
+      "logSha256": "6008b86f441c707268edf9de6a034502698070cd3da1aeb5d345b024e1825ffd",
+      "logContentBytes": 332434,
+      "logContentSha256": "41ad34acb102c0344b37d41bfdd38ed8a1e57ffe821998c91fa3c852729f9370",
+      "log": "attempts/compatibility/gradle.log.gz"
+    }
+  ],
+  "environment": {
+    "gradle": "8.10.2",
+    "runtimeJdk": "Temurin 17.0.20.1",
+    "testWorkerJdk": "Temurin 21.0.12.1",
+    "androidSdk": "/workspace/.toolchain/android-sdk API 35",
+    "ndk": "27.0.12077973",
+    "gradleUserHome": "/workspace/.gradle, pre-existing cache",
+    "network": "offline"
+  },
+  "changedFiles": [
+    "app/src/main/java/com/localai/workspace/documents/CodeLineChunker.kt",
+    "app/src/test/java/com/localai/workspace/documents/CodeLineChunkerTest.kt"
+  ],
+  "sourceTask": {
+    "id": "M02-08",
+    "sourceStatus": "TODO",
+    "requiresDevice": false,
+    "dependsOn": [
+      "M02-05"
+    ],
+    "dependencyStatus": "M02-05 remains TODO",
+    "formalCompletion": false
+  },
+  "sourcePlan": {
+    "backlogPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "backlogSha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235",
+    "roadmapPath": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md",
+    "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+    "taskCount": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatuses": {
+      "TODO": 97
+    },
+    "sourceFilesModified": false
+  },
+  "notRun": {
+    "fullAppJvm": "NOT_RUN",
+    "liteRtCompatJvm": "NOT_RUN",
+    "lint": "NOT_RUN",
+    "assemble": "NOT_RUN",
+    "androidTest": "NOT_RUN",
+    "emulator": "NOT_RUN",
+    "physicalDevice": "NOT_RUN",
+    "apk": "NOT_GENERATED"
+  }
+}

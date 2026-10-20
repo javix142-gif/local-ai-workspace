@@ -1,0 +1,6 @@
+6ce7788 test(documents): cover code chunk line boundaries
+ .../workspace/documents/CodeLineChunkerTest.kt     | 38 ++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+3e3fb0d fix(documents): keep code chunks within character limit
+ app/src/main/java/com/localai/workspace/documents/CodeLineChunker.kt | 5 +++++
+ 1 file changed, 5 insertions(+)

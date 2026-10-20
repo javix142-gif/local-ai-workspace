@@ -1,0 +1,15 @@
+Red reproduction, test-only commit 6ce7788429a00260816d184eb39601905fad317c:
+- :app:testDebugUnitTest --tests com.localai.workspace.documents.CodeLineChunkerTest
+- Gradle exit 1; BUILD FAILED in 2m47s; 63/63 actionable tasks executed.
+- JUnit: 3 tests, 1 expected regression failure, 0 errors, 0 skipped. The failed assertion shows an extra leading newline in a max-length code line after a blank first source line.
+
+Green correction, code commit 3e3fb0dffcd6e4488e1f28522067bfad7dd2a270:
+- Same focused CodeLineChunkerTest filter; Gradle exit 0; BUILD SUCCESSFUL in 44s; 7/63 actionable tasks executed, 56 up-to-date.
+- JUnit: 3/3 passed, 0 failures/errors/skips.
+
+Existing-wrapper compatibility check, same code commit:
+- :app:testDebugUnitTest --tests com.localai.workspace.semantic.v2.CodeSegmentsTest
+- Gradle exit 0; BUILD SUCCESSFUL in 20s; 1/63 actionable tasks executed, 62 up-to-date.
+- JUnit: 3/3 passed, 0 failures/errors/skips, including preservation of a leading blank line when it fits and explicit failure for an oversized source line.
+
+Other gates: full app JVM, LiteRT compatibility suite, lint, assemble, AndroidTest, EMULATOR, PHYSICAL_DEVICE and APK were NOT_RUN. No Robolectric/full-suite result is claimed.

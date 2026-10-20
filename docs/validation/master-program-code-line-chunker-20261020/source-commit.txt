@@ -1,0 +1,4 @@
+Test-only red commit: 6ce7788429a00260816d184eb39601905fad317c
+Production code fix / tested code SHA: 3e3fb0dffcd6e4488e1f28522067bfad7dd2a270
+Parent before the test-only commit: 60f053dabcb7d1461a59b52c19abd53f5df744a6
+Final code tree: 3026c5c3d47a87c915834a7fa6038e4d5d6ade7e.

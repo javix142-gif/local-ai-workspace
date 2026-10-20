@@ -1,0 +1,105 @@
+{
+  "sourceCodeCommit": "3e3fb0dffcd6e4488e1f28522067bfad7dd2a270",
+  "redTestOnlyCommit": "6ce7788429a00260816d184eb39601905fad317c",
+  "runs": [
+    {
+      "attempt": "red",
+      "sourceCommit": "6ce7788429a00260816d184eb39601905fad317c",
+      "startedAtUtc": "2026-10-20T00:04:53Z",
+      "finishedAtUtc": "2026-10-20T00:07:41Z",
+      "wallSeconds": 168,
+      "exitCode": 1,
+      "timeoutSeconds": 300,
+      "gradleReported": "BUILD FAILED in 2m 47s",
+      "actionableTaskLine": "63 actionable tasks: 63 executed",
+      "logPath": "attempts/red/gradle.log.gz",
+      "logBytes": 47087,
+      "logSha256": "2515db545904aead84f3f20e67a9628cd09957d7986dc89281160d1edc7dfe21",
+      "junit": [
+        {
+          "path": "attempts/red/junit/TEST-com.localai.workspace.documents.CodeLineChunkerTest.xml",
+          "suite": "com.localai.workspace.documents.CodeLineChunkerTest",
+          "tests": 3,
+          "failures": 1,
+          "errors": 0,
+          "skipped": 0,
+          "junitTimeSeconds": 0.045,
+          "sha256": "45bb2599ab182bcdb826e39f9b4e744bff8afbb859cdf165164966da1255dc6e",
+          "cases": [
+            "internalBlankLineKeepsItsSourceRangeAcrossChunkBoundary",
+            "maxLengthLineAfterLeadingBlankLineDoesNotExceedBudgetOrMisreportRange",
+            "preservesLeadingBlankLineWhenItFitsTheChunkBudget"
+          ]
+        }
+      ],
+      "logContentBytes": 534551,
+      "logContentSha256": "44005246d57710a1ea8449f45d372f2c79fc886362f00cd479585ee96f3e668d"
+    },
+    {
+      "attempt": "green",
+      "sourceCommit": "3e3fb0dffcd6e4488e1f28522067bfad7dd2a270",
+      "startedAtUtc": "2026-10-20T00:08:25Z",
+      "finishedAtUtc": "2026-10-20T00:09:10Z",
+      "wallSeconds": 45,
+      "exitCode": 0,
+      "timeoutSeconds": 300,
+      "gradleReported": "BUILD SUCCESSFUL in 44s",
+      "actionableTaskLine": "63 actionable tasks: 7 executed, 56 up-to-date",
+      "logPath": "attempts/green/gradle.log.gz",
+      "logBytes": 36166,
+      "logSha256": "0ba9191ba358bc9b02ce44c2b92b6d02d7670f7b2506c433a7b956210b4bf359",
+      "junit": [
+        {
+          "path": "attempts/green/junit/TEST-com.localai.workspace.documents.CodeLineChunkerTest.xml",
+          "suite": "com.localai.workspace.documents.CodeLineChunkerTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "junitTimeSeconds": 0.034,
+          "sha256": "5c78a6f7ed05c5620318b250f6024cfde2b3b3488c7c6492dfa0c13b64858ff1",
+          "cases": [
+            "internalBlankLineKeepsItsSourceRangeAcrossChunkBoundary",
+            "maxLengthLineAfterLeadingBlankLineDoesNotExceedBudgetOrMisreportRange",
+            "preservesLeadingBlankLineWhenItFitsTheChunkBudget"
+          ]
+        }
+      ],
+      "logContentBytes": 434495,
+      "logContentSha256": "f36d4712ec2efc24d6c9b67777c0dd48404750a51d5db47fcaa3949c3ef83fe3"
+    },
+    {
+      "attempt": "compatibility",
+      "sourceCommit": "3e3fb0dffcd6e4488e1f28522067bfad7dd2a270",
+      "startedAtUtc": "2026-10-20T00:09:28Z",
+      "finishedAtUtc": "2026-10-20T00:09:48Z",
+      "wallSeconds": 20,
+      "exitCode": 0,
+      "timeoutSeconds": 300,
+      "gradleReported": "BUILD SUCCESSFUL in 20s",
+      "actionableTaskLine": "63 actionable tasks: 1 executed, 62 up-to-date",
+      "logPath": "attempts/compatibility/gradle.log.gz",
+      "logBytes": 24644,
+      "logSha256": "6008b86f441c707268edf9de6a034502698070cd3da1aeb5d345b024e1825ffd",
+      "junit": [
+        {
+          "path": "attempts/compatibility/junit/TEST-com.localai.workspace.semantic.v2.CodeSegmentsTest.xml",
+          "suite": "com.localai.workspace.semantic.v2.CodeSegmentsTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "junitTimeSeconds": 0.052,
+          "sha256": "51ef3c3f56821a3bb890ecc642533e38e19190b5c7f773051048ceff9978d21d",
+          "cases": [
+            "oversizedSingleLineIsExplicitFailure",
+            "preservesLinesAndRelativePositions",
+            "retainsLeadingBlankLineProvenance"
+          ]
+        }
+      ],
+      "logContentBytes": 332434,
+      "logContentSha256": "41ad34acb102c0344b37d41bfdd38ed8a1e57ffe821998c91fa3c852729f9370"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+Code path reviewed: DocumentIngestion.TextChunker delegates recognized code pages to CodeLineChunker; SemanticLayer and SemanticRetrievalService also reuse CodeLineChunker; CodeSegments is the existing wrapper used by tests/retrieval.
+
+Confirmed defect at test-only source 6ce7788429a00260816d184eb39601905fad317c: for source "\n" + a line whose length equals maxCharacters, the empty first row leaves the buffer empty, but the chunker prepends another newline before line 2. This emitted text exceeds maxCharacters by one and labels a chunk with an unnecessary leading blank row. JUnit red result: maxLengthLineAfterLeadingBlankLineDoesNotExceedBudgetOrMisreportRange failed with expected source line alone vs actual leading newline plus source line.
+
+Minimal fix at code source 3e3fb0dffcd6e4488e1f28522067bfad7dd2a270: when the buffer is empty and a separator would make the next line exceed maxCharacters, advance lineStart to the current physical source line and omit only that separator. A leading blank line remains represented when it fits. Existing internal blank-line boundaries and explicit rejection of oversized individual lines are unchanged and tested.
+
+No retrieval, ranking, source scope, persistence, Room, model, runtime, dependency, or source backlog code changed. Original M02-08 remains preparatory only because its M02-05 dependency is still TODO.

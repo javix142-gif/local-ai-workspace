@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.semantic.v2.CodeSegmentsTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-20T00:09:48" hostname="42c4f375d730" time="0.052">
+  <properties/>
+  <testcase name="oversizedSingleLineIsExplicitFailure" classname="com.localai.workspace.semantic.v2.CodeSegmentsTest" time="0.037"/>
+  <testcase name="preservesLinesAndRelativePositions" classname="com.localai.workspace.semantic.v2.CodeSegmentsTest" time="0.004"/>
+  <testcase name="retainsLeadingBlankLineProvenance" classname="com.localai.workspace.semantic.v2.CodeSegmentsTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,14 @@
+### M02 — Documentos e información: ingesta, retrieval y procedencia
+
+**Objetivo:** que la app encuentre y responda sobre datos **reales**, no solo muestras preparadas.
+
+- Importar PDF digital, DOCX, XLSX, CSV, TXT/Markdown, código, ZIP válido, formatos prioritarios; errores precisos para archivos no soportados.
+- XLSX: nombres de hojas, A1/rangos, tipos (valor/fórmula/cache), fechas y CSV delimitado correctamente; celdas dispersas, rangos usados inflados y hojas extensas; no afirmar que se recalculan fórmulas si solo se usa valor cacheado.
+- DOCX: párrafos, tablas, encabezados, saltos y partes relevantes preservadas; distinguir comentarios/notas si se soportan.
+- PDF: texto, páginas y citas verificables; OCR local para escaneados como capacidad opcional, con límites y reportes de calidad.
+- Codebase: rutas, archivos, símbolos, líneas, referencias entre archivos y diffs; respetar exclusiones `.gitignore`/carpetas seleccionadas.
+- Retrieval híbrido EG1/EG2/FTS y consultas exactas (celda, ruta, fecha, cifra); umbral/abstención y deduplicación; no fallback arbitrario.
+- Índices `READY/NEEDS_REINDEX/FAILED`, generaciones blue/green, scope de proyecto, invalidación por edición/borrado y conservación de fuentes canónicas.
+- Navegación desde una cita hasta página, celda, fragmento, archivo o instante correcto.
+
+**Salida:** corpus fixture con respuestas citadas correctas, pruebas de aislamiento y edición→reindex, y análisis de casos adversos sin degradar móvil.
