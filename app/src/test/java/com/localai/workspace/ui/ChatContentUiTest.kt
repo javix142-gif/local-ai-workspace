@@ -24,6 +24,7 @@ import com.localai.workspace.data.CitationEvidenceEntity
 import com.localai.workspace.data.CitationCellReferenceCodec
 import com.localai.workspace.ModelCard
 import com.localai.workspace.data.ModelEntity
+import com.localai.workspace.R
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -38,6 +39,13 @@ import org.robolectric.annotation.GraphicsMode
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class ChatContentUiTest {
     @get:Rule val compose = createComposeRule()
+
+    private fun localized(id: Int, vararg args: Any): String =
+        RuntimeEnvironment.getApplication().getString(id, *args)
+
+    private fun optionSummary(thinking: Int, tools: Int): String =
+        "${localized(R.string.chat_thinking_summary, localized(thinking))} · " +
+            localized(R.string.chat_tools_summary, localized(tools))
 
     @Test fun citationReferenceKeepsEvidenceIdAndShowsStoredSourcePageAndExcerpt() {
         val excerpt = "The indexed passage preserves the user's selected project preference."
@@ -262,7 +270,8 @@ class ChatContentUiTest {
     @Test fun audioSourceIsOnlyOfferedWhenConnected() {
         var attached = false
         compose.setContent { LocalAiTheme { ChatComposer("question", false, {}, {}, {}, false, onStop = {}, onSend = {}, onAttachAudio = { attached = true }, audioEnabled = true) } }
-        compose.onNodeWithContentDescription("Add attachment").performClick(); compose.onNodeWithText("Audio").performClick()
+        compose.onNodeWithContentDescription(localized(R.string.chat_add_attachment)).performClick()
+        compose.onNodeWithText(localized(R.string.chat_audio)).performClick()
         assertTrue(attached)
     }
     @Test fun thinkingAndToolOverridesAreCompactAndFunctional() {
@@ -270,16 +279,16 @@ class ChatContentUiTest {
             var profile by remember { mutableStateOf(com.localai.workspace.data.AssistantProfile()) }
             AssistantControls(profile, true, true, true) { profile = it }
         } }
-        compose.onNodeWithTag("assistant-options-summary").assertTextContains("Think: Auto · Tools: Auto")
+        compose.onNodeWithTag("assistant-options-summary").assertTextContains(optionSummary(R.string.chat_thinking_auto, R.string.chat_tools_auto))
         compose.onNodeWithTag("assistant-options-button").performClick()
         compose.onNodeWithTag("assistant-options-thinking").performClick()
-        compose.onNodeWithText("OFF").performClick()
-        compose.onNodeWithTag("assistant-options-summary").assertTextContains("Think: Off · Tools: Auto")
+        compose.onNodeWithText(localized(R.string.chat_thinking_off)).performClick()
+        compose.onNodeWithTag("assistant-options-summary").assertTextContains(optionSummary(R.string.chat_thinking_off, R.string.chat_tools_auto))
         compose.onNodeWithTag("assistant-options-button").performClick()
         compose.onNodeWithTag("assistant-options-tools").performClick()
-        compose.onNodeWithText("Off").performClick()
-        compose.onNodeWithText("Done").performClick()
-        compose.onNodeWithTag("assistant-options-summary").assertTextContains("Think: Off · Tools: Off")
+        compose.onNodeWithText(localized(R.string.chat_tools_off)).performClick()
+        compose.onNodeWithText(localized(R.string.common_done)).performClick()
+        compose.onNodeWithTag("assistant-options-summary").assertTextContains(optionSummary(R.string.chat_thinking_off, R.string.chat_tools_off))
     }
 
     @Test fun toolsOffDoesNotChangeLogicalAgentAndCustomSelectionStaysDistinct() {
@@ -303,22 +312,23 @@ class ChatContentUiTest {
         } }
 
         compose.onNodeWithText("General Agent").assertIsDisplayed()
-        compose.onNodeWithTag("assistant-options-summary").assertTextContains("Think: On · Tools: Custom")
+        compose.onNodeWithTag("assistant-options-summary").assertTextContains(optionSummary(R.string.chat_thinking_on, R.string.chat_tools_custom))
         compose.onNodeWithTag("assistant-options-button").performClick()
-        compose.onNodeWithTag("assistant-options-tools").assertTextContains("Tools · Custom").performClick()
+        compose.onNodeWithTag("assistant-options-tools")
+            .assertTextContains(localized(R.string.chat_tools_option, localized(R.string.chat_tools_custom))).performClick()
         compose.onNodeWithTag("assistant-tool-checkbox-files.read").assertIsOn()
-        compose.onNodeWithText("Off").performClick()
-        compose.onNodeWithText("Done").performClick()
+        compose.onNodeWithText(localized(R.string.chat_tools_off)).performClick()
+        compose.onNodeWithText(localized(R.string.common_done)).performClick()
 
         compose.onNodeWithText("General Agent").assertIsDisplayed()
         compose.onNodeWithText("No agent").assertDoesNotExist()
-        compose.onNodeWithTag("assistant-options-summary").assertTextContains("Think: On · Tools: Off")
+        compose.onNodeWithTag("assistant-options-summary").assertTextContains(optionSummary(R.string.chat_thinking_on, R.string.chat_tools_off))
     }
     @Test fun codeHasLanguageAndCopiesExactContent() {
         compose.setContent { LocalAiTheme { ChatRichText("A **bold** answer with `inline`.\n\n```python\nprint(42)\n```") } }
         compose.onNodeWithText("python").assertIsDisplayed()
         compose.onNodeWithText("print(42)").assertExists()
-        compose.onNodeWithContentDescription("Copy code").performClick()
+        compose.onNodeWithContentDescription(localized(R.string.chat_copy_code)).performClick()
         compose.runOnIdle {
             val clipboard = RuntimeEnvironment.getApplication().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             assertEquals("print(42)", clipboard.primaryClip?.getItemAt(0)?.text.toString())
@@ -394,7 +404,7 @@ class ChatContentUiTest {
         val original = "See [the source](https://example.org/?q=a%2Fb) and keep `code` exactly."
         compose.setContent { LocalAiTheme { AssistantResponseCopyAction(original) } }
 
-        compose.onNodeWithContentDescription("Copy response").performClick()
+        compose.onNodeWithContentDescription(localized(R.string.chat_copy_response)).performClick()
         compose.runOnIdle {
             val clipboard = RuntimeEnvironment.getApplication().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             assertEquals(original, clipboard.primaryClip?.getItemAt(0)?.text.toString())
@@ -497,8 +507,8 @@ class ChatContentUiTest {
             table.performTouchInput { swipeRight() }
             val scrollRange = table.fetchSemanticsNode().config[SemanticsProperties.HorizontalScrollAxisRange]
             assertTrue("Three columns should scroll horizontally at fontScale=$scale", scrollRange.maxValue() > 0f)
-            assertTrue(table.fetchSemanticsNode().config[SemanticsProperties.ContentDescription]
-                .single().contains("3 columns and 2 data rows"))
+            assertEquals(localized(R.string.chat_table_description, 3, 2),
+                table.fetchSemanticsNode().config[SemanticsProperties.ContentDescription].single())
 
             compose.onNodeWithText("Item", useUnmergedTree = true)
                 .assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.Heading)).assertIsDisplayed()
@@ -568,13 +578,13 @@ class ChatContentUiTest {
             compose.onNodeWithTag("chat-header-conversation", useUnmergedTree = true).assertIsDisplayed()
             compose.onNodeWithTag("chat-header-model", useUnmergedTree = true).assertIsDisplayed()
             compose.onNodeWithTag("assistant-options-button").assertIsDisplayed()
-            compose.onNodeWithContentDescription("Add attachment").assertIsDisplayed()
-            compose.onNodeWithContentDescription("Stop").assertIsDisplayed()
+            compose.onNodeWithContentDescription(localized(R.string.chat_add_attachment)).assertIsDisplayed()
+            compose.onNodeWithContentDescription(localized(R.string.chat_stop)).assertIsDisplayed()
         }
-        compose.onNodeWithContentDescription("Stop").performClick()
+        compose.onNodeWithContentDescription(localized(R.string.chat_stop)).performClick()
         assertTrue(stopped)
-        compose.onNodeWithContentDescription("Add attachment").assertIsNotEnabled()
-        compose.onNodeWithText("Tools").assertDoesNotExist()
+        compose.onNodeWithContentDescription(localized(R.string.chat_add_attachment)).assertIsNotEnabled()
+        compose.onNodeWithText(localized(R.string.chat_tools)).assertDoesNotExist()
     }
 
     @Test fun libraryAdvertisesOnlyConnectedAudio() {

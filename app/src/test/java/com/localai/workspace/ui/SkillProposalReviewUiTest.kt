@@ -7,6 +7,7 @@ import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import com.localai.workspace.R
 import com.localai.workspace.skills.SkillDefinition
 import com.localai.workspace.skills.SkillOrigin
 import org.junit.Assert.*
@@ -14,12 +15,16 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [29], application = Application::class)
 class SkillProposalReviewUiTest {
     @get:Rule val compose = createComposeRule()
+
+    private fun localized(id: Int, vararg args: Any): String =
+        RuntimeEnvironment.getApplication().getString(id, *args)
 
     @Test fun reviewedProposalSavesDisabledAndWithNoImplicitToolGrant() {
         var saved: SkillDefinition? = null
@@ -51,12 +56,14 @@ Read the checklist and report supported findings.
             }
         }
 
-        compose.onNodeWithText("Review Skill proposal").assertIsDisplayed()
-        assertEquals(3, compose.onAllNodesWithText("Suggestions are not selected automatically.", substring = true)
+        compose.onNodeWithText(localized(R.string.chat_skill_review_proposal_title)).assertIsDisplayed()
+        assertEquals(3, compose.onAllNodesWithText("No se seleccionan automáticamente.", substring = true)
             .fetchSemanticsNodes().size)
-        compose.onNodeWithText("NETWORK_READ · unavailable locally").performScrollTo().assertIsDisplayed()
-        compose.onNodeWithText("Capabilities not available in this local workspace: NETWORK_READ").performScrollTo().assertIsDisplayed()
-        compose.onNodeWithText("Save disabled Skill").performClick()
+        compose.onNodeWithText("NETWORK_READ${localized(R.string.chat_skill_unavailable_local)}")
+            .performScrollTo().assertIsDisplayed()
+        compose.onNodeWithText(localized(R.string.chat_skill_capabilities_unavailable, "NETWORK_READ"))
+            .performScrollTo().assertIsDisplayed()
+        compose.onNodeWithText(localized(R.string.chat_skill_save_disabled)).performClick()
         compose.runOnIdle {
             val result = requireNotNull(saved)
             assertEquals(SkillOrigin.USER_AUTHORED, result.origin)

@@ -31,6 +31,7 @@ import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Text
+import com.localai.workspace.R
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -47,6 +48,8 @@ import java.util.concurrent.atomic.AtomicInteger
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class ChatVisualSurfacesUiTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
+
+    private fun localized(id: Int, vararg args: Any): String = compose.activity.getString(id, *args)
 
     @Test fun chatAndInspectorSurfacesWrapAtWidthsAndFontScalesWithoutLosingActionsOrReasons() {
         val longMessage = "This response remains complete and wraps naturally at compact width. ".repeat(5).trim()
@@ -127,20 +130,20 @@ class ChatVisualSurfacesUiTest {
             assertTrue("User card must remain within the $width dp viewport", userSurface.size.width <= viewportWidth)
             assertTrue("Assistant card must remain within the $width dp viewport", assistantSurface.size.width <= viewportWidth)
 
-            compose.onNodeWithText("You").assertIsDisplayed()
-            compose.onNodeWithText("Assistant response").assertIsDisplayed()
+            compose.onNodeWithText(localized(R.string.chat_user_message)).assertIsDisplayed()
+            compose.onNodeWithText(localized(R.string.chat_assistant_message)).assertIsDisplayed()
             compose.onNodeWithText(longMessage, useUnmergedTree = true).performScrollTo().assertIsDisplayed()
-            compose.onNodeWithText("Context budget").performScrollTo().assertIsDisplayed()
-            compose.onNodeWithText("3 included").performScrollTo().assertIsDisplayed()
-            compose.onNodeWithText("1 omitted").performScrollTo().assertIsDisplayed()
+            compose.onNodeWithText(localized(R.string.memory_context_budget)).performScrollTo().assertIsDisplayed()
+            compose.onNodeWithText(localized(R.string.memory_included_count, 3)).performScrollTo().assertIsDisplayed()
+            compose.onNodeWithText(localized(R.string.memory_omitted_count, 1)).performScrollTo().assertIsDisplayed()
             compose.onNodeWithText("document-17 · SEMANTIC").performScrollTo().assertIsDisplayed()
             compose.onNodeWithText("Reason · TOKEN_BUDGET").performScrollTo().assertIsDisplayed()
-            compose.onNodeWithContentDescription("Add attachment").performScrollTo().assertIsDisplayed()
+            compose.onNodeWithContentDescription(localized(R.string.chat_add_attachment)).performScrollTo().assertIsDisplayed()
             if (generating) {
                 compose.onNodeWithText("Generating · composing response").performScrollTo().assertIsDisplayed()
-                compose.onNodeWithContentDescription("Stop").performScrollTo().assertIsDisplayed()
+                compose.onNodeWithContentDescription(localized(R.string.chat_stop)).performScrollTo().assertIsDisplayed()
             } else {
-                compose.onNodeWithContentDescription("Send").performScrollTo().assertIsEnabled()
+                compose.onNodeWithContentDescription(localized(R.string.chat_send)).performScrollTo().assertIsEnabled()
             }
         }
 
@@ -148,27 +151,27 @@ class ChatVisualSurfacesUiTest {
         compose.waitForIdle()
         compose.onNodeWithText("Reason · TOKEN_BUDGET").performScrollTo()
         captureHostSurface("chat-context-inspector-411dp-fontScale-1.6.png")
-        compose.onNodeWithContentDescription("Add attachment").performScrollTo().performClick()
-        compose.onNodeWithText("File").performClick()
+        compose.onNodeWithContentDescription(localized(R.string.chat_add_attachment)).performScrollTo().performClick()
+        compose.onNodeWithText(localized(R.string.chat_file)).performClick()
         assertEquals("Existing attachment callback remains connected", 1, attachCount.get())
-        compose.onNodeWithContentDescription("Send").performScrollTo().performClick()
+        compose.onNodeWithContentDescription(localized(R.string.chat_send)).performScrollTo().performClick()
         assertEquals("Existing send callback remains connected", 1, sendCount.get())
         compose.runOnIdle {
             configure?.invoke(411, 1.6f, false)
             changeInput?.invoke("")
         }
         compose.waitForIdle()
-        compose.onNodeWithContentDescription("Send").performScrollTo().assertIsNotEnabled()
+        compose.onNodeWithContentDescription(localized(R.string.chat_send)).performScrollTo().assertIsNotEnabled()
         compose.runOnIdle {
             changeInput?.invoke("A draft that can be sent")
             configure?.invoke(411, 1.6f, true)
         }
         compose.waitForIdle()
-        compose.onNodeWithContentDescription("Stop").performScrollTo()
+        compose.onNodeWithContentDescription(localized(R.string.chat_stop)).performScrollTo()
             .assertIsDisplayed().assertIsEnabled().assertHasClickAction().performClick()
         compose.waitForIdle()
         assertEquals("Generating state keeps the stop callback", 1, stopCount.get())
-        compose.onNodeWithContentDescription("Stop").assertIsDisplayed()
+        compose.onNodeWithContentDescription(localized(R.string.chat_stop)).assertIsDisplayed()
         captureHostSurface("chat-composer-generating-411dp-fontScale-1.6.png")
     }
 

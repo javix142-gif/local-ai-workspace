@@ -17,6 +17,7 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import com.localai.workspace.R
 import com.localai.workspace.MainActivity
 import com.localai.workspace.data.AssistantProfile
 import org.junit.Assert.*
@@ -34,6 +35,8 @@ import java.io.File
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class ChatRefinementUiTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
+
+    private fun localized(id: Int): String = compose.activity.getString(id)
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Test fun compactComposerAndNestedInsetsKeepConversationAndActionsVisible() {
@@ -95,8 +98,8 @@ class ChatRefinementUiTest {
             compose.onNodeWithTag("chat-header-model", useUnmergedTree = true).assertIsDisplayed()
             compose.onNodeWithTag("chat-header-agent", useUnmergedTree = true).assertIsDisplayed()
             compose.onNodeWithTag("chat-composer-input").assertIsDisplayed().assertHasClickAction()
-            compose.onNodeWithContentDescription("Add attachment").assertIsDisplayed().assertHeightIsAtLeast(48.dp)
-            compose.onNodeWithContentDescription("Send").assertIsDisplayed().assertHeightIsAtLeast(48.dp)
+            compose.onNodeWithContentDescription(localized(R.string.chat_add_attachment)).assertIsDisplayed().assertHeightIsAtLeast(48.dp)
+            compose.onNodeWithContentDescription(localized(R.string.chat_send)).assertIsDisplayed().assertHeightIsAtLeast(48.dp)
             compose.onNodeWithTag("assistant-options-button").assertIsDisplayed().assertHeightIsAtLeast(48.dp)
             if (scale == 1f) {
                 compose.onNodeWithTag("chat-composer-surface").assertHeightIsEqualTo(56.dp)
@@ -117,29 +120,31 @@ class ChatRefinementUiTest {
         compose.mainClock.autoAdvance = false
         compose.onNodeWithTag("chat-composer-input").performTextReplacement("A new draft")
         compose.mainClock.advanceTimeBy(300)
-        compose.onNodeWithContentDescription("Send").performClick()
+        compose.onNodeWithContentDescription(localized(R.string.chat_send)).performClick()
         compose.mainClock.advanceTimeBy(300)
         assertEquals(1, send)
-        compose.onNodeWithContentDescription("Add attachment").performClick()
+        compose.onNodeWithContentDescription(localized(R.string.chat_add_attachment)).performClick()
         compose.mainClock.advanceTimeBy(300)
-        compose.onNodeWithText("File").performClick()
+        compose.onNodeWithText(localized(R.string.chat_file)).performClick()
         compose.mainClock.advanceTimeBy(300)
         assertEquals(1, attach)
         compose.onNodeWithTag("assistant-options-button").performClick()
         compose.mainClock.advanceTimeBy(300)
-        compose.onNodeWithText("Tools · Auto").performClick()
+        compose.onNodeWithText(compose.activity.getString(
+            R.string.chat_tools_option, compose.activity.getString(R.string.chat_tools_auto),
+        )).performClick()
         compose.mainClock.advanceTimeBy(300)
-        compose.onNodeWithText("Off").performClick()
+        compose.onNodeWithText(localized(R.string.chat_tools_off)).performClick()
         compose.mainClock.advanceTimeBy(300)
         assertTrue(observedProfile.tools.isEmpty())
-        compose.onNodeWithText("Done").performClick()
+        compose.onNodeWithText(localized(R.string.common_done)).performClick()
         compose.mainClock.advanceTimeBy(300)
         compose.onNodeWithText("General Agent", useUnmergedTree = true).assertIsDisplayed()
         compose.mainClock.autoAdvance = true
         compose.runOnIdle { configure!!(360, 1f, false, true) }
         compose.waitForIdle()
         compose.mainClock.advanceTimeBy(300)
-        compose.onNodeWithContentDescription("Stop").assertIsEnabled().performClick()
+        compose.onNodeWithContentDescription(localized(R.string.chat_stop)).assertIsEnabled().performClick()
         compose.mainClock.advanceTimeBy(300)
         assertEquals(1, stop)
     }

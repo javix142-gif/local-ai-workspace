@@ -34,6 +34,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import com.localai.workspace.R
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -49,6 +50,8 @@ import java.io.File
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class ChatHeaderComposerCompactCaptureTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
+
+    private fun localized(id: Int): String = compose.activity.getString(id)
 
     @Test
     fun capturesLightAndDarkAt360DpAndFontScale1() {
@@ -73,10 +76,13 @@ class ChatHeaderComposerCompactCaptureTest {
         compose.onNodeWithTag("chat-header-conversation", useUnmergedTree = true).assertIsDisplayed()
         compose.onNodeWithTag("chat-header-model", useUnmergedTree = true).assertIsDisplayed()
         compose.onNodeWithTag("assistant-options-button").assertIsDisplayed()
-        compose.onNodeWithTag("assistant-options-summary").assertTextContains("Think: Auto · Tools: Auto")
-        compose.onNodeWithText("Ask anything…").assertIsDisplayed()
-        compose.onNodeWithContentDescription("Add attachment").assertIsDisplayed()
-        compose.onNodeWithContentDescription("Send").assertIsDisplayed()
+        compose.onNodeWithTag("assistant-options-summary").assertTextContains(
+            "${compose.activity.getString(R.string.chat_thinking_summary, localized(R.string.chat_thinking_auto))} · " +
+                compose.activity.getString(R.string.chat_tools_summary, localized(R.string.chat_tools_auto)),
+        )
+        compose.onNodeWithText(localized(R.string.chat_input_hint)).assertIsDisplayed()
+        compose.onNodeWithContentDescription(localized(R.string.chat_add_attachment)).assertIsDisplayed()
+        compose.onNodeWithContentDescription(localized(R.string.chat_send)).assertIsDisplayed()
     }
 
     private fun capture(filename: String) {
@@ -104,6 +110,8 @@ class ChatHeaderComposerCompactCaptureTest {
 class ChatHeaderComposerLargeFontCaptureTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
 
+    private fun localized(id: Int): String = compose.activity.getString(id)
+
     @Test
     fun capturesLightAndDarkAt411DpAndFontScale1_6() {
         var setAppearance: ((Boolean, Float) -> Unit)? = null
@@ -121,9 +129,9 @@ class ChatHeaderComposerLargeFontCaptureTest {
             compose.onNodeWithTag("chat-header-conversation", useUnmergedTree = true).assertIsDisplayed()
             compose.onNodeWithTag("chat-header-model", useUnmergedTree = true).assertIsDisplayed()
             compose.onNodeWithTag("assistant-options-button").assertIsDisplayed()
-            compose.onNodeWithText("Ask anything…").assertIsDisplayed()
-            compose.onNodeWithContentDescription("Add attachment").assertIsDisplayed()
-            compose.onNodeWithContentDescription("Send").assertIsDisplayed()
+            compose.onNodeWithText(localized(R.string.chat_input_hint)).assertIsDisplayed()
+            compose.onNodeWithContentDescription(localized(R.string.chat_add_attachment)).assertIsDisplayed()
+            compose.onNodeWithContentDescription(localized(R.string.chat_send)).assertIsDisplayed()
             capture("chat-header-composer-411dp-$label-fontScale-1.6.png")
         }
     }

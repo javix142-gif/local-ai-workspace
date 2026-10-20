@@ -8,6 +8,7 @@ import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.localai.workspace.MainActivity
+import com.localai.workspace.R
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -23,6 +24,8 @@ import java.io.File
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class UiSmokeTest {
     @get:Rule val compose = createAndroidComposeRule<MainActivity>()
+
+    private fun localized(id: Int): String = compose.activity.getString(id)
 
     @Test fun homePrivacyAndModelImportNavigation() {
         compose.onNodeWithText("Start chat").assertIsDisplayed()
@@ -65,23 +68,24 @@ class UiSmokeTest {
 
     @Test fun chatComposerAndMenusHaveNoPermanentModelPickerOrFakeTools() {
         compose.onNodeWithText("Start chat").performClick()
-        awaitText("Ask anything…")
+        awaitText(localized(R.string.chat_input_hint))
         compose.onNodeWithText("Model picker").assertDoesNotExist()
         compose.onNodeWithText("Diagnostics").assertDoesNotExist()
-        compose.onNodeWithContentDescription("Send").assertIsNotEnabled()
-        compose.onNodeWithText("Ask anything…").performTextInput("Hola")
-        compose.onNodeWithContentDescription("Send").assertIsEnabled()
+        compose.onNodeWithContentDescription(localized(R.string.chat_send)).assertIsNotEnabled()
+        compose.onNodeWithText(localized(R.string.chat_input_hint)).performTextInput("Hola")
+        compose.onNodeWithContentDescription(localized(R.string.chat_send)).assertIsEnabled()
         screenshot("chat")
-        compose.onNodeWithContentDescription("Chat options").performClick()
-        listOf("Model", "Files", "Memory", "Diagnostics", "Delete chat").forEach { compose.onNodeWithText(it).assertExists() }
+        compose.onNodeWithContentDescription(localized(R.string.chat_options)).performClick()
+        listOf(R.string.chat_model, R.string.chat_files, R.string.chat_memory,
+            R.string.chat_diagnostics, R.string.chat_delete).forEach { compose.onNodeWithText(localized(it)).assertExists() }
     }
 
     @Test fun attachmentMenuOnlyOffersFunctionalSources() {
         compose.onNodeWithText("Start chat").performClick()
-        awaitText("Ask anything…")
-        compose.onNodeWithContentDescription("Add attachment").performClick()
-        compose.onNodeWithText("File").assertIsDisplayed()
-        compose.onNodeWithText("Image").assertDoesNotExist()
+        awaitText(localized(R.string.chat_input_hint))
+        compose.onNodeWithContentDescription(localized(R.string.chat_add_attachment)).performClick()
+        compose.onNodeWithText(localized(R.string.chat_file)).assertIsDisplayed()
+        compose.onNodeWithText(localized(R.string.chat_image)).assertDoesNotExist()
         compose.onNodeWithText("Tools").assertDoesNotExist()
         compose.onNodeWithText("Think").assertDoesNotExist()
     }
@@ -96,8 +100,8 @@ class UiSmokeTest {
         compose.onNodeWithText("Files").performClick()
         compose.onNodeWithText("No files yet").assertExists()
         compose.onNodeWithText("Memory").performClick()
-        compose.onNodeWithText("Structured memory").performClick()
-        compose.onNodeWithText("No saved memory").assertExists()
+        compose.onNodeWithText(localized(R.string.memory_title)).performClick()
+        compose.onNodeWithText(localized(R.string.memory_empty)).assertExists()
         // Fixture is explicitly USER_APPROVED; the real text editor is exercised by the device test.
         kotlinx.coroutines.runBlocking(kotlinx.coroutines.Dispatchers.IO) {
             graph.contextFoundation.memory.create(
@@ -108,18 +112,18 @@ class UiSmokeTest {
             )
         }
         awaitText("Prefiero respuestas breves")
-        compose.onNodeWithText("Details").performClick()
+        compose.onNodeWithText(localized(R.string.common_details)).performClick()
         compose.onNodeWithText("USER_APPROVED", substring = true).assertExists()
-        compose.onNodeWithText("Edit").performClick()
-        compose.onNodeWithText("Edit memory").assertExists()
-        compose.onNodeWithText("Content").performTextReplacement("Prefiero respuestas concretas")
-        compose.onNodeWithText("Save").performClick()
+        compose.onNodeWithText(localized(R.string.common_edit)).performClick()
+        compose.onNodeWithText(localized(R.string.memory_editor_edit)).assertExists()
+        compose.onNodeWithText(localized(R.string.memory_content)).performTextReplacement("Prefiero respuestas concretas")
+        compose.onNodeWithText(localized(R.string.common_save)).performClick()
         awaitText("Prefiero respuestas concretas")
-        compose.onNodeWithText("Details").performClick()
-        compose.onNodeWithText("Delete").performClick()
-        compose.onNodeWithText("Delete memory?").assertExists()
-        compose.onNodeWithText("Delete").performClick()
-        awaitText("No saved memory")
+        compose.onNodeWithText(localized(R.string.common_details)).performClick()
+        compose.onNodeWithText(localized(R.string.common_delete)).performClick()
+        compose.onNodeWithText(localized(R.string.memory_delete_title)).assertExists()
+        compose.onNodeWithText(localized(R.string.common_delete)).performClick()
+        awaitText(localized(R.string.memory_empty))
         compose.onNodeWithText("Settings").performClick()
         compose.onNodeWithText("Current configuration").assertExists()
         screenshot("project-settings")
