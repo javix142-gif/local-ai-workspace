@@ -56,7 +56,7 @@ class ProjectUiDeviceTest {
         compose.onNodeWithText("Current configuration").assertExists()
         compose.onNodeWithContentDescription("Project options").performClick()
         compose.onNodeWithText("Delete project").performClick()
-        compose.onNodeWithText("Delete").performClick()
+        compose.onNodeWithText(text(R.string.common_delete)).performClick()
         compose.waitUntil(15_000) { compose.onAllNodesWithText("Start project").fetchSemanticsNodes().isNotEmpty() }
         compose.onNodeWithText(name).assertDoesNotExist()
     }
