@@ -22,6 +22,11 @@ object CodeLineChunker {
                 flush(index)
                 start = index + 1
             }
+            if (buffer.isEmpty() && index + 1 > start && line.length + 1 > maxCharacters) {
+                // A leading blank line is useful context when it fits, but must not
+                // push a maximum-length source line beyond the chunk budget.
+                start = index + 1
+            }
             if (index + 1 > start) buffer.append('\n')
             buffer.append(line)
         }
