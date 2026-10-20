@@ -65,6 +65,14 @@ def run(name: str, args: list[str], cwd: Path | None = None, timeout: int = 1800
     return result
 
 
+def write_password_source(path: Path, password: str) -> Path:
+    """Create one private apksigner password source; each option gets its own file."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(password + "\n", encoding="utf-8")
+    path.chmod(0o600)
+    return path
+
+
 def gradle(source: Path, *tasks: str) -> None:
     wrapper = source / "gradlew"
     run("gradle-" + ("old" if source == OLD_ROOT else "current") + "-build",
@@ -111,7 +119,8 @@ def main() -> int:
         "fixture": "Synthetic only; 10 legacy rows, 10 sidecar rows, one project and one chat.",
         "physicalDevice": "NOT_RUN",
     }
-    password_file = TEMP / "signing-password.txt"
+    keystore_password_file = TEMP / "keystore-password.txt"
+    key_password_file = TEMP / "key-password.txt"
     old_signed = TEMP / "previous-0.5.0-debug-signed.apk"
     current_apk = ROOT / "app/build/outputs/apk/debug/app-debug.apk"
     current_test = ROOT / "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
@@ -122,10 +131,10 @@ def main() -> int:
         old_unsigned = OLD_ROOT / "app/build/outputs/apk/debug/app-debug.apk"
         if not old_unsigned.is_file():
             raise Failure("PREVIOUS_DEBUG_APK_MISSING")
-        password_file.write_text(PASSWORD + "\n", encoding="utf-8")
-        password_file.chmod(0o600)
+        write_password_source(keystore_password_file, PASSWORD)
+        write_password_source(key_password_file, PASSWORD)
         run("sign-previous-apk", [str(APKSIGNER), "sign", "--ks", str(KEYSTORE), "--ks-key-alias", ALIAS,
-                                  "--ks-pass", f"file:{password_file}", "--key-pass", f"file:{password_file}",
+                                  "--ks-pass", f"file:{keystore_password_file}", "--key-pass", f"file:{key_password_file}",
                                   "--out", str(old_signed), str(old_unsigned)])
         old_identity = {"package": package(old_signed)[0], "versionCode": package(old_signed)[1],
                         "versionName": package(old_signed)[2], "certificateSha256": signer_sha(old_signed),
@@ -179,7 +188,8 @@ def main() -> int:
                        "failureReason": str(error), "physicalDevice": "NOT_RUN"})
         print(f"H1_AT12_FAIL={error}", file=sys.stderr)
     finally:
-        password_file.unlink(missing_ok=True)
+        keystore_password_file.unlink(missing_ok=True)
+        key_password_file.unlink(missing_ok=True)
         (TEMP / "h1-at12-summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False))
     return 0 if summary["status"] == "PASS" else 1
