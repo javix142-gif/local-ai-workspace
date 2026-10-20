@@ -25,12 +25,15 @@ class DocumentRemovalUiTest {
 
     @Test fun removingImportedFileRequiresConfirmationAndPreservesItsOriginal() {
         val graph = (compose.activity.application as LocalAiApplication).graph
+        val appContext = graph.contextForMeasurements
         val projectId = runBlocking(Dispatchers.IO) { graph.workspace.createProject("Remove file UI test") }
         val displayName = "private-note-${System.currentTimeMillis()}.txt"
-        val original = File(compose.activity.cacheDir, displayName).apply { writeText("original user file") }
-        val imported = File(compose.activity.filesDir, "documents/$displayName").apply {
+        val original = File(appContext.cacheDir, displayName).apply { writeText("original user file") }
+        val imported = File(appContext.filesDir, "documents/$displayName").apply {
             parentFile!!.mkdirs(); writeText("private imported copy")
         }
+        val privateDocumentsRoot = File(appContext.filesDir, "documents").canonicalFile
+        assertTrue(imported.canonicalPath.startsWith(privateDocumentsRoot.path + File.separator))
         val documentId = "ui-remove-${System.currentTimeMillis()}"
         runBlocking(Dispatchers.IO) {
             graph.database.documentDao().insert(com.localai.workspace.data.DocumentEntity(
@@ -57,9 +60,39 @@ class DocumentRemovalUiTest {
             compose.onNodeWithText("Remove file").performClick()
             compose.onNodeWithText("Remove file from workspace?").assertIsDisplayed()
             compose.onNodeWithText("Remove file").performClick()
+            // First observe the durable Room deletion, then verify that its collected UI
+            // state removes the row/dialog. This distinguishes delayed persistence from stale UI.
+            compose.waitUntil(15_000) {
+                runBlocking(Dispatchers.IO) { graph.database.documentDao().get(documentId) == null }
+            }
             compose.waitUntil(15_000) { compose.onAllNodesWithText(displayName).fetchSemanticsNodes().isEmpty() }
-            // The Room flow removes the row before the repository finishes the durable file-cleanup outbox.
-            compose.waitUntil(15_000) { !imported.exists() }
+            // Private-file cleanup is a durable retryable outbox. If the initial deletion
+            // leaves an item pending, exercise the user's real Workspace retry action.
+            if (imported.exists()) {
+                val pendingPath = runBlocking(Dispatchers.IO) {
+                    graph.database.pendingDocumentDeletionDao().pending().map { it.localPath }
+                        .firstOrNull { File(it).canonicalFile == imported.canonicalFile }
+                }
+                assertTrue(
+                    "remaining app-private copy must have a durable retry entry; " +
+                        "path=${imported.canonicalPath}, privateRoot=$privateDocumentsRoot, " +
+                        "pending=${runBlocking(Dispatchers.IO) { graph.database.pendingDocumentDeletionDao().pending().map { it.localPath } }}, " +
+                        "documentReferences=${runBlocking(Dispatchers.IO) { graph.database.documentDao().pathReferences(imported.path) }}, " +
+                        "messageReferences=${runBlocking(Dispatchers.IO) { graph.database.messageDao().imageReferences(imported.path) }}",
+                    pendingPath != null,
+                )
+                compose.onNodeWithContentDescription("Back").assertIsDisplayed().performClick()
+                compose.waitUntil(15_000) {
+                    !imported.exists() || compose.onAllNodesWithText("File cleanup pending")
+                        .fetchSemanticsNodes().isNotEmpty()
+                }
+                if (imported.exists()) {
+                    compose.onNode(hasScrollAction()).performScrollToNode(hasText("File cleanup pending"))
+                    compose.onNodeWithText("File cleanup pending").assertIsDisplayed()
+                    compose.onNodeWithText("Retry").assertIsDisplayed().performClick()
+                    compose.waitUntil(15_000) { !imported.exists() }
+                }
+            }
             runBlocking(Dispatchers.IO) {
                 assertNull(graph.database.documentDao().get(documentId))
                 assertTrue(graph.database.documentDao().segmentsForDocument(documentId).isEmpty())

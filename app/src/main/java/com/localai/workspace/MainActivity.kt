@@ -481,8 +481,11 @@ private fun ProjectScreen(viewModel: HomeViewModel, navController: NavHostContro
     }, title = { Text("Remove file from workspace?") },
         confirmButton = { TextButton(onClick = {
             confirmFileDeleteId = null
-            fileDetailsId = file.id
-            viewModel.deleteDocument(projectId, file.id) { fileDetailsId = null }
+            // Dismiss both dialogs as soon as removal is confirmed. The repository may
+            // still be purging derived indexes and retryable private-file cleanup in the
+            // background; keeping stale file details visible until that work ends is misleading.
+            fileDetailsId = null
+            viewModel.deleteDocument(projectId, file.id)
         }) { Text("Remove file") } },
         dismissButton = { TextButton(onClick = { confirmFileDeleteId = null; fileDetailsId = file.id }) { Text("Keep file") } },
         text = {
