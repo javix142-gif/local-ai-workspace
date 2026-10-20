@@ -18,7 +18,7 @@ data class ToolContext(
     val projectId: String,
     val conversationId: String,
     val workingDirectory: File,
-    val grantedCapabilities: Set<com.localai.workspace.capabilities.Capability> = com.localai.workspace.capabilities.CapabilityPolicy.localCapabilities,
+    val grantedCapabilities: Set<com.localai.workspace.capabilities.Capability> = com.localai.workspace.capabilities.CapabilityPolicy.supportedToolCapabilities,
 )
 
 sealed interface ToolExecutionResult {
@@ -59,8 +59,9 @@ class ToolRegistry(
         if (state.calls >= maxCallsPerTurn) return ToolExecutionResult.Rejected("Tool-call limit reached")
         val tool = toolsById[request.toolId] ?: return ToolExecutionResult.Rejected("Unknown tool")
         val requirements = com.localai.workspace.capabilities.CapabilityPolicy.requirements(request.toolId)
-        if (com.localai.workspace.capabilities.CapabilityPolicy().evaluate(requirements,
-            com.localai.workspace.capabilities.CapabilityPolicy.localCapabilities, context.grantedCapabilities) != com.localai.workspace.capabilities.CapabilityDecision.ALLOW)
+        val capabilityDecision = com.localai.workspace.capabilities.CapabilityPolicy().evaluate(requirements,
+            com.localai.workspace.capabilities.CapabilityPolicy.supportedToolCapabilities, context.grantedCapabilities)
+        if (capabilityDecision == com.localai.workspace.capabilities.CapabilityDecision.UNAVAILABLE)
             return ToolExecutionResult.Rejected("CAPABILITY_UNAVAILABLE")
         val rawArguments = request.argumentsJson.trim()
         if (rawArguments.length > 32000) return ToolExecutionResult.Rejected("Arguments exceed size limit")
@@ -80,8 +81,12 @@ class ToolRegistry(
         if (!state.fingerprints.add(fingerprint)) return ToolExecutionResult.Rejected("Repeated identical tool call")
         when (val decision = policy.decide(request, enabledToolIds)) {
             is ToolDecision.Deny -> return ToolExecutionResult.Rejected(decision.reason)
-            is ToolDecision.NeedsConfirmation -> return ToolExecutionResult.NeedsConfirmation(decision.descriptor, arguments)
-            is ToolDecision.Allow -> Unit
+            is ToolDecision.NeedsConfirmation -> {
+                state.calls++
+                return ToolExecutionResult.NeedsConfirmation(decision.descriptor, arguments)
+            }
+            is ToolDecision.Allow -> if (capabilityDecision == com.localai.workspace.capabilities.CapabilityDecision.CONFIRM)
+                return ToolExecutionResult.Rejected("CAPABILITY_CONFIRMATION_GATE_MISSING")
         }
         state.calls++
         return try {

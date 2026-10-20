@@ -258,8 +258,23 @@ interface ToolCallDao {
     @Query("SELECT toolId FROM tool_calls WHERE messageId=:messageId AND status='SUCCESS' ORDER BY toolId")
     suspend fun successfulTools(messageId:String):List<String>
 
-    @Query("UPDATE tool_calls SET status = 'INTERRUPTED', errorCode = 'INTERRUPTED', finishedAt = :time WHERE status = 'RUNNING' AND conversationId = :id")
+    @Query("UPDATE tool_calls SET status = 'INTERRUPTED', errorCode = 'INTERRUPTED', finishedAt = :time WHERE status IN ('RUNNING', 'LAUNCHING') AND conversationId = :id")
     suspend fun recoverInterrupted(id: String, time: Long)
+
+    @Query("UPDATE tool_calls SET status = 'LAUNCHING', confirmationDecision = 'APPROVED' WHERE id = :id AND conversationId = :conversationId AND toolId = 'android.action.prepare' AND status = 'CONFIRMATION_REQUIRED'")
+    suspend fun claimPreparedAndroidAction(id: String, conversationId: String): Int
+
+    @Query("UPDATE tool_calls SET status = 'OPENED', errorCode = NULL, finishedAt = :time WHERE id = :id AND conversationId = :conversationId AND toolId = 'android.action.prepare' AND status = 'LAUNCHING'")
+    suspend fun markAndroidActionOpened(id: String, conversationId: String, time: Long): Int
+
+    @Query("UPDATE tool_calls SET status = 'OPEN_FAILED', errorCode = :reason, finishedAt = :time WHERE id = :id AND conversationId = :conversationId AND toolId = 'android.action.prepare' AND status = 'LAUNCHING'")
+    suspend fun markAndroidActionOpenFailed(id: String, conversationId: String, reason: String, time: Long): Int
+
+    @Query("UPDATE tool_calls SET status = 'DECLINED_BY_USER', confirmationDecision = 'REJECTED', finishedAt = :time WHERE id = :id AND conversationId = :conversationId AND toolId = 'android.action.prepare' AND status = 'CONFIRMATION_REQUIRED'")
+    suspend fun declinePreparedAndroidAction(id: String, conversationId: String, time: Long): Int
+
+    @Query("UPDATE tool_calls SET status = 'CONFIRMED_BY_USER', confirmationDecision = 'USER_REPORTED_COMPLETE', finishedAt = :time WHERE id = :id AND conversationId = :conversationId AND toolId = 'android.action.prepare' AND status = 'OPENED'")
+    suspend fun markAndroidActionReportedComplete(id: String, conversationId: String, time: Long): Int
     @Query("DELETE FROM tool_calls WHERE conversationId = :id OR messageId IN (SELECT id FROM messages WHERE conversationId = :id)")
     suspend fun deleteForConversation(id: String)
     @Query("DELETE FROM tool_calls WHERE conversationId IN (SELECT id FROM conversations WHERE projectId = :projectId) OR messageId IN (SELECT id FROM messages WHERE conversationId IN (SELECT id FROM conversations WHERE projectId = :projectId))")

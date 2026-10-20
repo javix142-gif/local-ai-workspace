@@ -67,9 +67,10 @@ class ProjectFileListTool(private val db: WorkspaceDatabase) : LocalTool {
     }
 }
 object ChatToolSchemas {
-    val defaults = setOf("calculator.evaluate", "files.read", "files.list") + com.localai.workspace.artifacts.ArtifactTool.IDS
+    val defaults = setOf("calculator.evaluate", "files.read", "files.list", AndroidActionPlanner.TOOL_ID) + com.localai.workspace.artifacts.ArtifactTool.IDS
     val available = defaults + "python.execute" + com.localai.workspace.artifacts.ArtifactTool.IDS
     fun schema(id: String): String = JSONObject().put("name", id).put("description", when(id) {
+        AndroidActionPlanner.TOOL_ID -> "Prepare one allow-listed Android handoff only. A user must review and confirm the exact action in the app before any external screen opens. No call, message, calendar write, alarm, settings change, or network request is performed by the tool. Supply action plus its typed fields: alarm(hour,minute,message?), timer(seconds,message?), calendar_event(title,startsAtEpochMillis,endsAtEpochMillis,location?,description?), dial(phoneNumber), sms_draft(phoneNumber,body), email_draft(recipient,subject,body), map_search(query), share_text(text), or settings(setting=wifi|bluetooth|apps|notifications|language|input)."
         "artifacts.list" -> "List real private artifact drafts and their IDs/versions in this project."
         "artifacts.read" -> "Read the verified full structured descriptor of an artifact ID/version in this project, before revising it. Missing IDs/versions or oversized descriptors fail explicitly; no guessed content."
         "artifacts.xlsxAddSheet" -> "Add one empty worksheet to the current app-generated XLSX draft. Supply id, expectedVersion and name (1–31 characters). Existing sheets, cells, formulas and cached values remain intact; the app never recalculates formulas. The operation creates a new immutable version, is limited to 16 sheets, and never edits imported files. Read the new version before writing cells; export is a separate user-selected SAF action."
@@ -89,6 +90,30 @@ object ChatToolSchemas {
         if(id == "files.read") {
             val properties = getJSONObject("properties")
             listOf("sheet", "column", "aggregate", "range").forEach { properties.put(it, JSONObject().put("type", "string").put("description", when(it) { "range" -> "Exact A1 or inclusive A1:B3, max 64 cells; requires sheet; returns missing addresses explicitly. Cannot combine with column/aggregate.";"column" -> "Column letter, e.g. A"; "aggregate" -> "Optional sum of numeric cached values"; else -> "Exact worksheet name" })) }
+        }
+        if(id == AndroidActionPlanner.TOOL_ID) {
+            val properties = getJSONObject("properties")
+            fun textField(name: String, max: Int, description: String = "") {
+                properties.put(name, JSONObject().put("type", "string").put("maxLength", max).apply { if (description.isNotBlank()) put("description", description) })
+            }
+            properties.put("action", JSONObject().put("type", "string").put("enum", org.json.JSONArray().put(AndroidActionPlanner.ALARM).put(AndroidActionPlanner.TIMER).put(AndroidActionPlanner.CALENDAR_EVENT).put(AndroidActionPlanner.DIAL).put(AndroidActionPlanner.SMS_DRAFT).put(AndroidActionPlanner.EMAIL_DRAFT).put(AndroidActionPlanner.MAP_SEARCH).put(AndroidActionPlanner.SHARE_TEXT).put(AndroidActionPlanner.SETTINGS)))
+            properties.put("hour", JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 23))
+            properties.put("minute", JSONObject().put("type", "integer").put("minimum", 0).put("maximum", 59))
+            properties.put("seconds", JSONObject().put("type", "integer").put("minimum", 1).put("maximum", 86_399))
+            properties.put("startsAtEpochMillis", JSONObject().put("type", "integer").put("minimum", 1))
+            properties.put("endsAtEpochMillis", JSONObject().put("type", "integer").put("minimum", 1))
+            textField("message", 64)
+            textField("title", 120)
+            textField("location", 200)
+            textField("description", 500)
+            textField("phoneNumber", 32)
+            textField("body", 4_000)
+            textField("recipient", 254)
+            textField("subject", 120)
+            textField("query", 240)
+            textField("text", 4_000)
+            properties.put("setting", JSONObject().put("type", "string").put("enum", org.json.JSONArray().put("wifi").put("bluetooth").put("apps").put("notifications").put("language").put("input")))
+            put("required", org.json.JSONArray().put("action"))
         }
         if(id=="artifacts.read") {
             getJSONObject("properties").put("id",JSONObject().put("type","string")).put("version",JSONObject().put("type","integer"))

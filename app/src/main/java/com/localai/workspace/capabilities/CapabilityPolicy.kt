@@ -15,19 +15,23 @@ class CapabilityPolicy(val enabled:Set<Capability> = Capability.entries.toSet()-
         val skillTools=if(activeSkills.isEmpty())SkillDefinition.STANDARD_TOOLS else activeSkills.flatMap{it.allowedTools + if(it.origin==com.localai.workspace.skills.SkillOrigin.BUILT_IN)com.localai.workspace.artifacts.ArtifactTool.IDS else emptySet()}.toSet()
         return SkillDefinition.STANDARD_TOOLS.sorted().map{id->
             val required=requirements(id)
+            val decision=evaluate(required,supportedToolCapabilities,supportedToolCapabilities)
             val reason=when {
                 id !in selected->"DISABLED"
                 id !in agent->"AGENT_NOT_ALLOWED"
                 id !in skillTools->"SKILL_NOT_ALLOWED"
-                evaluate(required,localCapabilities,localCapabilities)!=CapabilityDecision.ALLOW->"CAPABILITY_UNAVAILABLE"
+                decision==CapabilityDecision.UNAVAILABLE->"CAPABILITY_UNAVAILABLE"
+                decision==CapabilityDecision.CONFIRM->"CONFIRMATION_REQUIRED"
                 else->"AVAILABLE"
-            };ToolAvailability(id,reason=="AVAILABLE",reason)
+            };ToolAvailability(id,reason=="AVAILABLE"||reason=="CONFIRMATION_REQUIRED",reason)
         }
     }
     companion object {
         val localCapabilities=setOf(Capability.LOCAL_READ,Capability.LOCAL_COMPUTE,Capability.LOCAL_WRITE)
+        /** Capabilities implemented locally that always pass through an explicit confirmation UI. */
+        val supportedToolCapabilities=localCapabilities+Capability.EXTERNAL_SEND
         private val confirmation=setOf(Capability.LOCAL_DELETE,Capability.EXTERNAL_SEND,Capability.PURCHASE_PAYMENT,Capability.IRREVERSIBLE_SYSTEM_ACTION,Capability.SENSITIVE_ACTION)
-        fun requirements(id:String)=when(id){"files.read","files.list","artifacts.list","artifacts.read"->setOf(Capability.LOCAL_READ);"artifacts.create","artifacts.revise","artifacts.patchPreview","artifacts.xlsxSetCells","artifacts.xlsxAddSheet","artifacts.xlsxSetTable"->setOf(Capability.LOCAL_WRITE);"calculator.evaluate","python.execute"->setOf(Capability.LOCAL_COMPUTE);else->emptySet()}
+        fun requirements(id:String)=when(id){"files.read","files.list","artifacts.list","artifacts.read"->setOf(Capability.LOCAL_READ);"artifacts.create","artifacts.revise","artifacts.patchPreview","artifacts.xlsxSetCells","artifacts.xlsxAddSheet","artifacts.xlsxSetTable"->setOf(Capability.LOCAL_WRITE);"calculator.evaluate","python.execute"->setOf(Capability.LOCAL_COMPUTE);com.localai.workspace.domain.tools.AndroidActionPlanner.TOOL_ID->setOf(Capability.EXTERNAL_SEND);else->emptySet()}
     }
 }
 data class ToolAvailability(val toolId:String,val available:Boolean,val reason:String)

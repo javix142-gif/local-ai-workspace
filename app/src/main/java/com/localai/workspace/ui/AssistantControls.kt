@@ -16,6 +16,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.localai.workspace.data.*
 import com.localai.workspace.domain.tools.ChatToolSchemas
+import com.localai.workspace.domain.tools.AndroidActionPlanner
 import com.localai.workspace.ui.components.minimumAppTouchTarget
 import com.localai.workspace.ui.theme.LocalAiSpacing
 import com.localai.workspace.R
@@ -125,7 +126,16 @@ fun AssistantControls(profile: AssistantProfile, toolsAvailable: Boolean, thinki
     })
 }
 @Composable
-fun ToolExecutionCard(call: ToolCallEntity) {
+fun ToolExecutionCard(
+    call: ToolCallEntity,
+    onOpenAndroidAction: (ToolCallEntity) -> Unit = {},
+    onDeclineAndroidAction: (ToolCallEntity) -> Unit = {},
+    onReportAndroidActionComplete: (ToolCallEntity) -> Unit = {},
+) {
+    if (call.toolId == com.localai.workspace.domain.tools.AndroidActionPlanner.TOOL_ID) {
+        AndroidActionExecutionCard(call, onOpenAndroidAction, onDeclineAndroidAction, onReportAndroidActionComplete)
+        return
+    }
     var details by remember { mutableStateOf(false) }
     val toolName = stringResource(when {
         call.toolId.startsWith("artifacts.") -> R.string.chat_tool_artifact
@@ -140,3 +150,130 @@ fun ToolExecutionCard(call: ToolCallEntity) {
         Column(Modifier.heightIn(max = 400.dp).verticalScroll(rememberScrollState())) { Text(stringResource(R.string.chat_tool_elapsed, toolStatus, elapsed)); Text(call.validatedArgumentsJson); Text(call.resultJson.orEmpty().take(16000)) }
     })
 }
+
+@Composable
+private fun AndroidActionExecutionCard(
+    call: ToolCallEntity,
+    onOpen: (ToolCallEntity) -> Unit,
+    onDecline: (ToolCallEntity) -> Unit,
+    onReportComplete: (ToolCallEntity) -> Unit,
+) {
+    var review by remember(call.id) { mutableStateOf(false) }
+    var details by remember(call.id) { mutableStateOf(false) }
+    val action = remember(call.id, call.validatedArgumentsJson) {
+        runCatching { com.localai.workspace.domain.tools.AndroidActionPlanner.prepare(call.validatedArgumentsJson) }.getOrNull()
+    }
+    val title = action?.let { androidActionTitle(it.kind) } ?: stringResource(R.string.android_action_invalid)
+    val statusLabel = when (call.status) {
+        "CONFIRMATION_REQUIRED" -> stringResource(R.string.android_action_waiting)
+        "LAUNCHING" -> stringResource(R.string.android_action_opening)
+        "OPENED" -> stringResource(R.string.android_action_opened)
+        "CONFIRMED_BY_USER" -> stringResource(R.string.android_action_user_reported_complete)
+        "DECLINED_BY_USER" -> stringResource(R.string.android_action_declined)
+        "OPEN_FAILED" -> stringResource(R.string.android_action_open_failed)
+        else -> call.status
+    }
+
+    Card(Modifier.fillMaxWidth().testTag("android-action-card-${call.id}")) {
+        Column(Modifier.fillMaxWidth().padding(LocalAiSpacing.x3), verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x2)) {
+            Text(title, style = MaterialTheme.typography.titleSmall)
+            Text(statusLabel, style = MaterialTheme.typography.bodySmall)
+            when (call.status) {
+                "CONFIRMATION_REQUIRED" -> Button(
+                    onClick = { review = true }, enabled = action != null,
+                    modifier = Modifier.minimumAppTouchTarget().testTag("android-action-review-button-${call.id}"),
+                ) { Text(stringResource(R.string.android_action_review)) }
+                "OPENED" -> OutlinedButton(
+                    onClick = { onReportComplete(call) },
+                    modifier = Modifier.minimumAppTouchTarget().testTag("android-action-user-reported-complete"),
+                ) { Text(stringResource(R.string.android_action_report_complete)) }
+                else -> Unit
+            }
+            TextButton(onClick = { details = true }, modifier = Modifier.minimumAppTouchTarget()) {
+                Text(stringResource(R.string.common_details))
+            }
+        }
+    }
+
+    if (review) {
+        val reviewed = action
+        AlertDialog(
+            onDismissRequest = { review = false },
+            title = { Text(title) },
+            text = {
+                Column(Modifier.heightIn(max = 420.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x2)) {
+                    Text(stringResource(R.string.android_action_review_notice), Modifier.testTag("android-action-review-notice"))
+                    if (reviewed != null) AndroidActionPlanner.displayFields(reviewed).forEach { (key, value) ->
+                        Column {
+                            Text(stringResource(androidActionFieldLabel(key)), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(displayAndroidActionValue(key, value), style = MaterialTheme.typography.bodyMedium, modifier = Modifier.testTag("android-action-value-$key"))
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = { review = false; onOpen(call) }, enabled = reviewed != null,
+                    modifier = Modifier.minimumAppTouchTarget().testTag("android-action-confirm-button"),
+                ) { Text(stringResource(R.string.android_action_open_app)) }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { review = false; onDecline(call) },
+                    modifier = Modifier.minimumAppTouchTarget().testTag("android-action-decline-button"),
+                ) { Text(stringResource(R.string.android_action_decline)) }
+            },
+        )
+    }
+    if (details) AlertDialog(
+        onDismissRequest = { details = false },
+        title = { Text(title) },
+        confirmButton = { TextButton(onClick = { details = false }) { Text(stringResource(R.string.common_close)) } },
+        text = {
+            Column(Modifier.heightIn(max = 420.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x2)) {
+                Text(stringResource(R.string.android_action_status_detail, statusLabel))
+                action?.let { AndroidActionPlanner.displayFields(it).forEach { (key, value) -> Text("${stringResource(androidActionFieldLabel(key))}: ${displayAndroidActionValue(key, value)}") } }
+                if (call.status == "CONFIRMED_BY_USER") Text(stringResource(R.string.android_action_user_reported_note))
+                call.errorCode?.takeIf(String::isNotBlank)?.let { Text(stringResource(R.string.android_action_error_code, it)) }
+            }
+        },
+    )
+}
+
+@Composable
+private fun androidActionTitle(kind: String): String = stringResource(when (kind) {
+    com.localai.workspace.domain.tools.AndroidActionPlanner.ALARM -> R.string.android_action_alarm
+    com.localai.workspace.domain.tools.AndroidActionPlanner.TIMER -> R.string.android_action_timer
+    com.localai.workspace.domain.tools.AndroidActionPlanner.CALENDAR_EVENT -> R.string.android_action_calendar_event
+    com.localai.workspace.domain.tools.AndroidActionPlanner.DIAL -> R.string.android_action_dial
+    com.localai.workspace.domain.tools.AndroidActionPlanner.SMS_DRAFT -> R.string.android_action_sms_draft
+    com.localai.workspace.domain.tools.AndroidActionPlanner.EMAIL_DRAFT -> R.string.android_action_email_draft
+    com.localai.workspace.domain.tools.AndroidActionPlanner.MAP_SEARCH -> R.string.android_action_map_search
+    com.localai.workspace.domain.tools.AndroidActionPlanner.SHARE_TEXT -> R.string.android_action_share_text
+    com.localai.workspace.domain.tools.AndroidActionPlanner.SETTINGS -> R.string.android_action_settings
+    else -> R.string.android_action_invalid
+})
+
+private fun androidActionFieldLabel(key: String): Int = when (key) {
+    "hour" -> R.string.android_action_hour
+    "minute" -> R.string.android_action_minute
+    "seconds" -> R.string.android_action_seconds
+    "title" -> R.string.android_action_field_title
+    "startsAtEpochMillis" -> R.string.android_action_start_time
+    "endsAtEpochMillis" -> R.string.android_action_end_time
+    "location" -> R.string.android_action_location
+    "description" -> R.string.android_action_description
+    "phoneNumber" -> R.string.android_action_phone
+    "body" -> R.string.android_action_body
+    "recipient" -> R.string.android_action_recipient
+    "subject" -> R.string.android_action_subject
+    "query" -> R.string.android_action_query
+    "text" -> R.string.android_action_text
+    "setting" -> R.string.android_action_setting
+    "message" -> R.string.android_action_message
+    else -> R.string.android_action_invalid
+}
+
+private fun displayAndroidActionValue(key: String, value: String): String = if (key in setOf("startsAtEpochMillis", "endsAtEpochMillis")) {
+    runCatching { java.text.DateFormat.getDateTimeInstance().format(java.util.Date(value.toLong())) }.getOrDefault(value)
+} else value

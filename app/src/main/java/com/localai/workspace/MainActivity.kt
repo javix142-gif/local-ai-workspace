@@ -939,6 +939,7 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
     var skillProposalError by remember { mutableStateOf<String?>(null) }
     var skillProposalSaving by remember { mutableStateOf(false) }
     val chatScope = rememberCoroutineScope()
+    val actionContext = androidx.compose.ui.platform.LocalContext.current
     val skillSavedDisabledMessage = stringResource(R.string.chat_skill_saved_disabled)
     val skillRegistry = (androidx.compose.ui.platform.LocalContext.current.applicationContext as LocalAiApplication).graph.skillRegistry
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let(viewModel::attachDocument) }
@@ -1063,7 +1064,30 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                         val content = if (message.status == "GENERATING" && message.id == messages.lastOrNull()?.id) streaming else message.content
                         val messageEvidence = citationEvidenceByMessage[message.id].orEmpty()
                         Column {
-                        toolCalls.filter { it.messageId == message.id }.forEach { com.localai.workspace.ui.ToolExecutionCard(it) }
+                        toolCalls.filter { it.messageId == message.id }.forEach { call ->
+                            com.localai.workspace.ui.ToolExecutionCard(
+                                call,
+                                onOpenAndroidAction = { pending ->
+                                    chatScope.launch {
+                                        if (!viewModel.claimPreparedAndroidAction(pending)) return@launch
+                                        try {
+                                            val prepared = com.localai.workspace.domain.tools.AndroidActionPlanner.prepare(pending.validatedArgumentsJson)
+                                            val intent = com.localai.workspace.domain.tools.AndroidActionPlanner.toIntent(prepared, actionContext.packageName)
+                                            val launchIntent = if (prepared.kind == com.localai.workspace.domain.tools.AndroidActionPlanner.SHARE_TEXT)
+                                                android.content.Intent.createChooser(intent, actionContext.getString(R.string.android_action_share_text)) else intent
+                                            actionContext.startActivity(launchIntent)
+                                            viewModel.markAndroidActionOpened(pending)
+                                        } catch (failure: android.content.ActivityNotFoundException) {
+                                            viewModel.markAndroidActionOpenFailed(pending, "NO_COMPATIBLE_APP")
+                                        } catch (_: Exception) {
+                                            viewModel.markAndroidActionOpenFailed(pending, "START_FAILED")
+                                        }
+                                    }
+                                },
+                                onDeclineAndroidAction = { pending -> chatScope.launch { viewModel.declinePreparedAndroidAction(pending) } },
+                                onReportAndroidActionComplete = { opened -> chatScope.launch { viewModel.markAndroidActionReportedComplete(opened) } },
+                            )
+                        }
                         MessageBubble(message, content, messageEvidence,
                             activeLabel = if (generating && message.id == messages.lastOrNull()?.id) localizedChatGenerationLabel(generationProgress.stage, generationProgress.cancellationRequested) else null,
                             canContinue = !generating && !deletingChat && message.id == messages.lastOrNull()?.id && message.status == "COMPLETE",

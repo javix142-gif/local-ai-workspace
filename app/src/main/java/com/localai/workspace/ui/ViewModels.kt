@@ -3,6 +3,7 @@ package com.localai.workspace.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.room.withTransaction
 import kotlinx.coroutines.Dispatchers
 import com.localai.workspace.AppGraph
 import com.localai.workspace.data.CitationEvidenceEntity
@@ -393,6 +394,39 @@ class ChatViewModel(
     val assistantProfile = graph.assistantSettings.changes.map { graph.assistantSettings.forProject(projectId) }.stateIn(viewModelScope, SharingStarted.Eagerly, graph.assistantSettings.forProject(projectId))
     fun setAssistantProfile(profile: com.localai.workspace.data.AssistantProfile) { if (!_isGenerating.value) graph.assistantSettings.update(projectId, profile) }
     val toolCalls = _conversationId.flatMapLatest { id -> if (id == null) flowOf(emptyList()) else graph.database.toolCallDao().observeForConversation(id) }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    suspend fun claimPreparedAndroidAction(call: com.localai.workspace.data.ToolCallEntity): Boolean = transitionAndroidAction(call) { dao ->
+        dao.claimPreparedAndroidAction(call.id, call.conversationId)
+    }
+
+    suspend fun markAndroidActionOpened(call: com.localai.workspace.data.ToolCallEntity): Boolean = transitionAndroidAction(call) { dao ->
+        dao.markAndroidActionOpened(call.id, call.conversationId, System.currentTimeMillis())
+    }
+
+    suspend fun markAndroidActionOpenFailed(call: com.localai.workspace.data.ToolCallEntity, reason: String): Boolean = transitionAndroidAction(call) { dao ->
+        dao.markAndroidActionOpenFailed(call.id, call.conversationId, reason, System.currentTimeMillis())
+    }
+
+    suspend fun declinePreparedAndroidAction(call: com.localai.workspace.data.ToolCallEntity): Boolean = transitionAndroidAction(call) { dao ->
+        dao.declinePreparedAndroidAction(call.id, call.conversationId, System.currentTimeMillis())
+    }
+
+    suspend fun markAndroidActionReportedComplete(call: com.localai.workspace.data.ToolCallEntity): Boolean = transitionAndroidAction(call) { dao ->
+        dao.markAndroidActionReportedComplete(call.id, call.conversationId, System.currentTimeMillis())
+    }
+
+    private suspend fun transitionAndroidAction(
+        call: com.localai.workspace.data.ToolCallEntity,
+        update: suspend (com.localai.workspace.data.ToolCallDao) -> Int,
+    ): Boolean = withContext(Dispatchers.IO) {
+        if (call.toolId != com.localai.workspace.domain.tools.AndroidActionPlanner.TOOL_ID ||
+            call.conversationId != _conversationId.value) return@withContext false
+        graph.database.withTransaction {
+            val owner = graph.database.conversationDao().get(call.conversationId)
+            if (owner?.projectId != projectId) false else update(graph.database.toolCallDao()) == 1
+        }
+    }
+
     private val _generationProgress = MutableStateFlow(GenerationProgress())
     private val _generationError = MutableStateFlow<GenerationError?>(null)
     internal var screenCount = 0

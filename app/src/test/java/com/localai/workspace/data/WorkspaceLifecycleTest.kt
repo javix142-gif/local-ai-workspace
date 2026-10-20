@@ -74,6 +74,53 @@ class WorkspaceLifecycleTest {
         assertEquals(2, repo.observeConversations(project).first().size)
     }
 
+    @Test fun androidActionTransitionsAreScopedSingleUseAndClearlyUserReported() = runBlocking {
+        val project = repo.createProject("Action scope")
+        val chat = repo.createConversation(project)
+        db.toolCallDao().insert(ToolCallEntity(
+            id = "action-call", conversationId = chat.id, messageId = null,
+            toolId = "android.action.prepare", validatedArgumentsJson = "{\"action\":\"dial\",\"phoneNumber\":\"+12025550100\"}",
+            permissionDecision = "EXTERNAL_SEND_REQUIRES_CONFIRMATION", status = "CONFIRMATION_REQUIRED", startedAt = 10,
+        ))
+
+        assertEquals(0, db.toolCallDao().claimPreparedAndroidAction("action-call", "another-conversation"))
+        assertEquals(1, db.toolCallDao().claimPreparedAndroidAction("action-call", chat.id))
+        assertEquals(0, db.toolCallDao().claimPreparedAndroidAction("action-call", chat.id))
+        assertEquals("LAUNCHING", db.toolCallDao().observeForConversation(chat.id).first().single().status)
+        assertEquals(1, db.toolCallDao().markAndroidActionOpened("action-call", chat.id, 20))
+        assertEquals(0, db.toolCallDao().markAndroidActionOpened("action-call", chat.id, 21))
+        assertEquals("OPENED", db.toolCallDao().observeForConversation(chat.id).first().single().status)
+        assertEquals(1, db.toolCallDao().markAndroidActionReportedComplete("action-call", chat.id, 30))
+        val completed = db.toolCallDao().observeForConversation(chat.id).first().single()
+        assertEquals("CONFIRMED_BY_USER", completed.status)
+        assertEquals("USER_REPORTED_COMPLETE", completed.confirmationDecision)
+    }
+
+    @Test fun aDeclinedOrInterruptedAndroidActionCannotBeClaimedAgain() = runBlocking {
+        val project = repo.createProject("Action recovery")
+        val chat = repo.createConversation(project)
+        db.toolCallDao().insert(ToolCallEntity(
+            id = "declined-action", conversationId = chat.id, toolId = "android.action.prepare",
+            validatedArgumentsJson = "{\"action\":\"map_search\",\"query\":\"library\"}",
+            permissionDecision = "EXTERNAL_SEND_REQUIRES_CONFIRMATION", status = "CONFIRMATION_REQUIRED", startedAt = 10,
+        ))
+        assertEquals(1, db.toolCallDao().declinePreparedAndroidAction("declined-action", chat.id, 12))
+        assertEquals(0, db.toolCallDao().claimPreparedAndroidAction("declined-action", chat.id))
+        val declined = db.toolCallDao().observeForConversation(chat.id).first().single()
+        assertEquals("DECLINED_BY_USER", declined.status)
+        assertEquals("REJECTED", declined.confirmationDecision)
+
+        db.toolCallDao().insert(ToolCallEntity(
+            id = "interrupted-action", conversationId = chat.id, toolId = "android.action.prepare",
+            validatedArgumentsJson = "{\"action\":\"settings\",\"setting\":\"wifi\"}",
+            permissionDecision = "EXTERNAL_SEND_REQUIRES_CONFIRMATION", status = "LAUNCHING", startedAt = 15,
+        ))
+        db.toolCallDao().recoverInterrupted(chat.id, 25)
+        val interrupted = db.toolCallDao().observeForConversation(chat.id).first().associateBy { it.id }.getValue("interrupted-action")
+        assertEquals("INTERRUPTED", interrupted.status)
+        assertEquals(0, db.toolCallDao().markAndroidActionOpened("interrupted-action", chat.id, 26))
+    }
+
     @Test fun deletingOneProjectChatKeepsSiblingsFilesAndMemory() = runBlocking {
         val project = repo.createProject("Study"); val a = conversation(project, "one"); val b = conversation(project, "two")
         val file = File(documents, "keep.txt"); document(project, "keepdoc", file)
