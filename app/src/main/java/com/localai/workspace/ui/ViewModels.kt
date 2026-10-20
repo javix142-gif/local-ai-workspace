@@ -1113,7 +1113,14 @@ class ChatViewModel(
             } catch (error: Throwable) {
                 trace("REQUEST_FAILED") { it.copy(errorClass = error.javaClass.simpleName, completedAt = traceStore.terminalTime()) }
                 preparation.invalidateReady()
-                val diagnostic = (error as? GenerationException)?.diagnostic ?: GenerationError(
+                val diagnostic = (error as? GenerationException)?.diagnostic ?: if (error.message == "PINNED_PREFERENCE_EXCEEDS_CONTEXT_BUDGET") {
+                    GenerationError(
+                        _generationProgress.value.stage,
+                        "PINNED_PREFERENCE_EXCEEDS_CONTEXT_BUDGET",
+                        "Pinned memories exceed 15% of the context input limit. No prompt was sent. Unpin or shorten some entries, then try again.",
+                        technicalDetail = error.javaClass.name,
+                    )
+                } else GenerationError(
                     _generationProgress.value.stage, "GENERATION_ERROR", error.message ?: "Local generation failed.",
                     technicalDetail = error.javaClass.name,
                 )

@@ -160,7 +160,6 @@ class MemoryManager(val database:MemoryContextDatabase,private val embed:suspend
         val now=System.currentTimeMillis();require(m.expiresAt==null||m.expiresAt>now){"EXPIRED_MEMORY_CANNOT_APPROVE"}
         val approved=m.copy(status="ACTIVE",confidence=if(m.sourceType=="IMPORTED_UNREVIEWED")m.confidence else 1.0,
             sourceType=if(m.sourceType=="IMPORTED_UNREVIEWED")"USER_APPROVED"else m.sourceType,updatedAt=now)
-        if(approved.pinned)requirePinnedPreferenceBudget(approved,access)
         database.dao().put(approved)
     }
     suspend fun pin(id:String,access:ScopeAccess=ScopeAccess())=database.withTransaction{

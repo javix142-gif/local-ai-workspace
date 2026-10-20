@@ -29,8 +29,8 @@ class ProjectUiDeviceTest {
         compose.onNodeWithText("Files").performClick()
         compose.onNodeWithText("No files yet").assertExists()
         compose.onNodeWithText("Memory").performClick()
-        compose.onNodeWithContentDescription("Add memory").performClick()
-        compose.onNode(hasSetTextAction()).performTextInput("Approved UI validation memory")
+        compose.onNodeWithText("Add").performClick()
+        compose.onNodeWithText("Content").performTextInput("Approved UI validation memory")
         compose.onNodeWithText("Save").performClick()
         awaitText("Approved UI validation memory")
         val graph = (compose.activity.application as LocalAiApplication).graph
