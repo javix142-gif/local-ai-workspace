@@ -90,12 +90,17 @@ def signer_sha(apk: Path) -> str:
     return match.group(1).lower()
 
 
-def package(apk: Path) -> tuple[str, str, str]:
-    output = run("aapt-" + apk.stem, [str(AAPT), "dump", "badging", str(apk)]).stdout
-    match = re.search(r"^package: name='([^']+)' versionCode='([^']+)' versionName='([^']+)'", output, re.M)
+def parse_package_badging(output: str) -> tuple[str, str, str]:
+    """Parse app and test APK metadata; AndroidTest APKs legitimately have blank versions."""
+    match = re.search(r"^package: name='([^']+)' versionCode='([^']*)' versionName='([^']*)'", output, re.M)
     if not match:
         raise Failure("APK_PACKAGE_METADATA_NOT_FOUND")
     return match.group(1), match.group(2), match.group(3)
+
+
+def package(apk: Path) -> tuple[str, str, str]:
+    output = run("aapt-" + apk.stem, [str(AAPT), "dump", "badging", str(apk)]).stdout
+    return parse_package_badging(output)
 
 
 def instrumentation(serial: str, test_filter: str, filename: str) -> None:

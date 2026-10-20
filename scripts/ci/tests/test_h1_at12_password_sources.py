@@ -25,6 +25,24 @@ class H1At12PasswordSourceTest(unittest.TestCase):
             self.assertEqual(0o600, keystore.stat().st_mode & 0o777)
             self.assertEqual(0o600, key.stat().st_mode & 0o777)
 
+    def test_aapt_parser_accepts_android_test_apk_blank_version_fields(self) -> None:
+        output = "package: name='com.localai.workspace.debug.test' versionCode='' versionName='' platformBuildVersionCode='35'\n"
+        self.assertEqual(
+            ("com.localai.workspace.debug.test", "", ""),
+            MODULE.parse_package_badging(output),
+        )
+
+    def test_aapt_parser_preserves_application_version_fields(self) -> None:
+        output = "package: name='com.localai.workspace.debug' versionCode='27' versionName='0.5.0-debug' platformBuildVersionCode='35'\n"
+        self.assertEqual(
+            ("com.localai.workspace.debug", "27", "0.5.0-debug"),
+            MODULE.parse_package_badging(output),
+        )
+
+    def test_aapt_parser_still_rejects_missing_package_metadata(self) -> None:
+        with self.assertRaisesRegex(MODULE.Failure, "APK_PACKAGE_METADATA_NOT_FOUND"):
+            MODULE.parse_package_badging("application: label='test'\n")
+
 
 if __name__ == "__main__":
     unittest.main()
