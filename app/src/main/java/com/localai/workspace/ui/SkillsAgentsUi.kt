@@ -129,7 +129,7 @@ fun SkillProposalReviewDialog(
 
 @Composable fun SkillsAgentsEntry(onCreateSkill: () -> Unit = {}) {
     var panel by remember{mutableStateOf<String?>(null)}
-    Row {TextButton(onClick={panel="skills"}){Text("Skills")};TextButton(onClick={panel="agents"}){Text("Logical Agents")}}
+    Row {TextButton(onClick={panel="skills"}){Text(stringResource(R.string.navigation_skills))};TextButton(onClick={panel="agents"}){Text("Logical Agents")}}
     if(panel=="skills")SkillsManagement(onCreateSkill){panel=null}
     if(panel=="agents")AgentsManagement{panel=null}
 }

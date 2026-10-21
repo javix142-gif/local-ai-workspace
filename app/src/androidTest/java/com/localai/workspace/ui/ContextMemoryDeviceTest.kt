@@ -25,8 +25,7 @@ import java.io.File
 class ContextMemoryDeviceTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     @Test fun structuredMemoryEntryAndEditorAreAccessible() {
-        compose.onNodeWithText("Settings").performClick()
-        compose.onNodeWithText(text(R.string.memory_title)).performClick()
+        compose.onNodeWithTag("top-level-memory").performClick()
         compose.onNodeWithText(text(R.string.memory_search)).assertExists()
         compose.onNodeWithText(text(R.string.common_add)).performClick()
         compose.onNodeWithText(text(R.string.memory_content)).assertExists()
@@ -36,7 +35,7 @@ class ContextMemoryDeviceTest {
         compose.onNodeWithText(text(R.string.memory_scope, text(R.string.memory_scope_global))).assertExists()
     }
     @Test fun inspectorDoesNotStartGenerationAutomatically() {
-        compose.onNodeWithText("Settings").performClick()
+        compose.onNodeWithTag("top-level-settings").performClick()
         compose.onNodeWithText("Developer / Diagnostics").performClick()
         compose.onNodeWithText(text(R.string.memory_context_validation)).performScrollTo().performClick()
         compose.onNodeWithText(text(R.string.memory_build_context_no_generation)).assertExists().assertIsNotEnabled()
@@ -66,8 +65,7 @@ class ContextMemoryDeviceTest {
         val archive=fixture.second
         val current=versions.last()
 
-        compose.onNodeWithText("Settings").performClick()
-        compose.onNodeWithText(text(R.string.memory_title)).performClick()
+        compose.onNodeWithTag("top-level-memory").performClick()
         compose.onNodeWithText(text(R.string.memory_search)).performTextReplacement(marker)
         compose.onNodeWithText(text(R.string.memory_details)).performScrollTo().performClick()
         compose.onNodeWithText(text(R.string.memory_forget_permanently)).assertIsDisplayed()

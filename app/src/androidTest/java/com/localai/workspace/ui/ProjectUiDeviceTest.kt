@@ -22,10 +22,11 @@ class ProjectUiDeviceTest {
 
     @Test fun createProjectAndExplicitlySaveEditRemoveMemory() {
         val name = "UI validation ${System.currentTimeMillis()}"
-        compose.onNodeWithText("Start project").performClick()
-        compose.onNodeWithText("Project name").assertIsDisplayed()
-        compose.onNodeWithText("Project name").performTextInput(name)
-        compose.onNodeWithText("Create").performClick()
+        compose.onNodeWithTag("top-level-workspace").performClick()
+        compose.onNodeWithText(compose.activity.getString(R.string.workspace_new_project)).performClick()
+        compose.onNodeWithText(compose.activity.getString(R.string.workspace_project_name)).assertIsDisplayed()
+        compose.onNodeWithText(compose.activity.getString(R.string.workspace_project_name)).performTextInput(name)
+        compose.onNodeWithText(compose.activity.getString(R.string.workspace_create)).performClick()
         awaitText("Files")
         compose.onNodeWithText("Files").performClick()
         compose.onNodeWithText("No files yet").assertExists()
@@ -57,7 +58,7 @@ class ProjectUiDeviceTest {
         compose.onNodeWithContentDescription("Project options").performClick()
         compose.onNodeWithText("Delete project").performClick()
         compose.onNodeWithText(text(R.string.common_delete)).performClick()
-        compose.waitUntil(15_000) { compose.onAllNodesWithText("Start project").fetchSemanticsNodes().isNotEmpty() }
+        compose.waitUntil(15_000) { compose.onAllNodesWithText(compose.activity.getString(R.string.workspace_new_project)).fetchSemanticsNodes().isNotEmpty() }
         compose.onNodeWithText(name).assertDoesNotExist()
     }
 

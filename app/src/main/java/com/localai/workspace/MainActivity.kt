@@ -51,6 +51,7 @@ import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Memory
 import androidx.compose.material.icons.filled.ModelTraining
+import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Stop
@@ -71,6 +72,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -148,6 +150,7 @@ import com.localai.workspace.ui.HomeViewModel
 import com.localai.workspace.ui.HomeViewModelFactory
 import com.localai.workspace.ui.LocalAiTheme
 import com.localai.workspace.ui.components.AppScreenContent
+import com.localai.workspace.ui.components.AwsBottomBar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.DisposableEffect
@@ -174,8 +177,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-private data class TopLevelDestination(val route: String, val label: String, val icon: androidx.compose.ui.graphics.vector.ImageVector)
-
 @Composable
 private fun LocalAiWorkspaceRoot() {
     val application = androidx.compose.ui.platform.LocalContext.current.applicationContext as LocalAiApplication
@@ -184,11 +185,6 @@ private fun LocalAiWorkspaceRoot() {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
-    val topLevel = listOf(
-        TopLevelDestination("workspace", "Workspace", Icons.Default.Home),
-        TopLevelDestination("models", "Models", Icons.Default.ModelTraining),
-        TopLevelDestination("settings", "Settings", Icons.Default.Settings),
-    )
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(Unit) {
         homeViewModel.notices.collectLatest { snackbarHostState.showSnackbar(it) }
@@ -196,31 +192,30 @@ private fun LocalAiWorkspaceRoot() {
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
-            if (currentRoute in topLevel.map { it.route }) {
-                BottomAppBar {
-                    topLevel.forEach { destination ->
-                        NavigationBarItem(
-                            selected = currentRoute == destination.route,
-                            onClick = {
-                                navController.navigate(destination.route) {
-                                    popUpTo("workspace") { saveState = true }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
-                            icon = { Icon(destination.icon, contentDescription = destination.label) },
-                            label = { Text(destination.label) },
-                        )
-                    }
-                }
+            val selectedTopLevel = when (currentRoute) {
+                "home" -> "home"
+                "workspace", "project/{projectId}", "chat/{projectId}?conversationId={conversationId}",
+                "skill-chat/{projectId}" -> "workspace"
+                "memory", "memory/{projectId}" -> "memory"
+                else -> "settings"
             }
+            AwsBottomBar(selectedRoute = selectedTopLevel, onDestinationSelected = { route ->
+                navController.navigate(route) {
+                    popUpTo("home") { saveState = true }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            })
         },
     ) { padding ->
         NavHost(
             navController = navController,
-            startDestination = "workspace",
+            startDestination = "home",
             modifier = Modifier.padding(padding).consumeWindowInsets(padding),
         ) {
+            composable("home") {
+                HomeScreen(homeViewModel, navController)
+            }
             composable("workspace") {
                 WorkspaceScreen(homeViewModel, navController)
             }
@@ -232,6 +227,7 @@ private fun LocalAiWorkspaceRoot() {
             }
             composable("settings") {
                 SettingsScreen(
+                    openModels = { navController.navigate("models") },
                     openValidation = { navController.navigate("device_validation") },
                     openPerformance = { navController.navigate("performance") },
                     openSkillAuthoring = {
@@ -260,6 +256,9 @@ private fun LocalAiWorkspaceRoot() {
                 val chatViewModel = remember(projectId) { graph.chatSessions.get(projectId, null, skillAuthoring = true) }
                 ChatScreen(chatViewModel, navController, skillAuthoringMode = true)
             }
+            composable("memory") {
+                com.localai.workspace.ui.ContextMemoryEntry(initiallyOpen = true)
+            }
             composable("memory/{projectId}") { entry ->
                 val projectId = entry.arguments?.getString("projectId").orEmpty()
                 com.localai.workspace.ui.ContextMemoryEntry(projectId, initiallyOpen = true)
@@ -270,6 +269,57 @@ private fun LocalAiWorkspaceRoot() {
 
 private fun chatRoute(projectId: String, conversationId: String? = null): String =
     "chat/$projectId" + (conversationId?.let { "?conversationId=$it" } ?: "")
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HomeScreen(viewModel: HomeViewModel, navController: NavHostController) {
+    val models by viewModel.models.collectAsStateWithLifecycle()
+    val preparation by viewModel.modelPreparation.collectAsStateWithLifecycle()
+    val creating by viewModel.creating.collectAsStateWithLifecycle()
+    val usableModels = remember(models) {
+        models.filter(com.localai.workspace.data.ApplicationModelPreparation::isUsable)
+    }
+    AppScreenContent {
+        TopAppBar(title = { Text(stringResource(R.string.home_title), style = MaterialTheme.typography.titleLarge) })
+        Column(
+            Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(bottom = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Text(stringResource(R.string.home_intro), style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant)
+            LocalModeCard()
+            if (usableModels.isNotEmpty()) {
+                WorkspaceModelCard(
+                    models, preparation, viewModel::prepareModel,
+                    viewModel::retryModelPreparation, viewModel::cancelModelPreparation,
+                )
+            } else {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+                ) {
+                    Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(stringResource(R.string.home_model_missing_title), style = MaterialTheme.typography.titleMedium)
+                        Text(stringResource(R.string.home_model_missing_body), style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        TextButton(onClick = { navController.navigate("models") }) {
+                            Text(stringResource(R.string.home_add_model))
+                        }
+                    }
+                }
+            }
+            Button(
+                onClick = { viewModel.startChat { id, conversation -> navController.navigate(chatRoute(id, conversation)) } },
+                enabled = !creating,
+                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+            ) { Text(stringResource(R.string.home_start_chat)) }
+            OutlinedButton(
+                onClick = { navController.navigate("workspace") },
+                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+            ) { Text(stringResource(R.string.home_open_chats)) }
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -289,18 +339,18 @@ private fun WorkspaceScreen(viewModel: HomeViewModel, navController: NavHostCont
     val visibleChats = chats.filter { it.name.contains(query.trim(), ignoreCase = true) }
     val visibleProjects = projects.filter { it.name.contains(query.trim(), ignoreCase = true) }
     AppScreenContent {
-        TopAppBar(title = { Text("Local AI Workspace", style = MaterialTheme.typography.titleMedium) },
+        TopAppBar(title = { Text(stringResource(R.string.navigation_chats), style = MaterialTheme.typography.titleLarge) },
             actions = { IconButton(onClick = { searching = !searching; if (!searching) query = "" }) {
-                Icon(androidx.compose.material.icons.Icons.Default.Search, contentDescription = "Search workspace")
+                Icon(androidx.compose.material.icons.Icons.Default.Search, contentDescription = stringResource(R.string.workspace_search_accessibility))
             } })
         LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 16.dp)) {
             item {
                 LocalModeCard()
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(onClick = { viewModel.startChat { id, conversation -> navController.navigate(chatRoute(id, conversation)) } },
-                        enabled = !creating, modifier = Modifier.weight(1f)) { Text("Start chat") }
+                        enabled = !creating, modifier = Modifier.weight(1f)) { Text(stringResource(R.string.workspace_new_chat)) }
                     OutlinedButton(onClick = { showCreate = true }, enabled = !creating,
-                        modifier = Modifier.weight(1f)) { Text("Start project") }
+                        modifier = Modifier.weight(1f)) { Text(stringResource(R.string.workspace_new_project)) }
                 }
                 WorkspaceModelCard(models, preparation, viewModel::prepareModel,
                     viewModel::retryModelPreparation, viewModel::cancelModelPreparation)
@@ -308,31 +358,32 @@ private fun WorkspaceScreen(viewModel: HomeViewModel, navController: NavHostCont
             }
             if (searching) item {
                 OutlinedTextField(query, { query = it }, Modifier.fillMaxWidth(), singleLine = true,
-                    placeholder = { Text("Search titles") })
+                    placeholder = { Text(stringResource(R.string.workspace_search_hint)) })
             }
             if (pendingCleanup > 0) item {
                 Card(Modifier.fillMaxWidth()) { Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Text("File cleanup pending", Modifier.weight(1f), style = MaterialTheme.typography.bodySmall)
-                    TextButton(onClick = viewModel::retryDocumentCleanup) { Text("Retry") }
+                    Text(stringResource(R.string.workspace_cleanup_pending), Modifier.weight(1f), style = MaterialTheme.typography.bodySmall)
+                    TextButton(onClick = viewModel::retryDocumentCleanup) { Text(stringResource(R.string.workspace_retry_cleanup)) }
                 } }
             }
             items(activities, key = { "activity-${it.projectId}-${it.conversationId}" }) { activity ->
                 Card(Modifier.fillMaxWidth()) { Row(Modifier.padding(start = 12.dp), verticalAlignment = Alignment.CenterVertically) {
                     Column(Modifier.weight(1f).clickable { navController.navigate(chatRoute(activity.projectId, activity.conversationId)) }.padding(vertical = 12.dp)) {
                         Text(activity.title, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                        Text(if (activity.generating) compactGenerationLabel(activity.progress.stage, activity.progress.cancellationRequested) else "Reading files…", style = MaterialTheme.typography.labelSmall)
+                        Text(if (activity.generating) compactGenerationLabel(activity.progress.stage, activity.progress.cancellationRequested) else stringResource(R.string.chat_reading_files), style = MaterialTheme.typography.labelSmall)
                     }
-                    if (activity.generating) IconButton(onClick = { viewModel.stopChatActivity(activity.projectId, activity.conversationId) }) { Icon(Icons.Default.Stop, "Stop generation") }
+                    if (activity.generating) IconButton(onClick = { viewModel.stopChatActivity(activity.projectId, activity.conversationId) }) { Icon(Icons.Default.Stop, stringResource(R.string.chat_stop)) }
                 } }
             }
-            item { Text("Chats", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 12.dp, bottom = 4.dp)) }
-            if (visibleChats.isEmpty()) item { Text(if (query.isBlank()) "No chats yet" else "No matching chats", style = MaterialTheme.typography.bodyMedium) }
+            item { Text(stringResource(R.string.workspace_chats_title), style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(top = 12.dp, bottom = 4.dp).testTag("workspace-chats-section-title")) }
+            if (visibleChats.isEmpty()) item { Text(stringResource(if (query.isBlank()) R.string.workspace_no_chats else R.string.workspace_no_matching_chats), style = MaterialTheme.typography.bodyMedium) }
             items(visibleChats, key = { "chat-${it.id}" }) { chat ->
                 WorkspaceEntryCard(chat.name, "", false, chat.id in deleting,
                     onOpen = { navController.navigate(chatRoute(chat.id)) }, onDelete = { deleteId = chat.id })
             }
-            item { Text("Projects", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 12.dp, bottom = 4.dp)) }
-            if (visibleProjects.isEmpty()) item { Text(if (query.isBlank()) "No projects yet" else "No matching projects", style = MaterialTheme.typography.bodyMedium) }
+            item { Text(stringResource(R.string.workspace_projects_title), style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 12.dp, bottom = 4.dp)) }
+            if (visibleProjects.isEmpty()) item { Text(stringResource(if (query.isBlank()) R.string.workspace_no_projects else R.string.workspace_no_matching_projects), style = MaterialTheme.typography.bodyMedium) }
             items(visibleProjects, key = { "project-${it.id}" }) { project ->
                 WorkspaceEntryCard(project.name, "", true, project.id in deleting,
                     onOpen = { navController.navigate("project/${project.id}") }, onDelete = { deleteId = project.id })
@@ -358,30 +409,30 @@ private fun WorkspaceModelCard(models: List<ModelEntity>, state: RuntimePreparat
     Card(Modifier.fillMaxWidth().clickable { details = true }) {
         Row(Modifier.fillMaxWidth().padding(start = 12.dp, end = 8.dp, top = 8.dp, bottom = 8.dp), verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
-                Text(selected?.displayName?.let(::humanModelName) ?: "Choose model", style = MaterialTheme.typography.titleSmall,
+                Text(selected?.displayName?.let(::humanModelName) ?: stringResource(R.string.workspace_model_choose), style = MaterialTheme.typography.titleSmall,
                     maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Text(when { state.preparing -> compactGenerationLabel(state.progress.stage)
-                    state.error != null -> "Could not load · tap to retry"
-                    state.ready -> "Ready · Local"
-                    else -> "Not loaded" }, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    state.error != null -> stringResource(R.string.workspace_model_load_failed)
+                    state.ready -> stringResource(R.string.workspace_model_ready)
+                    else -> stringResource(R.string.workspace_model_not_loaded) }, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            IconButton(onClick = { details = true }) { Icon(Icons.Default.ChevronRight, "Active model") }
+            IconButton(onClick = { details = true }) { Icon(Icons.Default.ChevronRight, stringResource(R.string.workspace_model_active)) }
         }
         if (state.preparing) LinearProgressIndicator(Modifier.fillMaxWidth())
     }
-    if (details) AlertDialog(onDismissRequest = { details = false }, title = { Text("Active model") },
-        confirmButton = { TextButton(onClick = { details = false }) { Text("Done") } },
+    if (details) AlertDialog(onDismissRequest = { details = false }, title = { Text(stringResource(R.string.workspace_model_active)) },
+        confirmButton = { TextButton(onClick = { details = false }) { Text(stringResource(R.string.common_done)) } },
         text = { Column(Modifier.heightIn(max = 440.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             usable.forEach { model -> TextButton(onClick = { select(model.id); details = false }, modifier = Modifier.fillMaxWidth()) {
                 Text(humanModelName(model.displayName), maxLines = 2, overflow = TextOverflow.Ellipsis)
             } }
-            Text("One model stays in memory. Switching may reload it; Android can release it to free RAM.", style = MaterialTheme.typography.bodySmall)
+            Text(stringResource(R.string.workspace_model_memory_note), style = MaterialTheme.typography.bodySmall)
             if (state.preparing) {
                 Text(state.progress.label); state.progress.detail?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
-                TextButton(onClick = cancel) { Text("Cancel loading") }
+                TextButton(onClick = cancel) { Text(stringResource(R.string.workspace_model_cancel_loading)) }
             }
-            state.error?.let { Text(it.displayText(), style = MaterialTheme.typography.bodySmall); TextButton(onClick = retry) { Text("Retry loading") } }
-            if (!state.ready && !state.preparing && state.error == null) TextButton(onClick = retry) { Text("Load model") }
+            state.error?.let { Text(it.displayText(), style = MaterialTheme.typography.bodySmall); TextButton(onClick = retry) { Text(stringResource(R.string.workspace_model_retry_loading)) } }
+            if (!state.ready && !state.preparing && state.error == null) TextButton(onClick = retry) { Text(stringResource(R.string.workspace_model_load)) }
         } })
 }
 
@@ -436,7 +487,9 @@ private fun ProjectScreen(viewModel: HomeViewModel, navController: NavHostContro
                 DropdownMenu(menu, { menu = false }) { DropdownMenuItem(text = { Text("Delete project") }, onClick = { menu = false; showDelete = true }) }
             } })
         TabRow(tab) { listOf("Chats", "Files", "Memory", "Settings").forEachIndexed { index, label ->
-            Tab(tab == index, onClick = { tab = index }, enabled = !busy, text = { Text(label, maxLines = 1, style = MaterialTheme.typography.labelMedium) })
+            Tab(tab == index, onClick = { tab = index }, enabled = !busy,
+                modifier = Modifier.testTag("project-tab-${label.lowercase()}"),
+                text = { Text(label, maxLines = 1, style = MaterialTheme.typography.labelMedium) })
         } }
         if (busy) LinearProgressIndicator(Modifier.fillMaxWidth())
         when (tab) {
@@ -575,15 +628,16 @@ private fun ModelsScreen(viewModel: HomeViewModel, navController: NavHostControl
         TopAppBar(
             title = {
                 Column {
-                    Text("Model Library", fontWeight = FontWeight.SemiBold)
-                    Text("${models.size} model${if (models.size == 1) "" else "s"}", style = MaterialTheme.typography.labelSmall)
+                    Text(stringResource(R.string.models_title), style = MaterialTheme.typography.titleLarge)
+                    Text(stringResource(if (models.size == 1) R.string.models_count_one else R.string.models_count_many, models.size),
+                        style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             },
         )
         Button(onClick = { showAddModel = true }, modifier = Modifier.fillMaxWidth()) {
             Icon(Icons.Default.Add, contentDescription = null)
             Spacer(Modifier.width(8.dp))
-            Text("Add model")
+            Text(stringResource(R.string.models_add))
         }
         Spacer(Modifier.height(10.dp))
         LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -596,9 +650,15 @@ private fun ModelsScreen(viewModel: HomeViewModel, navController: NavHostControl
             }
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            Text("Models storage: ${formatBytes(models.sumOf { it.fileSize })}", style = MaterialTheme.typography.labelMedium)
+            Text(stringResource(R.string.models_storage, formatBytes(models.sumOf { it.fileSize })), style = MaterialTheme.typography.labelMedium)
             TextButton(onClick = { sort = when (sort) { "RECENT" -> "NAME"; "NAME" -> "SIZE"; "SIZE" -> "RUNTIME"; else -> "RECENT" } }) {
-                Text("Sort: ${sort.lowercase().replaceFirstChar { it.uppercase() }}")
+                val sortLabel = stringResource(when (sort) {
+                    "NAME" -> R.string.models_sort_name
+                    "SIZE" -> R.string.models_sort_size
+                    "RUNTIME" -> R.string.models_sort_runtime
+                    else -> R.string.models_sort_recent
+                })
+                Text(stringResource(R.string.models_sort, sortLabel))
             }
         }
         importProgress?.let { progress ->
@@ -626,7 +686,7 @@ private fun ModelsScreen(viewModel: HomeViewModel, navController: NavHostControl
         }
         com.localai.workspace.ui.SemanticV2Settings()
         if (visibleModels.isEmpty()) {
-            EmptyState("No models in this view", "Add a model to get started.")
+            EmptyState(stringResource(R.string.models_empty_title), stringResource(R.string.models_empty_body))
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
                 items(visibleModels, key = { it.id }) { model ->
@@ -994,7 +1054,7 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                             DropdownMenuItem(text = { Text(stringResource(R.string.chat_files)) }, onClick = { showChatMenu = false; showFiles = true })
                             if (!skillAuthoringMode) {
                                 DropdownMenuItem(text = { Text(stringResource(R.string.chat_artifacts)) }, enabled=!generating&&!deletingChat, onClick = { showChatMenu=false;showArtifacts=true })
-                                DropdownMenuItem(text = { Text(stringResource(R.string.chat_memory)) }, onClick = { showChatMenu = false; navController.navigate("memory/${project?.id.orEmpty()}") })
+                                DropdownMenuItem(modifier = Modifier.testTag("chat-menu-memory"), text = { Text(stringResource(R.string.chat_memory)) }, onClick = { showChatMenu = false; navController.navigate("memory/${project?.id.orEmpty()}") })
                                 DropdownMenuItem(text = { Text(stringResource(R.string.chat_diagnostics)) }, onClick = { showChatMenu = false; showDiagnostics = true })
                             }
                             DropdownMenuItem(
@@ -1375,18 +1435,38 @@ private fun ResponseDetailsDialog(metrics: GenerationMetricsPresentation, onDism
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SettingsScreen(openValidation: () -> Unit = {}, openPerformance: () -> Unit, openSkillAuthoring: () -> Unit = {}) {
+private fun SettingsScreen(
+    openModels: () -> Unit,
+    openValidation: () -> Unit = {},
+    openPerformance: () -> Unit,
+    openSkillAuthoring: () -> Unit = {},
+) {
     var developer by rememberSaveable { mutableStateOf(false) }
     var boundaries by remember { mutableStateOf(false) }
     AppScreenContent(columnModifier = Modifier.verticalScroll(rememberScrollState())) {
-        TopAppBar(title = { Text("Settings") })
+        TopAppBar(title = { Text(stringResource(R.string.navigation_more), style = MaterialTheme.typography.titleLarge) })
+        Card(Modifier.fillMaxWidth().clickable(onClick = openModels)) {
+            Row(
+                Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Icon(Icons.Default.ModelTraining, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                Column(Modifier.weight(1f)) {
+                    Text(stringResource(R.string.settings_models_entry), style = MaterialTheme.typography.titleSmall)
+                    Text(stringResource(R.string.settings_models_description), style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                Icon(Icons.Default.ChevronRight, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
         LocalModeCard()
         com.localai.workspace.ui.SemanticSettings()
         com.localai.workspace.ui.ContextMemoryEntry()
         com.localai.workspace.ui.SkillsAgentsEntry(onCreateSkill = openSkillAuthoring)
         Card(Modifier.fillMaxWidth().clickable { developer = !developer }) {
             Row(Modifier.fillMaxWidth().padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                Text("Developer / Diagnostics", Modifier.weight(1f), style = MaterialTheme.typography.titleSmall)
+                Text(stringResource(R.string.settings_advanced), Modifier.weight(1f), style = MaterialTheme.typography.titleSmall)
                 Icon(Icons.Default.ChevronRight, null)
             }
         }
@@ -1404,13 +1484,27 @@ private fun SettingsScreen(openValidation: () -> Unit = {}, openPerformance: () 
 @Composable
 private fun LocalModeCard() {
     var details by remember { mutableStateOf(false) }
-    TextButton(onClick = { details = true }) {
-        Icon(Icons.Default.CheckCircle, null, Modifier.size(16.dp)); Spacer(Modifier.width(6.dp))
-        Text("Private · Local", style = MaterialTheme.typography.labelMedium)
+    Card(
+        Modifier.fillMaxWidth().clickable { details = true },
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+    ) {
+        Row(
+            Modifier.fillMaxWidth().heightIn(min = 64.dp).padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Icon(Icons.Default.CheckCircle, null, tint = MaterialTheme.colorScheme.primary)
+            Column(Modifier.weight(1f)) {
+                Text(stringResource(R.string.workspace_local_privacy), style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer)
+                Text(stringResource(R.string.workspace_local_privacy_summary), style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer)
+            }
+        }
     }
-    if (details) AlertDialog(onDismissRequest = { details = false }, title = { Text("Private · Local") },
-        text = { Text("Inference and imported models, documents and saved memory stay on this device. Internet is used only for an explicit Hugging Face download. External connectors and web search are not enabled.") },
-        confirmButton = { TextButton(onClick = { details = false }) { Text("Done") } })
+    if (details) AlertDialog(onDismissRequest = { details = false }, title = { Text(stringResource(R.string.workspace_local_privacy)) },
+        text = { Text(stringResource(R.string.workspace_local_privacy_detail)) },
+        confirmButton = { TextButton(onClick = { details = false }) { Text(stringResource(R.string.common_done)) } })
 }
 
 @Composable
@@ -1429,10 +1523,10 @@ private fun CreateProjectDialog(onDismiss: () -> Unit, onCreate: (String) -> Uni
     var name by rememberSaveable { mutableStateOf("") }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Start project") },
-        text = { OutlinedTextField(value = name, onValueChange = { name = it }, modifier = Modifier.fillMaxWidth(), label = { Text("Project name") }, singleLine = true) },
-        confirmButton = { Button(onClick = { onCreate(name) }, enabled = name.isNotBlank()) { Text("Create") } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+        title = { Text(stringResource(R.string.workspace_create_project_title)) },
+        text = { OutlinedTextField(value = name, onValueChange = { name = it }, modifier = Modifier.fillMaxWidth(), label = { Text(stringResource(R.string.workspace_project_name)) }, singleLine = true) },
+        confirmButton = { Button(onClick = { onCreate(name) }, enabled = name.isNotBlank()) { Text(stringResource(R.string.workspace_create)) } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.common_cancel)) } },
     )
 }
 

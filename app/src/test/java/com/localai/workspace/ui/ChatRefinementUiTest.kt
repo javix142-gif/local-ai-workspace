@@ -171,6 +171,8 @@ class ChatRefinementUiTest {
 class WorkspaceRefinementUiTest {
     @get:Rule val compose = createAndroidComposeRule<MainActivity>()
 
+    private fun localized(id: Int): String = compose.activity.getString(id)
+
     @Test fun compactWorkspaceKeepsBothCreationActions() =
         inspectWorkspace("workspace-light-360dp.png")
 
@@ -179,15 +181,16 @@ class WorkspaceRefinementUiTest {
         inspectWorkspace("workspace-dark-411dp.png")
 
     private fun inspectWorkspace(captureName: String) {
-        val chat = compose.onNodeWithText("Start chat").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
-        val project = compose.onNodeWithText("Start project").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
+        compose.onNodeWithTag("top-level-workspace").performClick()
+        val chat = compose.onNodeWithText(localized(R.string.workspace_new_chat)).assertIsDisplayed().fetchSemanticsNode().boundsInRoot
+        val project = compose.onNodeWithText(localized(R.string.workspace_new_project)).assertIsDisplayed().fetchSemanticsNode().boundsInRoot
         assertTrue("Creation actions share one row", kotlin.math.abs(chat.top - project.top) < 2f)
         assertTrue("Creation actions do not overlap", chat.right < project.left)
         compose.onNodeWithText("Chats").assertIsDisplayed()
-        compose.onNodeWithText("Projects").assertIsDisplayed()
+        compose.onNodeWithText(localized(R.string.workspace_projects_title)).assertIsDisplayed()
         // The real dialog and its editable field are covered by ProjectUiDeviceTest;
         // Robolectric's Compose idler cannot settle that platform dialog reliably.
-        compose.onNodeWithText("Start chat").assertIsDisplayed()
+        compose.onNodeWithText(localized(R.string.workspace_new_chat)).assertIsDisplayed()
         compose.runOnUiThread {
             val view = compose.activity.window.decorView
             val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)

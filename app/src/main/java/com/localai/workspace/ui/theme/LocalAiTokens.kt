@@ -29,40 +29,41 @@ data class LocalAiStatusColors(
     val success: Color,
     val successContainer: Color,
     val onSuccessContainer: Color,
+    val disabled: Color,
 )
 
-private val LightBackground = Color(0xFFF6F7F4)
+private val LightBackground = Color(0xFFF7F8FA)
 private val LightSurface = Color(0xFFFFFFFF)
-private val LightContainer = Color(0xFFEFF1EE)
-private val LightText = Color(0xFF1D2522)
-private val LightSecondary = Color(0xFF54605B)
-private val LightOutline = Color(0xFF77817C)
-private val LightBrand = Color(0xFF3E746D)
+private val LightContainer = Color(0xFFE8F0FC)
+private val LightText = Color(0xFF1B1F24)
+private val LightSecondary = Color(0xFF5A6270)
+private val LightOutline = Color(0xFF7D8794)
+private val LightBrand = Color(0xFF2F6FD1)
 private val LightError = Color(0xFFBA1A1A)
 
-private val DarkBackground = Color(0xFF101613)
-private val DarkSurface = Color(0xFF171E1B)
-private val DarkContainer = Color(0xFF202824)
-private val DarkText = Color(0xFFE1E4DF)
-private val DarkSecondary = Color(0xFFBDC8C1)
-private val DarkOutline = Color(0xFF89948E)
-private val DarkBrand = Color(0xFFA5D8CE)
+private val DarkBackground = Color(0xFF121418)
+private val DarkSurface = Color(0xFF1C1F25)
+private val DarkContainer = Color(0xFF23324A)
+private val DarkText = Color(0xFFE6E8EB)
+private val DarkSecondary = Color(0xFFA8B0BC)
+private val DarkOutline = Color(0xFF9AA1AD)
+private val DarkBrand = Color(0xFF7FA8F0)
 private val DarkError = Color(0xFFFFB4AB)
 
 val localAiLightPalette = LocalAiPalette(
     colorScheme = lightColorScheme(
         primary = LightBrand,
         onPrimary = LightSurface,
-        primaryContainer = Color(0xFFDDEBE7),
-        onPrimaryContainer = Color(0xFF173E38),
+        primaryContainer = LightContainer,
+        onPrimaryContainer = LightText,
         secondary = LightSecondary,
         onSecondary = LightSurface,
         secondaryContainer = LightContainer,
         onSecondaryContainer = LightText,
         tertiary = LightBrand,
         onTertiary = LightSurface,
-        tertiaryContainer = Color(0xFFDDEBE7),
-        onTertiaryContainer = Color(0xFF173E38),
+        tertiaryContainer = LightContainer,
+        onTertiaryContainer = LightText,
         background = LightBackground,
         onBackground = LightText,
         surface = LightSurface,
@@ -77,40 +78,41 @@ val localAiLightPalette = LocalAiPalette(
         surfaceContainerHigh = LightContainer,
         surfaceContainerHighest = LightContainer,
         outline = LightOutline,
-        outlineVariant = Color(0xFFC2C8C3),
+        outlineVariant = Color(0xFFD1D8E2),
         error = LightError,
         onError = LightSurface,
         errorContainer = Color(0xFFF9DEDC),
         onErrorContainer = Color(0xFF410E0B),
-        inverseSurface = Color(0xFF2E3431),
-        inverseOnSurface = Color(0xFFF0F1EC),
-        inversePrimary = Color(0xFFA5D8CE),
+        inverseSurface = Color(0xFF30343B),
+        inverseOnSurface = Color(0xFFF6F8FC),
+        inversePrimary = DarkBrand,
         surfaceTint = LightBrand,
     ),
     statusColors = LocalAiStatusColors(
-        warning = Color(0xFF7A5D00),
-        warningContainer = Color(0xFFF4E7BE),
-        onWarningContainer = Color(0xFF4A3600),
-        success = Color(0xFF256D46),
-        successContainer = Color(0xFFDCEFE1),
-        onSuccessContainer = Color(0xFF173C27),
+        warning = Color(0xFF9A6700),
+        warningContainer = Color(0xFFFFF7E8),
+        onWarningContainer = Color(0xFF3B2A00),
+        success = Color(0xFF286F47),
+        successContainer = Color(0xFFE0F2E6),
+        onSuccessContainer = Color(0xFF153A24),
+        disabled = Color(0xFF6B7280),
     ),
 )
 
 val localAiDarkPalette = LocalAiPalette(
     colorScheme = darkColorScheme(
         primary = DarkBrand,
-        onPrimary = Color(0xFF183833),
-        primaryContainer = Color(0xFF294B44),
-        onPrimaryContainer = Color(0xFFD5EEE8),
+        onPrimary = DarkBackground,
+        primaryContainer = DarkContainer,
+        onPrimaryContainer = DarkText,
         secondary = DarkSecondary,
-        onSecondary = Color(0xFF26322D),
+        onSecondary = DarkBackground,
         secondaryContainer = DarkContainer,
         onSecondaryContainer = DarkText,
         tertiary = DarkBrand,
-        onTertiary = Color(0xFF183833),
-        tertiaryContainer = Color(0xFF294B44),
-        onTertiaryContainer = Color(0xFFD5EEE8),
+        onTertiary = DarkBackground,
+        tertiaryContainer = DarkContainer,
+        onTertiaryContainer = DarkText,
         background = DarkBackground,
         onBackground = DarkText,
         surface = DarkSurface,
@@ -125,23 +127,24 @@ val localAiDarkPalette = LocalAiPalette(
         surfaceContainerHigh = DarkContainer,
         surfaceContainerHighest = DarkContainer,
         outline = DarkOutline,
-        outlineVariant = Color(0xFF424C46),
+        outlineVariant = Color(0xFF414956),
         error = DarkError,
         onError = Color(0xFF690005),
-        errorContainer = Color(0xFF93000A),
+        errorContainer = Color(0xFF5C1516),
         onErrorContainer = Color(0xFFFFDAD6),
         inverseSurface = Color(0xFFE1E4DF),
         inverseOnSurface = Color(0xFF2E3431),
-        inversePrimary = Color(0xFF3E746D),
+        inversePrimary = LightBrand,
         surfaceTint = DarkBrand,
     ),
     statusColors = LocalAiStatusColors(
-        warning = Color(0xFFE6C66B),
-        warningContainer = Color(0xFF3C3218),
+        warning = Color(0xFFE3B964),
+        warningContainer = Color(0xFF42381F),
         onWarningContainer = Color(0xFFFFF0BE),
-        success = Color(0xFF8BD2A4),
-        successContainer = Color(0xFF203B2B),
+        success = Color(0xFF7FCB9C),
+        successContainer = Color(0xFF213C2B),
         onSuccessContainer = Color(0xFFD5F4DB),
+        disabled = Color(0xFF9AA1AD),
     ),
 )
 
@@ -230,6 +233,7 @@ object LocalAiLayout {
 object LocalAiRadii {
     val small: Dp = 8.dp
     val medium: Dp = 12.dp
+    val card: Dp = 16.dp
     val large: Dp = 20.dp
     val extraLarge: Dp = 28.dp
 

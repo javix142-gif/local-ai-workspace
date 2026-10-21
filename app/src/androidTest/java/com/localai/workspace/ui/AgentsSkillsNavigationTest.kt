@@ -4,6 +4,7 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.localai.workspace.MainActivity
+import com.localai.workspace.R
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -12,9 +13,10 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AgentsSkillsNavigationTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
+    private fun localized(id: Int) = compose.activity.getString(id)
     @Test fun builtInSkillsCanBeInspectedWithoutRunningTools() {
-        compose.onNodeWithText("Settings").performClick()
-        compose.onNodeWithText("Skills").performScrollTo().performClick()
+        compose.onNodeWithTag("top-level-settings").performClick()
+        compose.onNodeWithText(localized(R.string.navigation_skills)).performScrollTo().performClick()
         compose.onNodeWithText("Import SKILL.md").assertExists()
         // Built-ins are seeded by SkillRegistry on IO; wait for its Room flow before lookup.
         compose.waitUntil(timeoutMillis = 10_000) {
@@ -29,7 +31,7 @@ class AgentsSkillsNavigationTest {
         compose.onNodeWithText("Save").assertDoesNotExist()
     }
     @Test fun generalAgentIsProtectedAndValidationIsDeveloperOnly() {
-        compose.onNodeWithText("Settings").performClick()
+        compose.onNodeWithTag("top-level-settings").performClick()
         compose.onNodeWithText("Logical Agents").performScrollTo().performClick()
         compose.onNodeWithText("General Agent").performScrollTo().performClick()
         compose.onNodeWithText("Agent instructions").assertExists()

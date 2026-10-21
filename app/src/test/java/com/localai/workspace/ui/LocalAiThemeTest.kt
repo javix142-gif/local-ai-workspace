@@ -88,12 +88,15 @@ class LocalAiThemeTest {
         }
 
         compose.waitForIdle()
-        assertEquals(Color(0xFFF6F7F4), lightBackground)
-        assertEquals(Color(0xFF101613), darkBackground)
-        assertEquals(Color(0xFFEFF1EE), lightSurfaceContainer)
-        assertEquals(Color(0xFF202824), darkSurfaceContainer)
-        assertEquals(Color(0xFF7A5D00), lightStatus?.warning)
-        assertEquals(Color(0xFFE6C66B), darkStatus?.warning)
+        assertEquals(Color(0xFFF7F8FA), lightBackground)
+        assertEquals(Color(0xFF121418), darkBackground)
+        assertEquals(Color(0xFFE8F0FC), lightSurfaceContainer)
+        assertEquals(Color(0xFF23324A), darkSurfaceContainer)
+        assertEquals(Color(0xFF9A6700), lightStatus?.warning)
+        assertEquals(Color(0xFF286F47), lightStatus?.success)
+        assertEquals(Color(0xFFE3B964), darkStatus?.warning)
+        assertEquals(Color(0xFF6B7280), lightStatus?.disabled)
+        assertEquals(Color(0xFF9AA1AD), darkStatus?.disabled)
         assertEquals(22.sp, LocalAiTypography.titleLarge.fontSize)
         assertEquals(28.sp, LocalAiTypography.titleLarge.lineHeight)
         assertEquals(18.sp, LocalAiTypography.titleMedium.fontSize)
@@ -115,8 +118,8 @@ class LocalAiThemeTest {
             LocalAiSpacing.x1, LocalAiSpacing.x2, LocalAiSpacing.x3, LocalAiSpacing.x4,
             LocalAiSpacing.x5, LocalAiSpacing.x6, LocalAiSpacing.x8,
         ).map { it.value.toInt() })
-        assertEquals(listOf(8, 12, 20, 28), listOf(
-            LocalAiRadii.small, LocalAiRadii.medium, LocalAiRadii.large, LocalAiRadii.extraLarge,
+        assertEquals(listOf(8, 12, 16, 20, 28), listOf(
+            LocalAiRadii.small, LocalAiRadii.medium, LocalAiRadii.card, LocalAiRadii.large, LocalAiRadii.extraLarge,
         ).map { it.value.toInt() })
         assertEquals(720, LocalAiLayout.maxReadingWidth.value.toInt())
         assertEquals(16, LocalAiLayout.screenMargin.value.toInt())

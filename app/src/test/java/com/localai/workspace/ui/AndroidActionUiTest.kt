@@ -3,6 +3,7 @@ package com.localai.workspace.ui
 import android.app.Application
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -10,6 +11,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.runtime.mutableStateOf
 import com.localai.workspace.data.ToolCallEntity
+import com.localai.workspace.R
 import com.localai.workspace.ui.LocalAiTheme
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -26,6 +28,8 @@ import java.util.concurrent.atomic.AtomicInteger
 class AndroidActionUiTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
 
+    private fun localized(id: Int, vararg args: Any): String = compose.activity.getString(id, *args)
+
     @Test fun pendingProposalShowsFullDataAndDoesNothingUntilExplicitConfirmation() {
         val opened = AtomicInteger()
         val declined = AtomicInteger()
@@ -38,15 +42,49 @@ class AndroidActionUiTest {
 
         compose.onNodeWithText("Preparada; aún no se ha abierto ninguna aplicación.").assertIsDisplayed()
         compose.onNodeWithTag("android-action-review-button-${call.id}").performClick()
-        compose.onNodeWithText("Revisa todos los datos. Solo al pulsar «Abrir aplicación» se abrirá la pantalla correspondiente; no se enviará ni guardará nada automáticamente.").assertIsDisplayed()
+        compose.onNodeWithTag("android-action-confirm-sheet-${call.id}").assertIsDisplayed()
+        compose.onNodeWithText(localized(R.string.android_action_review_generic_notice)).assertIsDisplayed()
         compose.onNodeWithTag("android-action-value-phoneNumber").assertIsDisplayed()
         compose.onNodeWithTag("android-action-value-body").performScrollTo().assertIsDisplayed()
         compose.runOnIdle {
             assertEquals(0, opened.get())
             assertEquals(0, declined.get())
         }
-        compose.onNodeWithTag("android-action-confirm-button").performClick()
+        compose.onNodeWithTag("android-action-confirm-button").performScrollTo()
+            .assertIsDisplayed().performClick()
         compose.runOnIdle { assertEquals(1, opened.get()) }
+    }
+
+    @Test fun calendarConfirmationExplainsThatTheEventIsNotSavedUntilTheUserCompletesIt() {
+        val opened = AtomicInteger()
+        val declined = AtomicInteger()
+        val call = pendingCall(
+            """{"action":"calendar_event","title":"H3b synthetic review","startsAtEpochMillis":1792605600000,"endsAtEpochMillis":1792609200000}""",
+        )
+        compose.setContent {
+            LocalAiTheme {
+                ToolExecutionCard(call, onOpenAndroidAction = { opened.incrementAndGet() }, onDeclineAndroidAction = { declined.incrementAndGet() })
+            }
+        }
+
+        compose.onNodeWithTag("android-action-review-button-${call.id}").performClick()
+        compose.onNodeWithText(localized(R.string.android_action_review_calendar_notice)).assertIsDisplayed()
+        compose.onNodeWithTag("android-action-value-title").assertTextEquals("H3b synthetic review")
+        compose.runOnIdle { assertEquals(0, opened.get()); assertEquals(0, declined.get()) }
+        compose.onNodeWithTag("android-action-decline-button").performClick()
+        compose.runOnIdle { assertEquals(0, opened.get()); assertEquals(1, declined.get()) }
+    }
+
+    @Test fun openErrorKeepsHumanExplanationAndTechnicalCodeVisible() {
+        val call = pendingCall("""{"action":"map_search","query":"Biblioteca central"}""")
+            .copy(status = "OPEN_FAILED", errorCode = "NO_ACTIVITY_HANDLER")
+        compose.setContent { LocalAiTheme { ToolExecutionCard(call) } }
+
+        compose.onNodeWithText(localized(R.string.android_action_status_error)).assertIsDisplayed()
+        compose.onNodeWithText(localized(R.string.android_action_error_explanation)).assertIsDisplayed()
+        compose.onNodeWithTag("android-action-error-code").assertTextEquals(
+            localized(R.string.android_action_error_code, "NO_ACTIVITY_HANDLER"),
+        )
     }
 
     @Test fun decliningProposalDoesNotOpenAndOpenedStatusIsExplicitlyUserReported() {

@@ -94,7 +94,7 @@ private data class MemoryApprovalReview(
 
 @Composable fun ContextMemoryEntry(projectId:String?=null,initiallyOpen:Boolean=false) {
     var open by remember(initiallyOpen){mutableStateOf(initiallyOpen)}
-    TextButton(onClick={open=true}){Text(stringResource(R.string.memory_title))}
+    TextButton(onClick={open=true}, modifier=Modifier.testTag("context-memory-entry-open")){Text(stringResource(R.string.memory_title))}
     if(open) StructuredMemoryPanel(projectId){open=false}
 }
 @Composable private fun StructuredMemoryPanel(projectId:String?,close:()->Unit) {

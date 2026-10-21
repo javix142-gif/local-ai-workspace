@@ -28,25 +28,28 @@ class UiSmokeTest {
     private fun localized(id: Int): String = compose.activity.getString(id)
 
     @Test fun homePrivacyAndModelImportNavigation() {
-        compose.onNodeWithText("Start chat").assertIsDisplayed()
-        compose.onNodeWithText("No chats yet").assertExists()
-        screenshot("workspace")
-        compose.onNodeWithText("Private · Local").performClick()
-        compose.onNodeWithText("Inference and imported models", substring = true).assertExists()
-        compose.onNodeWithText("Done").performClick()
-        compose.onNodeWithText("Models").performClick()
+        compose.onNodeWithText(localized(R.string.home_start_chat)).assertIsDisplayed()
+        compose.onNodeWithTag("top-level-workspace").performClick()
+        compose.onNodeWithText(localized(R.string.workspace_no_chats)).assertExists()
+        screenshot("chats")
+        compose.onNodeWithText(localized(R.string.workspace_local_privacy)).performClick()
+        compose.onNodeWithText(localized(R.string.workspace_local_privacy_detail)).assertExists()
+        compose.onNodeWithText(localized(R.string.common_done)).performClick()
+        compose.onNodeWithTag("top-level-settings").performClick()
+        compose.onNodeWithText(localized(R.string.settings_models_entry)).performClick()
         screenshot("models")
-        compose.onNodeWithText("Add model").performClick()
+        compose.onNodeWithText(localized(R.string.models_add)).performClick()
         listOf("FROM DEVICE", "GGUF", "LiteRT-LM", "Multimodal", "ONLINE", "Hugging Face").forEach { compose.onNode(hasText(it) and hasAnyAncestor(isDialog())).assertExists() }
+        // AddModelDialog currently presents this hard-coded English action.
         compose.onNodeWithText("Cancel").performClick()
-        compose.onNodeWithText("No models in this view").assertExists()
+        compose.onNodeWithText(localized(R.string.models_empty_title)).assertExists()
     }
 
     @Test fun settingsKeepsDiagnosticsBehindDeveloperEntry() {
-        compose.onNodeWithText("Settings").performClick()
+        compose.onNodeWithTag("top-level-settings").performClick()
         compose.onNodeWithText("Local AI Performance").assertDoesNotExist()
-        compose.onNodeWithText("Developer / Diagnostics").performClick()
-        compose.onNodeWithText("Local AI Performance").performClick()
+        compose.onNodeWithText(localized(R.string.settings_advanced)).performScrollTo().performClick()
+        compose.onNodeWithText("Local AI Performance").performScrollTo().performClick()
         compose.onNodeWithText("RUNTIME: LiteRT-LM 0.17.1").assertExists()
         compose.onNodeWithText("CPU").assertExists()
         compose.onNodeWithText("GPU Experimental").assertExists()
@@ -54,34 +57,35 @@ class UiSmokeTest {
 
     @Test fun deviceValidationIsDeveloperOnlyAndHasRealSuiteActions() {
         compose.onNodeWithText("Device Validation").assertDoesNotExist()
-        compose.onNodeWithText("Settings").performClick()
+        compose.onNodeWithTag("top-level-settings").performClick()
         compose.onNodeWithText("Device Validation").assertDoesNotExist()
-        compose.onNodeWithText("Developer / Diagnostics").performClick()
-        compose.onNodeWithText("Device Validation").performClick()
+        compose.onNodeWithText(localized(R.string.settings_advanced)).performScrollTo().performClick()
+        compose.onNodeWithText("Device Validation").performScrollTo().performClick()
         awaitText("Run Quick Validation")
         compose.onNodeWithText("Run Full Validation").assertExists()
         compose.onNodeWithText("Full iterations").assertExists()
         screenshot("device-validation")
         compose.onNodeWithText("Back").performClick()
-        compose.onNodeWithText("Developer / Diagnostics").assertExists()
+        compose.onNodeWithText(localized(R.string.settings_advanced)).assertExists()
     }
 
     @Test fun chatComposerAndMenusHaveNoPermanentModelPickerOrFakeTools() {
-        compose.onNodeWithText("Start chat").performClick()
+        compose.onNodeWithText(localized(R.string.home_start_chat)).performClick()
         awaitText(localized(R.string.chat_input_hint))
         compose.onNodeWithText("Model picker").assertDoesNotExist()
-        compose.onNodeWithText("Diagnostics").assertDoesNotExist()
+        compose.onNodeWithText(localized(R.string.chat_diagnostics)).assertDoesNotExist()
         compose.onNodeWithContentDescription(localized(R.string.chat_send)).assertIsNotEnabled()
         compose.onNodeWithText(localized(R.string.chat_input_hint)).performTextInput("Hola")
         compose.onNodeWithContentDescription(localized(R.string.chat_send)).assertIsEnabled()
         screenshot("chat")
         compose.onNodeWithContentDescription(localized(R.string.chat_options)).performClick()
-        listOf(R.string.chat_model, R.string.chat_files, R.string.chat_memory,
+        listOf(R.string.chat_model, R.string.chat_files,
             R.string.chat_diagnostics, R.string.chat_delete).forEach { compose.onNodeWithText(localized(it)).assertExists() }
+        compose.onNodeWithTag("chat-menu-memory").assertIsDisplayed()
     }
 
     @Test fun attachmentMenuOnlyOffersFunctionalSources() {
-        compose.onNodeWithText("Start chat").performClick()
+        compose.onNodeWithText(localized(R.string.home_start_chat)).performClick()
         awaitText(localized(R.string.chat_input_hint))
         compose.onNodeWithContentDescription(localized(R.string.chat_add_attachment)).performClick()
         compose.onNodeWithText(localized(R.string.chat_file)).assertIsDisplayed()
@@ -91,16 +95,18 @@ class UiSmokeTest {
     }
 
     @Test fun projectTabsAndApprovedMemoryRemainFunctional() {
+        compose.onNodeWithTag("top-level-workspace").performClick()
         val graph = (compose.activity.application as com.localai.workspace.LocalAiApplication).graph
         val projectId = kotlinx.coroutines.runBlocking(kotlinx.coroutines.Dispatchers.IO) { graph.workspace.createProject("Test project") }
         awaitText("Test project")
         compose.onNodeWithText("Test project").performClick()
         awaitText("Files")
-        listOf("Chats", "Files", "Memory", "Settings").forEach { compose.onNodeWithText(it).assertExists() }
+        compose.onAllNodesWithText("Chats").assertCountEquals(2)
+        listOf("Files", "Memory", "Settings").forEach { compose.onNodeWithText(it).assertExists() }
         compose.onNodeWithText("Files").performClick()
         compose.onNodeWithText("No files yet").assertExists()
-        compose.onNodeWithText("Memory").performClick()
-        compose.onNodeWithText(localized(R.string.memory_title)).performClick()
+        compose.onNodeWithTag("project-tab-memory").performClick()
+        compose.onNodeWithTag("context-memory-entry-open").performClick()
         compose.onNodeWithText(localized(R.string.memory_empty)).assertExists()
         // Fixture is explicitly USER_APPROVED; the real text editor is exercised by the device test.
         kotlinx.coroutines.runBlocking(kotlinx.coroutines.Dispatchers.IO) {

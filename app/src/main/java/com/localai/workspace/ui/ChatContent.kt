@@ -28,6 +28,7 @@ import androidx.compose.ui.semantics.collectionItemInfo
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -104,17 +105,33 @@ fun ChatHeaderTitle(
         modifier.fillMaxWidth().clickable(enabled = enabled, onClick = onModelClick)
             .padding(vertical = LocalAiSpacing.x1)
             .testTag("chat-header-title"),
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x1),
     ) {
         Text(conversationTitle, Modifier.fillMaxWidth().testTag("chat-header-conversation"),
-            style = MaterialTheme.typography.titleSmall)
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(LocalAiSpacing.x2),
-            verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x1)) {
-            Box(Modifier.testTag("chat-header-agent")) {
-                ProvideTextStyle(MaterialTheme.typography.labelSmall) { agentTitle() }
+            style = MaterialTheme.typography.titleMedium)
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(LocalAiSpacing.x1),
+            verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x1),
+        ) {
+            Surface(
+                modifier = Modifier.testTag("chat-header-agent"),
+                shape = MaterialTheme.shapes.small,
+                color = MaterialTheme.colorScheme.secondaryContainer,
+                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            ) {
+                Box(Modifier.padding(horizontal = LocalAiSpacing.x2, vertical = LocalAiSpacing.x1)) {
+                    ProvideTextStyle(MaterialTheme.typography.labelSmall) { agentTitle() }
+                }
             }
-            Text(modelStatus, Modifier.testTag("chat-header-model"),
-                style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Surface(
+                modifier = Modifier.testTag("chat-header-model"),
+                shape = MaterialTheme.shapes.small,
+                color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            ) {
+                Text(modelStatus, Modifier.padding(horizontal = LocalAiSpacing.x2, vertical = LocalAiSpacing.x1),
+                    style = MaterialTheme.typography.labelSmall)
+            }
         }
     }
 }
@@ -189,6 +206,9 @@ internal fun ChatMessageSurface(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
+    val roleDescription = stringResource(
+        if (isUser) R.string.chat_role_user else R.string.chat_role_assistant,
+    )
     val shape = RoundedCornerShape(
         topStart = LocalAiRadii.large,
         topEnd = LocalAiRadii.large,
@@ -201,6 +221,9 @@ internal fun ChatMessageSurface(
     ) {
         Card(
             modifier = Modifier.fillMaxWidth(if (isUser) 0.88f else 1f)
+                .semantics {
+                    stateDescription = roleDescription
+                }
                 .testTag(if (isUser) "chat-message-user-surface" else "chat-message-assistant-surface"),
             shape = shape,
             colors = CardDefaults.cardColors(
@@ -220,12 +243,6 @@ internal fun ChatMessageSurface(
                         modifier = Modifier.fillMaxWidth(),
                         verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x1),
                     ) {
-                        Text(
-                            text = stringResource(if (isUser) R.string.chat_user_message else R.string.chat_assistant_message),
-                            style = MaterialTheme.typography.labelMedium,
-                            color = if (isUser) MaterialTheme.colorScheme.onPrimaryContainer
-                            else MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
                         if (stateLabel != null) {
                             Surface(
                                 modifier = Modifier.widthIn(max = 280.dp),

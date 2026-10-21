@@ -74,14 +74,17 @@ class ChatContentUiTest {
             }
         } }
 
-        compose.onNodeWithText("Evidence references").assertIsDisplayed()
-        compose.onNodeWithText("Evidence references")
+        compose.onNodeWithText(localized(R.string.chat_sources_title)).assertIsDisplayed()
+        compose.onNodeWithText(localized(R.string.chat_sources_title))
             .assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.Heading))
         compose.onNodeWithText("LCL-AB12", useUnmergedTree = true).assertIsDisplayed()
         compose.onNodeWithText("Project notes · onboarding.txt", useUnmergedTree = true).assertIsDisplayed()
-        val reference = compose.onNodeWithContentDescription(
-            "Evidence LCL-AB12, source Project notes · onboarding.txt, page 7, cells Hoja2!A1, Hoja1!A3",
-        ).assertIsDisplayed()
+        val referenceDescription = localized(
+            R.string.chat_source_accessibility,
+            "LCL-AB12",
+            "Project notes · onboarding.txt, ${localized(R.string.chat_source_page, 7)}, ${localized(R.string.chat_source_cells)} Hoja2!A1, Hoja1!A3",
+        )
+        val reference = compose.onNodeWithContentDescription(referenceDescription).assertIsDisplayed()
         val referenceNode = reference.fetchSemanticsNode()
         assertEquals(Role.Button, referenceNode.config[SemanticsProperties.Role])
         assertTrue("Reference target must be at least 48dp", referenceNode.size.height >= minimumTouchTargetPx)
@@ -90,15 +93,17 @@ class ChatContentUiTest {
         compose.runOnIdle { assertEquals("LCL-AB12", selectedId) }
         compose.onNodeWithTag("citation-detail-title", useUnmergedTree = true).assertTextEquals("LCL-AB12").assertIsDisplayed()
         compose.onNodeWithTag("citation-source", useUnmergedTree = true).assertTextEquals("Project notes · onboarding.txt")
-        compose.onNodeWithTag("citation-page", useUnmergedTree = true).assertTextEquals("Page 7")
+        compose.onNodeWithTag("citation-page", useUnmergedTree = true).assertTextEquals(localized(R.string.chat_source_page, 7))
         compose.onNodeWithTag("citation-cells", useUnmergedTree = true)
-            .assertTextEquals("Cells Hoja2!A1, Hoja1!A3").assertIsDisplayed()
+            .assertTextEquals("${localized(R.string.chat_source_cells)} Hoja2!A1, Hoja1!A3").assertIsDisplayed()
         compose.onNodeWithTag("citation-detail-cells", useUnmergedTree = true)
             .assertTextEquals("Hoja2!A1, Hoja1!A3").performScrollTo().assertIsDisplayed()
         compose.onNodeWithTag("citation-excerpt", useUnmergedTree = true).assertTextEquals(excerpt)
-        compose.onNodeWithText("Excerpt only; it does not represent a full-document review.").assertIsDisplayed()
-        compose.onNodeWithText("Metadata comes from the local index, not from model-generated citation text.").assertIsDisplayed()
-        compose.onNodeWithText("Close").performClick()
+        compose.onNodeWithTag("citation-detail-sources-note", useUnmergedTree = true)
+            .assertTextEquals(localized(R.string.chat_sources_note)).assertIsDisplayed()
+        compose.onNodeWithTag("citation-detail-metadata-note", useUnmergedTree = true)
+            .assertTextEquals(localized(R.string.chat_sources_metadata_note)).assertIsDisplayed()
+        compose.onNodeWithText(localized(R.string.chat_source_close)).performClick()
         compose.onNodeWithTag("citation-detail-scroll").assertDoesNotExist()
     }
 
@@ -145,14 +150,14 @@ class ChatContentUiTest {
                 .assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.VerticalScrollAxisRange))
             compose.onNodeWithTag("citation-source-preview-name", useUnmergedTree = true).assertTextEquals("notes.txt").assertIsDisplayed()
             compose.onNodeWithTag("citation-source-preview-location", useUnmergedTree = true)
-                .assertTextEquals("Page 3 · Text offsets 120–148").assertIsDisplayed()
+            .assertTextEquals("Page 3 · Text offsets 120–148").assertIsDisplayed()
             compose.onNodeWithTag("citation-source-preview-text", useUnmergedTree = true)
                 .assertTextEquals("Full indexed segment · exact source text").assertIsDisplayed()
             compose.onNodeWithTag("citation-source-preview-notice", useUnmergedTree = true)
-                .assertTextEquals("Indexed segment only; this is not a full-document review.")
+                .assertTextEquals(preview.notice)
                 .assertIsDisplayed()
         }
-        compose.onNodeWithText("Back to citation").performClick()
+        compose.onNodeWithText(localized(R.string.chat_source_back_to_citation)).performClick()
         compose.runOnIdle { assertTrue(returnedToCitation) }
     }
 
@@ -184,14 +189,17 @@ class ChatContentUiTest {
             }
         } }
 
-        compose.onNodeWithContentDescription(
-            "Evidence $evidenceId, source src/Answer.kt, lines 4–6",
-        ).assertIsDisplayed().performClick()
+        compose.onNodeWithContentDescription(localized(
+            R.string.chat_source_accessibility,
+            evidenceId,
+            "src/Answer.kt, ${localized(R.string.chat_source_lines_range, 4, 6)}",
+        )).assertIsDisplayed().performClick()
         compose.runOnIdle { assertEquals(evidenceId, selectedId) }
         compose.onNodeWithTag("citation-source", useUnmergedTree = true).assertTextEquals("src/Answer.kt")
-        compose.onNodeWithTag("citation-detail-lines", useUnmergedTree = true).assertTextEquals("Lines 4–6")
+        compose.onNodeWithTag("citation-detail-lines", useUnmergedTree = true).assertTextEquals(localized(R.string.chat_source_lines_range, 4, 6))
         compose.onNodeWithTag("citation-excerpt", useUnmergedTree = true).assertTextEquals("fun answer() = 42")
-        compose.onNodeWithText("Metadata comes from the local index, not from model-generated citation text.")
+        compose.onNodeWithTag("citation-detail-metadata-note", useUnmergedTree = true)
+            .assertTextEquals(localized(R.string.chat_sources_metadata_note))
             .performScrollTo().assertIsDisplayed()
     }
 
@@ -221,11 +229,11 @@ class ChatContentUiTest {
             compose.onNodeWithTag("citation-source", useUnmergedTree = true)
                 .assertTextEquals(sourceLabel).performScrollTo().assertIsDisplayed()
             compose.onNodeWithTag("citation-page", useUnmergedTree = true)
-                .assertTextEquals("Page 12").performScrollTo().assertIsDisplayed()
+                .assertTextEquals(localized(R.string.chat_source_page, 12)).performScrollTo().assertIsDisplayed()
             compose.onNodeWithTag("citation-excerpt", useUnmergedTree = true).assertTextEquals(excerpt)
-            compose.onNodeWithText("Excerpt only; it does not represent a full-document review.")
+            compose.onNodeWithText(localized(R.string.chat_sources_note))
                 .performScrollTo().assertIsDisplayed()
-            compose.onNodeWithText("Metadata comes from the local index, not from model-generated citation text.")
+            compose.onNodeWithText(localized(R.string.chat_sources_metadata_note))
                 .performScrollTo().assertIsDisplayed()
         }
     }

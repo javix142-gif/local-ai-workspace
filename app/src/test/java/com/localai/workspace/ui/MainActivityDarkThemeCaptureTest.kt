@@ -2,10 +2,13 @@ package com.localai.workspace.ui
 
 import android.graphics.Bitmap
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.localai.workspace.MainActivity
+import com.localai.workspace.R
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -22,17 +25,26 @@ class MainActivityDarkThemeCaptureTest {
     @get:Rule val compose = createAndroidComposeRule<MainActivity>()
 
     @Test
-    fun capturesDarkWorkspaceModelsAndSettingsAtCompactWidth() {
-        compose.onNodeWithText("Start chat").assertIsDisplayed()
-        capture("workspace-dark-360dp-fontScale-1.0")
+    fun capturesDarkHomeChatsMoreAndModelsAtCompactWidth() {
+        compose.onNodeWithText(compose.activity.getString(R.string.home_title)).assertIsDisplayed()
+        capture("h3b-home-dark-360dp-fontScale-1.0")
 
-        compose.onNodeWithText("Models").performClick()
-        compose.onNodeWithText("Add model").assertIsDisplayed()
-        capture("models-dark-360dp-fontScale-1.0")
+        compose.onNodeWithTag("top-level-workspace").assertTextContains(compose.activity.getString(R.string.navigation_chats)).performClick()
+        compose.onNodeWithText(compose.activity.getString(R.string.workspace_new_chat)).assertIsDisplayed()
+        capture("h3b-chats-dark-360dp-fontScale-1.0")
 
-        compose.onNodeWithText("Settings").performClick()
-        compose.onNodeWithText("Developer / Diagnostics").assertIsDisplayed()
-        capture("settings-dark-360dp-fontScale-1.0")
+        compose.onNodeWithTag("top-level-memory").assertTextContains(compose.activity.getString(R.string.navigation_memory)).performClick()
+        compose.onNodeWithText(compose.activity.getString(R.string.memory_search)).assertExists()
+        capture("h3b-memory-dark-360dp-fontScale-1.0")
+
+        compose.onNodeWithTag("top-level-settings").assertTextContains(compose.activity.getString(R.string.navigation_more)).performClick()
+        compose.onNodeWithText(compose.activity.getString(R.string.settings_models_entry)).assertIsDisplayed()
+        compose.onNodeWithText(compose.activity.getString(R.string.navigation_skills)).assertExists()
+        capture("h3b-more-dark-360dp-fontScale-1.0")
+
+        compose.onNodeWithText(compose.activity.getString(R.string.settings_models_entry)).performClick()
+        compose.onNodeWithText(compose.activity.getString(R.string.models_add)).assertIsDisplayed()
+        capture("h3b-models-dark-360dp-fontScale-1.0")
     }
 
     private fun capture(name: String) {

@@ -2,8 +2,10 @@ package com.localai.workspace.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -19,6 +21,8 @@ import com.localai.workspace.domain.tools.ChatToolSchemas
 import com.localai.workspace.domain.tools.AndroidActionPlanner
 import com.localai.workspace.ui.components.minimumAppTouchTarget
 import com.localai.workspace.ui.theme.LocalAiSpacing
+import com.localai.workspace.ui.theme.LocalAiRadii
+import com.localai.workspace.ui.theme.LocalAiStatusColors
 import com.localai.workspace.R
 
 @Composable
@@ -184,6 +188,7 @@ private fun PersonalDataPermissionCard(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AndroidActionExecutionCard(
     call: ToolCallEntity,
@@ -198,31 +203,64 @@ private fun AndroidActionExecutionCard(
     }
     val title = action?.let { androidActionTitle(it.kind) } ?: stringResource(R.string.android_action_invalid)
     val statusLabel = when (call.status) {
+        "CONFIRMATION_REQUIRED" -> stringResource(R.string.android_action_status_prepared)
+        "LAUNCHING" -> stringResource(R.string.android_action_status_opening)
+        "OPENED" -> stringResource(R.string.android_action_status_opened)
+        "CONFIRMED_BY_USER" -> stringResource(R.string.android_action_status_confirmed)
+        "DECLINED_BY_USER" -> stringResource(R.string.android_action_status_declined)
+        "OPEN_FAILED" -> stringResource(R.string.android_action_status_error)
+        else -> call.status
+    }
+    val statusExplanation = when (call.status) {
         "CONFIRMATION_REQUIRED" -> stringResource(R.string.android_action_waiting)
         "LAUNCHING" -> stringResource(R.string.android_action_opening)
         "OPENED" -> stringResource(R.string.android_action_opened)
         "CONFIRMED_BY_USER" -> stringResource(R.string.android_action_user_reported_complete)
         "DECLINED_BY_USER" -> stringResource(R.string.android_action_declined)
-        "OPEN_FAILED" -> stringResource(R.string.android_action_open_failed)
+        "OPEN_FAILED" -> stringResource(R.string.android_action_error_explanation)
         else -> call.status
     }
 
-    Card(Modifier.fillMaxWidth().testTag("android-action-card-${call.id}")) {
-        Column(Modifier.fillMaxWidth().padding(LocalAiSpacing.x3), verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x2)) {
-            Text(title, style = MaterialTheme.typography.titleSmall)
-            Text(statusLabel, style = MaterialTheme.typography.bodySmall)
+    Card(
+        modifier = Modifier.fillMaxWidth().testTag("android-action-card-${call.id}"),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(LocalAiRadii.card),
+    ) {
+        Column(Modifier.fillMaxWidth().padding(LocalAiSpacing.x4), verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x3)) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(LocalAiSpacing.x2)) {
+                Surface(
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                ) {
+                    Icon(Icons.Default.Info, contentDescription = null, modifier = Modifier.padding(10.dp))
+                }
+                Text(title, Modifier.weight(1f), style = MaterialTheme.typography.titleMedium)
+            }
+            AndroidActionStatusPill(call.status, statusLabel)
+            Text(statusExplanation, style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant)
+            if (call.status == "OPEN_FAILED") {
+                call.errorCode?.takeIf(String::isNotBlank)?.let { code ->
+                    Text(
+                        stringResource(R.string.android_action_error_code, code),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.testTag("android-action-error-code"),
+                    )
+                }
+            }
             when (call.status) {
                 "CONFIRMATION_REQUIRED" -> Button(
                     onClick = { review = true }, enabled = action != null,
-                    modifier = Modifier.minimumAppTouchTarget().testTag("android-action-review-button-${call.id}"),
+                    modifier = Modifier.fillMaxWidth().minimumAppTouchTarget().testTag("android-action-review-button-${call.id}"),
                 ) { Text(stringResource(R.string.android_action_review)) }
                 "OPENED" -> OutlinedButton(
                     onClick = { onReportComplete(call) },
-                    modifier = Modifier.minimumAppTouchTarget().testTag("android-action-user-reported-complete"),
+                    modifier = Modifier.fillMaxWidth().minimumAppTouchTarget().testTag("android-action-user-reported-complete"),
                 ) { Text(stringResource(R.string.android_action_report_complete)) }
                 else -> Unit
             }
-            TextButton(onClick = { details = true }, modifier = Modifier.minimumAppTouchTarget()) {
+            TextButton(onClick = { details = true }, modifier = Modifier.align(Alignment.End).minimumAppTouchTarget()) {
                 Text(stringResource(R.string.common_details))
             }
         }
@@ -230,33 +268,58 @@ private fun AndroidActionExecutionCard(
 
     if (review) {
         val reviewed = action
-        AlertDialog(
+        val notice = when (reviewed?.kind) {
+            AndroidActionPlanner.CALENDAR_EVENT -> R.string.android_action_review_calendar_notice
+            AndroidActionPlanner.ALARM, AndroidActionPlanner.TIMER -> R.string.android_action_review_clock_notice
+            else -> R.string.android_action_review_generic_notice
+        }
+        ModalBottomSheet(
             onDismissRequest = { review = false },
-            title = { Text(title) },
-            text = {
-                Column(Modifier.heightIn(max = 420.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x2)) {
-                    Text(stringResource(R.string.android_action_review_notice), Modifier.testTag("android-action-review-notice"))
-                    if (reviewed != null) AndroidActionPlanner.displayFields(reviewed).forEach { (key, value) ->
-                        Column {
-                            Text(stringResource(androidActionFieldLabel(key)), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                            Text(displayAndroidActionValue(key, value), style = MaterialTheme.typography.bodyMedium, modifier = Modifier.testTag("android-action-value-$key"))
+            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+            modifier = Modifier.testTag("android-action-confirm-sheet-${call.id}"),
+        ) {
+            Column(
+                Modifier.fillMaxWidth().imePadding().navigationBarsPadding()
+                    .heightIn(max = 720.dp).verticalScroll(rememberScrollState())
+                    .padding(horizontal = LocalAiSpacing.x4, vertical = LocalAiSpacing.x2),
+                verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x3),
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(LocalAiSpacing.x3)) {
+                    Surface(shape = CircleShape, color = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer) {
+                        Icon(Icons.Default.Info, contentDescription = null, modifier = Modifier.padding(14.dp))
+                    }
+                    Text(title, Modifier.weight(1f), style = MaterialTheme.typography.titleLarge)
+                }
+                Text(stringResource(notice), Modifier.testTag("android-action-review-notice"),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = MaterialTheme.shapes.medium,
+                    color = MaterialTheme.colorScheme.surfaceContainerLow,
+                ) {
+                    Column(Modifier.padding(LocalAiSpacing.x3), verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x2)) {
+                        if (reviewed != null) AndroidActionPlanner.displayFields(reviewed).forEach { (key, value) ->
+                            Column(Modifier.fillMaxWidth()) {
+                                Text(stringResource(androidActionFieldLabel(key)), style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text(displayAndroidActionValue(key, value), style = MaterialTheme.typography.bodyMedium,
+                                    modifier = Modifier.testTag("android-action-value-$key"))
+                            }
                         }
                     }
                 }
-            },
-            confirmButton = {
                 Button(
                     onClick = { review = false; onOpen(call) }, enabled = reviewed != null,
-                    modifier = Modifier.minimumAppTouchTarget().testTag("android-action-confirm-button"),
+                    modifier = Modifier.fillMaxWidth().minimumAppTouchTarget().testTag("android-action-confirm-button"),
                 ) { Text(stringResource(R.string.android_action_open_app)) }
-            },
-            dismissButton = {
-                TextButton(
+                OutlinedButton(
                     onClick = { review = false; onDecline(call) },
-                    modifier = Modifier.minimumAppTouchTarget().testTag("android-action-decline-button"),
+                    modifier = Modifier.fillMaxWidth().minimumAppTouchTarget().testTag("android-action-decline-button"),
                 ) { Text(stringResource(R.string.android_action_decline)) }
-            },
-        )
+            }
+        }
     }
     if (details) AlertDialog(
         onDismissRequest = { details = false },
@@ -264,13 +327,46 @@ private fun AndroidActionExecutionCard(
         confirmButton = { TextButton(onClick = { details = false }) { Text(stringResource(R.string.common_close)) } },
         text = {
             Column(Modifier.heightIn(max = 420.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x2)) {
-                Text(stringResource(R.string.android_action_status_detail, statusLabel))
+                Text(stringResource(R.string.android_action_status_detail, statusExplanation))
                 action?.let { AndroidActionPlanner.displayFields(it).forEach { (key, value) -> Text("${stringResource(androidActionFieldLabel(key))}: ${displayAndroidActionValue(key, value)}") } }
                 if (call.status == "CONFIRMED_BY_USER") Text(stringResource(R.string.android_action_user_reported_note))
                 call.errorCode?.takeIf(String::isNotBlank)?.let { Text(stringResource(R.string.android_action_error_code, it)) }
             }
         },
     )
+}
+
+@Composable
+private fun AndroidActionStatusPill(status: String, label: String) {
+    val statusColors = LocalAiStatusColors.current
+    val foreground = when (status) {
+        "CONFIRMATION_REQUIRED" -> statusColors.warning
+        "OPEN_FAILED" -> MaterialTheme.colorScheme.error
+        "DECLINED_BY_USER" -> statusColors.disabled
+        else -> MaterialTheme.colorScheme.primary
+    }
+    val background = when (status) {
+        "CONFIRMATION_REQUIRED" -> statusColors.warningContainer
+        "OPEN_FAILED" -> MaterialTheme.colorScheme.errorContainer
+        "DECLINED_BY_USER" -> MaterialTheme.colorScheme.surfaceContainerHigh
+        else -> MaterialTheme.colorScheme.primaryContainer
+    }
+    val content = when (status) {
+        "CONFIRMATION_REQUIRED" -> statusColors.onWarningContainer
+        "OPEN_FAILED" -> MaterialTheme.colorScheme.onErrorContainer
+        "DECLINED_BY_USER" -> MaterialTheme.colorScheme.onSurfaceVariant
+        else -> MaterialTheme.colorScheme.onPrimaryContainer
+    }
+    Surface(shape = MaterialTheme.shapes.small, color = background, contentColor = content) {
+        Row(
+            Modifier.padding(horizontal = LocalAiSpacing.x2, vertical = LocalAiSpacing.x1),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(LocalAiSpacing.x1),
+        ) {
+            Surface(shape = CircleShape, color = foreground, modifier = Modifier.size(8.dp)) {}
+            Text(label, style = MaterialTheme.typography.labelMedium)
+        }
+    }
 }
 
 @Composable

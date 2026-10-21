@@ -18,14 +18,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.unit.Density
@@ -130,8 +133,10 @@ class ChatVisualSurfacesUiTest {
             assertTrue("User card must remain within the $width dp viewport", userSurface.size.width <= viewportWidth)
             assertTrue("Assistant card must remain within the $width dp viewport", assistantSurface.size.width <= viewportWidth)
 
-            compose.onNodeWithText(localized(R.string.chat_user_message)).assertIsDisplayed()
-            compose.onNodeWithText(localized(R.string.chat_assistant_message)).assertIsDisplayed()
+            compose.onNodeWithTag("chat-message-user-surface")
+                .assert(SemanticsMatcher.expectValue(SemanticsProperties.StateDescription, localized(R.string.chat_role_user)))
+            compose.onNodeWithTag("chat-message-assistant-surface")
+                .assert(SemanticsMatcher.expectValue(SemanticsProperties.StateDescription, localized(R.string.chat_role_assistant)))
             compose.onNodeWithText(longMessage, useUnmergedTree = true).performScrollTo().assertIsDisplayed()
             compose.onNodeWithText(localized(R.string.memory_context_budget)).performScrollTo().assertIsDisplayed()
             compose.onNodeWithText(localized(R.string.memory_included_count, 3)).performScrollTo().assertIsDisplayed()
