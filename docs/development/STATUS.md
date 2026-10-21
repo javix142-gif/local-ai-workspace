@@ -1,6 +1,16 @@
 # Estado operativo — AWS H0 → H1 → H2
 
-Fecha: 2026-10-20. Rama: `feat/0.5.0-skills-agents`. Código Android/test actual: `01161491acc2a7c836222a84b7bd6f778292f8f3`.
+Fecha: 2026-10-21. Rama: `feat/0.5.0-skills-agents`. El código H2 está en el commit que contiene este checkpoint.
+
+## H2 — acciones Android y lectura personal local: HOST focalizado; validación global pendiente
+
+- Añade lecturas locales acotadas de calendario y contactos con `READ_CALENDAR`/`READ_CONTACTS` comprobados al ejecutar. La tarjeta de chat solicita permiso solo tras un toque; concederlo no reintenta la lectura por sí solo. Los resultados se marcan como datos no confiables y la consulta/resultado personal se excluye del historial Room de llamadas de herramienta.
+- Añade routing determinista para consultas compatibles y la herramienta Android de acciones existentes; mantiene la confirmación explícita antes de abrir una aplicación externa. Consultas de correo no se enrutan a una búsqueda que solo devuelve teléfonos. El conjunto Auto heredado incorpora las lecturas nuevas; selecciones personalizadas y Tools Off se conservan.
+- HOST focal final: 19 pruebas únicas PASS (herramientas 7, esquemas 4, defaults 1, UI 3, DOCX schema 4). `lintDebug` y `compileDebugAndroidTestKotlin` finalizaron exit 0; lint reporta 0 errores, 128 avisos y 1 información. LiteRT compatibilidad: 2/2 PASS en la ejecución completa inicial.
+- Una ejecución completa de app JUnit (960 casos) detectó un fallo de esquema DOCX causado por el acortamiento de `artifacts.create/revise`; se restauró la sintaxis DOCX de forma compacta y la clase afectada pasó 4/4. No se repitió la suite completa después de esa corrección; por tanto, el gate JVM global del código final no se declara PASS.
+- No se ejecutaron pruebas instrumentadas en esta sesión ni pruebas en Motorola. Al publicar este commit, los workflows existentes pueden verificar el mismo SHA y generar el APK personal; sus resultados deberán leerse por separado. `PHYSICAL_DEVICE=NOT_RUN`.
+
+H1 sigue `HOST/CI_VERIFIED` solo en su alcance auditado; conserva sus criterios físicos pendientes. No se modificaron el catálogo histórico, `EXECUTION_STATE.json`, IDs ni dependencias.
 
 ## H1 — memoria personalizada y unificada: HOST/CI_VERIFIED; DEVICE_PENDING
 

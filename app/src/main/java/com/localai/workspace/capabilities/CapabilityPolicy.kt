@@ -31,7 +31,7 @@ class CapabilityPolicy(val enabled:Set<Capability> = Capability.entries.toSet()-
         /** Capabilities implemented locally that always pass through an explicit confirmation UI. */
         val supportedToolCapabilities=localCapabilities+Capability.EXTERNAL_SEND
         private val confirmation=setOf(Capability.LOCAL_DELETE,Capability.EXTERNAL_SEND,Capability.PURCHASE_PAYMENT,Capability.IRREVERSIBLE_SYSTEM_ACTION,Capability.SENSITIVE_ACTION)
-        fun requirements(id:String)=when(id){"files.read","files.list","artifacts.list","artifacts.read"->setOf(Capability.LOCAL_READ);"artifacts.create","artifacts.revise","artifacts.patchPreview","artifacts.xlsxSetCells","artifacts.xlsxAddSheet","artifacts.xlsxSetTable"->setOf(Capability.LOCAL_WRITE);"calculator.evaluate","python.execute"->setOf(Capability.LOCAL_COMPUTE);com.localai.workspace.domain.tools.AndroidActionPlanner.TOOL_ID->setOf(Capability.EXTERNAL_SEND);else->emptySet()}
+        fun requirements(id:String)=when(id){"files.read","files.list","artifacts.list","artifacts.read","calendar.read","contacts.lookup"->setOf(Capability.LOCAL_READ);"artifacts.create","artifacts.revise","artifacts.patchPreview","artifacts.xlsxSetCells","artifacts.xlsxAddSheet","artifacts.xlsxSetTable"->setOf(Capability.LOCAL_WRITE);"calculator.evaluate","python.execute"->setOf(Capability.LOCAL_COMPUTE);com.localai.workspace.domain.tools.AndroidActionPlanner.TOOL_ID->setOf(Capability.EXTERNAL_SEND);else->emptySet()}
     }
 }
 data class ToolAvailability(val toolId:String,val available:Boolean,val reason:String)

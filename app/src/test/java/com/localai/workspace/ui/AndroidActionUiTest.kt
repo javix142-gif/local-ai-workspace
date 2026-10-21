@@ -85,6 +85,36 @@ class AndroidActionUiTest {
         compose.onNodeWithText("Este estado refleja lo que indicaste; la aplicación no verificó la acción externa.").assertIsDisplayed()
     }
 
+    @Test fun personalDataPermissionAppearsOnlyAfterTheToolReportsItIsRequired() {
+        val requested = AtomicInteger()
+        val granted = mutableStateOf(false)
+        val denied = mutableStateOf(false)
+        val call = ToolCallEntity(
+            id = "contacts-permission-test", conversationId = "conversation-test", messageId = "message-test",
+            toolId = "contacts.lookup", validatedArgumentsJson = "{\"privateArgumentsOmitted\":true}",
+            permissionDecision = "LOCAL_READ_RUNTIME_PERMISSION", status = "PERMISSION_REQUIRED",
+            startedAt = 1L, finishedAt = 1L, errorCode = "PERMISSION_REQUIRED",
+        )
+        compose.setContent {
+            LocalAiTheme {
+                ToolExecutionCard(
+                    call,
+                    onRequestPersonalDataPermission = { requested.incrementAndGet() },
+                    personalDataPermissionGranted = granted.value,
+                    personalDataPermissionDenied = denied.value,
+                )
+            }
+        }
+        compose.onNodeWithText("Para buscar números guardados en el dispositivo, Android necesita permiso para acceder a los contactos.").assertIsDisplayed()
+        compose.onNodeWithTag("personal-data-request-permission-${call.id}").performClick()
+        compose.runOnIdle { assertEquals(1, requested.get()); denied.value = true }
+        compose.onNodeWithText("No se concedió el permiso y no se leyeron datos. Si Android ya no muestra el diálogo, habilita el permiso en Ajustes de la app.").assertIsDisplayed()
+        compose.onNodeWithTag("personal-data-request-permission-${call.id}").performClick()
+        compose.runOnIdle { assertEquals(2, requested.get()); denied.value = false; granted.value = true }
+        compose.onNodeWithText("Permiso concedido. Vuelve a preguntar para consultar estos datos.").assertIsDisplayed()
+        compose.onNodeWithTag("personal-data-request-permission-${call.id}").assertDoesNotExist()
+    }
+
     private fun pendingCall(arguments: String) = ToolCallEntity(
         id = "action-test-1",
         conversationId = "conversation-test",

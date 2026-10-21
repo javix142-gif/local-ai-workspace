@@ -12,6 +12,13 @@ import org.robolectric.annotation.Config
 @Config(sdk=[29], application=android.app.Application::class)
 class ChatToolSchemasTest {
  @Test fun schemasAreRealTypedAndBounded() { for (id in ChatToolSchemas.defaults) { val s=JSONObject(ChatToolSchemas.schema(id));assertEquals(id,s.getString("name"));assertEquals("object",s.getJSONObject("parameters").getString("type")) };val patch=JSONObject(ChatToolSchemas.schema("artifacts.patchPreview"));assertEquals(4,patch.getJSONObject("parameters").getJSONArray("required").length());assertTrue(patch.getString("description").contains("review-only exact text patch")) }
+ @Test fun artifactCreateAndReviseDescriptionsStayCompactWithoutLosingFormatOrSafetyBoundaries() {
+  for (id in listOf("artifacts.create", "artifacts.revise")) {
+   val description = JSONObject(ChatToolSchemas.schema(id)).getString("description")
+   assertTrue("$id description should be materially shorter than the former >2,000-character contract", description.length < 1500)
+   listOf("XLSX", "DOCX", "PDF", "PPTX", "CODE", "immutable", "export", "Formulas are not calculated", "code is not run", "style:title|heading|body|bullet|numbered|pageBreak", "a non-list paragraph/table starts numbering again").forEach { assertTrue("$id missing $it", it in description) }
+  }
+ }
  @Test fun officialSdkToolAdapterReturnsActualCalculatorResult() {
   val registry=ToolRegistry(listOf(CalculatorTool()))
   val provider=com.google.ai.edge.litertlm.tool(object:com.google.ai.edge.litertlm.OpenApiTool {

@@ -21,11 +21,30 @@ object AssistantRouting {
         val xlsxSetTableIntent = Regex("agrega|añade|anade|inserta|actualiza|modifica|cambia|resize|set|update").containsMatchIn(p) &&
             Regex("tabla|table").containsMatchIn(p) &&
             Regex("excel|xlsx|planilla|libro|workbook|spreadsheet").containsMatchIn(p)
+        val calendarReadIntent = Regex("qu[eé] tengo|qu[eé] eventos|qu[eé] citas|muestra|consulta|revisa|lee|resume|lista|dime").containsMatchIn(p) &&
+            Regex("calendario|agenda|evento|cita|reuni[oó]n").containsMatchIn(p) ||
+            Regex("qu[eé] tengo (hoy|mañana|esta semana|la semana)").containsMatchIn(p)
+        val contactsLookupIntent = !Regex("correo|email|e-mail").containsMatchIn(p) &&
+            Regex("busca|encuentra|dime|muestra|qu[ií]en|cu[aá]l|datos|tel[eé]fono|n[uú]mero").containsMatchIn(p) &&
+            Regex("contacto|tel[eé]fono|n[uú]mero|de [a-záéíóúñ]").containsMatchIn(p)
+        val androidActionIntent =
+            (Regex("pon|programa|configura|crea|establece|a[nñ]ade|agrega|agenda").containsMatchIn(p) &&
+                Regex("alarma|temporizador|timer|reuni[oó]n|evento|cita").containsMatchIn(p)) ||
+            (Regex("llama|marca|env[ií]a|manda|escribe").containsMatchIn(p) &&
+                Regex("sms|mensaje|correo|email|marcador|tel[eé]fono").containsMatchIn(p)) ||
+            (Regex("busca|abre|navega|muestra|c[oó]mo llegar|ruta").containsMatchIn(p) &&
+                Regex("mapa|maps|ubicaci[oó]n|direcci[oó]n|ruta").containsMatchIn(p)) ||
+            (Regex("comparte|compartir").containsMatchIn(p) && Regex("texto|mensaje|esto").containsMatchIn(p)) ||
+            (Regex("abre|ir a|ve a|configura").containsMatchIn(p) &&
+                Regex("ajustes|configuraci[oó]n|wifi|bluetooth|notificaciones|idioma|teclado").containsMatchIn(p))
         return enabled.filter { id -> when(id) {
             "calculator.evaluate" -> Regex("[0-9]\\s*[+*/%()-]|calcula|calculate|aritm|cuánto es|cuanto es").containsMatchIn(p)
             "files.list" -> documents || Regex("archivo|file|documento|document|hoja|sheet|columna|column").containsMatchIn(p)
             "files.read" -> documents || Regex("archivo|file|documento|document|hoja|sheet|columna|column").containsMatchIn(p)
             "python.execute" -> Regex("python|desviación|desviacion|standard deviation|estadíst|statistics|promedio|average").containsMatchIn(p)
+            "calendar.read" -> calendarReadIntent
+            "contacts.lookup" -> contactsLookupIntent
+            com.localai.workspace.domain.tools.AndroidActionPlanner.TOOL_ID -> androidActionIntent
             "artifacts.create","artifacts.revise" -> !codePatchIntent && !xlsxCellEditIntent && !xlsxSetTableIntent && Regex("crea|genera|redacta|modifica|edita|actualiza|create|generate|write|edit|update").containsMatchIn(p) && Regex("word|docx|excel|xlsx|planilla|presupuesto|pdf|pptx|powerpoint|presentaci|archivo|file|código|codigo|code").containsMatchIn(p)
             "artifacts.xlsxSetCells" -> xlsxCellEditIntent && !xlsxSetTableIntent
             "artifacts.xlsxAddSheet" -> xlsxAddSheetIntent

@@ -835,7 +835,13 @@ class ChatViewModel(
                     logicalAgent?.allowedTools ?: com.localai.workspace.skills.SkillDefinition.STANDARD_TOOLS, activeSkills)
                 val routedTools = toolAvailability.filter { it.available }.map { it.toolId }.toSet()
                 routingTrace?.copy(tools=toolAvailability,messageId=assistantId)?.let { agentTrace.value=it;graph.agentSkills.last.value=it }
-                val toolOutputReserve = if (routedTools.any { it.startsWith("files.") || it.startsWith("artifacts.") }) 1000 else if ("python.execute" in routedTools) 800 else if(routedTools.isEmpty()) 0 else 64
+                val toolOutputReserve = when {
+                    routedTools.any { it.startsWith("files.") || it.startsWith("artifacts.") } -> 1000
+                    routedTools.any { it in com.localai.workspace.domain.tools.ChatToolSchemas.personalDataToolIds } -> 1200
+                    "python.execute" in routedTools -> 800
+                    routedTools.isEmpty() -> 0
+                    else -> 64
+                }
                 val toolSchemaReserve = toolOutputReserve + routedTools.sumOf { ContextBudgetManager().estimateTokens(com.localai.workspace.domain.tools.ChatToolSchemas.schema(it)) } + if(routedTools.isEmpty()) 0 else 128
                 val contextSize = if (diagnosticSmoke) 1024 else (model.configuredContext ?: model.declaredContext ?: 4_096).coerceIn(256, 8_192)
                 val outputLimit = if (diagnosticSmoke) 32 else (validationMaxOutputOverride ?: model.maxOutputTokens).coerceIn(1, 8192)

@@ -131,9 +131,16 @@ fun ToolExecutionCard(
     onOpenAndroidAction: (ToolCallEntity) -> Unit = {},
     onDeclineAndroidAction: (ToolCallEntity) -> Unit = {},
     onReportAndroidActionComplete: (ToolCallEntity) -> Unit = {},
+    onRequestPersonalDataPermission: (ToolCallEntity) -> Unit = {},
+    personalDataPermissionGranted: Boolean = false,
+    personalDataPermissionDenied: Boolean = false,
 ) {
     if (call.toolId == com.localai.workspace.domain.tools.AndroidActionPlanner.TOOL_ID) {
         AndroidActionExecutionCard(call, onOpenAndroidAction, onDeclineAndroidAction, onReportAndroidActionComplete)
+        return
+    }
+    if (call.toolId in ChatToolSchemas.personalDataToolIds && call.status == "PERMISSION_REQUIRED") {
+        PersonalDataPermissionCard(call, personalDataPermissionGranted, personalDataPermissionDenied, onRequestPersonalDataPermission)
         return
     }
     var details by remember { mutableStateOf(false) }
@@ -141,6 +148,8 @@ fun ToolExecutionCard(
         call.toolId.startsWith("artifacts.") -> R.string.chat_tool_artifact
         call.toolId == "calculator.evaluate" -> R.string.chat_tool_calculator
         call.toolId == "python.execute" -> R.string.chat_tool_python
+        call.toolId == "calendar.read" -> R.string.chat_tool_calendar
+        call.toolId == "contacts.lookup" -> R.string.chat_tool_contacts
         else -> R.string.chat_tool_files
     })
     val toolStatus = if (call.status == "SUCCESS") stringResource(R.string.chat_tool_complete) else call.status
@@ -149,6 +158,30 @@ fun ToolExecutionCard(
     if (details) AlertDialog(onDismissRequest = { details = false }, title = { Text(call.toolId) }, confirmButton = { TextButton(onClick = { details = false }) { Text(stringResource(R.string.common_close)) } }, text = {
         Column(Modifier.heightIn(max = 400.dp).verticalScroll(rememberScrollState())) { Text(stringResource(R.string.chat_tool_elapsed, toolStatus, elapsed)); Text(call.validatedArgumentsJson); Text(call.resultJson.orEmpty().take(16000)) }
     })
+}
+
+@Composable
+private fun PersonalDataPermissionCard(
+    call: ToolCallEntity,
+    granted: Boolean,
+    denied: Boolean,
+    onRequestPermission: (ToolCallEntity) -> Unit,
+) {
+    val isCalendar = call.toolId == "calendar.read"
+    val title = stringResource(if (isCalendar) R.string.chat_tool_calendar else R.string.chat_tool_contacts)
+    val help = stringResource(if (isCalendar) R.string.personal_data_calendar_permission_help else R.string.personal_data_contacts_permission_help)
+    Card(Modifier.fillMaxWidth().testTag("personal-data-permission-card-${call.id}")) {
+        Column(Modifier.fillMaxWidth().padding(LocalAiSpacing.x3), verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x2)) {
+            Text(title, style = MaterialTheme.typography.titleSmall)
+            Text(if (granted) stringResource(R.string.personal_data_permission_granted) else help, style = MaterialTheme.typography.bodySmall)
+            if (!granted) {
+                if (denied) Text(stringResource(R.string.personal_data_permission_denied), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
+                Button(onClick = { onRequestPermission(call) }, modifier = Modifier.minimumAppTouchTarget().testTag("personal-data-request-permission-${call.id}")) {
+                    Text(stringResource(R.string.personal_data_permission_request))
+                }
+            }
+        }
+    }
 }
 
 @Composable

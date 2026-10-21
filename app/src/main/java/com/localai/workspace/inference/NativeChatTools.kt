@@ -21,7 +21,14 @@ internal class NativeChatTools(private val context: Context) : AutoCloseable {
     private var validationDatabase: WorkspaceDatabase? = null
     private val db get() = if(request.getBoolean("validationScope")) validationDatabase ?: WorkspaceDatabase.createValidation(context).also { validationDatabase=it } else database.value
     private val directory = File(context.filesDir, "tool-workspaces")
-    private fun registryFor(db: WorkspaceDatabase) = ToolRegistry(listOf(CalculatorTool(), ProjectFileReadTool(db, File(context.filesDir,"documents")), ProjectFileListTool(db), com.localai.workspace.python.PythonTool(context), AndroidActionTool()) + com.localai.workspace.artifacts.ArtifactTool.IDS.map{com.localai.workspace.artifacts.ArtifactTool(context,it)})
+    private fun registryFor(db: WorkspaceDatabase): ToolRegistry {
+        val personalDataReader = ContentResolverPersonalDataReader(context)
+        return ToolRegistry(listOf(
+            CalculatorTool(), ProjectFileReadTool(db, File(context.filesDir,"documents")), ProjectFileListTool(db),
+            com.localai.workspace.python.PythonTool(context), AndroidActionTool(),
+            CalendarReadTool(personalDataReader), ContactsLookupTool(personalDataReader),
+        ) + com.localai.workspace.artifacts.ArtifactTool.IDS.map{com.localai.workspace.artifacts.ArtifactTool(context,it)})
+    }
     private val normalRegistry by lazy { registryFor(database.value) }
     private var validationRegistry: ToolRegistry? = null
     private val registry get() = if(request.getBoolean("validationScope")) validationRegistry ?: registryFor(db).also { validationRegistry=it } else normalRegistry
@@ -45,7 +52,7 @@ internal class NativeChatTools(private val context: Context) : AutoCloseable {
                 notify?.invoke(id, "RUNNING", callId)
                 db.withTransaction {
                     require(db.conversationDao().get(conversation)?.projectId == project) { "Tool scope no longer exists" }
-                    db.toolCallDao().insert(ToolCallEntity(callId, conversation, request.getString("messageId"), id, paramsJsonString.take(12000), permissionDecision(id), status = "RUNNING", startedAt = start))
+                    db.toolCallDao().insert(ToolCallEntity(callId, conversation, request.getString("messageId"), id, PersonalDataToolHistory.persistedArguments(id, paramsJsonString), permissionDecision(id), status = "RUNNING", startedAt = start))
                 }
                 val result = registry.execute(ToolRequest(id, paramsJsonString, TrustOrigin.MODEL),
                     request.getStringArrayList("enabledTools").orEmpty().toSet(), ToolContext(project, conversation, directory), state)
@@ -53,7 +60,7 @@ internal class NativeChatTools(private val context: Context) : AutoCloseable {
                 var validatedArguments = paramsJsonString.take(12000)
                 when(result) {
                     is ToolExecutionResult.Success -> { status = "SUCCESS"; response.put("result", try { JSONObject(result.output) } catch (_: org.json.JSONException) { JSONObject().put("value", result.output) }) }
-                    is ToolExecutionResult.Failed -> { status = result.code; response.put("error", result.message) }
+                    is ToolExecutionResult.Failed -> { status = result.code; response.put("error", if (id in PersonalDataToolHistory.ids) result.code else result.message) }
                     is ToolExecutionResult.Rejected -> { status = "REJECTED"; response.put("error", result.reason) }
                     is ToolExecutionResult.NeedsConfirmation -> {
                         status = "CONFIRMATION_REQUIRED"
@@ -68,7 +75,7 @@ internal class NativeChatTools(private val context: Context) : AutoCloseable {
                 // Private Room data for explicit Details, never logcat/benchmark.
                 db.withTransaction {
                     if (db.conversationDao().get(conversation)?.projectId == project) db.toolCallDao().insert(ToolCallEntity(callId, conversation, request.getString("messageId"), id,
-                        validatedArguments, permissionDecision(id), status = status, startedAt = start, finishedAt = System.currentTimeMillis(), errorCode = if(status == "SUCCESS") null else status, resultJson = response.toString().take(16000)))
+                        PersonalDataToolHistory.persistedArguments(id, validatedArguments), permissionDecision(id), status = status, startedAt = start, finishedAt = System.currentTimeMillis(), errorCode = if(status == "SUCCESS") null else status, resultJson = PersonalDataToolHistory.persistedResult(id, response)))
                 }
                 notify?.invoke(id, status, callId)
                 response.toString()
@@ -77,6 +84,7 @@ internal class NativeChatTools(private val context: Context) : AutoCloseable {
     }
     private fun permissionDecision(toolId: String): String = when {
         toolId == AndroidActionPlanner.TOOL_ID -> "EXTERNAL_SEND_REQUIRES_CONFIRMATION"
+        toolId in PersonalDataToolHistory.ids -> "LOCAL_READ_RUNTIME_PERMISSION"
         toolId in setOf("artifacts.create","artifacts.revise","artifacts.patchPreview","artifacts.xlsxSetCells","artifacts.xlsxAddSheet","artifacts.xlsxSetTable") -> "WRITE_LOCAL"
         else -> "READ_LOCAL"
     }

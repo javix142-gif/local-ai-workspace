@@ -29,7 +29,7 @@ data class SkillDefinition(
     val externalMetadata: Map<String,String> = emptyMap(),
 ) {
     companion object {
-        val STANDARD_TOOLS = setOf("calculator.evaluate", "files.read", "files.list", "python.execute", com.localai.workspace.domain.tools.AndroidActionPlanner.TOOL_ID) + com.localai.workspace.artifacts.ArtifactTool.IDS
+        val STANDARD_TOOLS = setOf("calculator.evaluate", "files.read", "files.list", "python.execute", "calendar.read", "contacts.lookup", com.localai.workspace.domain.tools.AndroidActionPlanner.TOOL_ID) + com.localai.workspace.artifacts.ArtifactTool.IDS
         fun hash(text:String)=MessageDigest.getInstance("SHA-256").digest(text.toByteArray(Charsets.UTF_8)).joinToString(""){"%02x".format(it)}
     }
 }

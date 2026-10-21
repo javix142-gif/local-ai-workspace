@@ -11,9 +11,17 @@ class AssistantSettings(context: Context) {
     private val prefs = context.getSharedPreferences("local_assistant_profiles", 0)
     private val revision = MutableStateFlow(0)
     val changes = revision.asStateFlow()
-    fun forProject(id: String) = AssistantProfile(
-        runCatching { ThinkingMode.valueOf(prefs.getString("$id.thinking", "AUTO")!!) }.getOrDefault(ThinkingMode.AUTO),
-        prefs.getStringSet("$id.tools", ChatToolSchemas.defaults)!!.toSet())
+    fun forProject(id: String): AssistantProfile {
+        val savedTools = prefs.getStringSet("$id.tools", null)?.toSet()
+        val effectiveTools = when (savedTools) {
+            null, ChatToolSchemas.previousAutoDefaults -> ChatToolSchemas.defaults
+            else -> savedTools
+        }
+        return AssistantProfile(
+            runCatching { ThinkingMode.valueOf(prefs.getString("$id.thinking", "AUTO")!!) }.getOrDefault(ThinkingMode.AUTO),
+            effectiveTools,
+        )
+    }
     fun update(id: String, profile: AssistantProfile) {
         prefs.edit().putString("$id.thinking", profile.thinking.name).putStringSet("$id.tools", profile.tools).apply()
         revision.value++

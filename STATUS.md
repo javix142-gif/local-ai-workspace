@@ -11,7 +11,11 @@
 
 See [architecture](docs/SKILLS_AGENTS_ARCHITECTURE.md). Models/APKs/caches remain outside Git.
 
-## Master optimization program — current H1 checkpoint (2026-10-20)
+## Master optimization program — H2 implementation checkpoint (2026-10-21)
+
+H2 adds bounded local calendar/contact read tools, on-demand runtime permission UI, redaction of personal data from tool-call history, explicit deterministic routing and shorter tool descriptions. The final focused HOST set passed 19 unique tests; LiteRT compatibility passed 2/2, `lintDebug` and AndroidTest Kotlin compilation passed (0 lint errors, 128 warnings, 1 informational item). One full app suite run found an H2-caused DOCX description omission; the compact description was corrected and its class passed 4/4, but the full suite was not rerun. Thus H2 does not claim a final full-JVM gate PASS. No local emulator or Motorola run; physical validation remains NOT_RUN. The push-triggered emulator/QA runs and any APK artifact are pending readback against the exact commit. See [operational status](docs/development/STATUS.md) and [handoff](docs/development/CODEX_TO_WORK_HANDOFF.md).
+
+### Previous H1 checkpoint (2026-10-20)
 
 Current product code SHA `01161491acc2a7c836222a84b7bd6f778292f8f3`; the feature HEAD after documentation-only commits is `16287d649eabf063fb4482d302060f378b2ff35a`. H1 is `HOST/CI_VERIFIED`, with device/manual checks still pending: connected emulator run 39511660788 passed its selected suite (16 PASS, six model-backed SKIPPED, no failures); H1-AT-12 used real `adb install -r` and preserved synthetic data. The gated QA ARM64 run 39511660726 produced a verified Debug APK for the same code SHA. The full host suite (941/941 + 2/2) remains historical at `aed4d8f`; the H1-focused tests were rerun at `16287d6` (25/25). Physical/Motorola checks and model performance remain NOT_RUN. The user authorized beginning H2 sequentially while those blockers remain tracked. See [current development status](docs/development/STATUS.md) and [H1 evidence](docs/validation/master-program-h1-20261020/RESULTS.md).
 

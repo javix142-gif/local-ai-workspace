@@ -137,6 +137,13 @@
     <string name="chat_tool_calculator">Calculadora</string>
     <string name="chat_tool_python">Python</string>
     <string name="chat_tool_files">Archivos</string>
+    <string name="chat_tool_calendar">Calendario</string>
+    <string name="chat_tool_contacts">Contactos</string>
+    <string name="personal_data_calendar_permission_help">Para leer eventos de este intervalo, Android necesita permiso para acceder al calendario.</string>
+    <string name="personal_data_contacts_permission_help">Para buscar números guardados en el dispositivo, Android necesita permiso para acceder a los contactos.</string>
+    <string name="personal_data_permission_request">Permitir acceso</string>
+    <string name="personal_data_permission_granted">Permiso concedido. Vuelve a preguntar para consultar estos datos.</string>
+    <string name="personal_data_permission_denied">No se concedió el permiso y no se leyeron datos. Si Android ya no muestra el diálogo, habilita el permiso en Ajustes de la app.</string>
     <string name="chat_local">Local</string>
     <string name="chat_status_loading">Cargando…</string>
     <string name="chat_status_warming">Preparando…</string>

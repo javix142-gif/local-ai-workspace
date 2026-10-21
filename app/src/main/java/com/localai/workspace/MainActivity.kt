@@ -104,6 +104,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
@@ -941,6 +942,12 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
     var skillProposalSaving by remember { mutableStateOf(false) }
     val chatScope = rememberCoroutineScope()
     val actionContext = androidx.compose.ui.platform.LocalContext.current
+    var pendingPersonalPermissionCallId by remember { mutableStateOf<String?>(null) }
+    val personalPermissionResults = remember { mutableStateMapOf<String, Boolean>() }
+    val personalPermissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        pendingPersonalPermissionCallId?.let { personalPermissionResults[it] = granted }
+        pendingPersonalPermissionCallId = null
+    }
     val skillSavedDisabledMessage = stringResource(R.string.chat_skill_saved_disabled)
     val skillRegistry = (androidx.compose.ui.platform.LocalContext.current.applicationContext as LocalAiApplication).graph.skillRegistry
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let(viewModel::attachDocument) }
@@ -1066,6 +1073,14 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                         val messageEvidence = citationEvidenceByMessage[message.id].orEmpty()
                         Column {
                         toolCalls.filter { it.messageId == message.id }.forEach { call ->
+                            val requestedPersonalPermission = when (call.toolId) {
+                                "calendar.read" -> android.Manifest.permission.READ_CALENDAR
+                                "contacts.lookup" -> android.Manifest.permission.READ_CONTACTS
+                                else -> null
+                            }
+                            val personalPermissionAlreadyGranted = requestedPersonalPermission?.let {
+                                androidx.core.content.ContextCompat.checkSelfPermission(actionContext, it) == android.content.pm.PackageManager.PERMISSION_GRANTED
+                            } == true
                             com.localai.workspace.ui.ToolExecutionCard(
                                 call,
                                 onOpenAndroidAction = { pending ->
@@ -1087,6 +1102,20 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                                 },
                                 onDeclineAndroidAction = { pending -> chatScope.launch { viewModel.declinePreparedAndroidAction(pending) } },
                                 onReportAndroidActionComplete = { opened -> chatScope.launch { viewModel.markAndroidActionReportedComplete(opened) } },
+                                onRequestPersonalDataPermission = { pending ->
+                                    val permission = when (pending.toolId) {
+                                        "calendar.read" -> android.Manifest.permission.READ_CALENDAR
+                                        "contacts.lookup" -> android.Manifest.permission.READ_CONTACTS
+                                        else -> null
+                                    }
+                                    if (permission != null) {
+                                        pendingPersonalPermissionCallId = pending.id
+                                        personalPermissionResults.remove(pending.id)
+                                        personalPermissionLauncher.launch(permission)
+                                    }
+                                },
+                                personalDataPermissionGranted = personalPermissionAlreadyGranted || personalPermissionResults[call.id] == true,
+                                personalDataPermissionDenied = personalPermissionResults[call.id] == false,
                             )
                         }
                         MessageBubble(message, content, messageEvidence,

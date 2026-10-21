@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Used only after the user explicitly chooses Hugging Face metadata/downloads. -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Requested only after a calendar/contact tool call and an explicit in-chat tap. -->
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <!-- Bounded partial wake lock only during an explicitly requested LiteRT operation. -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <application

@@ -1,5 +1,17 @@
 # Current checkpoint — H1 HOST/CI_VERIFIED; physical checks pending (2026-10-20)
 
+## H2 implementation checkpoint — 2026-10-21
+
+The feature commit containing this section adds `calendar.read` and `contacts.lookup` as bounded local tools, asks only for read permissions after an explicit in-chat action, returns their output as untrusted data, and redacts private arguments/results from persisted tool-call history. Deterministic routing exposes compatible calendar/contact queries and existing Android action preparation; email requests do not route to the phone-only lookup. Existing Tool Off and custom tool selections remain intact. `artifacts.create/revise` instructions are shorter while retaining the format schemas and DOCX list semantics.
+
+Final focused HOST coverage: 19 unique tests PASS across Android personal-data tools, chat tool schemas, profile defaults, Android action UI, and DOCX structure/schema. The full app run executed 960 tests and exposed one H2-caused description regression; after restoring the missing compact DOCX guidance, its class passed 4/4. The full suite was not repeated, so no final full-JVM PASS is claimed. LiteRT compatibility passed 2/2. `lintDebug` and `compileDebugAndroidTestKotlin` passed on the corrected production source; lint had 0 errors, 128 warnings and 1 informational item.
+
+No emulator/instrumentation, APK installation or physical Motorola test was run locally. Push-triggered emulator and personal QA workflows are separate evidence and must be read against the exact H2 commit. `PHYSICAL_DEVICE=NOT_RUN`; H1 criteria needing original private files/device remain pending. The canonical 97 source IDs/120 dependencies and `EXECUTION_STATE.json` are unchanged.
+
+---
+
+# Previous checkpoint — H1 HOST/CI_VERIFIED; physical checks pending (2026-10-20)
+
 - Branch `feat/0.5.0-skills-agents`; feature HEAD `16287d649eabf063fb4482d302060f378b2ff35a`; product/test SHA `01161491acc2a7c836222a84b7bd6f778292f8f3`. The intervening commits are docs/evidence only.
 - H1 corrective code is already present after audited SHA `3ca1d794`: commit `1f44f88` enforces pre-persistence pin budgeting, explicit no-pin approval, and H1-AT-12 update verification; later commits localize H1 UI/diagnostics.
 - Current focused HOST verification: 25/25 PASS (`H1PreferenceContextTest` 24/24, `H1MemoryApprovalUiTest` 1/1), zero failures/errors/skips, Gradle exit 0 in 210s. It verifies the 15% cap, explicit selection and confirmation, preserved `originalPinned` provenance, 1,000-record roundtrip and usable chat. Full log/XML/environment/checksums: [`verification-16287d6`](../validation/master-program-h1-20261020/corrective/verification-16287d6/).
