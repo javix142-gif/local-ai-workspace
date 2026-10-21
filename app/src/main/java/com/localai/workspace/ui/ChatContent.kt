@@ -37,6 +37,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -91,7 +92,6 @@ fun ChatTopBar(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ChatHeaderTitle(
     agentTitle: @Composable () -> Unit,
@@ -100,19 +100,61 @@ fun ChatHeaderTitle(
     onModelClick: () -> Unit,
     enabled: Boolean,
     modifier: Modifier = Modifier,
+    modelState: String? = null,
 ) {
     Column(
         modifier.fillMaxWidth().clickable(enabled = enabled, onClick = onModelClick)
-            .padding(vertical = LocalAiSpacing.x1)
             .testTag("chat-header-title"),
         verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x1),
     ) {
-        Text(conversationTitle, Modifier.fillMaxWidth().testTag("chat-header-conversation"),
-            style = MaterialTheme.typography.titleMedium)
-        FlowRow(
+        Text(
+            text = conversationTitle,
+            modifier = Modifier.fillMaxWidth()
+                .testTag("chat-header-conversation")
+                .semantics { contentDescription = conversationTitle },
+            style = MaterialTheme.typography.titleMedium,
+            maxLines = 1,
+            softWrap = false,
+            overflow = TextOverflow.Ellipsis,
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
+                .testTag("chat-header-status-row"),
             horizontalArrangement = Arrangement.spacedBy(LocalAiSpacing.x1),
-            verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x1),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
+            if (modelState != null) {
+                Surface(
+                    modifier = Modifier.testTag("chat-header-model-state"),
+                    shape = MaterialTheme.shapes.small,
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                ) {
+                    Text(
+                        modelState,
+                        Modifier.padding(horizontal = LocalAiSpacing.x2, vertical = LocalAiSpacing.x1),
+                        style = MaterialTheme.typography.labelSmall,
+                        maxLines = 1,
+                        softWrap = false,
+                    )
+                }
+            }
+            // Keep the selected model and its real readiness state at the leading edge.
+            Surface(
+                modifier = Modifier.testTag("chat-header-model"),
+                shape = MaterialTheme.shapes.small,
+                color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            ) {
+                Text(
+                    modelStatus,
+                    Modifier.padding(horizontal = LocalAiSpacing.x2, vertical = LocalAiSpacing.x1),
+                    style = MaterialTheme.typography.labelSmall,
+                    maxLines = 1,
+                    softWrap = false,
+                )
+            }
             Surface(
                 modifier = Modifier.testTag("chat-header-agent"),
                 shape = MaterialTheme.shapes.small,
@@ -122,15 +164,6 @@ fun ChatHeaderTitle(
                 Box(Modifier.padding(horizontal = LocalAiSpacing.x2, vertical = LocalAiSpacing.x1)) {
                     ProvideTextStyle(MaterialTheme.typography.labelSmall) { agentTitle() }
                 }
-            }
-            Surface(
-                modifier = Modifier.testTag("chat-header-model"),
-                shape = MaterialTheme.shapes.small,
-                color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            ) {
-                Text(modelStatus, Modifier.padding(horizontal = LocalAiSpacing.x2, vertical = LocalAiSpacing.x1),
-                    style = MaterialTheme.typography.labelSmall)
             }
         }
     }
@@ -175,7 +208,8 @@ fun ChatComposer(input: String, generating: Boolean, onInputChange: (String) -> 
                     }
                 }
                 BasicTextField(value = input, onValueChange = onInputChange,
-                    modifier = Modifier.weight(1f).heightIn(min = 48.dp).testTag("chat-composer-input"),
+                    modifier = Modifier.weight(1f).heightIn(min = 48.dp, max = 128.dp)
+                        .testTag("chat-composer-input"),
                     textStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface),
                     cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                     maxLines = 5, enabled = !generating,

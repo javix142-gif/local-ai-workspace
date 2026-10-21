@@ -11,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -273,6 +274,7 @@ private fun AndroidActionExecutionCard(
             AndroidActionPlanner.ALARM, AndroidActionPlanner.TIMER -> R.string.android_action_review_clock_notice
             else -> R.string.android_action_review_generic_notice
         }
+        val sheetMaxHeight = (LocalConfiguration.current.screenHeightDp * 0.9f).dp
         ModalBottomSheet(
             onDismissRequest = { review = false },
             sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
@@ -280,7 +282,7 @@ private fun AndroidActionExecutionCard(
         ) {
             Column(
                 Modifier.fillMaxWidth().imePadding().navigationBarsPadding()
-                    .heightIn(max = 720.dp).verticalScroll(rememberScrollState())
+                    .heightIn(max = sheetMaxHeight).verticalScroll(rememberScrollState())
                     .padding(horizontal = LocalAiSpacing.x4, vertical = LocalAiSpacing.x2),
                 verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x3),
             ) {

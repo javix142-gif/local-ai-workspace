@@ -1017,6 +1017,14 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
     val citation = selectedEvidence
     val selectedModel = models.firstOrNull { it.id == selectedModelId } ?: models.firstOrNull()
     val visionEnabled = selectedModel?.let { capabilityAvailability(it.toDescriptor(), ModelCapability.VISION) == CapabilityAvailability.AVAILABLE } == true
+    val selectedModelState = selectedModel?.let { model ->
+        when {
+            generating -> localizedChatGenerationLabel(generationProgress.stage, generationProgress.cancellationRequested)
+            preparation.modelId == model.id && preparation.preparing -> localizedChatGenerationLabel(preparation.progress.stage)
+            preparation.modelId == model.id && preparation.ready -> stringResource(R.string.chat_ready)
+            else -> stringResource(R.string.chat_not_loaded)
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -1025,17 +1033,11 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                     ChatHeaderTitle(
                         agentTitle = { com.localai.workspace.ui.ChatAgentLabel(viewModel) },
                         conversationTitle = if (skillAuthoringMode) stringResource(R.string.chat_skill_create_title) else if (standalone) project?.name ?: stringResource(R.string.chat_default_title) else "${conversation?.title ?: stringResource(R.string.chat_default_title)} · ${project?.name ?: stringResource(R.string.chat_project_title)}",
-                        modelStatus = selectedModel?.let { model ->
-                            val state = when {
-                                generating -> localizedChatGenerationLabel(generationProgress.stage, generationProgress.cancellationRequested)
-                                preparation.modelId == model.id && preparation.preparing -> localizedChatGenerationLabel(preparation.progress.stage)
-                                preparation.modelId == model.id && preparation.ready -> stringResource(R.string.chat_ready)
-                                else -> stringResource(R.string.chat_not_loaded)
-                            }
-                            stringResource(R.string.chat_local_model_status, humanModelName(model.displayName), state)
-                        } ?: stringResource(R.string.chat_choose_model),
+                        modelStatus = selectedModel?.let { humanModelName(it.displayName) }
+                            ?: stringResource(R.string.chat_choose_model),
                         onModelClick = { showModelPicker = true },
                         enabled = !generating && !deletingChat,
+                        modelState = selectedModelState,
                     )
                 },
                 navigationIcon = { IconButton(onClick = { navController.popBackStack() }, enabled = !deletingChat) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.chat_back)) } },

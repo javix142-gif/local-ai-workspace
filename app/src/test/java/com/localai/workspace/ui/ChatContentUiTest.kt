@@ -562,8 +562,9 @@ class ChatContentUiTest {
                 Column(Modifier.fillMaxSize()) {
                     ChatHeaderTitle(
                         agentTitle = { androidx.compose.material3.Text("General Agent") },
-                        conversationTitle = "A long conversation title that wraps instead of disappearing at large text sizes",
-                        modelStatus = "Gemma local model · Preparing · waiting for this selected model to become ready",
+                        conversationTitle = "A long conversation title that remains accessible when it is visually truncated at large text sizes",
+                        modelStatus = "Gemma local model with an extended runtime descriptor",
+                        modelState = "Preparing",
                         onModelClick = {}, enabled = true,
                     )
                     Spacer(Modifier.weight(1f))
@@ -582,9 +583,26 @@ class ChatContentUiTest {
         listOf(1f, 1.6f, 2f).forEach { scale ->
             compose.runOnIdle { setFontScale?.invoke(scale) }
             compose.waitForIdle()
-            compose.onNodeWithTag("chat-header-agent", useUnmergedTree = true).assertIsDisplayed()
             compose.onNodeWithTag("chat-header-conversation", useUnmergedTree = true).assertIsDisplayed()
-            compose.onNodeWithTag("chat-header-model", useUnmergedTree = true).assertIsDisplayed()
+            compose.onNodeWithText(
+                "Gemma local model with an extended runtime descriptor",
+                useUnmergedTree = true,
+            ).assertExists()
+            compose.onNodeWithTag("chat-header-model-state", useUnmergedTree = true).assertIsDisplayed()
+            val statusRow = compose.onNodeWithTag("chat-header-status-row", useUnmergedTree = true)
+                .assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.HorizontalScrollAxisRange))
+            statusRow.performTouchInput { swipeLeft() }
+            compose.onNodeWithTag("chat-header-agent", useUnmergedTree = true).assertIsDisplayed()
+            statusRow.performTouchInput { swipeRight() }
+            val title = compose.onNodeWithTag("chat-header-conversation", useUnmergedTree = true)
+                .assertTextEquals("A long conversation title that remains accessible when it is visually truncated at large text sizes")
+            val titleHeightDp = title.fetchSemanticsNode().size.height /
+                RuntimeEnvironment.getApplication().resources.displayMetrics.density
+            assertTrue("The header title stays to one visual line at fontScale=$scale ($titleHeightDp dp)", titleHeightDp <= if (scale == 2f) 68f else 40f)
+            val composerInput = compose.onNodeWithTag("chat-composer-input").assertIsDisplayed()
+            val inputHeightDp = composerInput.fetchSemanticsNode().size.height /
+                RuntimeEnvironment.getApplication().resources.displayMetrics.density
+            assertTrue("Long multiline input scrolls inside a bounded composer ($inputHeightDp dp)", inputHeightDp <= 128f)
             compose.onNodeWithTag("assistant-options-button").assertIsDisplayed()
             compose.onNodeWithContentDescription(localized(R.string.chat_add_attachment)).assertIsDisplayed()
             compose.onNodeWithContentDescription(localized(R.string.chat_stop)).assertIsDisplayed()

@@ -173,7 +173,8 @@ private fun ChatHeaderComposerPreview(dark: Boolean, fontScale: Float) {
                             ChatHeaderTitle(
                                 agentTitle = { Text("General Agent") },
                                 conversationTitle = "A long conversation title that wraps naturally across the available chat header width",
-                                modelStatus = "Gemma 4 E2B · Local · Ready · selected model status remains readable",
+                                modelStatus = "Gemma E2B",
+                                modelState = "Ready",
                                 onModelClick = {},
                                 enabled = true,
                             )

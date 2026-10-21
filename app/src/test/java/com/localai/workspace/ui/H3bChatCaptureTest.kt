@@ -25,10 +25,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.test.assertContentDescriptionEquals
 import androidx.compose.ui.test.assertHeightIsAtLeast
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.assertWidthIsAtLeast
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
@@ -37,6 +40,8 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.test.SemanticsMatcher
 import com.localai.workspace.R
 import com.localai.workspace.ui.components.AwsBottomBar
 import com.localai.workspace.data.CitationCellReferenceCodec
@@ -50,18 +55,26 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import org.robolectric.shadows.ShadowDialog
 import java.io.File
 import java.util.concurrent.atomic.AtomicInteger
 
 /** Synthetic Compose-only fixture for H3b visual evidence; it contains no user data or model output. */
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [29], application = Application::class, qualifiers = "w360dp-h800dp")
+@Config(sdk = [29], application = Application::class, qualifiers = "w360dp-h1000dp")
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class H3bChatCaptureTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
 
-    @Test fun capturesChatAtLightAndDarkAndSystemFontScaleOneAndTwo() {
-        var configure: ((Boolean, Float) -> Unit)? = null
+    @Test
+    fun capturesChatAndConfirmationLightDarkAtSystemFontScaleOne() = captureChatAndConfirmation(1f)
+
+    @Test
+    @Config(sdk = [29], application = Application::class, qualifiers = "w360dp-h1000dp", fontScale = 2f)
+    fun capturesChatAndConfirmationLightDarkAtSystemFontScaleTwo() = captureChatAndConfirmation(2f)
+
+    private fun captureChatAndConfirmation(fontScale: Float) {
+        var configureDark: ((Boolean) -> Unit)? = null
         val opened = AtomicInteger()
         val declined = AtomicInteger()
         val evidence = syntheticEvidence()
@@ -70,9 +83,8 @@ class H3bChatCaptureTest {
         compose.setContent {
             val baseDensity = LocalDensity.current
             var dark by remember { mutableStateOf(false) }
-            var fontScale by remember { mutableStateOf(1f) }
-            SideEffect { configure = { useDark, scale -> dark = useDark; fontScale = scale } }
             CompositionLocalProvider(LocalDensity provides Density(baseDensity.density, fontScale)) {
+                SideEffect { configureDark = { dark = it } }
                 LocalAiTheme(darkTheme = dark) {
                     Scaffold(
                         modifier = Modifier.fillMaxSize().testTag("h3b-chat-screen"),
@@ -87,7 +99,8 @@ class H3bChatCaptureTest {
                                     ChatHeaderTitle(
                                         agentTitle = { Text("General") },
                                         conversationTitle = "Conversación de diseño",
-                                        modelStatus = "Gemma E2B · Listo",
+                                        modelStatus = "Gemma E2B",
+                                        modelState = "Listo",
                                         onModelClick = {},
                                         enabled = true,
                                     )
@@ -144,12 +157,40 @@ class H3bChatCaptureTest {
             }
         }
 
-        listOf(false to 1f, false to 2f, true to 1f, true to 2f).forEach { (dark, scale) ->
-            compose.runOnIdle { configure?.invoke(dark, scale) }
+        assertEquals("Robolectric activity uses the requested system fontScale", fontScale, compose.activity.resources.configuration.fontScale, 0f)
+        listOf(false, true).forEach { dark ->
+            compose.runOnIdle { configureDark?.invoke(dark) }
             compose.waitForIdle()
             compose.onNodeWithTag("chat-header-conversation", useUnmergedTree = true).assertIsDisplayed()
+            compose.onNodeWithTag("chat-header-conversation", useUnmergedTree = true)
+                .assertTextEquals("Conversación de diseño")
+            assertHeightDpAtMost(
+                compose.onNodeWithTag("chat-header-conversation", useUnmergedTree = true),
+                if (fontScale == 2f) 68f else 40f,
+                "Conversation title remains a single visual line at fontScale=$fontScale",
+            )
             compose.onNodeWithTag("top-level-workspace")
                 .assertTextContains(compose.activity.getString(R.string.navigation_chats))
+            compose.onNodeWithText("Listo", useUnmergedTree = true).assertIsDisplayed()
+            compose.onNodeWithTag("chat-header-status-row", useUnmergedTree = true)
+                .assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.HorizontalScrollAxisRange))
+            listOf(
+                "home" to R.string.navigation_home,
+                "workspace" to R.string.navigation_chats,
+                "memory" to R.string.navigation_memory,
+                "settings" to R.string.navigation_more,
+            ).forEach { (route, labelId) ->
+                val label = compose.activity.getString(labelId)
+                compose.onNodeWithTag("top-level-$route").assertIsDisplayed()
+                    .assertWidthIsAtLeast(48.dp).assertHeightIsAtLeast(48.dp)
+                val labelNode = compose.onNodeWithTag("top-level-label-$route", useUnmergedTree = true)
+                    .assertContentDescriptionEquals(label).assertIsDisplayed()
+                assertHeightDpAtMost(
+                    labelNode,
+                    if (fontScale == 2f) 36f else 24f,
+                    "Navigation label $label stays on one line at fontScale=$fontScale",
+                )
+            }
             compose.onNodeWithTag("chat-message-user-surface").performScrollTo().assertIsDisplayed()
             compose.onNodeWithTag("chat-message-assistant-surface").performScrollTo().assertIsDisplayed()
             compose.onNodeWithTag("android-action-card-${action.id}").performScrollTo().assertIsDisplayed()
@@ -159,22 +200,38 @@ class H3bChatCaptureTest {
                 .assertHeightIsAtLeast(48.dp)
             compose.onNodeWithTag("chat-message-user-surface").performScrollTo()
             compose.waitForIdle()
-            capture("chat-${if (dark) "dark" else "light"}-360dp-fontScale-${scale.toInt()}.png")
+            capture("chat-${if (dark) "dark" else "light"}-360dp-fontScale-${fontScale.toInt()}.png")
         }
 
-        compose.runOnIdle { configure?.invoke(true, 2f) }
-        compose.waitForIdle()
-        compose.onNodeWithTag("android-action-review-button-${action.id}").performScrollTo().performClick()
-        compose.onNodeWithText(compose.activity.getString(R.string.android_action_review_calendar_notice))
-            .assertIsDisplayed()
-        compose.onNodeWithTag("android-action-value-title").assertTextEquals("Revisión sintética de calendario")
-        assertEquals(0, opened.get())
-        assertEquals(0, declined.get())
-        // decorView captures the activity window; ModalBottomSheet is a separate window.
-        // This frame is therefore named for the underlying action card, not the sheet.
-        capture("chat-action-card-dark-360dp-fontScale-2.png")
-        compose.onNodeWithTag("android-action-decline-button").performScrollTo().performClick()
-        compose.runOnIdle { assertEquals(0, opened.get()); assertEquals(1, declined.get()) }
+        listOf(false, true).forEach { dark ->
+            compose.runOnIdle { configureDark?.invoke(dark) }
+            compose.waitForIdle()
+            compose.onNodeWithTag("android-action-review-button-${action.id}")
+                .performScrollTo().performClick()
+            val sheetTag = "android-action-confirm-sheet-${action.id}"
+            compose.onNodeWithTag(sheetTag).assertIsDisplayed()
+            compose.onNodeWithText(compose.activity.getString(R.string.android_action_review_calendar_notice))
+                .assertIsDisplayed()
+            val modalValue = compose.onNodeWithTag("android-action-value-title")
+                .assertTextEquals("Revisión sintética de calendario")
+                .assertIsDisplayed()
+            assertTrue("Confirmation data has measured text at fontScale=$fontScale", modalValue.fetchSemanticsNode().size.height > 0)
+            compose.onNodeWithTag("android-action-confirm-button").assertIsDisplayed().assertHeightIsAtLeast(48.dp)
+            compose.onNodeWithTag("android-action-decline-button").assertIsDisplayed().assertHeightIsAtLeast(48.dp)
+            compose.runOnIdle {
+                assertEquals("the modal only proposes; it does not open the external app", 0, opened.get())
+            }
+            captureModal(
+                sheetTag,
+                "confirmation-sheet-${if (dark) "dark" else "light"}-360dp-fontScale-${fontScale.toInt()}.png",
+                fontScale,
+            )
+            compose.onNodeWithTag("android-action-decline-button").performClick()
+            compose.runOnIdle {
+                assertEquals(0, opened.get())
+                assertEquals(if (dark) 2 else 1, declined.get())
+            }
+        }
     }
 
     private fun capture(filename: String) {
@@ -192,6 +249,36 @@ class H3bChatCaptureTest {
         } finally {
             bitmap?.recycle()
         }
+    }
+
+    private fun captureModal(sheetTag: String, filename: String, expectedFontScale: Float) {
+        compose.waitForIdle()
+        compose.onNodeWithTag(sheetTag).assertIsDisplayed()
+        val dialog = ShadowDialog.getLatestDialog()
+        assertTrue("The opened Compose ModalBottomSheet owns a real Dialog window", dialog != null && dialog.isShowing)
+        val view = requireNotNull(dialog?.window?.decorView)
+        assertTrue("The modal window has measured pixels", view.width > 0 && view.height > 0)
+        assertEquals("The captured modal window has the requested system fontScale", expectedFontScale, view.resources.configuration.fontScale, 0f)
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        try {
+            compose.runOnUiThread { view.draw(Canvas(bitmap)) }
+            val output = File("build/h3b-chat-captures").apply { mkdirs() }.resolve(filename)
+            output.outputStream().use { assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)) }
+            assertTrue("The opened Compose modal is captured as a nonempty PNG: $filename", output.length() > 0)
+            assertTrue("Modal capture has a real rendered area", bitmap.width > 0 && bitmap.height > 0)
+        } finally {
+            bitmap.recycle()
+        }
+    }
+
+    private fun assertHeightDpAtMost(
+        node: androidx.compose.ui.test.SemanticsNodeInteraction,
+        maximumDp: Float,
+        message: String,
+    ) {
+        val density = compose.activity.resources.displayMetrics.density
+        val heightDp = node.fetchSemanticsNode().size.height / density
+        assertTrue("$message (height=${heightDp}dp)", heightDp <= maximumDp)
     }
 
     private fun syntheticEvidence() = CitationEvidenceEntity(
