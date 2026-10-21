@@ -113,6 +113,17 @@ function Get-MaskedSerial {
     return '…' + $script:Serial.Substring($script:Serial.Length - 4)
 }
 
+function Get-SanitizedDiagnosticText {
+    param([string]$Text)
+    if ([string]::IsNullOrWhiteSpace($Text)) { return $null }
+    $safe = $Text.Trim()
+    if ($script:Serial) { $safe = $safe.Replace($script:Serial, '<serial-redacted>') }
+    $safe = $safe -replace '(?i)[A-Z]:\\Users\\[^\\\s]+', '<user-path>'
+    $safe = (($safe -split "`r?`n" | Select-Object -First 4) -join ' | ')
+    if ($safe.Length -gt 320) { $safe = $safe.Substring(0, 320) }
+    return $safe
+}
+
 function Invoke-Adb {
     param(
         [string[]]$Arguments,
@@ -120,7 +131,22 @@ function Invoke-Adb {
         [switch]$AllowNonZero,
         [int]$TimeoutSeconds = 20
     )
-    $result = Invoke-NativeText -FilePath $script:AdbPath -Arguments $Arguments -TimeoutSeconds $TimeoutSeconds
+    try {
+        $result = Invoke-NativeText -FilePath $script:AdbPath -Arguments $Arguments -TimeoutSeconds $TimeoutSeconds
+    } catch {
+        $safeError = Get-SanitizedDiagnosticText -Text $_.Exception.Message
+        $safeArguments = @($Arguments | ForEach-Object {
+            if ($script:Serial -and $_ -eq $script:Serial) { '<serial-redacted>' } else { $_ }
+        })
+        $script:CommandRecords.Add([pscustomobject]@{
+            timeUtc = [DateTime]::UtcNow.ToString('o')
+            operation = $Name
+            command = 'adb ' + [string]::Join(' ', $safeArguments)
+            exitCode = $null
+            error = $safeError
+        })
+        throw "ADB_COMMAND_ERROR operation=$Name detail=$safeError"
+    }
     $safeArguments = @($Arguments | ForEach-Object {
         if ($script:Serial -and $_ -eq $script:Serial) { '<serial-redacted>' } else { $_ }
     })
@@ -129,6 +155,7 @@ function Invoke-Adb {
         operation = $Name
         command = 'adb ' + [string]::Join(' ', $safeArguments)
         exitCode = $result.ExitCode
+        stderrSummary = Get-SanitizedDiagnosticText -Text $result.Stderr
     })
     if ($result.ExitCode -ne 0 -and -not $AllowNonZero) {
         throw "ADB_COMMAND_FAILED operation=$Name exitCode=$($result.ExitCode)"
@@ -143,8 +170,12 @@ function Get-OneAuthorizedDevice {
         operation = 'adb-devices'
         command = 'adb devices -l'
         exitCode = $result.ExitCode
+        stderrSummary = Get-SanitizedDiagnosticText -Text $result.Stderr
     })
-    if ($result.ExitCode -ne 0) { throw "ADB_DEVICES_FAILED exitCode=$($result.ExitCode)" }
+    if ($result.ExitCode -ne 0) {
+        $detail = Get-SanitizedDiagnosticText -Text $result.Stderr
+        throw "ADB_DEVICES_FAILED exitCode=$($result.ExitCode) detail=$detail"
+    }
     $records = @()
     foreach ($line in ($result.Stdout -split "`r?`n")) {
         if ($line -match '^\s*(\S+)\s+(device|unauthorized|offline)(?:\s+(.*))?$') {
@@ -231,6 +262,7 @@ function Save-ConversationScreenshot {
         operation = 'explicit-manual-conversation-screenshot'
         command = 'adb -s <serial-redacted> exec-out screencap -p'
         exitCode = $process.ExitCode
+        stderrSummary = Get-SanitizedDiagnosticText -Text $stderr
     })
     if ($process.ExitCode -ne 0) { throw 'SCREENSHOT_CAPTURE_FAILED' }
     $bytes = [System.IO.File]::ReadAllBytes($Path)
