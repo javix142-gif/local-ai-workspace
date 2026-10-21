@@ -2,8 +2,11 @@
 
 Esta vista operativa no sustituye ni modifica el catálogo histórico de 97 IDs/120 dependencias ni sus estados fuente.
 
+Referencias de este flujo: [objetivo AWS](OBJETIVO_AWS.md), [redirección](PROMPT_CODEX_REDIRECCION.md), [guía visual histórica](../design/GUIA_VISUAL_AWS.md), [aceptación H1 v1.2](H1_PRUEBAS_ACEPTACION.md) y [continuidad H0→H1→H2](CORRECCION_CONTINUIDAD_H0_H1_H2.md).
+
 ## Estado más reciente
 
+- **H1 corrección AT-04 — código `a5090d6` validado:** el pin de memorias `PENDING` también respeta el máximo 15 % antes de persistir. HOST focal 25/25; lint y compilación Kotlin AndroidTest exit 0. EMULATOR run [39525954404](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39525954404) PASS: XML 22 = 16 PASS + 6 skips por modelos reales, cero fallos/errores; H1-AT-12 actualización sintética PASS. QA oficial y PERSONAL_QA del SHA terminaron success; APK Debug ARM64 disponible en los artifacts [oficial](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39525954210/artifacts/12314321055) y [personal](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39525954318/artifacts/12313972768). PHYSICAL_DEVICE=NOT_RUN; no es cierre físico ni suite JVM completa.
 - **H2 — publicado y validado en capas:** el código `a65a80dae1cf7edc3ae42afeb76620f66bfdc309` añade lecturas locales acotadas y confirmación explícita de acciones. HOST focal 19/19, LiteRT compat 2/2, lint y compilación Kotlin AndroidTest PASS; el gate completo de JVM no se repitió tras corregir el único fallo DOCX.
 - **M00-04 — evidencia HOST focal:** 2/2 pruebas PASS en el código H2 actual. La omisión material muestra aviso y motivo en el Inspector; la omisión rutinaria no muestra aviso. El catálogo histórico continúa con estado TODO y sin edición.
 - **EMULATOR:** run [39520261327](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39520261327), connected AndroidTest PASS; XML 22 total, 16 PASS y 6 SKIPPED por falta de pesos reales. H1-AT-12 pasó en emulador con fixture sintética. PHYSICAL_DEVICE=NOT_RUN.

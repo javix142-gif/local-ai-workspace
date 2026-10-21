@@ -1,5 +1,17 @@
 # Current checkpoint — H1 HOST/CI_VERIFIED; physical checks pending (2026-10-20)
 
+## Current update — H1-AT-04 pending-pin cap fix (`a5090d601426622b123cc2a970c13a5e8d9b3ff8`)
+
+The 15% pinned-memory cap now applies before persistence when a pending memory is pinned. HOST focal: intended red 1/1; corrected test 1/1; H1 unit/UI suites 25/25; `lintDebug` and `compileDebugAndroidTestKotlin` exit 0. No full JVM suite was run.
+
+EMULATOR run [39525954404](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39525954404) succeeded on API 35/x86_64. Connected XML/collector: 22 total, 16 PASS, 6 model-dependent SKIPPED, no failures/errors. H1-AT-12 in the same run installed source `9cfb0d8`, seeded synthetic data, then used `adb install -r` for `a5090d6`; package/certificate matched and 20 memories, project, chat/message and next-context preference survived. Synthetic fixture only; physical device NOT_RUN. One runner progress line said 27/22 although XML/collector agree at 22; reason NOT_DETERMINED.
+
+Official QA [39525954210](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39525954210) and Personal QA [39525954318](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39525954318) succeeded for the exact code SHA. Debug ARM64 APK SHA-256 `063a5cf081c452e74c95bc250a71fd1678930637b5f2bdd40728c7899dbcc3b8`, 121,635,467 bytes, package `com.localai.workspace.debug`, version `0.5.0-debug`/27, arm64-v8a only, v2 signature verified; certificate SHA-256 `b0d1c40838a22b6bbfc7bfa176c9bb917c7194c7b74dedf749566fb268ab120b`. Personal artifact [12313972768](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39525954318/artifacts/12313972768); official artifact [12314321055](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39525954210/artifacts/12314321055). Both are QA artifacts, not Release. Emulator artifact [12313033931](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39525954404/artifacts/12313033931), SHA-256 `6ba3b3b0f69e05d1ec69c8058c53b8a8a4973d574ea670a539b3e1d1c39e5db7`; ZIP and internal 50-file manifest verified locally.
+
+H2 implementation remains source SHA `a65a80d` and is unchanged. H1 physical AT-06/20/24 and Motorola tests remain pending; no native performance metrics are claimed. Room v1-v7 authentic schemas remain unavailable; the six model-dependent Android cases remain skipped. Backlog source remains 97 IDs/120 edges/TODO; `EXECUTION_STATE.json` and source catalog were not edited. `main`/peeled `v0.4.2` remain `de615b772cf37a99e7e08a647c59607b271de606`.
+
+---
+
 ## H2 implementation and validation checkpoint — 2026-10-21
 
 Source SHA: `a65a80dae1cf7edc3ae42afeb76620f66bfdc309`, branch `feat/0.5.0-skills-agents`. The implementation adds bounded local `calendar.read`/`contacts.lookup`, point-of-use permissions, untrusted local results, redacted tool history, deterministic routing, Android action handoffs with explicit confirmation, and compact artifact guidance preserving DOCX list semantics.

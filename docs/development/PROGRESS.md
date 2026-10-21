@@ -1,5 +1,13 @@
 # Continuidad de progreso
 
+2026-10-21 — H1-AT-04: fix `a5090d601426622b123cc2a970c13a5e8d9b3ff8` cierra el bypass al fijar una memoria `PENDING` por encima del 15 %. Prueba roja esperada: 1 fallo; test corregido 1/1, suites H1 25/25; `lintDebug` y `compileDebugAndroidTestKotlin` exit 0 (128 avisos/1 información). No se ejecutó el full JVM suite. Logs/XML HOST locales en `docs/validation/h1-close-20261021/`; primer wrapper falló antes de tareas por red, el gate usó caché existente.
+
+EMULATOR run 39525954404 PASS, API35/x86_64: `connectedDebugAndroidTest` exit 0; XML 22, 16 PASS, 6 SKIPPED por ausencia de modelos, 0 fallos/errores. H1-AT-12 PASS en emulator con fixture sintética: actualización `adb install -r`, certificado igual, 20 memorias más project/chat/message y preferencia preservados. Run log mostró progreso `27/22`; XML/collector coherentes en 22, causa de la diferencia desconocida. Artifact 12313033931 SHA `6ba3b3b0f69e05d1ec69c8058c53b8a8a4973d574ea670a539b3e1d1c39e5db7` (50/50 manifiesto interno verificado).
+
+QA oficial run 39525954210 y PERSONAL_QA 39525954318 PASS en el mismo SHA; artifacts 12314321055 y 12313972768. APK Debug ARM64 SHA `063a5cf081c452e74c95bc250a71fd1678930637b5f2bdd40728c7899dbcc3b8`, 121,635,467 bytes, package `com.localai.workspace.debug`, 0.5.0-debug/27, solo arm64-v8a, firma v2/ZIP/zipalign verificados; certificado `b0d1c408…ab120b`. Artifacts/manifest metadata detallados en `STATUS.md`; son QA, no Release.
+
+H1 sigue con criterios físicos AT-06/20/24 y Motorola pendientes. Room v1-v7 auténtico y seis skips de modelo continúan separados; no se midió rendimiento nativo. H2 code `a65a80d` sin cambios. Original 97 IDs/120 dependencias TODO intacto; `EXECUTION_STATE.json` no se editó. `main` y `v0.4.2` intactos.
+
 2026-10-20: H0 host estabilizado en 49f5913937fe7c049bf0ad71d2d75f7e5321b557: 918/918 JVM PASS, lint/AndroidTest compile/ARM64 Debug build PASS.
 APK local verificado, pero no entregado: la firma no coincide con la clave previa y esa clave privada no está disponible.
 La recomendación M02-01 de ese checkpoint quedó supersedida por el contrato directo H0→H1→H2; no es la próxima tarea vigente.
