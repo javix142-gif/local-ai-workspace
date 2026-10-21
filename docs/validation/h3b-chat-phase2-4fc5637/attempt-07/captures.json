@@ -1,0 +1,130 @@
+{
+  "sourceSha": "35f23d814d7850e3d18e642b4d9b94a3511c6e7c",
+  "captures": [
+    {
+      "file": "chat-action-card-dark-360dp-fontScale-2.png",
+      "format": "PNG",
+      "width": 360,
+      "height": 800,
+      "bytes": 62927,
+      "sha256": "52b220884932419f70ce240529f983a26f127bac9ba9050d330cd84fc704d219"
+    },
+    {
+      "file": "chat-dark-360dp-fontScale-1.png",
+      "format": "PNG",
+      "width": 360,
+      "height": 800,
+      "bytes": 59858,
+      "sha256": "6f40e4c9d7d9bc68f1cf76e0af25ab3f45660545c9bc1125af9f9052f3ca34b8"
+    },
+    {
+      "file": "chat-dark-360dp-fontScale-2.png",
+      "format": "PNG",
+      "width": 360,
+      "height": 800,
+      "bytes": 63877,
+      "sha256": "24b94642d6c610f9cd169cca19a62a265fb0929f84f36ea96febdae56572f2c5"
+    },
+    {
+      "file": "chat-light-360dp-fontScale-1.png",
+      "format": "PNG",
+      "width": 360,
+      "height": 800,
+      "bytes": 58102,
+      "sha256": "00120c89ea56167f23e1688ea7e9ebb051de84dd03a67c7f7f209e2b82c7efd8"
+    },
+    {
+      "file": "chat-light-360dp-fontScale-2.png",
+      "format": "PNG",
+      "width": 360,
+      "height": 800,
+      "bytes": 62675,
+      "sha256": "bebeb20bcae81b04faf7e2c466af04605298045f9a60a5be77100058ea0cdefc"
+    },
+    {
+      "file": "h3b-chats-dark-360dp-fontScale-1.0.png",
+      "format": "PNG",
+      "width": 360,
+      "height": 800,
+      "bytes": 31844,
+      "sha256": "c36d86f34fbdc0eadf9068b4b382e1b06fbd7fc532ab6ad7bca2069e67a4c976"
+    },
+    {
+      "file": "h3b-chats-light-360dp-fontScale-1.0.png",
+      "format": "PNG",
+      "width": 360,
+      "height": 800,
+      "bytes": 31270,
+      "sha256": "5e4f6cb3ce2d09787820af71652faee2aabbacc54cec73e981f3f50ede73ff03"
+    },
+    {
+      "file": "h3b-home-dark-360dp-fontScale-1.0.png",
+      "format": "PNG",
+      "width": 360,
+      "height": 800,
+      "bytes": 39876,
+      "sha256": "bdb333b12504a81864842f8fc2924e28a63c057fdbf60a3460a12d62da5e1363"
+    },
+    {
+      "file": "h3b-home-light-360dp-fontScale-1.0.png",
+      "format": "PNG",
+      "width": 360,
+      "height": 800,
+      "bytes": 38152,
+      "sha256": "1429ff01cb418ba080f24303082eb6899223ae0f455e49fb8ac30e768874ef94"
+    },
+    {
+      "file": "h3b-memory-dark-360dp-fontScale-1.0.png",
+      "format": "PNG",
+      "width": 360,
+      "height": 800,
+      "bytes": 8648,
+      "sha256": "13491e945f29779a22ddcef603e5021005949f7863db331f5067030c73f834e6"
+    },
+    {
+      "file": "h3b-memory-light-360dp-fontScale-1.0.png",
+      "format": "PNG",
+      "width": 360,
+      "height": 800,
+      "bytes": 8377,
+      "sha256": "1c6dc7a3f880eeec97591d2a34db2712576b8284d8a7cfbca79f592c60b9be92"
+    },
+    {
+      "file": "h3b-models-dark-360dp-fontScale-1.0.png",
+      "format": "PNG",
+      "width": 360,
+      "height": 800,
+      "bytes": 30259,
+      "sha256": "9fe1ffabb89d45f8819eebabab99adef314db59a2a3e9cfdb7b49c1f933ea2d9"
+    },
+    {
+      "file": "h3b-models-light-360dp-fontScale-1.0.png",
+      "format": "PNG",
+      "width": 360,
+      "height": 800,
+      "bytes": 29776,
+      "sha256": "42e9e79f1047edcb410a900a53a6e2a5fe2388173d1f1bc6594f4fd974705a23"
+    },
+    {
+      "file": "h3b-more-dark-360dp-fontScale-1.0.png",
+      "format": "PNG",
+      "width": 360,
+      "height": 800,
+      "bytes": 31624,
+      "sha256": "1c3b57d95f21367f59ef956c4e942ebb025c1d627a9868358a3ed2898cda2746"
+    },
+    {
+      "file": "h3b-more-light-360dp-fontScale-1.0.png",
+      "format": "PNG",
+      "width": 360,
+      "height": 800,
+      "bytes": 30620,
+      "sha256": "4cb383552334fbdad92db89b81eeba0dfbbb5c6d7b7f91ca95076d901c61d01c"
+    }
+  ],
+  "limitation": "Activity decorView capture does not include separate ModalBottomSheet window; action card is semantically tested, not visually captured as open confirmation.",
+  "dataProvenance": {
+    "dedicatedChatFixture": "H3B-SYNTHETIC-01, explicitly labeled; no user or model data",
+    "topLevelScreens": "Robolectric MultiProcessUiTestApplication empty/no-model state; no user data"
+  }
+}

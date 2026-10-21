@@ -1,0 +1,6 @@
+$ /workspace/.toolchain/android-sdk/platform-tools/adb devices -l
+List of devices attached
+
+exit_code=0
+emulator_path=/workspace/.toolchain/android-sdk/emulator/emulator
+emulator_exists=False

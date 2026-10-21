@@ -1,0 +1,10 @@
+TEST-com.localai.workspace.ui.AndroidActionUiTest.xml	tests=5	failures=0	errors=0	skipped=0
+TEST-com.localai.workspace.ui.ChatContentUiTest.xml	tests=18	failures=0	errors=0	skipped=0
+TEST-com.localai.workspace.ui.ChatRefinementUiTest.xml	tests=1	failures=0	errors=0	skipped=0
+TEST-com.localai.workspace.ui.ChatVisualSurfacesUiTest.xml	tests=1	failures=0	errors=0	skipped=0
+TEST-com.localai.workspace.ui.H3bChatCaptureTest.xml	tests=1	failures=0	errors=0	skipped=0
+TEST-com.localai.workspace.ui.LocalAiThemeTest.xml	tests=3	failures=0	errors=0	skipped=0
+TEST-com.localai.workspace.ui.MainActivityDarkThemeCaptureTest.xml	tests=1	failures=0	errors=0	skipped=0
+TEST-com.localai.workspace.ui.MainActivityThemeCaptureTest.xml	tests=1	failures=0	errors=0	skipped=0
+TEST-com.localai.workspace.ui.UiSmokeTest.xml	tests=6	failures=1	errors=0	skipped=0
+TOTAL	tests=37	failures=1	errors=0	skipped=0

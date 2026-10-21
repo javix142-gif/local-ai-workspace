@@ -1,0 +1,47 @@
+{
+  "contract": "AWS H3b Phase 1+2",
+  "status": "HOST_PASS_AWAITING_REVIEW",
+  "branch": "feat/0.5.0-skills-agents",
+  "baselineSha": "4fc5637377be8283a9580a3291857799af5e5c13",
+  "codeSha": "35f23d814d7850e3d18e642b4d9b94a3511c6e7c",
+  "codeCommit": "35f23d814d7850e3d18e642b4d9b94a3511c6e7c",
+  "host": {
+    "gradle": "8.10.2",
+    "gradleRuntimeJdk": "Temurin 17",
+    "toolchainDiscoveryJdks": ["/workspace/.toolchain/jdk-17", "/workspace/.toolchain/jdk-21-temurin"],
+    "androidSdk": "/workspace/.toolchain/android-sdk",
+    "ndk": "27.0.12077973",
+    "offline": true,
+    "startedAtUtc": "2026-10-21T18:40:47.251316Z",
+    "endedAtUtc": "2026-10-21T18:44:04.196181Z",
+    "durationSeconds": 196.945,
+    "exitCode": 0,
+    "commandEvidence": "attempt-07/command.txt",
+    "log": "attempt-07/gradle.log",
+    "tasks": {
+      "appTestDebugUnitTest": {"status": "PASS", "tests": 37, "passed": 37, "failures": 0, "errors": 0, "skipped": 0, "freshXmlFiles": 9},
+      "litertCompatTestDebugUnitTest": {"status": "UP-TO-DATE", "freshTests": 0, "note": "Prior 2/2 XML is historical and is not counted in the final invocation."},
+      "appLintDebug": {"status": "PASS", "warnings": 92, "information": 1, "errors": 0},
+      "compileDebugAndroidTestKotlin": {"status": "UP-TO-DATE", "instrumentationExecuted": false},
+      "fullJvmSuite": "NOT_RUN",
+      "assembleDebug": "NOT_RUN"
+    }
+  },
+  "captures": {
+    "path": "attempt-07/captures",
+    "count": 15,
+    "dimensions": "360x800 for chat and H3b top-level screens; shared-frame capture 411x891 is not part of this final set",
+    "allValidPng": true,
+    "dataProvenance": {"chatFixture": "H3B-SYNTHETIC-01, explicitly labeled; no user/model data", "topLevelScreens": "Robolectric MultiProcessUiTestApplication empty/no-model state; no user data"},
+    "references": {"path": "../../design/referencias/", "count": 10, "manifestSha256": "3398895eb2013f0519de7962c56bb0565c2683fefae63f76e12b4eb5caa2ef3b"},
+    "attemptManifest": {"path": "attempt-07/SHA256SUMS", "entries": 38, "sha256": "09024ef18f9aedba484f8ac3b4c6de659ce74b7d3be8bec2f64d9a3a24eaf745"},
+    "confirmationSheetVisualCapture": "NOT_CAPTURED; separate modal window excluded from activity decorView capture"
+  },
+  "emulator": "NOT_RUN; direct adb probe returned no devices and emulator executable was absent",
+  "physicalDevice": "NOT_RUN",
+  "apk": "NOT_RUN",
+  "originalBacklog": {"path": "../../development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json", "sha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235", "tasks": 97, "uniqueIds": 97, "dependencies": 120, "sourceStatuses": {"TODO": 97}, "modified": false},
+  "originalRoadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+  "mainAndV042": "de615b772cf37a99e7e08a647c59607b271de606",
+  "formalTaskClosure": false
+}

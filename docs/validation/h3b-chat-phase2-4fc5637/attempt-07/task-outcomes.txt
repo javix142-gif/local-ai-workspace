@@ -1,0 +1,4 @@
+> Task :app:testDebugUnitTest
+> Task :litert-compat:testDebugUnitTest UP-TO-DATE
+> Task :app:lintDebug
+> Task :app:compileDebugAndroidTestKotlin UP-TO-DATE

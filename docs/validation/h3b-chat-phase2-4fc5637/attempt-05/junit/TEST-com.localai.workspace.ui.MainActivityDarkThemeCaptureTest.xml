@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.MainActivityDarkThemeCaptureTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-21T18:31:22" hostname="bb89d9b8ef7f" time="0.687">
+  <properties/>
+  <testcase name="capturesDarkHomeChatsMoreAndModelsAtCompactWidth" classname="com.localai.workspace.ui.MainActivityDarkThemeCaptureTest" time="0.687"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,4 +1,4 @@
-# Backlog operativo — AWS H0 → H1 → H2
+# Backlog operativo — AWS H0 → H1 → H2 → H3b
 
 Esta vista operativa no sustituye ni modifica el catálogo histórico de 97 IDs/120 dependencias ni sus estados fuente.
 
@@ -10,7 +10,8 @@ Referencias de este flujo: [objetivo AWS](OBJETIVO_AWS.md), [redirección](PROMP
 - H2 añadió SET_ALARM al manifiesto y una prueba instrumentada de la manifest fusionada. El código está en 6e6acdaaedb20b7aff95fd2154d2b20eb8495cc6; el script de dispositivo, en fa6071f0322e0a60da5c2acf023e95847ab16619. Estado HOST y límites por capa: [evidencia H2/H3a](../validation/h2-close-h3a-20261021/RESULTS.md).
 - La suite HOST app pasó 961/961; LiteRT compatibilidad 2/2 pasó en invocación separada; lint, Debug assembly y compilación del AndroidTest pasaron. El run EMULATOR 39601660535 ejecutó 23 casos XML: 17 PASS, 6 SKIPPED por modelos ausentes y 0 fallos/errores; `AlarmPermissionManifestTest` y H1-AT-12 pasaron. El workflow global quedó FAIL porque faltó la captura large-font requerida; hay además discrepancia sin explicar entre progreso Gradle (29) y XML (23). El QA oficial 39601660283 cerró FAIL_CLOSED sin compilar APK. Personal QA 39601677489 pasó y el APK está en Drive; ver RESULTS. No equivale a PASS global ni a dispositivo.
 - H3a está preparado, no validado en teléfono. El smoke script es de solo lectura por defecto; no hay PowerShell ni un dispositivo conectado; el adb del SDK enumeró cero dispositivos. Moto G86 y H3a permanecen DEVICE_PENDING; PHYSICAL_DEVICE=NOT_RUN.
-- H3b queda esperando las nueve imágenes de referencia solicitadas. No se implementa UI visual hasta recibirlas.
+- H3b Fases 1–2: implementación de fundamentos/navegación y superficies del chat publicada en el código `35f23d814d7850e3d18e642b4d9b94a3511c6e7c`; pruebas Compose focalizadas 37/37 y `lintDebug` pasan en el checkout de ese SHA. El estado queda `HOST_PASS_AWAITING_REVIEW`; no es validación global ni de dispositivo. Evidencia y capturas sintéticas: [H3b Phase 1–2](../validation/h3b-chat-phase2-4fc5637/RESULTS.md). Fase 3 (Memoria completa, Inicio/primer uso, Chats/Más y nueva habilidad) sigue pendiente de revisión y autorización secuencial.
+- Incidencias reportadas para el Moto G86: Mensajes — `DEVICE_REPORTED / NOT_DIAGNOSED`, “sin síntomas concretos”; Calendario — `DEVICE_REPORTED / NOT_DIAGNOSED`, “sin síntomas concretos”; Alarma — `DEVICE_REPORTED / NOT_DIAGNOSED`, “sin síntomas concretos”. No se conoce en qué etapa falla la selección, preparación, confirmación o apertura del reloj/calendario; no se reprodujeron ni diagnosticaron aquí.
 - M00–M03 quedan congelados; no se inicia M00-06 u otra tarea funcional durante este cierre. El archivo fuente del backlog mantiene exactamente 97 IDs, 120 dependencias y estados TODO; esta vista operativa no altera esos datos.
 
 ## Estado previo a este cierre (histórico)

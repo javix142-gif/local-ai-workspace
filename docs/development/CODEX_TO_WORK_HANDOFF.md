@@ -1,4 +1,16 @@
-# Current checkpoint — H2 HOST complete; emulator evidence gate failed; H3a device pending / H3b awaiting references (2026-10-21)
+# Current checkpoint — H3b phases 1–2 HOST focused result; awaiting review (2026-10-21)
+
+## Latest handoff — AWS H3b phases 1–2
+
+Feature branch `feat/0.5.0-skills-agents`; baseline `4fc5637377be8283a9580a3291857799af5e5c13`; code commit `35f23d814d7850e3d18e642b4d9b94a3511c6e7c`. This increment implements H3b foundations/navigation and chat/action-state/citation presentation only. The four top-level destinations are Inicio, Chats, Memoria, Más; existing destinations, ViewModels, models, files, callbacks and action execution are reused. No database/schema, inference, permissions, agent/tool semantics, dependencies or workflow changed. H3b Phase 3 remains pending review; do not start it under the completed contract.
+
+The exact-SHA focused HOST invocation ran 2026-10-21 18:40:47–18:44:04 UTC (196.945s), Gradle 8.10.2, JDK 17 runtime, JDK 17/JDK 21 toolchain discovery, existing SDK/NDK, offline, exit 0. Nine newly generated app JUnit XML files report 37/37 pass, 0 fail/error/skip. `:app:lintDebug` passed with 92 warnings, 1 informational issue, 0 errors. In that same invocation LiteRT compatibility tests and `compileDebugAndroidTestKotlin` were `UP-TO-DATE`; they are not counted as fresh tests/compilation. The 37 fresh tests and command/log are under `docs/validation/h3b-chat-phase2-4fc5637/attempt-07/`; the report is [`H3b Phase 1–2 results`](../validation/h3b-chat-phase2-4fc5637/RESULTS.md). The earlier pre-commit attempt and all failed attempts remain in that evidence folder and are not used to inflate the final fresh XML count.
+
+Fifteen valid PNG captures from the exact-SHA Robolectric run are hashed and contain no user data. The dedicated chat fixture is synthetic (`H3B-SYNTHETIC-01`); top-level screenshots use the UI test application and its empty/no-model state. Selected chat/home captures and design references were visually inspected. The separate `ModalBottomSheet` confirmation window is not present in the activity `decorView` screenshot, so only its semantics and explicit callback test are claimed. At fontScale 2.0, “Memoria” wraps to two lines and the chat is dense but remains on the scrollable layout. Capture manifest: `docs/validation/h3b-chat-phase2-4fc5637/attempt-07/captures.json`.
+
+**EMULATOR=NOT_RUN**: direct SDK ADB probe found no connected device; the SDK has no emulator executable. **PHYSICAL_DEVICE=NOT_RUN; APK=NOT_RUN.** No inference performance, TTFT, tokens/s, memory or energy result is claimed. Moto G86 messages/calendar/alarm reports remain `DEVICE_REPORTED / NOT_DIAGNOSED`. The original plan files were not changed: backlog 97 IDs/120 dependencies/all TODO, SHA `bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235`; roadmap SHA `260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5`. M00–M03 remain frozen for this transition. `main` and peeled `v0.4.2` remain at `de615b772cf37a99e7e08a647c59607b271de606`.
+
+## Earlier H2 handoff (historical; details preserved below)
 
 ## Latest handoff — H2 technical close and H3a/H3b
 
