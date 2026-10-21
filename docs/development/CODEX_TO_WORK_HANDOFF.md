@@ -1,12 +1,18 @@
 # Current checkpoint — H1 HOST/CI_VERIFIED; physical checks pending (2026-10-20)
 
-## H2 implementation checkpoint — 2026-10-21
+## H2 implementation and validation checkpoint — 2026-10-21
 
-The feature commit containing this section adds `calendar.read` and `contacts.lookup` as bounded local tools, asks only for read permissions after an explicit in-chat action, returns their output as untrusted data, and redacts private arguments/results from persisted tool-call history. Deterministic routing exposes compatible calendar/contact queries and existing Android action preparation; email requests do not route to the phone-only lookup. Existing Tool Off and custom tool selections remain intact. `artifacts.create/revise` instructions are shorter while retaining the format schemas and DOCX list semantics.
+Source SHA: `a65a80dae1cf7edc3ae42afeb76620f66bfdc309`, branch `feat/0.5.0-skills-agents`. The implementation adds bounded local `calendar.read`/`contacts.lookup`, point-of-use permissions, untrusted local results, redacted tool history, deterministic routing, Android action handoffs with explicit confirmation, and compact artifact guidance preserving DOCX list semantics.
 
-Final focused HOST coverage: 19 unique tests PASS across Android personal-data tools, chat tool schemas, profile defaults, Android action UI, and DOCX structure/schema. The full app run executed 960 tests and exposed one H2-caused description regression; after restoring the missing compact DOCX guidance, its class passed 4/4. The full suite was not repeated, so no final full-JVM PASS is claimed. LiteRT compatibility passed 2/2. `lintDebug` and `compileDebugAndroidTestKotlin` passed on the corrected production source; lint had 0 errors, 128 warnings and 1 informational item.
+HOST: focused logs report 19/19 PASS; LiteRT compatibility 2/2 PASS; lint and AndroidTest Kotlin compilation PASS (0 lint errors, 128 warnings, 1 info). Full app test was 959/960 once, with one DOCX list-description regression. That description was restored and the affected class passed 4/4 in later focused runs; the full suite was not repeated. An 18-test focused attempt also failed once at the personal-data schema/routing test; subsequent 18- and 19-test runs passed, and the cause remains NOT_DETERMINED. See [H2 evidence](../validation/master-program-h2-20261021/RESULTS.md).
 
-No emulator/instrumentation, APK installation or physical Motorola test was run locally. Push-triggered emulator and personal QA workflows are separate evidence and must be read against the exact H2 commit. `PHYSICAL_DEVICE=NOT_RUN`; H1 criteria needing original private files/device remain pending. The canonical 97 source IDs/120 dependencies and `EXECUTION_STATE.json` are unchanged.
+M00-04 focused verification on this exact code passed 2/2, including the material-vs-routine notice behavior and Inspector drop reason. Source catalog status remains TODO and unchanged.
+
+EMULATOR [run 39520261327](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39520261327) passed its connected task on API 35 / Android 15 / x86_64: XML 22 total, 16 passed, 0 failed/errors, 6 skipped for real model weights. H1-AT-12 used synthetic update data and passed. The historical authentic Room v1-v7 schema is still unavailable and is not validated by the v8 migration case.
+
+PERSONAL_QA [run 39520260941](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39520260941) passed and produced the Debug ARM64 APK. The APK-only Drive container is [here](https://drive.google.com/file/d/16LuVNvAsd_3WxUQn7wQKyzXwu9glMDLP/view?usp=drivesdk); SHA-256 `1432e93a432a936f07221236bd3135554c78e3c5f36c34f69e08bfd759deeb8b`. It contains exactly the APK. Full metadata and limits are in H2 RESULTS. `PHYSICAL_DEVICE=NOT_RUN`; no native model/device performance metrics are claimed.
+
+The canonical plan files remain unchanged at 97 unique IDs/120 dependencies, all source statuses TODO. M00-04 behavior is HOST-verified but not written back as a source task status. M00-06 is the next original host-eligible task and already has partial instrumentation; audit its remaining end-to-end correlation gap before implementation. Preserve all H1, Room, model, and Moto limitations.
 
 ---
 

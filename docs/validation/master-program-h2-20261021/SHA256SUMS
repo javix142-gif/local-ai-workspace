@@ -1,0 +1,23 @@
+2593ddd2a900084a4631db966daf642d425dd7d0ced860ea13e43c205407c646  docs/validation/master-program-h2-20261021/RESULTS.json
+fbb9539a19ef20b5d75134d06aa691262cc2670869c5b8d70e0170d8014698e9  docs/validation/master-program-h2-20261021/RESULTS.md
+2b9fcfd451808400977cbaadcc6df0c31d20f5918f117ca3422943dbbb89b15c  docs/validation/master-program-h2-20261021/emulator/TEST-emulator-5554 - 15-_app-.xml
+bd5563ad852f551c9a662c50b8fb5031bc10a985e22e457a107c8568c81a9ba3  docs/validation/master-program-h2-20261021/emulator/github-artifact-12312145804.zip
+d7afd3d726e350e66ee2ec1e890c3f952d4b9ea75787e8fa6671cb1331cad829  docs/validation/master-program-h2-20261021/emulator/summary.json
+3d0521d7e5d9645e7fb5381a4b24a1ea81fcd951aa1e75733a10f1b120c0e990  docs/validation/master-program-h2-20261021/host/TEST-NativeHistoryRoleTest.xml
+7e7d8b87fc1fee99c7d6690297bf0e330e1b2a9b5ac5d6cd3b8ba6b25198e5a0  docs/validation/master-program-h2-20261021/host/focused-18-initial.log
+d42357ac7bc9458dde0b1570538b74c785b32cb9b8926201327d9fd31545117f  docs/validation/master-program-h2-20261021/host/focused-19.env
+4e515d07da31fef1218b095800d5d166d80a6a2cb18ed8f965c2106cf187b45a  docs/validation/master-program-h2-20261021/host/focused-19.log
+3d355d904fafda529bf4748f73fb23958d8c8a73b4a7e1f13f145aba5d6bcf18  docs/validation/master-program-h2-20261021/host/focused-gates-final.env
+535dab70b12729ce038d61d1e7506213a2435e0a5df832f5086d12da5b08abfa  docs/validation/master-program-h2-20261021/host/focused-gates-final.log
+f20a850a743710a5e6a006c4db583f7e4466d1a9a957ccc7f909c4027abc535a  docs/validation/master-program-h2-20261021/host/full-app-gate-first-attempt.log
+ac9b4fb0e6c72258e943a200a6c75357560223917364b39166b9767046181ab7  docs/validation/master-program-h2-20261021/host/litert-compat.log
+ac5b6bcb9ea404c095d57cd296c4df51fd5e02c04dd5d77a59a40bcd7a1844e4  docs/validation/master-program-h2-20261021/m00-04-focused/SHA256SUMS
+f8be1b3d2931b282d9ffa1a3110d9ea7d3a1e429dec35dcb9ba95a615ab100b4  docs/validation/master-program-h2-20261021/m00-04-focused/command.txt
+a03b465d2310477181ba16fd9448b770c9cc2f5e5325e4f4f8245c1132ed405c  docs/validation/master-program-h2-20261021/m00-04-focused/environment.txt
+29f9a2cd158b1cec98813c748999e2f2e5747f11d531e20399a4d1500fddad9e  docs/validation/master-program-h2-20261021/m00-04-focused/gradle.log
+b6822e878a638d9ece87ca5f5006eda6329b288680043bd8457f17c3a33c76b1  docs/validation/master-program-h2-20261021/m00-04-focused/xml/TEST-com.localai.workspace.ui.ChatSessionPipelineTest.xml
+10e399366759e911e6f0fd0c47e349eba434c7d6c8e406a42622de3d48414444  docs/validation/master-program-h2-20261021/m00-04-focused/xml/TEST-com.localai.workspace.ui.ContextOmissionInspectorUiTest.xml
+89aa3064878589afdcb7c6438d4183e33d74d40604cea9ed88665219b47e9633  docs/validation/master-program-h2-20261021/personal-qa/RESULTS.json
+44eee3c5444ba3bac038ef3619c0cee6ee748a3f1e51666d5d8a68dcecc62cd6  docs/validation/master-program-h2-20261021/personal-qa/logs/apk-integrity.log
+78f91002b40364511bb6a65e3f13e10782e189abb6da1c7ce90928e788857b38  docs/validation/master-program-h2-20261021/personal-qa/logs/qa-build-sanitized.log
+0a63745e78940123e8c044b17bfc29d2764a029c40ea57c7c730542f341d6196  docs/validation/master-program-h2-20261021/personal-qa/logs/workflow-build.log

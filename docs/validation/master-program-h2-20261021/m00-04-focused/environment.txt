@@ -1,0 +1,9 @@
+startedAtUtc=2026-10-21T00:52:15Z
+sourceSha=a65a80dae1cf7edc3ae42afeb76620f66bfdc309
+branch=feat/0.5.0-skills-agents
+openjdk version "17.0.20.1" 2026-08-18
+openjdk version "21.0.12.1" 2026-08-18 LTS
+androidSdk=/workspace/.toolchain/android-sdk
+ndk=/workspace/.toolchain/android-sdk/ndk/27.0.12077973
+exit_code=0
+finishedAtUtc=2026-10-21T00:52:49Z

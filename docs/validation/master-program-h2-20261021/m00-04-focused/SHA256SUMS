@@ -1,0 +1,5 @@
+f8be1b3d2931b282d9ffa1a3110d9ea7d3a1e429dec35dcb9ba95a615ab100b4  ./command.txt
+a03b465d2310477181ba16fd9448b770c9cc2f5e5325e4f4f8245c1132ed405c  ./environment.txt
+29f9a2cd158b1cec98813c748999e2f2e5747f11d531e20399a4d1500fddad9e  ./gradle.log
+b6822e878a638d9ece87ca5f5006eda6329b288680043bd8457f17c3a33c76b1  ./xml/TEST-com.localai.workspace.ui.ChatSessionPipelineTest.xml
+10e399366759e911e6f0fd0c47e349eba434c7d6c8e406a42622de3d48414444  ./xml/TEST-com.localai.workspace.ui.ContextOmissionInspectorUiTest.xml

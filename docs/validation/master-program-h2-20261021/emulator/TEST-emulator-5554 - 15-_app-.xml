@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuite name="com.localai.workspace.data.WorkspaceDatabaseMigrationTest" tests="22" failures="0" errors="0" skipped="6" time="74.328" timestamp="2026-10-21T00:36:11" hostname="localhost">
+  <properties>
+    <property name="device" value="emulator-5554 - 15" />
+    <property name="flavor" value="" />
+    <property name="project" value=":app" />
+  </properties>
+  <testcase name="v8CitationRowsSurviveThroughTheCurrentSchemaUpgrade" classname="com.localai.workspace.data.WorkspaceDatabaseMigrationTest" time="0.13" />
+  <testcase name="H1_AT_12_verifyMemoriesProjectChatAndNextContextAfterUpdate" classname="com.localai.workspace.h1acceptance.H1At12AfterUpdateTest" time="0.016" />
+  <testcase name="H1_AT_12_seedPreviousVersionData" classname="com.localai.workspace.h1acceptance.H1At12SeedTest" time="0.005" />
+  <testcase name="H1_AT_10_migratesMemoryFromAuthenticWorkspaceSchema8" classname="com.localai.workspace.h1acceptance.H1MemoryMigrationTest" time="0.127" />
+  <testcase name="H1_AT_10_migratesMemoryFromAuthenticWorkspaceSchema9" classname="com.localai.workspace.h1acceptance.H1MemoryMigrationTest" time="0.052" />
+  <testcase name="H1_AT_10_migratesMemoryFromAuthenticWorkspaceSchema10" classname="com.localai.workspace.h1acceptance.H1MemoryMigrationTest" time="0.057" />
+  <testcase name="normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole" classname="com.localai.workspace.inference.LiteRtLmDeviceSmokeTest" time="0.009">
+    <skipped />
+  </testcase>
+  <testcase name="cpuFirstTokenStreamingCompletionCancelRetryAndUnload" classname="com.localai.workspace.inference.LiteRtLmDeviceSmokeTest" time="0.032">
+    <skipped />
+  </testcase>
+  <testcase name="modelsExposeExperimentalSemanticDialogWithoutAddingAnotherNavigationRoute" classname="com.localai.workspace.semantic.SemanticV2NavigationTest" time="5.372" />
+  <testcase name="builtInSkillsCanBeInspectedWithoutRunningTools" classname="com.localai.workspace.ui.AgentsSkillsNavigationTest" time="6.627" />
+  <testcase name="generalAgentIsProtectedAndValidationIsDeveloperOnly" classname="com.localai.workspace.ui.AgentsSkillsNavigationTest" time="5.111" />
+  <testcase name="largeFontScaleExpandsHeaderAndKeepsAllThreeLinesVisible" classname="com.localai.workspace.ui.ChatHeaderLayoutTest" time="2.204" />
+  <testcase name="standardFontScaleKeepsAgentTitleAndModelInsideHeader" classname="com.localai.workspace.ui.ChatHeaderLayoutTest" time="2.433" />
+  <testcase name="H1_AT_13_forgetPermanentlyUsesConfirmationAndLeavesNoAppOwnedMarkerBytes" classname="com.localai.workspace.ui.ContextMemoryDeviceTest" time="8.145" />
+  <testcase name="inspectorDoesNotStartGenerationAutomatically" classname="com.localai.workspace.ui.ContextMemoryDeviceTest" time="4.653" />
+  <testcase name="structuredMemoryEntryAndEditorAreAccessible" classname="com.localai.workspace.ui.ContextMemoryDeviceTest" time="7.544" />
+  <testcase name="developerEntryOpensQuickAndFullScreen" classname="com.localai.workspace.ui.DeviceValidationNavigationTest" time="3.191" />
+  <testcase name="plain_chat_legacy_off_real_native" classname="com.localai.workspace.ui.NormalChatNativeDeviceTest" time="2.102">
+    <skipped />
+  </testcase>
+  <testcase name="plain_chat_context_v1_on_real_native" classname="com.localai.workspace.ui.NormalChatNativeDeviceTest" time="2.379">
+    <skipped />
+  </testcase>
+  <testcase name="cancel_then_retry_real_native" classname="com.localai.workspace.ui.NormalChatNativeDeviceTest" time="2.352">
+    <skipped />
+  </testcase>
+  <testcase name="project_chat_context_v1_on_real_native" classname="com.localai.workspace.ui.NormalChatNativeDeviceTest" time="1.938">
+    <skipped />
+  </testcase>
+  <testcase name="createProjectAndExplicitlySaveEditRemoveMemory" classname="com.localai.workspace.ui.ProjectUiDeviceTest" time="17.745" />
+</testsuite>

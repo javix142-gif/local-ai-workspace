@@ -1,0 +1,254 @@
+{
+  "label": "EMULATOR",
+  "sourceCommit": "a65a80dae1cf7edc3ae42afeb76620f66bfdc309",
+  "runId": "39520261327",
+  "runAttempt": "1",
+  "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39520261327",
+  "expected": {
+    "api": 35,
+    "abi": "x86_64",
+    "systemImage": "google_apis"
+  },
+  "device": {
+    "connected": true,
+    "api": "35",
+    "release": "15",
+    "abi": "x86_64",
+    "model": "sdk_gphone64_x86_64",
+    "product": "sdk_gphone64_x86_64",
+    "emulator": "1",
+    "screenSize": "Physical size: 1080x1920",
+    "screenDensity": "Physical density: 420"
+  },
+  "adbDevicesExitCode": 0,
+  "avdPrelaunchDiagnostics": {
+    "capturedBeforeLaunch": true,
+    "expectedAvdName": "localai-api35-x86_64",
+    "androidAvdHome": "/home/runner/.android/avd",
+    "xdgConfigHome": "/home/runner/.config",
+    "avdmanagerCreateExitCode": 0,
+    "createPipelineExitCode": 0,
+    "avdmanagerListExitCode": 0,
+    "avdmanagerListedExpected": true,
+    "avdmanagerReportedPaths": [
+      "/home/runner/.android/avd/localai-api35-x86_64.avd"
+    ],
+    "emulatorListExitCode": 0,
+    "emulatorListedExpected": true,
+    "searchPaths": [
+      {
+        "searchDirectory": "/home/runner/.android/avd",
+        "directoryExists": true,
+        "expectedIni": "/home/runner/.android/avd/localai-api35-x86_64.ini",
+        "iniExists": true,
+        "expectedConfig": "/home/runner/.android/avd/localai-api35-x86_64.avd/config.ini",
+        "configExists": true
+      },
+      {
+        "searchDirectory": "/home/runner/.config/.android/avd",
+        "directoryExists": false,
+        "expectedIni": "/home/runner/.config/.android/avd/localai-api35-x86_64.ini",
+        "iniExists": false,
+        "expectedConfig": "/home/runner/.config/.android/avd/localai-api35-x86_64.avd/config.ini",
+        "configExists": false
+      }
+    ],
+    "checks": {
+      "createCommandSucceeded": true,
+      "createPipelineSucceeded": true,
+      "avdmanagerListSucceeded": true,
+      "avdmanagerListedExpected": true,
+      "emulatorListSucceeded": true,
+      "emulatorListedExpected": true,
+      "managerReportedCanonicalPath": true,
+      "canonicalDirectoryExists": true,
+      "canonicalIniExists": true,
+      "canonicalConfigExists": true
+    },
+    "preflightPassed": true,
+    "preflightFailures": []
+  },
+  "avdPreflightExitCode": 0,
+  "apkInstallState": {
+    "checked": true,
+    "listPackagesExitCode": 0,
+    "packages": {
+      "application": {
+        "packageName": "com.localai.workspace.debug",
+        "installed": false
+      },
+      "instrumentationTest": {
+        "packageName": "com.localai.workspace.debug.test",
+        "installed": false
+      }
+    },
+    "applicationInstallVerification": {
+      "installedAfterTests": false,
+      "verifiedByConnectedInstrumentation": true,
+      "verifiedForRun": true
+    }
+  },
+  "physicalDeviceValidation": "NOT_RUN",
+  "connectedTask": ":app:connectedDebugAndroidTest",
+  "connectedTaskCommand": "./gradlew :app:connectedDebugAndroidTest --no-daemon --no-parallel --max-workers=2 --stacktrace --console=plain",
+  "gradleExitCode": 0,
+  "instrumentationXmlCount": 1,
+  "counts": {
+    "total": 22,
+    "passed": 16,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 6,
+    "executed": 16
+  },
+  "skippedCases": [
+    {
+      "class": "com.localai.workspace.inference.LiteRtLmDeviceSmokeTest",
+      "name": "normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole",
+      "reason": ""
+    },
+    {
+      "class": "com.localai.workspace.inference.LiteRtLmDeviceSmokeTest",
+      "name": "cpuFirstTokenStreamingCompletionCancelRetryAndUnload",
+      "reason": ""
+    },
+    {
+      "class": "com.localai.workspace.ui.NormalChatNativeDeviceTest",
+      "name": "plain_chat_legacy_off_real_native",
+      "reason": ""
+    },
+    {
+      "class": "com.localai.workspace.ui.NormalChatNativeDeviceTest",
+      "name": "plain_chat_context_v1_on_real_native",
+      "reason": ""
+    },
+    {
+      "class": "com.localai.workspace.ui.NormalChatNativeDeviceTest",
+      "name": "cancel_then_retry_real_native",
+      "reason": ""
+    },
+    {
+      "class": "com.localai.workspace.ui.NormalChatNativeDeviceTest",
+      "name": "project_chat_context_v1_on_real_native",
+      "reason": ""
+    }
+  ],
+  "headerUiDiagnostics": {
+    "screenshots": [
+      "ui-diagnostics/screenshots/chat-header-standard.png",
+      "ui-diagnostics/screenshots/chat-header-large-font.png"
+    ],
+    "requiredScreenshots": 2,
+    "captureReport": {
+      "screenshots": [
+        {
+          "name": "standard",
+          "transport": "logcat_base64_chunks_v1",
+          "collectorCommand": "adb -s <serial> logcat -d -v raw -s M00HeaderPng:I",
+          "logcatExitCode": 0,
+          "logcatBytes": 183931,
+          "localPath": "ui-diagnostics/screenshots/chat-header-standard.png",
+          "localFilePresent": true,
+          "pngValid": true,
+          "widthPixels": 1080,
+          "heightPixels": 1920,
+          "bytes": 47792,
+          "sha256": "214f9e93a5f68d47b1e2825fcf0bc4727f91e0d60073c024746673397441084f",
+          "captureRecordsFound": 1,
+          "expectedChunkCount": 125,
+          "receivedChunkCount": 125,
+          "endMarkerReceived": true,
+          "errors": []
+        },
+        {
+          "name": "large-font",
+          "transport": "logcat_base64_chunks_v1",
+          "collectorCommand": "adb -s <serial> logcat -d -v raw -s M00HeaderPng:I",
+          "logcatExitCode": 0,
+          "logcatBytes": 183931,
+          "localPath": "ui-diagnostics/screenshots/chat-header-large-font.png",
+          "localFilePresent": true,
+          "pngValid": true,
+          "widthPixels": 1080,
+          "heightPixels": 1920,
+          "bytes": 82777,
+          "sha256": "648e95eee679b74cd1e415fd9e704a203fc1a336e1a3b8ad0c45cf39d78a8469",
+          "captureRecordsFound": 1,
+          "expectedChunkCount": 216,
+          "receivedChunkCount": 216,
+          "endMarkerReceived": true,
+          "errors": []
+        }
+      ]
+    },
+    "logcat": {
+      "exitCode": 0,
+      "tags": [
+        "AndroidRuntime:E",
+        "TestRunner:I",
+        "Instrumentation:I",
+        "ChatHeaderLayout:V"
+      ],
+      "chatHeaderPrintToLogPriority": "DEBUG; ChatHeaderLayout:V includes DEBUG and INFO",
+      "bytes": 52400,
+      "sha256": "499306d12394f971b05133643601ee783a286b5756262bb8c9403e74a467a675"
+    }
+  },
+  "h1At12Update": {
+    "contract": "H1-AT-12",
+    "status": "PASS",
+    "startedAtUtc": "2026-10-21T00:18:03.798306+00:00",
+    "previousSourceCommit": "9cfb0d8112342ee097ac64aa573e5d35b446f834",
+    "currentSourceCommit": "a65a80dae1cf7edc3ae42afeb76620f66bfdc309",
+    "applicationId": "com.localai.workspace.debug",
+    "versionCode": 27,
+    "versionName": "0.5.0-debug",
+    "fixture": "Synthetic only; 10 legacy rows, 10 sidecar rows, one project and one chat.",
+    "physicalDevice": "NOT_RUN",
+    "completedAtUtc": "2026-10-21T00:34:18.548873+00:00",
+    "deviceSerial": "emulator-5554",
+    "oldApk": {
+      "package": "com.localai.workspace.debug",
+      "versionCode": "27",
+      "versionName": "0.5.0-debug",
+      "certificateSha256": "b0d1c40838a22b6bbfc7bfa176c9bb917c7194c7b74dedf749566fb268ab120b",
+      "apkSha256": "ec1ced8391829827d81ac70bfeae5df8a1e4917efb9c224372896e1206f8ce48"
+    },
+    "currentApk": {
+      "package": "com.localai.workspace.debug",
+      "versionCode": "27",
+      "versionName": "0.5.0-debug",
+      "certificateSha256": "b0d1c40838a22b6bbfc7bfa176c9bb917c7194c7b74dedf749566fb268ab120b",
+      "apkSha256": "9ff4bec3d1034e32a5d1b1bce46e27c411155f88ed75f0698f45e77c923889c2",
+      "testPackage": "com.localai.workspace.debug.test",
+      "testCertificateSha256": "b0d1c40838a22b6bbfc7bfa176c9bb917c7194c7b74dedf749566fb268ab120b",
+      "testApkSha256": "99f8bae78822a8f21bd9abcd5ba35b6605744369379cb4904515d7e760bd7c00"
+    },
+    "installUpdateCommand": "adb install -r <current-debug-apk>",
+    "seedTest": "com.localai.workspace.h1acceptance.H1At12SeedTest#H1_AT_12_seedPreviousVersionData",
+    "verifyTest": "com.localai.workspace.h1acceptance.H1At12AfterUpdateTest#H1_AT_12_verifyMemoriesProjectChatAndNextContextAfterUpdate",
+    "verified": [
+      "20 memories and type/scope",
+      "project",
+      "chat/message",
+      "preference in next ContextFoundation request",
+      "updated app opens"
+    ]
+  },
+  "acceptanceChecks": {
+    "avdPreflightPassed": true,
+    "adbConnected": true,
+    "api35X86_64Emulator": true,
+    "applicationApkInstalled": true,
+    "connectedTaskSucceeded": true,
+    "junitXmlPresent": true,
+    "junitCountsConsistent": true,
+    "testsExecuted": true,
+    "noTestFailuresOrErrors": true,
+    "headerUiDiagnosticsCaptured": true,
+    "h1At12RealUpdateVerified": true
+  },
+  "status": "PASS",
+  "failureReasons": [],
+  "apkOrModelArtifactsIncluded": false
+}

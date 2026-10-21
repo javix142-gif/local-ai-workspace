@@ -1,0 +1,184 @@
+{
+  "sourceCommit": "a65a80dae1cf7edc3ae42afeb76620f66bfdc309",
+  "branch": "feat/0.5.0-skills-agents",
+  "dateUtc": "2026-10-21",
+  "productChanges": [
+    "bounded calendar.read and contacts.lookup tools with point-of-use read permission",
+    "untrusted-result classification and private argument/result redaction in tool history",
+    "deterministic routing and compact tool descriptions preserving DOCX list guidance"
+  ],
+  "host": {
+    "fullApp": {
+      "status": "INCOMPLETE_FAIL_OBSERVED_NOT_RERUN",
+      "tests": 960,
+      "passed": 959,
+      "failed": 1,
+      "failure": "DocxArtifactStructureTest.generatedDocxEmitsOrderedListNumberingAndKeepsBulletList; compact description omitted DOCX list/style syntax",
+      "correction": "Description restored; affected class passed 4/4 in later focused runs",
+      "fullSuiteRerunAfterCorrection": false,
+      "finalFullSuitePass": false,
+      "log": "host/full-app-gate-first-attempt.log"
+    },
+    "intermediateFocused18": {
+      "status": "FAIL_THEN_LATER_PASS_CAUSE_UNDETERMINED",
+      "initialExitCode": 1,
+      "laterSameCountExitCode": 0,
+      "initialFailure": "AndroidPersonalDataToolsTest.toolSchemasAndDeterministicRoutingExposeOnlyRelevantPersonalReadsAndActionHandoffs; log maps assertion to line 110",
+      "cause": "NOT_DETERMINED",
+      "initialLog": "host/focused-18-initial.log",
+      "laterLog": "host/focused-gates-final.log"
+    },
+    "focused19": {
+      "status": "PASS_EVENT_LOG",
+      "tests": 19,
+      "passed": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "durationSeconds": 33,
+      "xmlPreservedForThisRun": false,
+      "log": "host/focused-19.log",
+      "environment": "host/focused-19.env"
+    },
+    "combinedHostGates": {
+      "status": "PASS",
+      "tasks": [
+        ":app:testDebugUnitTest",
+        ":app:lintDebug",
+        ":app:compileDebugAndroidTestKotlin"
+      ],
+      "unitTests": 18,
+      "passed": 18,
+      "duration": "4m27s",
+      "exitCode": 0,
+      "lintErrors": 0,
+      "lintWarnings": 128,
+      "lintInformation": 1,
+      "log": "host/focused-gates-final.log",
+      "environment": "host/focused-gates-final.env",
+      "literalShellCommandPreserved": false
+    },
+    "liteRtCompatibility": {
+      "status": "PASS",
+      "tests": 2,
+      "passed": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "log": "host/litert-compat.log"
+    }
+  },
+  "m00_04Focused": {
+    "status": "PASS_HOST_FOCUSED",
+    "sourceCommit": "a65a80dae1cf7edc3ae42afeb76620f66bfdc309",
+    "tests": 2,
+    "passed": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "durationSeconds": 34,
+    "exitCode": 0,
+    "environment": {
+      "gradle": "8.10.2",
+      "runtimeJdk": "Temurin 17.0.20.1",
+      "testToolchain": "Temurin 21.0.12.1",
+      "androidSdk": "/workspace/.toolchain/android-sdk, API 35",
+      "ndk": "27.0.12077973",
+      "gradleUserHome": "/workspace/.gradle (existing, offline)"
+    },
+    "commandFile": "m00-04-focused/command.txt",
+    "log": "m00-04-focused/gradle.log",
+    "xml": [
+      "m00-04-focused/xml/TEST-com.localai.workspace.ui.ChatSessionPipelineTest.xml",
+      "m00-04-focused/xml/TEST-com.localai.workspace.ui.ContextOmissionInspectorUiTest.xml"
+    ],
+    "sourceTask": {
+      "id": "M00-04",
+      "sourceStatus": "TODO_UNCHANGED",
+      "formalCompletion": false,
+      "reason": "Focused HOST behavior now passes; the original catalog remains historical TODO and no task status was edited."
+    }
+  },
+  "emulator": {
+    "status": "PASS_CONFIGURED_INSTRUMENTATION_WITH_MODEL_SKIPS",
+    "runId": "39520261327",
+    "jobId": "118962109027",
+    "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39520261327",
+    "sourceCommit": "a65a80dae1cf7edc3ae42afeb76620f66bfdc309",
+    "task": ":app:connectedDebugAndroidTest",
+    "device": "GitHub-hosted emulator API 35 / Android 15 / x86_64, emulator-5554, 1080x1920 at 420 dpi",
+    "counts": {
+      "total": 22,
+      "passed": 16,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 6,
+      "executed": 16
+    },
+    "skips": "Two LiteRT native and four Gemma native tests require real model files; no weights downloaded.",
+    "h1At12": "PASS on synthetic emulator fixture only; adb install -r preserved 20 synthetic memories, project, chat/message and context preference.",
+    "physicalDevice": "NOT_RUN",
+    "artifactId": "12312145804",
+    "artifactBytes": 166575,
+    "artifactSha256": "bd5563ad852f551c9a662c50b8fb5031bc10a985e22e457a107c8568c81a9ba3",
+    "artifactExpires": "2026-10-28",
+    "artifactFile": "emulator/github-artifact-12312145804.zip",
+    "roomHistoricalLimit": "This run covered v8-to-current; it does not establish v1-v7 migration."
+  },
+  "personalQa": {
+    "status": "PASS_PERSONAL_QA_NOT_RELEASE",
+    "runId": "39520260941",
+    "jobId": "118962107767",
+    "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39520260941",
+    "sourceCommit": "a65a80dae1cf7edc3ae42afeb76620f66bfdc309",
+    "artifactId": "12310364342",
+    "artifactBytes": 48987457,
+    "artifactSha256": "277d90d978117326d5387e93e8c54a630cc0784208f2787465abdad9dd3775eb",
+    "artifactExpires": "2026-11-20",
+    "apk": {
+      "filename": "local-ai-workspace-0.5.0-debug-arm64.apk",
+      "bytes": 121635467,
+      "sha256": "b2860ab3db809ab90bfc91078ab6246dd3dabd480ce5825fc31b2f17f0567d00",
+      "applicationId": "com.localai.workspace.debug",
+      "versionName": "0.5.0-debug",
+      "versionCode": 27,
+      "abis": ["arm64-v8a"],
+      "signature": "Debug v2 PASS",
+      "certificateSha256": "b0d1c40838a22b6bbfc7bfa176c9bb917c7194c7b74dedf749566fb268ab120b",
+      "zipCrc": "PASS",
+      "zipalign": "PASS",
+      "modelPayloads": "NONE"
+    },
+    "driveApkOnlyContainer": {
+      "id": "16LuVNvAsd_3WxUQn7wQKyzXwu9glMDLP",
+      "url": "https://drive.google.com/file/d/16LuVNvAsd_3WxUQn7wQKyzXwu9glMDLP/view?usp=drivesdk",
+      "filename": "local-ai-workspace-0.5.0-h2-personal-qa-arm64-apk-only.zip",
+      "bytes": 47264703,
+      "sha256": "1432e93a432a936f07221236bd3135554c78e3c5f36c34f69e08bfd759deeb8b",
+      "contents": "Exactly one entry: the APK",
+      "readback": "Filename, size and private folder metadata confirmed; local ZIP CRC and SHA-256 verified."
+    },
+    "emulator": "NOT_RUN by this workflow",
+    "physicalDevice": "NOT_RUN"
+  },
+  "officialQa": {
+    "status": "PASS_METADATA_OBSERVED_ARTIFACT_NOT_DOWNLOADED",
+    "runId": "39520260812",
+    "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39520260812",
+    "artifactId": "12311302592",
+    "artifactBytes": 48980137,
+    "artifactSha256": "59e1fff96a03f8d7ca2423619679e55de66e8a8f6132eff3f96d752f67287e56",
+    "artifactDownloadedForIndependentInspection": false
+  },
+  "physicalDevice": "NOT_RUN",
+  "sourceBacklog": {
+    "path": "docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json",
+    "tasks": 97,
+    "uniqueIds": 97,
+    "dependencyEdges": 120,
+    "sourceStatusesRemain": "TODO",
+    "sourceModified": false,
+    "main": "de615b772cf37a99e7e08a647c59607b271de606",
+    "peeledV042": "de615b772cf37a99e7e08a647c59607b271de606"
+  }
+}

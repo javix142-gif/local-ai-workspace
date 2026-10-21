@@ -4,21 +4,18 @@ Esta vista operativa no sustituye ni modifica el catálogo histórico de 97 IDs/
 
 ## Estado más reciente
 
-- **H2 — implementación lista para publicar; HOST focalizado:** añade `calendar.read` y `contacts.lookup` acotados, permisos runtime solicitados desde una acción explícita en el chat, historial de herramienta sin argumentos ni valores personales, routing determinista para intenciones compatibles y descripciones de herramientas más compactas. El detalle de H2 y sus limitaciones queda en [STATUS](STATUS.md) y [handoff](CODEX_TO_WORK_HANDOFF.md).
-- **HOST de H2:** 19 pruebas focales únicas PASS; lint y compilación Kotlin de AndroidTest PASS (0 errores de lint, 128 avisos, 1 información); compatibilidad LiteRT 2/2. La única suite completa de app ejecutada encontró un fallo de descripción DOCX, corregido y verificado en su clase 4/4; no se repitió toda la suite, por lo que el gate global final permanece sin aceptación.
-- No se ejecutaron instrumentación, emulador ni Motorola para H2. La construcción personal QA solo se considera validada cuando el workflow asociado al SHA exacto finalice y se inspeccione su artifact.
-
-- **H0/H1 instrumentado:** commit probado `01161491acc2a7c836222a84b7bd6f778292f8f3`; run Android [39511660788](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39511660788) PASS, 22 casos XML: 16 PASS, 0 FAIL/ERROR, 6 SKIPPED por ausencia de modelos reales. AVD API 35 x86_64 y ADB estuvieron conectados. H1-AT-12 `adb install -r` preservó la fixture sintética.
-- **HOST:** el último gate completo es histórico, en SHA `aed4d8f6220e9d1e65e93f7d54a5bbd77e749755` (app 941/941, compatibilidad 2/2, lint y Kotlin AndroidTest PASS; `assembleDebug` up-to-date). En `0116149` solo se ejecutó localmente `compileDebugAndroidTestKotlin`, PASS; no afirmar un nuevo gate JVM completo.
-- **APK QA ARM64:** run [39511660726](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39511660726) PASS en el mismo SHA. APK `com.localai.workspace.debug`, 0.5.0-debug/27, arm64-v8a, SHA `2dc3dd24992d2878099e67c2117bbc711fd1bce96ab610be4ba8a35ab7de6b6f`, certificado `b0d1c408…ab120b`. Está en [Drive](https://drive.google.com/file/d/1adOGxZnyyePC_CY68ZMWWBjy6mKjIWt9/view?usp=drivesdk) dentro de un ZIP que contiene solo el APK por el límite de carga de 100 MiB.
-- **H1: `HOST/CI_VERIFIED`; DEVICE_PENDING:** el alcance HOST/CI está respaldado por el gate histórico, la verificación focal actual (25/25) y el run conectado del mismo SHA de código. AT-06/20/24, Motorola, XLSX original y revisión manual siguen pendientes; el XML de emulador no demuestra Room v1–7 ni ejecución con modelos reales.
-- Los seis tests de inferencia con modelo real están SKIPPED, no aprobados. Motorola, workbook XLSX original y métricas nativas (TTFT, tokens/s, RAM/PSS, energía/temperatura/calidad) siguen NOT_RUN.
+- **H2 — publicado y validado en capas:** el código `a65a80dae1cf7edc3ae42afeb76620f66bfdc309` añade lecturas locales acotadas y confirmación explícita de acciones. HOST focal 19/19, LiteRT compat 2/2, lint y compilación Kotlin AndroidTest PASS; el gate completo de JVM no se repitió tras corregir el único fallo DOCX.
+- **M00-04 — evidencia HOST focal:** 2/2 pruebas PASS en el código H2 actual. La omisión material muestra aviso y motivo en el Inspector; la omisión rutinaria no muestra aviso. El catálogo histórico continúa con estado TODO y sin edición.
+- **EMULATOR:** run [39520261327](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39520261327), connected AndroidTest PASS; XML 22 total, 16 PASS y 6 SKIPPED por falta de pesos reales. H1-AT-12 pasó en emulador con fixture sintética. PHYSICAL_DEVICE=NOT_RUN.
+- **PERSONAL_QA:** [run 39520260941](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39520260941) pasó en el SHA H2. APK Debug ARM64 y Drive readback están en [H2 RESULTS](../validation/master-program-h2-20261021/RESULTS.md).
+- La suite completa de app tuvo un único resultado 959/960; la clase DOCX pasó 4/4 tras restaurar la descripción. No se repitió toda la suite y no se declara full-JVM PASS. Una discrepancia de una prueba en un intento focal posterior queda con causa NOT_DETERMINED.
+- El siguiente original elegible para preparación HOST es **M00-06**, ya parcialmente implementado: inspeccionar la correlación restante entre la línea temporal de documento/importación e inferencia antes de modificar. No cerrar formalmente el ID ni inferir métricas físicas.
 
 ## Secuencia autorizada
 
 1. H0 conserva la aceptación previa y su evidencia histórica; el resultado actual no modifica IDs ni DoD originales.
 2. H1 cuenta como `HOST/CI_VERIFIED`; conservar AT-06/20/24 y la inspección Motorola como DEVICE_PENDING, sin convertir omisiones físicas en PASS.
-3. **H2 actual:** implementación focalizada de lecturas locales y enrutamiento de acciones Android; auditoría automática del SHA publicado pendiente. No equivale a validación física ni a aceptación del gate HOST completo.
+3. **H2:** implementación publicada y workflows PERSONAL_QA/EMULATOR leídos de vuelta; el alcance y los skips se detallan arriba. No equivale a validación física ni a aceptación de la suite JVM completa.
 
 ## Límites y evidencia
 
