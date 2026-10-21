@@ -1,0 +1,7 @@
+Drive file id=10K4tD-Gbo0bKGZ4jtgC4Dmfh79Z17oJI
+url=https://drive.google.com/file/d/10K4tD-Gbo0bKGZ4jtgC4Dmfh79Z17oJI/view?usp=drivesdk
+name=LocalAIWorkspace-0.5.0-debug-arm64-APK-only.zip
+bytes=47264496
+local_sha256=3f098eca94460cd9bbc04678a21977da04fc88c43a9e95576e7d84970f181fc1
+readback_sha256=3f098eca94460cd9bbc04678a21977da04fc88c43a9e95576e7d84970f181fc1
+zip_contains_exactly=local-ai-workspace-0.5.0-debug-arm64.apk

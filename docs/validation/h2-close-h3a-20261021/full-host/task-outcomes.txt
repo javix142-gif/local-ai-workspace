@@ -1,0 +1,8 @@
+:app:testDebugUnitTest=EXECUTED
+:litert-compat:testDebugUnitTest=UP-TO-DATE
+:app:lintDebug=EXECUTED
+:app:assembleDebug=EXECUTED
+:app:compileDebugAndroidTestKotlin=EXECUTED
+:app:assembleDebugAndroidTest=NO_ACTIONS
+gradle_summary=177 actionable tasks: 40 executed, 3 from cache, 134 up-to-date
+gradle_build=BUILD SUCCESSFUL

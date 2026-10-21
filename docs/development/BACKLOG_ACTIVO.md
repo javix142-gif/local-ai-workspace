@@ -4,7 +4,16 @@ Esta vista operativa no sustituye ni modifica el catálogo histórico de 97 IDs/
 
 Referencias de este flujo: [objetivo AWS](OBJETIVO_AWS.md), [redirección](PROMPT_CODEX_REDIRECCION.md), [guía visual histórica](../design/GUIA_VISUAL_AWS.md), [aceptación H1 v1.2](H1_PRUEBAS_ACEPTACION.md) y [continuidad H0→H1→H2](CORRECCION_CONTINUIDAD_H0_H1_H2.md).
 
-## Estado más reciente
+
+## Secuencia vigente — H2 → H3a → H3b (2026-10-21)
+
+- H2 añadió SET_ALARM al manifiesto y una prueba instrumentada de la manifest fusionada. El código está en 6e6acdaaedb20b7aff95fd2154d2b20eb8495cc6; el script de dispositivo, en fa6071f0322e0a60da5c2acf023e95847ab16619. Estado HOST y límites por capa: [evidencia H2/H3a](../validation/h2-close-h3a-20261021/RESULTS.md).
+- La suite HOST app pasó 961/961; LiteRT compatibilidad 2/2 pasó en invocación separada; lint, Debug assembly y compilación del AndroidTest pasaron. El run EMULATOR 39601660535 ejecutó 23 casos XML: 17 PASS, 6 SKIPPED por modelos ausentes y 0 fallos/errores; `AlarmPermissionManifestTest` y H1-AT-12 pasaron. El workflow global quedó FAIL porque faltó la captura large-font requerida; hay además discrepancia sin explicar entre progreso Gradle (29) y XML (23). El QA oficial 39601660283 cerró FAIL_CLOSED sin compilar APK. Personal QA 39601677489 pasó y el APK está en Drive; ver RESULTS. No equivale a PASS global ni a dispositivo.
+- H3a está preparado, no validado en teléfono. El smoke script es de solo lectura por defecto; no hay PowerShell ni un dispositivo conectado; el adb del SDK enumeró cero dispositivos. Moto G86 y H3a permanecen DEVICE_PENDING; PHYSICAL_DEVICE=NOT_RUN.
+- H3b queda esperando las nueve imágenes de referencia solicitadas. No se implementa UI visual hasta recibirlas.
+- M00–M03 quedan congelados; no se inicia M00-06 u otra tarea funcional durante este cierre. El archivo fuente del backlog mantiene exactamente 97 IDs, 120 dependencias y estados TODO; esta vista operativa no altera esos datos.
+
+## Estado previo a este cierre (histórico)
 
 - **H1 corrección AT-04 — código `a5090d6` validado:** el pin de memorias `PENDING` también respeta el máximo 15 % antes de persistir. HOST focal 25/25; lint y compilación Kotlin AndroidTest exit 0. EMULATOR run [39525954404](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39525954404) PASS: XML 22 = 16 PASS + 6 skips por modelos reales, cero fallos/errores; H1-AT-12 actualización sintética PASS. QA oficial y PERSONAL_QA del SHA terminaron success; APK Debug ARM64 disponible en los artifacts [oficial](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39525954210/artifacts/12314321055) y [personal](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39525954318/artifacts/12313972768). PHYSICAL_DEVICE=NOT_RUN; no es cierre físico ni suite JVM completa.
 - **H2 — publicado y validado en capas:** el código `a65a80dae1cf7edc3ae42afeb76620f66bfdc309` añade lecturas locales acotadas y confirmación explícita de acciones. HOST focal 19/19, LiteRT compat 2/2, lint y compilación Kotlin AndroidTest PASS; el gate completo de JVM no se repitió tras corregir el único fallo DOCX.

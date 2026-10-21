@@ -1,0 +1,5 @@
+artifactOriginalPath=instrumented-xml/debug/TEST-emulator-5554 - 15-_app-.xml
+artifactOriginalSha256=308cf00c69b4f89f81002b42ba20a39182fb8a0a79895c3b7debe2e11c256f90
+presentationCopy=connected-emulator-5554-api35.xml
+presentationCopyLineEndings=LF normalized from source CRLF for diff --check; XML elements and attributes unchanged
+presentationCopySha256=3d4cbd066d3928e3d2816adc788aba499b45eb9519ac09d2ee9d83f815efa289

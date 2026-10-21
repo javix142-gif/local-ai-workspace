@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.performance.BenchmarkSummaryTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-21T12:30:07" hostname="bb89d9b8ef7f" time="0.007">
+  <properties/>
+  <testcase name="cohortsDoNotMixDevicesModelsConfigurationBoundariesOrFallback" classname="com.localai.workspace.performance.BenchmarkSummaryTest" time="0.004"/>
+  <testcase name="distributionsPreserveMissingAndIgnoreInvalidSamples" classname="com.localai.workspace.performance.BenchmarkSummaryTest" time="0.001"/>
+  <testcase name="unavailableAdditionalMeasurementsStayExplicit" classname="com.localai.workspace.performance.BenchmarkSummaryTest" time="0.0"/>
+  <testcase name="wrongAnswersAndCancelledRunsDoNotMakeSpeedLookBetter" classname="com.localai.workspace.performance.BenchmarkSummaryTest" time="0.001"/>
+  <testcase name="comparableCohortsExposePreparationPrefillAndObservedMemoryDistributions" classname="com.localai.workspace.performance.BenchmarkSummaryTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

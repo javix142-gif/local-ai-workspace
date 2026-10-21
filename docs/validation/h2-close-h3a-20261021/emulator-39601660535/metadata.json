@@ -1,0 +1,35 @@
+{
+  "sourceCommit": "fa6071f0322e0a60da5c2acf023e95847ab16619",
+  "runId": "39601660535",
+  "runAttempt": "1",
+  "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39601660535",
+  "runnerImage": "ubuntu24",
+  "runnerVersion": "20261012.334.1",
+  "expectedApi": 35,
+  "expectedAbi": "x86_64",
+  "connectedTask": ":app:connectedDebugAndroidTest",
+  "adbDevicesExitCode": 0,
+  "apkInstallState": {
+    "checked": true,
+    "listPackagesExitCode": 0,
+    "packages": {
+      "application": {
+        "packageName": "com.localai.workspace.debug",
+        "installed": false
+      },
+      "instrumentationTest": {
+        "packageName": "com.localai.workspace.debug.test",
+        "installed": false
+      }
+    },
+    "applicationInstallVerification": {
+      "installedAfterTests": false,
+      "verifiedByConnectedInstrumentation": true,
+      "verifiedForRun": true
+    }
+  },
+  "avdPreflightPassed": true,
+  "runnerClass": "GitHub-hosted standard ubuntu-24.04",
+  "modelDownloads": "none",
+  "label": "EMULATOR"
+}

@@ -1,0 +1,19 @@
+{
+  "runId": 39601660283,
+  "runAttempt": 1,
+  "workflow": "QA debug APK (ARM64)",
+  "sourceCommit": "fa6071f0322e0a60da5c2acf023e95847ab16619",
+  "branch": "feat/0.5.0-skills-agents",
+  "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39601660283",
+  "status": "completed",
+  "conclusion": "failure",
+  "jobId": 119227404353,
+  "jobStartedAtUtc": "2026-10-21T12:41:53Z",
+  "jobCompletedAtUtc": "2026-10-21T13:07:06Z",
+  "failedStep": "Wait for matching Android instrumentation run to succeed",
+  "failureReason": "ANDROID_INSTRUMENTATION_NOT_SUCCESSFUL",
+  "instrumentationRunId": 39601660535,
+  "buildStep": "SKIPPED",
+  "apkUploadStep": "SKIPPED",
+  "artifactProduced": false
+}

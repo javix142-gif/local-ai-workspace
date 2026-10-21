@@ -1,0 +1,8 @@
+package: com.localai.workspace.debug
+uses-permission: name='android.permission.INTERNET'
+uses-permission: name='android.permission.READ_CALENDAR'
+uses-permission: name='android.permission.READ_CONTACTS'
+uses-permission: name='com.android.alarm.permission.SET_ALARM'
+uses-permission: name='android.permission.WAKE_LOCK'
+permission: com.localai.workspace.debug.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+uses-permission: name='com.localai.workspace.debug.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'

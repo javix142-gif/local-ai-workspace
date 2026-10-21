@@ -1,0 +1,14 @@
+{
+  "sourceCommit": "6e6acdaaedb20b7aff95fd2154d2b20eb8495cc6",
+  "exitCode": 0,
+  "startUtc": "2026-10-21T12:36:57Z",
+  "endUtc": "2026-10-21T12:37:31Z",
+  "xmlFiles": [
+    "TEST-com.google.ai.edge.litertlm.NativeHistoryRoleTest.xml"
+  ],
+  "tests": 2,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "passed": 2
+}

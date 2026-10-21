@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.semantic.v2.EmbeddingEngineManagerTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-21T12:30:08" hostname="bb89d9b8ef7f" time="0.159">
+  <properties/>
+  <testcase name="gpuFailureIsVisibleAndNotRetriedOnNextRequest" classname="com.localai.workspace.semantic.v2.EmbeddingEngineManagerTest" time="0.034"/>
+  <testcase name="invalidVectorInvalidatesEngine" classname="com.localai.workspace.semantic.v2.EmbeddingEngineManagerTest" time="0.019"/>
+  <testcase name="twoRequestsUseOneEngineAndUnloadClosesIt" classname="com.localai.workspace.semantic.v2.EmbeddingEngineManagerTest" time="0.021"/>
+  <testcase name="modelChangeDoesNotKeepNativeEngine" classname="com.localai.workspace.semantic.v2.EmbeddingEngineManagerTest" time="0.023"/>
+  <testcase name="visionThenTextKeepsExpandedEngine" classname="com.localai.workspace.semantic.v2.EmbeddingEngineManagerTest" time="0.023"/>
+  <testcase name="cancellationWhileWaitingForResourceGateNeverInitializesNativeEngine" classname="com.localai.workspace.semantic.v2.EmbeddingEngineManagerTest" time="0.02"/>
+  <testcase name="deselectClearsTemporaryModelAndNativeEngine" classname="com.localai.workspace.semantic.v2.EmbeddingEngineManagerTest" time="0.017"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

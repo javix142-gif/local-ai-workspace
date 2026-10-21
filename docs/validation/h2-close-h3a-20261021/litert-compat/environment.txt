@@ -1,0 +1,2 @@
+Source code commit: 6e6acdaaedb20b7aff95fd2154d2b20eb8495cc6
+Gradle 8.10.2; JDK 17 Gradle runtime; :litert-compat uses Java/Kotlin 17 toolchain; Android SDK/API 35 and NDK 27.0.12077973 are existing; GRADLE_USER_HOME=/workspace/.gradle existing cache; --offline.

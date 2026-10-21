@@ -1,4 +1,20 @@
-# Current checkpoint — H1 HOST/CI_VERIFIED; physical checks pending (2026-10-20)
+# Current checkpoint — H2 HOST complete; emulator evidence gate failed; H3a device pending / H3b awaiting references (2026-10-21)
+
+## Latest handoff — H2 technical close and H3a/H3b
+
+Feature branch code commits: 6e6acdaaedb20b7aff95fd2154d2b20eb8495cc6 (SET_ALARM manifest permission plus packaged-manifest instrumentation test) and fa6071f0322e0a60da5c2acf023e95847ab16619 (Moto smoke script and sanitized ADB errors). The full HOST gate ran on the working tree at Git HEAD a779880351ae1ed25ab32e8f6ef906abd7252fe8 before the code commit; it included the then-uncommitted permission/test changes later committed unchanged as 6e6acda. Do not describe it as a clean checkout of 6e6acda. App JVM: 961/961 in 132 XML. LiteRT compatibility: 2/2 in a separate forced task run after 6e6acda; that task was UP-TO-DATE in the combined gate. Lint, assembleDebug, AndroidTest Kotlin compilation and assembleDebugAndroidTest completed in HOST. The separate connected Android instrumentation and its non-PASS collector result are recorded immediately below. Two repeated focused cases (personal-data routing and the previously inconsistent DOCX list case) passed 1/1 each, twice; earlier cause remains NOT_DETERMINED. Exact logs/XML and commands are under docs/validation/h2-close-h3a-20261021/.
+
+The manifest requests com.android.alarm.permission.SET_ALARM. Existing code/tests retain confirmation and EXTRA_SKIP_UI=false for ACTION_SET_ALARM and ACTION_SET_TIMER. `AlarmPermissionManifestTest.packagedApplicationRequestsSetAlarmPermission` passed in connected API 35 instrumentation on `fa6071f`. The complete emulator workflow is FAIL only at the evidence collector: its mandatory large-font screenshot is incomplete/missing. The connected task itself exited 0 with XML 23 total, 17 pass, 0 fail/error, 6 skipped for absent real model files. Do not report overall emulator PASS. Gradle console progress (28/23 and Finished 29) disagrees with the XML total 23; cause undetermined.
+
+H3a script: scripts/device/smoke_moto.ps1, documented in docs/development/H3A_MOTO_G86_SMOKE.md. Static source review only; this Linux executor has no PowerShell and no device is connected (the SDK adb enumerated zero devices). H3a=DEVICE_PENDING; M01-06=PENDING_REQUIRES_DEVICE; PHYSICAL_DEVICE=NOT_RUN. The script does not install/update the app, change permissions or data, send messages, create alarms/events, or download models. An optional conversation screenshot requires an explicit interactive prompt and stays private.
+
+The personal QA workflow [39601677489](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39601677489) passed independently of instrumentation. Its APK is in Drive as an APK-only ZIP: [download](https://drive.google.com/file/d/10K4tD-Gbo0bKGZ4jtgC4Dmfh79Z17oJI/view?usp=drivesdk), ZIP SHA-256 `3f098eca94460cd9bbc04678a21977da04fc88c43a9e95576e7d84970f181fc1`; inner APK SHA-256 `2ecbb8dcbb4e5101f29adb9a76582a412f4c87a58496997bdb8f4a643f8cf366`. It is Debug ARM64 only, package `com.localai.workspace.debug`, version `0.5.0-debug`/27, signed with the prior Debug QA certificate. Do not treat it as an official release or physical test.
+
+H3b: awaiting the nine user-provided visual references; no UI changes before they arrive. M00–M03 stay frozen for this transition. The authoritative task catalog remains 97 unique IDs/120 edges, source statuses TODO, unchanged and hashed in the preserved source files. main and peeled v0.4.2 remain de615b772cf37a99e7e08a647c59607b271de606.
+
+The following H1/H2 sections preserve earlier checkpoints and remain historical unless superseded above.
+
+# Historical checkpoint — H1 HOST/CI_VERIFIED; physical checks pending (2026-10-20)
 
 ## Current update — H1-AT-04 pending-pin cap fix (`a5090d601426622b123cc2a970c13a5e8d9b3ff8`)
 

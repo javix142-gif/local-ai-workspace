@@ -1,5 +1,16 @@
 # Estado operativo — programa AWS H0 → H1 → H2 y continuidad autorizada
 
+
+## Estado vigente — H2 HOST completo; gate EMULATOR FAIL; transición H3a/H3b (2026-10-21)
+
+- H2 añadió SET_ALARM a la manifest app en el commit de código 6e6acdaaedb20b7aff95fd2154d2b20eb8495cc6. Se conservan la confirmación explícita existente y EXTRA_SKIP_UI=false para alarma y temporizador. El nuevo Android test consulta el paquete instalado en instrumentación y exige el permiso en la manifest fusionada.
+- HOST del árbol probado: app JVM 961/961 en 132 XML; LiteRT compatibilidad 2/2 en ejecución forzada separada porque su tarea estaba UP-TO-DATE en el gate combinado; lintDebug, assembleDebug, compileDebugAndroidTestKotlin y assembleDebugAndroidTest completaron. El gate combinado duró 7m17s según Gradle y salió 0. Lint: 0 errores, 128 avisos y 1 información. La instrumentación `AlarmPermissionManifestTest` ejecutó y pasó en API 35/x86_64 (run 39601660535). El connected task fue BUILD SUCCESSFUL, XML 23 casos: 17 PASS, seis skips por falta de modelos reales, 0 fail/error. El collector y el workflow global marcaron FAIL porque no se completó la captura large-font obligatoria; por tanto EMULATOR no es PASS. El log de Gradle informa 29 terminados frente a 23 en XML, discrepancia no resuelta.
+- Se repitieron dos veces el test de enrutamiento/datos personales y el test DOCX que habían tenido resultados inconsistentes: 4/4 ejecuciones focales pasaron 1/1; la causa de los fallos anteriores permanece sin determinar.
+- El commit fa6071f0322e0a60da5c2acf023e95847ab16619 añade el script de smoke Moto y sanitiza sus diagnósticos. El script aún no se ha ejecutado: este entorno no tiene PowerShell ni dispositivo conectado (ADB del SDK reportó cero dispositivos), así que H3a permanece DEVICE_PENDING y PHYSICAL_DEVICE=NOT_RUN.
+- Secuencia vigente: cerrar la lectura del run H2 → H3a, ejecutar el checklist en Moto G86 Power sin tocar datos → H3b, esperar las nueve referencias visuales y después especificar el diseño. No se empieza un rediseño antes de esas imágenes.
+- M00–M03 quedan congelados durante esta transición; M01-06 permanece PENDING_REQUIRES_DEVICE; no se cambian sus DoD ni su estado. El backlog original conserva 97 IDs únicos y 120 dependencias, todos los estados fuente TODO. Sus fuentes y hashes se detallan en la evidencia H2/H3a. El catálogo fuente no se editó.
+- main y el tag v0.4.2 siguen intactos en de615b772cf37a99e7e08a647c59607b271de606.
+
 Fecha: 2026-10-21. Rama `feat/0.5.0-skills-agents`; código H2 `a65a80dae1cf7edc3ae42afeb76620f66bfdc309`; corrección H1 actual `a5090d601426622b123cc2a970c13a5e8d9b3ff8`.
 
 Referencias vigentes: [objetivo AWS](OBJETIVO_AWS.md), [redirección de continuidad](PROMPT_CODEX_REDIRECCION.md), [guía visual histórica](../design/GUIA_VISUAL_AWS.md), [aceptación H1 v1.2](H1_PRUEBAS_ACEPTACION.md) y [contrato H0→H1→H2](CORRECCION_CONTINUIDAD_H0_H1_H2.md). La guía visual es una instantánea histórica del árbol `aed43ee`; no se presenta como descripción de la UI actual.
@@ -15,7 +26,7 @@ Referencias vigentes: [objetivo AWS](OBJETIVO_AWS.md), [redirección de continui
 - QA oficial [run 39525954210](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39525954210) y PERSONAL_QA [run 39525954318](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39525954318) terminaron success para el mismo SHA. APK Debug ARM64: `com.localai.workspace.debug`, `0.5.0-debug`/27, solo `arm64-v8a`, 121,635,467 bytes; SHA-256 `063a5cf081c452e74c95bc250a71fd1678930637b5f2bdd40728c7899dbcc3b8`; apksigner v2, ZIP/CRC, `zipalign` y sin pesos pasaron. Certificado Debug `b0d1c40838a22b6bbfc7bfa176c9bb917c7194c7b74dedf749566fb268ab120b` (misma firma para H1-AT-12). Artifact personal [12313972768](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39525954318/artifacts/12313972768), SHA-256 `ef1aefca7589dab21d3a793db7e0a8fd642a1b747f13363d99613f676c07a189`, 48,987,414 bytes, vence 2026-11-20. Artifact QA oficial [12314321055](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39525954210/artifacts/12314321055), SHA-256 `76832eecaeaca6c6b88f1fa6dd410cac0031a540ad420fd7b3c64ed49f7b3e6a`, 48,980,084 bytes, vence 2026-10-28.
 - Los seis casos de inferencia/modelo permanecen SKIPPED; Room histórico v1-v7 no se resolvió. H1-AT-06/20/24 y Motorola siguen pendientes; `M01-06=PENDING_REQUIRES_DEVICE`. No se midieron TTFT, tokens/s, memoria, energía ni calidad en Motorola. H2 en `a65a80d` permanece sin cambios. Catálogo original conserva 97 IDs/120 dependencias y estados TODO; no se editó `EXECUTION_STATE.json`, `main` ni `v0.4.2`.
 
-## H2 — herramientas Android locales: HOST focal, EMULATOR y QA personal verificados
+## H2 — herramientas Android locales: snapshot previo al cierre SET_ALARM
 
 - Añade `calendar.read` y `contacts.lookup` acotados, con permisos solicitados en el punto de uso, resultados marcados como datos locales no confiables y redacción de argumentos/resultados personales en el historial persistido de herramientas. El enrutamiento es determinista; correo no se deriva a la búsqueda telefónica. Las propuestas de acciones Android conservan confirmación explícita. Las descripciones compactas de artefactos conservan detalles de listas DOCX.
 - HOST focal: 19/19 eventos de prueba completados; LiteRT compatibilidad 2/2. `lintDebug` (0 errores, 128 avisos, 1 información) y `compileDebugAndroidTestKotlin` PASS. La suite completa de app tuvo un intento de 960 pruebas con 959 PASS y un fallo DOCX. La descripción se corrigió y la clase afectada pasó 4/4 en validaciones posteriores; no se repitió la suite completa, por lo que el PASS global final no está establecido. El primer foco de 18 pruebas tuvo un fallo adicional, seguido de dos resultados verdes (18 y 19); causa de esa discrepancia NOT_DETERMINED.
@@ -23,7 +34,7 @@ Referencias vigentes: [objetivo AWS](OBJETIVO_AWS.md), [redirección de continui
 - EMULATOR run [39520261327](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39520261327) en el SHA exacto pasó la tarea conectada: 22 XML, 16 PASS, 0 FAIL/ERROR y 6 SKIPPED por falta de modelos reales. H1-AT-12 pasó con datos sintéticos. Esto no valida Moto G86 ni la migración histórica Room v1-v7.
 - PERSONAL_QA run [39520260941](https://github.com/javix142-gif/local-ai-workspace/actions/runs/39520260941) entregó APK Debug ARM64 verificada; resultado y Drive readback en [H2 RESULTS](../validation/master-program-h2-20261021/RESULTS.md). Es PERSONAL_QA, no Release. Motorola `NOT_RUN`.
 
-El source backlog conserva sus 97 IDs, 120 dependencias y estados TODO. H1 mantiene criterios físicos pendientes. El siguiente original host-elegible es M00-06; se inspeccionará la instrumentación existente antes de cualquier cambio. `main` y peeled `v0.4.2` permanecen en `de615b772cf37a99e7e08a647c59607b271de606`.
+El source backlog conserva sus 97 IDs, 120 dependencias y estados TODO. H1 mantiene criterios físicos pendientes. En ese snapshot se recomendaba M00-06; esa recomendación queda congelada y supersedida por la transición H2→H3a→H3b vigente. `main` y peeled `v0.4.2` permanecen en `de615b772cf37a99e7e08a647c59607b271de606`.
 
 ## H1 — memoria personalizada y unificada: HOST/CI_VERIFIED; DEVICE_PENDING
 
@@ -42,7 +53,7 @@ El source backlog conserva sus 97 IDs, 120 dependencias y estados TODO. H1 manti
 - El keystore QA del repositorio es intencionalmente público y solo sirve para Debug/QA: `keystore/aws-qa-dev.jks`, alias `awsqa`, contraseña pública `awsqadev`; certificado `b0d1c408…ab120b`. La variante `.parallel` sigue disponible para la transición controlada. La rotación a una clave protegida queda pendiente antes de cualquier publicación oficial.
 - Artifact de QA etiqueta `QA_DEBUG_ARM64_NOT_FOR_PRODUCTION`; no es release. EMULATOR=PASS solo para la matriz ejecutada arriba; PHYSICAL_DEVICE=NOT_RUN.
 
-## Estado y siguientes pasos autorizados
+## Estado y siguientes pasos autorizados en el snapshot anterior
 
 - **H1: `HOST/CI_VERIFIED`; no equivale a cierre físico integral.** Permanecen AT-06/20/24 y la validación Moto G86 con el XLSX original como `DEVICE_PENDING`. AT-20 exige una copia externa antes de instalar en el teléfono. El fixture Room 1→7 auténtico no está disponible; no se inventó ni se reabrió.
 - Los seis tests que requieren modelos reales están SKIPPED, no aprobados. No se midieron TTFT, tokens/s, PSS, energía, temperatura ni calidad de inferencia en el Motorola.

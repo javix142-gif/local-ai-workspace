@@ -1,0 +1,70 @@
+{
+  "runId": 39601660535,
+  "runAttempt": 1,
+  "workflow": "Android emulator instrumentation",
+  "sourceCommit": "fa6071f0322e0a60da5c2acf023e95847ab16619",
+  "branch": "feat/0.5.0-skills-agents",
+  "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39601660535",
+  "status": "completed",
+  "conclusion": "failure",
+  "startedAtUtc": "2026-10-21T12:41:49Z",
+  "completedAtUtc": "2026-10-21T13:07:02Z",
+  "jobId": 119227404771,
+  "jobName": "API 35 x86_64 emulator tests",
+  "jobStartedAtUtc": "2026-10-21T12:41:53Z",
+  "jobCompletedAtUtc": "2026-10-21T13:07:01Z",
+  "steps": {
+    "Create and boot accelerated API 35 emulator": "success",
+    "Verify H1-AT-12 real update preserves synthetic data": "success",
+    "Run all connected Android instrumentation tests": "success",
+    "Collect and validate instrumentation evidence": "failure",
+    "Upload sanitized emulator evidence": "success"
+  },
+  "device": {
+    "label": "EMULATOR",
+    "serial": "emulator-5554",
+    "api": 35,
+    "androidRelease": "15",
+    "abi": "x86_64",
+    "model": "sdk_gphone64_x86_64",
+    "screen": "1080x1920",
+    "density": 420,
+    "adbConnected": true,
+    "avdPreflight": "PASS"
+  },
+  "connectedTask": {
+    "command": "./gradlew :app:connectedDebugAndroidTest --no-daemon --no-parallel --max-workers=2 --stacktrace --console=plain",
+    "exitCode": 0,
+    "build": "BUILD SUCCESSFUL in 2m 3s",
+    "xmlCount": 1,
+    "xmlCounts": {
+      "total": 23,
+      "passed": 17,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 6,
+      "executed": 17
+    }
+  },
+  "modelDependentSkipped": 6,
+  "h1At12RealUpdate": "PASS; synthetic fixture only; previous and current APK both package com.localai.workspace.debug versionCode 27, versionName 0.5.0-debug, certificate SHA-256 b0d1c40838a22b6bbfc7bfa176c9bb917c7194c7b74dedf749566fb268ab120b",
+  "alarmManifestPermissionTest": "PASS in instrumented XML: packagedApplicationRequestsSetAlarmPermission",
+  "collector": {
+    "status": "FAIL",
+    "reason": "headerUiDiagnosticsCaptured",
+    "standardScreenshot": "PASS 1080x1920 sha256 214f9e93a5f68d47b1e2825fcf0bc4727f91e0d60073c024746673397441084f",
+    "largeFontScreenshot": "NOT_CAPTURED; missing complete chunk set/end marker"
+  },
+  "unresolvedLogDiscrepancy": "Gradle console said 28/23 completed and Finished 29 tests; the sole JUnit XML reports 23 cases and the collector reconciled 23. Cause not determined.",
+  "postRunPackageCheck": "application and test package absent after connected task; summary confirms verifiedByConnectedInstrumentation=true. No claim that app remained installed after the task.",
+  "artifact": {
+    "id": 12347627628,
+    "name": "android-emulator-evidence-39601660535-1",
+    "bytes": 97340,
+    "sha256": "66edcc56b60c6a7ed0a36778344944c96ea4a24441cb220353beed1d40e1ee9d",
+    "expiresAtUtc": "2026-10-28T13:06:56Z",
+    "originalArchive": "artifact-original.zip",
+    "innerChecksumEntries": 49,
+    "innerChecksumVerification": "49/49 PASS"
+  }
+}

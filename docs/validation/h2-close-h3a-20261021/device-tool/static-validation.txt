@@ -1,0 +1,26 @@
+H3a Moto smoke-tool static review
+Recorded: 2026-10-21T12:42:36Z
+Branch at review: feat/0.5.0-skills-agents
+Tool source commit: fa6071f0322e0a60da5c2acf023e95847ab16619
+Tool: scripts/device/smoke_moto.ps1
+Tool SHA-256: 001affcaf7d95b16fecf182e2c136aa00dba90938ac6532f3b8c0a082246515d
+
+Environment preflight
+- pwsh: NOT_FOUND
+- powershell: NOT_FOUND
+- adb is not on PATH, but the pinned SDK binary exists at /workspace/.toolchain/android-sdk/platform-tools/adb. Direct `adb devices -l` returned only “List of devices attached” and exit 0 (no devices attached).
+
+Source-only checks (not a PowerShell parse or execution)
+- Static review confirms default package com.localai.workspace.debug and requires exactly one authorized ADB device.
+- Output path is checked to be outside the repository; existing non-empty output directories are rejected to avoid overwrite.
+- Default behavior reads device properties, package/version, permission state, process IDs, allowlisted/redacted app diagnostic events, PSS and thermal summary.
+- `-OpenApp` is optional and only launches the package. `-CaptureConversationEvidence` separately prompts for manual confirmation, writes the PNG under private-evidence, and excludes that nested private capture from the shareable top-level SHA256SUMS manifest.
+- ADB command records mask the selected serial and sanitize stderr snippets; app log filtering emits selected diagnostic fields and redacted event markers rather than message payloads.
+- Inspected ADB command call sites: devices/getprop/pm path/dumpsys package/pm check-permission/pidof/logcat/dumpsys meminfo/dumpsys thermalservice; optional monkey launch; manually confirmed screencap. No install, uninstall, clear-data, permission grant/revoke, message input, alarm creation, calendar write or model download command is invoked.
+- The script records failure evidence and exit/error details and hashes top-level shareable files.
+
+Validation result
+- Static source review: PASS for the listed safety/flow properties.
+- PowerShell syntax/runtime: NOT_RUN (PowerShell is unavailable).
+- ADB enumeration: RUN; zero devices attached. Moto smoke script: NOT_RUN (PowerShell unavailable and no connected Motorola).
+- H3a remains DEVICE_PENDING; this source review is not device validation.

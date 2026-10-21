@@ -1,0 +1,14 @@
+Observed UTC: 2026-10-21
+Branch: feat/0.5.0-skills-agents
+HEAD before implementation: a779880351ae1ed25ab32e8f6ef906abd7252fe8
+origin/feat/0.5.0-skills-agents: a779880351ae1ed25ab32e8f6ef906abd7252fe8
+main: de615b772cf37a99e7e08a647c59607b271de606
+v0.4.2 peeled: de615b772cf37a99e7e08a647c59607b271de606
+JDK 17 runtime: /workspace/.toolchain/jdk-17 (java/javac 17.0.20.1)
+JDK 21 worker: /workspace/.toolchain/jdk-21-temurin (java/javac 21.0.12.1)
+Gradle wrapper: 8.10.2
+Android SDK: /workspace/.toolchain/android-sdk, API 35 present; NDK source.properties revision 27.0.12077973
+Gradle cache: /workspace/.gradle (3.0G, pre-existing)
+Disk: 19G available at preflight
+ADB: SDK platform-tools/adb present; no attached devices
+PowerShell: pwsh/powershell unavailable in this Linux executor

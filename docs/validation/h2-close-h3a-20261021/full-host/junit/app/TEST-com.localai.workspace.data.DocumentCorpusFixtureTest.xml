@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.data.DocumentCorpusFixtureTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-21T12:29:36" hostname="bb89d9b8ef7f" time="0.334">
+  <properties/>
+  <testcase name="digitalPdfPreservesExpectedPageAndAnswer" classname="com.localai.workspace.data.DocumentCorpusFixtureTest" time="0.104"/>
+  <testcase name="xlsxPreservesCellTypesSheetOrderFormulaAndCachedValueWithoutRecalculation" classname="com.localai.workspace.data.DocumentCorpusFixtureTest" time="0.026"/>
+  <testcase name="pptxSlideMatchesExpectedTitleAndSlideNumber" classname="com.localai.workspace.data.DocumentCorpusFixtureTest" time="0.058"/>
+  <testcase name="xlsxCellRangeFormulaCacheAndRevisionMatchExpectedResults" classname="com.localai.workspace.data.DocumentCorpusFixtureTest" time="0.03"/>
+  <testcase name="corpusFilesHaveVersionedMetadataAndExpectedQueries" classname="com.localai.workspace.data.DocumentCorpusFixtureTest" time="0.044"/>
+  <testcase name="quotedCsvCellMatchesExpectedAnswerAndCoordinate" classname="com.localai.workspace.data.DocumentCorpusFixtureTest" time="0.023"/>
+  <testcase name="codeFixtureReturnsExpectedLineWithoutExecutingIt" classname="com.localai.workspace.data.DocumentCorpusFixtureTest" time="0.023"/>
+  <testcase name="docxTableCellMatchesExpectedAnswer" classname="com.localai.workspace.data.DocumentCorpusFixtureTest" time="0.024"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

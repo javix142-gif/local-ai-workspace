@@ -1,0 +1,59 @@
+{
+  "compression": "gzip lossless; raw local files preserved",
+  "logs": [
+    {
+      "rawLogPath": "focused/docx-01/gradle.log",
+      "rawLogSha256": "1f2a075e919fb42cade4c392d2659cb09d6e9e804ea7ba959f05afef96be3383",
+      "rawLogBytes": 536006,
+      "compressedPath": "focused/docx-01/gradle.log.gz",
+      "compressedSha256": "5f91c950672d66a50032cf017b34a1f85b7c8c1f903811b1b0279d5bdf7c66ca",
+      "compressedBytes": 46315,
+      "decompressMatchesRaw": true
+    },
+    {
+      "rawLogPath": "focused/docx-02/gradle.log",
+      "rawLogSha256": "e0eaf765b5ae969785afdd2a5ac9f7d512c56cec9dea50c51e2c256c6af52da8",
+      "rawLogBytes": 536007,
+      "compressedPath": "focused/docx-02/gradle.log.gz",
+      "compressedSha256": "4a71f70624dae7876fd5ad3ced86e4116be0ddfe0b8a748e1ff0e8454a49c899",
+      "compressedBytes": 46322,
+      "decompressMatchesRaw": true
+    },
+    {
+      "rawLogPath": "focused/personal-data-01/gradle.log",
+      "rawLogSha256": "ae4dfbab6cd0b6a14a5a4090dd52c1a8f64942f23d7cbbd358c9e7bf2a89ed74",
+      "rawLogBytes": 536942,
+      "compressedPath": "focused/personal-data-01/gradle.log.gz",
+      "compressedSha256": "5a0c7c10672cff08e9ecbeb59e4d26174c283b54c43ee02ebae882df974b1278",
+      "compressedBytes": 46451,
+      "decompressMatchesRaw": true
+    },
+    {
+      "rawLogPath": "focused/personal-data-02/gradle.log",
+      "rawLogSha256": "392ec2ae99891e4f8307241fb2956ab315195fa3c6dcfff3524d42178c7dbcd5",
+      "rawLogBytes": 536006,
+      "compressedPath": "focused/personal-data-02/gradle.log.gz",
+      "compressedSha256": "c1ac664b18dd929c8f2fcace792f8ec57e966906da565f5ec09b7edcead3ca72",
+      "compressedBytes": 46319,
+      "decompressMatchesRaw": true
+    },
+    {
+      "rawLogPath": "full-host/gradle.log",
+      "rawLogSha256": "0bbcabe385d73b79e62302dab89681521856ae1a7f37141acaec8588a1cd25a1",
+      "rawLogBytes": 1968951,
+      "compressedPath": "full-host/gradle.log.gz",
+      "compressedSha256": "c7a322b8eb4b896b79713f58f1791553438290a9ecf6a4d1c10956aff2665714",
+      "compressedBytes": 72918,
+      "decompressMatchesRaw": true
+    },
+    {
+      "rawLogPath": "litert-compat/gradle.log",
+      "rawLogSha256": "62d6b79ca51cb98c36c3c483dc88760e8a4407118057a44cc0e92ad5777040be",
+      "rawLogBytes": 2197,
+      "compressedPath": "litert-compat/gradle.log.gz",
+      "compressedSha256": "d065097fa1d88a30f0547a0faf2038aefb0713372dbb2d5cfc7328752057545a",
+      "compressedBytes": 862,
+      "decompressMatchesRaw": true
+    }
+  ]
+}

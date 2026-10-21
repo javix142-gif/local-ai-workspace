@@ -1,0 +1,205 @@
+{
+  "contract": "AWS_H2_CLOSE_H3A_H3B",
+  "date": "2026-10-21",
+  "repository": "javix142-gif/local-ai-workspace",
+  "branch": "feat/0.5.0-skills-agents",
+  "baseRemoteSha": "a779880351ae1ed25ab32e8f6ef906abd7252fe8",
+  "codeCommits": {
+    "h2Permission": "6e6acdaaedb20b7aff95fd2154d2b20eb8495cc6",
+    "h3aSmokeScript": "fa6071f0322e0a60da5c2acf023e95847ab16619"
+  },
+  "h2": {
+    "permission": "com.android.alarm.permission.SET_ALARM",
+    "explicitConfirmationPreserved": true,
+    "alarmAndTimerExtraSkipUiFalsePreserved": true,
+    "packagedManifestInstrumentationTest": "PASS_EMULATOR; packaged application requests com.android.alarm.permission.SET_ALARM",
+    "host": {
+      "fullAppJvm": {
+        "status": "PASS",
+        "tests": 961,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "xmlCount": 132
+      },
+      "litertCompatibilityCombinedRun": "UP_TO_DATE",
+      "litertCompatibilitySeparateForcedRun": {
+        "status": "PASS",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "xmlCount": 1
+      },
+      "lintDebug": {
+        "status": "PASS",
+        "errors": 0,
+        "warnings": 128,
+        "information": 1
+      },
+      "assembleDebug": "PASS",
+      "compileDebugAndroidTestKotlin": "PASS",
+      "assembleDebugAndroidTest": "TASK_COMPLETED_NO_ACTIONS"
+    },
+    "fullGate": {
+      "gitHeadAtStart": "a779880351ae1ed25ab32e8f6ef906abd7252fe8",
+      "testedSourceCommitEquivalent": "6e6acdaaedb20b7aff95fd2154d2b20eb8495cc6",
+      "cleanCheckout": false,
+      "exitCode": 0,
+      "startUtc": "2026-10-21T12:28:54Z",
+      "endUtc": "2026-10-21T12:36:12Z",
+      "gradleReportedDuration": "7m17s",
+      "gradle": "8.10.2",
+      "jdkRuntime": "Temurin 17.0.20.1",
+      "testWorkerJdk": "Temurin 21.0.12.1",
+      "androidSdk": "/workspace/.toolchain/android-sdk API 35",
+      "ndk": "27.0.12077973",
+      "cmake": "3.31.6",
+      "gradleUserHome": "existing /workspace/.gradle",
+      "offline": true
+    },
+    "focusedFlakeRechecks": {
+      "personalDataRouting": {
+        "executions": 2,
+        "passPerExecution": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "docxListDescription": {
+        "executions": 2,
+        "passPerExecution": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "historicalCause": "NOT_DETERMINED"
+    }
+  },
+  "h3a": {
+    "script": "scripts/device/smoke_moto.ps1",
+    "staticReview": "PASS",
+    "powershellSyntaxOrExecution": "NOT_RUN_POWERSHELL_UNAVAILABLE",
+    "adbEnumeration": {
+      "status": "RUN",
+      "exitCode": 0,
+      "devicesAttached": 0
+    },
+    "physicalDevice": "NOT_RUN",
+    "status": "DEVICE_PENDING"
+  },
+  "h3b": {
+    "status": "WAITING_FOR_NINE_USER_REFERENCE_IMAGES",
+    "uiChanged": false
+  },
+  "workflowRuns": {
+    "emulator": {
+      "runId": 39601660535,
+      "jobId": 119227404771,
+      "sha": "fa6071f0322e0a60da5c2acf023e95847ab16619",
+      "status": "FAIL_COLLECTOR_GATE",
+      "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39601660535",
+      "connectedTask": ":app:connectedDebugAndroidTest",
+      "connectedTaskExitCode": 0,
+      "xmlCount": 1,
+      "counts": {
+        "total": 23,
+        "passed": 17,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 6,
+        "executed": 17
+      },
+      "h1At12RealUpdate": "PASS_SYNTHETIC_ONLY",
+      "alarmManifestPermissionTest": "PASS",
+      "collectorFailure": "required large-font ChatHeader screenshot incomplete/not captured",
+      "physicalDevice": "NOT_RUN",
+      "artifact": {
+        "id": 12347627628,
+        "name": "android-emulator-evidence-39601660535-1",
+        "bytes": 97340,
+        "sha256": "66edcc56b60c6a7ed0a36778344944c96ea4a24441cb220353beed1d40e1ee9d",
+        "expiresAtUtc": "2026-10-28T13:06:56Z"
+      }
+    },
+    "officialQa": {
+      "runId": 39601660283,
+      "jobId": 119227404353,
+      "sha": "fa6071f0322e0a60da5c2acf023e95847ab16619",
+      "status": "FAIL_CLOSED",
+      "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39601660283",
+      "failureReason": "ANDROID_INSTRUMENTATION_NOT_SUCCESSFUL",
+      "waitStep": "FAIL",
+      "buildStep": "SKIPPED",
+      "artifactUpload": "SKIPPED_NO_ARTIFACT"
+    },
+    "personalQa": {
+      "runId": 39601677489,
+      "jobId": 119227469101,
+      "sha": "fa6071f0322e0a60da5c2acf023e95847ab16619",
+      "status": "SUCCESS",
+      "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39601677489",
+      "parallelInstall": false,
+      "instrumentation": "NOT_RUN",
+      "artifact": {
+        "id": 12346548223,
+        "name": "local-ai-workspace-personal-qa-debug-arm64-39601677489-1",
+        "bytes": 48987531,
+        "sha256": "a4056d3180c27c89b1f98cb1756cd8f395c02c12916072e1ac203ff79930d40c",
+        "expiresAtUtc": "2026-11-20T12:50:44Z",
+        "readbackAndInternalManifest": "PASS"
+      }
+    }
+  },
+  "sourceBacklog": {
+    "tasks": 97,
+    "uniqueIds": 97,
+    "dependencies": 120,
+    "sourceStatuses": "TODO",
+    "sha256": "bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235"
+  },
+  "roadmapSha256": "260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5",
+  "m00ThroughM03": "FROZEN",
+  "m01-06": "PENDING_REQUIRES_DEVICE",
+  "mainAndV042": "de615b772cf37a99e7e08a647c59607b271de606",
+  "logStorage": {
+    "repositoryFormat": "gzip lossless .log.gz",
+    "rawLogsPreservedLocally": true,
+    "verificationFile": "log-compression.json",
+    "decompressedBytesMatchRaw": true
+  },
+  "personalApk": {
+    "artifactType": "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION",
+    "sourceCommit": "fa6071f0322e0a60da5c2acf023e95847ab16619",
+    "applicationId": "com.localai.workspace.debug",
+    "versionName": "0.5.0-debug",
+    "versionCode": 27,
+    "abi": [
+      "arm64-v8a"
+    ],
+    "apkBytes": 121635503,
+    "apkSha256": "2ecbb8dcbb4e5101f29adb9a76582a412f4c87a58496997bdb8f4a643f8cf366",
+    "certificateSha256": "b0d1c40838a22b6bbfc7bfa176c9bb917c7194c7b74dedf749566fb268ab120b",
+    "apkSigner": "PASS v2",
+    "zipCrc": "PASS",
+    "zipalign": "PASS",
+    "modelPayloads": "NONE",
+    "apkOnlyDriveZip": {
+      "id": "10K4tD-Gbo0bKGZ4jtgC4Dmfh79Z17oJI",
+      "name": "LocalAIWorkspace-0.5.0-debug-arm64-APK-only.zip",
+      "url": "https://drive.google.com/file/d/10K4tD-Gbo0bKGZ4jtgC4Dmfh79Z17oJI/view?usp=drivesdk",
+      "parentFolderId": "1rvoZO3ovX33qgaHBMnY8xtE-T8rdDLaB",
+      "bytes": 47264496,
+      "sha256": "3f098eca94460cd9bbc04678a21977da04fc88c43a9e95576e7d84970f181fc1",
+      "zipEntry": "local-ai-workspace-0.5.0-debug-arm64.apk",
+      "driveReadbackSha256": "3f098eca94460cd9bbc04678a21977da04fc88c43a9e95576e7d84970f181fc1"
+    }
+  },
+  "emulatorCaveats": {
+    "overallGate": "FAIL because evidence collector requires both standard and large-font screenshots; only standard was captured",
+    "gradleConsoleProgress": "The log says 28/23 completed and Finished 29 tests while the sole JUnit XML and collector report 23; discrepancy unexplained.",
+    "postRunPackageCheck": "The app and test packages were absent after the connected task. The summary separately records verifiedByConnectedInstrumentation=true; do not infer an install or run failure from the post-run package absence.",
+    "modelSkips": "6 native-model tests skipped; no model was downloaded.",
+    "device": "API 35 Android 15 x86_64 GitHub-hosted emulator; not a Motorola physical device."
+  }
+}

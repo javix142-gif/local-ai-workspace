@@ -1,0 +1,13 @@
+{
+  "startUtc": "2026-10-21T12:21:57Z",
+  "endUtc": "2026-10-21T12:25:12Z",
+  "exitCode": 0,
+  "xmlFiles": [
+    "TEST-com.localai.workspace.artifacts.DocxArtifactStructureTest.xml"
+  ],
+  "tests": 1,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "passed": 1
+}
