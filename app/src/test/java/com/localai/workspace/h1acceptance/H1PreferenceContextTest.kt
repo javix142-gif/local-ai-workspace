@@ -249,6 +249,19 @@ class H1PreferenceContextTest {
         assertNotNull("Synthetic records must reach the 15% pin ceiling",rejectedId)
         val pinned=manager.approvedPromptMemories(manager.lookup(access)).filter{it.pinned}
         assertTrue(ContextBudgetPolicy.preferenceBlockSize(pinned)<=ContextBudgetPolicy.preferenceBudget(ContextBudgetPolicy.inputBudget()))
+
+        val pending=manager.create(
+            "PIN-PENDING-LIMIT-Ñ "+"x".repeat(42),
+            SemanticScope(ScopeType.USER,"local"),MemoryKind.FACT,pending=true,
+        )
+        val pendingFailure=runCatching{manager.pin(pending.id,access)}.exceptionOrNull()
+        assertEquals("PINNED_PREFERENCE_LIMIT_EXCEEDED",pendingFailure?.message)
+        val unchangedPending=requireNotNull(manager.get(pending.id))
+        assertEquals("PENDING",unchangedPending.status)
+        assertFalse("An over-budget pending memory must not be pinned",unchangedPending.pinned)
+        val pendingExplanation=memoryActionErrorMessage(RuntimeEnvironment.getApplication(),IllegalStateException(pendingFailure?.message))
+        assertTrue(pendingExplanation.contains("15 %"))
+        assertTrue(pendingExplanation.contains("no se fijó"))
     }
 
     @Test fun H1_AT_04_chatGenerationDiagnosticLabelsAreLocalized() {

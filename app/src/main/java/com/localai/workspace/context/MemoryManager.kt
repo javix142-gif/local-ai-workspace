@@ -246,7 +246,11 @@ class MemoryManager(val database:MemoryContextDatabase,private val embed:suspend
     }
     suspend fun pin(id:String,access:ScopeAccess=ScopeAccess())=database.withTransaction{
         val m=requireNotNull(get(id));val next=m.copy(pinned=!m.pinned,updatedAt=System.currentTimeMillis())
-        if(next.pinned&&next.status=="ACTIVE")requirePinnedPreferenceBudget(next,access)
+        if(next.pinned&&next.status in setOf("ACTIVE","PENDING")){
+            // A pending record can become active on approval, so reserve its pin budget now.
+            // Keep its stored status unchanged; the projected copy is used only for the check.
+            requirePinnedPreferenceBudget(next.copy(status="ACTIVE"),access)
+        }
         database.dao().put(next)
     }
     private suspend fun requirePinnedPreferenceBudget(candidate:MemoryRecord,access:ScopeAccess){
