@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.validation.ZipTraversalControlTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-10-22T18:14:08" hostname="bb89d9b8ef7f" time="0.349">
+  <properties/>
+  <testcase name="corruptFixtureFailsBeforeProductionIsCalled" classname="com.localai.workspace.validation.ZipTraversalControlTest" time="0.043"/>
+  <testcase name="differentLimitsAndIoAreNotTraversal" classname="com.localai.workspace.validation.ZipTraversalControlTest" time="0.031"/>
+  <testcase name="exactAndroidPathRejectionIsRecognizedWithoutChangingValidator" classname="com.localai.workspace.validation.ZipTraversalControlTest" time="0.058"/>
+  <testcase name="arbitraryZipExceptionNeverPasses" classname="com.localai.workspace.validation.ZipTraversalControlTest" time="0.023"/>
+  <testcase name="nestedTraversalUsesActualProductionRejection" classname="com.localai.workspace.validation.ZipTraversalControlTest" time="0.023"/>
+  <testcase name="exportedZipEvidenceContainsNoPaths" classname="com.localai.workspace.validation.ZipTraversalControlTest" time="0.023"/>
+  <testcase name="anyNewOutsidePathFailsCanonicalCheck" classname="com.localai.workspace.validation.ZipTraversalControlTest" time="0.02"/>
+  <testcase name="outsideWriteFailsEvenWithExpectedSecurityException" classname="com.localai.workspace.validation.ZipTraversalControlTest" time="0.019"/>
+  <testcase name="partialUnsafeFileWithinRootFails" classname="com.localai.workspace.validation.ZipTraversalControlTest" time="0.019"/>
+  <testcase name="truncatedCentralDirectoryFailsPrevalidation" classname="com.localai.workspace.validation.ZipTraversalControlTest" time="0.021"/>
+  <testcase name="actualProductionParserRejectsTraversalAndNoFileEscapes" classname="com.localai.workspace.validation.ZipTraversalControlTest" time="0.024"/>
+  <testcase name="safeZipStillPassesActualProductionParser" classname="com.localai.workspace.validation.ZipTraversalControlTest" time="0.022"/>
+  <testcase name="fixtureOpensWithCentralDirectoryAndLiteralNames" classname="com.localai.workspace.validation.ZipTraversalControlTest" time="0.021"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

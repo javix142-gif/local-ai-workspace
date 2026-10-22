@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.ChatContentUiTest" tests="19" skipped="0" failures="0" errors="0" timestamp="2026-10-22T18:13:35" hostname="bb89d9b8ef7f" time="9.134">
+  <properties/>
+  <testcase name="longCitationExcerptAndSourceRemainScrollableAndUntruncatedOnCompactScaledLayout" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.35"/>
+  <testcase name="citationSourceCountUsesSpanishSingularAndPluralForms" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.198"/>
+  <testcase name="citationReferenceKeepsEvidenceIdAndShowsStoredSourcePageAndExcerpt" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.191"/>
+  <testcase name="thinkingAndToolOverridesAreCompactAndFunctional" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.565"/>
+  <testcase name="longMarkdownKeepsHierarchyContentAndScrollableCodeAtCompactWidthAndScaledText" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.327"/>
+  <testcase name="markdownHttpAndHttpsLinksExposeLabelAndDestinationAndOpenOnlyOnTap" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.145"/>
+  <testcase name="indexedSourcePreviewRetainsExactSegmentAndLocationAtLargeTextScale" classname="com.localai.workspace.ui.ChatContentUiTest" time="5.061"/>
+  <testcase name="rejectedProtocolMalformedLinkAndTableLinkStayVisibleWithoutLinkSemantics" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.115"/>
+  <testcase name="responseCopyActionCopiesExactMarkdownSourceInsteadOfRenderedLinkLabel" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.076"/>
+  <testcase name="longInputLargeFontAndGenerationKeepComposerActionsVisible" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.252"/>
+  <testcase name="toolsOffDoesNotChangeLogicalAgentAndCustomSelectionStaysDistinct" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.238"/>
+  <testcase name="codeHasLanguageAndCopiesExactContent" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.106"/>
+  <testcase name="libraryAdvertisesOnlyConnectedAudio" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.111"/>
+  <testcase name="audioSourceIsOnlyOfferedWhenConnected" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.118"/>
+  <testcase name="malformedTableRemainsLiteralAndKeepsEveryRowVisible" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.078"/>
+  <testcase name="semanticCodeCitationKeepsPathLinesAndOpensTheSameEvidenceId" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.448"/>
+  <testcase name="markdownTableKeepsHeadersCellsAndHorizontalAccessAtCompactWidthAndScaledText" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.4"/>
+  <testcase name="citationDetailOffersAnActionToOpenItsIndexedSourceSegment" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.217"/>
+  <testcase name="pendingImageIsVisibleAndRemoveClearsIt" classname="com.localai.workspace.ui.ChatContentUiTest" time="0.137"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

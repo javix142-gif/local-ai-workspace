@@ -1,0 +1,41 @@
+{
+  "contract": "H1-AT-12",
+  "status": "PASS",
+  "startedAtUtc": "2026-10-22T18:22:59.446895+00:00",
+  "previousSourceCommit": "9cfb0d8112342ee097ac64aa573e5d35b446f834",
+  "currentSourceCommit": "954c409f202f5e345d049c6c721cae3d06e5efac",
+  "applicationId": "com.localai.workspace.debug",
+  "versionCode": 27,
+  "versionName": "0.5.0-debug",
+  "fixture": "Synthetic only; 10 legacy rows, 10 sidecar rows, one project and one chat.",
+  "physicalDevice": "NOT_RUN",
+  "completedAtUtc": "2026-10-22T18:40:41.592271+00:00",
+  "deviceSerial": "emulator-5554",
+  "oldApk": {
+    "package": "com.localai.workspace.debug",
+    "versionCode": "27",
+    "versionName": "0.5.0-debug",
+    "certificateSha256": "b0d1c40838a22b6bbfc7bfa176c9bb917c7194c7b74dedf749566fb268ab120b",
+    "apkSha256": "ec1ced8391829827d81ac70bfeae5df8a1e4917efb9c224372896e1206f8ce48"
+  },
+  "currentApk": {
+    "package": "com.localai.workspace.debug",
+    "versionCode": "27",
+    "versionName": "0.5.0-debug",
+    "certificateSha256": "b0d1c40838a22b6bbfc7bfa176c9bb917c7194c7b74dedf749566fb268ab120b",
+    "apkSha256": "ffa30135cadeadef7fd428a2dc0ef8d2aadf1760fe821410bb80197beb25926a",
+    "testPackage": "com.localai.workspace.debug.test",
+    "testCertificateSha256": "b0d1c40838a22b6bbfc7bfa176c9bb917c7194c7b74dedf749566fb268ab120b",
+    "testApkSha256": "0354cbc357da3efac150013f6e3e620624768c59150a391a836f9af1f2e00062"
+  },
+  "installUpdateCommand": "adb install -r <current-debug-apk>",
+  "seedTest": "com.localai.workspace.h1acceptance.H1At12SeedTest#H1_AT_12_seedPreviousVersionData",
+  "verifyTest": "com.localai.workspace.h1acceptance.H1At12AfterUpdateTest#H1_AT_12_verifyMemoriesProjectChatAndNextContextAfterUpdate",
+  "verified": [
+    "20 memories and type/scope",
+    "project",
+    "chat/message",
+    "preference in next ContextFoundation request",
+    "updated app opens"
+  ]
+}

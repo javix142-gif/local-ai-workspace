@@ -1,0 +1,406 @@
+/workspace/aws-master-resume-20261019/app/src/main/java/com/localai/workspace/semantic/EmbeddingModels.kt:36: Warning: Consider using apply() instead; commit writes its data to persistent storage immediately, whereas apply will handle it in the background [ApplySharedPref]
+     rollback.commit();error("Config commit failed")
+              ~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/java/com/localai/workspace/semantic/v2/SemanticLayer.kt:100: Warning: Consider using apply() instead; commit writes its data to persistent storage immediately, whereas apply will handle it in the background [ApplySharedPref]
+        if (manager.selected?.id == id) { manager.deselect(); prefs.edit().remove("selected").commit() }
+                                                                                              ~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/java/com/localai/workspace/semantic/v2/SemanticModelState.kt:16: Warning: Consider using apply() instead; commit writes its data to persistent storage immediately, whereas apply will handle it in the background [ApplySharedPref]
+            prefs.edit().apply{previous.forEach{(key,value)->if(value==null)remove(key)else putString(key,value)}}.commit()
+                                                                                                                   ~~~~~~~~
+
+   Explanation for issues of type "ApplySharedPref":
+   Consider using apply() instead of commit on shared preferences. Whereas
+   commit blocks and writes its data to persistent storage immediately, apply
+   will handle it in the background.
+
+/workspace/aws-master-resume-20261019/app/src/main/java/com/localai/workspace/data/ImagePreprocessor.kt:7: Warning: Avoid using android.media.ExifInterface; use androidx.exifinterface.media.ExifInterface instead [ExifInterface]
+import android.media.ExifInterface
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "ExifInterface":
+   The android.media.ExifInterface implementation has some known security bugs
+   in older versions of Android. There is a new implementation available of
+   this library in the support library, which is preferable.
+
+/workspace/aws-master-resume-20261019/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.material:material-icons-extended than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/aws-master-resume-20261019/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.material:material-icons-extended than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/aws-master-resume-20261019/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.material:material-icons-extended than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/aws-master-resume-20261019/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.ui:ui than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/aws-master-resume-20261019/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.ui:ui than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/aws-master-resume-20261019/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.ui:ui than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/aws-master-resume-20261019/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.ui:ui-tooling than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/aws-master-resume-20261019/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.ui:ui-tooling than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/aws-master-resume-20261019/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.ui:ui-tooling than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/aws-master-resume-20261019/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.ui:ui-tooling-preview than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/aws-master-resume-20261019/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.ui:ui-tooling-preview than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+/workspace/aws-master-resume-20261019/gradle/libs.versions.toml:5: Warning: A newer version of androidx.compose.ui:ui-tooling-preview than 1.7.5 is available: 1.7.6 [GradleDependency]
+compose-ui = "1.7.5"
+             ~~~~~~~
+
+   Explanation for issues of type "GradleDependency":
+   This detector looks for usages of libraries where the version you are using
+   is not the current stable release. Using older versions is fine, and there
+   are cases where you deliberately want to stick with an older version.
+   However, you may simply not be aware that a more recent version is
+   available, and that is what this lint check helps find.
+
+/workspace/aws-master-resume-20261019/app/src/main/java/com/localai/workspace/ui/ChatContent.kt:240: Warning: Modifier parameter should be the first optional parameter [ModifierParameter from androidx.compose.ui]
+    modifier: Modifier = Modifier,
+    ~~~~~~~~
+
+   Explanation for issues of type "ModifierParameter":
+   The first (or only) Modifier parameter in a Composable function should
+   follow the following rules:
+   - Be named modifier
+   - Have a type of Modifier
+   - Either have no default value, or have a default value of Modifier
+   - If optional, be the first optional parameter in the parameter list
+
+   Vendor: Jetpack Compose
+   Identifier: androidx.compose.ui
+   Feedback: https://issuetracker.google.com/issues/new?component=612128
+
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:34: Warning: Formatting %d followed by words ("modelo"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="models_count_one">%1$d modelo</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:35: Warning: Formatting %d followed by words ("modelos"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="models_count_many">%1$d modelos</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:111: Warning: Formatting %d followed by words ("archivo"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="chat_files_selected_one">%1$d archivo seleccionado</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:112: Warning: Formatting %d followed by words ("archivos"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="chat_files_selected_many">%1$d archivos seleccionados</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:132: Warning: Formatting %d followed by words ("llamadas"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="chat_tool_diagnostics">Pensamiento: %1$s\nHerramientas: %2$d llamadas · %3$d no satisfactorias · %4$d ms</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:133: Warning: Formatting %d followed by words ("fragmentos"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="chat_rag_diagnostics">RAG: %1$s · %2$d fragmentos · %3$d ms · embeddings %4$d ms</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:137: Warning: Formatting %d followed by words ("bytes"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="chat_integrity">Integridad: %1$d / %2$d bytes · %3$d ms</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:160: Warning: Formatting %d followed by words ("columnas"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="chat_table_description">Tabla con %1$d columnas y %2$d filas de datos. Desplázate horizontalmente para ver todas las columnas.</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:253: Warning: Formatting %d followed by words ("llamadas"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="chat_diag_tool_calls">Herramientas: %1$d llamadas · %2$d no satisfactorias · %3$d ms</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:254: Warning: Formatting %d followed by words ("fragmentos"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="chat_diag_rag">RAG: %1$s · %2$d fragmentos · %3$d ms · embeddings %4$d ms</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:255: Warning: Formatting %d followed by words ("recuerdos"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="chat_diag_memory">Memoria: %1$d recuerdos recuperados</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:258: Warning: Formatting %d followed by words ("bytes"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="chat_diag_integrity">Integridad: %1$d / %2$d bytes · %3$d ms</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:282: Warning: Formatting %d followed by words ("fragmentos"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="chat_sending_document_excerpts">Enviando %1$d fragmentos pertinentes al modelo.</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:300: Warning: Formatting %d followed by words ("identificadores"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="chat_invalid_citation_ids">Se ignoraron %1$d identificadores de cita que no pertenecen a este turno.</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:315: Warning: Formatting %d followed by words ("bytes"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="chat_audio_prepared">Audio preparado: %1$d ms, %2$d bytes, WAV PCM.</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:333: Warning: Formatting %d followed by words ("archivos"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="workspace_file_cleanup_pending">Quedan %1$d archivos privados por limpiar.</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:404: Warning: Formatting %d followed by words ("recuerdos"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="memory_pending_approval_count">Revisar y aprobar %1$d recuerdos pendientes</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:461: Warning: Formatting %d followed by words ("recuerdos"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="memory_import_candidates">%1$d recuerdos · %2$d seleccionados. Se excluyen posibles secretos detectados con un patrón local básico.</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:481: Warning: Formatting %d followed by words ("tokens"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="memory_estimated_input_tokens">%1$d / %2$d tokens de entrada estimados</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:482: Warning: Formatting %d followed by words ("incluidos"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="memory_included_count">%1$d incluidos</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:483: Warning: Formatting %d followed by words ("omitidos"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="memory_omitted_count">%1$d omitidos</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:490: Warning: Formatting %d followed by words ("mensajes"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="memory_indexed_source_messages">Se indexaron %1$d mensajes de origen de la conversación</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:492: Warning: Formatting %d followed by words ("tokens"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="memory_estimated_tokens">%1$s · %2$d tokens estimados</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:501: Warning: Formatting %d followed by words ("recuerdos"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="memory_export_result">Se exportaron %1$d recuerdos activos; se excluyeron %2$d posibles secretos. No se incluyeron embeddings.</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:502: Warning: Formatting %d followed by words ("recuerdos"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="memory_export_json_result">Se exportaron %1$d recuerdos activos del ámbito; se excluyeron %2$d posibles secretos.</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:506: Warning: Formatting %d followed by words ("caracteres"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="memory_projected_pin_budget">Bloque fijado previsto: %1$d / %2$d caracteres (máximo 15 %%).</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:511: Warning: Formatting %d followed by words ("recuerdos"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="memory_approved_without_pin">Se aprobaron %1$d recuerdos; %2$d sin fijar. La fijación original queda registrada en la procedencia.</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:541: Warning: Formatting %d followed by words ("recuerdos"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="memory_import_result">Se importaron %1$d recuerdos pendientes; ya existían %2$d duplicados; %3$d recuerdos de proyectos ausentes pasaron a Usuario. Revisa y aprueba cada recuerdo.</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:546: Warning: Formatting %d followed by words ("recuerdos"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="memory_imported_count">Se importaron %1$d recuerdos pendientes; ya existían %2$d duplicados; %3$d ámbitos de proyecto ausentes pasaron a Usuario. Revisa y aprueba cada recuerdo.</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:548: Warning: Formatting %d followed by words ("recuerdos"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="memory_bundle_candidate_count">%1$d recuerdos · %2$d seleccionados. Se excluyen posibles secretos detectados con un patrón local básico.</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:560: Warning: Formatting %d followed by words ("tokens"): This should probably be a plural rather than a string [PluralsCandidate]
+    <string name="memory_item_scope_tokens">%1$s · %2$d tokens estimados</string>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "PluralsCandidate":
+   This lint check looks for potential errors in internationalization where
+   you have translated a message which involves a quantity and it looks like
+   other parts of the string may need grammatical changes.
+
+   For example, rather than something like this:
+     <string name="try_again">Try again in %d seconds.</string>
+   you should be using a plural:
+      <plurals name="try_again">
+           <item quantity="one">Try again in %d second</item>
+           <item quantity="other">Try again in %d seconds</item>
+       </plurals>
+   This will ensure that in other languages the right set of translations are
+   provided for the different quantity classes.
+
+   (This check depends on some heuristics, so it may not accurately determine
+   whether a string really should be a quantity. You can use tools:ignore to
+   filter out false positives.
+
+   https://developer.android.com/guide/topics/resources/string-resource.html#Plurals
+
+/workspace/aws-master-resume-20261019/app/build.gradle.kts:28: Warning: Missing x86_64 ABI support for ChromeOS [ChromeOsAbiSupport]
+                abiFilters += "arm64-v8a"
+                              ~~~~~~~~~~~
+
+   Explanation for issues of type "ChromeOsAbiSupport":
+   To properly support ChromeOS, your Android application should have an x86
+   and/or x86_64 binary as part of the build configuration. To fix the issue,
+   ensure your files are properly optimized for ARM; the binary translator
+   will then ensure compatibility with x86. Alternatively, add an abiSplit for
+   x86 within your build.gradle file and create the required x86
+   dependencies.
+
+   https://developer.android.com/ndk/guides/abis
+
+/workspace/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk15to18/1.72/32faf4d74dbc333fb3a7a6c80c30417cf888fc7a/bcpkix-jdk15to18-1.72.jar: Warning: checkClientTrusted is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers [TrustAllX509TrustManager]
+/workspace/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk15to18/1.72/32faf4d74dbc333fb3a7a6c80c30417cf888fc7a/bcpkix-jdk15to18-1.72.jar: Warning: checkClientTrusted is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers [TrustAllX509TrustManager]
+/workspace/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk15to18/1.72/32faf4d74dbc333fb3a7a6c80c30417cf888fc7a/bcpkix-jdk15to18-1.72.jar: Warning: checkServerTrusted is empty, which could cause insecure network traffic due to trusting arbitrary TLS/SSL certificates presented by peers [TrustAllX509TrustManager]
+
+   Explanation for issues of type "TrustAllX509TrustManager":
+   This check looks for X509TrustManager implementations whose
+   checkServerTrusted or checkClientTrusted methods do nothing (thus trusting
+   any certificate chain) which could result in insecure network traffic
+   caused by trusting arbitrary TLS/SSL certificates presented by peers.
+
+   https://goo.gle/TrustAllX509TrustManager
+
+/workspace/aws-master-resume-20261019/app/src/main/AndroidManifest.xml:14: Warning: The attribute android:allowBackup is deprecated from Android 12 and higher and may be removed in future versions. Consider adding the attribute android:dataExtractionRules specifying an @xml resource which configures cloud backups and device transfers on Android 12 and higher. [DataExtractionRules]
+        android:allowBackup="false"
+                             ~~~~~
+
+   Explanation for issues of type "DataExtractionRules":
+   Before Android 12, the attributes android:allowBackup and
+   android:fullBackupContent were used to configure all forms of backup,
+   including cloud backups, device-to-device transfers and adb backup.
+
+   In Android 12 and higher, these attributes have been deprecated and will
+   only apply to cloud backups. You should instead use the attribute
+   android:dataExtractionRules, specifying an @xml resource that configures
+   which files to back up, for cloud backups and for device-to-device
+   transfers, separately. If your minSdkVersion supports older versions,
+   you'll still want to specify an android:fullBackupContent resource if the
+   default behavior is not right for your app.
+
+   https://developer.android.com/about/versions/12/backup-restore#xml-changes
+   https://goo.gle/DataExtractionRules
+
+/workspace/aws-master-resume-20261019/app/src/main/java/com/localai/workspace/MainActivity.kt:475: Information: Prefer mutableIntStateOf instead of mutableStateOf [AutoboxingStateCreation from androidx.compose.runtime]
+    var tab by rememberSaveable { mutableStateOf(0) }
+                                  ~~~~~~~~~~~~~~
+
+   Explanation for issues of type "AutoboxingStateCreation":
+   Calling mutableStateOf<T>() when T is either backed by a primitive type on
+   the JVM or is a value class results in a state implementation that requires
+   all state values to be boxed. This usually causes an additional allocation
+   for each state write, and adds some additional work to auto-unbox values
+   when reading the value of the state. Instead, prefer to use a specialized
+   primitive state implementation for Int, Long, Float, and Double when the
+   state does not need to track null values and does not override the default
+   SnapshotMutationPolicy. See mutableIntStateOf(), mutableLongStateOf(),
+   mutableFloatStateOf(), and mutableDoubleStateOf() for more information.
+
+   Vendor: Jetpack Compose
+   Identifier: androidx.compose.runtime
+   Feedback: https://issuetracker.google.com/issues/new?component=612128
+
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:83: Warning: The resource R.string.action_status_prepared appears to be unused [UnusedResources]
+    <string name="action_status_prepared">Preparada</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:84: Warning: The resource R.string.action_status_opening appears to be unused [UnusedResources]
+    <string name="action_status_opening">Abriendo</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:85: Warning: The resource R.string.action_status_opened appears to be unused [UnusedResources]
+    <string name="action_status_opened">Abierta</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:86: Warning: The resource R.string.action_status_user_confirmed appears to be unused [UnusedResources]
+    <string name="action_status_user_confirmed">Confirmada por ti</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:87: Warning: The resource R.string.action_status_declined appears to be unused [UnusedResources]
+    <string name="action_status_declined">Rechazada</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:88: Warning: The resource R.string.action_status_error appears to be unused [UnusedResources]
+    <string name="action_status_error">Error</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:143: Warning: The resource R.string.chat_selected_files_help appears to be unused [UnusedResources]
+    <string name="chat_selected_files_help">El próximo mensaje incluirá hasta 3 fragmentos legibles de los archivos seleccionados. Los archivos grandes no se envían completos.</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:150: Warning: The resource R.string.chat_user_message appears to be unused [UnusedResources]
+    <string name="chat_user_message">Tú</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:151: Warning: The resource R.string.chat_assistant_message appears to be unused [UnusedResources]
+    <string name="chat_assistant_message">Respuesta del asistente</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:166: Warning: The resource R.string.chat_options_summary appears to be unused [UnusedResources]
+    <string name="chat_options_summary">Pensamiento: %1$s · Herramientas: %2$s</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:197: Warning: The resource R.string.android_action_open_failed appears to be unused [UnusedResources]
+    <string name="android_action_open_failed">No se pudo abrir una aplicación compatible.</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:201: Warning: The resource R.string.android_action_review_notice appears to be unused [UnusedResources]
+    <string name="android_action_review_notice">Revisa todos los datos. Solo al pulsar «Abrir aplicación» se abrirá la pantalla correspondiente; no se enviará ni guardará nada automáticamente.</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:245: Warning: The resource R.string.chat_local appears to be unused [UnusedResources]
+    <string name="chat_local">Local</string>
+            ~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:252: Warning: The resource R.string.chat_status_processing appears to be unused [UnusedResources]
+    <string name="chat_status_processing">Procesando…</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:253: Warning: The resource R.string.chat_diag_tool_calls appears to be unused [UnusedResources]
+    <string name="chat_diag_tool_calls">Herramientas: %1$d llamadas · %2$d no satisfactorias · %3$d ms</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:254: Warning: The resource R.string.chat_diag_rag appears to be unused [UnusedResources]
+    <string name="chat_diag_rag">RAG: %1$s · %2$d fragmentos · %3$d ms · embeddings %4$d ms</string>
+            ~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:255: Warning: The resource R.string.chat_diag_memory appears to be unused [UnusedResources]
+    <string name="chat_diag_memory">Memoria: %1$d recuerdos recuperados</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:256: Warning: The resource R.string.chat_diag_last_audio appears to be unused [UnusedResources]
+    <string name="chat_diag_last_audio">Preparación de audio más reciente: %1$s ms</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:257: Warning: The resource R.string.chat_diag_thinking appears to be unused [UnusedResources]
+    <string name="chat_diag_thinking">Pensamiento: %1$s</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:258: Warning: The resource R.string.chat_diag_integrity appears to be unused [UnusedResources]
+    <string name="chat_diag_integrity">Integridad: %1$d / %2$d bytes · %3$d ms</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:259: Warning: The resource R.string.chat_diag_litert_parameters appears to be unused [UnusedResources]
+    <string name="chat_diag_litert_parameters">Texto · contexto 1024 · salida 32</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:263: Warning: The resource R.string.chat_local_model_status appears to be unused [UnusedResources]
+    <string name="chat_local_model_status">%1$s · local · %2$s</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:343: Warning: The resource R.string.chat_files_selected_help appears to be unused [UnusedResources]
+    <string name="chat_files_selected_help">Archivos seleccionados</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:460: Warning: The resource R.string.memory_source_date appears to be unused [UnusedResources]
+    <string name="memory_source_date">Origen: %1$s · %2$s</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:461: Warning: The resource R.string.memory_import_candidates appears to be unused [UnusedResources]
+    <string name="memory_import_candidates">%1$d recuerdos · %2$d seleccionados. Se excluyen posibles secretos detectados con un patrón local básico.</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:462: Warning: The resource R.string.memory_import_provenance_note appears to be unused [UnusedResources]
+    <string name="memory_import_provenance_note">Los recuerdos importados quedan pendientes. Se conserva el ámbito de proyectos existentes; los proyectos ausentes se reasignan a Usuario y se cuentan. El ámbito y la confianza originales quedan en la procedencia.</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:467: Warning: The resource R.string.memory_edit_review appears to be unused [UnusedResources]
+    <string name="memory_edit_review">Editar / revisar</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:468: Warning: The resource R.string.memory_review_full appears to be unused [UnusedResources]
+    <string name="memory_review_full">Revisar el recuerdo completo</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:474: Warning: The resource R.string.memory_candidate_metadata appears to be unused [UnusedResources]
+    <string name="memory_candidate_metadata">Confianza: %1$s\nID externo: %2$s\nÁmbito original: %3$s\nFechas originales: %4$s / %5$s\nProcedencia: %6$s</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:528: Warning: The resource R.string.memory_kind_title appears to be unused [UnusedResources]
+    <string name="memory_kind_title">Tipo: %1$s</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:539: Warning: The resource R.string.memory_entry_source appears to be unused [UnusedResources]
+    <string name="memory_entry_source">Origen: %1$s · %2$s</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:540: Warning: The resource R.string.memory_candidate_header appears to be unused [UnusedResources]
+    <string name="memory_candidate_header">%1$s · %2$s%3$s</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/src/main/res/values/strings.xml:541: Warning: The resource R.string.memory_import_result appears to be unused [UnusedResources]
+    <string name="memory_import_result">Se importaron %1$d recuerdos pendientes; ya existían %2$d duplicados; %3$d recuerdos de proyectos ausentes pasaron a Usuario. Revisa y aprueba cada recuerdo.</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "UnusedResources":
+   Unused resources make applications larger and slow down builds.
+
+
+   The unused resource check can ignore tests. If you want to include
+   resources that are only referenced from tests, consider packaging them in a
+   test source set instead.
+
+   You can include test sources in the unused resource check by setting the
+   system property lint.unused-resources.include-tests =true, and to exclude
+   them (usually for performance reasons), use
+   lint.unused-resources.exclude-tests =true.
+   ,
+
+/workspace/aws-master-resume-20261019/app/src/main/AndroidManifest.xml:12: Warning: Should explicitly set android:icon, there is no default [MissingApplicationIcon]
+    <application
+     ~~~~~~~~~~~
+
+   Explanation for issues of type "MissingApplicationIcon":
+   You should set an icon for the application as whole because there is no
+   default. This attribute must be set as a reference to a drawable resource
+   containing the image (for example @drawable/icon).
+
+   https://developer.android.com/studio/publish/preparing#publishing-configure
+
+/workspace/aws-master-resume-20261019/app/build.gradle.kts:101: Warning: Use version catalog instead [UseTomlInstead]
+    testImplementation("androidx.compose.ui:ui-test-junit4")
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/build.gradle.kts:102: Warning: Use version catalog instead [UseTomlInstead]
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/aws-master-resume-20261019/app/build.gradle.kts:107: Warning: Use version catalog instead [UseTomlInstead]
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "UseTomlInstead":
+   If your project is using a libs.versions.toml file, you should place all
+   Gradle dependencies in the TOML file. This lint check looks for version
+   declarations outside of the TOML file and suggests moving them (and in the
+   IDE, provides a quickfix to performing the operation automatically).
+
+0 errors, 90 warnings

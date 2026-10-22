@@ -19159,7 +19159,7 @@
   "previousNextRecommendedTaskBefore20261021": "Continue with one test-first, host-preparatory M02-01 synthetic document corpus increment only after inspecting existing fixtures and the authentic M02-01 DoD. M02-01 remains source TODO and depends on device-gated M00-10; this preparation does not close the source task. Preserve 97 IDs, 120 dependency edges, and all source TODO states.",
   "latestH3bPhase2": {
     "name": "AWS H3b phases 1–2: shared foundations/navigation and chat surfaces",
-    "status": "HOST_PASS_AWAITING_REVIEW",
+    "status": "USER_ACCEPTED",
     "baselineSha": "4fc5637377be8283a9580a3291857799af5e5c13",
     "codeSha": "35f23d814d7850e3d18e642b4d9b94a3511c6e7c",
     "codeCommit": "35f23d814d7850e3d18e642b4d9b94a3511c6e7c",
@@ -19201,6 +19201,77 @@
     "main": "de615b772cf37a99e7e08a647c59607b271de606",
     "peeledV042": "de615b772cf37a99e7e08a647c59607b271de606",
     "formalBacklogTaskClosure": false,
-    "next": "Stop after H3b phases 1–2 for review. H3b phase 3 remains pending."
+    "acceptedByUserAt": "2026-10-22; user confirmed fd2da6a and green CI",
+    "next": "H3b Phase 3 authorized sequentially; current screen Memoria, then Inicio; pause for visual review after both."
+  },
+  "latestH3bPhase3": {
+    "name": "AWS H3b Phase 3 sequential visual screens",
+    "currentScreen": "Memoria",
+    "status": "MEMORY_IMPLEMENTED_HOST_AND_EMULATOR_PASS_WITH_HOST_INTERMITTENT_FAILURE",
+    "codeSha": "954c409f202f5e345d049c6c721cae3d06e5efac",
+    "codeCommit": "954c409f202f5e345d049c6c721cae3d06e5efac",
+    "codePaths": [
+      "app/src/main/java/com/localai/workspace/ui/ContextMemoryUi.kt",
+      "app/src/main/java/com/localai/workspace/ui/SemanticV2Settings.kt",
+      "app/src/main/res/values/strings.xml",
+      "app/src/test/java/com/localai/workspace/ui/H3bMemoryScreenUiTest.kt"
+    ],
+    "evidence": "docs/validation/h3b-phase3-memory/attempt-01/RESULTS.md",
+    "evidenceManifest": {"path": "docs/validation/h3b-phase3-memory/attempt-01/SHA256SUMS", "entries": 162, "sha256": "bf3a90c7f4e760292a5166b37099667fb5e0d5deae24a22516a65321abc9c3bd"},
+    "host": {
+      "gradle": "8.10.2",
+      "runtimeJdk": "Temurin 17",
+      "testWorkerJdk": "Temurin 21",
+      "androidSdk": "/workspace/.toolchain/android-sdk",
+      "ndk": "27.0.12077973",
+      "offline": true,
+      "focusedMemoryTests": {"status": "PASS", "tests": 4, "passed": 4, "failures": 0, "errors": 0, "skipped": 0},
+      "appFullSuite": {
+        "attempts": [
+          {"status": "PASS", "tests": 973, "passed": 973, "failures": 0, "errors": 0, "skipped": 0, "durationSeconds": 536, "log": "docs/validation/h3b-phase3-memory/attempt-01/host/full-app-compat-lint-first-pass.log", "xmlPreserved": false},
+          {"status": "FAIL_ONE_TEST", "tests": 973, "passed": 972, "failures": 1, "errors": 0, "skipped": 0, "durationSeconds": 196, "log": "docs/validation/h3b-phase3-memory/attempt-01/host/full-app-second-run.log", "xml": "docs/validation/h3b-phase3-memory/attempt-01/host/app-junit-failed-run/"}
+        ],
+        "observedFailureFrequency": "1/2",
+        "failure": "H1PreferenceContextTest.H1_AT_01_approvedPreferencesReachTheRealGenerationRequestIncludingGreeting; assertion at H1PreferenceContextTest.kt:166 that the ViewModel still contains the selected document ID after request generation.",
+        "causalAttribution": "NOT_DETERMINED; not changed by the Memory screen patch; do not treat either run as proof of a stable pass."
+      },
+      "litertCompatTests": {"status": "PASS_THEN_UP_TO_DATE", "tests": 2, "passed": 2, "failures": 0, "errors": 0, "skipped": 0},
+      "lintDebug": {"status": "PASS", "warnings": 90, "errors": 0, "durationSeconds": 259},
+      "diffCheck": "PASS"
+    },
+    "emulator": {
+      "status": "PASS_WITH_PROGRESS_COUNT_DISCREPANCY",
+      "runId": "39830487826",
+      "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39830487826",
+      "workflowSourceSha": "954c409f202f5e345d049c6c721cae3d06e5efac",
+      "jobId": "120005016572",
+      "artifactId": "12450355874",
+      "artifactName": "android-emulator-evidence-39830487826-1",
+      "artifactSha256": "63bbd54c1a957ee5b16448500443d12821df544c4d4a9d6890198c06efd844c1",
+      "artifactBytes": 176447,
+      "connectedTask": ":app:connectedDebugAndroidTest",
+      "device": {"serial": "emulator-5554", "api": 35, "release": "15", "abi": "x86_64", "model": "sdk_gphone64_x86_64"},
+      "xml": {"tests": 24, "passed": 18, "failures": 0, "errors": 0, "skipped": 6, "executed": 18},
+      "skips": "Two LiteRT and four native chat tests skipped because real models were not installed.",
+      "h1At12Update": "PASS on synthetic fixture; no physical device data.",
+      "progressDiscrepancy": "Gradle console reported 30/24 progress; XML and collector both report 24. Cause NOT_DETERMINED.",
+      "physicalDevice": "NOT_RUN"
+    },
+    "captures": {
+      "status": "Four actual MainActivity Robolectric screenshots, visually inspected; empty test database, no synthetic records in captures.",
+      "path": "docs/validation/h3b-phase3-memory/attempt-01/captures/",
+      "size": "360dp wide by 800dp high, light/dark, fontScale 1.0/2.0",
+      "sha256": {
+        "h3b-memory-dark-360dp-fontScale-1.0.png": "00ee4f4bc2bc00b508c823a1e5ea407aa55178e429a8c111a91706ac08fb6ed6",
+        "h3b-memory-dark-360dp-fontScale-2.0.png": "0c64d65951727568d03975b391c16c34ffd7879b833a7fd4825c39f3297ed4c3",
+        "h3b-memory-light-360dp-fontScale-1.0.png": "939b11c78d771a107c2da84f39e6944b8f8ce5dc020c2d6cd57a36f07d7cbc72",
+        "h3b-memory-light-360dp-fontScale-2.0.png": "98be569031203715685e5b5a5b3de454d32f4ee1b9d35b6a1fc303641f5d8dfc"
+      }
+    },
+    "physicalDevice": "NOT_RUN",
+    "backlogSource": {"tasks": 97, "uniqueIds": 97, "dependencyEdges": 120, "sourceStatuses": {"TODO": 97}, "sourceModified": false},
+    "main": "de615b772cf37a99e7e08a647c59607b271de606",
+    "peeledV042": "de615b772cf37a99e7e08a647c59607b271de606",
+    "next": "Implement Inicio next; run HOST suite and emulator CI for its code SHA; after Inicio, deliver the four light/dark scale 1.0/2.0 captures for both screens and wait for user review before continuing."
   }
 }

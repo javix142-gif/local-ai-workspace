@@ -1,0 +1,15 @@
+Commands used for HOST validation (paths are those used in this workspace):
+
+Focused screen/UI run: 4 Memory tests passed in 1m09. The saved console log does not contain the original CLI line; the test classes were selected with Gradle `--tests` filters, but the exact filter spelling/command was not preserved. The later full-suite XML independently lists all four passing Memory cases.
+
+Full HOST gate, first complete execution:
+env GRADLE_USER_HOME=/workspace/.gradle JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain --rerun-tasks -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug
+Result: exit 0, BUILD SUCCESSFUL in 8m56. At execution time, the app test XML was counted as 973/973 PASS, compatibility 2/2 PASS, lint 0 errors. The XML files from this first run were replaced by the later full-suite invocation and are not in this evidence bundle. This run preceded only a small UI metadata-resource reuse change; it is kept as historical evidence.
+
+Full HOST gate, second execution on the final tracked code tree:
+env GRADLE_USER_HOME=/workspace/.gradle JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :app:testDebugUnitTest :litert-compat:testDebugUnitTest :app:lintDebug
+Result: app XML 973 tests, 972 passed, 1 failed; command exit 1, Gradle reported BUILD FAILED in 3m16. The failure is H1PreferenceContextTest.H1_AT_01_approvedPreferencesReachTheRealGenerationRequestIncludingGreeting, assertion at H1PreferenceContextTest.kt:166 (selected document ID was no longer present in the ViewModel after request generation). Its XML is preserved under app-junit-failed-run/.
+
+Final compatibility + lint invocation on the final tracked code tree:
+env GRADLE_USER_HOME=/workspace/.gradle JAVA_HOME=/workspace/.toolchain/jdk-17 PATH=/workspace/.toolchain/jdk-17/bin:$PATH ANDROID_HOME=/workspace/.toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/.toolchain/android-sdk ./gradlew --no-daemon --no-parallel --max-workers=1 --offline --console=plain -Porg.gradle.java.installations.paths=/workspace/.toolchain/jdk-17,/workspace/.toolchain/jdk-21-temurin :litert-compat:testDebugUnitTest :app:lintDebug
+Result: exit 0, BUILD SUCCESSFUL in 4m19. LiteRT task UP-TO-DATE (the forced first full run executed it and reported 2/2 PASS); lint exact final source reports 0 errors, 90 warnings.

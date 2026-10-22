@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.data.RetrievalIntegrityTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-22T18:12:53" hostname="bb89d9b8ef7f" time="0.362">
+  <properties/>
+  <testcase name="selectedDocumentBeyondGlobalCapIsSearchedBeforeLimitAndNoMatchIsEmpty" classname="com.localai.workspace.data.RetrievalIntegrityTest" time="0.198"/>
+  <testcase name="cancellationIsNotConvertedToLexicalSuccess" classname="com.localai.workspace.data.RetrievalIntegrityTest" time="0.037"/>
+  <testcase name="fullChunkEmbeddingAndLateLexicalEvidenceHaveExactCoverage" classname="com.localai.workspace.data.RetrievalIntegrityTest" time="0.063"/>
+  <testcase name="unicodeWindowsCoverWholePassageWithoutBreakingCodePoints" classname="com.localai.workspace.data.RetrievalIntegrityTest" time="0.019"/>
+  <testcase name="actualTokenLimitConditionUsesCompleteBoundedWindowsAndFiniteCentroid" classname="com.localai.workspace.data.RetrievalIntegrityTest" time="0.045"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

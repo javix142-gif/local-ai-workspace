@@ -1,0 +1,11 @@
+Repository: javix142-gif/local-ai-workspace
+Branch: feat/0.5.0-skills-agents
+Code commit: 954c409f202f5e345d049c6c721cae3d06e5efac
+Host date: 2026-10-22 UTC
+Gradle wrapper: 8.10.2
+Gradle runtime: Temurin JDK 17, /workspace/.toolchain/jdk-17
+JVM test worker/toolchain discovery: Temurin JDK 21, /workspace/.toolchain/jdk-21-temurin
+Android SDK: /workspace/.toolchain/android-sdk
+Android NDK: 27.0.12077973
+Dependency mode: offline, existing Gradle user home /workspace/.gradle
+Test runner: Robolectric, Android test application with local test database; screenshots contain the genuine empty-memory state and no model/user data.

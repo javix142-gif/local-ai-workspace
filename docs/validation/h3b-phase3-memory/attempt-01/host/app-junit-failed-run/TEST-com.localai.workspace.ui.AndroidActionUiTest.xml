@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.AndroidActionUiTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-22T18:13:28" hostname="bb89d9b8ef7f" time="3.275">
+  <properties/>
+  <testcase name="calendarDateFormattingUsesSpanishAndTheRequestedTimeZone" classname="com.localai.workspace.ui.AndroidActionUiTest" time="0.691"/>
+  <testcase name="pendingProposalShowsFullDataAndDoesNothingUntilExplicitConfirmation" classname="com.localai.workspace.ui.AndroidActionUiTest" time="1.295"/>
+  <testcase name="personalDataPermissionAppearsOnlyAfterTheToolReportsItIsRequired" classname="com.localai.workspace.ui.AndroidActionUiTest" time="0.214"/>
+  <testcase name="openErrorKeepsHumanExplanationAndTechnicalCodeVisible" classname="com.localai.workspace.ui.AndroidActionUiTest" time="0.079"/>
+  <testcase name="calendarConfirmationExplainsThatTheEventIsNotSavedUntilTheUserCompletesIt" classname="com.localai.workspace.ui.AndroidActionUiTest" time="0.438"/>
+  <testcase name="decliningProposalDoesNotOpenAndOpenedStatusIsExplicitlyUserReported" classname="com.localai.workspace.ui.AndroidActionUiTest" time="0.332"/>
+  <testcase name="calendarProposalOpensOnlyAfterExplicitConfirmation" classname="com.localai.workspace.ui.AndroidActionUiTest" time="0.226"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

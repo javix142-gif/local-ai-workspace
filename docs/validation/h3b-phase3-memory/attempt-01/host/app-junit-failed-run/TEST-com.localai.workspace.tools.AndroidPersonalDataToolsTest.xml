@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.tools.AndroidPersonalDataToolsTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-22T18:13:27" hostname="bb89d9b8ef7f" time="0.149">
+  <properties/>
+  <testcase name="missingCalendarPermissionDoesNotQueryProvider" classname="com.localai.workspace.tools.AndroidPersonalDataToolsTest" time="0.021"/>
+  <testcase name="calendarPermissionIsCheckedAtExecutionAndResultsAreUntrustedAndBounded" classname="com.localai.workspace.tools.AndroidPersonalDataToolsTest" time="0.023"/>
+  <testcase name="personalToolHistoryOmitsSearchTermsNamesAndPhoneNumbers" classname="com.localai.workspace.tools.AndroidPersonalDataToolsTest" time="0.023"/>
+  <testcase name="contactsLookupIsBoundedAndReturnsOnlyLocalUntrustedMatches" classname="com.localai.workspace.tools.AndroidPersonalDataToolsTest" time="0.026"/>
+  <testcase name="missingContactsPermissionDoesNotQueryProvider" classname="com.localai.workspace.tools.AndroidPersonalDataToolsTest" time="0.021"/>
+  <testcase name="toolSchemasAndDeterministicRoutingExposeOnlyRelevantPersonalReadsAndActionHandoffs" classname="com.localai.workspace.tools.AndroidPersonalDataToolsTest" time="0.016"/>
+  <testcase name="calendarArgumentsAreExactAndBoundedToThirtyOneDays" classname="com.localai.workspace.tools.AndroidPersonalDataToolsTest" time="0.018"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

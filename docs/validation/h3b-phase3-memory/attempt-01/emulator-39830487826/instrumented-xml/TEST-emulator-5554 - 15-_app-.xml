@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuite name="com.localai.workspace.data.WorkspaceDatabaseMigrationTest" tests="24" failures="0" errors="0" skipped="6" time="80.311" timestamp="2026-10-22T18:42:32" hostname="localhost">
+  <properties>
+    <property name="device" value="emulator-5554 - 15" />
+    <property name="flavor" value="" />
+    <property name="project" value=":app" />
+  </properties>
+  <testcase name="v8CitationRowsSurviveThroughTheCurrentSchemaUpgrade" classname="com.localai.workspace.data.WorkspaceDatabaseMigrationTest" time="0.099" />
+  <testcase name="H1_AT_12_verifyMemoriesProjectChatAndNextContextAfterUpdate" classname="com.localai.workspace.h1acceptance.H1At12AfterUpdateTest" time="0.043" />
+  <testcase name="H1_AT_12_seedPreviousVersionData" classname="com.localai.workspace.h1acceptance.H1At12SeedTest" time="0.003" />
+  <testcase name="H1_AT_10_migratesMemoryFromAuthenticWorkspaceSchema8" classname="com.localai.workspace.h1acceptance.H1MemoryMigrationTest" time="0.178" />
+  <testcase name="H1_AT_10_migratesMemoryFromAuthenticWorkspaceSchema9" classname="com.localai.workspace.h1acceptance.H1MemoryMigrationTest" time="0.076" />
+  <testcase name="H1_AT_10_migratesMemoryFromAuthenticWorkspaceSchema10" classname="com.localai.workspace.h1acceptance.H1MemoryMigrationTest" time="0.052" />
+  <testcase name="normalCpuTurnsReuseNativeSessionAndRestoredHistoryUsesBundleRole" classname="com.localai.workspace.inference.LiteRtLmDeviceSmokeTest" time="0.034">
+    <skipped />
+  </testcase>
+  <testcase name="cpuFirstTokenStreamingCompletionCancelRetryAndUnload" classname="com.localai.workspace.inference.LiteRtLmDeviceSmokeTest" time="0.027">
+    <skipped />
+  </testcase>
+  <testcase name="modelsExposeExperimentalSemanticDialogWithoutAddingAnotherNavigationRoute" classname="com.localai.workspace.semantic.SemanticV2NavigationTest" time="7.116" />
+  <testcase name="packagedApplicationRequestsSetAlarmPermission" classname="com.localai.workspace.tools.AlarmPermissionManifestTest" time="0.003" />
+  <testcase name="builtInSkillsCanBeInspectedWithoutRunningTools" classname="com.localai.workspace.ui.AgentsSkillsNavigationTest" time="6.91" />
+  <testcase name="generalAgentIsProtectedAndValidationIsDeveloperOnly" classname="com.localai.workspace.ui.AgentsSkillsNavigationTest" time="6.938" />
+  <testcase name="maximumFontScaleKeepsHeaderPillsReadableAtTwo" classname="com.localai.workspace.ui.ChatHeaderLayoutTest" time="1.966" />
+  <testcase name="standardFontScaleKeepsAgentTitleAndModelInsideHeader" classname="com.localai.workspace.ui.ChatHeaderLayoutTest" time="2.233" />
+  <testcase name="largeFontScaleKeepsHeaderPillsReadableAtOnePointSix" classname="com.localai.workspace.ui.ChatHeaderLayoutTest" time="2.477" />
+  <testcase name="H1_AT_13_forgetPermanentlyUsesConfirmationAndLeavesNoAppOwnedMarkerBytes" classname="com.localai.workspace.ui.ContextMemoryDeviceTest" time="6.875" />
+  <testcase name="inspectorDoesNotStartGenerationAutomatically" classname="com.localai.workspace.ui.ContextMemoryDeviceTest" time="5.56" />
+  <testcase name="structuredMemoryEntryAndEditorAreAccessible" classname="com.localai.workspace.ui.ContextMemoryDeviceTest" time="6.225" />
+  <testcase name="developerEntryOpensQuickAndFullScreen" classname="com.localai.workspace.ui.DeviceValidationNavigationTest" time="4.023" />
+  <testcase name="plain_chat_legacy_off_real_native" classname="com.localai.workspace.ui.NormalChatNativeDeviceTest" time="2.53">
+    <skipped />
+  </testcase>
+  <testcase name="plain_chat_context_v1_on_real_native" classname="com.localai.workspace.ui.NormalChatNativeDeviceTest" time="2.407">
+    <skipped />
+  </testcase>
+  <testcase name="cancel_then_retry_real_native" classname="com.localai.workspace.ui.NormalChatNativeDeviceTest" time="2.353">
+    <skipped />
+  </testcase>
+  <testcase name="project_chat_context_v1_on_real_native" classname="com.localai.workspace.ui.NormalChatNativeDeviceTest" time="2.428">
+    <skipped />
+  </testcase>
+  <testcase name="createProjectAndExplicitlySaveEditRemoveMemory" classname="com.localai.workspace.ui.ProjectUiDeviceTest" time="16.744" />
+</testsuite>

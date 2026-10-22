@@ -1,0 +1,11 @@
+$ git diff --check
+PASS
+$ git diff --cached --check
+PASS
+$ git diff --exit-code HEAD -- docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md
+PASS: source plan unchanged
+$ sha256sum source backlog and roadmap
+bbb06425761f480a90f06ea8bb987235041f496fcc1065fb4936db3d55dd0235  docs/development/plan-source/2026-10-08/Local_AI_Workspace_BACKLOG.json
+260590f125e988e92bae284df8366ceda3a15c39c546e0bc78a4d21bbcbbd1c5  docs/development/plan-source/2026-10-08/Local_AI_Workspace_ROADMAP.md
+$ python validate EXECUTION_STATE and RESULTS links
+PASS: valid JSON and 16 existing relative links
