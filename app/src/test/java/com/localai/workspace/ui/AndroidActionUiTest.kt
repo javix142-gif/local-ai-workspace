@@ -21,6 +21,8 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import java.util.concurrent.atomic.AtomicInteger
+import java.time.ZoneId
+import java.util.Locale
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [29], application = Application::class, qualifiers = "w360dp-h800dp")
@@ -68,11 +70,67 @@ class AndroidActionUiTest {
         }
 
         compose.onNodeWithTag("android-action-review-button-${call.id}").performClick()
-        compose.onNodeWithText(localized(R.string.android_action_review_calendar_notice)).assertIsDisplayed()
+        compose.onNodeWithTag("calendar-event-confirmation-title")
+            .assertTextEquals(localized(R.string.android_action_create_event)).assertIsDisplayed()
         compose.onNodeWithTag("android-action-value-title").assertTextEquals("H3b synthetic review")
+        compose.onNodeWithText(localized(R.string.android_action_start_time)).assertIsDisplayed()
+        compose.onNodeWithText(localized(R.string.android_action_end_time)).assertIsDisplayed()
+        compose.onNodeWithTag("android-action-calendar-start")
+            .assertTextEquals(formatAndroidActionDateTime(1792605600000L)).assertIsDisplayed()
+        compose.onNodeWithTag("android-action-calendar-end")
+            .assertTextEquals(formatAndroidActionDateTime(1792609200000L)).assertIsDisplayed()
+        compose.onNodeWithText(localized(R.string.android_action_review_calendar_notice)).assertIsDisplayed()
+        compose.onNodeWithText(localized(R.string.android_action_open_calendar)).assertIsDisplayed()
+        compose.onNodeWithText(localized(R.string.common_cancel)).assertIsDisplayed()
+        compose.onNodeWithText("Calendario:").assertDoesNotExist()
+        compose.onNodeWithText("Inicio (epoch ms)").assertDoesNotExist()
+        compose.onNodeWithText("Fin (epoch ms)").assertDoesNotExist()
         compose.runOnIdle { assertEquals(0, opened.get()); assertEquals(0, declined.get()) }
         compose.onNodeWithTag("android-action-decline-button").performClick()
         compose.runOnIdle { assertEquals(0, opened.get()); assertEquals(1, declined.get()) }
+        compose.waitForIdle()
+        compose.onNodeWithTag("android-action-details-button").performClick()
+        compose.onNodeWithTag("android-action-details-startsAtEpochMillis")
+            .assertTextEquals("Inicio: ${formatAndroidActionDateTime(1792605600000L)}")
+            .performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("android-action-details-endsAtEpochMillis")
+            .assertTextEquals("Término: ${formatAndroidActionDateTime(1792609200000L)}")
+            .performScrollTo().assertIsDisplayed()
+        compose.onNodeWithText("Inicio (epoch ms)").assertDoesNotExist()
+        compose.onNodeWithText("Fin (epoch ms)").assertDoesNotExist()
+    }
+
+    @Test fun calendarDateFormattingUsesSpanishAndTheRequestedTimeZone() {
+        val spanish = Locale.forLanguageTag("es-ES")
+        assertEquals(
+            "21 de octubre de 2026 · 18:00",
+            formatAndroidActionDateTime(1792605600000L, spanish, ZoneId.of("UTC")),
+        )
+        assertEquals(
+            "21 de octubre de 2026 · 11:00",
+            formatAndroidActionDateTime(1792605600000L, spanish, ZoneId.of("America/Los_Angeles")),
+        )
+        assertEquals(
+            "20 de octubre de 2026 · 17:00",
+            formatAndroidActionDateTime(1792540800000L, spanish, ZoneId.of("America/Los_Angeles")),
+        )
+    }
+
+    @Test fun calendarProposalOpensOnlyAfterExplicitConfirmation() {
+        val opened = AtomicInteger()
+        val declined = AtomicInteger()
+        val call = pendingCall(
+            """{"action":"calendar_event","title":"Revisión H3b","startsAtEpochMillis":1792605600000,"endsAtEpochMillis":1792609200000}""",
+        )
+        compose.setContent {
+            LocalAiTheme {
+                ToolExecutionCard(call, onOpenAndroidAction = { opened.incrementAndGet() }, onDeclineAndroidAction = { declined.incrementAndGet() })
+            }
+        }
+        compose.onNodeWithTag("android-action-review-button-${call.id}").performClick()
+        compose.runOnIdle { assertEquals(0, opened.get()); assertEquals(0, declined.get()) }
+        compose.onNodeWithTag("android-action-confirm-button").performScrollTo().performClick()
+        compose.runOnIdle { assertEquals(1, opened.get()); assertEquals(0, declined.get()) }
     }
 
     @Test fun openErrorKeepsHumanExplanationAndTechnicalCodeVisible() {

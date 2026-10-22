@@ -107,6 +107,23 @@ class ChatContentUiTest {
         compose.onNodeWithTag("citation-detail-scroll").assertDoesNotExist()
     }
 
+    @Test fun citationSourceCountUsesSpanishSingularAndPluralForms() {
+        val first = citationEvidence("COUNT-1", "notes-a.txt", 1, "Stored excerpt A")
+        val second = citationEvidence("COUNT-2", "notes-b.txt", 2, "Stored excerpt B")
+        compose.setContent { LocalAiTheme {
+            Column {
+                CitationEvidenceReferences(listOf(first)) {}
+                CitationEvidenceReferences(listOf(first, second)) {}
+            }
+        } }
+
+        compose.onNodeWithText("1 fragmento vinculado")
+            .assertContentDescriptionEquals("1 fragmento de fuente vinculado a esta respuesta").assertIsDisplayed()
+        compose.onNodeWithText("2 fragmentos vinculados")
+            .assertContentDescriptionEquals("2 fragmentos de fuentes vinculados a esta respuesta").assertIsDisplayed()
+        compose.onNodeWithText("1 fragmentos vinculados").assertDoesNotExist()
+    }
+
     @Test
     @Config(sdk = [35], application = Application::class)
     fun citationDetailOffersAnActionToOpenItsIndexedSourceSegment() {

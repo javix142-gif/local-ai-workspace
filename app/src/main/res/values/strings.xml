@@ -57,7 +57,10 @@
     <string name="chat_role_user">Tú dijiste</string>
     <string name="chat_role_assistant">Respondió el asistente</string>
     <string name="chat_sources_title">Fuentes</string>
-    <string name="chat_sources_count">%1$d fragmentos vinculados</string>
+    <plurals name="chat_sources_count">
+        <item quantity="one">%1$d fragmento vinculado</item>
+        <item quantity="other">%1$d fragmentos vinculados</item>
+    </plurals>
     <string name="chat_sources_note">Basado en fragmentos seleccionados; no significa que se haya leído el documento completo.</string>
     <string name="chat_sources_metadata_note">El origen y la ubicación provienen del índice local, no de texto de cita generado.</string>
     <string name="chat_source_accessibility">Referencia %1$s, %2$s</string>
@@ -73,7 +76,10 @@
     <string name="chat_source_preview_title">Fragmento del índice local</string>
     <string name="chat_source_close">Cerrar</string>
     <string name="chat_source_back_to_citation">Volver a la referencia</string>
-    <string name="chat_sources_accessibility">%1$d fragmentos de fuentes vinculados a esta respuesta</string>
+    <plurals name="chat_sources_accessibility">
+        <item quantity="one">%1$d fragmento de fuente vinculado a esta respuesta</item>
+        <item quantity="other">%1$d fragmentos de fuentes vinculados a esta respuesta</item>
+    </plurals>
     <string name="action_status_prepared">Preparada</string>
     <string name="action_status_opening">Abriendo</string>
     <string name="action_status_opened">Abierta</string>
@@ -180,7 +186,7 @@
     <string name="android_action_status_confirmed">Confirmada por ti</string>
     <string name="android_action_status_declined">Rechazada</string>
     <string name="android_action_status_error">Error</string>
-    <string name="android_action_review_calendar_notice">Se abrirá el calendario con estos datos para que los revises. El evento aún no se ha guardado.</string>
+    <string name="android_action_review_calendar_notice">Se abrirá tu calendario para que lo guardes tú.</string>
     <string name="android_action_review_clock_notice">Se abrirá el reloj con estos datos para que los revises. La alarma o el temporizador aún no se ha creado.</string>
     <string name="android_action_review_generic_notice">Revisa los datos. Solo al continuar se abrirá la aplicación correspondiente; AWS no enviará ni guardará nada automáticamente.</string>
     <string name="android_action_error_explanation">No se pudo abrir la aplicación. No se completó ninguna acción externa.</string>
@@ -190,6 +196,8 @@
     <string name="android_action_declined">Rechazada; no se abrió ninguna aplicación.</string>
     <string name="android_action_open_failed">No se pudo abrir una aplicación compatible.</string>
     <string name="android_action_review">Revisar acción</string>
+    <string name="android_action_create_event">Crear evento</string>
+    <string name="android_action_open_calendar">Abrir calendario</string>
     <string name="android_action_review_notice">Revisa todos los datos. Solo al pulsar «Abrir aplicación» se abrirá la pantalla correspondiente; no se enviará ni guardará nada automáticamente.</string>
     <string name="android_action_open_app">Abrir aplicación</string>
     <string name="android_action_decline">Rechazar</string>
@@ -201,8 +209,8 @@
     <string name="android_action_minute">Minuto</string>
     <string name="android_action_seconds">Segundos</string>
     <string name="android_action_field_title">Título</string>
-    <string name="android_action_start_time">Inicio (epoch ms)</string>
-    <string name="android_action_end_time">Fin (epoch ms)</string>
+    <string name="android_action_start_time">Inicio</string>
+    <string name="android_action_end_time">Término</string>
     <string name="android_action_location">Lugar</string>
     <string name="android_action_description">Descripción</string>
     <string name="android_action_phone">Teléfono</string>

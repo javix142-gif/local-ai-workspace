@@ -32,6 +32,7 @@ import com.localai.workspace.data.CitationEvidenceEntity
 import com.localai.workspace.data.CitationCellReferenceCodec
 import com.localai.workspace.R
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.pluralStringResource
 import com.localai.workspace.ui.theme.LocalAiRadii
 
 /** Displays only evidence records already validated and attached to this assistant message. */
@@ -41,6 +42,12 @@ internal fun CitationEvidenceReferences(
     onCitation: (String) -> Unit,
 ) {
     if (evidence.isEmpty()) return
+    val countLabel = pluralStringResource(R.plurals.chat_sources_count, evidence.size, evidence.size)
+    val countDescription = pluralStringResource(
+        R.plurals.chat_sources_accessibility,
+        evidence.size,
+        evidence.size,
+    )
 
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
@@ -53,9 +60,10 @@ internal fun CitationEvidenceReferences(
             Column(Modifier.weight(1f)) {
                 Text(stringResource(R.string.chat_sources_title), style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.semantics { heading() })
-                Text(stringResource(R.string.chat_sources_count, evidence.size),
+                Text(countLabel,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.semantics { contentDescription = countDescription })
             }
         }
         Text(stringResource(R.string.chat_sources_note), style = MaterialTheme.typography.bodySmall,

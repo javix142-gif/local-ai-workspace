@@ -5,6 +5,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.*
@@ -15,6 +17,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.localai.workspace.data.*
@@ -25,6 +28,10 @@ import com.localai.workspace.ui.theme.LocalAiSpacing
 import com.localai.workspace.ui.theme.LocalAiRadii
 import com.localai.workspace.ui.theme.LocalAiStatusColors
 import com.localai.workspace.R
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @Composable
 fun AssistantControls(profile: AssistantProfile, toolsAvailable: Boolean, thinkingAvailable: Boolean,
@@ -261,7 +268,7 @@ private fun AndroidActionExecutionCard(
                 ) { Text(stringResource(R.string.android_action_report_complete)) }
                 else -> Unit
             }
-            TextButton(onClick = { details = true }, modifier = Modifier.align(Alignment.End).minimumAppTouchTarget()) {
+            TextButton(onClick = { details = true }, modifier = Modifier.align(Alignment.End).minimumAppTouchTarget().testTag("android-action-details-button")) {
                 Text(stringResource(R.string.common_details))
             }
         }
@@ -286,28 +293,32 @@ private fun AndroidActionExecutionCard(
                     .padding(horizontal = LocalAiSpacing.x4, vertical = LocalAiSpacing.x2),
                 verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x3),
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(LocalAiSpacing.x3)) {
-                    Surface(shape = CircleShape, color = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer) {
-                        Icon(Icons.Default.Info, contentDescription = null, modifier = Modifier.padding(14.dp))
+                if (reviewed?.kind == AndroidActionPlanner.CALENDAR_EVENT) {
+                    CalendarEventConfirmation(reviewed)
+                } else {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(LocalAiSpacing.x3)) {
+                        Surface(shape = CircleShape, color = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer) {
+                            Icon(Icons.Default.Info, contentDescription = null, modifier = Modifier.padding(14.dp))
+                        }
+                        Text(title, Modifier.weight(1f), style = MaterialTheme.typography.titleLarge)
                     }
-                    Text(title, Modifier.weight(1f), style = MaterialTheme.typography.titleLarge)
-                }
-                Text(stringResource(notice), Modifier.testTag("android-action-review-notice"),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = MaterialTheme.shapes.medium,
-                    color = MaterialTheme.colorScheme.surfaceContainerLow,
-                ) {
-                    Column(Modifier.padding(LocalAiSpacing.x3), verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x2)) {
-                        if (reviewed != null) AndroidActionPlanner.displayFields(reviewed).forEach { (key, value) ->
-                            Column(Modifier.fillMaxWidth()) {
-                                Text(stringResource(androidActionFieldLabel(key)), style = MaterialTheme.typography.labelMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                Text(displayAndroidActionValue(key, value), style = MaterialTheme.typography.bodyMedium,
-                                    modifier = Modifier.testTag("android-action-value-$key"))
+                    Text(stringResource(notice), Modifier.testTag("android-action-review-notice"),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = MaterialTheme.shapes.medium,
+                        color = MaterialTheme.colorScheme.surfaceContainerLow,
+                    ) {
+                        Column(Modifier.padding(LocalAiSpacing.x3), verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x2)) {
+                            if (reviewed != null) AndroidActionPlanner.displayFields(reviewed).forEach { (key, value) ->
+                                Column(Modifier.fillMaxWidth()) {
+                                    Text(stringResource(androidActionFieldLabel(key)), style = MaterialTheme.typography.labelMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    Text(displayAndroidActionValue(key, value), style = MaterialTheme.typography.bodyMedium,
+                                        modifier = Modifier.testTag("android-action-value-$key"))
+                                }
                             }
                         }
                     }
@@ -315,11 +326,15 @@ private fun AndroidActionExecutionCard(
                 Button(
                     onClick = { review = false; onOpen(call) }, enabled = reviewed != null,
                     modifier = Modifier.fillMaxWidth().minimumAppTouchTarget().testTag("android-action-confirm-button"),
-                ) { Text(stringResource(R.string.android_action_open_app)) }
+                ) {
+                    Text(stringResource(if (reviewed?.kind == AndroidActionPlanner.CALENDAR_EVENT) {
+                        R.string.android_action_open_calendar
+                    } else R.string.android_action_open_app))
+                }
                 OutlinedButton(
                     onClick = { review = false; onDecline(call) },
                     modifier = Modifier.fillMaxWidth().minimumAppTouchTarget().testTag("android-action-decline-button"),
-                ) { Text(stringResource(R.string.android_action_decline)) }
+                ) { Text(stringResource(if (reviewed?.kind == AndroidActionPlanner.CALENDAR_EVENT) R.string.common_cancel else R.string.android_action_decline)) }
             }
         }
     }
@@ -330,12 +345,127 @@ private fun AndroidActionExecutionCard(
         text = {
             Column(Modifier.heightIn(max = 420.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x2)) {
                 Text(stringResource(R.string.android_action_status_detail, statusExplanation))
-                action?.let { AndroidActionPlanner.displayFields(it).forEach { (key, value) -> Text("${stringResource(androidActionFieldLabel(key))}: ${displayAndroidActionValue(key, value)}") } }
+                action?.let { AndroidActionPlanner.displayFields(it).forEach { (key, value) ->
+                    Text(
+                        "${stringResource(androidActionFieldLabel(key))}: ${displayAndroidActionValue(key, value)}",
+                        modifier = Modifier.testTag("android-action-details-$key"),
+                    )
+                } }
                 if (call.status == "CONFIRMED_BY_USER") Text(stringResource(R.string.android_action_user_reported_note))
                 call.errorCode?.takeIf(String::isNotBlank)?.let { Text(stringResource(R.string.android_action_error_code, it)) }
             }
         },
     )
+}
+
+@Composable
+private fun CalendarEventConfirmation(action: com.localai.workspace.domain.tools.PreparedAndroidAction) {
+    Column(
+        Modifier.fillMaxWidth().testTag("calendar-event-confirmation-content"),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x3),
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Surface(
+                modifier = Modifier.size(64.dp),
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(Icons.Default.Event, contentDescription = null, modifier = Modifier.size(30.dp))
+                    Surface(
+                        modifier = Modifier.align(Alignment.BottomEnd).size(24.dp),
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+                        }
+                    }
+                }
+            }
+        }
+        Text(
+            stringResource(R.string.android_action_create_event),
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.semantics { heading() }.testTag("calendar-event-confirmation-title"),
+        )
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.medium,
+            color = MaterialTheme.colorScheme.surfaceContainerLow,
+        ) {
+            Column(
+                Modifier.fillMaxWidth().padding(LocalAiSpacing.x3),
+                verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x2),
+            ) {
+                Text(
+                    action.fields.getString("title"),
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.fillMaxWidth().testTag("android-action-value-title"),
+                )
+                CalendarEventDateRow(
+                    R.string.android_action_start_time,
+                    action.fields.getLong("startsAtEpochMillis"),
+                    "android-action-calendar-start",
+                )
+                CalendarEventDateRow(
+                    R.string.android_action_end_time,
+                    action.fields.getLong("endsAtEpochMillis"),
+                    "android-action-calendar-end",
+                )
+                action.fields.optString("location").takeIf(String::isNotBlank)?.let { location ->
+                    CalendarEventOptionalDetail(R.string.android_action_location, location, "android-action-calendar-location")
+                }
+                action.fields.optString("description").takeIf(String::isNotBlank)?.let { description ->
+                    CalendarEventOptionalDetail(R.string.android_action_description, description, "android-action-calendar-description")
+                }
+            }
+        }
+        Row(
+            Modifier.fillMaxWidth().testTag("android-action-calendar-note"),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(LocalAiSpacing.x2),
+        ) {
+            Surface(
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            ) {
+                Icon(Icons.Default.Info, contentDescription = null, modifier = Modifier.padding(8.dp).size(20.dp))
+            }
+            Text(
+                stringResource(R.string.android_action_review_calendar_notice),
+                Modifier.weight(1f),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+@Composable
+private fun CalendarEventDateRow(label: Int, epochMillis: Long, tag: String) {
+    Column(Modifier.fillMaxWidth()) {
+        Text(stringResource(label), style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(
+            formatAndroidActionDateTime(epochMillis),
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.fillMaxWidth().testTag(tag),
+        )
+    }
+}
+
+@Composable
+private fun CalendarEventOptionalDetail(label: Int, value: String, tag: String) {
+    Column(Modifier.fillMaxWidth()) {
+        Text(stringResource(label), style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(value, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.testTag(tag))
+    }
 }
 
 @Composable
@@ -406,5 +536,14 @@ private fun androidActionFieldLabel(key: String): Int = when (key) {
 }
 
 private fun displayAndroidActionValue(key: String, value: String): String = if (key in setOf("startsAtEpochMillis", "endsAtEpochMillis")) {
-    runCatching { java.text.DateFormat.getDateTimeInstance().format(java.util.Date(value.toLong())) }.getOrDefault(value)
+    value.toLongOrNull()?.let { formatAndroidActionDateTime(it) } ?: "Fecha no disponible"
 } else value
+
+internal fun formatAndroidActionDateTime(
+    epochMillis: Long,
+    locale: Locale = Locale.forLanguageTag("es-ES"),
+    zoneId: ZoneId = ZoneId.systemDefault(),
+): String = runCatching {
+    DateTimeFormatter.ofPattern("d 'de' MMMM 'de' uuuu · HH:mm", locale)
+        .format(Instant.ofEpochMilli(epochMillis).atZone(zoneId))
+}.getOrDefault("Fecha no disponible")

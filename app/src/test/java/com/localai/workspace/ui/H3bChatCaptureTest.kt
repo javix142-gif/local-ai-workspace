@@ -216,11 +216,22 @@ class H3bChatCaptureTest {
                 .assertTextEquals("Revisión sintética de calendario")
                 .assertIsDisplayed()
             assertTrue("Confirmation data has measured text at fontScale=$fontScale", modalValue.fetchSemanticsNode().size.height > 0)
-            compose.onNodeWithTag("android-action-confirm-button").assertIsDisplayed().assertHeightIsAtLeast(48.dp)
-            compose.onNodeWithTag("android-action-decline-button").assertIsDisplayed().assertHeightIsAtLeast(48.dp)
+            compose.onNodeWithTag("calendar-event-confirmation-title")
+                .assertTextEquals(compose.activity.getString(R.string.android_action_create_event)).assertIsDisplayed()
+            compose.onNodeWithTag("android-action-calendar-start").performScrollTo()
+                .assertTextEquals(formatAndroidActionDateTime(1792605600000L)).assertIsDisplayed()
+            compose.onNodeWithTag("android-action-calendar-end").performScrollTo()
+                .assertTextEquals(formatAndroidActionDateTime(1792609200000L)).assertIsDisplayed()
+            compose.onNodeWithText(compose.activity.getString(R.string.android_action_review_calendar_notice))
+                .performScrollTo().assertIsDisplayed()
+            compose.onNodeWithTag("android-action-confirm-button").performScrollTo()
+                .assertIsDisplayed().assertHeightIsAtLeast(48.dp)
+            compose.onNodeWithTag("android-action-decline-button").performScrollTo()
+                .assertIsDisplayed().assertHeightIsAtLeast(48.dp)
             compose.runOnIdle {
                 assertEquals("the modal only proposes; it does not open the external app", 0, opened.get())
             }
+            compose.onNodeWithText(compose.activity.getString(R.string.android_action_review_calendar_notice)).performScrollTo()
             captureModal(
                 sheetTag,
                 "confirmation-sheet-${if (dark) "dark" else "light"}-360dp-fontScale-${fontScale.toInt()}.png",
