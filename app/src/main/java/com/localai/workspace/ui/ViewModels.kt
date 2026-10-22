@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.room.withTransaction
 import kotlinx.coroutines.Dispatchers
+import android.Manifest
 import android.content.Context
+import java.util.Calendar
 import com.localai.workspace.AppGraph
 import com.localai.workspace.R
 import com.localai.workspace.data.CitationEvidenceEntity
@@ -82,10 +84,58 @@ internal fun GenerationError.localizedChatDisplayText(context: Context): String 
     }
 }
 
+sealed interface HomeCalendarDayState {
+    data object PermissionRequired : HomeCalendarDayState
+    data object Loading : HomeCalendarDayState
+    data object Empty : HomeCalendarDayState
+    data object Unavailable : HomeCalendarDayState
+    data class Events(
+        val records: List<com.localai.workspace.domain.tools.LocalCalendarEvent>,
+        val truncated: Boolean,
+    ) : HomeCalendarDayState
+}
+
 class HomeViewModel(private val graph: AppGraph) : ViewModel() {
     val chatActivities = graph.chatSessions.activities
     fun stopChatActivity(projectId: String, conversationId: String?) = graph.chatSessions.stop(projectId, conversationId)
     val modelPreparation = graph.modelPreparation.state
+    private val calendarReader = com.localai.workspace.domain.tools.ContentResolverPersonalDataReader(graph.contextForMeasurements)
+    private val _calendarDay = MutableStateFlow<HomeCalendarDayState>(
+        if (calendarReader.hasPermission(Manifest.permission.READ_CALENDAR)) HomeCalendarDayState.Loading
+        else HomeCalendarDayState.PermissionRequired,
+    )
+    val calendarDay = _calendarDay.asStateFlow()
+    private var calendarDayJob: Job? = null
+
+    fun refreshCalendarDay() {
+        calendarDayJob?.cancel()
+        if (!calendarReader.hasPermission(Manifest.permission.READ_CALENDAR)) {
+            _calendarDay.value = HomeCalendarDayState.PermissionRequired
+            return
+        }
+        _calendarDay.value = HomeCalendarDayState.Loading
+        calendarDayJob = viewModelScope.launch {
+            val day = Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
+            val start = day.timeInMillis
+            day.add(Calendar.DAY_OF_MONTH, 1)
+            try {
+                val batch = calendarReader.calendarInstances(start, day.timeInMillis)
+                _calendarDay.value = if (batch.records.isEmpty()) HomeCalendarDayState.Empty
+                else HomeCalendarDayState.Events(batch.records, batch.truncated)
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: SecurityException) {
+                _calendarDay.value = HomeCalendarDayState.PermissionRequired
+            } catch (_: Exception) {
+                _calendarDay.value = HomeCalendarDayState.Unavailable
+            }
+        }
+    }
     fun prepareModel(id: String) = graph.modelPreparation.select(id)
     fun retryModelPreparation() = graph.modelPreparation.retry()
     fun cancelModelPreparation() = graph.modelPreparation.cancel()

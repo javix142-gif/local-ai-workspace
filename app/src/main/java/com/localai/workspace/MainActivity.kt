@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -43,6 +44,7 @@ import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.icons.filled.ChatBubbleOutline
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.FolderOpen
@@ -85,6 +87,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.AnnotatedString
 import com.localai.workspace.ui.ChatComposer
 import com.localai.workspace.ui.ChatHeaderTitle
@@ -114,6 +117,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -151,6 +156,14 @@ import com.localai.workspace.ui.HomeViewModelFactory
 import com.localai.workspace.ui.LocalAiTheme
 import com.localai.workspace.ui.components.AppScreenContent
 import com.localai.workspace.ui.components.AwsBottomBar
+import com.localai.workspace.ui.HomeCalendarDayState
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+import java.util.Locale
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.DisposableEffect
@@ -276,18 +289,37 @@ private fun HomeScreen(viewModel: HomeViewModel, navController: NavHostControlle
     val models by viewModel.models.collectAsStateWithLifecycle()
     val preparation by viewModel.modelPreparation.collectAsStateWithLifecycle()
     val creating by viewModel.creating.collectAsStateWithLifecycle()
+    val calendarDay by viewModel.calendarDay.collectAsStateWithLifecycle()
+    val calendarPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
+        viewModel.refreshCalendarDay()
+    }
+    LaunchedEffect(viewModel) { viewModel.refreshCalendarDay() }
     val usableModels = remember(models) {
         models.filter(com.localai.workspace.data.ApplicationModelPreparation::isUsable)
     }
-    AppScreenContent {
-        TopAppBar(title = { Text(stringResource(R.string.home_title), style = MaterialTheme.typography.titleLarge) })
-        Column(
-            Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(bottom = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            Text(stringResource(R.string.home_intro), style = MaterialTheme.typography.bodyLarge,
+    val greeting = when (LocalTime.now().hour) {
+        in 5..11 -> R.string.home_greeting_morning
+        in 12..19 -> R.string.home_greeting_afternoon
+        else -> R.string.home_greeting_evening
+    }
+    val todayLabel = remember {
+        DateTimeFormatter.ofPattern("EEEE d 'de' MMMM", Locale.forLanguageTag("es"))
+            .format(LocalDate.now())
+    }
+    AppScreenContent(columnModifier = Modifier.testTag("home-scroll").verticalScroll(rememberScrollState()).padding(bottom = 20.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Text(stringResource(greeting), Modifier.semantics { heading() }.testTag("home-greeting"),
+                    style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onSurface)
+                Text(todayLabel, Modifier.testTag("home-date"), style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            Text(stringResource(R.string.home_intro), style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant)
             LocalModeCard()
+            HomeCalendarCard(calendarDay) {
+                calendarPermission.launch(android.Manifest.permission.READ_CALENDAR)
+            }
             if (usableModels.isNotEmpty()) {
                 WorkspaceModelCard(
                     models, preparation, viewModel::prepareModel,
@@ -298,8 +330,9 @@ private fun HomeScreen(viewModel: HomeViewModel, navController: NavHostControlle
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
                 ) {
-                    Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(stringResource(R.string.home_model_missing_title), style = MaterialTheme.typography.titleMedium)
+                    Column(Modifier.fillMaxWidth().padding(16.dp).testTag("home-model-missing"), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(stringResource(R.string.home_model_missing_title), style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.semantics { heading() })
                         Text(stringResource(R.string.home_model_missing_body), style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant)
                         TextButton(onClick = { navController.navigate("models") }) {
@@ -311,12 +344,72 @@ private fun HomeScreen(viewModel: HomeViewModel, navController: NavHostControlle
             Button(
                 onClick = { viewModel.startChat { id, conversation -> navController.navigate(chatRoute(id, conversation)) } },
                 enabled = !creating,
-                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("home-start-chat"),
             ) { Text(stringResource(R.string.home_start_chat)) }
             OutlinedButton(
                 onClick = { navController.navigate("workspace") },
-                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("home-open-chats"),
             ) { Text(stringResource(R.string.home_open_chats)) }
+        }
+    }
+}
+
+@Composable
+private fun HomeCalendarCard(state: HomeCalendarDayState, requestPermission: () -> Unit) {
+    Card(
+        modifier = Modifier.fillMaxWidth().testTag("home-calendar-card"),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+    ) {
+        Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Surface(shape = RoundedCornerShape(50.dp), color = MaterialTheme.colorScheme.primaryContainer) {
+                    Icon(Icons.Default.Event, contentDescription = null, tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(10.dp).size(22.dp))
+                }
+                Text(stringResource(R.string.home_calendar_title), Modifier.semantics { heading() },
+                    style = MaterialTheme.typography.titleMedium)
+            }
+            when (state) {
+                HomeCalendarDayState.PermissionRequired -> {
+                    Text(stringResource(R.string.home_calendar_permission), style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    OutlinedButton(onClick = requestPermission, Modifier.fillMaxWidth().heightIn(min = 48.dp)
+                        .testTag("home-calendar-permission")) {
+                        Text(stringResource(R.string.home_calendar_allow))
+                    }
+                }
+                HomeCalendarDayState.Loading -> Text(stringResource(R.string.home_calendar_loading),
+                    Modifier.testTag("home-calendar-loading"), style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                HomeCalendarDayState.Empty -> Text(stringResource(R.string.home_calendar_empty),
+                    Modifier.testTag("home-calendar-empty"), style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                HomeCalendarDayState.Unavailable -> Text(stringResource(R.string.home_calendar_unavailable),
+                    Modifier.testTag("home-calendar-unavailable"), style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                is HomeCalendarDayState.Events -> {
+                    state.records.forEach { event ->
+                        Row(Modifier.fillMaxWidth().testTag("home-calendar-event"),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.Top) {
+                            val timeLabel = if (event.allDay) stringResource(R.string.home_calendar_all_day) else
+                                DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(Locale.forLanguageTag("es"))
+                                    .withZone(ZoneId.systemDefault()).format(Instant.ofEpochMilli(event.startEpochMillis))
+                            Text(timeLabel, Modifier.widthIn(min = 72.dp), style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.primary)
+                            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                                Text(event.title.ifBlank { stringResource(R.string.home_calendar_untitled) },
+                                    style = MaterialTheme.typography.bodyLarge)
+                                event.location?.takeIf(String::isNotBlank)?.let {
+                                    Text(it, style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                }
+                            }
+                        }
+                    }
+                    if (state.truncated) Text(pluralStringResource(R.plurals.home_calendar_truncated, state.records.size, state.records.size),
+                        style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            }
         }
     }
 }

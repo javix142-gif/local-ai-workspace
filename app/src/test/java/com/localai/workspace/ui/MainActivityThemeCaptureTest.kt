@@ -27,7 +27,7 @@ class MainActivityThemeCaptureTest {
 
     @Test
     fun capturesLightHomeChatsMoreAndModelsAtCompactWidth() {
-        compose.onNodeWithText(compose.activity.getString(R.string.home_title)).assertIsDisplayed()
+        compose.onNodeWithTag("home-greeting").assertIsDisplayed()
         capture("h3b-home-light-360dp-fontScale-1.0")
 
         compose.onNodeWithTag("top-level-workspace").assertTextContains(compose.activity.getString(R.string.navigation_chats)).performClick()
