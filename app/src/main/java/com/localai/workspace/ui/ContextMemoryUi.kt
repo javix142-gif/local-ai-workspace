@@ -5,12 +5,21 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Event
+import androidx.compose.material.icons.filled.FolderOpen
+import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.icons.filled.PeopleAlt
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Subject
+import androidx.compose.material.icons.filled.TaskAlt
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -25,6 +34,8 @@ import com.localai.workspace.context.*
 import com.localai.workspace.context.ContextBundle
 import com.localai.workspace.semantic.v2.*
 import com.localai.workspace.ui.theme.LocalAiSpacing
+import com.localai.workspace.ui.components.AwsCard
+import com.localai.workspace.ui.components.AwsListRow
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import com.google.gson.GsonBuilder
@@ -92,6 +103,30 @@ private data class MemoryApprovalReview(
     "EXPIRED"->R.string.memory_status_expired
     else->R.string.memory_status_inactive
 })
+@Composable private fun memoryCategoryLabel(kind:MemoryKind):String=stringResource(when(kind){
+    MemoryKind.PREFERENCE->R.string.memory_category_preferences
+    MemoryKind.PROCEDURE->R.string.memory_category_routines
+    MemoryKind.FACT->R.string.memory_category_facts
+    MemoryKind.DECISION->R.string.memory_category_decisions
+    MemoryKind.EVENT->R.string.memory_category_dates
+    MemoryKind.RELATIONSHIP->R.string.memory_category_people
+    MemoryKind.PROJECT_CONTEXT->R.string.memory_category_projects
+    MemoryKind.SUMMARY->R.string.memory_category_summaries
+    MemoryKind.TASK_STATE->R.string.memory_category_tasks
+    MemoryKind.OTHER->R.string.memory_category_other
+})
+private fun memoryCategoryIcon(kind:MemoryKind)=when(kind){
+    MemoryKind.PREFERENCE->Icons.Default.Tune
+    MemoryKind.PROCEDURE->Icons.Default.Settings
+    MemoryKind.FACT->Icons.Default.Lightbulb
+    MemoryKind.DECISION->Icons.Default.CheckCircle
+    MemoryKind.EVENT->Icons.Default.Event
+    MemoryKind.RELATIONSHIP->Icons.Default.PeopleAlt
+    MemoryKind.PROJECT_CONTEXT->Icons.Default.FolderOpen
+    MemoryKind.SUMMARY->Icons.Default.Subject
+    MemoryKind.TASK_STATE->Icons.Default.TaskAlt
+    MemoryKind.OTHER->Icons.Default.FolderOpen
+}
 
 @Composable fun ContextMemoryEntry(projectId:String?=null,initiallyOpen:Boolean=false) {
     var open by remember(initiallyOpen){mutableStateOf(initiallyOpen)}
@@ -105,7 +140,8 @@ private data class MemoryApprovalReview(
     var editing by remember{mutableStateOf<MemoryRecord?>(null)};var editor by remember{mutableStateOf(false)};var text by remember{mutableStateOf("")};var ttl by remember{mutableStateOf("")};var kind by remember{mutableStateOf(MemoryKind.FACT)};var choosingKind by remember{mutableStateOf(false)};var scopeMenu by remember{mutableStateOf(false)};var writingScope by remember(projectId){mutableStateOf(projectId?.let{SemanticScope(ScopeType.PROJECT,it)} ?: SemanticScope(ScopeType.USER,"local"))}
     var structuredSubject by remember{mutableStateOf("")};var structuredPredicate by remember{mutableStateOf("")};var structuredObject by remember{mutableStateOf("")};var structuredConflict by remember{mutableStateOf<StructuredPreferenceConflictException?>(null)}
     var details by remember{mutableStateOf<MemoryRecord?>(null)};var removal by remember{mutableStateOf<MemoryRecord?>(null)};var permanentRemoval by remember{mutableStateOf<MemoryRecord?>(null)};var error by remember{mutableStateOf<String?>(null)};var busy by remember{mutableStateOf(false)};var brief by remember{mutableStateOf<ProjectBrief?>(null)}
-    var implementDialog by remember{mutableStateOf(false)};var bundlePreview by remember{mutableStateOf<MemoryBundleV1.Preview?>(null)};var selectedBundleKeys by remember{mutableStateOf<Set<String>>(emptySet())};var importResult by remember{mutableStateOf<String?>(null)}
+    var importDialog by remember{mutableStateOf(false)};var exportDialog by remember{mutableStateOf(false)};var advanced by remember{mutableStateOf(false)}
+    var bundlePreview by remember{mutableStateOf<MemoryBundleV1.Preview?>(null)};var selectedBundleKeys by remember{mutableStateOf<Set<String>>(emptySet())};var importResult by remember{mutableStateOf<String?>(null)}
     var approvalReview by remember{mutableStateOf<MemoryApprovalReview?>(null)}
     var exportAllWorkspaceMemory by remember{mutableStateOf(false)}
     var bundleReview by remember{mutableStateOf<Map<String,MemoryManager.BundleCandidateReview>>(emptyMap())}
@@ -117,7 +153,7 @@ private data class MemoryApprovalReview(
     fun run(block:suspend()->Unit){scope.launch{busy=true;error=null;try{withContext(Dispatchers.IO){block()}}catch(cancel:CancellationException){throw cancel}catch(e:Exception){error=memoryActionErrorMessage(context,e)}finally{busy=false}}}
     val pendingForScope=all.filter{it.status=="PENDING"&&access.permits(it.scopeType,it.scopeId)}
         .sortedWith(compareByDescending<MemoryRecord>{it.pinned}.thenByDescending{it.importance}.thenByDescending{it.updatedAt}.thenBy{it.id})
-    val matching=all.filter{access.permits(it.scopeType,it.scopeId)&&(!projectOnly||it.scopeType=="PROJECT")&&(showInactive||it.status in setOf("ACTIVE","PENDING")&&it.expiresAt?.let{t->t>System.currentTimeMillis()}!=false)&&(kindFilter==null||it.kind==kindFilter?.name)&&it.text.contains(query,true)}
+    val matching=all.filter{access.permits(it.scopeType,it.scopeId)&&(!projectOnly||it.scopeType=="PROJECT")&&(showInactive||it.status in setOf("ACTIVE","PENDING")&&it.expiresAt?.let{t->t>System.currentTimeMillis()}!=false)&&it.text.contains(query,true)}
     val visible=matching.sortedWith(
         compareByDescending<MemoryRecord>{it.status=="PENDING"}
             .thenByDescending{it.pinned}
@@ -198,7 +234,7 @@ private data class MemoryApprovalReview(
                     output.use{it.write(exported.archive)}
                 }
                 importResult=context.getString(R.string.memory_export_result,exported.exportedRecords,exported.excludedSensitiveRecords)
-                implementDialog=false
+                exportDialog=false
             } catch(cancel:CancellationException){throw cancel} catch(e:Exception){error=memoryBundleExportError(context,e)}
             finally{busy=false;exportAllWorkspaceMemory=false}
         }
@@ -228,84 +264,122 @@ private data class MemoryApprovalReview(
                 bundlePreview=parsed
                 bundleReview=review
                 selectedBundleKeys=emptySet()
-                implementDialog=false
+                importDialog=false
                 importResult=null
             } catch(cancel:CancellationException){throw cancel} catch(e:Exception){error=memoryBundleImportError(context,e)}
             finally{busy=false}
         }
     }
-    SemanticPanel(stringResource(R.string.memory_title),close,fullScreen=fullScreen) {
+    SemanticPanel(
+        title=stringResource(R.string.memory_title),
+        dismiss=close,
+        fullScreen=fullScreen,
+        bottomContent={
+            Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+                OutlinedButton(onClick={importDialog=true},modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("memory-import")) {
+                    Text(stringResource(R.string.memory_import_button))
+                }
+                Button(onClick={exportDialog=true},modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("memory-export")) {
+                    Text(stringResource(R.string.memory_export_button))
+                }
+            }
+        },
+    ) {
         if(fullScreen)Text(stringResource(R.string.memory_intro),style=MaterialTheme.typography.bodyMedium,color=MaterialTheme.colorScheme.onSurfaceVariant)
         OutlinedTextField(query,{query=it},label={Text(stringResource(R.string.memory_search))},singleLine=true,modifier=Modifier.fillMaxWidth().testTag("memory-search"))
         Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)) {
             TextButton(onClick={editing=null;text="";ttl="";structuredSubject="";structuredPredicate="";structuredObject="";kind=MemoryKind.FACT;editor=true},modifier=Modifier.weight(1f)){Text(stringResource(R.string.common_add))}
             TextButton(onClick={filters=!filters},modifier=Modifier.weight(1f).testTag("memory-filter-toggle")){Text(stringResource(R.string.memory_filter))}
         }
-        Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)) {
-            TextButton(onClick={memoryJsonExporter.launch("LOCAL_AI_WORKSPACE_MEMORY.json")},modifier=Modifier.weight(1f)){Text(stringResource(R.string.memory_export_json))}
-            TextButton(onClick={implementDialog=true},modifier=Modifier.weight(1f)){Text(stringResource(R.string.memory_import_export))}
-        }
-        if(visibleKinds.isNotEmpty())Row(
-            Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).testTag("memory-category-filters"),
-            horizontalArrangement=Arrangement.spacedBy(8.dp),
-        ) {
-            FilterChip(selected=kindFilter==null,onClick={kindFilter=null},label={Text(stringResource(R.string.memory_all_types))},modifier=Modifier.testTag("memory-category-all"))
-            visibleKinds.forEach{(category,records)->
-                FilterChip(
-                    selected=kindFilter==category,onClick={kindFilter=if(kindFilter==category)null else category},
-                    label={Text(stringResource(R.string.memory_category_count,memoryKindLabel(category),records.size))},
-                    modifier=Modifier.testTag("memory-category-${category.name.lowercase()}"),
-                )
-            }
-        }
         if(filters){
             Row(verticalAlignment=androidx.compose.ui.Alignment.CenterVertically){Checkbox(showInactive,{showInactive=it});Text(stringResource(R.string.memory_include_inactive))}
             if(projectId!=null)Row(verticalAlignment=androidx.compose.ui.Alignment.CenterVertically){Checkbox(projectOnly,{projectOnly=it});Text(stringResource(R.string.memory_project_only))}
         }
-        if(pendingForScope.isNotEmpty())TextButton(
-            enabled=!busy,onClick={requestApproval(pendingForScope.map{it.id})},modifier=Modifier.testTag("memory-review-all-pending"),
-        ){Text(stringResource(R.string.memory_pending_approval_count,pendingForScope.size))}
         if(visiblePending.isNotEmpty()){
-            MemorySectionHeading(stringResource(R.string.memory_pending_section,visiblePending.size),"memory-pending-section")
-            visiblePending.forEach{memory->MemoryRecordCard(
-                memory=memory,showStatus=true,onDetails={details=memory},
-                onApprove={requestApproval(listOf(memory.id))},onDiscard={removal=memory},
-            )}
+            AwsCard(modifier=Modifier.testTag("memory-pending-card")) {
+                Column(Modifier.fillMaxWidth().padding(12.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
+                    MemorySectionHeading(stringResource(R.string.memory_pending_section,visiblePending.size),"memory-pending-section")
+                    visiblePending.forEachIndexed{index,memory->
+                        MemoryRecordCard(
+                            memory=memory,showStatus=false,container=false,onDetails={details=memory},
+                            onApprove={requestApproval(listOf(memory.id))},onDiscard={removal=memory},
+                        )
+                        if(index<visiblePending.lastIndex)HorizontalDivider()
+                    }
+                    if(pendingForScope.size>1)TextButton(
+                        enabled=!busy,onClick={requestApproval(pendingForScope.map{it.id})},modifier=Modifier.testTag("memory-review-all-pending"),
+                    ){Text(stringResource(R.string.memory_pending_approval_count,pendingForScope.size))}
+                }
+            }
+        }
+        if(visibleKinds.isNotEmpty()) AwsCard(modifier=Modifier.testTag("memory-category-list")) {
+            visibleKinds.forEach{(category,records)->
+                AwsListRow(
+                    icon=memoryCategoryIcon(category),
+                    title=memoryCategoryLabel(category),
+                    count=records.size,
+                    onClick={kindFilter=if(kindFilter==category)null else category},
+                    expanded=kindFilter==category,
+                    contentDescription=stringResource(R.string.memory_category_count,memoryCategoryLabel(category),records.size),
+                    modifier=Modifier.testTag("memory-kind-${category.name.lowercase()}"),
+                )
+                if(kindFilter==category) records.forEach{memory->MemoryRecordCard(
+                    memory=memory,showStatus=true,onDetails={details=memory},
+                    onApprove=if(memory.status=="PENDING")({requestApproval(listOf(memory.id))})else null,
+                    onDiscard=if(memory.status=="PENDING")({removal=memory})else null,
+                )}
+                if(category!=visibleKinds.last().first) HorizontalDivider(Modifier.padding(horizontal=16.dp))
+            }
         }
         if(visiblePinned.isNotEmpty()){
             MemorySectionHeading(stringResource(R.string.memory_pinned_section,visiblePinned.size),"memory-pinned-section")
             visiblePinned.forEach{memory->MemoryRecordCard(memory=memory,showStatus=false,onDetails={details=memory})}
         }
-        visibleKinds.forEach{(category,records)->
-            MemorySectionHeading(stringResource(R.string.memory_category_section,memoryKindLabel(category),records.size),"memory-kind-${category.name.lowercase()}")
-            records.forEach{memory->MemoryRecordCard(
-                memory=memory,showStatus=true,onDetails={details=memory},
-                onApprove=if(memory.status=="PENDING")({requestApproval(listOf(memory.id))})else null,
-                onDiscard=if(memory.status=="PENDING")({removal=memory})else null,
-            )}
-        }
-        if(matching.isEmpty())Text(stringResource(R.string.memory_empty),modifier=Modifier.testTag("memory-empty-state"),style=MaterialTheme.typography.bodyMedium)
+        if(matching.isEmpty())Text(stringResource(R.string.memory_empty),modifier=Modifier.testTag("memory-empty-state"),style=MaterialTheme.typography.bodyLarge)
         if(matching.size>100)Text(stringResource(R.string.memory_showing_limit,matching.size))
-        TextButton(onClick={run{foundation.memory.recover()}},modifier=Modifier.testTag("memory-rebuild-embeddings")){Text(stringResource(R.string.memory_rebuild_embeddings))}
+        TextButton(onClick={advanced=!advanced},modifier=Modifier.testTag("memory-advanced-toggle")) {
+            Text(stringResource(R.string.memory_advanced))
+        }
+        if(advanced)AwsCard(modifier=Modifier.testTag("memory-advanced-options")) {
+            Column(Modifier.fillMaxWidth().padding(8.dp),verticalArrangement=Arrangement.spacedBy(4.dp)) {
+                TextButton(onClick={memoryJsonExporter.launch("LOCAL_AI_WORKSPACE_MEMORY.json")},modifier=Modifier.fillMaxWidth().testTag("memory-export-json")) {
+                    Text(stringResource(R.string.memory_export_json))
+                }
+                TextButton(onClick={run{foundation.memory.recover()}},modifier=Modifier.fillMaxWidth().testTag("memory-rebuild-embeddings")) {
+                    Text(stringResource(R.string.memory_rebuild_embeddings))
+                }
+            }
+        }
         importResult?.let{Text(it,style=MaterialTheme.typography.bodySmall)}
         if(projectId!=null)TextButton(onClick={run{brief=foundation.database.dao().brief(projectId) ?: ProjectBrief(projectId,graph.database.projectDao().get(projectId)?.name.orEmpty())}}){Text(stringResource(R.string.memory_project_brief))}
         if(busy)LinearProgressIndicator(Modifier.fillMaxWidth());error?.let{Text(it,color=MaterialTheme.colorScheme.error)}
     }
-    if(implementDialog) AlertDialog(
-        onDismissRequest={implementDialog=false},
-        title={Text(stringResource(R.string.memory_implement))},
+    if(exportDialog) AlertDialog(
+        onDismissRequest={exportDialog=false},
+        title={Text(stringResource(R.string.memory_export_dialog_title))},
         text={Column(verticalArrangement=Arrangement.spacedBy(8.dp)){
             Text(stringResource(R.string.memory_prepare_portable))
-            TextButton(onClick={context.getSystemService(android.content.ClipboardManager::class.java).setPrimaryClip(android.content.ClipData.newPlainText("AWS memory import prompt",MemoryBundleV1.copyPrompt()));implementDialog=false;importResult=context.getString(R.string.memory_prompt_copied)}){Text(stringResource(R.string.memory_copy_prompt))}
+            TextButton(onClick={context.getSystemService(android.content.ClipboardManager::class.java).setPrimaryClip(android.content.ClipData.newPlainText("AWS memory import prompt",MemoryBundleV1.copyPrompt()));exportDialog=false;importResult=context.getString(R.string.memory_prompt_copied)}){Text(stringResource(R.string.memory_copy_prompt))}
             TextButton(enabled=!busy,onClick={exportAllWorkspaceMemory=false;memoryBundleExporter.launch("AWS_MEMORY_IMPORT.zip")}){Text(stringResource(R.string.memory_export_scope_zip))}
             if(projectId==null)TextButton(enabled=!busy,onClick={exportAllWorkspaceMemory=true;memoryBundleExporter.launch("AWS_MEMORY_IMPORT_ALL_PROJECTS.zip")}){Text(stringResource(R.string.memory_export_all_zip))}
             Text(stringResource(R.string.memory_zip_scope_note),style=MaterialTheme.typography.bodySmall)
-            TextButton(enabled=!busy,onClick={memoryBundlePicker.launch(arrayOf("application/zip","application/octet-stream","*/*"))}){Text(stringResource(R.string.memory_import_zip))}
-            Text(stringResource(R.string.memory_import_zip_note),style=MaterialTheme.typography.bodySmall)
             if(busy)LinearProgressIndicator(Modifier.fillMaxWidth())
             error?.let{Text(it,color=MaterialTheme.colorScheme.error,style=MaterialTheme.typography.bodySmall)}
         }},
-        confirmButton={TextButton(onClick={implementDialog=false}){Text(stringResource(R.string.common_close))}}
+        confirmButton={TextButton(onClick={exportDialog=false}){Text(stringResource(R.string.common_close))}}
+    )
+    if(importDialog) AlertDialog(
+        onDismissRequest={importDialog=false},
+        title={Text(stringResource(R.string.memory_import_dialog_title))},
+        text={Column(verticalArrangement=Arrangement.spacedBy(8.dp)){
+            Text(stringResource(R.string.memory_import_zip_note),style=MaterialTheme.typography.bodyMedium)
+            TextButton(enabled=!busy,onClick={importDialog=false;memoryBundlePicker.launch(arrayOf("application/zip","application/octet-stream","*/*"))}) {
+                Text(stringResource(R.string.memory_import_zip))
+            }
+            if(busy)LinearProgressIndicator(Modifier.fillMaxWidth())
+            error?.let{Text(it,color=MaterialTheme.colorScheme.error,style=MaterialTheme.typography.bodySmall)}
+        }},
+        confirmButton={TextButton(onClick={importDialog=false}){Text(stringResource(R.string.common_close))}}
     )
     bundlePreview?.let{preview->MemoryBundleReviewDialog(
         preview=preview,selectedKeys=selectedBundleKeys,onSelectionChange={selectedBundleKeys=it},review= bundleReview,busy=busy,
@@ -408,14 +482,27 @@ private fun MemoryRecordCard(
     onDetails:()->Unit,
     onApprove:(()->Unit)?=null,
     onDiscard:(()->Unit)?=null,
+    container:Boolean=true,
+) {
+    val modifier=Modifier.fillMaxWidth().testTag("memory-record-${memory.id}")
+    if(container) AwsCard(modifier=modifier) {
+        MemoryRecordContents(memory,showStatus,onDetails,onApprove,onDiscard,Modifier)
+    } else {
+        MemoryRecordContents(memory,showStatus,onDetails,onApprove,onDiscard,modifier)
+    }
+}
+
+@Composable
+private fun MemoryRecordContents(
+    memory:MemoryRecord,
+    showStatus:Boolean,
+    onDetails:()->Unit,
+    onApprove:(()->Unit)?,
+    onDiscard:(()->Unit)?,
+    modifier:Modifier,
 ) {
     val kind=MemoryKind.entries.firstOrNull{it.name==memory.kind}?:MemoryKind.OTHER
-    Card(
-        modifier=Modifier.fillMaxWidth().testTag("memory-record-${memory.id}"),
-        border=BorderStroke(1.dp,MaterialTheme.colorScheme.outlineVariant),
-        colors=CardDefaults.cardColors(containerColor=MaterialTheme.colorScheme.surface),
-    ) {
-        Column(Modifier.fillMaxWidth().padding(14.dp),verticalArrangement=Arrangement.spacedBy(6.dp)) {
+    Column(modifier.fillMaxWidth().padding(14.dp),verticalArrangement=Arrangement.spacedBy(6.dp)) {
             Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp),verticalAlignment=androidx.compose.ui.Alignment.CenterVertically) {
                 Text(memoryKindLabel(kind),Modifier.weight(1f),style=MaterialTheme.typography.labelLarge,color=MaterialTheme.colorScheme.primary)
                 if(memory.pinned)Text(stringResource(R.string.memory_pinned_marker).trim(),style=MaterialTheme.typography.labelMedium,color=MaterialTheme.colorScheme.primary)
@@ -435,13 +522,27 @@ private fun MemoryRecordCard(
                 style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant,
             )
             if(onApprove!=null&&onDiscard!=null){
-                Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)) {
-                    OutlinedButton(onClick=onDiscard,modifier=Modifier.weight(1f).testTag("memory-discard-${memory.id}")){Text(stringResource(R.string.memory_discard))}
-                    Button(onClick=onApprove,modifier=Modifier.weight(1f).testTag("memory-approve-${memory.id}")){Text(stringResource(R.string.memory_approve))}
+                if(androidx.compose.ui.platform.LocalDensity.current.fontScale>=1.5f) {
+                    Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(8.dp)) {
+                        OutlinedButton(onClick=onDiscard,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("memory-discard-${memory.id}")) {
+                            Text(stringResource(R.string.memory_discard))
+                        }
+                        Button(onClick=onApprove,modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("memory-approve-${memory.id}")) {
+                            Text(stringResource(R.string.memory_approve))
+                        }
+                    }
+                } else {
+                    Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+                        OutlinedButton(onClick=onDiscard,modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("memory-discard-${memory.id}")) {
+                            Text(stringResource(R.string.memory_discard))
+                        }
+                        Button(onClick=onApprove,modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("memory-approve-${memory.id}")) {
+                            Text(stringResource(R.string.memory_approve))
+                        }
+                    }
                 }
             }
             TextButton(onClick=onDetails,modifier=Modifier.testTag("memory-details-${memory.id}")){Text(stringResource(R.string.memory_details))}
-        }
     }
 }
 

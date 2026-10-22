@@ -117,6 +117,10 @@ class UiSmokeTest {
                 sourceType = "USER_APPROVED",
             )
         }
+        compose.waitUntil(15_000) {
+            compose.onAllNodesWithTag("memory-kind-fact").fetchSemanticsNodes().isNotEmpty()
+        }
+        compose.onNodeWithTag("memory-kind-fact").performClick()
         awaitText("Prefiero respuestas breves")
         compose.onNodeWithText(localized(R.string.common_details)).performClick()
         compose.onNodeWithText("USER_APPROVED", substring = true).assertExists()

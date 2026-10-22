@@ -123,6 +123,7 @@ import java.util.Date
     title:String,
     dismiss:()->Unit,
     fullScreen:Boolean=false,
+    bottomContent:@Composable ColumnScope.()->Unit = {},
     content:@Composable ColumnScope.()->Unit,
 ) {
     if (fullScreen) {
@@ -142,13 +143,18 @@ import java.util.Date
                 verticalArrangement=Arrangement.spacedBy(12.dp),
                 content=content,
             )
+            Column(
+                Modifier.fillMaxWidth().padding(horizontal=16.dp).padding(top=4.dp, bottom=12.dp),
+                verticalArrangement=Arrangement.spacedBy(8.dp),
+                content=bottomContent,
+            )
         }
     } else {
         Dialog(onDismissRequest=dismiss,properties=DialogProperties(usePlatformDefaultWidth=false)) {
             BoxWithConstraints(Modifier.fillMaxWidth().imePadding().padding(16.dp)) {
                 Surface(shape=MaterialTheme.shapes.large,modifier=Modifier.widthIn(max=560.dp).fillMaxWidth().heightIn(max=maxHeight*.92f)) {
                     Column(Modifier.verticalScroll(rememberScrollState()).padding(16.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
-                        Text(title,style=MaterialTheme.typography.titleLarge);content();TextButton(onClick=dismiss,modifier=Modifier.fillMaxWidth()){Text("Close")}
+                        Text(title,style=MaterialTheme.typography.titleLarge);content();bottomContent();TextButton(onClick=dismiss,modifier=Modifier.fillMaxWidth()){Text("Close")}
                     }
                 }
             }

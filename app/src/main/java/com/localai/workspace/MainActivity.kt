@@ -156,7 +156,13 @@ import com.localai.workspace.ui.HomeViewModelFactory
 import com.localai.workspace.ui.LocalAiTheme
 import com.localai.workspace.ui.components.AppScreenContent
 import com.localai.workspace.ui.components.AwsBottomBar
+import com.localai.workspace.ui.components.AwsCard
+import com.localai.workspace.ui.components.AwsListRow
+import com.localai.workspace.ui.components.StatusPill
+import com.localai.workspace.ui.components.StatusTone
 import com.localai.workspace.ui.HomeCalendarDayState
+import com.localai.workspace.context.ScopeAccess
+import com.localai.workspace.domain.tools.ChatToolSchemas
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
@@ -290,6 +296,16 @@ private fun HomeScreen(viewModel: HomeViewModel, navController: NavHostControlle
     val preparation by viewModel.modelPreparation.collectAsStateWithLifecycle()
     val creating by viewModel.creating.collectAsStateWithLifecycle()
     val calendarDay by viewModel.calendarDay.collectAsStateWithLifecycle()
+    val app = androidx.compose.ui.platform.LocalContext.current.applicationContext as LocalAiApplication
+    val foundation = app.graph.contextFoundation
+    val memoryEnabled by foundation.enabled.collectAsStateWithLifecycle()
+    val memoryRecords by foundation.memory.items.collectAsStateWithLifecycle(initialValue = emptyList())
+    val pendingMemoryCount = remember(memoryRecords) {
+        val access = ScopeAccess()
+        memoryRecords.count { it.status == "PENDING" && access.permits(it.scopeType, it.scopeId) }
+    }
+    // There is no registered web tool in this build; report capability honestly instead of a stored flag.
+    val webEnabled = remember { ChatToolSchemas.available.any { it.startsWith("web.") } }
     val calendarPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
         viewModel.refreshCalendarDay()
     }
@@ -297,69 +313,118 @@ private fun HomeScreen(viewModel: HomeViewModel, navController: NavHostControlle
     val usableModels = remember(models) {
         models.filter(com.localai.workspace.data.ApplicationModelPreparation::isUsable)
     }
-    val greeting = when (LocalTime.now().hour) {
+    val greeting = stringResource(when (LocalTime.now().hour) {
         in 5..11 -> R.string.home_greeting_morning
         in 12..19 -> R.string.home_greeting_afternoon
         else -> R.string.home_greeting_evening
-    }
+    })
     val todayLabel = remember {
         DateTimeFormatter.ofPattern("EEEE d 'de' MMMM", Locale.forLanguageTag("es"))
             .format(LocalDate.now())
     }
-    AppScreenContent(columnModifier = Modifier.testTag("home-scroll").verticalScroll(rememberScrollState()).padding(bottom = 20.dp)) {
-        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    HomeDashboardContent(
+        greeting = greeting,
+        todayLabel = todayLabel,
+        models = models,
+        preparation = preparation,
+        calendarDay = calendarDay,
+        memoryEnabled = memoryEnabled,
+        webEnabled = webEnabled,
+        pendingMemoryCount = pendingMemoryCount,
+        creating = creating,
+        onRequestCalendarPermission = { calendarPermission.launch(android.Manifest.permission.READ_CALENDAR) },
+        onStartChat = { viewModel.startChat { id, conversation -> navController.navigate(chatRoute(id, conversation)) } },
+        onOpenChats = { navController.navigate("workspace") },
+        onOpenModels = { navController.navigate("models") },
+        onOpenMemory = { navController.navigate("memory") },
+        onPrepareModel = viewModel::prepareModel,
+        onRetryModelPreparation = viewModel::retryModelPreparation,
+        onCancelModelPreparation = viewModel::cancelModelPreparation,
+    )
+}
+
+@Composable
+internal fun HomeDashboardContent(
+    greeting: String,
+    todayLabel: String,
+    models: List<ModelEntity>,
+    preparation: RuntimePreparation.State,
+    calendarDay: HomeCalendarDayState,
+    memoryEnabled: Boolean,
+    webEnabled: Boolean,
+    pendingMemoryCount: Int,
+    creating: Boolean,
+    modifier: Modifier = Modifier,
+    onRequestCalendarPermission: () -> Unit,
+    onStartChat: () -> Unit,
+    onOpenChats: () -> Unit,
+    onOpenModels: () -> Unit,
+    onOpenMemory: () -> Unit,
+    onPrepareModel: (String) -> Unit,
+    onRetryModelPreparation: () -> Unit,
+    onCancelModelPreparation: () -> Unit,
+) {
+    val usableModels = remember(models) {
+        models.filter(com.localai.workspace.data.ApplicationModelPreparation::isUsable)
+    }
+    val modelStatus = when {
+        preparation.ready && usableModels.any { it.id == preparation.modelId } -> R.string.home_status_model_ready
+        preparation.preparing -> R.string.home_status_model_loading
+        else -> R.string.home_status_model_unavailable
+    }
+    AppScreenContent(
+        modifier = modifier,
+        columnModifier = Modifier.testTag("home-scroll").verticalScroll(rememberScrollState()).padding(bottom = 20.dp),
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                Text(stringResource(greeting), Modifier.semantics { heading() }.testTag("home-greeting"),
-                    style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onSurface)
+                Text(greeting, Modifier.semantics { heading() }.testTag("home-greeting"),
+                    style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface)
                 Text(todayLabel, Modifier.testTag("home-date"), style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            Text(stringResource(R.string.home_intro), style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant)
-            LocalModeCard()
-            HomeCalendarCard(calendarDay) {
-                calendarPermission.launch(android.Manifest.permission.READ_CALENDAR)
+            LocalModeCard(memoryEnabled, webEnabled, modelStatus)
+            if (pendingMemoryCount > 0) {
+                AwsCard(Modifier.testTag("home-pending-memory")) {
+                    AwsListRow(
+                        icon = Icons.Default.Memory,
+                        title = stringResource(R.string.home_pending_memories, pendingMemoryCount),
+                        count = pendingMemoryCount,
+                        onClick = onOpenMemory,
+                        contentDescription = stringResource(R.string.home_pending_memories, pendingMemoryCount),
+                    )
+                }
             }
+            HomeCalendarCard(calendarDay, onRequestCalendarPermission)
             if (usableModels.isNotEmpty()) {
-                WorkspaceModelCard(
-                    models, preparation, viewModel::prepareModel,
-                    viewModel::retryModelPreparation, viewModel::cancelModelPreparation,
-                )
+                WorkspaceModelCard(models, preparation, onPrepareModel, onRetryModelPreparation, onCancelModelPreparation)
             } else {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
-                ) {
-                    Column(Modifier.fillMaxWidth().padding(16.dp).testTag("home-model-missing"), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                AwsCard(modifier = Modifier.testTag("home-model-missing")) {
+                    Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text(stringResource(R.string.home_model_missing_title), style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.semantics { heading() })
                         Text(stringResource(R.string.home_model_missing_body), style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        TextButton(onClick = { navController.navigate("models") }) {
-                            Text(stringResource(R.string.home_add_model))
-                        }
+                        TextButton(onClick = onOpenModels) { Text(stringResource(R.string.home_add_model)) }
                     }
                 }
             }
-            Button(
-                onClick = { viewModel.startChat { id, conversation -> navController.navigate(chatRoute(id, conversation)) } },
-                enabled = !creating,
-                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("home-start-chat"),
-            ) { Text(stringResource(R.string.home_start_chat)) }
-            OutlinedButton(
-                onClick = { navController.navigate("workspace") },
-                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("home-open-chats"),
-            ) { Text(stringResource(R.string.home_open_chats)) }
+            Button(onClick = onStartChat, enabled = !creating,
+                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("home-start-chat")) {
+                Text(stringResource(R.string.home_start_chat))
+            }
+            OutlinedButton(onClick = onOpenChats,
+                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("home-open-chats")) {
+                Text(stringResource(R.string.home_open_chats))
+            }
         }
     }
 }
 
 @Composable
 private fun HomeCalendarCard(state: HomeCalendarDayState, requestPermission: () -> Unit) {
-    Card(
-        modifier = Modifier.fillMaxWidth().testTag("home-calendar-card"),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
-    ) {
+    AwsCard(modifier = Modifier.testTag("home-calendar-card")) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 Surface(shape = RoundedCornerShape(50.dp), color = MaterialTheme.colorScheme.primaryContainer) {
@@ -438,7 +503,7 @@ private fun WorkspaceScreen(viewModel: HomeViewModel, navController: NavHostCont
             } })
         LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 16.dp)) {
             item {
-                LocalModeCard()
+            LocalModeCard()
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(onClick = { viewModel.startChat { id, conversation -> navController.navigate(chatRoute(id, conversation)) } },
                         enabled = !creating, modifier = Modifier.weight(1f)) { Text(stringResource(R.string.workspace_new_chat)) }
@@ -1577,11 +1642,14 @@ private fun SettingsScreen(
 }
 
 @Composable
-private fun LocalModeCard() {
+private fun LocalModeCard(
+    memoryEnabled: Boolean? = null,
+    webEnabled: Boolean? = null,
+    modelStatus: Int? = null,
+) {
     var details by remember { mutableStateOf(false) }
-    Card(
+    AwsCard(
         Modifier.fillMaxWidth().clickable { details = true },
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
     ) {
         Row(
             Modifier.fillMaxWidth().heightIn(min = 64.dp).padding(horizontal = 16.dp, vertical = 12.dp),
@@ -1591,9 +1659,57 @@ private fun LocalModeCard() {
             Icon(Icons.Default.CheckCircle, null, tint = MaterialTheme.colorScheme.primary)
             Column(Modifier.weight(1f)) {
                 Text(stringResource(R.string.workspace_local_privacy), style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer)
+                color = MaterialTheme.colorScheme.onSurface)
                 Text(stringResource(R.string.workspace_local_privacy_summary), style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
+        if (memoryEnabled != null || webEnabled != null || modelStatus != null) {
+            Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                val largeText = androidx.compose.ui.platform.LocalDensity.current.fontScale >= 1.5f
+                if (largeText) {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        memoryEnabled?.let { enabled ->
+                            StatusPill(
+                                label = stringResource(if (enabled) R.string.home_status_memory_active else R.string.home_status_memory_inactive),
+                                tone = if (enabled) StatusTone.SUCCESS else StatusTone.DISABLED,
+                                modifier = Modifier.testTag("home-status-memory"),
+                            )
+                        }
+                        webEnabled?.let { enabled ->
+                            StatusPill(
+                                label = stringResource(if (enabled) R.string.home_status_web_active else R.string.home_status_web_inactive),
+                                tone = if (enabled) StatusTone.BRAND else StatusTone.DISABLED,
+                                modifier = Modifier.testTag("home-status-web"),
+                            )
+                        }
+                    }
+                } else {
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        memoryEnabled?.let { enabled ->
+                            StatusPill(
+                                label = stringResource(if (enabled) R.string.home_status_memory_active else R.string.home_status_memory_inactive),
+                                tone = if (enabled) StatusTone.SUCCESS else StatusTone.DISABLED,
+                                modifier = Modifier.testTag("home-status-memory"),
+                            )
+                        }
+                        webEnabled?.let { enabled ->
+                            StatusPill(
+                                label = stringResource(if (enabled) R.string.home_status_web_active else R.string.home_status_web_inactive),
+                                tone = if (enabled) StatusTone.BRAND else StatusTone.DISABLED,
+                                modifier = Modifier.testTag("home-status-web"),
+                            )
+                        }
+                    }
+                }
+                modelStatus?.let { statusId ->
+                    StatusPill(
+                        label = stringResource(statusId),
+                        tone = if (statusId == R.string.home_status_model_ready) StatusTone.SUCCESS else StatusTone.BRAND,
+                        modifier = Modifier.testTag("home-status-model"),
+                    )
+                }
             }
         }
     }

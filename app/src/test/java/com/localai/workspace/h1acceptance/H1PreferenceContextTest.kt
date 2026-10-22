@@ -151,6 +151,8 @@ class H1PreferenceContextTest {
             if(index==2){
                 vm.attachDocument(input("selected-report.md","RESUMEN-PRIVADO-AT01-Ñandú\nEl documento describe el proceso de verificación de fuentes.".toByteArray()))
                 selectedDocumentId=vm.selectedDocumentIds.first{it.isNotEmpty()}.single()
+                assertTrue("The attached document is selected before the generation request consumes it",
+                    vm.selectedDocumentIds.value.contains(selectedDocumentId))
             }
             assertTrue(vm.send(query))
             val request=withTimeout(20_000){backend.requests.receive()}
@@ -163,9 +165,12 @@ class H1PreferenceContextTest {
             if(selectedDocumentId!=null){
                 assertEquals(setOf(selectedDocumentId),foundation.last.value?.request?.selectedDocumentIds)
                 assertTrue(request.conversation?.userMessage.orEmpty().contains("RESUMEN-PRIVADO-AT01-Ñandú"))
-                assertTrue(vm.selectedDocumentIds.value.contains(selectedDocumentId))
             }
             vm.isGenerating.first{!it}
+            if(selectedDocumentId!=null){
+                assertFalse("A document used by the completed turn is consumed from the selection",
+                    vm.selectedDocumentIds.value.contains(selectedDocumentId))
+            }
         }
     }
 

@@ -24,9 +24,10 @@ import com.localai.workspace.data.*
 import com.localai.workspace.domain.tools.ChatToolSchemas
 import com.localai.workspace.domain.tools.AndroidActionPlanner
 import com.localai.workspace.ui.components.minimumAppTouchTarget
+import com.localai.workspace.ui.components.StatusPill
+import com.localai.workspace.ui.components.StatusTone
 import com.localai.workspace.ui.theme.LocalAiSpacing
 import com.localai.workspace.ui.theme.LocalAiRadii
-import com.localai.workspace.ui.theme.LocalAiStatusColors
 import com.localai.workspace.R
 import java.time.Instant
 import java.time.ZoneId
@@ -470,35 +471,13 @@ private fun CalendarEventOptionalDetail(label: Int, value: String, tag: String) 
 
 @Composable
 private fun AndroidActionStatusPill(status: String, label: String) {
-    val statusColors = LocalAiStatusColors.current
-    val foreground = when (status) {
-        "CONFIRMATION_REQUIRED" -> statusColors.warning
-        "OPEN_FAILED" -> MaterialTheme.colorScheme.error
-        "DECLINED_BY_USER" -> statusColors.disabled
-        else -> MaterialTheme.colorScheme.primary
+    val tone = when (status) {
+        "CONFIRMATION_REQUIRED" -> StatusTone.WARNING
+        "OPEN_FAILED" -> StatusTone.ERROR
+        "DECLINED_BY_USER" -> StatusTone.DISABLED
+        else -> StatusTone.BRAND
     }
-    val background = when (status) {
-        "CONFIRMATION_REQUIRED" -> statusColors.warningContainer
-        "OPEN_FAILED" -> MaterialTheme.colorScheme.errorContainer
-        "DECLINED_BY_USER" -> MaterialTheme.colorScheme.surfaceContainerHigh
-        else -> MaterialTheme.colorScheme.primaryContainer
-    }
-    val content = when (status) {
-        "CONFIRMATION_REQUIRED" -> statusColors.onWarningContainer
-        "OPEN_FAILED" -> MaterialTheme.colorScheme.onErrorContainer
-        "DECLINED_BY_USER" -> MaterialTheme.colorScheme.onSurfaceVariant
-        else -> MaterialTheme.colorScheme.onPrimaryContainer
-    }
-    Surface(shape = MaterialTheme.shapes.small, color = background, contentColor = content) {
-        Row(
-            Modifier.padding(horizontal = LocalAiSpacing.x2, vertical = LocalAiSpacing.x1),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(LocalAiSpacing.x1),
-        ) {
-            Surface(shape = CircleShape, color = foreground, modifier = Modifier.size(8.dp)) {}
-            Text(label, style = MaterialTheme.typography.labelMedium)
-        }
-    }
+    StatusPill(label = label, tone = tone)
 }
 
 @Composable
