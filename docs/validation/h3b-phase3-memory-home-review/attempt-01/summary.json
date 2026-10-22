@@ -1,0 +1,138 @@
+{
+  "sourceCodeSha": "c7bd9447606020de6a2093b72a17a47be5705299",
+  "host": {
+    "appJvm": {
+      "xmlFiles": 148,
+      "tests": 984,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 984
+    },
+    "liteRtCompatibility": {
+      "xmlFiles": 1,
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 2
+    },
+    "lint": {
+      "status": "PASS",
+      "errors": 0,
+      "warnings": 96,
+      "information": 1,
+      "report": "final-host-c7bd944/lint/lint-results-debug.txt"
+    },
+    "fullHostGradleExit": 0,
+    "instrumentation": "NOT_RUN in HOST; separate emulator CI will be recorded after workflow readback"
+  },
+  "preferenceLoop": {
+    "test": "H1PreferenceContextTest.H1_AT_01_approvedPreferencesReachTheRealGenerationRequestIncludingGreeting",
+    "runs": 20,
+    "passed": 20,
+    "failed": 0,
+    "skipped": 0,
+    "cause": "Historical intermittent assertion checked that a document remained selected after send had consumed it; the test now checks selected before send, request provenance/content, and deselection after completion. No preference-delivery race reproduced."
+  },
+  "captures": {
+    "count": 18,
+    "manifest": "capture-manifest.json",
+    "synthetic": true,
+    "dimensionsPx": "360x800",
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "fontScales": [
+      1.0,
+      2.0
+    ]
+  },
+  "emulator": {
+    "status": "FAIL",
+    "runId": 39856422426,
+    "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39856422426",
+    "sourceSha": "c7bd9447606020de6a2093b72a17a47be5705299",
+    "workflow": "android-emulator-instrumented.yml",
+    "startedAtUtc": "2026-10-22T21:20:17Z",
+    "completedAtUtc": "2026-10-22T21:43:42Z",
+    "device": {
+      "serial": "emulator-5554",
+      "api": 35,
+      "androidRelease": "15",
+      "abi": "x86_64",
+      "model": "sdk_gphone64_x86_64",
+      "adbConnected": true
+    },
+    "h1At12Update": {
+      "status": "PASS",
+      "fixture": "synthetic; 10 legacy rows, 10 sidecar rows, one project and one chat",
+      "physicalDevice": "NOT_RUN"
+    },
+    "connectedTask": {
+      "name": ":app:connectedDebugAndroidTest",
+      "exitCode": 1,
+      "xmlFiles": 1,
+      "total": 24,
+      "passed": 16,
+      "failed": 2,
+      "errors": 0,
+      "skipped": 6,
+      "executed": 18
+    },
+    "failures": [
+      {
+        "test": "com.localai.workspace.ui.ContextMemoryDeviceTest.H1_AT_13_forgetPermanentlyUsesConfirmationAndLeavesNoAppOwnedMarkerBytes",
+        "observed": "performScrollTo could not find Detalles after the marker query; current memory categories start collapsed, and the test did not expand the category. Permanent-forget action was not reached.",
+        "classification": "test-flow mismatch with intentional collapsed category presentation; update test navigation without weakening assertions"
+      },
+      {
+        "test": "com.localai.workspace.ui.ProjectUiDeviceTest.createProjectAndExplicitlySaveEditRemoveMemory",
+        "observed": "NoSuchElementException while locating the newly saved record in the project FACT scope. Stack names ProjectUiDeviceTest.kt:93; versioned c7bd source has 70 lines and the lookup at lines 40-45.",
+        "classification": "NOT_DETERMINED; no data-loss conclusion"
+      }
+    ],
+    "consoleProgressDiscrepancy": "Gradle console reports 29/24 at the end; the parsed JUnit XML has 24 tests and internally coherent counts. Cause not determined.",
+    "collector": {
+      "status": "FAIL",
+      "applicationApkInstalledPostCheck": false,
+      "connectedTaskSucceeded": false,
+      "xmlPresent": true,
+      "countsConsistent": true
+    },
+    "artifact": {
+      "id": 12460364221,
+      "name": "android-emulator-evidence-39856422426-1",
+      "bytes": 180354,
+      "sha256": "b233846048a499e3869ccf467684c6d389d36aeedfd993725ee7725a05eed1cf",
+      "retentionUntil": "2026-10-29T21:43:37Z",
+      "localCopy": "emulator-39856422426/artifact-original.zip",
+      "internalManifestEntries": 50,
+      "internalManifestVerified": true
+    },
+    "physicalDevice": "NOT_RUN"
+  },
+  "physicalDevice": "NOT_RUN",
+  "next": "Wait for user visual review; do not start later H3b Phase 3 screens. Preserve the instrumented failures and do not rerun in this checkpoint.",
+  "automaticallyTriggeredWorkflows": {
+    "personalQa": {
+      "runId": 39856422471,
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39856422471",
+      "status": "PASS",
+      "artifactId": 12459577844,
+      "artifactBytes": 49094692,
+      "artifactSha256": "2d302b5aa09b18453e9742daf5f615e54a9f4ffc3ea5d6a36f281e5e3581f78b",
+      "retentionUntil": "2026-11-21T21:27:32Z",
+      "downloadedOrDelivered": false
+    },
+    "gatedQa": {
+      "runId": 39856422564,
+      "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39856422564",
+      "status": "FAIL_CLOSED",
+      "reason": "matching emulator workflow failed; build and artifact upload skipped",
+      "artifact": "NONE"
+    }
+  },
+  "emulatorStatus": "FAIL"
+}

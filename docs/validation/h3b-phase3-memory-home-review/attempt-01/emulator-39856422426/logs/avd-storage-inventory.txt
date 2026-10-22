@@ -1,0 +1,20 @@
+search_directory=/home/runner/.android/avd
+find_exit_code=0
+file=/home/runner/.android/avd/localai-api35-x86_64.ini
+ff9ecb96f71c82b586e890ce3dd99ce4837b3b59921632d1df08152d56c6c392  /home/runner/.android/avd/localai-api35-x86_64.ini
+sha256sum_exit_code=0
+path=/home/runner/.android/avd/localai-api35-x86_64.avd
+target=android-35
+metadata_grep_exit_code=0
+file=/home/runner/.android/avd/localai-api35-x86_64.avd/config.ini
+262309abbbec3be0d1e437150b71f5319d4d82f95d4036b13d3bcf013a4a1a3e  /home/runner/.android/avd/localai-api35-x86_64.avd/config.ini
+sha256sum_exit_code=0
+abi.type=x86_64
+image.sysdir.1=system-images/android-35/google_apis/x86_64/
+metadata_grep_exit_code=0
+expected_ini=/home/runner/.android/avd/localai-api35-x86_64.ini exists=true
+expected_config=/home/runner/.android/avd/localai-api35-x86_64.avd/config.ini exists=true
+search_directory=/home/runner/.config/.android/avd
+directory_exists=false
+expected_ini=/home/runner/.config/.android/avd/localai-api35-x86_64.ini exists=false
+expected_config=/home/runner/.config/.android/avd/localai-api35-x86_64.avd/config.ini exists=false

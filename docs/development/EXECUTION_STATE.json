@@ -18641,7 +18641,7 @@
       "noMergeTagReleaseOrForcePush": true
     }
   },
-  "updated_at": "2026-10-21",
+  "updated_at": "2026-10-22T21:48:48Z",
   "previousLatestMasterProgramContinuation": {
     "status": "ACTIVE_PREPARATORY_IMPLEMENTATION",
     "codeSha": "d214453df7e1c53ed60107d76e98017ce7beab6c",
@@ -19206,24 +19206,27 @@
   },
   "latestH3bPhase3": {
     "name": "AWS H3b Phase 3 sequential visual screens",
+    "status": "MEMORY_HOME_HOST_PASS_EMULATOR_FAIL_WAITING_USER_VISUAL_REVIEW",
     "currentScreen": "WAITING_FOR_USER_VISUAL_REVIEW",
-    "status": "MEMORY_AND_HOME_HOST_PASS_EMULATOR_PASS_WAITING_USER_REVIEW",
-    "codeSha": "f4574ecf2f18e7a9838dc1d741b0cbbd4edd3147",
-    "codeCommit": "f4574ecf2f18e7a9838dc1d741b0cbbd4edd3147",
+    "baseSha": "49ce2b53f2c77ef4be33d367787d7c134d11258b",
+    "codeSha": "c7bd9447606020de6a2093b72a17a47be5705299",
+    "codeCommit": "c7bd9447606020de6a2093b72a17a47be5705299",
+    "branch": "feat/0.5.0-skills-agents",
     "codePaths": [
       "app/src/main/java/com/localai/workspace/MainActivity.kt",
-      "app/src/main/java/com/localai/workspace/ui/ViewModels.kt",
+      "app/src/main/java/com/localai/workspace/ui/AssistantControls.kt",
+      "app/src/main/java/com/localai/workspace/ui/ContextMemoryUi.kt",
+      "app/src/main/java/com/localai/workspace/ui/SemanticV2Settings.kt",
+      "app/src/main/java/com/localai/workspace/ui/components/AwsBottomBar.kt",
+      "app/src/main/java/com/localai/workspace/ui/components/AwsSurfaces.kt",
       "app/src/main/res/values/strings.xml",
-      "app/src/test/java/com/localai/workspace/ui/MainActivityDarkThemeCaptureTest.kt",
-      "app/src/test/java/com/localai/workspace/ui/MainActivityThemeCaptureTest.kt",
-      "app/src/test/java/com/localai/workspace/ui/H3bHomeScreenUiTest.kt"
+      "app/src/test/java/com/localai/workspace/h1acceptance/H1PreferenceContextTest.kt",
+      "app/src/test/java/com/localai/workspace/ui/AwsBottomBarUiTest.kt",
+      "app/src/test/java/com/localai/workspace/ui/H3bMemoryScreenUiTest.kt",
+      "app/src/test/java/com/localai/workspace/ui/H3bSyntheticHomeCaptureTest.kt",
+      "app/src/test/java/com/localai/workspace/ui/UiSmokeTest.kt"
     ],
-    "evidence": "docs/validation/h3b-phase3-home/attempt-01/RESULTS.md",
-    "evidenceManifest": {
-      "path": "docs/validation/h3b-phase3-home/attempt-01/SHA256SUMS",
-      "entries": 165,
-      "sha256": "68945945a83606b7560406fda41d5ea5b9f4a5b59d89d3737a02955a152da082"
-    },
+    "scope": "User-directed rework of Memory and Home visual checkpoints only; shared cards/status pill; no inference, storage, Room, permission, routing or task-catalog change.",
     "host": {
       "gradle": "8.10.2",
       "runtimeJdk": "Temurin 17",
@@ -19231,26 +19234,32 @@
       "androidSdk": "/workspace/.toolchain/android-sdk",
       "ndk": "27.0.12077973",
       "offline": true,
-      "focusedHomeTests": {
-        "status": "PASS",
-        "tests": 5,
-        "passed": 5,
+      "preferenceIntermittentFollowup": {
+        "test": "H1PreferenceContextTest.H1_AT_01_approvedPreferencesReachTheRealGenerationRequestIncludingGreeting",
+        "historicalFrequency": "1 failure observed in 4 earlier full-suite runs",
+        "currentRuns": 20,
+        "passed": 20,
         "failures": 0,
         "errors": 0,
         "skipped": 0,
-        "durationSeconds": 198,
-        "exitCode": 0
+        "exitCode": 0,
+        "durationSeconds": 575,
+        "diagnosis": "The old failing assertion required a selected document to remain selected after a completed turn had consumed supplied evidence. Test now asserts selection before send, selected ID/content and preferences in the real request, then expected deselection after completion. No preference-delivery production race reproduced.",
+        "evidence": "docs/validation/h3b-phase3-memory-home-review/attempt-01/preference-loop-final/"
       },
       "appFullSuite": {
         "status": "PASS",
-        "tests": 978,
-        "passed": 978,
+        "tests": 984,
+        "passed": 984,
         "failures": 0,
         "errors": 0,
         "skipped": 0,
-        "xmlFiles": 142,
-        "taskOutcome": "EXECUTED",
-        "exitCode": 0
+        "xmlFiles": 148,
+        "exitCode": 0,
+        "durationSeconds": 331,
+        "command": "docs/validation/h3b-phase3-memory-home-review/attempt-01/final-host-c7bd944/command.txt",
+        "log": "docs/validation/h3b-phase3-memory-home-review/attempt-01/final-host-c7bd944/run.log",
+        "xml": "docs/validation/h3b-phase3-memory-home-review/attempt-01/final-host-c7bd944/junit/app/"
       },
       "litertCompat": {
         "status": "PASS",
@@ -19260,247 +19269,473 @@
         "errors": 0,
         "skipped": 0,
         "xmlFiles": 1,
-        "taskOutcome": "UP-TO-DATE in final gate; result XML from same validation window"
+        "exitCode": 0,
+        "taskOutcomeInCombinedGate": "UP-TO-DATE",
+        "freshRun": "--rerun-tasks, 16 tasks executed, BUILD SUCCESSFUL in 31s",
+        "evidence": "docs/validation/h3b-phase3-memory-home-review/attempt-01/litert-compat-c7bd944/"
       },
       "lintDebug": {
         "status": "PASS",
-        "warnings": 90,
         "errors": 0,
-        "exitCode": 0
+        "warnings": 96,
+        "information": 1,
+        "exitCode": 0,
+        "historicalComparison": "Last recorded H3b checkpoint was 90 warnings; current total is +6. Current lint report has no Warning in changed Compose files; one Information AutoboxingStateCreation in MainActivity.kt. No equivalent baseline rerun was performed.",
+        "report": "docs/validation/h3b-phase3-memory-home-review/attempt-01/final-host-c7bd944/lint/lint-results-debug.txt"
       },
-      "fullGateDurationSeconds": 446,
-      "actionableTasks": 128,
-      "executedTasks": 27,
-      "upToDateTasks": 101,
-      "diffCheck": "PASS before code commit",
-      "intermittentFailure": {
-        "test": "H1PreferenceContextTest.H1_AT_01_approvedPreferencesReachTheRealGenerationRequestIncludingGreeting",
-        "observed": "1 failure in 4 full app suite runs during Memory/Home work: 1/2 on Memory SHA 954c409 and 0/2 on Home code variants, including final commit",
-        "cause": "NOT_DETERMINED",
-        "attributedToHome": false
-      }
+      "uismokeTestAdjustment": {
+        "test": "UiSmokeTest.projectTabsAndApprovedMemoryRemainFunctional",
+        "initialResult": "FAIL in first full run because the test expected a record before expanding the newly collapsed category row",
+        "followup": "The test now opens memory-kind-fact before retaining record/detail/edit/delete assertions; focused test 1/1 PASS and final full app suite 984/984 PASS.",
+        "evidence": "docs/validation/h3b-phase3-memory-home-review/attempt-01/uismoke-followup/"
+      },
+      "diffCheck": "Scoped documentation/capture-manifest check PASS; whole evidence bundle check reports trailing whitespace and final blank lines in raw Actions output, preserved byte-for-byte."
     },
     "emulator": {
-      "status": "PASS_WITH_SIX_MODEL_DEPENDENT_SKIPS",
-      "runId": "39839230088",
-      "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39839230088",
-      "workflowSourceSha": "f4574ecf2f18e7a9838dc1d741b0cbbd4edd3147",
-      "jobId": "120035537807",
-      "durationSeconds": 1598,
-      "artifactId": "12454476399",
-      "artifactName": "android-emulator-evidence-39839230088-1",
-      "artifactBytes": 176375,
-      "artifactSha256": "512ce1057e25f9e055e3be7574608c345b6510a39d271c5b8b7b5fd3c75db1b2",
-      "internalManifestEntries": 50,
-      "internalManifestSha256": "fc3a3871feed62728ac3a4316ba7ff3866be4de7bbaf30a94d02c7fc8f0307f1",
-      "connectedTask": ":app:connectedDebugAndroidTest",
-      "exitCode": 0,
+      "status": "FAIL",
+      "runId": 39856422426,
+      "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39856422426",
+      "sourceSha": "c7bd9447606020de6a2093b72a17a47be5705299",
+      "workflow": "android-emulator-instrumented.yml",
+      "startedAtUtc": "2026-10-22T21:20:17Z",
+      "completedAtUtc": "2026-10-22T21:43:42Z",
       "device": {
         "serial": "emulator-5554",
         "api": 35,
-        "release": "15",
+        "androidRelease": "15",
         "abi": "x86_64",
-        "model": "sdk_gphone64_x86_64"
+        "model": "sdk_gphone64_x86_64",
+        "adbConnected": true
       },
-      "xml": {
-        "tests": 24,
-        "passed": 18,
-        "failures": 0,
+      "h1At12Update": {
+        "status": "PASS",
+        "fixture": "synthetic; 10 legacy rows, 10 sidecar rows, one project and one chat",
+        "physicalDevice": "NOT_RUN"
+      },
+      "connectedTask": {
+        "name": ":app:connectedDebugAndroidTest",
+        "exitCode": 1,
+        "xmlFiles": 1,
+        "total": 24,
+        "passed": 16,
+        "failed": 2,
         "errors": 0,
         "skipped": 6,
         "executed": 18
       },
-      "skips": "2 LiteRT and 4 native chat tests require actual model weights; none downloaded.",
-      "h1At12Update": "PASS on synthetic fixture only; no user data or physical-device validation.",
-      "physicalDevice": "NOT_RUN"
+      "failures": [
+        {
+          "test": "com.localai.workspace.ui.ContextMemoryDeviceTest.H1_AT_13_forgetPermanentlyUsesConfirmationAndLeavesNoAppOwnedMarkerBytes",
+          "observed": "performScrollTo could not find Detalles after the marker query; current memory categories start collapsed, and the test did not expand the category. Permanent-forget action was not reached.",
+          "classification": "test-flow mismatch with intentional collapsed category presentation; update test navigation without weakening assertions"
+        },
+        {
+          "test": "com.localai.workspace.ui.ProjectUiDeviceTest.createProjectAndExplicitlySaveEditRemoveMemory",
+          "observed": "NoSuchElementException while locating the newly saved record in the project FACT scope. Stack names ProjectUiDeviceTest.kt:93; versioned c7bd source has 70 lines and the lookup at lines 40-45.",
+          "classification": "NOT_DETERMINED; no data-loss conclusion"
+        }
+      ],
+      "consoleProgressDiscrepancy": "Gradle console reports 29/24 at the end; the parsed JUnit XML has 24 tests and internally coherent counts. Cause not determined.",
+      "collector": {
+        "status": "FAIL",
+        "applicationApkInstalledPostCheck": false,
+        "connectedTaskSucceeded": false,
+        "xmlPresent": true,
+        "countsConsistent": true
+      },
+      "artifact": {
+        "id": 12460364221,
+        "name": "android-emulator-evidence-39856422426-1",
+        "bytes": 180354,
+        "sha256": "b233846048a499e3869ccf467684c6d389d36aeedfd993725ee7725a05eed1cf",
+        "retentionUntil": "2026-10-29T21:43:37Z",
+        "localCopy": "docs/validation/h3b-phase3-memory-home-review/attempt-01/emulator-39856422426/artifact-original.zip",
+        "internalManifestEntries": 50,
+        "internalManifestVerified": true,
+        "sha256VerifiedAgainstGitHubApi": true
+      }
+    },
+    "automaticallyTriggeredWorkflows": {
+      "personalQa": {
+        "runId": 39856422471,
+        "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39856422471",
+        "status": "PASS",
+        "artifactId": 12459577844,
+        "artifactBytes": 49094692,
+        "artifactSha256": "2d302b5aa09b18453e9742daf5f615e54a9f4ffc3ea5d6a36f281e5e3581f78b",
+        "retentionUntil": "2026-11-21T21:27:32Z",
+        "downloadedOrDelivered": false
+      },
+      "gatedQa": {
+        "runId": 39856422564,
+        "url": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39856422564",
+        "status": "FAIL_CLOSED",
+        "reason": "matching emulator workflow failed; build and artifact upload skipped",
+        "artifact": "NONE"
+      }
     },
     "captures": {
-      "status": "Four actual full MainActivity Compose Robolectric captures visually inspected; not emulator/device captures.",
-      "path": "docs/validation/h3b-phase3-home/attempt-01/captures/",
-      "size": "360x800 pixels; configuration 360dp; no Calendar permission in HOST fixture and no synthetic events.",
-      "fontScales": [
-        1.0,
-        2.0
-      ],
+      "status": "VISUAL_REVIEW_PENDING",
+      "path": "docs/validation/h3b-phase3-memory-home-review/attempt-01/captures/",
+      "manifest": "docs/validation/h3b-phase3-memory-home-review/attempt-01/capture-manifest.json",
+      "pngCount": 18,
+      "dimensionsPx": "360x800",
+      "logicalWidthDp": 360,
       "themes": [
         "light",
         "dark"
       ],
-      "sha256": {
-        "h3b-home-dark-360dp-fontScale-1.0.png": "f20018cbb6d2489e886dcd2cef02f67818d3c011a41c933408c5a77d37dbbca2",
-        "h3b-home-dark-360dp-fontScale-2.0.png": "918457719c1048f19703dd00106683cbc05ee7b1e961652208964a5a28076bdd",
-        "h3b-home-light-360dp-fontScale-1.0.png": "693e5b087db707c6ff1db0c9e304808d9c8ee50773d12cc5e888bbdad31e07c2",
-        "h3b-home-light-360dp-fontScale-2.0.png": "b9f5deb5e157d5677f4ff3cfe898bccb94efb64644fdb4bbf4ca9b4ead12e121"
-      }
+      "fontScales": [
+        1.0,
+        2.0
+      ],
+      "fixture": "Synthetic: 2 pending, 1 pinned, 5 memory categories; Home has 3 synthetic calendar events and test-only ready-model state.",
+      "renderer": "Robolectric MainActivity decor view; not emulator or device."
     },
     "physicalDevice": "NOT_RUN",
-    "backlogSource": {
+    "emulatorStatus": "FAIL",
+    "sourceBacklog": {
       "tasks": 97,
       "uniqueIds": 97,
-      "dependencyEdges": 120,
-      "sourceStatuses": {
-        "TODO": 97
-      },
+      "dependencies": 120,
       "sourceModified": false
     },
     "main": "de615b772cf37a99e7e08a647c59607b271de606",
     "peeledV042": "de615b772cf37a99e7e08a647c59607b271de606",
-    "next": "Wait for the user to review Memoria and Inicio captures; do not start later Phase 3 screens until approval.",
-    "memoryScreen": {
-      "codeSha": "954c409f202f5e345d049c6c721cae3d06e5efac",
-      "codeCommit": "954c409f202f5e345d049c6c721cae3d06e5efac",
-      "codePaths": [
-        "app/src/main/java/com/localai/workspace/ui/ContextMemoryUi.kt",
-        "app/src/main/java/com/localai/workspace/ui/SemanticV2Settings.kt",
-        "app/src/main/res/values/strings.xml",
-        "app/src/test/java/com/localai/workspace/ui/H3bMemoryScreenUiTest.kt"
-      ],
-      "evidence": "docs/validation/h3b-phase3-memory/attempt-01/RESULTS.md",
-      "evidenceManifest": {
-        "path": "docs/validation/h3b-phase3-memory/attempt-01/SHA256SUMS",
-        "entries": 162,
-        "sha256": "bf3a90c7f4e760292a5166b37099667fb5e0d5deae24a22516a65321abc9c3bd"
+    "next": "Wait for user visual review; do not start later H3b Phase 3 screens. Preserve the instrumented failures and do not rerun in this checkpoint.",
+    "screens": {
+      "Memoria": {
+        "status": "IMPLEMENTED_HOST_CHECKED_EMULATOR_FAIL_WAITING_USER_REVIEW",
+        "contents": [
+          "Por aprobar · N and Approve/Discard",
+          "category rows with counts",
+          "Fijadas · N",
+          "Import/Export footer above navigation",
+          "JSON export and embedding rebuild under Advanced",
+          "empty-state invitation"
+        ]
       },
-      "host": {
-        "gradle": "8.10.2",
-        "runtimeJdk": "Temurin 17",
-        "testWorkerJdk": "Temurin 21",
-        "androidSdk": "/workspace/.toolchain/android-sdk",
-        "ndk": "27.0.12077973",
-        "offline": true,
-        "focusedMemoryTests": {
-          "status": "PASS",
-          "tests": 4,
-          "passed": 4,
-          "failures": 0,
-          "errors": 0,
-          "skipped": 0
+      "Inicio": {
+        "status": "IMPLEMENTED_HOST_CHECKED_EMULATOR_FAIL_WAITING_USER_REVIEW",
+        "contents": [
+          "bold localized greeting",
+          "real Memory/Web/model status in production",
+          "pending card only for positive scoped count",
+          "calendar permission/data state",
+          "no fake search/suggestions"
+        ]
+      }
+    },
+    "evidenceManifest": {
+      "path": "docs/validation/h3b-phase3-memory-home-review/attempt-01/SHA256SUMS",
+      "entries": 408,
+      "sha256": "63531e9d3103548adeb74e527b76ba3fb5aeb4ac5b691da8cafcd91ef79203b6",
+      "scope": "All evidence files below attempt-01, excluding the manifest itself; includes the original emulator artifact and its extracted files."
+    }
+  },
+  "latestH3bPhase3History": [
+    {
+      "recordedAt": "2026-10-22",
+      "reason": "User requested a fresh Memory/Home visual checkpoint with synthetic data and large-font captures; prior captures did not contain these fixtures.",
+      "checkpoint": {
+        "name": "AWS H3b Phase 3 sequential visual screens",
+        "currentScreen": "WAITING_FOR_USER_VISUAL_REVIEW",
+        "status": "MEMORY_AND_HOME_HOST_PASS_EMULATOR_PASS_WAITING_USER_REVIEW",
+        "codeSha": "f4574ecf2f18e7a9838dc1d741b0cbbd4edd3147",
+        "codeCommit": "f4574ecf2f18e7a9838dc1d741b0cbbd4edd3147",
+        "codePaths": [
+          "app/src/main/java/com/localai/workspace/MainActivity.kt",
+          "app/src/main/java/com/localai/workspace/ui/ViewModels.kt",
+          "app/src/main/res/values/strings.xml",
+          "app/src/test/java/com/localai/workspace/ui/MainActivityDarkThemeCaptureTest.kt",
+          "app/src/test/java/com/localai/workspace/ui/MainActivityThemeCaptureTest.kt",
+          "app/src/test/java/com/localai/workspace/ui/H3bHomeScreenUiTest.kt"
+        ],
+        "evidence": "docs/validation/h3b-phase3-home/attempt-01/RESULTS.md",
+        "evidenceManifest": {
+          "path": "docs/validation/h3b-phase3-home/attempt-01/SHA256SUMS",
+          "entries": 165,
+          "sha256": "68945945a83606b7560406fda41d5ea5b9f4a5b59d89d3737a02955a152da082"
         },
-        "appFullSuite": {
-          "attempts": [
-            {
+        "host": {
+          "gradle": "8.10.2",
+          "runtimeJdk": "Temurin 17",
+          "testWorkerJdk": "Temurin 21",
+          "androidSdk": "/workspace/.toolchain/android-sdk",
+          "ndk": "27.0.12077973",
+          "offline": true,
+          "focusedHomeTests": {
+            "status": "PASS",
+            "tests": 5,
+            "passed": 5,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "durationSeconds": 198,
+            "exitCode": 0
+          },
+          "appFullSuite": {
+            "status": "PASS",
+            "tests": 978,
+            "passed": 978,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "xmlFiles": 142,
+            "taskOutcome": "EXECUTED",
+            "exitCode": 0
+          },
+          "litertCompat": {
+            "status": "PASS",
+            "tests": 2,
+            "passed": 2,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "xmlFiles": 1,
+            "taskOutcome": "UP-TO-DATE in final gate; result XML from same validation window"
+          },
+          "lintDebug": {
+            "status": "PASS",
+            "warnings": 90,
+            "errors": 0,
+            "exitCode": 0
+          },
+          "fullGateDurationSeconds": 446,
+          "actionableTasks": 128,
+          "executedTasks": 27,
+          "upToDateTasks": 101,
+          "diffCheck": "PASS before code commit",
+          "intermittentFailure": {
+            "test": "H1PreferenceContextTest.H1_AT_01_approvedPreferencesReachTheRealGenerationRequestIncludingGreeting",
+            "observed": "1 failure in 4 full app suite runs during Memory/Home work: 1/2 on Memory SHA 954c409 and 0/2 on Home code variants, including final commit",
+            "cause": "NOT_DETERMINED",
+            "attributedToHome": false
+          }
+        },
+        "emulator": {
+          "status": "PASS_WITH_SIX_MODEL_DEPENDENT_SKIPS",
+          "runId": "39839230088",
+          "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39839230088",
+          "workflowSourceSha": "f4574ecf2f18e7a9838dc1d741b0cbbd4edd3147",
+          "jobId": "120035537807",
+          "durationSeconds": 1598,
+          "artifactId": "12454476399",
+          "artifactName": "android-emulator-evidence-39839230088-1",
+          "artifactBytes": 176375,
+          "artifactSha256": "512ce1057e25f9e055e3be7574608c345b6510a39d271c5b8b7b5fd3c75db1b2",
+          "internalManifestEntries": 50,
+          "internalManifestSha256": "fc3a3871feed62728ac3a4316ba7ff3866be4de7bbaf30a94d02c7fc8f0307f1",
+          "connectedTask": ":app:connectedDebugAndroidTest",
+          "exitCode": 0,
+          "device": {
+            "serial": "emulator-5554",
+            "api": 35,
+            "release": "15",
+            "abi": "x86_64",
+            "model": "sdk_gphone64_x86_64"
+          },
+          "xml": {
+            "tests": 24,
+            "passed": 18,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 6,
+            "executed": 18
+          },
+          "skips": "2 LiteRT and 4 native chat tests require actual model weights; none downloaded.",
+          "h1At12Update": "PASS on synthetic fixture only; no user data or physical-device validation.",
+          "physicalDevice": "NOT_RUN"
+        },
+        "captures": {
+          "status": "Four actual full MainActivity Compose Robolectric captures visually inspected; not emulator/device captures.",
+          "path": "docs/validation/h3b-phase3-home/attempt-01/captures/",
+          "size": "360x800 pixels; configuration 360dp; no Calendar permission in HOST fixture and no synthetic events.",
+          "fontScales": [
+            1.0,
+            2.0
+          ],
+          "themes": [
+            "light",
+            "dark"
+          ],
+          "sha256": {
+            "h3b-home-dark-360dp-fontScale-1.0.png": "f20018cbb6d2489e886dcd2cef02f67818d3c011a41c933408c5a77d37dbbca2",
+            "h3b-home-dark-360dp-fontScale-2.0.png": "918457719c1048f19703dd00106683cbc05ee7b1e961652208964a5a28076bdd",
+            "h3b-home-light-360dp-fontScale-1.0.png": "693e5b087db707c6ff1db0c9e304808d9c8ee50773d12cc5e888bbdad31e07c2",
+            "h3b-home-light-360dp-fontScale-2.0.png": "b9f5deb5e157d5677f4ff3cfe898bccb94efb64644fdb4bbf4ca9b4ead12e121"
+          }
+        },
+        "physicalDevice": "NOT_RUN",
+        "backlogSource": {
+          "tasks": 97,
+          "uniqueIds": 97,
+          "dependencyEdges": 120,
+          "sourceStatuses": {
+            "TODO": 97
+          },
+          "sourceModified": false
+        },
+        "main": "de615b772cf37a99e7e08a647c59607b271de606",
+        "peeledV042": "de615b772cf37a99e7e08a647c59607b271de606",
+        "next": "Wait for the user to review Memoria and Inicio captures; do not start later Phase 3 screens until approval.",
+        "memoryScreen": {
+          "codeSha": "954c409f202f5e345d049c6c721cae3d06e5efac",
+          "codeCommit": "954c409f202f5e345d049c6c721cae3d06e5efac",
+          "codePaths": [
+            "app/src/main/java/com/localai/workspace/ui/ContextMemoryUi.kt",
+            "app/src/main/java/com/localai/workspace/ui/SemanticV2Settings.kt",
+            "app/src/main/res/values/strings.xml",
+            "app/src/test/java/com/localai/workspace/ui/H3bMemoryScreenUiTest.kt"
+          ],
+          "evidence": "docs/validation/h3b-phase3-memory/attempt-01/RESULTS.md",
+          "evidenceManifest": {
+            "path": "docs/validation/h3b-phase3-memory/attempt-01/SHA256SUMS",
+            "entries": 162,
+            "sha256": "bf3a90c7f4e760292a5166b37099667fb5e0d5deae24a22516a65321abc9c3bd"
+          },
+          "host": {
+            "gradle": "8.10.2",
+            "runtimeJdk": "Temurin 17",
+            "testWorkerJdk": "Temurin 21",
+            "androidSdk": "/workspace/.toolchain/android-sdk",
+            "ndk": "27.0.12077973",
+            "offline": true,
+            "focusedMemoryTests": {
               "status": "PASS",
-              "tests": 973,
-              "passed": 973,
+              "tests": 4,
+              "passed": 4,
               "failures": 0,
               "errors": 0,
-              "skipped": 0,
-              "durationSeconds": 536,
-              "log": "docs/validation/h3b-phase3-memory/attempt-01/host/full-app-compat-lint-first-pass.log",
-              "xmlPreserved": false
+              "skipped": 0
             },
-            {
-              "status": "FAIL_ONE_TEST",
-              "tests": 973,
-              "passed": 972,
-              "failures": 1,
+            "appFullSuite": {
+              "attempts": [
+                {
+                  "status": "PASS",
+                  "tests": 973,
+                  "passed": 973,
+                  "failures": 0,
+                  "errors": 0,
+                  "skipped": 0,
+                  "durationSeconds": 536,
+                  "log": "docs/validation/h3b-phase3-memory/attempt-01/host/full-app-compat-lint-first-pass.log",
+                  "xmlPreserved": false
+                },
+                {
+                  "status": "FAIL_ONE_TEST",
+                  "tests": 973,
+                  "passed": 972,
+                  "failures": 1,
+                  "errors": 0,
+                  "skipped": 0,
+                  "durationSeconds": 196,
+                  "log": "docs/validation/h3b-phase3-memory/attempt-01/host/full-app-second-run.log",
+                  "xml": "docs/validation/h3b-phase3-memory/attempt-01/host/app-junit-failed-run/"
+                }
+              ],
+              "observedFailureFrequency": "1/2",
+              "failure": "H1PreferenceContextTest.H1_AT_01_approvedPreferencesReachTheRealGenerationRequestIncludingGreeting; assertion at H1PreferenceContextTest.kt:166 that the ViewModel still contains the selected document ID after request generation.",
+              "causalAttribution": "NOT_DETERMINED; not changed by the Memory screen patch; do not treat either run as proof of a stable pass."
+            },
+            "litertCompatTests": {
+              "status": "PASS_THEN_UP_TO_DATE",
+              "tests": 2,
+              "passed": 2,
+              "failures": 0,
               "errors": 0,
-              "skipped": 0,
-              "durationSeconds": 196,
-              "log": "docs/validation/h3b-phase3-memory/attempt-01/host/full-app-second-run.log",
-              "xml": "docs/validation/h3b-phase3-memory/attempt-01/host/app-junit-failed-run/"
+              "skipped": 0
+            },
+            "lintDebug": {
+              "status": "PASS",
+              "warnings": 90,
+              "errors": 0,
+              "durationSeconds": 259
+            },
+            "diffCheck": "PASS"
+          },
+          "emulator": {
+            "status": "PASS_WITH_PROGRESS_COUNT_DISCREPANCY",
+            "runId": "39830487826",
+            "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39830487826",
+            "workflowSourceSha": "954c409f202f5e345d049c6c721cae3d06e5efac",
+            "jobId": "120005016572",
+            "artifactId": "12450355874",
+            "artifactName": "android-emulator-evidence-39830487826-1",
+            "artifactSha256": "63bbd54c1a957ee5b16448500443d12821df544c4d4a9d6890198c06efd844c1",
+            "artifactBytes": 176447,
+            "connectedTask": ":app:connectedDebugAndroidTest",
+            "device": {
+              "serial": "emulator-5554",
+              "api": 35,
+              "release": "15",
+              "abi": "x86_64",
+              "model": "sdk_gphone64_x86_64"
+            },
+            "xml": {
+              "tests": 24,
+              "passed": 18,
+              "failures": 0,
+              "errors": 0,
+              "skipped": 6,
+              "executed": 18
+            },
+            "skips": "Two LiteRT and four native chat tests skipped because real models were not installed.",
+            "h1At12Update": "PASS on synthetic fixture; no physical device data.",
+            "progressDiscrepancy": "Gradle console reported 30/24 progress; XML and collector both report 24. Cause NOT_DETERMINED.",
+            "physicalDevice": "NOT_RUN"
+          },
+          "captures": {
+            "status": "Four actual MainActivity Robolectric screenshots, visually inspected; empty test database, no synthetic records in captures.",
+            "path": "docs/validation/h3b-phase3-memory/attempt-01/captures/",
+            "size": "360dp wide by 800dp high, light/dark, fontScale 1.0/2.0",
+            "sha256": {
+              "h3b-memory-dark-360dp-fontScale-1.0.png": "00ee4f4bc2bc00b508c823a1e5ea407aa55178e429a8c111a91706ac08fb6ed6",
+              "h3b-memory-dark-360dp-fontScale-2.0.png": "0c64d65951727568d03975b391c16c34ffd7879b833a7fd4825c39f3297ed4c3",
+              "h3b-memory-light-360dp-fontScale-1.0.png": "939b11c78d771a107c2da84f39e6944b8f8ce5dc020c2d6cd57a36f07d7cbc72",
+              "h3b-memory-light-360dp-fontScale-2.0.png": "98be569031203715685e5b5a5b3de454d32f4ee1b9d35b6a1fc303641f5d8dfc"
             }
+          },
+          "physicalDevice": "NOT_RUN"
+        },
+        "personalQa": {
+          "status": "PASS_REPORTED_BY_WORKFLOW",
+          "runId": "39839230085",
+          "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39839230085",
+          "artifactId": "12453375144",
+          "artifactName": "local-ai-workspace-personal-qa-debug-arm64-39839230085-1",
+          "artifactBytes": 49054182,
+          "artifactZipSha256ReportedByUploadLog": "8d73bd153d94d767772a5d996e9c87eb3d7f9e0ec6a1979a06ef58d12c7007e8",
+          "apk": {
+            "bytes": 121861443,
+            "sha256ReportedByBuildLog": "b0e13ea4548ddcfdc89098ee1074320d61c636fbaebcef376c58158a05811f6f",
+            "applicationId": "com.localai.workspace.debug",
+            "versionName": "0.5.0-debug",
+            "versionCode": 27,
+            "abi": "arm64-v8a",
+            "signature": "Debug v2 verified",
+            "certificateSha256": "b0d1c40838a22b6bbfc7bfa176c9bb917c7194c7b74dedf749566fb268ab120b",
+            "zipIntegrity": "PASS",
+            "zipalign": "PASS"
+          },
+          "localDownloadRehash": "NOT_RUN",
+          "instrumentationInThisWorkflow": "NOT_RUN; emulator instrumentation is recorded separately"
+        },
+        "visualReviewCheckpoint": {
+          "screens": [
+            "Memoria",
+            "Inicio"
           ],
-          "observedFailureFrequency": "1/2",
-          "failure": "H1PreferenceContextTest.H1_AT_01_approvedPreferencesReachTheRealGenerationRequestIncludingGreeting; assertion at H1PreferenceContextTest.kt:166 that the ViewModel still contains the selected document ID after request generation.",
-          "causalAttribution": "NOT_DETERMINED; not changed by the Memory screen patch; do not treat either run as proof of a stable pass."
-        },
-        "litertCompatTests": {
-          "status": "PASS_THEN_UP_TO_DATE",
-          "tests": 2,
-          "passed": 2,
-          "failures": 0,
-          "errors": 0,
-          "skipped": 0
-        },
-        "lintDebug": {
-          "status": "PASS",
-          "warnings": 90,
-          "errors": 0,
-          "durationSeconds": 259
-        },
-        "diffCheck": "PASS"
-      },
-      "emulator": {
-        "status": "PASS_WITH_PROGRESS_COUNT_DISCREPANCY",
-        "runId": "39830487826",
-        "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39830487826",
-        "workflowSourceSha": "954c409f202f5e345d049c6c721cae3d06e5efac",
-        "jobId": "120005016572",
-        "artifactId": "12450355874",
-        "artifactName": "android-emulator-evidence-39830487826-1",
-        "artifactSha256": "63bbd54c1a957ee5b16448500443d12821df544c4d4a9d6890198c06efd844c1",
-        "artifactBytes": 176447,
-        "connectedTask": ":app:connectedDebugAndroidTest",
-        "device": {
-          "serial": "emulator-5554",
-          "api": 35,
-          "release": "15",
-          "abi": "x86_64",
-          "model": "sdk_gphone64_x86_64"
-        },
-        "xml": {
-          "tests": 24,
-          "passed": 18,
-          "failures": 0,
-          "errors": 0,
-          "skipped": 6,
-          "executed": 18
-        },
-        "skips": "Two LiteRT and four native chat tests skipped because real models were not installed.",
-        "h1At12Update": "PASS on synthetic fixture; no physical device data.",
-        "progressDiscrepancy": "Gradle console reported 30/24 progress; XML and collector both report 24. Cause NOT_DETERMINED.",
-        "physicalDevice": "NOT_RUN"
-      },
-      "captures": {
-        "status": "Four actual MainActivity Robolectric screenshots, visually inspected; empty test database, no synthetic records in captures.",
-        "path": "docs/validation/h3b-phase3-memory/attempt-01/captures/",
-        "size": "360dp wide by 800dp high, light/dark, fontScale 1.0/2.0",
-        "sha256": {
-          "h3b-memory-dark-360dp-fontScale-1.0.png": "00ee4f4bc2bc00b508c823a1e5ea407aa55178e429a8c111a91706ac08fb6ed6",
-          "h3b-memory-dark-360dp-fontScale-2.0.png": "0c64d65951727568d03975b391c16c34ffd7879b833a7fd4825c39f3297ed4c3",
-          "h3b-memory-light-360dp-fontScale-1.0.png": "939b11c78d771a107c2da84f39e6944b8f8ce5dc020c2d6cd57a36f07d7cbc72",
-          "h3b-memory-light-360dp-fontScale-2.0.png": "98be569031203715685e5b5a5b3de454d32f4ee1b9d35b6a1fc303641f5d8dfc"
+          "status": "WAITING_FOR_USER_REVIEW",
+          "nextScreensNotStarted": [
+            "Primer uso sin modelo",
+            "Lista de chats",
+            "Más",
+            "Nueva habilidad",
+            "ajustes finales del modo oscuro"
+          ]
         }
-      },
-      "physicalDevice": "NOT_RUN"
-    },
-    "personalQa": {
-      "status": "PASS_REPORTED_BY_WORKFLOW",
-      "runId": "39839230085",
-      "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39839230085",
-      "artifactId": "12453375144",
-      "artifactName": "local-ai-workspace-personal-qa-debug-arm64-39839230085-1",
-      "artifactBytes": 49054182,
-      "artifactZipSha256ReportedByUploadLog": "8d73bd153d94d767772a5d996e9c87eb3d7f9e0ec6a1979a06ef58d12c7007e8",
-      "apk": {
-        "bytes": 121861443,
-        "sha256ReportedByBuildLog": "b0e13ea4548ddcfdc89098ee1074320d61c636fbaebcef376c58158a05811f6f",
-        "applicationId": "com.localai.workspace.debug",
-        "versionName": "0.5.0-debug",
-        "versionCode": 27,
-        "abi": "arm64-v8a",
-        "signature": "Debug v2 verified",
-        "certificateSha256": "b0d1c40838a22b6bbfc7bfa176c9bb917c7194c7b74dedf749566fb268ab120b",
-        "zipIntegrity": "PASS",
-        "zipalign": "PASS"
-      },
-      "localDownloadRehash": "NOT_RUN",
-      "instrumentationInThisWorkflow": "NOT_RUN; emulator instrumentation is recorded separately"
-    },
-    "visualReviewCheckpoint": {
-      "screens": [
-        "Memoria",
-        "Inicio"
-      ],
-      "status": "WAITING_FOR_USER_REVIEW",
-      "nextScreensNotStarted": [
-        "Primer uso sin modelo",
-        "Lista de chats",
-        "Más",
-        "Nueva habilidad",
-        "ajustes finales del modo oscuro"
-      ]
+      }
     }
-  }
+  ]
 }

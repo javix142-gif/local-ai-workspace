@@ -1,0 +1,11 @@
+fontScale=1.0
+memory-screen=Rect.fromLTRB(0.0, 0.0, 360.0, 720.0)
+memory-screen-title=Rect.fromLTRB(16.0, 12.0, 344.0, 37.0)
+memory-pending-card=Rect.fromLTRB(16.0, 49.0, 344.0, 538.0)
+memory-category-list=Rect.fromLTRB(16.0, 550.0, 344.0, 656.0)
+memory-pinned-section=Rect.fromLTRB(0.0, 0.0, 0.0, 0.0)
+memory-import=Rect.fromLTRB(16.0, 660.0, 176.0, 708.0)
+memory-export=Rect.fromLTRB(184.0, 660.0, 344.0, 708.0)
+top-level-memory=Rect.fromLTRB(184.0, 720.0, 268.0, 800.0)
+capture=activity-decor-view
+decor=360x800

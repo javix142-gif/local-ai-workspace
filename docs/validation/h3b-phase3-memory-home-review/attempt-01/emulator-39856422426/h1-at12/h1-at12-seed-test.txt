@@ -1,0 +1,17 @@
+command=['/usr/local/lib/android/sdk/platform-tools/adb', '-s', 'emulator-5554', 'shell', 'am', 'instrument', '-w', '-e', 'class', 'com.localai.workspace.h1acceptance.H1At12SeedTest#H1_AT_12_seedPreviousVersionData', 'com.localai.workspace.debug.test/androidx.test.runner.AndroidJUnitRunner']
+cwd=/home/runner/work/local-ai-workspace/local-ai-workspace
+timeout_seconds=240
+exit_code=0
+timed_out=false
+--- stdout ---
+
+com.localai.workspace.h1acceptance.H1At12SeedTest:.
+
+Time: 0.104
+
+OK (1 test)
+
+
+
+--- stderr ---
+

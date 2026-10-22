@@ -1,0 +1,16 @@
+command=['/usr/local/lib/android/sdk/platform-tools/adb', '-s', 'emulator-5554', 'shell', 'am', 'start', '-W', '-n', 'com.localai.workspace.debug/com.localai.workspace.MainActivity']
+cwd=/home/runner/work/local-ai-workspace/local-ai-workspace
+timeout_seconds=1800
+exit_code=0
+timed_out=false
+--- stdout ---
+Starting: Intent { cmp=com.localai.workspace.debug/com.localai.workspace.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: com.localai.workspace.debug/com.localai.workspace.MainActivity
+TotalTime: 3080
+WaitTime: 3088
+Complete
+
+--- stderr ---
+

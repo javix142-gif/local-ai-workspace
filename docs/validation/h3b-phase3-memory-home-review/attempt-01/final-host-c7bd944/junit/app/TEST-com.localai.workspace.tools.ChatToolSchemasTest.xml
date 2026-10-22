@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.tools.ChatToolSchemasTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-22T21:14:06" hostname="bb89d9b8ef7f" time="0.108">
+  <properties/>
+  <testcase name="disabledAndInvalidToolsNeverExecute" classname="com.localai.workspace.tools.ChatToolSchemasTest" time="0.027"/>
+  <testcase name="schemasAreRealTypedAndBounded" classname="com.localai.workspace.tools.ChatToolSchemasTest" time="0.041"/>
+  <testcase name="officialSdkToolAdapterReturnsActualCalculatorResult" classname="com.localai.workspace.tools.ChatToolSchemasTest" time="0.025"/>
+  <testcase name="artifactCreateAndReviseDescriptionsStayCompactWithoutLosingFormatOrSafetyBoundaries" classname="com.localai.workspace.tools.ChatToolSchemasTest" time="0.015"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

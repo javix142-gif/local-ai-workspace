@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.h1acceptance.H1PreferenceContextTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-22T21:04:18" hostname="bb89d9b8ef7f" time="6.416">
+  <properties/>
+  <testcase name="H1_AT_01_approvedPreferencesReachTheRealGenerationRequestIncludingGreeting" classname="com.localai.workspace.h1acceptance.H1PreferenceContextTest" time="6.416"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

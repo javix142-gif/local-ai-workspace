@@ -1,0 +1,9 @@
+code_sha=c7bd9447606020de6a2093b72a17a47be5705299
+branch=feat/0.5.0-skills-agents
+gradle=8.10.2; runtime_jdk=Temurin 17; test_worker_jdk=Temurin 21
+java17=openjdk version "17.0.20.1" 2026-08-18
+java21=openjdk version "21.0.12.1" 2026-08-18 LTS
+android_sdk=/workspace/.toolchain/android-sdk
+gradle_user_home=/workspace/.gradle
+offline=true
+target_test=com.localai.workspace.h1acceptance.H1PreferenceContextTest.H1_AT_01_approvedPreferencesReachTheRealGenerationRequestIncludingGreeting

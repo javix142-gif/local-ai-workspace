@@ -1,0 +1,15 @@
+code_sha=49ce2b53f2c77ef4be33d367787d7c134d11258b
+branch=feat/0.5.0-skills-agents
+java17=openjdk version "17.0.20.1" 2026-08-18
+javac17=javac 17.0.20.1
+java21=openjdk version "21.0.12.1" 2026-08-18 LTS
+javac21=javac 21.0.12.1
+jdk17_compiler=jdk.compiler@17.0.20.1
+jdk21_compiler=jdk.compiler@21.0.12.1
+gradle_user_home=/workspace/.gradle
+gradle_wrapper_distribution=/workspace/.gradle/wrapper/dists/gradle-8.10.2-bin/a04bxjujx95o3nb99gddekhwo/gradle-8.10.2
+android_sdk=/workspace/.toolchain/android-sdk
+java_home=/workspace/.toolchain/jdk-17
+path_prefix=/workspace/.toolchain/jdk-17/bin
+loop_started_utc=2026-10-22T20:00:07.210496+00:00
+network=offline

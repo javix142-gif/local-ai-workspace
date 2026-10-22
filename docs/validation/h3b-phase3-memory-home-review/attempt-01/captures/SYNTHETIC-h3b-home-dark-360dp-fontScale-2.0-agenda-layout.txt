@@ -1,0 +1,10 @@
+fontScale=2.0
+home-greeting=Rect.fromLTRB(0.0, 0.0, 0.0, 0.0)
+home-status-memory=Rect.fromLTRB(32.0, 99.0, 227.0, 135.0)
+home-status-web=Rect.fromLTRB(32.0, 143.0, 245.0, 179.0)
+home-status-model=Rect.fromLTRB(32.0, 187.0, 194.0, 223.0)
+home-calendar-card=Rect.fromLTRB(16.0, 243.0, 344.0, 720.0)
+home-calendar-event=MISSING: AssertionError
+home-start-chat=Rect.fromLTRB(0.0, 0.0, 0.0, 0.0)
+home-open-chats=Rect.fromLTRB(0.0, 0.0, 0.0, 0.0)
+decor=360x800

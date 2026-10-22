@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.ArtifactsDocxTemplateUiTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-22T21:14:11" hostname="bb89d9b8ef7f" time="0.231">
+  <properties/>
+  <testcase name="selectingTemplateUpdatesTheVisibleDraftDescriptor" classname="com.localai.workspace.ui.ArtifactsDocxTemplateUiTest" time="0.231"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.H3bMemoryScreenUiTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-22T21:14:36" hostname="bb89d9b8ef7f" time="0.551">
+  <properties/>
+  <testcase name="pendingAndPinnedSectionsUseStoredRecordsAndKeepDiscardConfirmed" classname="com.localai.workspace.ui.H3bMemoryScreenUiTest" time="0.342"/>
+  <testcase name="topLevelMemoryIsAnIntegratedScreenWithTheRealEmptyState" classname="com.localai.workspace.ui.H3bMemoryScreenUiTest" time="0.209"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

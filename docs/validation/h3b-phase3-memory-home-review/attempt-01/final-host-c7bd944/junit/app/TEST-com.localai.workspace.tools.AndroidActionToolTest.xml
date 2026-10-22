@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.tools.AndroidActionToolTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-22T21:14:06" hostname="bb89d9b8ef7f" time="0.122">
+  <properties/>
+  <testcase name="actionCapabilityIsVisibleButStillMarkedForConfirmationAndCanBeTurnedOff" classname="com.localai.workspace.tools.AndroidActionToolTest" time="0.028"/>
+  <testcase name="alarmTimerCalendarAndExternalDestinationsAreTypedAllowListedIntents" classname="com.localai.workspace.tools.AndroidActionToolTest" time="0.057"/>
+  <testcase name="modelToolCallReturnsConfirmationWithoutExecutingExternalAction" classname="com.localai.workspace.tools.AndroidActionToolTest" time="0.019"/>
+  <testcase name="invalidAndOutOfScopeInputsAreRejectedWithoutCreatingAnIntent" classname="com.localai.workspace.tools.AndroidActionToolTest" time="0.018"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
