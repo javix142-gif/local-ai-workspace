@@ -23,7 +23,9 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.printToLog
 import androidx.compose.ui.unit.Density
@@ -87,13 +89,13 @@ class ChatHeaderLayoutTest {
 
     @Test fun largeFontScaleKeepsHeaderPillsReadableAtOnePointSix() {
         render(1.6f)
-        captureLayoutDiagnostics("large-font", 1.6f)
+        captureLayoutDiagnostics("font-scale-1.6", 1.6f, capturePng = false)
         assertHeaderContentAndBounds(1.6f)
     }
 
     @Test fun maximumFontScaleKeepsHeaderPillsReadableAtTwo() {
         render(2f)
-        captureLayoutDiagnostics("maximum-font", 2f)
+        captureLayoutDiagnostics("large-font", 2f)
         assertHeaderContentAndBounds(2f)
     }
 
@@ -103,7 +105,8 @@ class ChatHeaderLayoutTest {
         compose.onNodeWithTag("chat-header-model", useUnmergedTree = true).assertIsDisplayed()
         compose.onNodeWithTag("chat-header-model-state", useUnmergedTree = true).assertIsDisplayed()
         compose.onNodeWithTag("chat-header-conversation", useUnmergedTree = true).assertTextContains(LONG_CONVERSATION_TITLE)
-        compose.onNodeWithTag("chat-header-model", useUnmergedTree = true).assertTextContains(LONG_MODEL_STATUS)
+        compose.onNodeWithText(LONG_MODEL_STATUS, useUnmergedTree = true).assertIsDisplayed()
+        compose.onNodeWithContentDescription(LONG_MODEL_STATUS, useUnmergedTree = true).assertIsDisplayed()
         assertModelLinePrecedesChatBody(fontScale)
     }
 
@@ -136,7 +139,11 @@ class ChatHeaderLayoutTest {
         assertTrue("Model status should not be clipped under the header", model.bottom <= body.top)
     }
 
-    private fun captureLayoutDiagnostics(label: String, requestedFontScale: Float) {
+    private fun captureLayoutDiagnostics(
+        label: String,
+        requestedFontScale: Float,
+        capturePng: Boolean = true,
+    ) {
         compose.waitForIdle()
         val tags = listOf(
             "chat-layout-root", "chat-header-appbar", "chat-header-title",
@@ -170,6 +177,7 @@ class ChatHeaderLayoutTest {
         }
         Log.i("ChatHeaderLayout", diagnostic)
         compose.onRoot(useUnmergedTree = true).printToLog("ChatHeaderLayout")
+        if (!capturePng) return
 
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val targetContext = instrumentation.targetContext

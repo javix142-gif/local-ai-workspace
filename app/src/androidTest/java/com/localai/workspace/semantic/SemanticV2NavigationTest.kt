@@ -15,7 +15,7 @@ class SemanticV2NavigationTest {
         val modelsEntry = compose.activity.getString(R.string.settings_models_entry)
         compose.onNodeWithText(modelsEntry, substring = true).assertIsDisplayed()
         compose.onNode(hasClickAction() and hasText(modelsEntry, substring = true)).performClick()
-        compose.onNodeWithText("Models").assertIsDisplayed()
+        compose.onNodeWithText(compose.activity.getString(R.string.models_title)).assertIsDisplayed()
         compose.onNodeWithText("Semantic search").performClick()
         compose.onNodeWithText("Embedding models").assertIsDisplayed()
         compose.onNodeWithText("EmbeddingGemma 2 740M").assertExists()
