@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.border
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -93,6 +94,7 @@ fun ChatTopBar(
 }
 
 @Composable
+@OptIn(ExperimentalLayoutApi::class)
 fun ChatHeaderTitle(
     agentTitle: @Composable () -> Unit,
     conversationTitle: String,
@@ -117,12 +119,10 @@ fun ChatHeaderTitle(
             softWrap = false,
             overflow = TextOverflow.Ellipsis,
         )
-        Row(
-            modifier = Modifier.fillMaxWidth()
-                .horizontalScroll(rememberScrollState())
-                .testTag("chat-header-status-row"),
+        FlowRow(
+            modifier = Modifier.fillMaxWidth().testTag("chat-header-status-row"),
             horizontalArrangement = Arrangement.spacedBy(LocalAiSpacing.x1),
-            verticalAlignment = Alignment.CenterVertically,
+            verticalArrangement = Arrangement.spacedBy(LocalAiSpacing.x1),
         ) {
             if (modelState != null) {
                 Surface(
@@ -133,10 +133,10 @@ fun ChatHeaderTitle(
                 ) {
                     Text(
                         modelState,
-                        Modifier.padding(horizontal = LocalAiSpacing.x2, vertical = LocalAiSpacing.x1),
+                        Modifier.padding(horizontal = LocalAiSpacing.x2, vertical = LocalAiSpacing.x1)
+                            .semantics { contentDescription = modelState },
                         style = MaterialTheme.typography.labelSmall,
-                        maxLines = 1,
-                        softWrap = false,
+                        softWrap = true,
                     )
                 }
             }
@@ -149,10 +149,10 @@ fun ChatHeaderTitle(
             ) {
                 Text(
                     modelStatus,
-                    Modifier.padding(horizontal = LocalAiSpacing.x2, vertical = LocalAiSpacing.x1),
+                    Modifier.padding(horizontal = LocalAiSpacing.x2, vertical = LocalAiSpacing.x1)
+                        .semantics { contentDescription = modelStatus },
                     style = MaterialTheme.typography.labelSmall,
-                    maxLines = 1,
-                    softWrap = false,
+                    softWrap = true,
                 )
             }
             Surface(

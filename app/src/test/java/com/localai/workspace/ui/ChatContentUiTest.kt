@@ -77,6 +77,8 @@ class ChatContentUiTest {
         compose.onNodeWithText(localized(R.string.chat_sources_title)).assertIsDisplayed()
         compose.onNodeWithText(localized(R.string.chat_sources_title))
             .assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.Heading))
+        compose.onNodeWithTag("citation-sources-note").assertIsDisplayed()
+        compose.onNodeWithText(localized(R.string.chat_sources_metadata_note)).assertDoesNotExist()
         compose.onNodeWithText("LCL-AB12", useUnmergedTree = true).assertIsDisplayed()
         compose.onNodeWithText("Project notes · onboarding.txt", useUnmergedTree = true).assertIsDisplayed()
         val referenceDescription = localized(
@@ -607,10 +609,16 @@ class ChatContentUiTest {
             ).assertExists()
             compose.onNodeWithTag("chat-header-model-state", useUnmergedTree = true).assertIsDisplayed()
             val statusRow = compose.onNodeWithTag("chat-header-status-row", useUnmergedTree = true)
-                .assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.HorizontalScrollAxisRange))
-            statusRow.performTouchInput { swipeLeft() }
-            compose.onNodeWithTag("chat-header-agent", useUnmergedTree = true).assertIsDisplayed()
-            statusRow.performTouchInput { swipeRight() }
+            val statusRowBounds = statusRow.fetchSemanticsNode().boundsInRoot
+            listOf("chat-header-model-state", "chat-header-model", "chat-header-agent").forEach { tag ->
+                val pill = compose.onNodeWithTag(tag, useUnmergedTree = true)
+                    .assertIsDisplayed().fetchSemanticsNode().boundsInRoot
+                assertTrue(
+                    "$tag remains fully inside the wrapping status row at fontScale=$scale",
+                    pill.left >= statusRowBounds.left && pill.right <= statusRowBounds.right &&
+                        pill.top >= statusRowBounds.top && pill.bottom <= statusRowBounds.bottom,
+                )
+            }
             val title = compose.onNodeWithTag("chat-header-conversation", useUnmergedTree = true)
                 .assertTextEquals("A long conversation title that remains accessible when it is visually truncated at large text sizes")
             val titleHeightDp = title.fetchSemanticsNode().size.height /

@@ -11,11 +11,17 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.localai.workspace.R
@@ -30,6 +36,7 @@ fun AwsBottomBar(
     onDestinationSelected: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val compactLabels = LocalDensity.current.fontScale >= 1.5f
     val tabs = listOf(
         WorkspaceTab("home", stringResource(R.string.navigation_home), Icons.Default.Home),
         WorkspaceTab("workspace", stringResource(R.string.navigation_chats), Icons.Default.ChatBubbleOutline),
@@ -41,25 +48,50 @@ fun AwsBottomBar(
         containerColor = MaterialTheme.colorScheme.surface,
         tonalElevation = 0.dp,
     ) {
-        tabs.forEach { tab ->
-            NavigationBarItem(
-                modifier = Modifier.testTag("top-level-${tab.route}"),
-                selected = selectedRoute == tab.route,
-                onClick = { onDestinationSelected(tab.route) },
-                icon = { Icon(tab.icon, contentDescription = null) },
-                label = {
-                    Text(
-                        text = tab.label,
-                        modifier = Modifier
-                            .testTag("top-level-label-${tab.route}")
-                            .semantics { contentDescription = tab.label },
-                        maxLines = 1,
-                        softWrap = false,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                },
-                alwaysShowLabel = true,
-            )
+        if (compactLabels) {
+            val selectedTab = tabs.first { it.route == selectedRoute }
+            Column(Modifier.fillMaxWidth()) {
+                Text(
+                    text = selectedTab.label,
+                    modifier = Modifier.fillMaxWidth().testTag("top-level-label-${selectedTab.route}"),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.labelMedium,
+                )
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+                    tabs.forEach { tab ->
+                        NavigationBarItem(
+                            modifier = Modifier.testTag("top-level-${tab.route}")
+                                .semantics { contentDescription = tab.label },
+                            selected = selectedRoute == tab.route,
+                            onClick = { onDestinationSelected(tab.route) },
+                            icon = { Icon(tab.icon, contentDescription = null) },
+                            label = null,
+                            alwaysShowLabel = false,
+                        )
+                    }
+                }
+            }
+        } else {
+            tabs.forEach { tab ->
+                NavigationBarItem(
+                    modifier = Modifier.testTag("top-level-${tab.route}"),
+                    selected = selectedRoute == tab.route,
+                    onClick = { onDestinationSelected(tab.route) },
+                    icon = { Icon(tab.icon, contentDescription = null) },
+                    label = {
+                        Text(
+                            text = tab.label,
+                            modifier = Modifier
+                                .testTag("top-level-label-${tab.route}")
+                                .semantics { contentDescription = tab.label },
+                            maxLines = 1,
+                            softWrap = false,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    },
+                    alwaysShowLabel = true,
+                )
+            }
         }
     }
 }

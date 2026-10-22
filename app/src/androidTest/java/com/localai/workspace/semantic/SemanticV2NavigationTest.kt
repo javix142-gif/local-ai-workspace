@@ -3,6 +3,7 @@ package com.localai.workspace.semantic
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.localai.workspace.MainActivity
+import com.localai.workspace.R
 import org.junit.Rule
 import org.junit.Test
 
@@ -10,7 +11,11 @@ import org.junit.Test
 class SemanticV2NavigationTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     @Test fun modelsExposeExperimentalSemanticDialogWithoutAddingAnotherNavigationRoute() {
-        compose.onNodeWithText("Models").performClick()
+        compose.onNodeWithTag("top-level-settings").performClick()
+        val modelsEntry = compose.activity.getString(R.string.settings_models_entry)
+        compose.onNodeWithText(modelsEntry, substring = true).assertIsDisplayed()
+        compose.onNode(hasClickAction() and hasText(modelsEntry, substring = true)).performClick()
+        compose.onNodeWithText("Models").assertIsDisplayed()
         compose.onNodeWithText("Semantic search").performClick()
         compose.onNodeWithText("Embedding models").assertIsDisplayed()
         compose.onNodeWithText("EmbeddingGemma 2 740M").assertExists()

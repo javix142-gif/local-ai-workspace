@@ -28,10 +28,11 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertContentDescriptionEquals
 import androidx.compose.ui.test.assertHeightIsAtLeast
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotSelected
+import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.assertWidthIsAtLeast
-import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
@@ -40,8 +41,6 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.semantics.SemanticsProperties
-import androidx.compose.ui.test.SemanticsMatcher
 import com.localai.workspace.R
 import com.localai.workspace.ui.components.AwsBottomBar
 import com.localai.workspace.data.CitationCellReferenceCodec
@@ -169,11 +168,25 @@ class H3bChatCaptureTest {
                 if (fontScale == 2f) 68f else 40f,
                 "Conversation title remains a single visual line at fontScale=$fontScale",
             )
-            compose.onNodeWithTag("top-level-workspace")
-                .assertTextContains(compose.activity.getString(R.string.navigation_chats))
+            val chatsLabel = compose.activity.getString(R.string.navigation_chats)
+            if (fontScale >= 1.5f) {
+                compose.onNodeWithTag("top-level-label-workspace", useUnmergedTree = true)
+                    .assertTextEquals(chatsLabel).assertIsDisplayed()
+            } else {
+                compose.onNodeWithTag("top-level-workspace").assertTextContains(chatsLabel)
+            }
             compose.onNodeWithText("Listo", useUnmergedTree = true).assertIsDisplayed()
-            compose.onNodeWithTag("chat-header-status-row", useUnmergedTree = true)
-                .assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.HorizontalScrollAxisRange))
+            val statusRowBounds = compose.onNodeWithTag("chat-header-status-row", useUnmergedTree = true)
+                .fetchSemanticsNode().boundsInRoot
+            listOf("chat-header-model-state", "chat-header-model", "chat-header-agent").forEach { tag ->
+                val pill = compose.onNodeWithTag(tag, useUnmergedTree = true)
+                    .assertIsDisplayed().fetchSemanticsNode().boundsInRoot
+                assertTrue(
+                    "$tag remains fully inside the wrapping status row at fontScale=$fontScale",
+                    pill.left >= statusRowBounds.left && pill.right <= statusRowBounds.right &&
+                        pill.top >= statusRowBounds.top && pill.bottom <= statusRowBounds.bottom,
+                )
+            }
             listOf(
                 "home" to R.string.navigation_home,
                 "workspace" to R.string.navigation_chats,
@@ -181,15 +194,24 @@ class H3bChatCaptureTest {
                 "settings" to R.string.navigation_more,
             ).forEach { (route, labelId) ->
                 val label = compose.activity.getString(labelId)
-                compose.onNodeWithTag("top-level-$route").assertIsDisplayed()
+                val destination = compose.onNodeWithTag("top-level-$route").assertIsDisplayed()
                     .assertWidthIsAtLeast(48.dp).assertHeightIsAtLeast(48.dp)
-                val labelNode = compose.onNodeWithTag("top-level-label-$route", useUnmergedTree = true)
-                    .assertContentDescriptionEquals(label).assertIsDisplayed()
-                assertHeightDpAtMost(
-                    labelNode,
-                    if (fontScale == 2f) 36f else 24f,
-                    "Navigation label $label stays on one line at fontScale=$fontScale",
-                )
+                if (route == "workspace") destination.assertIsSelected() else destination.assertIsNotSelected()
+                if (fontScale >= 1.5f) {
+                    destination.assertContentDescriptionEquals(label)
+                    if (route != "workspace") {
+                        compose.onNodeWithTag("top-level-label-$route", useUnmergedTree = true)
+                            .assertDoesNotExist()
+                    }
+                } else {
+                    val labelNode = compose.onNodeWithTag("top-level-label-$route", useUnmergedTree = true)
+                        .assertContentDescriptionEquals(label).assertIsDisplayed()
+                    assertHeightDpAtMost(
+                        labelNode,
+                        24f,
+                        "Navigation label $label stays on one line at fontScale=$fontScale",
+                    )
+                }
             }
             compose.onNodeWithTag("chat-message-user-surface").performScrollTo().assertIsDisplayed()
             compose.onNodeWithTag("chat-message-assistant-surface").performScrollTo().assertIsDisplayed()

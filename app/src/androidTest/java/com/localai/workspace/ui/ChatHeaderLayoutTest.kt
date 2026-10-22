@@ -66,6 +66,7 @@ class ChatHeaderLayoutTest {
                                     conversationTitle = LONG_CONVERSATION_TITLE,
                                     modelStatus = LONG_MODEL_STATUS,
                                     onModelClick = {}, enabled = true,
+                                    modelState = "Preparing the selected local model",
                                 )
                             },
                             actions = { Text("⋮") },
@@ -81,23 +82,29 @@ class ChatHeaderLayoutTest {
     @Test fun standardFontScaleKeepsAgentTitleAndModelInsideHeader() {
         render(1f)
         captureLayoutDiagnostics("standard", 1f)
-        compose.onNodeWithTag("chat-header-agent", useUnmergedTree = true).assertIsDisplayed()
-        compose.onNodeWithTag("chat-header-conversation", useUnmergedTree = true).assertIsDisplayed()
-        compose.onNodeWithTag("chat-header-model", useUnmergedTree = true).assertIsDisplayed()
-        compose.onNodeWithTag("chat-header-conversation", useUnmergedTree = true).assertTextContains(LONG_CONVERSATION_TITLE)
-        compose.onNodeWithTag("chat-header-model", useUnmergedTree = true).assertTextContains(LONG_MODEL_STATUS)
-        assertModelLinePrecedesChatBody(1f)
+        assertHeaderContentAndBounds(1f)
     }
 
-    @Test fun largeFontScaleExpandsHeaderAndKeepsAllThreeLinesVisible() {
+    @Test fun largeFontScaleKeepsHeaderPillsReadableAtOnePointSix() {
         render(1.6f)
         captureLayoutDiagnostics("large-font", 1.6f)
+        assertHeaderContentAndBounds(1.6f)
+    }
+
+    @Test fun maximumFontScaleKeepsHeaderPillsReadableAtTwo() {
+        render(2f)
+        captureLayoutDiagnostics("maximum-font", 2f)
+        assertHeaderContentAndBounds(2f)
+    }
+
+    private fun assertHeaderContentAndBounds(fontScale: Float) {
         compose.onNodeWithTag("chat-header-agent", useUnmergedTree = true).assertIsDisplayed()
         compose.onNodeWithTag("chat-header-conversation", useUnmergedTree = true).assertIsDisplayed()
         compose.onNodeWithTag("chat-header-model", useUnmergedTree = true).assertIsDisplayed()
+        compose.onNodeWithTag("chat-header-model-state", useUnmergedTree = true).assertIsDisplayed()
         compose.onNodeWithTag("chat-header-conversation", useUnmergedTree = true).assertTextContains(LONG_CONVERSATION_TITLE)
         compose.onNodeWithTag("chat-header-model", useUnmergedTree = true).assertTextContains(LONG_MODEL_STATUS)
-        assertModelLinePrecedesChatBody(1.6f)
+        assertModelLinePrecedesChatBody(fontScale)
     }
 
     private fun assertModelLinePrecedesChatBody(fontScale: Float) {
@@ -108,6 +115,10 @@ class ChatHeaderLayoutTest {
         val conversation = compose.onNodeWithTag("chat-header-conversation", useUnmergedTree = true)
             .fetchSemanticsNode().boundsInRoot
         val model = compose.onNodeWithTag("chat-header-model", useUnmergedTree = true)
+            .fetchSemanticsNode().boundsInRoot
+        val agent = compose.onNodeWithTag("chat-header-agent", useUnmergedTree = true)
+            .fetchSemanticsNode().boundsInRoot
+        val modelState = compose.onNodeWithTag("chat-header-model-state", useUnmergedTree = true)
             .fetchSemanticsNode().boundsInRoot
         val body = compose.onNodeWithTag("chat-body", useUnmergedTree = true)
             .fetchSemanticsNode().boundsInRoot
@@ -120,6 +131,8 @@ class ChatHeaderLayoutTest {
         }
         assertTrue("Conversation title should remain inside the app bar", conversation.bottom <= appBar.bottom)
         assertTrue("Model status should remain inside the app bar", model.bottom <= appBar.bottom)
+        assertTrue("Agent pill should remain within the app bar bounds", agent.left >= appBar.left && agent.right <= appBar.right && agent.bottom <= appBar.bottom)
+        assertTrue("Model-state pill should remain within the app bar bounds", modelState.left >= appBar.left && modelState.right <= appBar.right && modelState.bottom <= appBar.bottom)
         assertTrue("Model status should not be clipped under the header", model.bottom <= body.top)
     }
 

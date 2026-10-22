@@ -69,9 +69,6 @@ internal fun CitationEvidenceReferences(
         Text(stringResource(R.string.chat_sources_note), style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.testTag("citation-sources-note"))
-        Text(stringResource(R.string.chat_sources_metadata_note), style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.testTag("citation-sources-metadata-note"))
         evidence.forEach { item ->
             val pageDescription = item.pageStart?.let { stringResource(R.string.chat_source_page, it) }
             val lineDescription = item.lineStart?.let { start ->
