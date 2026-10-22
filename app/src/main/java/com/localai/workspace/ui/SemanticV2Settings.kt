@@ -3,12 +3,16 @@ package com.localai.workspace.ui
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -115,12 +119,37 @@ import java.util.Date
         TextButton(enabled=enabled,onClick=import){Text(if(installed)"Change model"else"Import")}
     } }
 }
-@Composable internal fun SemanticPanel(title:String,dismiss:()->Unit,content:@Composable ColumnScope.()->Unit) {
-    Dialog(onDismissRequest=dismiss,properties=DialogProperties(usePlatformDefaultWidth=false)) {
-        BoxWithConstraints(Modifier.fillMaxWidth().imePadding().padding(16.dp)) {
-            Surface(shape=MaterialTheme.shapes.large,modifier=Modifier.widthIn(max=560.dp).fillMaxWidth().heightIn(max=maxHeight*.92f)) {
-                Column(Modifier.verticalScroll(rememberScrollState()).padding(16.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
-                    Text(title,style=MaterialTheme.typography.titleLarge);content();TextButton(onClick=dismiss,modifier=Modifier.fillMaxWidth()){Text("Close")}
+@Composable internal fun SemanticPanel(
+    title:String,
+    dismiss:()->Unit,
+    fullScreen:Boolean=false,
+    content:@Composable ColumnScope.()->Unit,
+) {
+    if (fullScreen) {
+        Column(
+            Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).testTag("memory-screen"),
+        ) {
+            Text(
+                title,
+                Modifier.fillMaxWidth().padding(horizontal=16.dp, vertical=12.dp)
+                    .semantics { heading() }.testTag("memory-screen-title"),
+                style=MaterialTheme.typography.titleLarge,
+                color=MaterialTheme.colorScheme.onBackground,
+            )
+            Column(
+                Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState())
+                    .padding(horizontal=16.dp).padding(bottom=20.dp),
+                verticalArrangement=Arrangement.spacedBy(12.dp),
+                content=content,
+            )
+        }
+    } else {
+        Dialog(onDismissRequest=dismiss,properties=DialogProperties(usePlatformDefaultWidth=false)) {
+            BoxWithConstraints(Modifier.fillMaxWidth().imePadding().padding(16.dp)) {
+                Surface(shape=MaterialTheme.shapes.large,modifier=Modifier.widthIn(max=560.dp).fillMaxWidth().heightIn(max=maxHeight*.92f)) {
+                    Column(Modifier.verticalScroll(rememberScrollState()).padding(16.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
+                        Text(title,style=MaterialTheme.typography.titleLarge);content();TextButton(onClick=dismiss,modifier=Modifier.fillMaxWidth()){Text("Close")}
+                    }
                 }
             }
         }

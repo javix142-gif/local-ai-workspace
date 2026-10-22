@@ -391,6 +391,13 @@
     <string name="chat_skill_save_disabled">Guardar habilidad desactivada</string>
 
     <string name="memory_title">Memoria</string>
+    <string name="memory_intro">Lo que el asistente puede usar para ayudarte. Solo se conserva lo que apruebas.</string>
+    <string name="memory_pending_section">Por aprobar · %1$d</string>
+    <string name="memory_pinned_section">Fijadas · %1$d</string>
+    <string name="memory_category_count">%1$s · %2$d</string>
+    <string name="memory_category_section">%1$s · %2$d</string>
+    <string name="memory_import_export">Importar o exportar</string>
+    <string name="memory_discard">Descartar</string>
     <string name="memory_search">Buscar recuerdos</string>
     <string name="memory_filter">Filtrar</string>
     <string name="memory_export_json">Exportar JSON</string>
