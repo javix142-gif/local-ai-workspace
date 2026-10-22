@@ -186,7 +186,9 @@ class WorkspaceRefinementUiTest {
         val project = compose.onNodeWithText(localized(R.string.workspace_new_project)).assertIsDisplayed().fetchSemanticsNode().boundsInRoot
         assertTrue("Creation actions share one row", kotlin.math.abs(chat.top - project.top) < 2f)
         assertTrue("Creation actions do not overlap", chat.right < project.left)
-        compose.onNodeWithText("Chats").assertIsDisplayed()
+        compose.onNodeWithTag("workspace-chats-section-title")
+            .assertIsDisplayed()
+            .assertTextEquals("Chats")
         compose.onNodeWithText(localized(R.string.workspace_projects_title)).assertIsDisplayed()
         // The real dialog and its editable field are covered by ProjectUiDeviceTest;
         // Robolectric's Compose idler cannot settle that platform dialog reliably.

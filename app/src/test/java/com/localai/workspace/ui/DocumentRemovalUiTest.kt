@@ -46,6 +46,7 @@ class DocumentRemovalUiTest {
             )))
         }
         try {
+            compose.onNodeWithTag("top-level-workspace").performClick()
             awaitText("Remove file UI test")
             compose.onNodeWithText("Remove file UI test").performClick()
             awaitText("Files")
