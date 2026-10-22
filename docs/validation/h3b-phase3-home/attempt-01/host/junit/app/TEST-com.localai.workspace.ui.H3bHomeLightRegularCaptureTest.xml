@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.H3bHomeLightRegularCaptureTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-22T19:15:11" hostname="bb89d9b8ef7f" time="0.139">
+  <properties/>
+  <testcase name="capturesActualHomeAtLightThemeScaleOne" classname="com.localai.workspace.ui.H3bHomeLightRegularCaptureTest" time="0.139"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

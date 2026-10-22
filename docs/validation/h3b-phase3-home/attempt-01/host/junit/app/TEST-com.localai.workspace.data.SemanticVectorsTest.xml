@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.data.SemanticVectorsTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-22T19:14:09" hostname="bb89d9b8ef7f" time="0.006">
+  <properties/>
+  <testcase name="nonNeuralWrongShapeAndInvalidNumbersRejected" classname="com.localai.workspace.data.SemanticVectorsTest" time="0.001"/>
+  <testcase name="exactRoundTripAndSourceInvalidation" classname="com.localai.workspace.data.SemanticVectorsTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

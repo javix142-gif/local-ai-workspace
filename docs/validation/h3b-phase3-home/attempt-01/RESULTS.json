@@ -1,0 +1,139 @@
+{
+  "name": "H3b Phase 3 — Inicio",
+  "codeSha": "f4574ecf2f18e7a9838dc1d741b0cbbd4edd3147",
+  "branch": "feat/0.5.0-skills-agents",
+  "host": {
+    "focusedHome": {
+      "status": "PASS",
+      "tests": 5,
+      "passed": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "durationSeconds": 198,
+      "exitCode": 0
+    },
+    "appFullSuite": {
+      "status": "PASS",
+      "tests": 978,
+      "passed": 978,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlFiles": 142,
+      "exitCode": 0
+    },
+    "litertCompat": {
+      "status": "PASS",
+      "tests": 2,
+      "passed": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xmlFiles": 1,
+      "exitCode": 0,
+      "taskOutcomeFinalGate": "UP-TO-DATE; last executed XML from same validation window is 2/2 PASS"
+    },
+    "lintDebug": {
+      "status": "PASS",
+      "errors": 0,
+      "warnings": 90,
+      "exitCode": 0
+    },
+    "fullGateDurationSeconds": 446,
+    "gradleTasks": {
+      "actionable": 128,
+      "executed": 27,
+      "upToDate": 101
+    }
+  },
+  "emulator": {
+    "status": "PASS_WITH_MODEL_TESTS_SKIPPED",
+    "runId": 39839230088,
+    "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39839230088",
+    "sourceSha": "f4574ecf2f18e7a9838dc1d741b0cbbd4edd3147",
+    "jobId": 120035537807,
+    "durationSeconds": 1598,
+    "api": 35,
+    "androidRelease": "15",
+    "abi": "x86_64",
+    "serial": "emulator-5554",
+    "connectedTask": ":app:connectedDebugAndroidTest",
+    "exitCode": 0,
+    "xml": {
+      "tests": 24,
+      "passed": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 6,
+      "executed": 18
+    },
+    "skips": [
+      "2 LiteRT tests and 4 native chat tests require real model weights; no weights downloaded"
+    ],
+    "h1At12": "PASS on synthetic fixture only; not user/physical-device data",
+    "artifact": {
+      "id": 12454476399,
+      "name": "android-emulator-evidence-39839230088-1",
+      "bytes": 176375,
+      "sha256": "512ce1057e25f9e055e3be7574608c345b6510a39d271c5b8b7b5fd3c75db1b2",
+      "internalManifestEntries": 50,
+      "internalManifestSha256": "fc3a3871feed62728ac3a4316ba7ff3866be4de7bbaf30a94d02c7fc8f0307f1"
+    },
+    "physicalDevice": "NOT_RUN"
+  },
+  "physicalDevice": "NOT_RUN",
+  "captures": {
+    "type": "Full MainActivity Compose render via Robolectric; not device captures",
+    "resolutionDp": "360x800",
+    "hostScreenshots": true,
+    "syntheticCalendarEvents": false,
+    "fontScales": [
+      1.0,
+      2.0
+    ],
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "pixelSize": "360x800",
+    "description": "Full actual MainActivity Compose rendering captured by Robolectric; not emulator/device screenshots. Calendar permission not granted in HOST fixture; no synthetic events."
+  },
+  "intermittentObservedTest": {
+    "test": "H1PreferenceContextTest.H1_AT_01_approvedPreferencesReachTheRealGenerationRequestIncludingGreeting",
+    "failures": 1,
+    "fullSuiteRuns": 4,
+    "frequency": "1/4 observed full app suite runs; 1/2 on Memory SHA 954c409, 0/2 on Home SHA f4574ec",
+    "cause": "NOT_DETERMINED",
+    "attributedToHome": false
+  },
+  "next": "Wait for user visual review of Memoria and Inicio captures; do not continue Phase 3 screens before approval.",
+  "personalQa": {
+    "status": "PASS_REPORTED_BY_WORKFLOW",
+    "runId": 39839230085,
+    "runUrl": "https://github.com/javix142-gif/local-ai-workspace/actions/runs/39839230085",
+    "sourceSha": "f4574ecf2f18e7a9838dc1d741b0cbbd4edd3147",
+    "artifactId": 12453375144,
+    "artifactName": "local-ai-workspace-personal-qa-debug-arm64-39839230085-1",
+    "artifactBytes": 49054182,
+    "artifactZipSha256ReportedByUploadLog": "8d73bd153d94d767772a5d996e9c87eb3d7f9e0ec6a1979a06ef58d12c7007e8",
+    "apk": {
+      "filename": "local-ai-workspace-0.5.0-debug-arm64.apk",
+      "bytes": 121861443,
+      "sha256ReportedByBuildLog": "b0e13ea4548ddcfdc89098ee1074320d61c636fbaebcef376c58158a05811f6f",
+      "applicationId": "com.localai.workspace.debug",
+      "versionName": "0.5.0-debug",
+      "versionCode": 27,
+      "abis": [
+        "arm64-v8a"
+      ],
+      "signature": "Debug v2 verified",
+      "certificateSha256": "b0d1c40838a22b6bbfc7bfa176c9bb917c7194c7b74dedf749566fb268ab120b",
+      "zipIntegrity": "PASS",
+      "zipalign": "PASS"
+    },
+    "instrumentation": "NOT_RUN in the personal QA workflow; see separate EMULATOR run 39839230088",
+    "localArtifactRehash": "NOT_RUN; APK/ZIP not downloaded locally",
+    "artifactType": "PERSONAL_QA_DEBUG_ARM64_NOT_FOR_PRODUCTION"
+  }
+}

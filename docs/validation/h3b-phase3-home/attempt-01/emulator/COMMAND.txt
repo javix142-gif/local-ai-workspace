@@ -1,0 +1,8 @@
+Workflow: .github/workflows/android-emulator-instrumented.yml
+Run: 39839230088
+Source SHA: f4574ecf2f18e7a9838dc1d741b0cbbd4edd3147
+Job: 120035537807
+Command: ./gradlew :app:connectedDebugAndroidTest --no-daemon --no-parallel --max-workers=2 --stacktrace --console=plain
+Exit code: 0
+Result: connected instrumentation succeeded; parsed XML 24 total / 18 passed / 0 failed / 0 errors / 6 skipped.
+Emulator: API 35, Android 15, x86_64, emulator-5554.

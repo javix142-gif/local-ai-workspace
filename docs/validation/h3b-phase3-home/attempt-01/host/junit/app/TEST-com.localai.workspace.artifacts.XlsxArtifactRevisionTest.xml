@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.artifacts.XlsxArtifactRevisionTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-22T19:13:58" hostname="bb89d9b8ef7f" time="0.573">
+  <properties/>
+  <testcase name="explicitSpreadsheetCellChangeRoutesToBoundedCellEditTool" classname="com.localai.workspace.artifacts.XlsxArtifactRevisionTest" time="0.044"/>
+  <testcase name="formulaCachedValuesKeepTheirDeclaredSpreadsheetResultTypes" classname="com.localai.workspace.artifacts.XlsxArtifactRevisionTest" time="0.034"/>
+  <testcase name="setTableToolAddsAndResizesImmutableWorkbookTable" classname="com.localai.workspace.artifacts.XlsxArtifactRevisionTest" time="0.093"/>
+  <testcase name="addingWorksheetRoutesAndPreservesExistingGeneratedWorkbookAsNewRevision" classname="com.localai.workspace.artifacts.XlsxArtifactRevisionTest" time="0.07"/>
+  <testcase name="boundedCellEditToolCreatesImmutableVersionAndPreservesFormulaCacheAndScope" classname="com.localai.workspace.artifacts.XlsxArtifactRevisionTest" time="0.059"/>
+  <testcase name="xlsxStructuredTablesRejectMissingDuplicateAndOverlappingHeaders" classname="com.localai.workspace.artifacts.XlsxArtifactRevisionTest" time="0.035"/>
+  <testcase name="formulaEditIntentRoutesToBoundedXlsxEditTool" classname="com.localai.workspace.artifacts.XlsxArtifactRevisionTest" time="0.032"/>
+  <testcase name="editingDependencyRetainsFormulaAndCachedValueAcrossSavedVersionsWithoutClaimingRecalculation" classname="com.localai.workspace.artifacts.XlsxArtifactRevisionTest" time="0.039"/>
+  <testcase name="formulaCellEditCreatesVersionWithoutStaleCacheAndRequestsReaderRecalculation" classname="com.localai.workspace.artifacts.XlsxArtifactRevisionTest" time="0.068"/>
+  <testcase name="xlsxStructuredTableSpecRendersNativeOoxmlPartsAndReadPreview" classname="com.localai.workspace.artifacts.XlsxArtifactRevisionTest" time="0.063"/>
+  <testcase name="formulaCellEditPreservesNativeTableAndPriorWorkbookRevision" classname="com.localai.workspace.artifacts.XlsxArtifactRevisionTest" time="0.035"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.context.ContextFoundationDeduplicationTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-22T19:14:00" hostname="bb89d9b8ef7f" time="0.453">
+  <properties/>
+  <testcase name="productionFoundationPreservesDistinctDocumentProvenanceAndDeduplicatesRepeatedHit" classname="com.localai.workspace.context.ContextFoundationDeduplicationTest" time="0.453"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.artifacts.DocxArtifactStructureTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-22T19:13:54" hostname="bb89d9b8ef7f" time="0.412">
+  <properties/>
+  <testcase name="generatedDocxEmitsOrderedListNumberingAndKeepsBulletList" classname="com.localai.workspace.artifacts.DocxArtifactStructureTest" time="0.134"/>
+  <testcase name="generatedDocxResolvesStylesNumberingTablesAndImmutableRevisions" classname="com.localai.workspace.artifacts.DocxArtifactStructureTest" time="0.085"/>
+  <testcase name="generatedDocxPreservesParagraphAndTableBlockOrder" classname="com.localai.workspace.artifacts.DocxArtifactStructureTest" time="0.071"/>
+  <testcase name="generatedDocxBuiltInTemplatesResolveStylesAndKeepDocumentContent" classname="com.localai.workspace.artifacts.DocxArtifactStructureTest" time="0.121"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.data.DocxStructureFidelityTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-22T19:14:08" hostname="bb89d9b8ef7f" time="0.16">
+  <properties/>
+  <testcase name="unresolvedDocxListDefinitionIsVisibleAndKeepsItemText" classname="com.localai.workspace.data.DocxStructureFidelityTest" time="0.063"/>
+  <testcase name="docxListNumberingAndNestingArePreservedInExtractedText" classname="com.localai.workspace.data.DocxStructureFidelityTest" time="0.026"/>
+  <testcase name="plainParagraphAndTableSeparatorsRemainCompatible" classname="com.localai.workspace.data.DocxStructureFidelityTest" time="0.022"/>
+  <testcase name="headingsTableLocationsAndExplicitPageBreaksRemainTraceable" classname="com.localai.workspace.data.DocxStructureFidelityTest" time="0.025"/>
+  <testcase name="tableHeaderEmptyCellsAndPageBreakBeforeRemainTraceable" classname="com.localai.workspace.data.DocxStructureFidelityTest" time="0.023"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

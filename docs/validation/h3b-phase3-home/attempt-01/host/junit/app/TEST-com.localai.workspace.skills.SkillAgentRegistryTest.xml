@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.skills.SkillAgentRegistryTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-10-22T19:14:43" hostname="bb89d9b8ef7f" time="0.496">
+  <properties/>
+  <testcase name="sourceAllowanceIsNotARequirementForInstructionOnlyTasks" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.031"/>
+  <testcase name="installedEnabledEligibleActiveAreIndependent" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.042"/>
+  <testcase name="duplicateNameIsNotInstalledUnderNewId" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.038"/>
+  <testcase name="explicitProjectGeneralPrecedenceAndMissingDisabledFallback" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.065"/>
+  <testcase name="reviewedConversationDraftRegistersDisabledAndExportsAsSkillMarkdown" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.03"/>
+  <testcase name="userEditsSurviveInitialization" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.025"/>
+  <testcase name="repeatedAndConcurrentSeedingDoesNotOverwriteDisabledBuiltIn" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.032"/>
+  <testcase name="generalAndBuiltInsCannotBeDeleted" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.032"/>
+  <testcase name="invalidMetadataAndOversizedInputAreRejected" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.02"/>
+  <testcase name="importUpdateAndRoundTripPreserveMetadata" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.037"/>
+  <testcase name="executedRequiresAnActiveSkillAndSuccessfulAssociatedTool" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.016"/>
+  <testcase name="capabilitiesAndSourcesDoNotInventFutureAvailability" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.018"/>
+  <testcase name="sidecarReopenPersistsPreferencesAndOrigin" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.038"/>
+  <testcase name="generalOffersInstalledSkillsWithoutForcingActivationOrExpandingCustomAgents" classname="com.localai.workspace.skills.SkillAgentRegistryTest" time="0.068"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.skills.ValidationReservationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-22T19:14:44" hostname="bb89d9b8ef7f" time="0.009">
+  <properties/>
+  <testcase name="cancellationDuringStartupReleasesReservation" classname="com.localai.workspace.skills.ValidationReservationTest" time="0.008"/>
+  <testcase name="concurrentRejectionDoesNotReleaseTheActiveOwner" classname="com.localai.workspace.skills.ValidationReservationTest" time="0.001"/>
+  <testcase name="setupFailureAlwaysReleasesReservation" classname="com.localai.workspace.skills.ValidationReservationTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

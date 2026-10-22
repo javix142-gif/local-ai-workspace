@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.ui.BasicMarkdownTest" tests="20" skipped="0" failures="0" errors="0" timestamp="2026-10-22T19:14:52" hostname="bb89d9b8ef7f" time="0.007">
+  <properties/>
+  <testcase name="htmlAndRemoteImageStayLiteral" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.002"/>
+  <testcase name="unknownFenceLanguageAndTildeFenceAreSafe" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.001"/>
+  <testcase name="inlineHttpAndHttpsLinksKeepLabelsAndSurroundingText" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.001"/>
+  <testcase name="fencedCodePreservesIndentationAndDoesNotParseMarkdownInside" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.0"/>
+  <testcase name="wellFormedPipeTableKeepsHeadersRowsAndEscapedPipes" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.001"/>
+  <testcase name="headingLevelsArePreservedForPresentation" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.0"/>
+  <testcase name="tableRowsAcceptInitialAndFinalPipesIndependently" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.0"/>
+  <testcase name="markdownInsideInlineAndFencedCodeDoesNotBecomeALink" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.0"/>
+  <testcase name="escapedPipeAtEndOfRowIsNotConsumedAsAnOuterPipe" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.0"/>
+  <testcase name="tableSyntaxInsideFencedCodeIsNotParsedAsATable" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.001"/>
+  <testcase name="rejectedLinkAndImageSyntaxCannotExposeNestedHttpLinks" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.0"/>
+  <testcase name="malformedTableLikeTextIsKeptAsOneLiteralParagraph" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.0"/>
+  <testcase name="unsupportedMalformedImageAndHtmlSyntaxRemainLiteral" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.0"/>
+  <testcase name="paragraphsListsAndHeadings" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.0"/>
+  <testcase name="boldAndInlineCodeAreSeparate" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.0"/>
+  <testcase name="streamingUnclosedFenceRemainsReadable" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.0"/>
+  <testcase name="pipeInsideSingleBacktickSpanStaysInItsCell" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.0"/>
+  <testcase name="tableCellsCanRetainLiteralLinkSyntaxForTheExistingTableRenderer" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.0"/>
+  <testcase name="inlineLinksDoNotChangeBlockParsingOfPipeTables" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.0"/>
+  <testcase name="malformedAndEscapedMarkupKeepsVisibleText" classname="com.localai.workspace.ui.BasicMarkdownTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

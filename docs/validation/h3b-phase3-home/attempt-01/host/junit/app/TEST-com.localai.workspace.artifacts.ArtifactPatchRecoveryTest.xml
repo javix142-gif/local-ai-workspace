@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.localai.workspace.artifacts.ArtifactPatchRecoveryTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-22T19:13:47" hostname="bb89d9b8ef7f" time="5.114">
+  <properties/>
+  <testcase name="listingLeavesStagingAloneWhileAnotherWriterHoldsProjectLock" classname="com.localai.workspace.artifacts.ArtifactPatchRecoveryTest" time="4.889"/>
+  <testcase name="applyingAfterCommittedRevisionAndProcessRestartCleansPendingPreviewIdempotently" classname="com.localai.workspace.artifacts.ArtifactPatchRecoveryTest" time="0.095"/>
+  <testcase name="listingNeverFollowsAbandonedStagingSymlinksOutsideArtifactItem" classname="com.localai.workspace.artifacts.ArtifactPatchRecoveryTest" time="0.071"/>
+  <testcase name="listingCleansOnlyAbandonedRevisionStagingDirectoriesAndKeepsCommittedBytes" classname="com.localai.workspace.artifacts.ArtifactPatchRecoveryTest" time="0.058"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

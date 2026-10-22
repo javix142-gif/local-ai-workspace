@@ -1,0 +1,9 @@
+Source code commit: f4574ecf2f18e7a9838dc1d741b0cbbd4edd3147
+Branch: feat/0.5.0-skills-agents
+Gradle wrapper: 8.10.2
+Gradle runtime: JDK 17 at /workspace/.toolchain/jdk-17
+JVM test/toolchain discovery: JDK 21 at /workspace/.toolchain/jdk-21-temurin
+Android SDK: /workspace/.toolchain/android-sdk
+NDK: existing SDK installation; no install/upgrade performed in this host gate
+Gradle user home: /workspace/.gradle
+Mode: --offline; no dependency downloads requested.
