@@ -13,9 +13,9 @@ class DeviceValidationNavigationTest {
     private fun localized(id: Int) = compose.activity.getString(id)
     @Test fun developerEntryOpensQuickAndFullScreen() {
         compose.onNodeWithTag("top-level-settings").performClick()
-        compose.onNodeWithText("Device Validation").assertDoesNotExist()
+        compose.onNodeWithText(localized(R.string.more_device_validation)).assertDoesNotExist()
         compose.onNodeWithTag("more-advanced-toggle").performScrollTo().performClick()
-        compose.onNodeWithText("Device Validation").performScrollTo().performClick()
+        compose.onNodeWithText(localized(R.string.more_device_validation)).performScrollTo().performClick()
         compose.onNodeWithText("Run Quick Validation").assertExists()
         compose.onNodeWithText("Run Full Validation").assertExists()
         compose.onNodeWithText("Back").performClick()
