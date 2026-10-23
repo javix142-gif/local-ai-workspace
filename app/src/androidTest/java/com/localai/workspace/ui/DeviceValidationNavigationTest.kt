@@ -14,7 +14,7 @@ class DeviceValidationNavigationTest {
     @Test fun developerEntryOpensQuickAndFullScreen() {
         compose.onNodeWithTag("top-level-settings").performClick()
         compose.onNodeWithText("Device Validation").assertDoesNotExist()
-        compose.onNodeWithTag("more-advanced-toggle").performClick()
+        compose.onNodeWithTag("more-advanced-toggle").performScrollTo().performClick()
         compose.onNodeWithText("Device Validation").performScrollTo().performClick()
         compose.onNodeWithText("Run Quick Validation").assertExists()
         compose.onNodeWithText("Run Full Validation").assertExists()
