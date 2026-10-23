@@ -37,7 +37,7 @@ class ContextMemoryDeviceTest {
     }
     @Test fun inspectorDoesNotStartGenerationAutomatically() {
         compose.onNodeWithTag("top-level-settings").performClick()
-        compose.onNodeWithText(text(R.string.settings_advanced)).performClick()
+        compose.onNodeWithTag("more-advanced-toggle").performClick()
         compose.onNodeWithText(text(R.string.memory_context_validation)).performScrollTo().performClick()
         compose.onNodeWithText(text(R.string.memory_build_context_no_generation)).assertExists().assertIsNotEnabled()
         compose.onNodeWithText(text(R.string.memory_run_gemma_explicit)).assertDoesNotExist()
