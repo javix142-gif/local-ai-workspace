@@ -35,6 +35,8 @@ class ProjectUiDeviceTest {
         compose.onNodeWithText(text(R.string.common_add)).performClick()
         compose.onNodeWithText(text(R.string.memory_content)).performTextInput("Approved UI validation memory")
         compose.onNodeWithText(text(R.string.common_save)).performClick()
+        awaitTag("memory-kind-fact")
+        compose.onNodeWithTag("memory-kind-fact").performClick()
         awaitText("Approved UI validation memory")
         val graph = (compose.activity.application as LocalAiApplication).graph
         val memoryId = runBlocking(Dispatchers.IO) {
@@ -64,6 +66,10 @@ class ProjectUiDeviceTest {
 
     private fun awaitText(text: String) = compose.waitUntil(15_000) {
         compose.onAllNodesWithText(text).fetchSemanticsNodes().isNotEmpty()
+    }
+
+    private fun awaitTag(tag: String) = compose.waitUntil(15_000) {
+        compose.onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty()
     }
 
     private fun text(id: Int, vararg args: Any): String = compose.activity.getString(id, *args)
