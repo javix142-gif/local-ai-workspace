@@ -175,7 +175,8 @@ fun ChatComposer(input: String, generating: Boolean, onInputChange: (String) -> 
     onFiles: (() -> Unit)? = null, onStop: () -> Unit, onSend: () -> Unit,
     contextualControls: (@Composable () -> Unit)? = null,
     onAttachAudio: (() -> Unit)? = null, audioEnabled: Boolean = false,
-    contextualControlsInline: Boolean = false) {
+    contextualControlsInline: Boolean = false,
+    composerEnabled: Boolean = true) {
     var menu by remember { mutableStateOf(false) }
     Column(Modifier.fillMaxWidth().imePadding().navigationBarsPadding()) {
     Surface(
@@ -212,7 +213,7 @@ fun ChatComposer(input: String, generating: Boolean, onInputChange: (String) -> 
                         .testTag("chat-composer-input"),
                     textStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface),
                     cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
-                    maxLines = 5, enabled = !generating,
+                    maxLines = 5, enabled = !generating && composerEnabled,
                     decorationBox = { field ->
                         Box(Modifier.padding(vertical = LocalAiSpacing.x2), contentAlignment = Alignment.CenterStart) {
                             if (input.isEmpty()) Text(stringResource(R.string.chat_input_hint), style = MaterialTheme.typography.bodyLarge,
@@ -221,7 +222,9 @@ fun ChatComposer(input: String, generating: Boolean, onInputChange: (String) -> 
                         }
                     })
                 if (contextualControlsInline) contextualControls?.invoke()
-                IconButton(onClick = if (generating) onStop else onSend, enabled = generating || input.isNotBlank(),
+                IconButton(
+                    onClick = if (generating) onStop else onSend,
+                    enabled = generating || (composerEnabled && input.isNotBlank()),
                     modifier = Modifier.minimumAppTouchTarget()) {
                     Icon(if (generating) Icons.Default.Stop else Icons.AutoMirrored.Filled.Send,
                         if (generating) stringResource(R.string.chat_stop) else stringResource(R.string.chat_send))

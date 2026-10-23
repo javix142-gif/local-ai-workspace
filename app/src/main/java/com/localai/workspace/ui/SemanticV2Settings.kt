@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -17,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.localai.workspace.LocalAiApplication
+import com.localai.workspace.R
 import com.localai.workspace.semantic.v2.*
 import kotlinx.coroutines.*
 import java.io.File
@@ -58,8 +60,8 @@ import java.util.Date
     val eg2Health=SemanticModelPresentation.status(eg2Installed,model?.validationStatus in setOf("TEXT_PROBE_PASSED","PROBED_TEXT_NOT_DEVICE_VALIDATED"),state.state)
     val disabled=busy || externalBusy
     Column {
-        TextButton(onClick={open=true}) { Text("Semantic search") }
-        if(open) SemanticPanel("Embedding models",{open=false}) {
+        TextButton(onClick={open=true}) { Text(stringResource(R.string.more_semantic_search)) }
+        if(open) SemanticPanel(stringResource(R.string.more_embedding_models_title),{open=false}) {
             Text(if(chosen==SemanticProviderChoice.EG2)model?.displayName ?: "Choose an embedding model" else "EmbeddingGemma 300M",style=MaterialTheme.typography.titleMedium)
             Text(if(chosen==SemanticProviderChoice.EG2)eg2Health else legacyHealth,style=MaterialTheme.typography.bodyMedium)
             if(chosen==SemanticProviderChoice.EG2 && model!=null)Text("${model.fileSize/1024/1024} MiB · ${if(state.requested==SemanticBackend.CPU)"CPU"else"GPU experimental"} · ${layer.dimension}D",style=MaterialTheme.typography.bodySmall)

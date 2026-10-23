@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.localai.workspace.LocalAiApplication
 import com.localai.workspace.R
@@ -127,13 +129,49 @@ fun SkillProposalReviewDialog(
     )
 }
 
-@Composable fun SkillsAgentsEntry(onCreateSkill: () -> Unit = {}) {
-    var panel by remember{mutableStateOf<String?>(null)}
-    Row {TextButton(onClick={panel="skills"}){Text(stringResource(R.string.navigation_skills))};TextButton(onClick={panel="agents"}){Text("Logical Agents")}}
-    if(panel=="skills")SkillsManagement(onCreateSkill){panel=null}
-    if(panel=="agents")AgentsManagement{panel=null}
+@Composable fun SkillsAgentsEntry(
+    onCreateSkill: () -> Unit = {},
+    canCreateSkill: Boolean = true,
+    skillUnavailableReason: String? = null,
+) {
+    var panel by remember { mutableStateOf<String?>(null) }
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        val largeText = LocalDensity.current.fontScale >= 1.5f
+        if (largeText) {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                SkillsAgentsEntryButton(R.string.navigation_skills, "more-skills-open") { panel = "skills" }
+                SkillsAgentsEntryButton(R.string.skills_agents, "more-agents-open") { panel = "agents" }
+            }
+        } else {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                SkillsAgentsEntryButton(R.string.navigation_skills, "more-skills-open", Modifier.weight(1f)) { panel = "skills" }
+                SkillsAgentsEntryButton(R.string.skills_agents, "more-agents-open", Modifier.weight(1f)) { panel = "agents" }
+            }
+        }
+        if (panel == "skills") SkillsManagement(
+            onCreateSkill = onCreateSkill,
+            close = { panel = null },
+            canCreateSkill = canCreateSkill,
+            unavailableReason = skillUnavailableReason,
+        )
+        if (panel == "agents") AgentsManagement { panel = null }
+    }
 }
-@Composable private fun SkillsManagement(onCreateSkill:()->Unit,close:()->Unit) {
+
+@Composable
+private fun SkillsAgentsEntryButton(title: Int, tag: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    OutlinedButton(
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth().heightIn(min = 48.dp).testTag(tag),
+    ) { Text(stringResource(title)) }
+}
+
+@Composable private fun SkillsManagement(
+    onCreateSkill: () -> Unit,
+    close: () -> Unit,
+    canCreateSkill: Boolean,
+    unavailableReason: String?,
+) {
     val context=LocalContext.current;val graph=(context.applicationContext as LocalAiApplication).graph
     val registry=graph.skillRegistry;val skills by registry.changes.collectAsState(initial=emptyList());val scope=rememberCoroutineScope()
     var editing by remember{mutableStateOf<SkillDefinition?>(null)};var error by remember{mutableStateOf<String?>(null)};var exportId by remember{mutableStateOf<String?>(null)}
@@ -148,34 +186,45 @@ fun SkillProposalReviewDialog(
         registry.install(Charsets.UTF_8.newDecoder().decode(java.nio.ByteBuffer.wrap(bytes)).toString())
     }}
     val exporter=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/markdown")){uri->val id=exportId;if(uri!=null&&id!=null)run{context.contentResolver.openOutputStream(uri)?.bufferedWriter()?.use{it.write(registry.export(id))} ?: error("SKILL_EXPORT_FAILED")}}
-    SemanticPanel("Skills",close) {
-        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Button(onClick=onCreateSkill,modifier=Modifier.fillMaxWidth()){Text("CREAR SKILL")}
-            Text("Start a local Gemma conversation and review its SKILL.md proposal before saving.", style=MaterialTheme.typography.bodySmall)
-            Row {
-                TextButton(onClick={importer.launch(arrayOf("text/*","application/octet-stream"))}){Text("Import SKILL.md")}
-                Spacer(Modifier.weight(1f))
-                TextButton(onClick={error=null;editing=SkillDefinition("skill.user-${UUID.randomUUID()}","","",instructions="")}){Text("Create manually")}
+    SemanticPanel(stringResource(R.string.skills_manage_title), close) {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(
+                onClick = onCreateSkill,
+                enabled = canCreateSkill,
+                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("skills-create-conversation"),
+            ) { Text(stringResource(R.string.skills_create)) }
+            Text(stringResource(R.string.skills_create_summary), style = MaterialTheme.typography.bodySmall)
+            if (!canCreateSkill && unavailableReason != null) {
+                Text(unavailableReason, Modifier.testTag("skills-create-unavailable"),
+                    style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
+            OutlinedButton(
+                onClick = { importer.launch(arrayOf("text/*", "application/octet-stream")) },
+                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+            ) { Text(stringResource(R.string.skills_import)) }
+            OutlinedButton(
+                onClick = { error = null; editing = SkillDefinition("skill.user-${UUID.randomUUID()}", "", "", instructions = "") },
+                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+            ) { Text(stringResource(R.string.skills_create_manual)) }
         }
         skills.forEach{s->Card(Modifier.fillMaxWidth().clickable{error=null;editing=s}){Row(Modifier.padding(12.dp)){Column(Modifier.weight(1f)){Text(s.name);Text(s.description,style=MaterialTheme.typography.bodySmall);Text(s.origin.name.replace('_',' '),style=MaterialTheme.typography.labelSmall)};Switch(s.enabled,{run{registry.enable(s.id,it)}})}}}
         error?.let{Text(it,color=MaterialTheme.colorScheme.error)}
     }
     editing?.let{s->SkillEditor(s,errorMessage=error,save={value->run{registry.update(value);editing=null}},export={exportId=s.id;exporter.launch("${s.name.replace(' ','-')}-SKILL.md")},remove={removeId=s.id},close={editing=null})}
-    removeId?.let{id->AlertDialog(onDismissRequest={removeId=null},title={Text("Remove skill?")},text={Text("Existing chats and saved data remain. Agent assignments will ignore the missing skill.")},confirmButton={TextButton(onClick={run{registry.remove(id);removeId=null;editing=null}}){Text("Remove")}},dismissButton={TextButton(onClick={removeId=null}){Text("Cancel")}})}
+    removeId?.let{id->AlertDialog(onDismissRequest={removeId=null},title={Text(stringResource(R.string.skills_remove_title))},text={Text(stringResource(R.string.skills_remove_note))},confirmButton={TextButton(onClick={run{registry.remove(id);removeId=null;editing=null}}){Text(stringResource(R.string.skills_remove))}},dismissButton={TextButton(onClick={removeId=null}){Text(stringResource(R.string.common_cancel))}})}
 }
 @Composable private fun SkillEditor(skill:SkillDefinition,errorMessage:String?,save:(SkillDefinition)->Unit,export:()->Unit,remove:()->Unit,close:()->Unit) {
     val readOnly=skill.origin==SkillOrigin.BUILT_IN
     var name by remember(skill.id){mutableStateOf(skill.name)};var description by remember(skill.id){mutableStateOf(skill.description)};var instructions by remember(skill.id){mutableStateOf(skill.instructions)}
     var keywords by remember(skill.id){mutableStateOf(skill.routingProfile.keywords.joinToString(", "))};var explicit by remember(skill.id){mutableStateOf(skill.routingProfile.explicitOnly)}
-    SemanticPanel(if(readOnly)skill.name else "Edit skill",close) {
-        OutlinedTextField(name,{name=it},readOnly=readOnly,label={Text("Name")},modifier=Modifier.fillMaxWidth())
-        OutlinedTextField(description,{description=it},readOnly=readOnly,label={Text("Description")},modifier=Modifier.fillMaxWidth())
-        OutlinedTextField(instructions,{instructions=it},readOnly=readOnly,label={Text("Instructions")},modifier=Modifier.fillMaxWidth(),minLines=4)
-        if(!readOnly){OutlinedTextField(keywords,{keywords=it},label={Text("Routing keywords, comma separated")},modifier=Modifier.fillMaxWidth());Row{Checkbox(explicit,{explicit=it});Text("Explicit selection only")}}
-        if(skill.externalMetadata.isNotEmpty())Text("Additional metadata preserved; resources and scripts are not executed.",style=MaterialTheme.typography.bodySmall)
+    SemanticPanel(if(readOnly)skill.name else stringResource(R.string.skills_edit_title),close) {
+        OutlinedTextField(name,{name=it},readOnly=readOnly,label={Text(stringResource(R.string.skills_name))},modifier=Modifier.fillMaxWidth())
+        OutlinedTextField(description,{description=it},readOnly=readOnly,label={Text(stringResource(R.string.skills_description))},modifier=Modifier.fillMaxWidth())
+        OutlinedTextField(instructions,{instructions=it},readOnly=readOnly,label={Text(stringResource(R.string.skills_instructions))},modifier=Modifier.fillMaxWidth(),minLines=4)
+        if(!readOnly){OutlinedTextField(keywords,{keywords=it},label={Text(stringResource(R.string.skills_routing_keywords))},modifier=Modifier.fillMaxWidth());Row{Checkbox(explicit,{explicit=it});Text(stringResource(R.string.skills_explicit_only))}}
+        if(skill.externalMetadata.isNotEmpty())Text(stringResource(R.string.skills_metadata_notice),style=MaterialTheme.typography.bodySmall)
         errorMessage?.let{Text(it,color=MaterialTheme.colorScheme.error)}
-        Row {TextButton(onClick=export){Text("Export")};if(!readOnly){TextButton(onClick=remove){Text("Remove")};TextButton(enabled=name.isNotBlank()&&description.isNotBlank()&&instructions.isNotBlank(),onClick={save(skill.copy(name=name,description=description,instructions=instructions,routingProfile=skill.routingProfile.copy(keywords=keywords.split(',').map{it.trim()}.filter{it.isNotEmpty()},explicitOnly=explicit)))}){Text("Save")}}}
+        Row {TextButton(onClick=export){Text(stringResource(R.string.skills_export))};if(!readOnly){TextButton(onClick=remove){Text(stringResource(R.string.skills_remove))};TextButton(enabled=name.isNotBlank()&&description.isNotBlank()&&instructions.isNotBlank(),onClick={save(skill.copy(name=name,description=description,instructions=instructions,routingProfile=skill.routingProfile.copy(keywords=keywords.split(',').map{it.trim()}.filter{it.isNotEmpty()},explicitOnly=explicit)))}){Text(stringResource(R.string.skills_save))}}}
     }
 }
 @Composable private fun AgentsManagement(close:()->Unit) {
@@ -184,28 +233,28 @@ fun SkillProposalReviewDialog(
     var editing by remember{mutableStateOf<AgentDefinition?>(null)};var error by remember{mutableStateOf<String?>(null)};var remove by remember{mutableStateOf<String?>(null)}
     fun run(block:suspend()->Unit){scope.launch{try{withContext(Dispatchers.IO){block()};error=null}catch(c:CancellationException){throw c}catch(e:Exception){error=e.message}}}
     LaunchedEffect(Unit){graph.agentRegistry.initialize();graph.skillRegistry.initialize()}
-    SemanticPanel("Logical Agents",close) {
-        TextButton(onClick={error=null;editing=AgentDefinition("agent.user-${UUID.randomUUID()}","",skillIds=skills.map{it.id}.toSet())}){Text("Create agent")}
+    SemanticPanel(stringResource(R.string.skills_agents),close) {
+        TextButton(onClick={error=null;editing=AgentDefinition("agent.user-${UUID.randomUUID()}","",skillIds=skills.map{it.id}.toSet())}){Text(stringResource(R.string.agents_create))}
         agents.forEach{a->Card(Modifier.fillMaxWidth().clickable{error=null;editing=a}){Row(Modifier.padding(12.dp)){Column(Modifier.weight(1f)){Text(a.name);Text(a.description,style=MaterialTheme.typography.bodySmall)};if(a.id!=AgentResolver.GENERAL)Switch(a.enabled,{run{graph.agentRegistry.enable(a.id,it)}})}}}
         error?.let{Text(it,color=MaterialTheme.colorScheme.error)}
     }
     editing?.let{a->AgentEditor(a,skills,errorMessage=error,save={value->run{graph.agentRegistry.update(value);editing=null}},remove={remove=a.id},close={editing=null})}
-    remove?.let{id->AlertDialog(onDismissRequest={remove=null},title={Text("Remove agent?")},text={Text("Projects referencing it will use General Agent. Saved memory is preserved.")},confirmButton={TextButton(onClick={run{graph.agentRegistry.remove(id);remove=null;editing=null}}){Text("Remove")}},dismissButton={TextButton(onClick={remove=null}){Text("Cancel")}})}
+    remove?.let{id->AlertDialog(onDismissRequest={remove=null},title={Text(stringResource(R.string.agents_remove_title))},text={Text(stringResource(R.string.agents_remove_note))},confirmButton={TextButton(onClick={run{graph.agentRegistry.remove(id);remove=null;editing=null}}){Text(stringResource(R.string.skills_remove))}},dismissButton={TextButton(onClick={remove=null}){Text(stringResource(R.string.common_cancel))}})}
 }
 @Composable private fun AgentEditor(agent:AgentDefinition,skills:List<SkillDefinition>,errorMessage:String?,save:(AgentDefinition)->Unit,remove:()->Unit,close:()->Unit) {
     val readOnly=agent.id==AgentResolver.GENERAL
     var name by remember(agent.id){mutableStateOf(agent.name)};var description by remember(agent.id){mutableStateOf(agent.description)};var role by remember(agent.id){mutableStateOf(agent.systemRole)}
     var assigned by remember(agent.id){mutableStateOf(agent.skillIds)};var tools by remember(agent.id){mutableStateOf(agent.allowedTools)};var sources by remember(agent.id){mutableStateOf(agent.allowedSourceTypes)};var scopes by remember(agent.id){mutableStateOf(agent.memoryScopes)}
-    SemanticPanel(if(readOnly)agent.name else "Edit agent",close) {
-        OutlinedTextField(name,{name=it},readOnly=readOnly,label={Text("Name")},modifier=Modifier.fillMaxWidth())
-        OutlinedTextField(description,{description=it},readOnly=readOnly,label={Text("Description")},modifier=Modifier.fillMaxWidth())
-        OutlinedTextField(role,{role=it},readOnly=readOnly,label={Text("Agent instructions")},modifier=Modifier.fillMaxWidth(),minLines=3)
-        Text("Available Skills");skills.forEach{s->Choice(s.name,s.id in assigned,!readOnly){assigned=if(it)assigned+s.id else assigned-s.id}}
-        Text("Tools");SkillDefinition.STANDARD_TOOLS.sorted().forEach{id->Choice(id,id in tools,!readOnly){tools=if(it)tools+id else tools-id}}
-        Text("Sources");SourceType.local.forEach{type->Choice(type.name.replace('_',' '),type in sources,!readOnly){sources=if(it)sources+type else sources-type}}
-        Text("Memory scopes");ScopeType.entries.forEach{type->Choice(type.name,type in scopes,!readOnly){scopes=if(it)scopes+type else scopes-type}}
+    SemanticPanel(if(readOnly)agent.name else stringResource(R.string.skills_agents),close) {
+        OutlinedTextField(name,{name=it},readOnly=readOnly,label={Text(stringResource(R.string.skills_name))},modifier=Modifier.fillMaxWidth())
+        OutlinedTextField(description,{description=it},readOnly=readOnly,label={Text(stringResource(R.string.skills_description))},modifier=Modifier.fillMaxWidth())
+        OutlinedTextField(role,{role=it},readOnly=readOnly,label={Text(stringResource(R.string.agents_instructions))},modifier=Modifier.fillMaxWidth(),minLines=3)
+        Text(stringResource(R.string.agents_available_skills));skills.forEach{s->Choice(s.name,s.id in assigned,!readOnly){assigned=if(it)assigned+s.id else assigned-s.id}}
+        Text(stringResource(R.string.agents_tools));SkillDefinition.STANDARD_TOOLS.sorted().forEach{id->Choice(id,id in tools,!readOnly){tools=if(it)tools+id else tools-id}}
+        Text(stringResource(R.string.agents_sources));SourceType.local.forEach{type->Choice(type.name.replace('_',' '),type in sources,!readOnly){sources=if(it)sources+type else sources-type}}
+        Text(stringResource(R.string.agents_memory_scopes));ScopeType.entries.forEach{type->Choice(type.name,type in scopes,!readOnly){scopes=if(it)scopes+type else scopes-type}}
         errorMessage?.let{Text(it,color=MaterialTheme.colorScheme.error)}
-        if(!readOnly)Row{TextButton(onClick=remove){Text("Remove")};TextButton(enabled=name.isNotBlank(),onClick={save(agent.copy(name=name,description=description,systemRole=role,skillIds=assigned,allowedTools=tools,allowedSourceTypes=sources,memoryScopes=scopes))}){Text("Save")}}
+        if(!readOnly)Row{TextButton(onClick=remove){Text(stringResource(R.string.skills_remove))};TextButton(enabled=name.isNotBlank(),onClick={save(agent.copy(name=name,description=description,systemRole=role,skillIds=assigned,allowedTools=tools,allowedSourceTypes=sources,memoryScopes=scopes))}){Text(stringResource(R.string.skills_save))}}
     }
 }
 @Composable private fun Choice(label:String,checked:Boolean,enabled:Boolean=true,change:(Boolean)->Unit) {Row(Modifier.fillMaxWidth()){Checkbox(checked,change,enabled=enabled);Text(label,Modifier.padding(top=12.dp))}}

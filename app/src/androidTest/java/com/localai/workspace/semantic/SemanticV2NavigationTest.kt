@@ -16,10 +16,10 @@ class SemanticV2NavigationTest {
         compose.onNodeWithText(modelsEntry, substring = true).assertIsDisplayed()
         compose.onNode(hasClickAction() and hasText(modelsEntry, substring = true)).performClick()
         compose.onNodeWithText(compose.activity.getString(R.string.models_title)).assertIsDisplayed()
-        compose.onNodeWithText("Semantic search").performClick()
-        compose.onNodeWithText("Embedding models").assertIsDisplayed()
+        compose.onNodeWithText(compose.activity.getString(R.string.more_semantic_search)).performClick()
+        compose.onNodeWithText(compose.activity.getString(R.string.more_embedding_models_title)).assertIsDisplayed()
         compose.onNodeWithText("EmbeddingGemma 2 740M").assertExists()
         compose.onNodeWithText("Close").performClick()
-        compose.onNodeWithText("Embedding models").assertDoesNotExist()
+        compose.onNodeWithText(compose.activity.getString(R.string.more_embedding_models_title)).assertDoesNotExist()
     }
 }

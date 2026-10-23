@@ -17,7 +17,7 @@ class AgentsSkillsNavigationTest {
     @Test fun builtInSkillsCanBeInspectedWithoutRunningTools() {
         compose.onNodeWithTag("top-level-settings").performClick()
         compose.onNodeWithText(localized(R.string.navigation_skills)).performScrollTo().performClick()
-        compose.onNodeWithText("Import SKILL.md").assertExists()
+        compose.onNodeWithText(localized(R.string.skills_import)).assertExists()
         // Built-ins are seeded by SkillRegistry on IO; wait for its Room flow before lookup.
         compose.waitUntil(timeoutMillis = 10_000) {
             compose.onAllNodesWithText("Spreadsheet Analysis").fetchSemanticsNodes().isNotEmpty()
@@ -27,14 +27,14 @@ class AgentsSkillsNavigationTest {
             .performScrollTo()
             .assertIsDisplayed()
             .performClick()
-        compose.onNodeWithText("Export").assertExists()
-        compose.onNodeWithText("Save").assertDoesNotExist()
+        compose.onNodeWithText(localized(R.string.skills_export)).assertExists()
+        compose.onNodeWithText(localized(R.string.skills_save)).assertDoesNotExist()
     }
     @Test fun generalAgentIsProtectedAndValidationIsDeveloperOnly() {
         compose.onNodeWithTag("top-level-settings").performClick()
-        compose.onNodeWithText("Logical Agents").performScrollTo().performClick()
+        compose.onNodeWithText(localized(R.string.skills_agents)).performScrollTo().performClick()
         compose.onNodeWithText("General Agent").performScrollTo().performClick()
-        compose.onNodeWithText("Agent instructions").assertExists()
-        compose.onNodeWithText("Remove").assertDoesNotExist()
+        compose.onNodeWithText(localized(R.string.agents_instructions)).assertExists()
+        compose.onNodeWithText(localized(R.string.skills_remove)).assertDoesNotExist()
     }
 }

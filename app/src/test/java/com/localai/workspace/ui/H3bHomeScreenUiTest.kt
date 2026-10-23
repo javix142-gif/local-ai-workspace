@@ -61,6 +61,9 @@ class H3bHomeScreenUiTest {
         }
 
         compose.onNodeWithTag("home-start-chat").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("home-start-chat").assertIsNotEnabled()
+        compose.onNodeWithTag("home-model-missing").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("home-add-model").performScrollTo().assertIsDisplayed()
         compose.onNodeWithTag("home-open-chats").performScrollTo().assertIsDisplayed()
     }
 }

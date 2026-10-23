@@ -34,6 +34,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -119,8 +120,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
@@ -247,11 +251,19 @@ private fun LocalAiWorkspaceRoot() {
             }
             composable("settings") {
                 SettingsScreen(
+                    homeViewModel = homeViewModel,
                     openModels = { navController.navigate("models") },
                     openValidation = { navController.navigate("device_validation") },
                     openPerformance = { navController.navigate("performance") },
+                    openMemory = { navController.navigate("memory") },
                     openSkillAuthoring = {
-                        homeViewModel.startChat { projectId, _ -> navController.navigate("skill-chat/$projectId") }
+                        val state = homeViewModel.modelPreparation.value
+                        val modelReady = state.ready && homeViewModel.models.value.any {
+                            it.id == state.modelId && com.localai.workspace.data.ApplicationModelPreparation.isUsable(it)
+                        }
+                        if (modelReady) {
+                            homeViewModel.startChat { projectId, _ -> navController.navigate("skill-chat/$projectId") }
+                        }
                     },
                 )
             }
@@ -333,6 +345,14 @@ private fun HomeScreen(viewModel: HomeViewModel, navController: NavHostControlle
         webEnabled = webEnabled,
         pendingMemoryCount = pendingMemoryCount,
         creating = creating,
+        chatReady = preparation.ready && usableModels.any { it.id == preparation.modelId },
+        chatUnavailableMessage = when {
+            preparation.ready && usableModels.any { it.id == preparation.modelId } -> null
+            usableModels.isEmpty() -> null
+            preparation.preparing -> R.string.home_chat_waiting_for_model
+            preparation.error != null -> R.string.home_chat_model_error
+            else -> R.string.home_chat_model_not_ready
+        },
         onRequestCalendarPermission = { calendarPermission.launch(android.Manifest.permission.READ_CALENDAR) },
         onStartChat = { viewModel.startChat { id, conversation -> navController.navigate(chatRoute(id, conversation)) } },
         onOpenChats = { navController.navigate("workspace") },
@@ -355,6 +375,8 @@ internal fun HomeDashboardContent(
     webEnabled: Boolean,
     pendingMemoryCount: Int,
     creating: Boolean,
+    chatReady: Boolean = false,
+    chatUnavailableMessage: Int? = null,
     modifier: Modifier = Modifier,
     onRequestCalendarPermission: () -> Unit,
     onStartChat: () -> Unit,
@@ -403,15 +425,25 @@ internal fun HomeDashboardContent(
             } else if (usableModels.isEmpty()) {
                 AwsCard(modifier = Modifier.testTag("home-model-missing")) {
                     Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(stringResource(R.string.home_model_missing_title), style = MaterialTheme.typography.titleMedium,
+                        Text(stringResource(if (models.isEmpty()) R.string.home_model_missing_title else R.string.home_model_unusable_title), style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.semantics { heading() })
-                        Text(stringResource(R.string.home_model_missing_body), style = MaterialTheme.typography.bodyMedium,
+                        Text(stringResource(if (models.isEmpty()) R.string.home_model_missing_body else R.string.home_model_unusable_body), style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        TextButton(onClick = onOpenModels) { Text(stringResource(R.string.home_add_model)) }
+                        TextButton(onClick = onOpenModels, modifier = Modifier.heightIn(min = 48.dp).testTag("home-add-model")) {
+                            Text(stringResource(R.string.home_add_model))
+                        }
                     }
                 }
             }
-            Button(onClick = onStartChat, enabled = !creating,
+            chatUnavailableMessage?.let { message ->
+                Text(
+                    stringResource(message),
+                    Modifier.fillMaxWidth().testTag("home-chat-disabled-reason"),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            Button(onClick = onStartChat, enabled = !creating && chatReady,
                 modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("home-start-chat")) {
                 Text(stringResource(R.string.home_start_chat))
             }
@@ -488,8 +520,6 @@ private fun WorkspaceScreen(viewModel: HomeViewModel, navController: NavHostCont
     val deleting by viewModel.deletingChats.collectAsStateWithLifecycle()
     val creating by viewModel.creating.collectAsStateWithLifecycle()
     val pendingCleanup by viewModel.pendingDocumentCleanup.collectAsStateWithLifecycle()
-    val preparation by viewModel.modelPreparation.collectAsStateWithLifecycle()
-    val models by viewModel.models.collectAsStateWithLifecycle()
     val activities by viewModel.chatActivities.collectAsStateWithLifecycle()
     var deleteId by rememberSaveable { mutableStateOf<String?>(null) }
     var showCreate by rememberSaveable { mutableStateOf(false) }
@@ -504,19 +534,19 @@ private fun WorkspaceScreen(viewModel: HomeViewModel, navController: NavHostCont
             } })
         LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 16.dp)) {
             item {
-            LocalModeCard()
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(onClick = { viewModel.startChat { id, conversation -> navController.navigate(chatRoute(id, conversation)) } },
-                        enabled = !creating, modifier = Modifier.weight(1f)) { Text(stringResource(R.string.workspace_new_chat)) }
+                        enabled = !creating, modifier = Modifier.weight(1f).heightIn(min = 48.dp).testTag("workspace-new-chat")) {
+                        Text(stringResource(R.string.workspace_new_chat))
+                    }
                     OutlinedButton(onClick = { showCreate = true }, enabled = !creating,
-                        modifier = Modifier.weight(1f)) { Text(stringResource(R.string.workspace_new_project)) }
+                        modifier = Modifier.weight(1f).heightIn(min = 48.dp).testTag("workspace-new-project")) {
+                        Text(stringResource(R.string.workspace_new_project))
+                    }
                 }
-                WorkspaceModelCard(models, preparation, viewModel::prepareModel,
-                    viewModel::retryModelPreparation, viewModel::cancelModelPreparation)
-                com.localai.workspace.ui.SemanticSearchEntry()
             }
             if (searching) item {
-                OutlinedTextField(query, { query = it }, Modifier.fillMaxWidth(), singleLine = true,
+                OutlinedTextField(query, { query = it }, Modifier.fillMaxWidth().testTag("workspace-search-field"), singleLine = true,
                     placeholder = { Text(stringResource(R.string.workspace_search_hint)) })
             }
             if (pendingCleanup > 0) item {
@@ -535,13 +565,14 @@ private fun WorkspaceScreen(viewModel: HomeViewModel, navController: NavHostCont
                 } }
             }
             item { Text(stringResource(R.string.workspace_chats_title), style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(top = 12.dp, bottom = 4.dp).testTag("workspace-chats-section-title")) }
+                modifier = Modifier.padding(top = 12.dp, bottom = 4.dp).semantics { heading() }.testTag("workspace-chats-section-title")) }
             if (visibleChats.isEmpty()) item { Text(stringResource(if (query.isBlank()) R.string.workspace_no_chats else R.string.workspace_no_matching_chats), style = MaterialTheme.typography.bodyMedium) }
             items(visibleChats, key = { "chat-${it.id}" }) { chat ->
                 WorkspaceEntryCard(chat.name, "", false, chat.id in deleting,
                     onOpen = { navController.navigate(chatRoute(chat.id)) }, onDelete = { deleteId = chat.id })
             }
-            item { Text(stringResource(R.string.workspace_projects_title), style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 12.dp, bottom = 4.dp)) }
+            item { Text(stringResource(R.string.workspace_projects_title), style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(top = 12.dp, bottom = 4.dp).semantics { heading() }.testTag("workspace-projects-section-title")) }
             if (visibleProjects.isEmpty()) item { Text(stringResource(if (query.isBlank()) R.string.workspace_no_projects else R.string.workspace_no_matching_projects), style = MaterialTheme.typography.bodyMedium) }
             items(visibleProjects, key = { "project-${it.id}" }) { project ->
                 WorkspaceEntryCard(project.name, "", true, project.id in deleting,
@@ -607,12 +638,15 @@ internal fun WorkspaceEntryCard(title: String, subtitle: String, isProject: Bool
             Spacer(Modifier.width(12.dp))
             Column(Modifier.weight(1f)) {
                 Text(title, style = MaterialTheme.typography.titleSmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
-                if (busy || subtitle.isNotBlank()) Text(if (busy) "Deleting…" else subtitle, style = MaterialTheme.typography.bodySmall)
+                if (busy || subtitle.isNotBlank()) Text(if (busy) stringResource(R.string.workspace_deleting) else subtitle,
+                    style = MaterialTheme.typography.bodySmall)
             }
             Box {
-                IconButton(onClick = { menu = true }, enabled = !busy) { Icon(Icons.Default.MoreVert, contentDescription = "Options for $title") }
+                IconButton(onClick = { menu = true }, enabled = !busy) {
+                    Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.workspace_item_options, title))
+                }
                 DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
-                    DropdownMenuItem(text = { Text(if (isProject) "Delete project" else "Delete chat") },
+                    DropdownMenuItem(text = { Text(stringResource(if (isProject) R.string.workspace_delete_project else R.string.workspace_delete_chat)) },
                         leadingIcon = { Icon(Icons.Default.DeleteOutline, contentDescription = null) },
                         onClick = { menu = false; onDelete() })
                 }
@@ -1175,6 +1209,10 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
     LaunchedEffect(Unit) { viewModel.notices.collectLatest { snackbarHostState.showSnackbar(it) } }
     val citation = selectedEvidence
     val selectedModel = models.firstOrNull { it.id == selectedModelId } ?: models.firstOrNull()
+    val modelReady = selectedModel?.let { model ->
+        com.localai.workspace.data.ApplicationModelPreparation.isUsable(model) &&
+            preparation.ready && preparation.modelId == model.id
+    } == true
     val visionEnabled = selectedModel?.let { capabilityAvailability(it.toDescriptor(), ModelCapability.VISION) == CapabilityAvailability.AVAILABLE } == true
     val selectedModelState = selectedModel?.let { model ->
         when {
@@ -1249,6 +1287,7 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                     onFiles = if (documents.isNotEmpty()) ({ showFiles = true }) else null,
                     onStop = viewModel::stop, onSend = { if (viewModel.send(input)) input = "" },
                     contextualControlsInline = true,
+                    composerEnabled = modelReady,
                     contextualControls = if (skillAuthoringMode) null else ({ com.localai.workspace.ui.AssistantControls(assistantProfile,
                         selectedModel?.toDescriptor()?.let { it.runtime == RuntimeType.LITERT_LM && ModelCapability.TOOL_CALLING in it.capabilities } == true,
                         selectedModel?.toDescriptor()?.let { it.runtime == RuntimeType.LITERT_LM && ModelCapability.THINKING in it.capabilities } == true, !generating, compact = true, onChange = viewModel::setAssistantProfile) }))
@@ -1275,10 +1314,15 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
                     TextButton(onClick = { historicalDiagnostic = generationError ?: preparation.error; showTechnicalError = true }) { Text(stringResource(R.string.common_details)) }
                 }
             }
+            if (!modelReady && !preparation.preparing) {
+                ChatModelUnavailableNotice(onOpenModels = { navController.navigate("models") })
+            }
             if (messages.isEmpty()) {
                 if (skillAuthoringMode) {
                     Column(Modifier.fillMaxWidth().padding(24.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Text(stringResource(R.string.chat_skill_prompt_title), style = MaterialTheme.typography.titleLarge)
+                        Text(stringResource(R.string.chat_skill_prompt_title),
+                            Modifier.semantics { heading() }.testTag("skill-authoring-prompt-title"),
+                            style = MaterialTheme.typography.titleLarge)
                         Text(stringResource(R.string.chat_skill_prompt_body), style = MaterialTheme.typography.bodyMedium)
                         Text(stringResource(R.string.chat_skill_prompt_local), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
@@ -1573,6 +1617,21 @@ private fun MessageBubble(message: MessageEntity, content: String,
 }
 
 @Composable
+private fun ChatModelUnavailableNotice(onOpenModels: () -> Unit) {
+    AwsCard(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp).testTag("chat-model-unavailable")) {
+        Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(stringResource(R.string.chat_model_required_title),
+                Modifier.semantics { heading() }, style = MaterialTheme.typography.titleSmall)
+            Text(stringResource(R.string.chat_model_required_body),
+                style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            TextButton(onClick = onOpenModels, modifier = Modifier.heightIn(min = 48.dp)) {
+                Text(stringResource(R.string.chat_model_open_models))
+            }
+        }
+    }
+}
+
+@Composable
 private fun ResponseDetailsDialog(metrics: GenerationMetricsPresentation, onDismiss: () -> Unit) {
     var showRaw by rememberSaveable(metrics.raw) { mutableStateOf(false) }
     AlertDialog(
@@ -1597,49 +1656,163 @@ private fun ResponseDetailsDialog(metrics: GenerationMetricsPresentation, onDism
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsScreen(
+    homeViewModel: HomeViewModel,
     openModels: () -> Unit,
     openValidation: () -> Unit = {},
     openPerformance: () -> Unit,
+    openMemory: () -> Unit,
     openSkillAuthoring: () -> Unit = {},
 ) {
+    val models by homeViewModel.models.collectAsStateWithLifecycle()
+    val preparation by homeViewModel.modelPreparation.collectAsStateWithLifecycle()
+    val canAuthorSkill = preparation.ready && models.any {
+        it.id == preparation.modelId && com.localai.workspace.data.ApplicationModelPreparation.isUsable(it)
+    }
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val calendarGranted = androidx.core.content.ContextCompat.checkSelfPermission(
+        context, android.Manifest.permission.READ_CALENDAR,
+    ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+    val contactsGranted = androidx.core.content.ContextCompat.checkSelfPermission(
+        context, android.Manifest.permission.READ_CONTACTS,
+    ) == android.content.pm.PackageManager.PERMISSION_GRANTED
     var developer by rememberSaveable { mutableStateOf(false) }
     var boundaries by remember { mutableStateOf(false) }
+    var actionInfo by remember { mutableStateOf(false) }
+    var connectionInfo by remember { mutableStateOf<Int?>(null) }
     AppScreenContent(columnModifier = Modifier.verticalScroll(rememberScrollState())) {
         TopAppBar(title = { Text(stringResource(R.string.navigation_more), style = MaterialTheme.typography.titleLarge) })
-        Card(Modifier.fillMaxWidth().clickable(onClick = openModels)) {
-            Row(
-                Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(horizontal = 16.dp, vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                Icon(Icons.Default.ModelTraining, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-                Column(Modifier.weight(1f)) {
-                    Text(stringResource(R.string.settings_models_entry), style = MaterialTheme.typography.titleSmall)
-                    Text(stringResource(R.string.settings_models_description), style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+        MoreSection(stringResource(R.string.more_actions_section), "more-actions-section") {
+            MoreDestinationRow(
+                icon = Icons.Default.Settings,
+                title = stringResource(R.string.more_phone_actions_title),
+                description = stringResource(R.string.more_phone_actions_summary),
+                modifier = Modifier.testTag("more-phone-actions"),
+                onClick = { actionInfo = true },
+            )
+        }
+        MoreSection(stringResource(R.string.more_connections_section), "more-connections-section") {
+            MoreDestinationRow(
+                icon = Icons.Default.Event,
+                title = stringResource(R.string.more_calendar_title),
+                description = stringResource(if (calendarGranted) R.string.more_permission_granted else R.string.more_permission_requested_when_used),
+                modifier = Modifier.testTag("more-calendar-connection"),
+                onClick = { connectionInfo = R.string.more_calendar_permission_detail },
+            )
+            HorizontalDivider(Modifier.padding(horizontal = 12.dp), color = MaterialTheme.colorScheme.outlineVariant)
+            MoreDestinationRow(
+                icon = Icons.Default.Info,
+                title = stringResource(R.string.more_contacts_title),
+                description = stringResource(if (contactsGranted) R.string.more_permission_granted else R.string.more_permission_requested_when_used),
+                modifier = Modifier.testTag("more-contacts-connection"),
+                onClick = { connectionInfo = R.string.more_contacts_permission_detail },
+            )
+        }
+        MoreSection(stringResource(R.string.more_assistant_section), "more-assistant-section") {
+            MoreDestinationRow(
+                icon = Icons.Default.ModelTraining,
+                title = stringResource(R.string.settings_models_entry),
+                description = stringResource(R.string.settings_models_description),
+                modifier = Modifier.testTag("more-models-entry"),
+                onClick = openModels,
+            )
+            HorizontalDivider(Modifier.padding(horizontal = 12.dp), color = MaterialTheme.colorScheme.outlineVariant)
+            MoreDestinationRow(
+                icon = Icons.Default.Memory,
+                title = stringResource(R.string.navigation_memory),
+                description = stringResource(R.string.more_memory_summary),
+                modifier = Modifier.testTag("more-memory-entry"),
+                onClick = openMemory,
+            )
+            HorizontalDivider(Modifier.padding(horizontal = 12.dp), color = MaterialTheme.colorScheme.outlineVariant)
+            com.localai.workspace.ui.SkillsAgentsEntry(
+                onCreateSkill = openSkillAuthoring,
+                canCreateSkill = canAuthorSkill,
+                skillUnavailableReason = if (canAuthorSkill) null else stringResource(R.string.skills_create_needs_model),
+            )
+            HorizontalDivider(Modifier.padding(horizontal = 12.dp), color = MaterialTheme.colorScheme.outlineVariant)
+            com.localai.workspace.ui.SemanticSettings()
+        }
+        MoreSection(stringResource(R.string.more_privacy_section), "more-privacy-section") {
+            LocalModeCard(modifier = Modifier.testTag("more-privacy-entry"))
+        }
+        MoreSection(stringResource(R.string.settings_advanced), "more-advanced-section") {
+            MoreDestinationRow(
+                icon = Icons.Default.Info,
+                title = stringResource(R.string.settings_advanced),
+                description = stringResource(R.string.more_advanced_summary),
+                expanded = developer,
+                modifier = Modifier.testTag("more-advanced-toggle"),
+                onClick = { developer = !developer },
+            )
+            if (developer) {
+                com.localai.workspace.ui.ContextDiagnosticsEntry()
+                com.localai.workspace.ui.AgentsSkillsDiagnosticsEntry()
+                TextButton(onClick = openPerformance, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
+                    Text(stringResource(R.string.more_performance))
                 }
-                Icon(Icons.Default.ChevronRight, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                TextButton(onClick = openValidation, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
+                    Text(stringResource(R.string.more_device_validation))
+                }
+                TextButton(onClick = { boundaries = true }, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
+                    Text(stringResource(R.string.more_capability_boundaries))
+                }
             }
         }
-        LocalModeCard()
-        com.localai.workspace.ui.SemanticSettings()
-        com.localai.workspace.ui.ContextMemoryEntry()
-        com.localai.workspace.ui.SkillsAgentsEntry(onCreateSkill = openSkillAuthoring)
-        Card(Modifier.fillMaxWidth().clickable { developer = !developer }) {
-            Row(Modifier.fillMaxWidth().padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                Text(stringResource(R.string.settings_advanced), Modifier.weight(1f), style = MaterialTheme.typography.titleSmall)
-                Icon(Icons.Default.ChevronRight, null)
-            }
-        }
-        if (developer) com.localai.workspace.ui.ContextDiagnosticsEntry()
-        if (developer) com.localai.workspace.ui.AgentsSkillsDiagnosticsEntry()
-        if (developer) TextButton(onClick = openPerformance, modifier = Modifier.fillMaxWidth()) { Text("Local AI Performance") }
-        if (developer) TextButton(onClick = openValidation, modifier = Modifier.fillMaxWidth()) { Text("Device Validation") }
-        TextButton(onClick = { boundaries = true }) { Text("About capabilities") }
     }
-    if (boundaries) AlertDialog(onDismissRequest = { boundaries = false }, title = { Text("Capability boundaries") },
-        text = { Text("Model support does not mean a function is available in this app. Imported models are inspected; runtime and device determine compatibility. Evidence references resolve against the local index. Native performance requires Android device testing.") },
-        confirmButton = { TextButton(onClick = { boundaries = false }) { Text("Done") } })
+    if (actionInfo) AlertDialog(
+        onDismissRequest = { actionInfo = false },
+        title = { Text(stringResource(R.string.more_phone_actions_title)) },
+        text = { Text(stringResource(R.string.more_phone_actions_detail)) },
+        confirmButton = { TextButton(onClick = { actionInfo = false }) { Text(stringResource(R.string.common_close)) } },
+    )
+    connectionInfo?.let { message -> AlertDialog(
+        onDismissRequest = { connectionInfo = null },
+        title = { Text(stringResource(if (message == R.string.more_calendar_permission_detail) R.string.more_calendar_title else R.string.more_contacts_title)) },
+        text = { Text(stringResource(message)) },
+        confirmButton = { TextButton(onClick = { connectionInfo = null }) { Text(stringResource(R.string.common_close)) } },
+    ) }
+    if (boundaries) AlertDialog(onDismissRequest = { boundaries = false }, title = { Text(stringResource(R.string.more_capability_boundaries)) },
+        text = { Text(stringResource(R.string.more_capability_boundaries_detail)) },
+        confirmButton = { TextButton(onClick = { boundaries = false }) { Text(stringResource(R.string.common_done)) } })
+}
+
+@Composable
+private fun MoreSection(title: String, tag: String, content: @Composable () -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(title, Modifier.semantics { heading() }.testTag("$tag-title"),
+            style = MaterialTheme.typography.titleMedium)
+        AwsCard(Modifier.testTag(tag), content = { content() })
+    }
+}
+
+@Composable
+private fun MoreDestinationRow(
+    icon: ImageVector,
+    title: String,
+    description: String,
+    modifier: Modifier = Modifier,
+    expanded: Boolean = false,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier.fillMaxWidth().heightIn(min = 68.dp)
+            .clickable(role = Role.Button, onClick = onClick)
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Surface(Modifier.size(40.dp), shape = CircleShape, color = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer) {
+            Box(contentAlignment = Alignment.Center) { Icon(icon, contentDescription = null, modifier = Modifier.size(21.dp)) }
+        }
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            Text(title, style = MaterialTheme.typography.titleSmall)
+            Text(description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        Icon(Icons.Default.ChevronRight, contentDescription = null,
+            modifier = Modifier.size(20.dp).rotate(if (expanded) 90f else 0f),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
 }
 
 @Composable
@@ -1649,10 +1822,11 @@ private fun LocalModeCard(
     webEnabled: Boolean? = null,
     modelStatus: Int? = null,
     onOpenModels: (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
 ) {
     var details by remember { mutableStateOf(false) }
     AwsCard(
-        Modifier.fillMaxWidth().clickable { details = true },
+        modifier.fillMaxWidth().clickable { details = true },
     ) {
         Row(
             Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(horizontal = 12.dp, vertical = 8.dp),

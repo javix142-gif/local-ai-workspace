@@ -44,6 +44,8 @@ class MainActivityThemeCaptureTest {
         compose.onNodeWithTag("top-level-settings").assertTextContains(compose.activity.getString(R.string.navigation_more)).performClick()
         compose.onNodeWithText(compose.activity.getString(R.string.settings_models_entry)).assertIsDisplayed()
         compose.onNodeWithText(compose.activity.getString(R.string.navigation_skills)).assertExists()
+        compose.onNodeWithTag("more-actions-section").assertExists()
+        compose.onNodeWithTag("more-connections-section").assertExists()
         capture("h3b-more-light-360dp-fontScale-1.0")
 
         compose.onNodeWithText(compose.activity.getString(R.string.settings_models_entry)).performClick()
@@ -59,7 +61,7 @@ class MainActivityThemeCaptureTest {
             bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
             view.draw(android.graphics.Canvas(bitmap!!))
         }
-        val directory = File("build/ux-01-captures").apply { mkdirs() }
+        val directory = File("build/h3b-final-captures").apply { mkdirs() }
         File(directory, "$name.png").outputStream().use {
             check(bitmap!!.compress(Bitmap.CompressFormat.PNG, 100, it))
         }

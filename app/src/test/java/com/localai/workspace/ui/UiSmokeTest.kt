@@ -27,16 +27,25 @@ class UiSmokeTest {
 
     private fun localized(id: Int): String = compose.activity.getString(id)
 
+    @Test fun firstUseWithoutModelExplainsTheBlockedChatAndOpensRealModelOptions() {
+        compose.onNodeWithTag("home-model-missing").assertIsDisplayed()
+        compose.onNodeWithText(localized(R.string.home_model_missing_title)).assertIsDisplayed()
+        compose.onNodeWithTag("home-start-chat").assertIsNotEnabled()
+        compose.onNodeWithTag("home-add-model").performClick()
+        compose.onNodeWithText(localized(R.string.models_title)).assertIsDisplayed()
+        compose.onNodeWithText(localized(R.string.models_add)).assertIsDisplayed()
+    }
+
     @Test fun homePrivacyAndModelImportNavigation() {
         compose.onNodeWithText(localized(R.string.home_start_chat)).assertIsDisplayed()
         compose.onNodeWithTag("top-level-workspace").performClick()
         compose.onNodeWithText(localized(R.string.workspace_no_chats)).assertExists()
         screenshot("chats")
-        compose.onNodeWithText(localized(R.string.workspace_local_privacy)).performClick()
+        compose.onNodeWithTag("top-level-settings").performClick()
+        compose.onNodeWithTag("more-privacy-entry").performScrollTo().performClick()
         compose.onNodeWithText(localized(R.string.workspace_local_privacy_detail)).assertExists()
         compose.onNodeWithText(localized(R.string.common_done)).performClick()
-        compose.onNodeWithTag("top-level-settings").performClick()
-        compose.onNodeWithText(localized(R.string.settings_models_entry)).performClick()
+        compose.onNodeWithTag("more-models-entry").performScrollTo().performClick()
         screenshot("models")
         compose.onNodeWithText(localized(R.string.models_add)).performClick()
         listOf("FROM DEVICE", "GGUF", "LiteRT-LM", "Multimodal", "ONLINE", "Hugging Face").forEach { compose.onNode(hasText(it) and hasAnyAncestor(isDialog())).assertExists() }
@@ -48,35 +57,37 @@ class UiSmokeTest {
     @Test fun settingsKeepsDiagnosticsBehindDeveloperEntry() {
         compose.onNodeWithTag("top-level-settings").performClick()
         compose.onNodeWithText("Local AI Performance").assertDoesNotExist()
-        compose.onNodeWithText(localized(R.string.settings_advanced)).performScrollTo().performClick()
-        compose.onNodeWithText("Local AI Performance").performScrollTo().performClick()
+        compose.onNodeWithTag("more-advanced-toggle").performScrollTo().performClick()
+        compose.onNodeWithText(localized(R.string.more_performance)).performScrollTo().performClick()
         compose.onNodeWithText("RUNTIME: LiteRT-LM 0.17.1").assertExists()
         compose.onNodeWithText("CPU").assertExists()
         compose.onNodeWithText("GPU Experimental").assertExists()
     }
 
     @Test fun deviceValidationIsDeveloperOnlyAndHasRealSuiteActions() {
-        compose.onNodeWithText("Device Validation").assertDoesNotExist()
+        compose.onNodeWithText(localized(R.string.more_device_validation)).assertDoesNotExist()
         compose.onNodeWithTag("top-level-settings").performClick()
         compose.onNodeWithText("Device Validation").assertDoesNotExist()
-        compose.onNodeWithText(localized(R.string.settings_advanced)).performScrollTo().performClick()
-        compose.onNodeWithText("Device Validation").performScrollTo().performClick()
+        compose.onNodeWithTag("more-advanced-toggle").performScrollTo().performClick()
+        compose.onNodeWithText(localized(R.string.more_device_validation)).performScrollTo().performClick()
         awaitText("Run Quick Validation")
         compose.onNodeWithText("Run Full Validation").assertExists()
         compose.onNodeWithText("Full iterations").assertExists()
         screenshot("device-validation")
         compose.onNodeWithText("Back").performClick()
-        compose.onNodeWithText(localized(R.string.settings_advanced)).assertExists()
+        compose.onNodeWithTag("more-advanced-toggle").assertExists()
     }
 
     @Test fun chatComposerAndMenusHaveNoPermanentModelPickerOrFakeTools() {
-        compose.onNodeWithText(localized(R.string.home_start_chat)).performClick()
+        compose.onNodeWithTag("top-level-workspace").performClick()
+        compose.onNodeWithTag("workspace-new-chat").performClick()
         awaitText(localized(R.string.chat_input_hint))
         compose.onNodeWithText("Model picker").assertDoesNotExist()
         compose.onNodeWithText(localized(R.string.chat_diagnostics)).assertDoesNotExist()
         compose.onNodeWithContentDescription(localized(R.string.chat_send)).assertIsNotEnabled()
-        compose.onNodeWithText(localized(R.string.chat_input_hint)).performTextInput("Hola")
-        compose.onNodeWithContentDescription(localized(R.string.chat_send)).assertIsEnabled()
+        compose.onNodeWithTag("chat-model-unavailable").assertIsDisplayed()
+        compose.onNodeWithTag("chat-composer-input").assertIsNotEnabled()
+        compose.onNodeWithText(localized(R.string.chat_model_open_models)).assertIsDisplayed()
         screenshot("chat")
         compose.onNodeWithContentDescription(localized(R.string.chat_options)).performClick()
         listOf(R.string.chat_model, R.string.chat_files,
@@ -85,7 +96,8 @@ class UiSmokeTest {
     }
 
     @Test fun attachmentMenuOnlyOffersFunctionalSources() {
-        compose.onNodeWithText(localized(R.string.home_start_chat)).performClick()
+        compose.onNodeWithTag("top-level-workspace").performClick()
+        compose.onNodeWithTag("workspace-new-chat").performClick()
         awaitText(localized(R.string.chat_input_hint))
         compose.onNodeWithContentDescription(localized(R.string.chat_add_attachment)).performClick()
         compose.onNodeWithText(localized(R.string.chat_file)).assertIsDisplayed()
