@@ -197,15 +197,10 @@ class H3bChatCaptureTest {
                 val destination = compose.onNodeWithTag("top-level-$route").assertIsDisplayed()
                     .assertWidthIsAtLeast(48.dp).assertHeightIsAtLeast(48.dp)
                 if (route == "workspace") destination.assertIsSelected() else destination.assertIsNotSelected()
-                if (fontScale >= 1.5f) {
-                    destination.assertContentDescriptionEquals(label)
-                    if (route != "workspace") {
-                        compose.onNodeWithTag("top-level-label-$route", useUnmergedTree = true)
-                            .assertDoesNotExist()
-                    }
-                } else {
-                    val labelNode = compose.onNodeWithTag("top-level-label-$route", useUnmergedTree = true)
-                        .assertContentDescriptionEquals(label).assertIsDisplayed()
+                destination.assertContentDescriptionEquals(label)
+                val labelNode = compose.onNodeWithTag("top-level-label-$route", useUnmergedTree = true)
+                    .assertTextEquals(label).assertContentDescriptionEquals(label).assertIsDisplayed()
+                if (fontScale < 1.5f) {
                     assertHeightDpAtMost(
                         labelNode,
                         24f,

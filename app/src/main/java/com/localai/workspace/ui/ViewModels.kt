@@ -7,7 +7,8 @@ import androidx.room.withTransaction
 import kotlinx.coroutines.Dispatchers
 import android.Manifest
 import android.content.Context
-import java.util.Calendar
+import java.time.LocalDate
+import java.time.ZoneId
 import com.localai.workspace.AppGraph
 import com.localai.workspace.R
 import com.localai.workspace.data.CitationEvidenceEntity
@@ -95,6 +96,15 @@ sealed interface HomeCalendarDayState {
     ) : HomeCalendarDayState
 }
 
+/** Local calendar-day query bounds. The next midnight is exclusive. */
+internal data class HomeCalendarDayWindow(val startEpochMillis: Long, val endExclusiveEpochMillis: Long)
+
+internal fun homeCalendarDayWindow(date: LocalDate, zoneId: ZoneId): HomeCalendarDayWindow =
+    HomeCalendarDayWindow(
+        startEpochMillis = date.atStartOfDay(zoneId).toInstant().toEpochMilli(),
+        endExclusiveEpochMillis = date.plusDays(1).atStartOfDay(zoneId).toInstant().toEpochMilli(),
+    )
+
 class HomeViewModel(private val graph: AppGraph) : ViewModel() {
     val chatActivities = graph.chatSessions.activities
     fun stopChatActivity(projectId: String, conversationId: String?) = graph.chatSessions.stop(projectId, conversationId)
@@ -115,16 +125,10 @@ class HomeViewModel(private val graph: AppGraph) : ViewModel() {
         }
         _calendarDay.value = HomeCalendarDayState.Loading
         calendarDayJob = viewModelScope.launch {
-            val day = Calendar.getInstance().apply {
-                set(Calendar.HOUR_OF_DAY, 0)
-                set(Calendar.MINUTE, 0)
-                set(Calendar.SECOND, 0)
-                set(Calendar.MILLISECOND, 0)
-            }
-            val start = day.timeInMillis
-            day.add(Calendar.DAY_OF_MONTH, 1)
+            val zoneId = ZoneId.systemDefault()
+            val dayWindow = homeCalendarDayWindow(LocalDate.now(zoneId), zoneId)
             try {
-                val batch = calendarReader.calendarInstances(start, day.timeInMillis)
+                val batch = calendarReader.calendarInstances(dayWindow.startEpochMillis, dayWindow.endExclusiveEpochMillis)
                 _calendarDay.value = if (batch.records.isEmpty()) HomeCalendarDayState.Empty
                 else HomeCalendarDayState.Events(batch.records, batch.truncated)
             } catch (cancelled: CancellationException) {

@@ -6,13 +6,15 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
@@ -31,7 +33,7 @@ import org.robolectric.annotation.GraphicsMode
 class AwsBottomBarUiTest {
     @get:Rule val compose = createComposeRule()
 
-    @Test fun largeTextShowsOnlyActiveLabelAndKeepsEveryDestinationAccessible() {
+    @Test fun allFourLabelsAndTargetsRemainUsableAtSystemTextScales() {
         val routes = listOf(
             "home" to "Inicio",
             "workspace" to "Chats",
@@ -39,7 +41,6 @@ class AwsBottomBarUiTest {
             "settings" to "Más",
         )
         var setFontScale: ((Float) -> Unit)? = null
-        var setSelectedRoute: ((String) -> Unit)? = null
         var minimumTouchTargetPx = 0f
 
         compose.setContent {
@@ -49,7 +50,6 @@ class AwsBottomBarUiTest {
                 val selectedRoute = remember { mutableStateOf("workspace") }
                 SideEffect {
                     setFontScale = { fontScale.value = it }
-                    setSelectedRoute = { selectedRoute.value = it }
                     minimumTouchTargetPx = with(systemDensity) { 48.dp.toPx() }
                 }
                 CompositionLocalProvider(
@@ -63,40 +63,38 @@ class AwsBottomBarUiTest {
             }
         }
 
-        routes.forEach { (route, label) ->
-            compose.onNodeWithTag("top-level-label-$route", useUnmergedTree = true)
-                .assertTextEquals(label)
-            val target = compose.onNodeWithTag("top-level-$route")
-                .assertHasClickAction().fetchSemanticsNode().boundsInRoot
-            assertTrue("$route target must be at least 48dp", target.height >= minimumTouchTargetPx)
-        }
-
-        for (scale in listOf(1.6f, 2f)) {
+        for (scale in listOf(1.0f, 1.3f, 1.6f, 2.0f)) {
             compose.runOnIdle { setFontScale?.invoke(scale) }
-            for ((activeRoute, activeLabel) in routes) {
-                compose.runOnIdle { setSelectedRoute?.invoke(activeRoute) }
+            compose.waitForIdle()
+            routes.forEach { (route, label) ->
+                compose.onNodeWithTag("top-level-label-$route", useUnmergedTree = true)
+                    .assertIsDisplayed()
+                    .assertTextEquals(label)
+                val item = compose.onNodeWithTag("top-level-$route", useUnmergedTree = true)
+                    .assertHasClickAction()
+                    .fetchSemanticsNode().boundsInRoot
+                val icon = compose.onNodeWithTag("top-level-icon-$route", useUnmergedTree = true)
+                    .fetchSemanticsNode().boundsInRoot
+                val labelBounds = compose.onNodeWithTag("top-level-label-$route", useUnmergedTree = true)
+                    .fetchSemanticsNode().boundsInRoot
+                assertTrue("$route target at scale $scale must be at least 48dp", item.height >= minimumTouchTargetPx)
+                assertTrue("$route keeps the icon and label inside its touch target", icon.left >= item.left && labelBounds.right <= item.right)
+                assertTrue("$route label follows its icon and remains inside the target", labelBounds.top >= icon.bottom && labelBounds.bottom <= item.bottom)
+                val layouts = mutableListOf<TextLayoutResult>()
+                compose.onNodeWithTag("top-level-label-$route", useUnmergedTree = true)
+                    .performSemanticsAction(SemanticsActions.GetTextLayoutResult) { getTextLayoutResult ->
+                        getTextLayoutResult(layouts)
+                    }
+                assertTrue("$route label layout exists at scale $scale", layouts.isNotEmpty())
+                assertTrue("$route label is not visually clipped at scale $scale", layouts.all {
+                    !it.didOverflowWidth && it.lineCount == 1 && it.getLineRight(0) <= it.size.width
+                })
+            }
+
+            routes.forEach { (route, _) ->
+                compose.onNodeWithTag("top-level-$route", useUnmergedTree = true).performClick()
                 compose.waitForIdle()
-                compose.onNodeWithTag("top-level-label-$activeRoute", useUnmergedTree = true)
-                    .assertIsDisplayed().assertTextEquals(activeLabel)
-                val item = compose.onNodeWithTag("top-level-$activeRoute", useUnmergedTree = true)
-                    .fetchSemanticsNode().boundsInRoot
-                val icon = compose.onNodeWithTag("top-level-icon-$activeRoute", useUnmergedTree = true)
-                    .fetchSemanticsNode().boundsInRoot
-                val labelBounds = compose.onNodeWithTag("top-level-label-$activeRoute", useUnmergedTree = true)
-                    .fetchSemanticsNode().boundsInRoot
-                assertTrue("Active $activeLabel label is inside its icon destination", labelBounds.left >= item.left && labelBounds.right <= item.right)
-                assertTrue("Active $activeLabel label sits below its icon", labelBounds.top >= icon.bottom)
-                assertTrue("Active $activeLabel label remains within the navigation bar", labelBounds.bottom <= item.bottom)
-                routes.filter { it.first != activeRoute }.forEach { (route, label) ->
-                    compose.onNodeWithTag("top-level-label-$route", useUnmergedTree = true).assertDoesNotExist()
-                    compose.onNodeWithContentDescription(label, useUnmergedTree = true).assertExists()
-                    compose.onNodeWithTag("top-level-icon-$route", useUnmergedTree = true).assertExists()
-                }
-                routes.forEach { (route, _) ->
-                    val target = compose.onNodeWithTag("top-level-$route")
-                        .assertHasClickAction().fetchSemanticsNode().boundsInRoot
-                    assertTrue("$route target at fontScale $scale must be at least 48dp", target.height >= minimumTouchTargetPx)
-                }
+                compose.onNodeWithTag("top-level-$route", useUnmergedTree = true).assertIsSelected()
             }
         }
     }

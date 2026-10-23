@@ -27,14 +27,33 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import java.io.File
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 private const val SYNTHETIC_MODEL_ID = "synthetic-h3b-home-model"
 
+internal fun h3bCaptureDirectory(): File = File(
+    System.getenv("AWS_H3B_CAPTURE_DIR") ?: "build/h3b-phase3-review-captures",
+)
+
 private fun captureSyntheticHome(compose:AndroidComposeTestRule<*,MainActivity>,name:String,expectedScale:Float) {
     var renderedFontScale=0f
+    var openedModelSettings=0
+    val syntheticDate=LocalDate.of(2026,10,22)
+    val zone=ZoneId.systemDefault()
+    fun eventTime(hour:Int,minute:Int)=syntheticDate.atTime(hour,minute).atZone(zone).toInstant().toEpochMilli()
+    val syntheticEvents=listOf(
+        LocalCalendarEvent("SINTÉTICO · Revisión del proyecto",eventTime(10,0),eventTime(10,30),false,"Sala de prueba"),
+        LocalCalendarEvent("SINTÉTICO · Preparar el resumen",eventTime(12,0),eventTime(12,30),false,null),
+        LocalCalendarEvent("SINTÉTICO · Revisar documentos",eventTime(15,0),eventTime(15,30),false,null),
+    )
+    check(syntheticEvents.all { event ->
+        Instant.ofEpochMilli(event.startEpochMillis).atZone(zone).toLocalDate()==syntheticDate &&
+            Instant.ofEpochMilli(event.endEpochMillis).atZone(zone).toLocalDate()==syntheticDate
+    }) { "The synthetic agenda fixture must stay within one local calendar date." }
     compose.activity.setContentView(ComposeView(compose.activity).apply { setContent {
         val configuration=LocalConfiguration.current
         SideEffect { renderedFontScale=configuration.fontScale }
@@ -43,7 +62,7 @@ private fun captureSyntheticHome(compose:AndroidComposeTestRule<*,MainActivity>,
                 HomeDashboardContent(
                     greeting="Buenos días",
                     todayLabel=DateTimeFormatter.ofPattern("EEEE d 'de' MMMM",Locale.forLanguageTag("es"))
-                        .format(LocalDate.now()),
+                        .format(syntheticDate),
                     models=listOf(ModelEntity(
                         id=SYNTHETIC_MODEL_ID,
                         displayName="SINTÉTICO · Gemma 4 E2B",
@@ -56,14 +75,7 @@ private fun captureSyntheticHome(compose:AndroidComposeTestRule<*,MainActivity>,
                         importedAt=1L,
                     )),
                     preparation=RuntimePreparation.State(modelId=SYNTHETIC_MODEL_ID,ready=true),
-                    calendarDay=HomeCalendarDayState.Events(
-                        records=listOf(
-                            LocalCalendarEvent("SINTÉTICO · Revisión del proyecto",System.currentTimeMillis()+3_600_000,System.currentTimeMillis()+5_400_000,false,"Sala de prueba"),
-                            LocalCalendarEvent("SINTÉTICO · Preparar el resumen",System.currentTimeMillis()+7_200_000,System.currentTimeMillis()+9_000_000,false,null),
-                            LocalCalendarEvent("SINTÉTICO · Revisar documentos",System.currentTimeMillis()+10_800_000,System.currentTimeMillis()+12_600_000,false,null),
-                        ),
-                        truncated=false,
-                    ),
+                    calendarDay=HomeCalendarDayState.Events(records=syntheticEvents,truncated=false),
                     memoryEnabled=true,
                     webEnabled=false,
                     pendingMemoryCount=0,
@@ -72,7 +84,7 @@ private fun captureSyntheticHome(compose:AndroidComposeTestRule<*,MainActivity>,
                     onRequestCalendarPermission={},
                     onStartChat={},
                     onOpenChats={},
-                    onOpenModels={},
+                    onOpenModels={openedModelSettings++},
                     onOpenMemory={},
                     onPrepareModel={},
                     onRetryModelPreparation={},
@@ -85,9 +97,13 @@ private fun captureSyntheticHome(compose:AndroidComposeTestRule<*,MainActivity>,
     assertEquals(expectedScale,renderedFontScale,0f)
     writeHomeCapture(compose,"$name-overview")
     compose.onNodeWithTag("home-greeting").assertExists().assertIsDisplayed()
+    listOf("home" to "Inicio","workspace" to "Chats","memory" to "Memoria","settings" to "Más").forEach { (route,label) ->
+        compose.onNodeWithTag("top-level-label-$route",useUnmergedTree=true).assertIsDisplayed().assertTextEquals(label)
+    }
     compose.onNodeWithText("Memoria activa").assertExists()
     compose.onNodeWithText("Web desactivada").assertExists()
     compose.onNodeWithTag("home-status-model",useUnmergedTree=true).assertExists().assertIsDisplayed()
+    compose.onNodeWithTag("home-workspace-model-card").assertDoesNotExist()
     val webStatusBounds=compose.onNodeWithTag("home-status-web",useUnmergedTree=true)
         .assertIsDisplayed().fetchSemanticsNode().boundsInRoot
     if(expectedScale>=1.5f) check(webStatusBounds.height<80f) {
@@ -95,17 +111,20 @@ private fun captureSyntheticHome(compose:AndroidComposeTestRule<*,MainActivity>,
     }
     compose.onNodeWithText("Modelo listo").assertExists()
     compose.onNodeWithTag("home-pending-memory").assertDoesNotExist()
+    compose.onNodeWithTag("home-model-missing").assertDoesNotExist()
     assertEquals(3,compose.onAllNodesWithTag("home-calendar-event").fetchSemanticsNodes().size)
     compose.onNodeWithText("SINTÉTICO · Revisar documentos").performScrollTo().assertIsDisplayed()
     writeHomeCapture(compose,"$name-agenda")
+    compose.onNodeWithTag("home-open-models",useUnmergedTree=true).assertHasClickAction().performClick()
+    assertEquals("The real model configuration entry point stays available from the compact status.",1,openedModelSettings)
 }
 
 private fun writeHomeCapture(compose:AndroidComposeTestRule<*,MainActivity>,name:String) {
     compose.waitForIdle()
-    val folder=File("build/h3b-phase3-captures").apply{mkdirs()}
+    val folder=h3bCaptureDirectory().apply{mkdirs()}
     val diagnostic=buildString {
         appendLine("fontScale=${compose.activity.resources.configuration.fontScale}")
-        listOf("home-greeting","home-status-memory","home-status-web","home-status-model","home-calendar-card","home-calendar-event","home-start-chat","home-open-chats")
+        listOf("home-greeting","home-status-memory","home-status-web","home-status-model","home-open-models","home-calendar-card","home-calendar-event","home-start-chat","home-open-chats")
             .forEach { tag ->
                 val bounds=runCatching {
                     compose.onNodeWithTag(tag,useUnmergedTree=true).fetchSemanticsNode().boundsInRoot

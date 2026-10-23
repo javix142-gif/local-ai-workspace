@@ -24,6 +24,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -136,7 +137,7 @@ private fun memoryCategoryIcon(kind:MemoryKind)=when(kind){
 @Composable private fun StructuredMemoryPanel(projectId:String?,fullScreen:Boolean=false,close:()->Unit) {
     val context=LocalContext.current;val graph=(context.applicationContext as LocalAiApplication).graph;val foundation=graph.contextFoundation;val scope=rememberCoroutineScope()
     val all by foundation.memory.items.collectAsState(initial=emptyList());val access=ScopeAccess(projectId=projectId)
-    var query by remember{mutableStateOf("")};var showInactive by remember{mutableStateOf(false)};var projectOnly by remember{mutableStateOf(projectId!=null)};var kindFilter by remember{mutableStateOf<MemoryKind?>(null)};var filters by remember{mutableStateOf(false)}
+    var query by remember{mutableStateOf("")};var showInactive by remember{mutableStateOf(false)};var projectOnly by remember{mutableStateOf(projectId!=null)};var kindFilter by remember{mutableStateOf<MemoryKind?>(null)};var filters by remember{mutableStateOf(false)};var showAllPending by remember{mutableStateOf(false)}
     var editing by remember{mutableStateOf<MemoryRecord?>(null)};var editor by remember{mutableStateOf(false)};var text by remember{mutableStateOf("")};var ttl by remember{mutableStateOf("")};var kind by remember{mutableStateOf(MemoryKind.FACT)};var choosingKind by remember{mutableStateOf(false)};var scopeMenu by remember{mutableStateOf(false)};var writingScope by remember(projectId){mutableStateOf(projectId?.let{SemanticScope(ScopeType.PROJECT,it)} ?: SemanticScope(ScopeType.USER,"local"))}
     var structuredSubject by remember{mutableStateOf("")};var structuredPredicate by remember{mutableStateOf("")};var structuredObject by remember{mutableStateOf("")};var structuredConflict by remember{mutableStateOf<StructuredPreferenceConflictException?>(null)}
     var details by remember{mutableStateOf<MemoryRecord?>(null)};var removal by remember{mutableStateOf<MemoryRecord?>(null)};var permanentRemoval by remember{mutableStateOf<MemoryRecord?>(null)};var error by remember{mutableStateOf<String?>(null)};var busy by remember{mutableStateOf(false)};var brief by remember{mutableStateOf<ProjectBrief?>(null)}
@@ -153,6 +154,11 @@ private fun memoryCategoryIcon(kind:MemoryKind)=when(kind){
     fun run(block:suspend()->Unit){scope.launch{busy=true;error=null;try{withContext(Dispatchers.IO){block()}}catch(cancel:CancellationException){throw cancel}catch(e:Exception){error=memoryActionErrorMessage(context,e)}finally{busy=false}}}
     val pendingForScope=all.filter{it.status=="PENDING"&&access.permits(it.scopeType,it.scopeId)}
         .sortedWith(compareByDescending<MemoryRecord>{it.pinned}.thenByDescending{it.importance}.thenByDescending{it.updatedAt}.thenBy{it.id})
+    val pendingMatchingFilters=pendingForScope.filter{
+        (!projectOnly||it.scopeType=="PROJECT") &&
+            (showInactive||it.expiresAt?.let{expiresAt->expiresAt>System.currentTimeMillis()}!=false) &&
+            it.text.contains(query,true)
+    }
     val matching=all.filter{access.permits(it.scopeType,it.scopeId)&&(!projectOnly||it.scopeType=="PROJECT")&&(showInactive||it.status in setOf("ACTIVE","PENDING")&&it.expiresAt?.let{t->t>System.currentTimeMillis()}!=false)&&it.text.contains(query,true)}
     val visible=matching.sortedWith(
         compareByDescending<MemoryRecord>{it.status=="PENDING"}
@@ -274,16 +280,6 @@ private fun memoryCategoryIcon(kind:MemoryKind)=when(kind){
         title=stringResource(R.string.memory_title),
         dismiss=close,
         fullScreen=fullScreen,
-        bottomContent={
-            Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)) {
-                OutlinedButton(onClick={importDialog=true},modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("memory-import")) {
-                    Text(stringResource(R.string.memory_import_button))
-                }
-                Button(onClick={exportDialog=true},modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("memory-export")) {
-                    Text(stringResource(R.string.memory_export_button))
-                }
-            }
-        },
     ) {
         if(fullScreen)Text(stringResource(R.string.memory_intro),style=MaterialTheme.typography.bodyMedium,color=MaterialTheme.colorScheme.onSurfaceVariant)
         OutlinedTextField(query,{query=it},label={Text(stringResource(R.string.memory_search))},singleLine=true,modifier=Modifier.fillMaxWidth().testTag("memory-search"))
@@ -298,14 +294,25 @@ private fun memoryCategoryIcon(kind:MemoryKind)=when(kind){
         if(visiblePending.isNotEmpty()){
             AwsCard(modifier=Modifier.testTag("memory-pending-card")) {
                 Column(Modifier.fillMaxWidth().padding(12.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
-                    MemorySectionHeading(stringResource(R.string.memory_pending_section,visiblePending.size),"memory-pending-section")
-                    visiblePending.forEachIndexed{index,memory->
+                    MemorySectionHeading(stringResource(R.string.memory_pending_section,pendingMatchingFilters.size),"memory-pending-section")
+                    val pendingToShow=if(showAllPending)visiblePending else visiblePending.take(1)
+                    pendingToShow.forEachIndexed{index,memory->
                         MemoryRecordCard(
                             memory=memory,showStatus=false,container=false,onDetails={details=memory},
                             onApprove={requestApproval(listOf(memory.id))},onDiscard={removal=memory},
                         )
-                        if(index<visiblePending.lastIndex)HorizontalDivider()
+                        if(index<pendingToShow.lastIndex)HorizontalDivider()
                     }
+                    if(pendingMatchingFilters.size>pendingToShow.size)TextButton(
+                        enabled=!busy,onClick={showAllPending=true},modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("memory-pending-show-all"),
+                    ){Text(pluralStringResource(
+                        R.plurals.memory_pending_show_all,
+                        pendingMatchingFilters.size-pendingToShow.size,
+                        pendingMatchingFilters.size-pendingToShow.size,
+                    ))}
+                    if(showAllPending&&visiblePending.size>1)TextButton(
+                        enabled=!busy,onClick={showAllPending=false},modifier=Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("memory-pending-show-less"),
+                    ){Text(stringResource(R.string.memory_pending_show_less))}
                     if(pendingForScope.size>1)TextButton(
                         enabled=!busy,onClick={requestApproval(pendingForScope.map{it.id})},modifier=Modifier.testTag("memory-review-all-pending"),
                     ){Text(stringResource(R.string.memory_pending_approval_count,pendingForScope.size))}
@@ -353,6 +360,17 @@ private fun memoryCategoryIcon(kind:MemoryKind)=when(kind){
         importResult?.let{Text(it,style=MaterialTheme.typography.bodySmall)}
         if(projectId!=null)TextButton(onClick={run{brief=foundation.database.dao().brief(projectId) ?: ProjectBrief(projectId,graph.database.projectDao().get(projectId)?.name.orEmpty())}}){Text(stringResource(R.string.memory_project_brief))}
         if(busy)LinearProgressIndicator(Modifier.fillMaxWidth());error?.let{Text(it,color=MaterialTheme.colorScheme.error)}
+        Row(
+            Modifier.fillMaxWidth().padding(top=8.dp).testTag("memory-transfer-actions"),
+            horizontalArrangement=Arrangement.spacedBy(8.dp),
+        ) {
+            OutlinedButton(onClick={importDialog=true},modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("memory-import")) {
+                Text(stringResource(R.string.memory_import_button))
+            }
+            OutlinedButton(onClick={exportDialog=true},modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("memory-export")) {
+                Text(stringResource(R.string.memory_export_button))
+            }
+        }
     }
     if(exportDialog) AlertDialog(
         onDismissRequest={exportDialog=false},

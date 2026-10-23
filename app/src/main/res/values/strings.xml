@@ -8,7 +8,6 @@
     <string name="home_greeting_morning">Buenos días</string>
     <string name="home_greeting_afternoon">Buenas tardes</string>
     <string name="home_greeting_evening">Buenas noches</string>
-    <string name="home_intro">Un espacio privado para conversar con tus modelos y documentos locales.</string>
     <string name="home_start_chat">Empezar un chat</string>
     <string name="home_open_chats">Ver chats y proyectos</string>
     <string name="home_model_missing_title">Aún no hay un modelo listo</string>
@@ -20,9 +19,13 @@
     <string name="home_status_web_active">Web activada</string>
     <string name="home_status_web_inactive">Web desactivada</string>
     <string name="home_status_model_ready">Modelo listo</string>
+    <string name="home_open_model_settings">Abrir configuración de modelos</string>
     <string name="home_status_model_loading">Preparando modelo</string>
     <string name="home_status_model_unavailable">Modelo no listo</string>
-    <string name="home_pending_memories">%1$d recuerdos por revisar</string>
+    <plurals name="home_pending_memories">
+        <item quantity="one">%1$d recuerdo por revisar</item>
+        <item quantity="other">%1$d recuerdos por revisar</item>
+    </plurals>
     <string name="home_calendar_permission">Permitir acceso al calendario para ver tu día</string>
     <string name="home_calendar_allow">Permitir acceso</string>
     <string name="home_calendar_empty">No tienes eventos hoy</string>
@@ -417,16 +420,18 @@
     <string name="memory_pending_section">Por aprobar · %1$d</string>
     <string name="memory_pinned_section">Fijadas · %1$d</string>
     <string name="memory_category_count">%1$s · %2$d</string>
-    <string name="memory_category_section">%1$s · %2$d</string>
-    <string name="memory_import_export">Importar o exportar</string>
     <string name="memory_discard">Descartar</string>
     <string name="memory_search">Buscar recuerdos</string>
     <string name="memory_filter">Filtrar</string>
     <string name="memory_export_json">Exportar JSON</string>
     <string name="memory_pending_approval_count">Revisar y aprobar %1$d recuerdos pendientes</string>
+    <plurals name="memory_pending_show_all">
+        <item quantity="one">Mostrar %1$d propuesta más</item>
+        <item quantity="other">Mostrar %1$d propuestas más</item>
+    </plurals>
+    <string name="memory_pending_show_less">Mostrar una propuesta</string>
     <string name="memory_include_inactive">Incluir registros inactivos</string>
     <string name="memory_project_only">Solo este proyecto</string>
-    <string name="memory_all_types">Todos los tipos</string>
     <string name="memory_empty">Aún no hay recuerdos. Cuéntame tus preferencias y te propondré guardarlas.</string>
     <string name="memory_import_button">Importar</string>
     <string name="memory_export_button">Exportar</string>
@@ -447,7 +452,6 @@
     <string name="memory_details">Detalles</string>
     <string name="memory_rebuild_embeddings">Reconstruir embeddings pendientes</string>
     <string name="memory_project_brief">Resumen del proyecto</string>
-    <string name="memory_implement">Implementar memoria</string>
     <string name="memory_prepare_portable">Prepara recuerdos personales para revisarlos antes de importarlos en este dispositivo.</string>
     <string name="memory_copy_prompt">COPIAR PROMPT</string>
     <string name="memory_prompt_copied">Prompt copiado. El asistente externo solo recibe el texto que pegues allí.</string>

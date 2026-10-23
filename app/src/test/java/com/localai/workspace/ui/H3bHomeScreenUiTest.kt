@@ -9,6 +9,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performScrollTo
 import androidx.core.content.ContextCompat
 import com.localai.workspace.MainActivity
+import com.localai.workspace.R
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -24,6 +25,13 @@ import java.io.File
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class H3bHomeScreenUiTest {
     @get:Rule val compose = createAndroidComposeRule<MainActivity>()
+
+    @Test
+    fun pendingMemoryCountUsesSpanishSingularAndPluralForms() {
+        val resources = compose.activity.resources
+        assertEquals("1 recuerdo por revisar", resources.getQuantityString(R.plurals.home_pending_memories, 1, 1))
+        assertEquals("2 recuerdos por revisar", resources.getQuantityString(R.plurals.home_pending_memories, 2, 2))
+    }
 
     @Test
     fun homeUsesActualCalendarPermissionAndModelStateAndKeepsActionsReachable() {
@@ -130,7 +138,7 @@ private fun writeFullActivityCapture(activity: MainActivity, name: String) {
         bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
         view.draw(android.graphics.Canvas(bitmap!!))
     }
-    val directory = File("build/h3b-phase3-captures").apply { mkdirs() }
+    val directory = h3bCaptureDirectory().apply { mkdirs() }
     File(directory, "$name.png").outputStream().use {
         check(bitmap!!.compress(Bitmap.CompressFormat.PNG, 100, it))
     }

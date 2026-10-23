@@ -16,6 +16,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -384,22 +385,22 @@ internal fun HomeDashboardContent(
                 Text(todayLabel, Modifier.testTag("home-date"), style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            LocalModeCard(memoryEnabled, webEnabled, modelStatus)
+            LocalModeCard(memoryEnabled, webEnabled, modelStatus, onOpenModels)
             if (pendingMemoryCount > 0) {
                 AwsCard(Modifier.testTag("home-pending-memory")) {
                     AwsListRow(
                         icon = Icons.Default.Memory,
-                        title = stringResource(R.string.home_pending_memories, pendingMemoryCount),
+                        title = pluralStringResource(R.plurals.home_pending_memories, pendingMemoryCount, pendingMemoryCount),
                         count = pendingMemoryCount,
                         onClick = onOpenMemory,
-                        contentDescription = stringResource(R.string.home_pending_memories, pendingMemoryCount),
+                        contentDescription = pluralStringResource(R.plurals.home_pending_memories, pendingMemoryCount, pendingMemoryCount),
                     )
                 }
             }
             HomeCalendarCard(calendarDay, onRequestCalendarPermission)
-            if (usableModels.isNotEmpty()) {
+            if (usableModels.isNotEmpty() && !preparation.ready) {
                 WorkspaceModelCard(models, preparation, onPrepareModel, onRetryModelPreparation, onCancelModelPreparation)
-            } else {
+            } else if (usableModels.isEmpty()) {
                 AwsCard(modifier = Modifier.testTag("home-model-missing")) {
                     Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text(stringResource(R.string.home_model_missing_title), style = MaterialTheme.typography.titleMedium,
@@ -564,7 +565,7 @@ private fun WorkspaceModelCard(models: List<ModelEntity>, state: RuntimePreparat
     if (usable.isEmpty()) return
     val selected = usable.firstOrNull { it.id == state.modelId }
     var details by rememberSaveable { mutableStateOf(false) }
-    Card(Modifier.fillMaxWidth().clickable { details = true }) {
+    Card(Modifier.fillMaxWidth().clickable { details = true }.testTag("home-workspace-model-card")) {
         Row(Modifier.fillMaxWidth().padding(start = 12.dp, end = 8.dp, top = 8.dp, bottom = 8.dp), verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Text(selected?.displayName?.let(::humanModelName) ?: stringResource(R.string.workspace_model_choose), style = MaterialTheme.typography.titleSmall,
@@ -1642,17 +1643,19 @@ private fun SettingsScreen(
 }
 
 @Composable
+@OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
 private fun LocalModeCard(
     memoryEnabled: Boolean? = null,
     webEnabled: Boolean? = null,
     modelStatus: Int? = null,
+    onOpenModels: (() -> Unit)? = null,
 ) {
     var details by remember { mutableStateOf(false) }
     AwsCard(
         Modifier.fillMaxWidth().clickable { details = true },
     ) {
         Row(
-            Modifier.fillMaxWidth().heightIn(min = 64.dp).padding(horizontal = 16.dp, vertical = 12.dp),
+            Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(horizontal = 12.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
@@ -1665,50 +1668,39 @@ private fun LocalModeCard(
             }
         }
         if (memoryEnabled != null || webEnabled != null || modelStatus != null) {
-            Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                val largeText = androidx.compose.ui.platform.LocalDensity.current.fontScale >= 1.5f
-                if (largeText) {
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        memoryEnabled?.let { enabled ->
-                            StatusPill(
-                                label = stringResource(if (enabled) R.string.home_status_memory_active else R.string.home_status_memory_inactive),
-                                tone = if (enabled) StatusTone.SUCCESS else StatusTone.DISABLED,
-                                modifier = Modifier.testTag("home-status-memory"),
-                            )
-                        }
-                        webEnabled?.let { enabled ->
-                            StatusPill(
-                                label = stringResource(if (enabled) R.string.home_status_web_active else R.string.home_status_web_inactive),
-                                tone = if (enabled) StatusTone.BRAND else StatusTone.DISABLED,
-                                modifier = Modifier.testTag("home-status-web"),
-                            )
-                        }
-                    }
-                } else {
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        memoryEnabled?.let { enabled ->
-                            StatusPill(
-                                label = stringResource(if (enabled) R.string.home_status_memory_active else R.string.home_status_memory_inactive),
-                                tone = if (enabled) StatusTone.SUCCESS else StatusTone.DISABLED,
-                                modifier = Modifier.testTag("home-status-memory"),
-                            )
-                        }
-                        webEnabled?.let { enabled ->
-                            StatusPill(
-                                label = stringResource(if (enabled) R.string.home_status_web_active else R.string.home_status_web_inactive),
-                                tone = if (enabled) StatusTone.BRAND else StatusTone.DISABLED,
-                                modifier = Modifier.testTag("home-status-web"),
-                            )
-                        }
-                    }
+            FlowRow(
+                Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 2.dp),
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                memoryEnabled?.let { enabled ->
+                    StatusPill(
+                        label = stringResource(if (enabled) R.string.home_status_memory_active else R.string.home_status_memory_inactive),
+                        tone = if (enabled) StatusTone.SUCCESS else StatusTone.DISABLED,
+                        modifier = Modifier.testTag("home-status-memory"),
+                    )
+                }
+                webEnabled?.let { enabled ->
+                    StatusPill(
+                        label = stringResource(if (enabled) R.string.home_status_web_active else R.string.home_status_web_inactive),
+                        tone = if (enabled) StatusTone.BRAND else StatusTone.DISABLED,
+                        modifier = Modifier.testTag("home-status-web"),
+                    )
                 }
                 modelStatus?.let { statusId ->
-                    StatusPill(
-                        label = stringResource(statusId),
-                        tone = if (statusId == R.string.home_status_model_ready) StatusTone.SUCCESS else StatusTone.BRAND,
-                        modifier = Modifier.testTag("home-status-model"),
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        StatusPill(
+                            label = stringResource(statusId),
+                            tone = if (statusId == R.string.home_status_model_ready) StatusTone.SUCCESS else StatusTone.BRAND,
+                            modifier = Modifier.testTag("home-status-model"),
+                        )
+                        if (onOpenModels != null) IconButton(
+                            onClick = onOpenModels,
+                            modifier = Modifier.size(48.dp).testTag("home-open-models"),
+                        ) {
+                            Icon(Icons.Default.Settings, contentDescription = stringResource(R.string.home_open_model_settings))
+                        }
+                    }
                 }
             }
         }

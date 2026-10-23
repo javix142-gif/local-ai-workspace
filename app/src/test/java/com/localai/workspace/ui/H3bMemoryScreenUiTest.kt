@@ -34,6 +34,12 @@ import java.io.File
 class H3bMemoryScreenUiTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
 
+    @Test fun pendingShowAllUsesSpanishSingularAndPluralForms() {
+        val resources=compose.activity.resources
+        assertEquals("Mostrar 1 propuesta más",resources.getQuantityString(R.plurals.memory_pending_show_all,1,1))
+        assertEquals("Mostrar 2 propuestas más",resources.getQuantityString(R.plurals.memory_pending_show_all,2,2))
+    }
+
     @Test fun topLevelMemoryIsAnIntegratedScreenWithTheRealEmptyState() {
         compose.onNodeWithTag("top-level-memory").performClick()
         compose.onNodeWithTag("memory-screen").assertIsDisplayed()
@@ -41,11 +47,11 @@ class H3bMemoryScreenUiTest {
         compose.onNodeWithText(compose.activity.getString(R.string.memory_intro)).assertIsDisplayed()
         compose.onNodeWithText(compose.activity.getString(R.string.memory_search)).assertIsDisplayed()
         compose.onNodeWithTag("memory-empty-state").assertIsDisplayed()
-        compose.onNodeWithTag("memory-import").assertIsDisplayed()
-        compose.onNodeWithTag("memory-export").assertIsDisplayed()
+        compose.onNodeWithTag("memory-import").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("memory-export").performScrollTo().assertIsDisplayed()
         compose.onNodeWithTag("memory-export-json").assertDoesNotExist()
         compose.onNodeWithTag("memory-rebuild-embeddings").assertDoesNotExist()
-        compose.onNodeWithTag("memory-advanced-toggle").performClick()
+        compose.onNodeWithTag("memory-advanced-toggle").performScrollTo().performClick()
         compose.onNodeWithTag("memory-export-json").assertIsDisplayed()
         compose.onNodeWithTag("memory-rebuild-embeddings").assertIsDisplayed()
         compose.onNodeWithTag("top-level-memory").assertIsSelected()
@@ -57,34 +63,50 @@ class H3bMemoryScreenUiTest {
         val pendingText="H3B_TEST pending memory ${System.nanoTime()}"
         val pinnedText="H3B_TEST pinned preference ${System.nanoTime()}"
         val categoryText="H3B_TEST saved fact ${System.nanoTime()}"
-        val (pending,pinned,category)=runBlocking(Dispatchers.IO) {
+        val fixture=runBlocking(Dispatchers.IO) {
             val pending=memory.create(pendingText,SemanticScope(ScopeType.USER,"local"),MemoryKind.FACT,pending=true)
+            val secondPending=memory.create("H3B_TEST second pending ${System.nanoTime()}",SemanticScope(ScopeType.USER,"local"),MemoryKind.FACT,pending=true)
             val pinned=memory.create(pinnedText,SemanticScope(ScopeType.USER,"local"),MemoryKind.PREFERENCE)
             memory.pin(pinned.id,ScopeAccess())
             val category=memory.create(categoryText,SemanticScope(ScopeType.USER,"local"),MemoryKind.FACT)
-            Triple(pending,pinned,category)
+            listOf(pending.id,secondPending.id,pinned.id)
         }
+        val pending=fixture[0]
+        val secondPending=fixture[1]
+        val pinned=fixture[2]
+        val pendingIds=listOf(pending,secondPending)
 
         compose.onNodeWithTag("top-level-memory").performClick()
         compose.waitUntil(10_000) {
-            compose.onAllNodesWithTag("memory-record-${pending.id}").fetchSemanticsNodes().isNotEmpty() &&
-                compose.onAllNodesWithTag("memory-record-${pinned.id}").fetchSemanticsNodes().isNotEmpty()
+            compose.onAllNodesWithTag("memory-pending-card").fetchSemanticsNodes().isNotEmpty() &&
+                compose.onAllNodesWithTag("memory-record-$pinned").fetchSemanticsNodes().isNotEmpty()
         }
         compose.onNodeWithTag("memory-pending-section").assertIsDisplayed()
+        compose.onNodeWithText("Por aprobar · 2").assertIsDisplayed()
         compose.onNodeWithTag("memory-pinned-section").assertIsDisplayed()
         compose.onNodeWithTag("memory-kind-fact").assertExists()
-        compose.onNodeWithTag("memory-discard-${pending.id}").performScrollTo().performClick()
+        val initiallyVisiblePending=pendingIds.filter { id ->
+            compose.onAllNodesWithTag("memory-record-$id").fetchSemanticsNodes().isNotEmpty()
+        }
+        assertEquals("Only one pending proposal is expanded initially",1,initiallyVisiblePending.size)
+        val initialPendingId=initiallyVisiblePending.single()
+        compose.onNodeWithTag("memory-pending-show-all").performScrollTo().performClick()
+        pendingIds.forEach { id -> compose.onNodeWithTag("memory-record-$id").performScrollTo().assertIsDisplayed() }
+        compose.onNodeWithTag("memory-review-all-pending").performScrollTo().assertIsDisplayed()
+
+        compose.onNodeWithTag("memory-discard-$initialPendingId").performScrollTo().performClick()
         compose.onNodeWithText(compose.activity.getString(R.string.memory_delete_title)).assertIsDisplayed()
         compose.onNodeWithText(compose.activity.getString(R.string.common_cancel)).performClick()
-        assertEquals("discard requires confirmation and cancel preserves pending status", "PENDING", runBlocking(Dispatchers.IO) { memory.get(pending.id)?.status })
+        assertEquals("discard requires confirmation and cancel preserves pending status", "PENDING", runBlocking(Dispatchers.IO) { memory.get(initialPendingId)?.status })
 
-        compose.onNodeWithTag("memory-approve-${pending.id}").performScrollTo().performClick()
-        compose.waitUntil(10_000) { runBlocking(Dispatchers.IO) { memory.get(pending.id)?.status == "ACTIVE" } }
+        compose.onNodeWithTag("memory-approve-$initialPendingId").performScrollTo().performClick()
+        compose.waitUntil(10_000) { runBlocking(Dispatchers.IO) { memory.get(initialPendingId)?.status == "ACTIVE" } }
+        assertEquals("The second proposal remains pending", "PENDING", runBlocking(Dispatchers.IO) { memory.get(pendingIds.single { it != initialPendingId })?.status })
         compose.onNodeWithTag("memory-pinned-section").performScrollTo().assertIsDisplayed()
         compose.onNodeWithTag("memory-kind-fact").performScrollTo().performClick()
         compose.onNodeWithText(categoryText).performScrollTo().assertIsDisplayed()
-        compose.onNodeWithTag("memory-import").assertIsDisplayed()
-        compose.onNodeWithTag("memory-export").assertIsDisplayed()
+        compose.onNodeWithTag("memory-import").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("memory-export").performScrollTo().assertIsDisplayed()
     }
 }
 
@@ -116,24 +138,39 @@ private fun captureSyntheticMemory(
     assertEquals(expectedScale,compose.activity.resources.configuration.fontScale,0f)
     val pendingIds=seedSyntheticMemoryFixture(compose.activity)
     compose.onNodeWithTag("top-level-memory").performClick()
-    compose.waitUntil(10_000) { compose.onAllNodesWithTag("memory-pending-card").fetchSemanticsNodes().isNotEmpty() }
+    compose.waitUntil(10_000) {
+        compose.onAllNodesWithTag("memory-pending-card").fetchSemanticsNodes().isNotEmpty() &&
+            compose.onAllNodesWithTag("memory-pinned-section").fetchSemanticsNodes().isNotEmpty() &&
+            listOf("fact", "procedure", "decision", "event", "relationship").all { kind ->
+                compose.onAllNodesWithTag("memory-kind-$kind").fetchSemanticsNodes().isNotEmpty()
+            }
+    }
     captureMemoryView(compose,name+"-overview")
     compose.onNodeWithText("Por aprobar · 2").assertExists()
     compose.onNodeWithText("Fijadas · 1").assertExists()
-    listOf("fact","procedure","decision","event","relationship").forEach { kind ->
-        compose.onNodeWithTag("memory-kind-$kind").assertExists()
+    val initiallyVisible=pendingIds.filter { id ->
+        compose.onAllNodesWithTag("memory-record-$id").fetchSemanticsNodes().isNotEmpty()
     }
-    compose.onNodeWithTag("memory-import").assertExists().assertIsDisplayed()
-    compose.onNodeWithTag("memory-export").assertExists().assertIsDisplayed()
+    assertEquals("Memory opens with one pending proposal expanded",1,initiallyVisible.size)
+    compose.onNodeWithTag("memory-pending-show-all").performScrollTo().performClick()
+    pendingIds.forEach { id -> compose.onNodeWithTag("memory-record-$id").performScrollTo().assertIsDisplayed() }
     if(expectedScale>=1.5f) pendingIds.forEach { id ->
         listOf("memory-discard-$id","memory-approve-$id").forEach { tag ->
             val action=compose.onNodeWithTag(tag).performScrollTo().assertIsDisplayed()
                 .assertHasClickAction().assertHeightIsAtLeast(48.dp).fetchSemanticsNode()
-            check(action.boundsInRoot.height<80f) {
-                "$tag action label wrapped at large text scale: ${action.boundsInRoot}"
-            }
+            check(action.boundsInRoot.height<80f) { "$tag action unexpectedly occupies more than two compact rows: ${action.boundsInRoot}" }
         }
     }
+    compose.onNodeWithTag("memory-pending-show-less").performScrollTo().performClick()
+    assertEquals("Collapsing restores the one-card summary",1,pendingIds.count { id ->
+        compose.onAllNodesWithTag("memory-record-$id").fetchSemanticsNodes().isNotEmpty()
+    })
+    listOf("fact","procedure","decision","event","relationship").forEach { kind ->
+        compose.onNodeWithTag("memory-kind-$kind").assertExists()
+    }
+    compose.onNodeWithTag("memory-import").performScrollTo().assertExists().assertIsDisplayed().assertHeightIsAtLeast(48.dp)
+    compose.onNodeWithTag("memory-export").performScrollTo().assertExists().assertIsDisplayed().assertHeightIsAtLeast(48.dp)
+    captureMemoryView(compose,name+"-transfer-actions")
 
     compose.onNodeWithTag("memory-kind-fact").performScrollTo().performClick()
     compose.onNodeWithText("SINTÉTICO · trabaja con documentos locales").performScrollTo().assertIsDisplayed()
@@ -143,11 +180,12 @@ private fun captureSyntheticMemory(
 }
 
 private fun captureMemoryView(compose:AndroidComposeTestRule<*,MainActivity>,name:String) {
+    val directory=h3bCaptureDirectory().apply{mkdirs()}
     compose.waitForIdle()
     var bitmap:Bitmap?=null
     val diagnostic=buildString {
         appendLine("fontScale=${compose.activity.resources.configuration.fontScale}")
-        listOf("memory-screen","memory-screen-title","memory-pending-card","memory-category-list","memory-pinned-section","memory-import","memory-export","top-level-memory")
+        listOf("memory-screen","memory-screen-title","memory-pending-card","memory-pending-show-all","memory-category-list","memory-pinned-section","memory-transfer-actions","memory-import","memory-export","top-level-memory")
             .forEach { tag ->
                 val bounds=runCatching {
                     compose.onNodeWithTag(tag,useUnmergedTree=true).fetchSemanticsNode().boundsInRoot
@@ -158,13 +196,12 @@ private fun captureMemoryView(compose:AndroidComposeTestRule<*,MainActivity>,nam
     compose.runOnUiThread {
         val view=compose.activity.window.decorView
         check(view.width>0&&view.height>0){"The Activity window must be laid out before the screenshot."}
-        File("build/h3b-phase3-captures/$name-layout.txt").writeText(
+        File(directory,"$name-layout.txt").writeText(
             diagnostic + "capture=activity-decor-view\ndecor=${view.width}x${view.height}\n",
         )
         bitmap=Bitmap.createBitmap(view.width,view.height,Bitmap.Config.ARGB_8888)
         view.draw(android.graphics.Canvas(bitmap!!))
     }
-    val directory=File("build/h3b-phase3-captures").apply{mkdirs()}
     File(directory,"$name.png").outputStream().use{check(bitmap!!.compress(Bitmap.CompressFormat.PNG,100,it))}
 }
 

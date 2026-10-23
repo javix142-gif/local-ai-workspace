@@ -13,6 +13,7 @@ import com.localai.workspace.context.ScopeAccess
 import com.localai.workspace.semantic.v2.ScopeType
 import com.localai.workspace.semantic.v2.SemanticScope
 import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -67,8 +68,23 @@ class ContextMemoryDeviceTest {
 
         compose.onNodeWithTag("top-level-memory").performClick()
         compose.onNodeWithText(text(R.string.memory_search)).performTextReplacement(marker)
-        compose.onNodeWithText(text(R.string.memory_details)).performScrollTo().performClick()
+        val factCategory=compose.onNodeWithTag("memory-kind-fact").performScrollTo().assertIsDisplayed()
+        factCategory.performClick()
+        compose.onNodeWithTag("memory-record-${current.id}").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("memory-details-${current.id}").performScrollTo().performClick()
         compose.onNodeWithText(text(R.string.memory_forget_permanently)).assertIsDisplayed()
+        compose.onNodeWithText(text(R.string.memory_forget_permanently)).performScrollTo().performClick()
+        compose.onNodeWithText(text(R.string.memory_forget_title)).assertIsDisplayed()
+
+        compose.onNodeWithText(text(R.string.common_cancel)).performClick()
+        compose.waitForIdle()
+        runBlocking {
+            assertTrue("Cancel preserves every memory version",versions.all{manager.get(it.id)!=null})
+            assertEquals(3,graph.contextFoundation.database.dao().vectorsForOrigins(versions.map{it.id}).size)
+            assertTrue(MemoryBundleV1.read(archive.inputStream()).candidates.any{it.content.contains(marker)})
+        }
+
+        compose.onNodeWithTag("memory-details-${current.id}").performScrollTo().performClick()
         compose.onNodeWithText(text(R.string.memory_forget_permanently)).performScrollTo().performClick()
         compose.onNodeWithText(text(R.string.memory_forget_title)).assertIsDisplayed()
         compose.onNodeWithText(text(R.string.memory_forget_permanently)).performClick()
