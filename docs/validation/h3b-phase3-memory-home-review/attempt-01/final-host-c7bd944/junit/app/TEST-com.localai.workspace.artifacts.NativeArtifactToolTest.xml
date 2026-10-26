@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.localai.workspace.artifacts.NativeArtifactToolTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-22T21:13:21" hostname="bb89d9b8ef7f" time="1.721">
-  <properties/>
-  <testcase name="sdkAdapterCreatesActualDraftRecordsWritePermissionAndRejectsScopeMismatch" classname="com.localai.workspace.artifacts.NativeArtifactToolTest" time="1.721"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

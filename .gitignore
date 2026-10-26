@@ -104,6 +104,12 @@ docs/validation/**/*.bin
 docs/validation/**/*.pb
 docs/validation/**/audit_package.py
 
+# Keep only the review summary and screenshots from this historical H3b bundle.
+/docs/validation/h3b-phase3-memory-home-review/**/*
+!/docs/validation/h3b-phase3-memory-home-review/**/
+!/docs/validation/h3b-phase3-memory-home-review/**/RESULTS.md
+!/docs/validation/h3b-phase3-memory-home-review/**/*.png
+
 # Common OS/editor detritus
 .DS_Store
 Thumbs.db

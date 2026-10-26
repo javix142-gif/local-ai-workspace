@@ -1,3 +1,5 @@
+> Historial: el estado operativo vigente está en [STATUS.md](../../STATUS.md). El checkpoint H2 de abajo fue supersedido por H3b.
+
 # Estado operativo — programa AWS H0 → H1 → H2 y continuidad autorizada
 
 

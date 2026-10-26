@@ -156,7 +156,7 @@ import java.util.Date
             BoxWithConstraints(Modifier.fillMaxWidth().imePadding().padding(16.dp)) {
                 Surface(shape=MaterialTheme.shapes.large,modifier=Modifier.widthIn(max=560.dp).fillMaxWidth().heightIn(max=maxHeight*.92f)) {
                     Column(Modifier.verticalScroll(rememberScrollState()).padding(16.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
-                        Text(title,style=MaterialTheme.typography.titleLarge);content();bottomContent();TextButton(onClick=dismiss,modifier=Modifier.fillMaxWidth()){Text("Close")}
+                        Text(title,style=MaterialTheme.typography.titleLarge);content();bottomContent();TextButton(onClick=dismiss,modifier=Modifier.fillMaxWidth()){Text(stringResource(R.string.common_close))}
                     }
                 }
             }

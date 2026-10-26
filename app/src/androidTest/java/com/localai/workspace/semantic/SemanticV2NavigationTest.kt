@@ -19,7 +19,7 @@ class SemanticV2NavigationTest {
         compose.onNodeWithText(compose.activity.getString(R.string.more_semantic_search)).performClick()
         compose.onNodeWithText(compose.activity.getString(R.string.more_embedding_models_title)).assertIsDisplayed()
         compose.onNodeWithText("EmbeddingGemma 2 740M").assertExists()
-        compose.onNodeWithText("Close").performClick()
+        compose.onNodeWithText(compose.activity.getString(R.string.common_close)).performClick()
         compose.onNodeWithText(compose.activity.getString(R.string.more_embedding_models_title)).assertDoesNotExist()
     }
 }

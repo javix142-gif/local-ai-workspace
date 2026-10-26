@@ -1,4 +1,0 @@
-expected_avd_name=localai-api35-x86_64
-resolved_search_directory_count=2
-search_directory=/home/runner/.android/avd exists=true
-search_directory=/home/runner/.config/.android/avd exists=false

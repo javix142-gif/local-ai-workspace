@@ -62,6 +62,8 @@
     <string name="more_advanced_summary">Diagnósticos y opciones técnicas existentes</string>
     <string name="more_performance">Rendimiento de IA local</string>
     <string name="more_device_validation">Validación del dispositivo</string>
+    <string name="device_validation_quick">Ejecutar validación rápida</string>
+    <string name="device_validation_full">Ejecutar validación completa</string>
     <string name="more_capability_boundaries">Capacidades disponibles</string>
     <string name="more_capability_boundaries_detail">Se muestran únicamente capacidades registradas por la aplicación. Su disponibilidad depende del modelo, los permisos y las funciones implementadas.</string>
     <string name="more_semantic_search">Búsqueda semántica</string>
@@ -414,6 +416,8 @@
     <string name="chat_delete_project_detail">¿Eliminar «%1$s» junto con sus chats, archivos privados, índices de fuentes y memoria del proyecto? No se puede deshacer. Se conservan los modelos, la memoria global y los demás proyectos.</string>
     <string name="chat_delete_workspace_detail">¿Eliminar «%1$s» junto con sus mensajes, archivos privados adjuntos y memoria del chat? No se puede deshacer. Se conservan los modelos y la memoria global.</string>
     <string name="chat_agent_general">Asistente general</string>
+    <string name="agent_preferred">Agente preferido: %1$s</string>
+    <string name="agent_general_default">Asistente general (predeterminado)</string>
     <string name="chat_agent_project_default">Predeterminado del proyecto · Asistente general</string>
     <string name="chat_skills_next_turn">Habilidades para el siguiente turno</string>
     <string name="chat_skills_auto_description">La selección determinista automática sigue activa. Las selecciones explícitas también dependen del agente y de las capacidades disponibles.</string>

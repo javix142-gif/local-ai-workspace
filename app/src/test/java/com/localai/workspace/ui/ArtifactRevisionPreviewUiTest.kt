@@ -13,6 +13,7 @@ import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextReplacement
 import androidx.test.core.app.ApplicationProvider
 import com.localai.workspace.artifacts.ArtifactSpec
+import com.localai.workspace.R
 import com.localai.workspace.artifacts.ArtifactStore
 import org.json.JSONObject
 import org.junit.After
@@ -74,7 +75,7 @@ class ArtifactRevisionPreviewUiTest {
         assertArrayEquals("Preview is read-only",originalBytes,store.verifiedFile(project,original).readBytes())
 
         // Close is the AlertDialog confirm button, outside the scrollable body.
-        compose.onNodeWithText("Close").performClick()
+        compose.onNodeWithText(context.getString(R.string.common_close)).performClick()
         assertTrue("The dialog exposes its normal cancel/dismiss callback",dismissed)
         assertEquals("Closing a proposal must not persist it",1,store.history(project,original.id).size)
         assertArrayEquals("Cancel preserves the original saved bytes",originalBytes,store.verifiedFile(project,original).readBytes())

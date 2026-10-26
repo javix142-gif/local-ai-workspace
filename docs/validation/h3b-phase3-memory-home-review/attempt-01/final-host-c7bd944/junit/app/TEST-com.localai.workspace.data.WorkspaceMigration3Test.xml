@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.localai.workspace.data.WorkspaceMigration3Test" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-22T21:13:38" hostname="bb89d9b8ef7f" time="0.099">
-  <properties/>
-  <testcase name="version2WorkspacesChatsAndModelsSurviveRoomMigrationAndDeletedDefaultStaysDeleted" classname="com.localai.workspace.data.WorkspaceMigration3Test" time="0.099"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

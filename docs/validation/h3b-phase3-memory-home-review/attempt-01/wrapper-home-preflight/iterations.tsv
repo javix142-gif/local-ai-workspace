@@ -1,4 +1,0 @@
-iteration	started_utc	duration_seconds	exit_code	tests	failures	errors	skipped	test_result	log	xml
-1	2026-10-22T19:59:17.415953+00:00	5.389	1	24	0	0	0	PASS	run-01.log	xml/iteration-01.xml
-2	2026-10-22T19:59:22.806618+00:00	5.386	1	24	0	0	0	PASS	run-02.log	xml/iteration-02.xml
-3	2026-10-22T19:59:28.193939+00:00	5.331	1	24	0	0	0	PASS	run-03.log	xml/iteration-03.xml

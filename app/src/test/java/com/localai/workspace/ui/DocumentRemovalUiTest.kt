@@ -3,6 +3,7 @@ package com.localai.workspace.ui
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.localai.workspace.MainActivity
+import com.localai.workspace.R
 import com.localai.workspace.LocalAiApplication
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -82,7 +83,7 @@ class DocumentRemovalUiTest {
                         "messageReferences=${runBlocking(Dispatchers.IO) { graph.database.messageDao().imageReferences(imported.path) }}",
                     pendingPath != null,
                 )
-                compose.onNodeWithContentDescription("Back").assertIsDisplayed().performClick()
+                compose.onNodeWithContentDescription(compose.activity.getString(R.string.chat_back)).assertIsDisplayed().performClick()
                 compose.waitUntil(15_000) {
                     !imported.exists() || compose.onAllNodesWithText("File cleanup pending")
                         .fetchSemanticsNodes().isNotEmpty()

@@ -1,9 +1,0 @@
-command=['/usr/local/lib/android/sdk/build-tools/35.0.0/apksigner', 'sign', '--ks', '/home/runner/work/local-ai-workspace/local-ai-workspace/keystore/aws-qa-dev.jks', '--ks-key-alias', 'awsqa', '--ks-pass', 'file:/home/runner/work/_temp/h1-at12/keystore-password.txt', '--key-pass', 'file:/home/runner/work/_temp/h1-at12/key-password.txt', '--out', '/home/runner/work/_temp/h1-at12/previous-0.5.0-debug-signed.apk', '/home/runner/work/local-ai-workspace/local-ai-workspace/h1-previous/app/build/outputs/apk/debug/app-debug.apk']
-cwd=/home/runner/work/local-ai-workspace/local-ai-workspace
-timeout_seconds=1800
-exit_code=0
-timed_out=false
---- stdout ---
-
---- stderr ---
-

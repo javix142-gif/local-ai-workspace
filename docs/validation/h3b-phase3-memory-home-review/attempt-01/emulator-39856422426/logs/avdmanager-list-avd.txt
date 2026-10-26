@@ -1,7 +1,0 @@
-Available Android Virtual Devices:
-    Name: localai-api35-x86_64
-  Device: pixel_2 (Google)
-    Path: /home/runner/.android/avd/localai-api35-x86_64.avd
-  Target: Google APIs (Google Inc.)
-          Based on: Android API 35 Tag/ABI: google_apis/x86_64
-  Sdcard: 512 MB

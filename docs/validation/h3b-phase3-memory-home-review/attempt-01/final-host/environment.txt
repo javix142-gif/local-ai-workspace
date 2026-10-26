@@ -1,7 +1,0 @@
-started_utc=2026-10-22T20:49:23Z
-code_sha=49ce2b53f2c77ef4be33d367787d7c134d11258b
-branch=feat/0.5.0-skills-agents
-runtime_java=openjdk version "17.0.20.1" 2026-08-18
-worker_jdk21=openjdk version "21.0.12.1" 2026-08-18 LTS
-gradle_user_home=/workspace/.gradle
-android_sdk=/workspace/.toolchain/android-sdk

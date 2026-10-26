@@ -235,7 +235,7 @@ private fun SkillsAgentsEntryButton(title: Int, tag: String, modifier: Modifier 
     LaunchedEffect(Unit){graph.agentRegistry.initialize();graph.skillRegistry.initialize()}
     SemanticPanel(stringResource(R.string.skills_agents),close) {
         TextButton(onClick={error=null;editing=AgentDefinition("agent.user-${UUID.randomUUID()}","",skillIds=skills.map{it.id}.toSet())}){Text(stringResource(R.string.agents_create))}
-        agents.forEach{a->Card(Modifier.fillMaxWidth().clickable{error=null;editing=a}){Row(Modifier.padding(12.dp)){Column(Modifier.weight(1f)){Text(a.name);Text(a.description,style=MaterialTheme.typography.bodySmall)};if(a.id!=AgentResolver.GENERAL)Switch(a.enabled,{run{graph.agentRegistry.enable(a.id,it)}})}}}
+        agents.forEach{a->Card(Modifier.fillMaxWidth().clickable{error=null;editing=a}){Row(Modifier.padding(12.dp)){Column(Modifier.weight(1f)){Text(if(a.id==AgentResolver.GENERAL)stringResource(R.string.chat_agent_general) else a.name);Text(a.description,style=MaterialTheme.typography.bodySmall)};if(a.id!=AgentResolver.GENERAL)Switch(a.enabled,{run{graph.agentRegistry.enable(a.id,it)}})}}}
         error?.let{Text(it,color=MaterialTheme.colorScheme.error)}
     }
     editing?.let{a->AgentEditor(a,skills,errorMessage=error,save={value->run{graph.agentRegistry.update(value);editing=null}},remove={remove=a.id},close={editing=null})}
@@ -245,8 +245,9 @@ private fun SkillsAgentsEntryButton(title: Int, tag: String, modifier: Modifier 
     val readOnly=agent.id==AgentResolver.GENERAL
     var name by remember(agent.id){mutableStateOf(agent.name)};var description by remember(agent.id){mutableStateOf(agent.description)};var role by remember(agent.id){mutableStateOf(agent.systemRole)}
     var assigned by remember(agent.id){mutableStateOf(agent.skillIds)};var tools by remember(agent.id){mutableStateOf(agent.allowedTools)};var sources by remember(agent.id){mutableStateOf(agent.allowedSourceTypes)};var scopes by remember(agent.id){mutableStateOf(agent.memoryScopes)}
-    SemanticPanel(if(readOnly)agent.name else stringResource(R.string.skills_agents),close) {
-        OutlinedTextField(name,{name=it},readOnly=readOnly,label={Text(stringResource(R.string.skills_name))},modifier=Modifier.fillMaxWidth())
+    val displayedName=if(readOnly)stringResource(R.string.chat_agent_general) else name
+    SemanticPanel(if(readOnly)displayedName else stringResource(R.string.skills_agents),close) {
+        OutlinedTextField(displayedName,{name=it},readOnly=readOnly,label={Text(stringResource(R.string.skills_name))},modifier=Modifier.fillMaxWidth())
         OutlinedTextField(description,{description=it},readOnly=readOnly,label={Text(stringResource(R.string.skills_description))},modifier=Modifier.fillMaxWidth())
         OutlinedTextField(role,{role=it},readOnly=readOnly,label={Text(stringResource(R.string.agents_instructions))},modifier=Modifier.fillMaxWidth(),minLines=3)
         Text(stringResource(R.string.agents_available_skills));skills.forEach{s->Choice(s.name,s.id in assigned,!readOnly){assigned=if(it)assigned+s.id else assigned-s.id}}
@@ -264,8 +265,10 @@ private fun SkillsAgentsEntryButton(title: Int, tag: String, modifier: Modifier 
     val agents by graph.agentRegistry.changes.collectAsState(initial=emptyList());val preference by graph.agentsSkillsDatabase.dao().observePreference(projectId).collectAsState(initial=null)
     var open by remember{mutableStateOf(false)}
     LaunchedEffect(Unit){graph.agentRegistry.initialize()}
-    Box{TextButton(onClick={open=true}){Text("Preferred agent: ${agents.firstOrNull{it.id==preference?.preferredAgentId&&it.enabled}?.name ?: "General Agent"}")};DropdownMenu(open,{open=false}){
-        DropdownMenuItem(text={Text("General Agent (default)")},onClick={open=false;scope.launch{graph.agentRegistry.prefer(projectId,null)}})
+    val preferredAgent=agents.firstOrNull{it.id==preference?.preferredAgentId&&it.enabled}
+    val preferredName=if(preferredAgent==null||preferredAgent.id==AgentResolver.GENERAL)stringResource(R.string.chat_agent_general) else preferredAgent.name
+    Box{TextButton(onClick={open=true}){Text(stringResource(R.string.agent_preferred,preferredName))};DropdownMenu(open,{open=false}){
+        DropdownMenuItem(text={Text(stringResource(R.string.agent_general_default))},onClick={open=false;scope.launch{graph.agentRegistry.prefer(projectId,null)}})
         agents.filter{it.enabled&&it.id!=AgentResolver.GENERAL}.forEach{a->DropdownMenuItem(text={Text(a.name)},onClick={open=false;scope.launch{graph.agentRegistry.prefer(projectId,a.id)}})}
     }}
 }

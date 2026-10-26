@@ -13,9 +13,11 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.localai.workspace.AppGraph
+import com.localai.workspace.R
 import com.localai.workspace.validation.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,12 +47,12 @@ fun DeviceValidationScreen(graph:AppGraph,back:()->Unit) {
     val report=current
     val previous=history.lastOrNull { it.runId!=report?.runId && report!=null && it.startedAt<report.startedAt && it.phase==ValidationPhase.COMPLETED && ValidationRules.compatible(it,report) }
     LazyColumn(Modifier.fillMaxSize().padding(horizontal=16.dp),verticalArrangement=Arrangement.spacedBy(10.dp),contentPadding=PaddingValues(bottom=24.dp)) {
-        item { TopAppBar(title={Text("Device Validation")},navigationIcon={TextButton(onClick=back){Text("Back")}}) }
+        item { TopAppBar(title={Text(stringResource(R.string.more_device_validation))},navigationIcon={TextButton(onClick=back){Text(stringResource(R.string.chat_back))}}) }
         item { Text("Developer / Diagnostics · isolated synthetic data",style=MaterialTheme.typography.bodySmall) }
         item { Text(status,style=MaterialTheme.typography.titleSmall) }
         item { Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)) {
-            Button(enabled=initialized && !running,onClick={validation.start(ValidationMode.QUICK)},modifier=Modifier.weight(1f)) { Text("Run Quick Validation") }
-            OutlinedButton(enabled=initialized && !running,onClick={validation.start(ValidationMode.FULL,iterations)},modifier=Modifier.weight(1f)) { Text("Run Full Validation") }
+            Button(enabled=initialized && !running,onClick={validation.start(ValidationMode.QUICK)},modifier=Modifier.weight(1f)) { Text(stringResource(R.string.device_validation_quick)) }
+            OutlinedButton(enabled=initialized && !running,onClick={validation.start(ValidationMode.FULL,iterations)},modifier=Modifier.weight(1f)) { Text(stringResource(R.string.device_validation_full)) }
         } }
         item { OutlinedButton(enabled=initialized && !running,onClick={validation.start(ValidationMode.THINKING_BUDGETS)}) {
             Text("Thinking budget probes · 256 / 512 / 1024")

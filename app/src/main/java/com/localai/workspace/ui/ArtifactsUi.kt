@@ -11,12 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.text.selection.SelectionContainer
 import com.localai.workspace.artifacts.*
+import com.localai.workspace.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.launch
@@ -80,7 +82,7 @@ import org.json.JSONObject
         descriptor=spec.json().toString(2);savedPreview=prepared.second;preview=spec;previewText=prepared.second;imagePreviews=prepared.third
         versions=withContext(Dispatchers.IO){store.history(projectId,revision.id)}
     }
-    AlertDialog(onDismissRequest=onDismiss,title={Text("Artifacts · local drafts")},confirmButton={TextButton(onClick=onDismiss){Text("Close")}},text={
+    AlertDialog(onDismissRequest=onDismiss,title={Text("Artifacts · local drafts")},confirmButton={TextButton(onClick=onDismiss){Text(stringResource(R.string.common_close))}},text={
         Column(Modifier.heightIn(max=520.dp).verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(8.dp)) {
             Text("Actual local files. Originals are preserved. Enable artifact tools in Options to ask the model to create/edit a draft.",style=MaterialTheme.typography.bodySmall)
             if(notice.isNotBlank())Text(notice,Modifier.testTag("artifact-status"),style=MaterialTheme.typography.bodySmall)

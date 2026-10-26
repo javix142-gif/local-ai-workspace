@@ -674,7 +674,7 @@ private fun ProjectScreen(viewModel: HomeViewModel, navController: NavHostContro
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let { viewModel.attachProjectDocument(projectId, it) } }
     Column(Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
         TopAppBar(title = { Text(project?.name ?: "Project", maxLines = 1, overflow = TextOverflow.Ellipsis) },
-            navigationIcon = { IconButton(onClick = { navController.popBackStack() }, enabled = !busy) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back") } },
+            navigationIcon = { IconButton(onClick = { navController.popBackStack() }, enabled = !busy) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.chat_back)) } },
             actions = { Box {
                 IconButton(onClick = { menu = true }, enabled = !busy && project != null) { Icon(Icons.Default.MoreVert, "Project options") }
                 DropdownMenu(menu, { menu = false }) { DropdownMenuItem(text = { Text("Delete project") }, onClick = { menu = false; showDelete = true }) }
@@ -1013,7 +1013,7 @@ private fun HuggingFaceDialog(viewModel: HomeViewModel, onDismiss: () -> Unit) {
                 }
             }
         },
-        confirmButton = { TextButton(onClick = onDismiss) { Text("Close") } },
+        confirmButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.common_close)) } },
     )
 }
 
@@ -1052,7 +1052,7 @@ private fun ModelDetailsScreen(viewModel: HomeViewModel, navController: NavHostC
     Column(Modifier.fillMaxSize().padding(horizontal = 20.dp)) {
         TopAppBar(
             title = { Text("Model details", maxLines = 1, overflow = TextOverflow.Ellipsis) },
-            navigationIcon = { IconButton(onClick = { navController.popBackStack() }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back") } },
+            navigationIcon = { IconButton(onClick = { navController.popBackStack() }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.chat_back)) } },
         )
         LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
             item {
@@ -1138,7 +1138,7 @@ private fun DetailSection(title: String, values: List<Pair<String, String?>>) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostController, skillAuthoringMode: Boolean = viewModel.skillAuthoringMode) {
+internal fun ChatScreen(viewModel: ChatViewModel, navController: NavHostController, skillAuthoringMode: Boolean = viewModel.skillAuthoringMode) {
     val project by viewModel.project.collectAsStateWithLifecycle()
     val conversation by viewModel.conversation.collectAsStateWithLifecycle()
     val standalone = project?.workspaceKind == com.localai.workspace.data.WorkspaceKind.CHAT
@@ -1319,7 +1319,7 @@ private fun ChatScreen(viewModel: ChatViewModel, navController: NavHostControlle
             }
             if (messages.isEmpty()) {
                 if (skillAuthoringMode) {
-                    Column(Modifier.fillMaxWidth().padding(24.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Column(Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()).padding(24.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         Text(stringResource(R.string.chat_skill_prompt_title),
                             Modifier.semantics { heading() }.testTag("skill-authoring-prompt-title"),
                             style = MaterialTheme.typography.titleLarge)

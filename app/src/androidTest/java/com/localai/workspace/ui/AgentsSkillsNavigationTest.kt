@@ -33,7 +33,7 @@ class AgentsSkillsNavigationTest {
     @Test fun generalAgentIsProtectedAndValidationIsDeveloperOnly() {
         compose.onNodeWithTag("top-level-settings").performClick()
         compose.onNodeWithText(localized(R.string.skills_agents)).performScrollTo().performClick()
-        compose.onNodeWithText("General Agent").performScrollTo().performClick()
+        compose.onNodeWithText(localized(R.string.chat_agent_general)).performScrollTo().performClick()
         compose.onNodeWithText(localized(R.string.agents_instructions)).assertExists()
         compose.onNodeWithText(localized(R.string.skills_remove)).assertDoesNotExist()
     }

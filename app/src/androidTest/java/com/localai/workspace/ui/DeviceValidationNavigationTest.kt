@@ -16,8 +16,8 @@ class DeviceValidationNavigationTest {
         compose.onNodeWithText(localized(R.string.more_device_validation)).assertDoesNotExist()
         compose.onNodeWithTag("more-advanced-toggle").performScrollTo().performClick()
         compose.onNodeWithText(localized(R.string.more_device_validation)).performScrollTo().performClick()
-        compose.onNodeWithText("Run Quick Validation").assertExists()
-        compose.onNodeWithText("Run Full Validation").assertExists()
-        compose.onNodeWithText("Back").performClick()
+        compose.onNodeWithText(localized(R.string.device_validation_quick)).assertExists()
+        compose.onNodeWithText(localized(R.string.device_validation_full)).assertExists()
+        compose.onNodeWithText(localized(R.string.chat_back)).performClick()
     }
 }

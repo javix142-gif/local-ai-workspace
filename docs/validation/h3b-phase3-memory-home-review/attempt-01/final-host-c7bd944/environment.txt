@@ -1,9 +1,0 @@
-gradle=8.10.2
-runtime_jdk=Temurin 17
-test_worker_jdk=Temurin 21
-android_sdk=/workspace/.toolchain/android-sdk
-ndk=27.0.12077973
-offline=true
-java17=openjdk version "17.0.20.1" 2026-08-18
-java21=openjdk version "21.0.12.1" 2026-08-18 LTS
-gradle_user_home=/workspace/.gradle

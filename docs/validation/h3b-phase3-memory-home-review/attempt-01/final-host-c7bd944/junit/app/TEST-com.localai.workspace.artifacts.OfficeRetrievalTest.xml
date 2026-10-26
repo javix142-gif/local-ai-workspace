@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.localai.workspace.artifacts.OfficeRetrievalTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-22T21:13:23" hostname="bb89d9b8ef7f" time="0.168">
-  <properties/>
-  <testcase name="realFileToolRetrievesExactQualifiedCellsAndAbstainsWithinDocument" classname="com.localai.workspace.artifacts.OfficeRetrievalTest" time="0.123"/>
-  <testcase name="pptxReopensAsOrderedSlidesAndDocxRunsKeepWordsAndTableBoundaries" classname="com.localai.workspace.artifacts.OfficeRetrievalTest" time="0.045"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

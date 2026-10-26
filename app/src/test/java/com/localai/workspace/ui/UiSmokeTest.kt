@@ -67,14 +67,14 @@ class UiSmokeTest {
     @Test fun deviceValidationIsDeveloperOnlyAndHasRealSuiteActions() {
         compose.onNodeWithText(localized(R.string.more_device_validation)).assertDoesNotExist()
         compose.onNodeWithTag("top-level-settings").performClick()
-        compose.onNodeWithText("Device Validation").assertDoesNotExist()
+        compose.onNodeWithText(localized(R.string.more_device_validation)).assertDoesNotExist()
         compose.onNodeWithTag("more-advanced-toggle").performScrollTo().performClick()
         compose.onNodeWithText(localized(R.string.more_device_validation)).performScrollTo().performClick()
-        awaitText("Run Quick Validation")
-        compose.onNodeWithText("Run Full Validation").assertExists()
+        awaitText(localized(R.string.device_validation_quick))
+        compose.onNodeWithText(localized(R.string.device_validation_full)).assertExists()
         compose.onNodeWithText("Full iterations").assertExists()
         screenshot("device-validation")
-        compose.onNodeWithText("Back").performClick()
+        compose.onNodeWithText(localized(R.string.chat_back)).performClick()
         compose.onNodeWithTag("more-advanced-toggle").assertExists()
     }
 
